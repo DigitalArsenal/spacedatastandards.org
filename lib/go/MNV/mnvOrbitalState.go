@@ -472,7 +472,7 @@ func (rcv *mnvOrbitalState) MutateDriftRate(n float64) bool {
 	return rcv.MutateDRIFT_RATE(n)
 }
 
-/// Position uncertainty U (km, 1-sigma)
+/// Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
 func (rcv *mnvOrbitalState) SIGMA_U() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -485,7 +485,7 @@ func (rcv *mnvOrbitalState) SigmaU() float64 {
 	return rcv.SIGMA_U()
 }
 
-/// Position uncertainty U (km, 1-sigma)
+/// Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
 func (rcv *mnvOrbitalState) MutateSIGMA_U(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
 }
@@ -494,7 +494,7 @@ func (rcv *mnvOrbitalState) MutateSigmaU(n float64) bool {
 	return rcv.MutateSIGMA_U(n)
 }
 
-/// Position uncertainty V (km, 1-sigma)
+/// Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
 func (rcv *mnvOrbitalState) SIGMA_V() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -507,7 +507,7 @@ func (rcv *mnvOrbitalState) SigmaV() float64 {
 	return rcv.SIGMA_V()
 }
 
-/// Position uncertainty V (km, 1-sigma)
+/// Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
 func (rcv *mnvOrbitalState) MutateSIGMA_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
@@ -516,7 +516,7 @@ func (rcv *mnvOrbitalState) MutateSigmaV(n float64) bool {
 	return rcv.MutateSIGMA_V(n)
 }
 
-/// Position uncertainty W (km, 1-sigma)
+/// Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
 func (rcv *mnvOrbitalState) SIGMA_W() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
@@ -529,7 +529,7 @@ func (rcv *mnvOrbitalState) SigmaW() float64 {
 	return rcv.SIGMA_W()
 }
 
-/// Position uncertainty W (km, 1-sigma)
+/// Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
 func (rcv *mnvOrbitalState) MutateSIGMA_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }

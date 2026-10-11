@@ -16,6 +16,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 
+struct CATProduct;
+struct CATProductBuilder;
+
 struct CAT;
 struct CATBuilder;
 
@@ -229,6 +232,178 @@ inline const char *EnumNamemassCategory(massCategory e) {
   return EnumNamesmassCategory()[index];
 }
 
+/// What a product the catalog selected for an object is.
+enum catalogProductKind : int8_t {
+  /// Not stated
+  catalogProductKind_Unspecified = 0,
+  /// $OMM with MEAN_ELEMENT_THEORY SGP4
+  catalogProductKind_Sgp4Elements = 1,
+  /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+  catalogProductKind_Sgp4XpElements = 2,
+  /// $OCM: a state and its covariance
+  catalogProductKind_StateCovariance = 3,
+  catalogProductKind_MIN = catalogProductKind_Unspecified,
+  catalogProductKind_MAX = catalogProductKind_StateCovariance
+};
+
+inline const catalogProductKind (&EnumValuescatalogProductKind())[4] {
+  static const catalogProductKind values[] = {
+    catalogProductKind_Unspecified,
+    catalogProductKind_Sgp4Elements,
+    catalogProductKind_Sgp4XpElements,
+    catalogProductKind_StateCovariance
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescatalogProductKind() {
+  static const char * const names[5] = {
+    "Unspecified",
+    "Sgp4Elements",
+    "Sgp4XpElements",
+    "StateCovariance",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecatalogProductKind(catalogProductKind e) {
+  if (::flatbuffers::IsOutRange(e, catalogProductKind_Unspecified, catalogProductKind_StateCovariance)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescatalogProductKind()[index];
+}
+
+/// One product the catalog selected for the object, by content identifier.
+struct CATProduct FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CATProductBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_KIND = 4,
+    VT_RECORD_CID = 6,
+    VT_SOURCE_ID = 8,
+    VT_EPOCH = 10,
+    VT_SELECTION_REASON = 12,
+    VT_STALE = 14
+  };
+  /// What the product is.
+  catalogProductKind KIND() const {
+    return static_cast<catalogProductKind>(GetField<int8_t>(VT_KIND, 0));
+  }
+  /// CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as
+  /// published, a size-prefixed FlatBuffer.
+  const ::flatbuffers::String *RECORD_CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RECORD_CID);
+  }
+  /// The product's source: its PROVENANCE SOURCE_ID.
+  const ::flatbuffers::String *SOURCE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_ID);
+  }
+  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
+  /// epoch.
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Why the catalog selected this product over the other candidates of its
+  /// KIND, as the selecting integrator states it (for example, the lowest
+  /// measured median error for the object's orbit regime and prediction
+  /// horizon).
+  const ::flatbuffers::String *SELECTION_REASON() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SELECTION_REASON);
+  }
+  /// True when a maneuver after EPOCH retired the product and no product of its
+  /// KIND from after the maneuver has been selected yet.
+  bool STALE() const {
+    return GetField<uint8_t>(VT_STALE, 0) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_KIND, 1) &&
+           VerifyOffset(verifier, VT_RECORD_CID) &&
+           verifier.VerifyString(RECORD_CID()) &&
+           VerifyOffset(verifier, VT_SOURCE_ID) &&
+           verifier.VerifyString(SOURCE_ID()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyOffset(verifier, VT_SELECTION_REASON) &&
+           verifier.VerifyString(SELECTION_REASON()) &&
+           VerifyField<uint8_t>(verifier, VT_STALE, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct CATProductBuilder {
+  typedef CATProduct Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_KIND(catalogProductKind KIND) {
+    fbb_.AddElement<int8_t>(CATProduct::VT_KIND, static_cast<int8_t>(KIND), 0);
+  }
+  void add_RECORD_CID(::flatbuffers::Offset<::flatbuffers::String> RECORD_CID) {
+    fbb_.AddOffset(CATProduct::VT_RECORD_CID, RECORD_CID);
+  }
+  void add_SOURCE_ID(::flatbuffers::Offset<::flatbuffers::String> SOURCE_ID) {
+    fbb_.AddOffset(CATProduct::VT_SOURCE_ID, SOURCE_ID);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(CATProduct::VT_EPOCH, EPOCH);
+  }
+  void add_SELECTION_REASON(::flatbuffers::Offset<::flatbuffers::String> SELECTION_REASON) {
+    fbb_.AddOffset(CATProduct::VT_SELECTION_REASON, SELECTION_REASON);
+  }
+  void add_STALE(bool STALE) {
+    fbb_.AddElement<uint8_t>(CATProduct::VT_STALE, static_cast<uint8_t>(STALE), 0);
+  }
+  explicit CATProductBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CATProduct> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CATProduct>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CATProduct> CreateCATProduct(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    catalogProductKind KIND = catalogProductKind_Unspecified,
+    ::flatbuffers::Offset<::flatbuffers::String> RECORD_CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SELECTION_REASON = 0,
+    bool STALE = false) {
+  CATProductBuilder builder_(_fbb);
+  builder_.add_SELECTION_REASON(SELECTION_REASON);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_SOURCE_ID(SOURCE_ID);
+  builder_.add_RECORD_CID(RECORD_CID);
+  builder_.add_STALE(STALE);
+  builder_.add_KIND(KIND);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CATProduct> CreateCATProductDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    catalogProductKind KIND = catalogProductKind_Unspecified,
+    const char *RECORD_CID = nullptr,
+    const char *SOURCE_ID = nullptr,
+    const char *EPOCH = nullptr,
+    const char *SELECTION_REASON = nullptr,
+    bool STALE = false) {
+  auto RECORD_CID__ = RECORD_CID ? _fbb.CreateString(RECORD_CID) : 0;
+  auto SOURCE_ID__ = SOURCE_ID ? _fbb.CreateString(SOURCE_ID) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto SELECTION_REASON__ = SELECTION_REASON ? _fbb.CreateString(SELECTION_REASON) : 0;
+  return CreateCATProduct(
+      _fbb,
+      KIND,
+      RECORD_CID__,
+      SOURCE_ID__,
+      EPOCH__,
+      SELECTION_REASON__,
+      STALE);
+}
+
 /// Catalog Entity Message
 struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CATBuilder Builder;
@@ -258,7 +433,9 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PAYLOADS = 48,
     VT_BUS_ID = 50,
     VT_CATALOG_URI = 52,
-    VT_CATALOG_OBJECT_ID = 54
+    VT_CATALOG_OBJECT_ID = 54,
+    VT_PRODUCTS = 56,
+    VT_PRODUCTS_AS_OF = 58
   };
   /// Satellite Name(s)
   const ::flatbuffers::String *OBJECT_NAME() const {
@@ -282,7 +459,7 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// Ownership, typically country or company
   legacyCountryCode OWNER() const {
-    return static_cast<legacyCountryCode>(GetField<int8_t>(VT_OWNER, 0));
+    return static_cast<legacyCountryCode>(GetField<uint8_t>(VT_OWNER, 0));
   }
   /// Launch Date [year-month-day] (ISO 8601)
   const ::flatbuffers::String *LAUNCH_DATE() const {
@@ -377,6 +554,17 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *CATALOG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CATALOG_OBJECT_ID);
   }
+  /// The products an integrating catalog selected for the object as of
+  /// PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+  /// the same source and epoch where there is one. The object's maneuvers are
+  /// its $MNV stream, not references here.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CATProduct>> *PRODUCTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CATProduct>> *>(VT_PRODUCTS);
+  }
+  /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
+  const ::flatbuffers::String *PRODUCTS_AS_OF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PRODUCTS_AS_OF);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -387,7 +575,7 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
            VerifyField<int8_t>(verifier, VT_OBJECT_TYPE, 1) &&
            VerifyField<int8_t>(verifier, VT_OPS_STATUS_CODE, 1) &&
-           VerifyField<int8_t>(verifier, VT_OWNER, 1) &&
+           VerifyField<uint8_t>(verifier, VT_OWNER, 1) &&
            VerifyOffset(verifier, VT_LAUNCH_DATE) &&
            verifier.VerifyString(LAUNCH_DATE()) &&
            VerifyOffset(verifier, VT_LAUNCH_SITE) &&
@@ -418,6 +606,11 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(CATALOG_URI()) &&
            VerifyOffset(verifier, VT_CATALOG_OBJECT_ID) &&
            verifier.VerifyString(CATALOG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_PRODUCTS) &&
+           verifier.VerifyVector(PRODUCTS()) &&
+           verifier.VerifyVectorOfTables(PRODUCTS()) &&
+           VerifyOffset(verifier, VT_PRODUCTS_AS_OF) &&
+           verifier.VerifyString(PRODUCTS_AS_OF()) &&
            verifier.EndTable();
   }
 };
@@ -442,7 +635,7 @@ struct CATBuilder {
     fbb_.AddElement<int8_t>(CAT::VT_OPS_STATUS_CODE, static_cast<int8_t>(OPS_STATUS_CODE), 7);
   }
   void add_OWNER(legacyCountryCode OWNER) {
-    fbb_.AddElement<int8_t>(CAT::VT_OWNER, static_cast<int8_t>(OWNER), 0);
+    fbb_.AddElement<uint8_t>(CAT::VT_OWNER, static_cast<uint8_t>(OWNER), 0);
   }
   void add_LAUNCH_DATE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE) {
     fbb_.AddOffset(CAT::VT_LAUNCH_DATE, LAUNCH_DATE);
@@ -504,6 +697,12 @@ struct CATBuilder {
   void add_CATALOG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> CATALOG_OBJECT_ID) {
     fbb_.AddOffset(CAT::VT_CATALOG_OBJECT_ID, CATALOG_OBJECT_ID);
   }
+  void add_PRODUCTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATProduct>>> PRODUCTS) {
+    fbb_.AddOffset(CAT::VT_PRODUCTS, PRODUCTS);
+  }
+  void add_PRODUCTS_AS_OF(::flatbuffers::Offset<::flatbuffers::String> PRODUCTS_AS_OF) {
+    fbb_.AddOffset(CAT::VT_PRODUCTS_AS_OF, PRODUCTS_AS_OF);
+  }
   explicit CATBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -542,7 +741,9 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLD>>> PAYLOADS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BUS_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CATALOG_URI = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CATALOG_OBJECT_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> CATALOG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATProduct>>> PRODUCTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PRODUCTS_AS_OF = 0) {
   CATBuilder builder_(_fbb);
   builder_.add_MASS(MASS);
   builder_.add_SIZE(SIZE);
@@ -551,6 +752,8 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
   builder_.add_APOGEE(APOGEE);
   builder_.add_INCLINATION(INCLINATION);
   builder_.add_PERIOD(PERIOD);
+  builder_.add_PRODUCTS_AS_OF(PRODUCTS_AS_OF);
+  builder_.add_PRODUCTS(PRODUCTS);
   builder_.add_CATALOG_OBJECT_ID(CATALOG_OBJECT_ID);
   builder_.add_CATALOG_URI(CATALOG_URI);
   builder_.add_BUS_ID(BUS_ID);
@@ -600,7 +803,9 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
     const std::vector<::flatbuffers::Offset<PLD>> *PAYLOADS = nullptr,
     const char *BUS_ID = nullptr,
     const char *CATALOG_URI = nullptr,
-    const char *CATALOG_OBJECT_ID = nullptr) {
+    const char *CATALOG_OBJECT_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<CATProduct>> *PRODUCTS = nullptr,
+    const char *PRODUCTS_AS_OF = nullptr) {
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto LAUNCH_DATE__ = LAUNCH_DATE ? _fbb.CreateString(LAUNCH_DATE) : 0;
@@ -612,6 +817,8 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
   auto BUS_ID__ = BUS_ID ? _fbb.CreateString(BUS_ID) : 0;
   auto CATALOG_URI__ = CATALOG_URI ? _fbb.CreateString(CATALOG_URI) : 0;
   auto CATALOG_OBJECT_ID__ = CATALOG_OBJECT_ID ? _fbb.CreateString(CATALOG_OBJECT_ID) : 0;
+  auto PRODUCTS__ = PRODUCTS ? _fbb.CreateVector<::flatbuffers::Offset<CATProduct>>(*PRODUCTS) : 0;
+  auto PRODUCTS_AS_OF__ = PRODUCTS_AS_OF ? _fbb.CreateString(PRODUCTS_AS_OF) : 0;
   return CreateCAT(
       _fbb,
       OBJECT_NAME__,
@@ -639,7 +846,9 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
       PAYLOADS__,
       BUS_ID__,
       CATALOG_URI__,
-      CATALOG_OBJECT_ID__);
+      CATALOG_OBJECT_ID__,
+      PRODUCTS__,
+      PRODUCTS_AS_OF__);
 }
 
 inline const CAT *GetCAT(const void *buf) {

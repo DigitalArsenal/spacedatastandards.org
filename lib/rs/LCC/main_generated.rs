@@ -3,14 +3,14 @@
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LEGACY_COUNTRY_CODE: i8 = 0;
+pub const ENUM_MIN_LEGACY_COUNTRY_CODE: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LEGACY_COUNTRY_CODE: i8 = 125;
+pub const ENUM_MAX_LEGACY_COUNTRY_CODE: u8 = 140;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LEGACY_COUNTRY_CODE: [legacyCountryCode; 126] = [
+pub const ENUM_VALUES_LEGACY_COUNTRY_CODE: [legacyCountryCode; 141] = [
     legacyCountryCode::AB,
     legacyCountryCode::ABS,
     legacyCountryCode::AC,
@@ -137,11 +137,31 @@ pub const ENUM_VALUES_LEGACY_COUNTRY_CODE: [legacyCountryCode; 126] = [
     legacyCountryCode::VENZ,
     legacyCountryCode::VTNM,
     legacyCountryCode::ZWE,
+    legacyCountryCode::AGO,
+    legacyCountryCode::BGR,
+    legacyCountryCode::BHR,
+    legacyCountryCode::BWA,
+    legacyCountryCode::CAN,
+    legacyCountryCode::CZE,
+    legacyCountryCode::HRV,
+    legacyCountryCode::JOR,
+    legacyCountryCode::KWT,
+    legacyCountryCode::PER,
+    legacyCountryCode::PRI,
+    legacyCountryCode::SLB,
+    legacyCountryCode::SVK,
+    legacyCountryCode::TWN,
+    legacyCountryCode::UGA,
 ];
 
+/// Owner and country codes of the public satellite catalog. An ordinal is a
+/// wire value: members are appended after ZWE, never inserted, so the ones
+/// after it are out of alphabetical order. Some owners have two codes, the
+/// catalog's older one and an ISO 3166-1 alpha-3 code the catalog also uses
+/// (CA and CAN); each code is its own member.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct legacyCountryCode(pub i8);
+pub struct legacyCountryCode(pub u8);
 
 #[allow(non_upper_case_globals)]
 impl legacyCountryCode {
@@ -397,9 +417,39 @@ impl legacyCountryCode {
     pub const VTNM: Self = Self(124);
     /// Republic of Zimbabwe
     pub const ZWE: Self = Self(125);
+    /// Angola (ISO 3166-1 alpha-3; also ANG)
+    pub const AGO: Self = Self(126);
+    /// Bulgaria (ISO 3166-1 alpha-3; also BUL)
+    pub const BGR: Self = Self(127);
+    /// Bahrain
+    pub const BHR: Self = Self(128);
+    /// Botswana
+    pub const BWA: Self = Self(129);
+    /// Canada (ISO 3166-1 alpha-3; also CA)
+    pub const CAN: Self = Self(130);
+    /// Czechia (ISO 3166-1 alpha-3; also CZCH)
+    pub const CZE: Self = Self(131);
+    /// Croatia
+    pub const HRV: Self = Self(132);
+    /// Jordan
+    pub const JOR: Self = Self(133);
+    /// Kuwait
+    pub const KWT: Self = Self(134);
+    /// Peru (ISO 3166-1 alpha-3; also PERU)
+    pub const PER: Self = Self(135);
+    /// Puerto Rico
+    pub const PRI: Self = Self(136);
+    /// Solomon Islands
+    pub const SLB: Self = Self(137);
+    /// Slovakia
+    pub const SVK: Self = Self(138);
+    /// Taiwan (ISO 3166-1 alpha-3; also ROC)
+    pub const TWN: Self = Self(139);
+    /// Uganda
+    pub const UGA: Self = Self(140);
 
-    pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 125;
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 140;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::AB,
         Self::ABS,
@@ -527,6 +577,21 @@ impl legacyCountryCode {
         Self::VENZ,
         Self::VTNM,
         Self::ZWE,
+        Self::AGO,
+        Self::BGR,
+        Self::BHR,
+        Self::BWA,
+        Self::CAN,
+        Self::CZE,
+        Self::HRV,
+        Self::JOR,
+        Self::KWT,
+        Self::PER,
+        Self::PRI,
+        Self::SLB,
+        Self::SVK,
+        Self::TWN,
+        Self::UGA,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -658,6 +723,21 @@ impl legacyCountryCode {
             Self::VENZ => Some("VENZ"),
             Self::VTNM => Some("VTNM"),
             Self::ZWE => Some("ZWE"),
+            Self::AGO => Some("AGO"),
+            Self::BGR => Some("BGR"),
+            Self::BHR => Some("BHR"),
+            Self::BWA => Some("BWA"),
+            Self::CAN => Some("CAN"),
+            Self::CZE => Some("CZE"),
+            Self::HRV => Some("HRV"),
+            Self::JOR => Some("JOR"),
+            Self::KWT => Some("KWT"),
+            Self::PER => Some("PER"),
+            Self::PRI => Some("PRI"),
+            Self::SLB => Some("SLB"),
+            Self::SVK => Some("SVK"),
+            Self::TWN => Some("TWN"),
+            Self::UGA => Some("UGA"),
             _ => None,
         }
     }
@@ -678,7 +758,7 @@ impl<'a> ::flatbuffers::Follow<'a> for legacyCountryCode {
 
     #[inline]
     unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
         Self(b)
     }
 }
@@ -688,22 +768,22 @@ impl ::flatbuffers::Push for legacyCountryCode {
 
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
     }
 }
 
 impl ::flatbuffers::EndianScalar for legacyCountryCode {
-    type Scalar = i8;
+    type Scalar = u8;
 
     #[inline]
-    fn to_little_endian(self) -> i8 {
+    fn to_little_endian(self) -> u8 {
         self.0.to_le()
     }
 
     #[inline]
     #[allow(clippy::wrong_self_convention)]
-    fn from_little_endian(v: i8) -> Self {
-        let b = i8::from_le(v);
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
         Self(b)
     }
 }
@@ -713,7 +793,7 @@ impl<'a> ::flatbuffers::Verifiable for legacyCountryCode {
     fn run_verifier(
         v: &mut ::flatbuffers::Verifier, pos: usize
     ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        i8::run_verifier(v, pos)
+        u8::run_verifier(v, pos)
     }
 }
 

@@ -8,411 +8,644 @@ import Common
 
 import FlatBuffers
 
-///  Capability class of a distributable software unit (module, application, or
-///  composed flow).
-///
-///  This enum IS the ratified category vocabulary. A storefront, library, module
-///  manifest and search surface all classify against these members and nothing
-///  else; a category that is not a member here does not exist. Members name
-///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
-///  site, organization, product, protocol brand or algorithm implementation;
-///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
-///  the taxonomy.
-///
-///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
-///  reuse an ordinal. A reorder silently re-labels every published listing.
-///
-///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
-///  default-constructed classification can never decode as a real category. The
-///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
-///  ordinal 0 is a real family — and had to append an `Unspecified` member at
-///  the tail to recover. This enum does not repeat that.
-///
-///  Each member's canonical display name is stated in its doc comment and is
-///  part of the ratified contract: a consumer rendering a category label uses
-///  that string verbatim, so every surface spells a category identically. The
-///  canonical route slug is the member identifier lowercased with `_` replaced
-///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
-///  "rf-and-communications").
-public enum capabilityClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Provider-declared standing of a module in its own offering. Append new
+///  values only; never reorder or reuse existing values.
+public enum pmmTrustTier: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  ///  No capability class stated. The publisher did not classify the unit.
-  ///  A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT
-  ///  infer a class from the unit's name, description or tags.
-  ///  Display name: "Unspecified".
+  ///  Not stated. Treated as OPTIONAL by verifiers.
   case unspecified = 0
-  ///  Advancing an object's state forward or backward in time under a force
-  ///  model, and interpolating between computed states.
-  ///  Display name: "Propagation".
-  case propagation = 1
-  ///  Estimating an object's state or model parameters by fitting to
-  ///  observations or ephemerides.
-  ///  Display name: "Orbit Determination".
-  case orbitDetermination = 2
-  ///  Planning, targeting and optimizing trajectory changes, including
-  ///  station-keeping, transfers and collision-avoidance maneuvers.
-  ///  Display name: "Maneuver Planning".
-  case maneuverPlanning = 3
-  ///  Screening for close approaches between objects and quantifying collision
-  ///  probability and miss distance.
-  ///  Display name: "Conjunction Assessment".
-  case conjunctionAssessment = 4
-  ///  Atmospheric reentry, decay prediction, fragmentation and debris-cloud
-  ///  evolution.
-  ///  Display name: "Reentry & Breakup".
-  case reentryAndBreakup = 5
-  ///  Attitude determination and control, body orientation, and pointing or
-  ///  slew planning.
-  ///  Display name: "Attitude & Pointing".
-  case attitudeAndPointing = 6
-  ///  Coordinate frame realization and transformation, time scale conversion,
-  ///  and earth-orientation parameter handling.
-  ///  Display name: "Reference Frames & Time".
-  case referenceFramesAndTime = 7
-  ///  Sensor modelling and tasking, field-of-regard and access computation, and
-  ///  area or target coverage figures of merit.
-  ///  Display name: "Sensors & Coverage".
-  case sensorsAndCoverage = 8
-  ///  Producing, correlating or associating observations of tracked objects,
-  ///  and maintaining tracks from them.
-  ///  Display name: "Tracking & Observation".
-  case trackingAndObservation = 9
-  ///  Radio-frequency link modelling, emitter and band characterization, signal
-  ///  capture handling, and communications planning.
-  ///  Display name: "RF & Communications".
-  case rfAndCommunications = 10
-  ///  Interference, jamming, spoofing and countermeasure modelling.
-  ///  Display name: "Electronic Warfare".
-  case electronicWarfare = 11
-  ///  Atmospheric density, gravity field, magnetic field, radiation, solar and
-  ///  geomagnetic activity, and ionospheric modelling.
-  ///  Display name: "Space Environment".
-  case spaceEnvironment = 12
-  ///  Acquiring bytes from upstream providers and parsing or exporting them
-  ///  across canonical record formats.
-  ///  Display name: "Data Sources & Ingest".
-  case dataSourcesAndIngest = 13
-  ///  Validating records for integrity, physical plausibility, continuity and
-  ///  schema conformance, and scoring data quality.
-  ///  Display name: "Data Validation & Quality".
-  case dataValidationAndQuality = 14
-  ///  Object catalogue curation, cross-identifier resolution, bus and physical
-  ///  property association, and entity identity.
-  ///  Display name: "Catalog & Identity".
-  case catalogAndIdentity = 15
-  ///  Rendering, scene composition, shading and interactive display of space
-  ///  data.
-  ///  Display name: "Visualization & Rendering".
-  case visualizationAndRendering = 16
-  ///  Ground station operation and control of physical equipment, including
-  ///  antenna rotators, radios and other hardware interfaces.
-  ///  Display name: "Ground Segment & Hardware".
-  case groundSegmentAndHardware = 17
-  ///  Mission and constellation design, trade studies, performance analysis and
-  ///  report generation.
-  ///  Display name: "Mission Design & Analysis".
-  case missionDesignAndAnalysis = 18
-  ///  Composition of other units into a graph. The unit of distribution is a
-  ///  flow of modules, not a leaf algorithm.
-  ///  Display name: "Flows & Composition".
-  case flowAndComposition = 19
-  ///  Persisting, indexing and querying records; storage engines and query
-  ///  surfaces.
-  ///  Display name: "Data Storage & Query".
-  case dataStorageAndQuery = 20
-  ///  Key custody, signing and verification, authentication, authorization and
-  ///  access control.
-  ///  Display name: "Security & Identity".
-  case securityAndIdentity = 21
-  ///  Listing, purchase, subscription, entitlement and license enforcement for
-  ///  distributed units.
-  ///  Display name: "Commerce & Licensing".
-  case commerceAndLicensing = 22
-  ///  Node runtime, artifact delivery, registry, publication and peer transport
-  ///  plumbing.
-  ///  Display name: "Node Infrastructure".
-  case nodeInfrastructure = 23
-  ///  Foundational mathematics and general-purpose utility libraries consumed by
-  ///  other units rather than run on their own.
-  ///  Display name: "Foundation & Math".
-  case foundationAndMath = 24
+  ///  The provider declares this module part of its baseline service. Only a
+  ///  CORE entry may ever be loaded before a user session exists, and only a
+  ///  CORE entry is presented pre-selected at first sign-in.
+  case core = 1
+  ///  Offered and endorsed by the provider, but never loaded without an
+  ///  explicit user selection.
+  case recommended = 2
+  ///  Offered only.
+  case optional_ = 3
 
-  public static var max: capabilityClass { return .foundationAndMath }
-  public static var min: capabilityClass { return .unspecified }
+  public static var max: pmmTrustTier { return .optional_ }
+  public static var min: pmmTrustTier { return .unspecified }
 }
 
 
-///  One ratified category in the taxonomy.
-///
-///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
-///  without the label a surface will render, the sentence a browse row will
-///  show, and the route a link will target. This is what stops each consumer
-///  from inventing its own wording for the same code.
-public struct CCTCategory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  What a client must hold before the artifact may be fetched and
+///  instantiated. Append new values only; never reorder or reuse existing
+///  values.
+public enum pmmAccessPolicy: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  No session, no grant: an unauthenticated client may fetch and run it.
+  case anonymous = 0
+  ///  An authenticated session is required.
+  case authenticated = 1
+  ///  An entitlement or license grant is required (see `$ENT`, `$PLK`).
+  case entitled = 2
+
+  public static var max: pmmAccessPolicy { return .entitled }
+  public static var min: pmmAccessPolicy { return .anonymous }
+}
+
+
+///  Lifecycle of one manifest entry. Append new values only; never reorder or
+///  reuse existing values.
+public enum pmmEntryState: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Served and loadable.
+  case active = 0
+  ///  Still served, superseded by another entry. Clients SHOULD migrate.
+  case deprecated = 1
+  ///  No longer served. Clients MUST NOT fetch it.
+  case withdrawn = 2
+  ///  Actively distrusted by the provider (compromise, bad build). Clients
+  ///  MUST refuse this CONTENT_HASH even if they already hold the bytes.
+  case revoked = 3
+
+  public static var max: pmmEntryState { return .revoked }
+  public static var min: pmmEntryState { return .active }
+}
+
+
+///  The single key identity every signature in this manifest resolves to, and
+///  the two external anchors that give that key its weight: the DNS proof that
+///  binds it to the domain, and the Adversarial-Security bond that prices
+///  trust in it.
+public struct PMMTrustAnchor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategory.id, addPrefix: prefix) }
+  public static var id: String { "$PMM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PMMTrustAnchor.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE: VOffset = 4
-    static let DISPLAY_NAME: VOffset = 6
-    static let SUMMARY: VOffset = 8
-    static let SLUG: VOffset = 10
-    static let DESCRIPTION: VOffset = 12
-    static let PARENT: VOffset = 14
-    static let SORT_ORDER: VOffset = 16
-    static let KEYWORDS: VOffset = 18
-    static let ICON_KEY: VOffset = 20
+    static let PROVIDER_DOMAIN: VOffset = 4
+    static let NODE_PEER_ID: VOffset = 6
+    static let NODE_XPUB: VOffset = 8
+    static let SIGNING_PUBLIC_KEY: VOffset = 10
+    static let SIGNING_KEY_PATH: VOffset = 12
+    static let SIGNATURE_ALGORITHM: VOffset = 14
+    static let EPM_CID: VOffset = 16
+    static let DNS_PROOF_RECORD_NAME: VOffset = 18
+    static let DNS_PROOF_TXT: VOffset = 20
+    static let DNS_PROOF_STATEMENT: VOffset = 22
+    static let BOND_ADDRESSES: VOffset = 24
+    static let BOND_ATTESTATION_URL: VOffset = 26
   }
 
-  ///  The ratified category code. This is the join key every consumer uses.
-  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
-  ///  name stated in the CODE member's doc comment.
-  public var DISPLAY_NAME: String! { let o = _accessor.offset(VT.DISPLAY_NAME); return _accessor.string(at: o) }
-  public var DISPLAY_NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DISPLAY_NAME) }
-  ///  One-sentence description shown on browse rows and category headers.
-  public var SUMMARY: String! { let o = _accessor.offset(VT.SUMMARY); return _accessor.string(at: o) }
-  public var SUMMARYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SUMMARY) }
-  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
-  ///  `-`. Published explicitly rather than derived so every surface routes
-  ///  identically.
-  public var SLUG: String! { let o = _accessor.offset(VT.SLUG); return _accessor.string(at: o) }
-  public var SLUGSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SLUG) }
-  ///  Longer editorial description for a category landing page.
+  ///  Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and
+  ///  MUST equal the origin the manifest was fetched from.
+  public var PROVIDER_DOMAIN: String? { let o = _accessor.offset(VT.PROVIDER_DOMAIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_DOMAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DOMAIN) }
+  ///  libp2p peer id of the provider node.
+  public var NODE_PEER_ID: String? { let o = _accessor.offset(VT.NODE_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NODE_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NODE_PEER_ID) }
+  ///  BIP-32 account xpub of the node identity, verbatim as advertised in the
+  ///  node's `$EPM`.
+  public var NODE_XPUB: String? { let o = _accessor.offset(VT.NODE_XPUB); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NODE_XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NODE_XPUB) }
+  ///  Hex-encoded public key that verifies `PMM.SIGNATURE` and every
+  ///  `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.
+  public var SIGNING_PUBLIC_KEY: String? { let o = _accessor.offset(VT.SIGNING_PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNING_PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNING_PUBLIC_KEY) }
+  ///  HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.
+  public var SIGNING_KEY_PATH: String? { let o = _accessor.offset(VT.SIGNING_KEY_PATH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNING_KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNING_KEY_PATH) }
+  ///  Signature algorithm identifier, e.g. "ed25519",
+  ///  "secp256k1-compact-ethereum". Empty means "ed25519".
+  public var SIGNATURE_ALGORITHM: String? { let o = _accessor.offset(VT.SIGNATURE_ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURE_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE_ALGORITHM) }
+  ///  IPFS CID of the provider node's `$EPM`.
+  public var EPM_CID: String? { let o = _accessor.offset(VT.EPM_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPM_CID) }
+  ///  Fully-qualified DNS name of the TXT record carrying the signed
+  ///  domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client
+  ///  resolves this itself (DNS-over-HTTPS) rather than trusting the copy
+  ///  below.
+  public var DNS_PROOF_RECORD_NAME: String? { let o = _accessor.offset(VT.DNS_PROOF_RECORD_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DNS_PROOF_RECORD_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DNS_PROOF_RECORD_NAME) }
+  ///  Verbatim TXT value of that proof, carried only so a client can detect
+  ///  disagreement with what DNS returns. The resolved record always wins.
+  public var DNS_PROOF_TXT: String? { let o = _accessor.offset(VT.DNS_PROOF_TXT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DNS_PROOF_TXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DNS_PROOF_TXT) }
+  ///  The canonical statement the DNS proof signs, verbatim, when the proof
+  ///  format keeps it out of the TXT value.
+  public var DNS_PROOF_STATEMENT: String? { let o = _accessor.offset(VT.DNS_PROOF_STATEMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DNS_PROOF_STATEMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DNS_PROOF_STATEMENT) }
+  ///  Chain addresses derived from this same node key that hold the provider's
+  ///  Adversarial-Security bond. Each entry proves, through `ChainProof`, that
+  ///  the address derives from the key that signed this manifest.
+  public var BOND_ADDRESSES: FlatbufferVector<ChainProof> { return _accessor.vector(at: VT.BOND_ADDRESSES, byteSize: 4) }
+  ///  Optional URL of a machine-readable bond attestation (bonded value,
+  ///  duration unspent) for clients that price trust rather than gate on it.
+  public var BOND_ATTESTATION_URL: String? { let o = _accessor.offset(VT.BOND_ATTESTATION_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BOND_ATTESTATION_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BOND_ATTESTATION_URL) }
+  public static func startPMMTrustAnchor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(PROVIDER_DOMAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DOMAIN, at: VT.PROVIDER_DOMAIN) }
+  public static func add(NODE_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_PEER_ID, at: VT.NODE_PEER_ID) }
+  public static func add(NODE_XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_XPUB, at: VT.NODE_XPUB) }
+  public static func add(SIGNING_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNING_PUBLIC_KEY, at: VT.SIGNING_PUBLIC_KEY) }
+  public static func add(SIGNING_KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNING_KEY_PATH, at: VT.SIGNING_KEY_PATH) }
+  public static func add(SIGNATURE_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_ALGORITHM, at: VT.SIGNATURE_ALGORITHM) }
+  public static func add(EPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPM_CID, at: VT.EPM_CID) }
+  public static func add(DNS_PROOF_RECORD_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DNS_PROOF_RECORD_NAME, at: VT.DNS_PROOF_RECORD_NAME) }
+  public static func add(DNS_PROOF_TXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DNS_PROOF_TXT, at: VT.DNS_PROOF_TXT) }
+  public static func add(DNS_PROOF_STATEMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DNS_PROOF_STATEMENT, at: VT.DNS_PROOF_STATEMENT) }
+  public static func addVectorOf(BOND_ADDRESSES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOND_ADDRESSES, at: VT.BOND_ADDRESSES) }
+  public static func add(BOND_ATTESTATION_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOND_ATTESTATION_URL, at: VT.BOND_ATTESTATION_URL) }
+  public static func endPMMTrustAnchor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPMMTrustAnchor(
+    _ fbb: inout FlatBufferBuilder,
+    PROVIDER_DOMAINOffset PROVIDER_DOMAIN: Offset = Offset(),
+    NODE_PEER_IDOffset NODE_PEER_ID: Offset = Offset(),
+    NODE_XPUBOffset NODE_XPUB: Offset = Offset(),
+    SIGNING_PUBLIC_KEYOffset SIGNING_PUBLIC_KEY: Offset = Offset(),
+    SIGNING_KEY_PATHOffset SIGNING_KEY_PATH: Offset = Offset(),
+    SIGNATURE_ALGORITHMOffset SIGNATURE_ALGORITHM: Offset = Offset(),
+    EPM_CIDOffset EPM_CID: Offset = Offset(),
+    DNS_PROOF_RECORD_NAMEOffset DNS_PROOF_RECORD_NAME: Offset = Offset(),
+    DNS_PROOF_TXTOffset DNS_PROOF_TXT: Offset = Offset(),
+    DNS_PROOF_STATEMENTOffset DNS_PROOF_STATEMENT: Offset = Offset(),
+    BOND_ADDRESSESVectorOffset BOND_ADDRESSES: Offset = Offset(),
+    BOND_ATTESTATION_URLOffset BOND_ATTESTATION_URL: Offset = Offset()
+  ) -> Offset {
+    let __start = PMMTrustAnchor.startPMMTrustAnchor(&fbb)
+    PMMTrustAnchor.add(PROVIDER_DOMAIN: PROVIDER_DOMAIN, &fbb)
+    PMMTrustAnchor.add(NODE_PEER_ID: NODE_PEER_ID, &fbb)
+    PMMTrustAnchor.add(NODE_XPUB: NODE_XPUB, &fbb)
+    PMMTrustAnchor.add(SIGNING_PUBLIC_KEY: SIGNING_PUBLIC_KEY, &fbb)
+    PMMTrustAnchor.add(SIGNING_KEY_PATH: SIGNING_KEY_PATH, &fbb)
+    PMMTrustAnchor.add(SIGNATURE_ALGORITHM: SIGNATURE_ALGORITHM, &fbb)
+    PMMTrustAnchor.add(EPM_CID: EPM_CID, &fbb)
+    PMMTrustAnchor.add(DNS_PROOF_RECORD_NAME: DNS_PROOF_RECORD_NAME, &fbb)
+    PMMTrustAnchor.add(DNS_PROOF_TXT: DNS_PROOF_TXT, &fbb)
+    PMMTrustAnchor.add(DNS_PROOF_STATEMENT: DNS_PROOF_STATEMENT, &fbb)
+    PMMTrustAnchor.addVectorOf(BOND_ADDRESSES: BOND_ADDRESSES, &fbb)
+    PMMTrustAnchor.add(BOND_ATTESTATION_URL: BOND_ATTESTATION_URL, &fbb)
+    return PMMTrustAnchor.endPMMTrustAnchor(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PROVIDER_DOMAIN, fieldName: "PROVIDER_DOMAIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NODE_PEER_ID, fieldName: "NODE_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NODE_XPUB, fieldName: "NODE_XPUB", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNING_PUBLIC_KEY, fieldName: "SIGNING_PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNING_KEY_PATH, fieldName: "SIGNING_KEY_PATH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE_ALGORITHM, fieldName: "SIGNATURE_ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPM_CID, fieldName: "EPM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DNS_PROOF_RECORD_NAME, fieldName: "DNS_PROOF_RECORD_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DNS_PROOF_TXT, fieldName: "DNS_PROOF_TXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DNS_PROOF_STATEMENT, fieldName: "DNS_PROOF_STATEMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BOND_ADDRESSES, fieldName: "BOND_ADDRESSES", required: false, type: ForwardOffset<Vector<ForwardOffset<ChainProof>, ChainProof>>.self)
+    try _v.visit(field: VT.BOND_ATTESTATION_URL, fieldName: "BOND_ATTESTATION_URL", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  One module the provider offers.
+public struct PMMModuleEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PMM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PMMModuleEntry.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MODULE_ID: VOffset = 4
+    static let PLUGIN_ID: VOffset = 6
+    static let PLG_CID: VOffset = 8
+    static let NAME: VOffset = 10
+    static let DESCRIPTION: VOffset = 12
+    static let VERSION: VOffset = 14
+    static let EPOCH: VOffset = 16
+    static let CONTENT_HASH: VOffset = 18
+    static let ARTIFACT_SIZE_BYTES: VOffset = 20
+    static let ARTIFACT_PATH: VOffset = 22
+    static let ARTIFACT_CID: VOffset = 24
+    static let ARTIFACT_SIGNATURE: VOffset = 26
+    static let TRUST_TIER: VOffset = 28
+    static let DEFAULT_ENABLED: VOffset = 30
+    static let ACCESS_POLICY: VOffset = 32
+    static let ENTRY_STATE: VOffset = 34
+    static let RUNTIME_TARGETS: VOffset = 36
+    static let REQUIRED_SCHEMAS: VOffset = 38
+    static let MIN_PERMISSIONS: VOffset = 40
+    static let LICENSE: VOffset = 42
+    static let DOCUMENTATION_URL: VOffset = 44
+    static let ICON_URL: VOffset = 46
+    static let SUPERSEDES_CONTENT_HASH: VOffset = 48
+    static let UPDATED_AT: VOffset = 50
+    static let PLUGIN_TYPE: VOffset = 52
+    static let PRIMARY_CATEGORY: VOffset = 54
+    static let CATEGORIES: VOffset = 56
+  }
+
+  ///  Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable
+  ///  across versions. Required and unique within the manifest.
+  public var MODULE_ID: String! { let o = _accessor.offset(VT.MODULE_ID); return _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODULE_ID) }
+  ///  `$PLG.PLUGIN_ID` of the full listing for this module, when one is
+  ///  published.
+  public var PLUGIN_ID: String? { let o = _accessor.offset(VT.PLUGIN_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PLUGIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PLUGIN_ID) }
+  ///  IPFS CID of that `$PLG` record.
+  public var PLG_CID: String? { let o = _accessor.offset(VT.PLG_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PLG_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PLG_CID) }
+  ///  Display name.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Human-readable summary.
   public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
-  ///  top-level category. A category MUST NOT name itself as its parent.
-  public var PARENT: capabilityClass { let o = _accessor.offset(VT.PARENT); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Presentation order within its parent, ascending. Ties break on
-  ///  DISPLAY_NAME.
-  public var SORT_ORDER: UInt16 { let o = _accessor.offset(VT.SORT_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Search synonyms and alternate phrasings that resolve to this category.
-  ///  Feeds type-ahead; never rendered as the category label.
-  public var KEYWORDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.KEYWORDS, byteSize: 4) }
-  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
-  ///  URL: consuming node surfaces load zero external-origin bytes, so the
-  ///  consumer resolves this against its own local asset set.
-  public var ICON_KEY: String? { let o = _accessor.offset(VT.ICON_KEY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICON_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_KEY) }
-  public static func startCCTCategory(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
-  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
-  public static func add(SUMMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUMMARY, at: VT.SUMMARY) }
-  public static func add(SLUG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLUG, at: VT.SLUG) }
+  ///  SemVer 2.0.0 version of the offered artifact.
+  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
+  ///  Monotonic publication counter for this MODULE_ID. Increases on every
+  ///  re-publication, including a rebuild at the same VERSION.
+  public var EPOCH: UInt64 { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  64 lowercase hexadecimal characters encoding SHA-256 of the module's
+  ///  portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical
+  ///  in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity
+  ///  capability and signature policies key on.
+  public var CONTENT_HASH: String? { let o = _accessor.offset(VT.CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_HASH) }
+  ///  Size of those portable WASM bytes.
+  public var ARTIFACT_SIZE_BYTES: UInt64 { let o = _accessor.offset(VT.ARTIFACT_SIZE_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Path, relative to the provider origin, from which the artifact is
+  ///  fetched. Relative on purpose: the bytes must come from the same origin
+  ///  whose domain the DNS proof binds.
+  public var ARTIFACT_PATH: String? { let o = _accessor.offset(VT.ARTIFACT_PATH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARTIFACT_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARTIFACT_PATH) }
+  ///  IPFS CID of the artifact, for content-addressed retrieval.
+  public var ARTIFACT_CID: String? { let o = _accessor.offset(VT.ARTIFACT_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARTIFACT_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARTIFACT_CID) }
+  ///  Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`
+  ///  over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry
+  ///  before spending a byte of bandwidth. The artifact's own publication
+  ///  trailer remains authoritative after download.
+  public var ARTIFACT_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.ARTIFACT_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToArtifactSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ARTIFACT_SIGNATURE, body: body) }
+  ///  Provider-declared standing. Gates anonymous loading.
+  public var TRUST_TIER: pmmTrustTier { let o = _accessor.offset(VT.TRUST_TIER); return o == 0 ? .unspecified : pmmTrustTier(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  True when the provider ships this module enabled by default. A recorded
+  ///  user choice overrides it permanently.
+  public var DEFAULT_ENABLED: Bool { let o = _accessor.offset(VT.DEFAULT_ENABLED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  What the client must hold to fetch and run it.
+  public var ACCESS_POLICY: pmmAccessPolicy { let o = _accessor.offset(VT.ACCESS_POLICY); return o == 0 ? .authenticated : pmmAccessPolicy(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .authenticated }
+  ///  Entry lifecycle.
+  public var ENTRY_STATE: pmmEntryState { let o = _accessor.offset(VT.ENTRY_STATE); return o == 0 ? .active : pmmEntryState(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .active }
+  ///  Opaque runtime-target tags this artifact is built for, e.g. "browser",
+  ///  "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.
+  public var RUNTIME_TARGETS: FlatbufferVector<String?> { return _accessor.vector(at: VT.RUNTIME_TARGETS, byteSize: 4) }
+  ///  SDS schema codes at this module's invoke surface, e.g. "OMM", "OEM".
+  public var REQUIRED_SCHEMAS: FlatbufferVector<String?> { return _accessor.vector(at: VT.REQUIRED_SCHEMAS, byteSize: 4) }
+  ///  Minimum host permissions the module needs, same vocabulary as
+  ///  `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an
+  ///  anonymously-loaded CORE module is allowed to do.
+  public var MIN_PERMISSIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MIN_PERMISSIONS, byteSize: 4) }
+  ///  SPDX license identifier of the module.
+  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
+  ///  URL to the module's documentation.
+  public var DOCUMENTATION_URL: String? { let o = _accessor.offset(VT.DOCUMENTATION_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DOCUMENTATION_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DOCUMENTATION_URL) }
+  ///  URL to the module's icon.
+  public var ICON_URL: String? { let o = _accessor.offset(VT.ICON_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ICON_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_URL) }
+  ///  `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.
+  public var SUPERSEDES_CONTENT_HASH: String? { let o = _accessor.offset(VT.SUPERSEDES_CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SUPERSEDES_CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SUPERSEDES_CONTENT_HASH) }
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of
+  ///  the last change to this entry.
+  public var UPDATED_AT: String? { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UPDATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATED_AT) }
+  ///  Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+  ///  is the ONLY sanctioned way to group an offering: a client grouping a
+  ///  catalogue MUST read this field and MUST NOT infer family from the shape
+  ///  of `MODULE_ID`, which carries no normative structure. Defaults to
+  ///  `Unspecified`, which a client MUST render as ungrouped — never silently
+  ///  as `Sensor`. Present here, rather than only on
+  ///  the linked `$PLG`, so an anonymous client can section the catalogue at
+  ///  boot without fetching one `$PLG` per module.
+  public var PLUGIN_TYPE: pluginCategory { let o = _accessor.offset(VT.PLUGIN_TYPE); return o == 0 ? .unspecified : pluginCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  The one ratified `$CCT` category this module is shelved under. Mirrors
+  ///  `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+  ///  sanctioned way to group an offering: `pluginCategory` is single-valued,
+  ///  holds a real family at ordinal 0, mixes capability families with
+  ///  node-internal plumbing, and carries a deprecated vendor-derived member.
+  ///  Present here, rather than only on the linked `$PLG`, so an anonymous
+  ///  client can section the catalogue at boot without fetching one `$PLG` per
+  ///  module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+  ///
+  ///  SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+  ///  statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+  ///  `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+  ///  resting on a signed content hash. A consumer that shelves, filters or
+  ///  counts by this field MUST NOT present the resulting grouping as
+  ///  authenticated, and MUST keep the verified identity (`MODULE_ID`,
+  ///  `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+  ///  from provider-supplied presentation. Extending the canonical statement to
+  ///  cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+  ///  every verifier in lockstep and is not made implicitly by adopting this
+  ///  field.
+  public var PRIMARY_CATEGORY: capabilityClass { let o = _accessor.offset(VT.PRIMARY_CATEGORY); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Every ratified `$CCT` category this module belongs to, for browse, filter
+  ///  and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+  ///  include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+  ///  PRIMARY_CATEGORY.
+  public var CATEGORIES: FlatbufferVector<capabilityClass> { return _accessor.vector(at: VT.CATEGORIES, byteSize: 1) }
+  public static func startPMMModuleEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VT.PLUGIN_ID) }
+  public static func add(PLG_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLG_CID, at: VT.PLG_CID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(PARENT: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARENT.rawValue, def: 0, at: VT.PARENT) }
-  public static func add(SORT_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SORT_ORDER, def: 0, at: VT.SORT_ORDER) }
-  public static func addVectorOf(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VT.KEYWORDS) }
-  public static func add(ICON_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_KEY, at: VT.ICON_KEY) }
-  public static func endCCTCategory(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10]); return end }
-  public static func createCCTCategory(
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(EPOCH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0, at: VT.EPOCH) }
+  public static func add(CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_HASH, at: VT.CONTENT_HASH) }
+  public static func add(ARTIFACT_SIZE_BYTES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARTIFACT_SIZE_BYTES, def: 0, at: VT.ARTIFACT_SIZE_BYTES) }
+  public static func add(ARTIFACT_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARTIFACT_PATH, at: VT.ARTIFACT_PATH) }
+  public static func add(ARTIFACT_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARTIFACT_CID, at: VT.ARTIFACT_CID) }
+  public static func addVectorOf(ARTIFACT_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARTIFACT_SIGNATURE, at: VT.ARTIFACT_SIGNATURE) }
+  public static func add(TRUST_TIER: pmmTrustTier, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUST_TIER.rawValue, def: 0, at: VT.TRUST_TIER) }
+  public static func add(DEFAULT_ENABLED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_ENABLED, def: false,
+   at: VT.DEFAULT_ENABLED) }
+  public static func add(ACCESS_POLICY: pmmAccessPolicy, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCESS_POLICY.rawValue, def: 1, at: VT.ACCESS_POLICY) }
+  public static func add(ENTRY_STATE: pmmEntryState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTRY_STATE.rawValue, def: 0, at: VT.ENTRY_STATE) }
+  public static func addVectorOf(RUNTIME_TARGETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RUNTIME_TARGETS, at: VT.RUNTIME_TARGETS) }
+  public static func addVectorOf(REQUIRED_SCHEMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUIRED_SCHEMAS, at: VT.REQUIRED_SCHEMAS) }
+  public static func addVectorOf(MIN_PERMISSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MIN_PERMISSIONS, at: VT.MIN_PERMISSIONS) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(DOCUMENTATION_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOCUMENTATION_URL, at: VT.DOCUMENTATION_URL) }
+  public static func add(ICON_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_URL, at: VT.ICON_URL) }
+  public static func add(SUPERSEDES_CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUPERSEDES_CONTENT_HASH, at: VT.SUPERSEDES_CONTENT_HASH) }
+  public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
+  public static func add(PLUGIN_TYPE: pluginCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLUGIN_TYPE.rawValue, def: 21, at: VT.PLUGIN_TYPE) }
+  public static func add(PRIMARY_CATEGORY: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_CATEGORY.rawValue, def: 0, at: VT.PRIMARY_CATEGORY) }
+  public static func addVectorOf(CATEGORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORIES, at: VT.CATEGORIES) }
+  public static func endPMMModuleEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPMMModuleEntry(
     _ fbb: inout FlatBufferBuilder,
-    CODE: capabilityClass = .unspecified,
-    DISPLAY_NAMEOffset DISPLAY_NAME: Offset,
-    SUMMARYOffset SUMMARY: Offset,
-    SLUGOffset SLUG: Offset,
+    MODULE_IDOffset MODULE_ID: Offset,
+    PLUGIN_IDOffset PLUGIN_ID: Offset = Offset(),
+    PLG_CIDOffset PLG_CID: Offset = Offset(),
+    NAMEOffset NAME: Offset = Offset(),
     DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    PARENT: capabilityClass = .unspecified,
-    SORT_ORDER: UInt16 = 0,
-    KEYWORDSVectorOffset KEYWORDS: Offset = Offset(),
-    ICON_KEYOffset ICON_KEY: Offset = Offset()
+    VERSIONOffset VERSION: Offset = Offset(),
+    EPOCH: UInt64 = 0,
+    CONTENT_HASHOffset CONTENT_HASH: Offset = Offset(),
+    ARTIFACT_SIZE_BYTES: UInt64 = 0,
+    ARTIFACT_PATHOffset ARTIFACT_PATH: Offset = Offset(),
+    ARTIFACT_CIDOffset ARTIFACT_CID: Offset = Offset(),
+    ARTIFACT_SIGNATUREVectorOffset ARTIFACT_SIGNATURE: Offset = Offset(),
+    TRUST_TIER: pmmTrustTier = .unspecified,
+    DEFAULT_ENABLED: Bool = false,
+    ACCESS_POLICY: pmmAccessPolicy = .authenticated,
+    ENTRY_STATE: pmmEntryState = .active,
+    RUNTIME_TARGETSVectorOffset RUNTIME_TARGETS: Offset = Offset(),
+    REQUIRED_SCHEMASVectorOffset REQUIRED_SCHEMAS: Offset = Offset(),
+    MIN_PERMISSIONSVectorOffset MIN_PERMISSIONS: Offset = Offset(),
+    LICENSEOffset LICENSE: Offset = Offset(),
+    DOCUMENTATION_URLOffset DOCUMENTATION_URL: Offset = Offset(),
+    ICON_URLOffset ICON_URL: Offset = Offset(),
+    SUPERSEDES_CONTENT_HASHOffset SUPERSEDES_CONTENT_HASH: Offset = Offset(),
+    UPDATED_ATOffset UPDATED_AT: Offset = Offset(),
+    PLUGIN_TYPE: pluginCategory = .unspecified,
+    PRIMARY_CATEGORY: capabilityClass = .unspecified,
+    CATEGORIESVectorOffset CATEGORIES: Offset = Offset()
   ) -> Offset {
-    let __start = CCTCategory.startCCTCategory(&fbb)
-    CCTCategory.add(CODE: CODE, &fbb)
-    CCTCategory.add(DISPLAY_NAME: DISPLAY_NAME, &fbb)
-    CCTCategory.add(SUMMARY: SUMMARY, &fbb)
-    CCTCategory.add(SLUG: SLUG, &fbb)
-    CCTCategory.add(DESCRIPTION: DESCRIPTION, &fbb)
-    CCTCategory.add(PARENT: PARENT, &fbb)
-    CCTCategory.add(SORT_ORDER: SORT_ORDER, &fbb)
-    CCTCategory.addVectorOf(KEYWORDS: KEYWORDS, &fbb)
-    CCTCategory.add(ICON_KEY: ICON_KEY, &fbb)
-    return CCTCategory.endCCTCategory(&fbb, start: __start)
+    let __start = PMMModuleEntry.startPMMModuleEntry(&fbb)
+    PMMModuleEntry.add(MODULE_ID: MODULE_ID, &fbb)
+    PMMModuleEntry.add(PLUGIN_ID: PLUGIN_ID, &fbb)
+    PMMModuleEntry.add(PLG_CID: PLG_CID, &fbb)
+    PMMModuleEntry.add(NAME: NAME, &fbb)
+    PMMModuleEntry.add(DESCRIPTION: DESCRIPTION, &fbb)
+    PMMModuleEntry.add(VERSION: VERSION, &fbb)
+    PMMModuleEntry.add(EPOCH: EPOCH, &fbb)
+    PMMModuleEntry.add(CONTENT_HASH: CONTENT_HASH, &fbb)
+    PMMModuleEntry.add(ARTIFACT_SIZE_BYTES: ARTIFACT_SIZE_BYTES, &fbb)
+    PMMModuleEntry.add(ARTIFACT_PATH: ARTIFACT_PATH, &fbb)
+    PMMModuleEntry.add(ARTIFACT_CID: ARTIFACT_CID, &fbb)
+    PMMModuleEntry.addVectorOf(ARTIFACT_SIGNATURE: ARTIFACT_SIGNATURE, &fbb)
+    PMMModuleEntry.add(TRUST_TIER: TRUST_TIER, &fbb)
+    PMMModuleEntry.add(DEFAULT_ENABLED: DEFAULT_ENABLED, &fbb)
+    PMMModuleEntry.add(ACCESS_POLICY: ACCESS_POLICY, &fbb)
+    PMMModuleEntry.add(ENTRY_STATE: ENTRY_STATE, &fbb)
+    PMMModuleEntry.addVectorOf(RUNTIME_TARGETS: RUNTIME_TARGETS, &fbb)
+    PMMModuleEntry.addVectorOf(REQUIRED_SCHEMAS: REQUIRED_SCHEMAS, &fbb)
+    PMMModuleEntry.addVectorOf(MIN_PERMISSIONS: MIN_PERMISSIONS, &fbb)
+    PMMModuleEntry.add(LICENSE: LICENSE, &fbb)
+    PMMModuleEntry.add(DOCUMENTATION_URL: DOCUMENTATION_URL, &fbb)
+    PMMModuleEntry.add(ICON_URL: ICON_URL, &fbb)
+    PMMModuleEntry.add(SUPERSEDES_CONTENT_HASH: SUPERSEDES_CONTENT_HASH, &fbb)
+    PMMModuleEntry.add(UPDATED_AT: UPDATED_AT, &fbb)
+    PMMModuleEntry.add(PLUGIN_TYPE: PLUGIN_TYPE, &fbb)
+    PMMModuleEntry.add(PRIMARY_CATEGORY: PRIMARY_CATEGORY, &fbb)
+    PMMModuleEntry.addVectorOf(CATEGORIES: CATEGORIES, &fbb)
+    return PMMModuleEntry.endPMMModuleEntry(&fbb, start: __start)
+  }
+  public static func sortVectorOfPmmmoduleEntry(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
+    var off = offsets
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
+    return fbb.createVector(ofOffsets: off)
+  }
+  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> PMMModuleEntry? {
+    let key = key.utf8.map { $0 }
+    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
+    var start: Int32 = 0
+    while span != 0 {
+      var middle = span / 2
+      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
+      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
+      if comp > 0 {
+        span = middle
+      } else if comp < 0 {
+        middle += 1
+        start += middle
+        span -= middle
+      } else {
+        return PMMModuleEntry(fbb, o: tableOffset)
+      }
+    }
+    return nil
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUMMARY, fieldName: "SUMMARY", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SLUG, fieldName: "SLUG", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLUGIN_ID, fieldName: "PLUGIN_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLG_CID, fieldName: "PLG_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PARENT, fieldName: "PARENT", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.SORT_ORDER, fieldName: "SORT_ORDER", required: false, type: UInt16.self)
-    try _v.visit(field: VT.KEYWORDS, fieldName: "KEYWORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.ICON_KEY, fieldName: "ICON_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CONTENT_HASH, fieldName: "CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ARTIFACT_SIZE_BYTES, fieldName: "ARTIFACT_SIZE_BYTES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.ARTIFACT_PATH, fieldName: "ARTIFACT_PATH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ARTIFACT_CID, fieldName: "ARTIFACT_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ARTIFACT_SIGNATURE, fieldName: "ARTIFACT_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TRUST_TIER, fieldName: "TRUST_TIER", required: false, type: pmmTrustTier.self)
+    try _v.visit(field: VT.DEFAULT_ENABLED, fieldName: "DEFAULT_ENABLED", required: false, type: Bool.self)
+    try _v.visit(field: VT.ACCESS_POLICY, fieldName: "ACCESS_POLICY", required: false, type: pmmAccessPolicy.self)
+    try _v.visit(field: VT.ENTRY_STATE, fieldName: "ENTRY_STATE", required: false, type: pmmEntryState.self)
+    try _v.visit(field: VT.RUNTIME_TARGETS, fieldName: "RUNTIME_TARGETS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.REQUIRED_SCHEMAS, fieldName: "REQUIRED_SCHEMAS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MIN_PERMISSIONS, fieldName: "MIN_PERMISSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DOCUMENTATION_URL, fieldName: "DOCUMENTATION_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ICON_URL, fieldName: "ICON_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUPERSEDES_CONTENT_HASH, fieldName: "SUPERSEDES_CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLUGIN_TYPE, fieldName: "PLUGIN_TYPE", required: false, type: pluginCategory.self)
+    try _v.visit(field: VT.PRIMARY_CATEGORY, fieldName: "PRIMARY_CATEGORY", required: false, type: capabilityClass.self)
+    try _v.visit(field: VT.CATEGORIES, fieldName: "CATEGORIES", required: false, type: ForwardOffset<Vector<capabilityClass, capabilityClass>>.self)
     _v.finish()
   }
 }
 
-///  An observed count of catalogue items in one category.
-///
-///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
-///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
-///  count can never omit when it was taken or what it was taken over. A consumer
-///  that needs a live number computes it from the items; a consumer rendering a
-///  published rollup MUST show it as of COUNTED_AT.
-public struct CCTCategoryRollup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Provider Module Manifest — what one provider node offers, signed by that
+///  node's key.
+public struct PMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategoryRollup.id, addPrefix: prefix) }
+  public static var id: String { "$PMM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PMM.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE: VOffset = 4
-    static let ITEM_COUNT: VOffset = 6
-    static let SOURCE_CATALOG_ID: VOffset = 8
-    static let COUNTED_AT: VOffset = 10
+    static let PROVIDER_DOMAIN: VOffset = 4
+    static let PROVIDER_NAME: VOffset = 6
+    static let DESCRIPTION: VOffset = 8
+    static let EPOCH: VOffset = 10
+    static let TRUST: VOffset = 12
+    static let MODULES: VOffset = 14
+    static let CANONICAL_URL: VOffset = 16
+    static let CREATED_AT: VOffset = 18
+    static let UPDATED_AT: VOffset = 20
+    static let EXPIRES_AT: VOffset = 22
+    static let SIGNATURE: VOffset = 24
+    static let SIGNED_STATEMENT: VOffset = 26
   }
 
-  ///  Category being counted.
-  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
-  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
-  public var ITEM_COUNT: UInt32 { let o = _accessor.offset(VT.ITEM_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Identifier of the catalogue the count was taken over.
-  public var SOURCE_CATALOG_ID: String! { let o = _accessor.offset(VT.SOURCE_CATALOG_ID); return _accessor.string(at: o) }
-  public var SOURCE_CATALOG_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE_CATALOG_ID) }
-  ///  Unix seconds when the count was taken.
-  public var COUNTED_AT: UInt64 { let o = _accessor.offset(VT.COUNTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startCCTCategoryRollup(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
-  public static func add(ITEM_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITEM_COUNT, def: 0, at: VT.ITEM_COUNT) }
-  public static func add(SOURCE_CATALOG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CATALOG_ID, at: VT.SOURCE_CATALOG_ID) }
-  public static func add(COUNTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNTED_AT, def: 0, at: VT.COUNTED_AT) }
-  public static func endCCTCategoryRollup(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8]); return end }
-  public static func createCCTCategoryRollup(
-    _ fbb: inout FlatBufferBuilder,
-    CODE: capabilityClass = .unspecified,
-    ITEM_COUNT: UInt32 = 0,
-    SOURCE_CATALOG_IDOffset SOURCE_CATALOG_ID: Offset,
-    COUNTED_AT: UInt64 = 0
-  ) -> Offset {
-    let __start = CCTCategoryRollup.startCCTCategoryRollup(&fbb)
-    CCTCategoryRollup.add(CODE: CODE, &fbb)
-    CCTCategoryRollup.add(ITEM_COUNT: ITEM_COUNT, &fbb)
-    CCTCategoryRollup.add(SOURCE_CATALOG_ID: SOURCE_CATALOG_ID, &fbb)
-    CCTCategoryRollup.add(COUNTED_AT: COUNTED_AT, &fbb)
-    return CCTCategoryRollup.endCCTCategoryRollup(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.ITEM_COUNT, fieldName: "ITEM_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.SOURCE_CATALOG_ID, fieldName: "SOURCE_CATALOG_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.COUNTED_AT, fieldName: "COUNTED_AT", required: false, type: UInt64.self)
-    _v.finish()
-  }
-}
-
-///  $CCT — Capability Category Taxonomy.
-///
-///  The ratified set of capability classes that distributable units (modules,
-///  applications, composed flows) are classified under, together with the labels
-///  and routes every consuming surface renders. One published $CCT is the single
-///  source of truth shared by a storefront, a library, a search index and the
-///  unit manifests themselves.
-///
-///  Division of labour: `$CCT` = the category vocabulary and its presentation;
-///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
-///  application's manifest, which cites categories by code; `$PMM` = which
-///  modules a provider serves; `$STO`/`$STF` = commerce.
-public struct CCT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCT.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let TAXONOMY_ID: VOffset = 4
-    static let VERSION: VOffset = 6
-    static let ISSUED_AT: VOffset = 8
-    static let TITLE: VOffset = 10
-    static let CATEGORIES: VOffset = 12
-    static let ROLLUPS: VOffset = 14
-    static let SIGNATURE: VOffset = 16
-  }
-
-  ///  Stable identifier of this taxonomy publication.
-  public var TAXONOMY_ID: String! { let o = _accessor.offset(VT.TAXONOMY_ID); return _accessor.string(at: o) }
-  public var TAXONOMY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TAXONOMY_ID) }
-  ///  SemVer 2.0.0 version of the taxonomy content.
-  public var VERSION: String! { let o = _accessor.offset(VT.VERSION); return _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERSION) }
-  ///  Unix seconds when this taxonomy revision was issued.
-  public var ISSUED_AT: UInt64 { let o = _accessor.offset(VT.ISSUED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Human-readable title of the taxonomy.
-  public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
-  ///  The ratified categories. Every capabilityClass member a consumer may
-  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
-  public var CATEGORIES: FlatbufferVector<CCTCategory> { return _accessor.vector(at: VT.CATEGORIES, byteSize: 4) }
-  ///  Optional per-category item counts as observed over a named catalogue.
-  ///  Absent means counts are computed by the consumer.
-  public var ROLLUPS: FlatbufferVector<CCTCategoryRollup> { return _accessor.vector(at: VT.ROLLUPS, byteSize: 4) }
-  ///  Signature from the publishing node key over the canonical taxonomy bytes.
+  ///  Domain of the provider, e.g. "node.example.org". Required. MUST equal
+  ///  the origin the manifest was served from.
+  public var PROVIDER_DOMAIN: String! { let o = _accessor.offset(VT.PROVIDER_DOMAIN); return _accessor.string(at: o) }
+  public var PROVIDER_DOMAINSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PROVIDER_DOMAIN) }
+  ///  Display name of the provider.
+  public var PROVIDER_NAME: String? { let o = _accessor.offset(VT.PROVIDER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_NAME) }
+  ///  Human-readable summary of what the provider serves.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  Monotonic manifest epoch. A client MUST reject an epoch lower than the
+  ///  highest it has already verified for `PROVIDER_DOMAIN`.
+  public var EPOCH: UInt64 { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  The key identity and its external anchors.
+  public var TRUST: PMMTrustAnchor? { let o = _accessor.offset(VT.TRUST); return o == 0 ? nil : PMMTrustAnchor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  The offered modules.
+  public var MODULES: FlatbufferVector<PMMModuleEntry> { return _accessor.vector(at: VT.MODULES, byteSize: 4) }
+  public func MODULESBy(key: String) -> PMMModuleEntry? { let o = _accessor.offset(VT.MODULES); return o == 0 ? nil : PMMModuleEntry.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
+  ///  Canonical absolute URL this manifest is served from.
+  public var CANONICAL_URL: String? { let o = _accessor.offset(VT.CANONICAL_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CANONICAL_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CANONICAL_URL) }
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  when the manifest was created.
+  public var CREATED_AT: String? { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATED_AT) }
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  when the manifest was last signed.
+  public var UPDATED_AT: String? { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UPDATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATED_AT) }
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  after which a verifier MUST refuse anonymous CORE loading from this
+  ///  manifest and re-fetch. Required in practice for anonymous trust: an
+  ///  unexpiring signed manifest cannot be withdrawn.
+  public var EXPIRES_AT: String? { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXPIRES_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXPIRES_AT) }
+  ///  Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement
+  ///  defined in this file's header.
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
-  public static func startCCT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(TAXONOMY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAXONOMY_ID, at: VT.TAXONOMY_ID) }
-  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
-  public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VT.ISSUED_AT) }
-  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
-  public static func addVectorOf(CATEGORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORIES, at: VT.CATEGORIES) }
-  public static func addVectorOf(ROLLUPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLLUPS, at: VT.ROLLUPS) }
+  ///  The canonical statement, verbatim. A verifier MUST rebuild it from this
+  ///  record and reject any difference.
+  public var SIGNED_STATEMENT: String? { let o = _accessor.offset(VT.SIGNED_STATEMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNED_STATEMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNED_STATEMENT) }
+  public static func startPMM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(PROVIDER_DOMAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DOMAIN, at: VT.PROVIDER_DOMAIN) }
+  public static func add(PROVIDER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_NAME, at: VT.PROVIDER_NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(EPOCH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0, at: VT.EPOCH) }
+  public static func add(TRUST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRUST, at: VT.TRUST) }
+  public static func addVectorOf(MODULES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULES, at: VT.MODULES) }
+  public static func add(CANONICAL_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_URL, at: VT.CANONICAL_URL) }
+  public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VT.CREATED_AT) }
+  public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
+  public static func add(EXPIRES_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXPIRES_AT, at: VT.EXPIRES_AT) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
-  public static func endCCT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 12]); return end }
-  public static func createCCT(
+  public static func add(SIGNED_STATEMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNED_STATEMENT, at: VT.SIGNED_STATEMENT) }
+  public static func endPMM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPMM(
     _ fbb: inout FlatBufferBuilder,
-    TAXONOMY_IDOffset TAXONOMY_ID: Offset,
-    VERSIONOffset VERSION: Offset,
-    ISSUED_AT: UInt64 = 0,
-    TITLEOffset TITLE: Offset = Offset(),
-    CATEGORIESVectorOffset CATEGORIES: Offset,
-    ROLLUPSVectorOffset ROLLUPS: Offset = Offset(),
-    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
+    PROVIDER_DOMAINOffset PROVIDER_DOMAIN: Offset,
+    PROVIDER_NAMEOffset PROVIDER_NAME: Offset = Offset(),
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    EPOCH: UInt64 = 0,
+    TRUSTOffset TRUST: Offset = Offset(),
+    MODULESVectorOffset MODULES: Offset = Offset(),
+    CANONICAL_URLOffset CANONICAL_URL: Offset = Offset(),
+    CREATED_ATOffset CREATED_AT: Offset = Offset(),
+    UPDATED_ATOffset UPDATED_AT: Offset = Offset(),
+    EXPIRES_ATOffset EXPIRES_AT: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset(),
+    SIGNED_STATEMENTOffset SIGNED_STATEMENT: Offset = Offset()
   ) -> Offset {
-    let __start = CCT.startCCT(&fbb)
-    CCT.add(TAXONOMY_ID: TAXONOMY_ID, &fbb)
-    CCT.add(VERSION: VERSION, &fbb)
-    CCT.add(ISSUED_AT: ISSUED_AT, &fbb)
-    CCT.add(TITLE: TITLE, &fbb)
-    CCT.addVectorOf(CATEGORIES: CATEGORIES, &fbb)
-    CCT.addVectorOf(ROLLUPS: ROLLUPS, &fbb)
-    CCT.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
-    return CCT.endCCT(&fbb, start: __start)
+    let __start = PMM.startPMM(&fbb)
+    PMM.add(PROVIDER_DOMAIN: PROVIDER_DOMAIN, &fbb)
+    PMM.add(PROVIDER_NAME: PROVIDER_NAME, &fbb)
+    PMM.add(DESCRIPTION: DESCRIPTION, &fbb)
+    PMM.add(EPOCH: EPOCH, &fbb)
+    PMM.add(TRUST: TRUST, &fbb)
+    PMM.addVectorOf(MODULES: MODULES, &fbb)
+    PMM.add(CANONICAL_URL: CANONICAL_URL, &fbb)
+    PMM.add(CREATED_AT: CREATED_AT, &fbb)
+    PMM.add(UPDATED_AT: UPDATED_AT, &fbb)
+    PMM.add(EXPIRES_AT: EXPIRES_AT, &fbb)
+    PMM.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    PMM.add(SIGNED_STATEMENT: SIGNED_STATEMENT, &fbb)
+    return PMM.endPMM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TAXONOMY_ID, fieldName: "TAXONOMY_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ISSUED_AT, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CATEGORIES, fieldName: "CATEGORIES", required: true, type: ForwardOffset<Vector<ForwardOffset<CCTCategory>, CCTCategory>>.self)
-    try _v.visit(field: VT.ROLLUPS, fieldName: "ROLLUPS", required: false, type: ForwardOffset<Vector<ForwardOffset<CCTCategoryRollup>, CCTCategoryRollup>>.self)
+    try _v.visit(field: VT.PROVIDER_DOMAIN, fieldName: "PROVIDER_DOMAIN", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_NAME, fieldName: "PROVIDER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TRUST, fieldName: "TRUST", required: false, type: ForwardOffset<PMMTrustAnchor>.self)
+    try _v.visit(field: VT.MODULES, fieldName: "MODULES", required: false, type: ForwardOffset<Vector<ForwardOffset<PMMModuleEntry>, PMMModuleEntry>>.self)
+    try _v.visit(field: VT.CANONICAL_URL, fieldName: "CANONICAL_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SIGNED_STATEMENT, fieldName: "SIGNED_STATEMENT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -8,260 +8,273 @@ import Common
 
 import FlatBuffers
 
-///  Peer Registry Record - Durable trusted-peer registry state for an SDN node.
-///
-///  PRR records describe one libp2p peer entry in a node's local peer registry.
-///  The current registry is a projection over the latest PRR records by PEER_ID,
-///  with deleted records acting as tombstones.
-public enum peerRegistryTrustCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Account Record (ACT)
+///  Description
+///  A node-local operator account, a signed-in session, a sign-in challenge or
+///  an external wallet link, keyed by the extended public key the operator
+///  proves control of. Sign-in is a challenge the node issues and a signature
+///  the operator returns over it; a session is the node's record of a verified
+///  signature until EXPIRES_AT. Key slots list the derivation paths the node
+///  uses for each purpose key so an operator can see and rotate them. A record
+///  never carries private key material.
+///  Role of the record. Append new values only; never reorder or reuse
+///  existing values.
+public enum actKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case untrusted = 0
-  case limited = 1
-  case standard = 2
-  case trusted = 3
-  case admin = 4
+  case operator_ = 0
+  case session = 1
+  case challenge = 2
+  case externallink = 3
 
-  public static var max: peerRegistryTrustCategory { return .admin }
-  public static var min: peerRegistryTrustCategory { return .untrusted }
+  public static var max: actKind { return .externallink }
+  public static var min: actKind { return .operator_ }
 }
 
 
-///  String metadata key/value attached to a peer registry entry.
-public struct PRRMetadataEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One purpose-key slot of an operator.
+public struct ACTKeySlot: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRR" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRRMetadataEntry.id, addPrefix: prefix) }
+  public static var id: String { "$ACT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ACTKeySlot.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let KEY: VOffset = 4
-    static let VALUE: VOffset = 6
+    static let SLOT: VOffset = 4
+    static let KEY_PATH: VOffset = 6
+    static let NEXT_PATH: VOffset = 8
+    static let ROTATABLE: VOffset = 10
+    static let ALGORITHM: VOffset = 12
   }
 
-  ///  Metadata key.
-  public var KEY: String? { let o = _accessor.offset(VT.KEY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY) }
-  ///  Metadata value.
-  public var VALUE: String? { let o = _accessor.offset(VT.VALUE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALUE) }
-  public static func startPRRMetadataEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY, at: VT.KEY) }
-  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VT.VALUE) }
-  public static func endPRRMetadataEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPRRMetadataEntry(
+  ///  Slot name, e.g. "signing", "encryption", "publication".
+  public var SLOT: String? { let o = _accessor.offset(VT.SLOT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SLOTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SLOT) }
+  ///  Derivation path currently in use.
+  public var KEY_PATH: String? { let o = _accessor.offset(VT.KEY_PATH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_PATH) }
+  ///  Derivation path the next rotation will use.
+  public var NEXT_PATH: String? { let o = _accessor.offset(VT.NEXT_PATH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NEXT_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NEXT_PATH) }
+  public var ROTATABLE: Bool { let o = _accessor.offset(VT.ROTATABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Key algorithm, e.g. "secp256k1", "ed25519", "x25519".
+  public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
+  public static func startACTKeySlot(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(SLOT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLOT, at: VT.SLOT) }
+  public static func add(KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_PATH, at: VT.KEY_PATH) }
+  public static func add(NEXT_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NEXT_PATH, at: VT.NEXT_PATH) }
+  public static func add(ROTATABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATABLE, def: false,
+   at: VT.ROTATABLE) }
+  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VT.ALGORITHM) }
+  public static func endACTKeySlot(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createACTKeySlot(
     _ fbb: inout FlatBufferBuilder,
-    KEYOffset KEY: Offset = Offset(),
-    VALUEOffset VALUE: Offset = Offset()
+    SLOTOffset SLOT: Offset = Offset(),
+    KEY_PATHOffset KEY_PATH: Offset = Offset(),
+    NEXT_PATHOffset NEXT_PATH: Offset = Offset(),
+    ROTATABLE: Bool = false,
+    ALGORITHMOffset ALGORITHM: Offset = Offset()
   ) -> Offset {
-    let __start = PRRMetadataEntry.startPRRMetadataEntry(&fbb)
-    PRRMetadataEntry.add(KEY: KEY, &fbb)
-    PRRMetadataEntry.add(VALUE: VALUE, &fbb)
-    return PRRMetadataEntry.endPRRMetadataEntry(&fbb, start: __start)
+    let __start = ACTKeySlot.startACTKeySlot(&fbb)
+    ACTKeySlot.add(SLOT: SLOT, &fbb)
+    ACTKeySlot.add(KEY_PATH: KEY_PATH, &fbb)
+    ACTKeySlot.add(NEXT_PATH: NEXT_PATH, &fbb)
+    ACTKeySlot.add(ROTATABLE: ROTATABLE, &fbb)
+    ACTKeySlot.add(ALGORITHM: ALGORITHM, &fbb)
+    return ACTKeySlot.endACTKeySlot(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.KEY, fieldName: "KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SLOT, fieldName: "SLOT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KEY_PATH, fieldName: "KEY_PATH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NEXT_PATH, fieldName: "NEXT_PATH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROTATABLE, fieldName: "ROTATABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-public struct PRR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Account Record - operator, session, challenge or external link.
+public struct ACT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRR" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRR.id, addPrefix: prefix) }
+  public static var id: String { "$ACT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ACT.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let PEER_ID: VOffset = 4
-    static let MULTIFORMAT_ADDRESS: VOffset = 6
-    static let TRUST_LEVEL: VOffset = 8
-    static let NAME: VOffset = 10
-    static let ORGANIZATION: VOffset = 12
-    static let GROUPS: VOffset = 14
-    static let NOTES: VOffset = 16
-    static let ADDED_AT: VOffset = 18
-    static let LAST_SEEN: VOffset = 20
-    static let LAST_CONNECTED: VOffset = 22
-    static let CONNECTION_COUNT: VOffset = 24
-    static let MESSAGES_RECEIVED: VOffset = 26
-    static let MESSAGES_SENT: VOffset = 28
-    static let BYTES_RECEIVED: VOffset = 30
-    static let BYTES_SENT: VOffset = 32
-    static let EPM_DATA: VOffset = 34
-    static let VCARD_DATA: VOffset = 36
-    static let METADATA: VOffset = 38
-    static let UPDATED_AT: VOffset = 40
-    static let DELETED: VOffset = 42
-    static let PROVIDER_PEER_ID: VOffset = 44
-    static let PROVIDER_SIGNATURE: VOffset = 46
+    static let ACCOUNT_ID: VOffset = 4
+    static let KIND: VOffset = 6
+    static let XPUB: VOffset = 8
+    static let XPUB_FINGERPRINT: VOffset = 10
+    static let NAME: VOffset = 12
+    static let TRUST_LEVEL: VOffset = 14
+    static let SIGNING_PUBLIC_KEY: VOffset = 16
+    static let EPM_CID: VOffset = 18
+    static let PEER_ID: VOffset = 20
+    static let CREATED_AT: VOffset = 22
+    static let LAST_SEEN: VOffset = 24
+    static let EXPIRES_AT: VOffset = 26
+    static let CHALLENGE_ID: VOffset = 28
+    static let CHALLENGE: VOffset = 30
+    static let SIGNATURE: VOffset = 32
+    static let SIGNATURE_TYPE: VOffset = 34
+    static let EXTERNAL_CHAIN: VOffset = 36
+    static let EXTERNAL_ADDRESS: VOffset = 38
+    static let LINKED: VOffset = 40
+    static let KEY_SLOTS: VOffset = 42
   }
 
-  ///  libp2p peer ID.
-  public var PEER_ID: String! { let o = _accessor.offset(VT.PEER_ID); return _accessor.string(at: o) }
-  public var PEER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PEER_ID) }
-  ///  Known libp2p/IPFS multiaddresses for this peer.
-  public var MULTIFORMAT_ADDRESS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MULTIFORMAT_ADDRESS, byteSize: 4) }
-  ///  Trust level assigned to this peer by the local registry.
-  public var TRUST_LEVEL: peerRegistryTrustCategory { let o = _accessor.offset(VT.TRUST_LEVEL); return o == 0 ? .standard : peerRegistryTrustCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .standard }
-  ///  Optional display name.
+  public var ACCOUNT_ID: String? { let o = _accessor.offset(VT.ACCOUNT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ACCOUNT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACCOUNT_ID) }
+  public var KIND: actKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .operator_ : actKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .operator_ }
+  ///  Extended public key the operator proves control of.
+  public var XPUB: String? { let o = _accessor.offset(VT.XPUB); return o == 0 ? nil : _accessor.string(at: o) }
+  public var XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.XPUB) }
+  ///  Fingerprint of XPUB.
+  public var XPUB_FINGERPRINT: String? { let o = _accessor.offset(VT.XPUB_FINGERPRINT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var XPUB_FINGERPRINTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.XPUB_FINGERPRINT) }
   public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Optional organization name.
-  public var ORGANIZATION: String? { let o = _accessor.offset(VT.ORGANIZATION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORGANIZATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORGANIZATION) }
-  ///  Peer group names this peer belongs to.
-  public var GROUPS: FlatbufferVector<String?> { return _accessor.vector(at: VT.GROUPS, byteSize: 4) }
-  ///  Operator notes for this peer.
-  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
-  ///  Unix timestamp in milliseconds when this peer was added.
-  public var ADDED_AT: UInt64 { let o = _accessor.offset(VT.ADDED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Unix timestamp in milliseconds when this peer was last observed.
-  public var LAST_SEEN: UInt64 { let o = _accessor.offset(VT.LAST_SEEN); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Unix timestamp in milliseconds when this peer last connected.
-  public var LAST_CONNECTED: UInt64 { let o = _accessor.offset(VT.LAST_CONNECTED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Number of successful connections observed by this node.
-  public var CONNECTION_COUNT: UInt64 { let o = _accessor.offset(VT.CONNECTION_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Number of messages received from this peer.
-  public var MESSAGES_RECEIVED: UInt64 { let o = _accessor.offset(VT.MESSAGES_RECEIVED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Number of messages sent to this peer.
-  public var MESSAGES_SENT: UInt64 { let o = _accessor.offset(VT.MESSAGES_SENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Number of bytes received from this peer.
-  public var BYTES_RECEIVED: UInt64 { let o = _accessor.offset(VT.BYTES_RECEIVED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Number of bytes sent to this peer.
-  public var BYTES_SENT: UInt64 { let o = _accessor.offset(VT.BYTES_SENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Optional EPM.fbs bytes for the peer identity profile.
-  public var EPM_DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.EPM_DATA, byteSize: 1) }
-  public func withUnsafePointerToEpmData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.EPM_DATA, body: body) }
-  ///  Optional vCard projection for compatibility views.
-  public var VCARD_DATA: String? { let o = _accessor.offset(VT.VCARD_DATA); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VCARD_DATASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VCARD_DATA) }
-  ///  Additional peer metadata as string key/value entries.
-  public var METADATA: FlatbufferVector<PRRMetadataEntry> { return _accessor.vector(at: VT.METADATA, byteSize: 4) }
-  ///  Unix timestamp in milliseconds when this registry record was last updated.
-  public var UPDATED_AT: UInt64 { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  True when this record tombstones the peer from the current registry.
-  public var DELETED: Bool { let o = _accessor.offset(VT.DELETED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Peer ID of the node/provider that issued this registry record.
-  public var PROVIDER_PEER_ID: String? { let o = _accessor.offset(VT.PROVIDER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROVIDER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_PEER_ID) }
-  ///  Provider signature over the peer registry record.
-  public var PROVIDER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PROVIDER_SIGNATURE, byteSize: 1) }
-  public func withUnsafePointerToProviderSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PROVIDER_SIGNATURE, body: body) }
-  public static func startPRR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
-  public static func add(PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PEER_ID, at: VT.PEER_ID) }
-  public static func addVectorOf(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VT.MULTIFORMAT_ADDRESS) }
-  public static func add(TRUST_LEVEL: peerRegistryTrustCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUST_LEVEL.rawValue, def: 2, at: VT.TRUST_LEVEL) }
+  public var TRUST_LEVEL: peerRegistryTrustCategory { let o = _accessor.offset(VT.TRUST_LEVEL); return o == 0 ? .untrusted : peerRegistryTrustCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .untrusted }
+  public var SIGNING_PUBLIC_KEY: String? { let o = _accessor.offset(VT.SIGNING_PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNING_PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNING_PUBLIC_KEY) }
+  ///  Content identifier of the operator's identity record.
+  public var EPM_CID: String? { let o = _accessor.offset(VT.EPM_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPM_CID) }
+  ///  Peer identifier the account is bound to.
+  public var PEER_ID: String? { let o = _accessor.offset(VT.PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PEER_ID) }
+  ///  Unix milliseconds.
+  public var CREATED_AT: Int64 { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Unix milliseconds; 0 = never.
+  public var LAST_SEEN: Int64 { let o = _accessor.offset(VT.LAST_SEEN); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Unix milliseconds a session or challenge expires; 0 = none.
+  public var EXPIRES_AT: Int64 { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var CHALLENGE_ID: String? { let o = _accessor.offset(VT.CHALLENGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHALLENGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHALLENGE_ID) }
+  ///  Challenge text the operator signs.
+  public var CHALLENGE: String? { let o = _accessor.offset(VT.CHALLENGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHALLENGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHALLENGE) }
+  ///  Signature over CHALLENGE.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  ///  Signature scheme identifier.
+  public var SIGNATURE_TYPE: String? { let o = _accessor.offset(VT.SIGNATURE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE_TYPE) }
+  ///  External chain identifier of a linked wallet (CAIP-2 form).
+  public var EXTERNAL_CHAIN: String? { let o = _accessor.offset(VT.EXTERNAL_CHAIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTERNAL_CHAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTERNAL_CHAIN) }
+  ///  External address of a linked wallet.
+  public var EXTERNAL_ADDRESS: String? { let o = _accessor.offset(VT.EXTERNAL_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTERNAL_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTERNAL_ADDRESS) }
+  ///  True when the external link has been verified.
+  public var LINKED: Bool { let o = _accessor.offset(VT.LINKED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var KEY_SLOTS: FlatbufferVector<ACTKeySlot> { return _accessor.vector(at: VT.KEY_SLOTS, byteSize: 4) }
+  public static func startACT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  public static func add(ACCOUNT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCOUNT_ID, at: VT.ACCOUNT_ID) }
+  public static func add(KIND: actKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPUB, at: VT.XPUB) }
+  public static func add(XPUB_FINGERPRINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPUB_FINGERPRINT, at: VT.XPUB_FINGERPRINT) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(ORGANIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORGANIZATION, at: VT.ORGANIZATION) }
-  public static func addVectorOf(GROUPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUPS, at: VT.GROUPS) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
-  public static func add(ADDED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADDED_AT, def: 0, at: VT.ADDED_AT) }
-  public static func add(LAST_SEEN: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_SEEN, def: 0, at: VT.LAST_SEEN) }
-  public static func add(LAST_CONNECTED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_CONNECTED, def: 0, at: VT.LAST_CONNECTED) }
-  public static func add(CONNECTION_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONNECTION_COUNT, def: 0, at: VT.CONNECTION_COUNT) }
-  public static func add(MESSAGES_RECEIVED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGES_RECEIVED, def: 0, at: VT.MESSAGES_RECEIVED) }
-  public static func add(MESSAGES_SENT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGES_SENT, def: 0, at: VT.MESSAGES_SENT) }
-  public static func add(BYTES_RECEIVED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTES_RECEIVED, def: 0, at: VT.BYTES_RECEIVED) }
-  public static func add(BYTES_SENT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTES_SENT, def: 0, at: VT.BYTES_SENT) }
-  public static func addVectorOf(EPM_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPM_DATA, at: VT.EPM_DATA) }
-  public static func add(VCARD_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VCARD_DATA, at: VT.VCARD_DATA) }
-  public static func addVectorOf(METADATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA, at: VT.METADATA) }
-  public static func add(UPDATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT, def: 0, at: VT.UPDATED_AT) }
-  public static func add(DELETED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELETED, def: false,
-   at: VT.DELETED) }
-  public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
-  public static func addVectorOf(PROVIDER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_SIGNATURE, at: VT.PROVIDER_SIGNATURE) }
-  public static func endPRR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createPRR(
+  public static func add(TRUST_LEVEL: peerRegistryTrustCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUST_LEVEL.rawValue, def: 0, at: VT.TRUST_LEVEL) }
+  public static func add(SIGNING_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNING_PUBLIC_KEY, at: VT.SIGNING_PUBLIC_KEY) }
+  public static func add(EPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPM_CID, at: VT.EPM_CID) }
+  public static func add(PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PEER_ID, at: VT.PEER_ID) }
+  public static func add(CREATED_AT: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREATED_AT, def: 0, at: VT.CREATED_AT) }
+  public static func add(LAST_SEEN: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_SEEN, def: 0, at: VT.LAST_SEEN) }
+  public static func add(EXPIRES_AT: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VT.EXPIRES_AT) }
+  public static func add(CHALLENGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHALLENGE_ID, at: VT.CHALLENGE_ID) }
+  public static func add(CHALLENGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHALLENGE, at: VT.CHALLENGE) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VT.SIGNATURE_TYPE) }
+  public static func add(EXTERNAL_CHAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_CHAIN, at: VT.EXTERNAL_CHAIN) }
+  public static func add(EXTERNAL_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_ADDRESS, at: VT.EXTERNAL_ADDRESS) }
+  public static func add(LINKED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINKED, def: false,
+   at: VT.LINKED) }
+  public static func addVectorOf(KEY_SLOTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_SLOTS, at: VT.KEY_SLOTS) }
+  public static func endACT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createACT(
     _ fbb: inout FlatBufferBuilder,
-    PEER_IDOffset PEER_ID: Offset,
-    MULTIFORMAT_ADDRESSVectorOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
-    TRUST_LEVEL: peerRegistryTrustCategory = .standard,
+    ACCOUNT_IDOffset ACCOUNT_ID: Offset = Offset(),
+    KIND: actKind = .operator_,
+    XPUBOffset XPUB: Offset = Offset(),
+    XPUB_FINGERPRINTOffset XPUB_FINGERPRINT: Offset = Offset(),
     NAMEOffset NAME: Offset = Offset(),
-    ORGANIZATIONOffset ORGANIZATION: Offset = Offset(),
-    GROUPSVectorOffset GROUPS: Offset = Offset(),
-    NOTESOffset NOTES: Offset = Offset(),
-    ADDED_AT: UInt64 = 0,
-    LAST_SEEN: UInt64 = 0,
-    LAST_CONNECTED: UInt64 = 0,
-    CONNECTION_COUNT: UInt64 = 0,
-    MESSAGES_RECEIVED: UInt64 = 0,
-    MESSAGES_SENT: UInt64 = 0,
-    BYTES_RECEIVED: UInt64 = 0,
-    BYTES_SENT: UInt64 = 0,
-    EPM_DATAVectorOffset EPM_DATA: Offset = Offset(),
-    VCARD_DATAOffset VCARD_DATA: Offset = Offset(),
-    METADATAVectorOffset METADATA: Offset = Offset(),
-    UPDATED_AT: UInt64 = 0,
-    DELETED: Bool = false,
-    PROVIDER_PEER_IDOffset PROVIDER_PEER_ID: Offset = Offset(),
-    PROVIDER_SIGNATUREVectorOffset PROVIDER_SIGNATURE: Offset = Offset()
+    TRUST_LEVEL: peerRegistryTrustCategory = .untrusted,
+    SIGNING_PUBLIC_KEYOffset SIGNING_PUBLIC_KEY: Offset = Offset(),
+    EPM_CIDOffset EPM_CID: Offset = Offset(),
+    PEER_IDOffset PEER_ID: Offset = Offset(),
+    CREATED_AT: Int64 = 0,
+    LAST_SEEN: Int64 = 0,
+    EXPIRES_AT: Int64 = 0,
+    CHALLENGE_IDOffset CHALLENGE_ID: Offset = Offset(),
+    CHALLENGEOffset CHALLENGE: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset(),
+    SIGNATURE_TYPEOffset SIGNATURE_TYPE: Offset = Offset(),
+    EXTERNAL_CHAINOffset EXTERNAL_CHAIN: Offset = Offset(),
+    EXTERNAL_ADDRESSOffset EXTERNAL_ADDRESS: Offset = Offset(),
+    LINKED: Bool = false,
+    KEY_SLOTSVectorOffset KEY_SLOTS: Offset = Offset()
   ) -> Offset {
-    let __start = PRR.startPRR(&fbb)
-    PRR.add(PEER_ID: PEER_ID, &fbb)
-    PRR.addVectorOf(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
-    PRR.add(TRUST_LEVEL: TRUST_LEVEL, &fbb)
-    PRR.add(NAME: NAME, &fbb)
-    PRR.add(ORGANIZATION: ORGANIZATION, &fbb)
-    PRR.addVectorOf(GROUPS: GROUPS, &fbb)
-    PRR.add(NOTES: NOTES, &fbb)
-    PRR.add(ADDED_AT: ADDED_AT, &fbb)
-    PRR.add(LAST_SEEN: LAST_SEEN, &fbb)
-    PRR.add(LAST_CONNECTED: LAST_CONNECTED, &fbb)
-    PRR.add(CONNECTION_COUNT: CONNECTION_COUNT, &fbb)
-    PRR.add(MESSAGES_RECEIVED: MESSAGES_RECEIVED, &fbb)
-    PRR.add(MESSAGES_SENT: MESSAGES_SENT, &fbb)
-    PRR.add(BYTES_RECEIVED: BYTES_RECEIVED, &fbb)
-    PRR.add(BYTES_SENT: BYTES_SENT, &fbb)
-    PRR.addVectorOf(EPM_DATA: EPM_DATA, &fbb)
-    PRR.add(VCARD_DATA: VCARD_DATA, &fbb)
-    PRR.addVectorOf(METADATA: METADATA, &fbb)
-    PRR.add(UPDATED_AT: UPDATED_AT, &fbb)
-    PRR.add(DELETED: DELETED, &fbb)
-    PRR.add(PROVIDER_PEER_ID: PROVIDER_PEER_ID, &fbb)
-    PRR.addVectorOf(PROVIDER_SIGNATURE: PROVIDER_SIGNATURE, &fbb)
-    return PRR.endPRR(&fbb, start: __start)
+    let __start = ACT.startACT(&fbb)
+    ACT.add(ACCOUNT_ID: ACCOUNT_ID, &fbb)
+    ACT.add(KIND: KIND, &fbb)
+    ACT.add(XPUB: XPUB, &fbb)
+    ACT.add(XPUB_FINGERPRINT: XPUB_FINGERPRINT, &fbb)
+    ACT.add(NAME: NAME, &fbb)
+    ACT.add(TRUST_LEVEL: TRUST_LEVEL, &fbb)
+    ACT.add(SIGNING_PUBLIC_KEY: SIGNING_PUBLIC_KEY, &fbb)
+    ACT.add(EPM_CID: EPM_CID, &fbb)
+    ACT.add(PEER_ID: PEER_ID, &fbb)
+    ACT.add(CREATED_AT: CREATED_AT, &fbb)
+    ACT.add(LAST_SEEN: LAST_SEEN, &fbb)
+    ACT.add(EXPIRES_AT: EXPIRES_AT, &fbb)
+    ACT.add(CHALLENGE_ID: CHALLENGE_ID, &fbb)
+    ACT.add(CHALLENGE: CHALLENGE, &fbb)
+    ACT.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    ACT.add(SIGNATURE_TYPE: SIGNATURE_TYPE, &fbb)
+    ACT.add(EXTERNAL_CHAIN: EXTERNAL_CHAIN, &fbb)
+    ACT.add(EXTERNAL_ADDRESS: EXTERNAL_ADDRESS, &fbb)
+    ACT.add(LINKED: LINKED, &fbb)
+    ACT.addVectorOf(KEY_SLOTS: KEY_SLOTS, &fbb)
+    return ACT.endACT(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.PEER_ID, fieldName: "PEER_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MULTIFORMAT_ADDRESS, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.TRUST_LEVEL, fieldName: "TRUST_LEVEL", required: false, type: peerRegistryTrustCategory.self)
+    try _v.visit(field: VT.ACCOUNT_ID, fieldName: "ACCOUNT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: actKind.self)
+    try _v.visit(field: VT.XPUB, fieldName: "XPUB", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.XPUB_FINGERPRINT, fieldName: "XPUB_FINGERPRINT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ORGANIZATION, fieldName: "ORGANIZATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GROUPS, fieldName: "GROUPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ADDED_AT, fieldName: "ADDED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.LAST_SEEN, fieldName: "LAST_SEEN", required: false, type: UInt64.self)
-    try _v.visit(field: VT.LAST_CONNECTED, fieldName: "LAST_CONNECTED", required: false, type: UInt64.self)
-    try _v.visit(field: VT.CONNECTION_COUNT, fieldName: "CONNECTION_COUNT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.MESSAGES_RECEIVED, fieldName: "MESSAGES_RECEIVED", required: false, type: UInt64.self)
-    try _v.visit(field: VT.MESSAGES_SENT, fieldName: "MESSAGES_SENT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.BYTES_RECEIVED, fieldName: "BYTES_RECEIVED", required: false, type: UInt64.self)
-    try _v.visit(field: VT.BYTES_SENT, fieldName: "BYTES_SENT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.EPM_DATA, fieldName: "EPM_DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.VCARD_DATA, fieldName: "VCARD_DATA", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.METADATA, fieldName: "METADATA", required: false, type: ForwardOffset<Vector<ForwardOffset<PRRMetadataEntry>, PRRMetadataEntry>>.self)
-    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.DELETED, fieldName: "DELETED", required: false, type: Bool.self)
-    try _v.visit(field: VT.PROVIDER_PEER_ID, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PROVIDER_SIGNATURE, fieldName: "PROVIDER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TRUST_LEVEL, fieldName: "TRUST_LEVEL", required: false, type: peerRegistryTrustCategory.self)
+    try _v.visit(field: VT.SIGNING_PUBLIC_KEY, fieldName: "SIGNING_PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPM_CID, fieldName: "EPM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PEER_ID, fieldName: "PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: Int64.self)
+    try _v.visit(field: VT.LAST_SEEN, fieldName: "LAST_SEEN", required: false, type: Int64.self)
+    try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: Int64.self)
+    try _v.visit(field: VT.CHALLENGE_ID, fieldName: "CHALLENGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHALLENGE, fieldName: "CHALLENGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SIGNATURE_TYPE, fieldName: "SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTERNAL_CHAIN, fieldName: "EXTERNAL_CHAIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTERNAL_ADDRESS, fieldName: "EXTERNAL_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINKED, fieldName: "LINKED", required: false, type: Bool.self)
+    try _v.visit(field: VT.KEY_SLOTS, fieldName: "KEY_SLOTS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACTKeySlot>, ACTKeySlot>>.self)
     _v.finish()
   }
 }

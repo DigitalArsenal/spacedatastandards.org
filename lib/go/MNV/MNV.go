@@ -7,6 +7,12 @@ import (
 )
 
 /// Spacecraft Maneuver
+///
+/// U, V and W are the UVW axes of an orbit state: U radial, along the position
+/// vector away from the central body; W cross-track, along the orbit normal
+/// (the direction of r x v); V in-track, W x U, completing the right-handed
+/// frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+/// pre-maneuver state at EVENT_START_TIME.
 type MNV struct {
 	_tab flatbuffers.Table
 }
@@ -290,7 +296,8 @@ func (rcv *MNV) OrigSensorId() []byte {
 }
 
 /// Original sensor identifier
-/// Maneuver event identifier
+/// Maneuver event identifier. Records of one event share it: a merged event
+/// and the source records it combines.
 func (rcv *MNV) EVENT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -303,7 +310,8 @@ func (rcv *MNV) EventId() []byte {
 	return rcv.EVENT_ID()
 }
 
-/// Maneuver event identifier
+/// Maneuver event identifier. Records of one event share it: a merged event
+/// and the source records it combines.
 /// True if object is uncorrelated
 func (rcv *MNV) UCT() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
@@ -370,7 +378,7 @@ func (rcv *MNV) MutateDeltaVel(n float64) bool {
 	return rcv.MutateDELTA_VEL(n)
 }
 
-/// Delta-V along-track/U component (km/s)
+/// Delta-V along U, radial (km/s)
 func (rcv *MNV) DELTA_VEL_U() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -383,7 +391,7 @@ func (rcv *MNV) DeltaVelU() float64 {
 	return rcv.DELTA_VEL_U()
 }
 
-/// Delta-V along-track/U component (km/s)
+/// Delta-V along U, radial (km/s)
 func (rcv *MNV) MutateDELTA_VEL_U(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
@@ -392,7 +400,7 @@ func (rcv *MNV) MutateDeltaVelU(n float64) bool {
 	return rcv.MutateDELTA_VEL_U(n)
 }
 
-/// Delta-V cross-track/V component (km/s)
+/// Delta-V along V, in-track (km/s)
 func (rcv *MNV) DELTA_VEL_V() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
@@ -405,7 +413,7 @@ func (rcv *MNV) DeltaVelV() float64 {
 	return rcv.DELTA_VEL_V()
 }
 
-/// Delta-V cross-track/V component (km/s)
+/// Delta-V along V, in-track (km/s)
 func (rcv *MNV) MutateDELTA_VEL_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
 }
@@ -414,7 +422,7 @@ func (rcv *MNV) MutateDeltaVelV(n float64) bool {
 	return rcv.MutateDELTA_VEL_V(n)
 }
 
-/// Delta-V radial/W component (km/s)
+/// Delta-V along W, cross-track (km/s)
 func (rcv *MNV) DELTA_VEL_W() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
@@ -427,7 +435,7 @@ func (rcv *MNV) DeltaVelW() float64 {
 	return rcv.DELTA_VEL_W()
 }
 
-/// Delta-V radial/W component (km/s)
+/// Delta-V along W, cross-track (km/s)
 func (rcv *MNV) MutateDELTA_VEL_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
 }
@@ -458,7 +466,7 @@ func (rcv *MNV) MutateDeltaPos(n float64) bool {
 	return rcv.MutateDELTA_POS(n)
 }
 
-/// Delta position U component (km)
+/// Delta position along U, radial (km)
 func (rcv *MNV) DELTA_POS_U() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -471,7 +479,7 @@ func (rcv *MNV) DeltaPosU() float64 {
 	return rcv.DELTA_POS_U()
 }
 
-/// Delta position U component (km)
+/// Delta position along U, radial (km)
 func (rcv *MNV) MutateDELTA_POS_U(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
@@ -480,7 +488,7 @@ func (rcv *MNV) MutateDeltaPosU(n float64) bool {
 	return rcv.MutateDELTA_POS_U(n)
 }
 
-/// Delta position V component (km)
+/// Delta position along V, in-track (km)
 func (rcv *MNV) DELTA_POS_V() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
@@ -493,7 +501,7 @@ func (rcv *MNV) DeltaPosV() float64 {
 	return rcv.DELTA_POS_V()
 }
 
-/// Delta position V component (km)
+/// Delta position along V, in-track (km)
 func (rcv *MNV) MutateDELTA_POS_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
@@ -502,7 +510,7 @@ func (rcv *MNV) MutateDeltaPosV(n float64) bool {
 	return rcv.MutateDELTA_POS_V(n)
 }
 
-/// Delta position W component (km)
+/// Delta position along W, cross-track (km)
 func (rcv *MNV) DELTA_POS_W() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
@@ -515,7 +523,7 @@ func (rcv *MNV) DeltaPosW() float64 {
 	return rcv.DELTA_POS_W()
 }
 
-/// Delta position W component (km)
+/// Delta position along W, cross-track (km)
 func (rcv *MNV) MutateDELTA_POS_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
@@ -775,7 +783,8 @@ func (rcv *MNV) MnvrAccelTimesLength() int {
 }
 
 /// Acceleration profile times (ISO 8601)
-/// Acceleration values (km/s^2, 3 components per point)
+/// Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+/// the state at that point's MNVR_ACCEL_TIMES entry
 func (rcv *MNV) MNVR_ACCELS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
@@ -801,7 +810,8 @@ func (rcv *MNV) MnvrAccelsLength() int {
 	return rcv.MNVR_ACCELSLength()
 }
 
-/// Acceleration values (km/s^2, 3 components per point)
+/// Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+/// the state at that point's MNVR_ACCEL_TIMES entry
 func (rcv *MNV) MutateMNVR_ACCELS(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
@@ -924,7 +934,9 @@ func (rcv *MNV) TagsLength() int {
 }
 
 /// Associated tags
-/// Sourced data references
+/// Sourced data references: identifiers of the records this one was
+/// determined from (CIDv1 for records of this network), such as the source
+/// records a merged event combines
 func (rcv *MNV) SOURCED_DATA(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
@@ -950,7 +962,9 @@ func (rcv *MNV) SourcedDataLength() int {
 	return rcv.SOURCED_DATALength()
 }
 
-/// Sourced data references
+/// Sourced data references: identifiers of the records this one was
+/// determined from (CIDv1 for records of this network), such as the source
+/// records a merged event combines
 /// Sourced data types
 func (rcv *MNV) SOURCED_DATA_TYPES() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
@@ -979,8 +993,27 @@ func (rcv *MNV) TransactionId() []byte {
 }
 
 /// Transaction identifier
+/// Where the maneuver's data comes from and the terms it travels under.
+func (rcv *MNV) PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *MNV) Provenance(obj *PVN) *PVN {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Where the maneuver's data comes from and the terms it travels under.
 func MNVStart(builder *flatbuffers.Builder) {
-	builder.StartObject(45)
+	builder.StartObject(46)
 }
 func MNVAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -1287,6 +1320,12 @@ func MNVAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffe
 }
 func MNVAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	MNVAddTRANSACTION_ID(builder, TRANSACTION_ID)
+}
+func MNVAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func MNVAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	MNVAddPROVENANCE(builder, PROVENANCE)
 }
 func MNVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

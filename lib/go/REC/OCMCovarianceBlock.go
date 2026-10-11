@@ -301,8 +301,43 @@ func (rcv *OCMCovarianceBlock) LinesLength() int {
 }
 
 /// The data lines, as written.
+/// Realism of the block's covariance: one entry per line of LINES, in order,
+/// or one entry for every line.
+func (rcv *OCMCovarianceBlock) COV_REALISM(obj *CVR, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CVR)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OCMCovarianceBlock) CovRealism(obj *CVR, j int) bool {
+	return rcv.COV_REALISM(obj, j)
+}
+
+func (rcv *OCMCovarianceBlock) COV_REALISMLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCMCovarianceBlock) CovRealismLength() int {
+	return rcv.COV_REALISMLength()
+}
+
+/// Realism of the block's covariance: one entry per line of LINES, in order,
+/// or one entry for every line.
 func OCMCovarianceBlockStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(16)
 }
 func OCMCovarianceBlockAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -399,6 +434,18 @@ func OCMCovarianceBlockStartLINESVector(builder *flatbuffers.Builder, numElems i
 }
 func OCMCovarianceBlockStartLinesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OCMCovarianceBlockStartLINESVector(builder, numElems)
+}
+func OCMCovarianceBlockAddCOV_REALISM(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(COV_REALISM), 0)
+}
+func OCMCovarianceBlockAddCovRealism(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
+	OCMCovarianceBlockAddCOV_REALISM(builder, COV_REALISM)
+}
+func OCMCovarianceBlockStartCOV_REALISMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OCMCovarianceBlockStartCovRealismVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMCovarianceBlockStartCOV_REALISMVector(builder, numElems)
 }
 func OCMCovarianceBlockEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

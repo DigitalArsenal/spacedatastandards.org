@@ -464,22 +464,38 @@ class OMM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Where the element set comes from and the terms it travels under.
+    public function getPROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(90);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Realism of COVARIANCE.
+    public function getCOV_REALISM()
+    {
+        $obj = new CVR();
+        $o = $this->__offset(92);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOMM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(43);
+        $builder->StartObject(45);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OMM
      */
-    public static function createOMM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $MEAN_ELEMENT_THEORY, $COMMENT, $EPOCH, $SEMI_MAJOR_AXIS, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $EPHEMERIS_TYPE, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $COVARIANCE, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS, $CLASSIFICATION, $MESSAGE_ID, $USER_DEFINED_PARAMETERS)
+    public static function createOMM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $MEAN_ELEMENT_THEORY, $COMMENT, $EPOCH, $SEMI_MAJOR_AXIS, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $EPHEMERIS_TYPE, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $COVARIANCE, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS, $CLASSIFICATION, $MESSAGE_ID, $USER_DEFINED_PARAMETERS, $PROVENANCE, $COV_REALISM)
     {
-        $builder->startObject(43);
+        $builder->startObject(45);
         self::addCCSDS_OMM_VERS($builder, $CCSDS_OMM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -523,6 +539,8 @@ class OMM extends Table
         self::addCLASSIFICATION($builder, $CLASSIFICATION);
         self::addMESSAGE_ID($builder, $MESSAGE_ID);
         self::addUSER_DEFINED_PARAMETERS($builder, $USER_DEFINED_PARAMETERS);
+        self::addPROVENANCE($builder, $PROVENANCE);
+        self::addCOV_REALISM($builder, $COV_REALISM);
         $o = $builder->endObject();
         return $o;
     }
@@ -1003,6 +1021,26 @@ class OMM extends Table
     public static function startUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(43, $PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_REALISM(FlatBufferBuilder $builder, $COV_REALISM)
+    {
+        $builder->addOffsetX(44, $COV_REALISM, 0);
     }
 
     /**

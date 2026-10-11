@@ -1,0 +1,73 @@
+// Hash: 904856f84e3767926806d10f5fa47a3f53767bfc054793da697428e1ecfc9e3a
+// Version: 1.245.0
+// -----------------------------------END_HEADER
+// Product Provenance (PVN)
+//
+// Where a data product comes from and the terms it travels under: the source it
+// was made from and that source's originator, the provider that published it,
+// the software that made it, the class of its licence and the lineage its data
+// descends from. A product carries its PVN as PROVENANCE ($OMM, $OCM, $MNV); a
+// PVN on its own describes one source.
+//
+// Unknown terms are never a grant: a product whose LICENSE_CLASS is Unspecified
+// is computed on and cited, never republished.
+
+/// What kind of data a source supplies.
+enum pvnSourceKind : byte {
+  /// Not stated
+  Unspecified,
+  /// Element sets of a catalog
+  ElementSet,
+  /// Ephemerides: states over time, from an operator or a precise-orbit service
+  Ephemeris,
+  /// Observations (ranges, angles, other measurements) that states are
+  /// estimated from
+  Observation
+}
+
+/// What the terms of a product's source permit.
+enum pvnLicenseClass : byte {
+  /// Not stated. Never a grant: treated as CiteOnly.
+  Unspecified,
+  /// The records may be republished, with the credit the terms ask.
+  Reproducible,
+  /// The records are computed on and cited, never republished.
+  CiteOnly,
+  /// The records may be republished under the same terms, which every derived
+  /// record carries.
+  ShareAlike,
+  /// The records may be republished for non-commercial use only.
+  NonCommercial
+}
+
+/// Product Provenance
+table PVN {
+  /// Publisher-stable, lowercase identifier of the source in the provider's
+  /// registry of sources.
+  SOURCE_ID: string;
+  /// What kind of data the source supplies.
+  SOURCE_KIND: pvnSourceKind = Unspecified;
+  /// Agency, operator or catalog that created the source data, as it names
+  /// itself. Not a message's CCSDS ORIGINATOR, which names who created the
+  /// message.
+  ORIGINATOR: string;
+  /// Identifier of the provider that published the product, as the provider
+  /// names itself: the module, node or service that retrieved the source data.
+  PROVIDER_ID: string;
+  /// Identifier of the software that made the product from the source data,
+  /// with its version when it has one.
+  PRODUCER: string;
+  /// What the source's terms permit for the product.
+  LICENSE_CLASS: pvnLicenseClass = Unspecified;
+  /// Identifier of the terms LICENSE_CLASS was read from: an SPDX license
+  /// identifier where one applies, else the identifier of the terms in the
+  /// provider's licence register.
+  LICENSE_ID: string;
+  /// Identifier of the lineage the source's data descends from. Sources that
+  /// republish one upstream share its lineage, so their products are not
+  /// independent of each other.
+  LINEAGE: string;
+}
+
+root_type PVN;
+file_identifier "$PVN";

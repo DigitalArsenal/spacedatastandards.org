@@ -435,8 +435,32 @@ class OMM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         return o == 0
 
+    # Where the element set comes from and the terms it travels under.
+    # OMM
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Realism of COVARIANCE.
+    # OMM
+    def COV_REALISM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CVR import CVR
+            obj = CVR()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def OMMStart(builder):
-    builder.StartObject(43)
+    builder.StartObject(45)
 
 def Start(builder):
     OMMStart(builder)
@@ -727,13 +751,27 @@ def OMMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
 def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
     return OMMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
 
+def OMMAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    OMMAddPROVENANCE(builder, PROVENANCE)
+
+def OMMAddCOV_REALISM(builder, COV_REALISM):
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REALISM), 0)
+
+def AddCOV_REALISM(builder, COV_REALISM):
+    OMMAddCOV_REALISM(builder, COV_REALISM)
+
 def OMMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return OMMEnd(builder)
 
+import CVR
 import OMMUserDefinedParameter
+import PVN
 import RFM
 try:
     from typing import List, Optional
@@ -788,6 +826,8 @@ class OMMT(object):
         CLASSIFICATION = None,
         MESSAGE_ID = None,
         USER_DEFINED_PARAMETERS = None,
+        PROVENANCE = None,
+        COV_REALISM = None,
     ):
         self.CCSDS_OMM_VERS = CCSDS_OMM_VERS  # type: float
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
@@ -832,6 +872,8 @@ class OMMT(object):
         self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
         self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
         self.USER_DEFINED_PARAMETERS = USER_DEFINED_PARAMETERS  # type: Optional[List[OMMUserDefinedParameter.OMMUserDefinedParameterT]]
+        self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
+        self.COV_REALISM = COV_REALISM  # type: Optional[CVR.CVRT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -912,6 +954,10 @@ class OMMT(object):
                 else:
                     oMMUserDefinedParameter_ = OMMUserDefinedParameter.OMMUserDefinedParameterT.InitFromObj(OMM.USER_DEFINED_PARAMETERS(i))
                     self.USER_DEFINED_PARAMETERS.append(oMMUserDefinedParameter_)
+        if OMM.PROVENANCE() is not None:
+            self.PROVENANCE = PVN.PVNT.InitFromObj(OMM.PROVENANCE())
+        if OMM.COV_REALISM() is not None:
+            self.COV_REALISM = CVR.CVRT.InitFromObj(OMM.COV_REALISM())
 
     # OMMT
     def Pack(self, builder):
@@ -961,6 +1007,10 @@ class OMMT(object):
             for i in reversed(range(len(self.USER_DEFINED_PARAMETERS))):
                 builder.PrependUOffsetTRelative(USER_DEFINED_PARAMETERSlist[i])
             USER_DEFINED_PARAMETERS = builder.EndVector()
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
+        if self.COV_REALISM is not None:
+            COV_REALISM = self.COV_REALISM.Pack(builder)
         OMMStart(builder)
         OMMAddCCSDS_OMM_VERS(builder, self.CCSDS_OMM_VERS)
         if self.CREATION_DATE is not None:
@@ -1022,5 +1072,9 @@ class OMMT(object):
             OMMAddMESSAGE_ID(builder, MESSAGE_ID)
         if self.USER_DEFINED_PARAMETERS is not None:
             OMMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+        if self.PROVENANCE is not None:
+            OMMAddPROVENANCE(builder, PROVENANCE)
+        if self.COV_REALISM is not None:
+            OMMAddCOV_REALISM(builder, COV_REALISM)
         OMM = OMMEnd(builder)
         return OMM

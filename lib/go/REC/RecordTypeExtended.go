@@ -16,16 +16,22 @@ type RecordTypeExtended uint16
 const (
 	RecordTypeExtendedNONE RecordTypeExtended = 0
 	RecordTypeExtendedABA  RecordTypeExtended = 256
+	RecordTypeExtendedCVR  RecordTypeExtended = 257
+	RecordTypeExtendedPVN  RecordTypeExtended = 258
 )
 
 var EnumNamesRecordTypeExtended = map[RecordTypeExtended]string{
 	RecordTypeExtendedNONE: "NONE",
 	RecordTypeExtendedABA:  "ABA",
+	RecordTypeExtendedCVR:  "CVR",
+	RecordTypeExtendedPVN:  "PVN",
 }
 
 var EnumValuesRecordTypeExtended = map[string]RecordTypeExtended{
 	"NONE": RecordTypeExtendedNONE,
 	"ABA":  RecordTypeExtendedABA,
+	"CVR":  RecordTypeExtendedCVR,
+	"PVN":  RecordTypeExtendedPVN,
 }
 
 func (v RecordTypeExtended) String() string {

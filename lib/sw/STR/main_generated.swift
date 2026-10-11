@@ -8,381 +8,459 @@ import Common
 
 import FlatBuffers
 
-///  Coarse spectral region a band belongs to, by effective wavelength.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbSpectralRegime: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Photon energy above 100 keV (wavelength below 0.0124 nm).
-  case gammaRay = 1
-  ///  10 keV to 100 keV (0.0124 nm to 0.124 nm).
-  case hardXRay = 2
-  ///  0.1 keV to 10 keV (0.124 nm to 12.4 nm).
-  case softXRay = 3
-  ///  12.4 nm to 91.2 nm.
-  case extremeUltraviolet = 4
-  ///  91.2 nm to 200 nm.
-  case farUltraviolet = 5
-  ///  200 nm to 380 nm.
-  case nearUltraviolet = 6
-  ///  380 nm to 750 nm.
-  case visible = 7
-  ///  0.75 um to 5 um.
-  case nearInfrared = 8
-  ///  5 um to 40 um.
-  case midInfrared = 9
-  ///  40 um to 350 um.
-  case farInfrared = 10
-  ///  350 um to 1 mm.
-  case submillimetre = 11
-  ///  1 mm to 10 cm (3 GHz to 300 GHz).
-  case microwave = 12
-  ///  Longer than 10 cm (below 3 GHz).
-  case radio = 13
-
-  public static var max: phbSpectralRegime { return .radio }
-  public static var min: phbSpectralRegime { return .unspecified }
-}
-
-
-///  Calibration system a magnitude is stated in.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbMagnitudeSystem: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Zero magnitude is the flux of the standard A0 V reference star.
-  case vega = 1
-  ///  Zero magnitude is a flux density of 3631 Jy per unit frequency.
-  case ab = 2
-  ///  Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit
-  ///  wavelength.
-  case st = 3
-  ///  Instrument-specific system; ZERO_POINT_JY states the calibration.
-  case instrumental = 4
-  ///  The value is not a magnitude (a flux, a count rate, a temperature).
-  case notAMagnitude = 5
-
-  public static var max: phbMagnitudeSystem { return .notAMagnitude }
-  public static var min: phbMagnitudeSystem { return .unspecified }
-}
-
-
-///  Physical quantity a measurement VALUE states.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbQuantity: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Magnitude in the band's SYSTEM.
-  case magnitude = 1
-  ///  Spectral flux density per unit frequency, janskys (1e-26 W m-2 Hz-1).
-  case fluxDensityJy = 2
-  ///  Band-integrated energy flux, W m-2.
-  case energyFluxWPerM2 = 3
-  ///  Band-integrated photon flux, photons m-2 s-1.
-  case photonFluxPerM2S = 4
-  ///  Detected count rate of the stated instrument, counts s-1.
-  case countRatePerS = 5
-  ///  Brightness temperature, kelvin.
-  case brightnessTemperatureK = 6
-
-  public static var max: phbQuantity { return .brightnessTemperatureK }
-  public static var min: phbQuantity { return .unspecified }
-}
-
-
-///  How a measurement was obtained.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbDerivation: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Observed in this band.
-  case measured = 1
-  ///  Converted from a measurement in another band or system by a stated
-  ///  transformation.
-  case transformed = 2
-  ///  Synthesised from a spectral energy distribution or a model atmosphere;
-  ///  never observed in this band.
-  case modelled = 3
-
-  public static var max: phbDerivation { return .modelled }
-  public static var min: phbDerivation { return .unspecified }
-}
-
-
-///  Whether a measurement is a detection or a bound.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbBoundKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  A detection: VALUE is the measured brightness.
-  case detection = 0
-  ///  Not detected: the source is fainter than VALUE (a flux upper limit, a
-  ///  magnitude lower bound).
-  case upperLimit = 1
-  ///  Saturated or confused: the source is at least as bright as VALUE.
-  case lowerLimit = 2
-
-  public static var max: phbBoundKind { return .lowerLimit }
-  public static var min: phbBoundKind { return .detection }
-}
-
-
-///  One source's brightness in one band.
-public struct PHBMeasurement: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Star Catalog Entry
+public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PHB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PHBMeasurement.id, addPrefix: prefix) }
+  public static var id: String { "$STR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: STR.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let BAND_ID: VOffset = 4
-    static let SPECTRAL_REGIME: VOffset = 6
-    static let WAVELENGTH_EFF_NM: VOffset = 8
-    static let QUANTITY: VOffset = 10
-    static let MAGNITUDE_SYSTEM: VOffset = 12
-    static let VALUE: VOffset = 14
-    static let UNCERTAINTY: VOffset = 16
-    static let BOUND: VOffset = 18
-    static let DERIVATION: VOffset = 20
-    static let EPOCH_MJD: VOffset = 22
-    static let OBSERVATION_COUNT: VOffset = 24
+    static let ID: VOffset = 4
+    static let CS_ID: VOffset = 6
+    static let GNC_CAT_ID: VOffset = 8
+    static let GAIADR3_CAT_ID: VOffset = 10
+    static let HIP_CAT_ID: VOffset = 12
+    static let CAT_VERSION: VOffset = 14
+    static let ASTROMETRY_ORIGIN: VOffset = 16
+    static let STAR_EPOCH: VOffset = 18
+    static let RA: VOffset = 20
+    static let RA_UNC: VOffset = 22
+    static let DEC: VOffset = 24
+    static let DEC_UNC: VOffset = 26
+    static let POS_UNC_FLAG: VOffset = 28
+    static let PARALLAX: VOffset = 30
+    static let PARALLAX_UNC: VOffset = 32
+    static let PMRA: VOffset = 34
+    static let PMRA_UNC: VOffset = 36
+    static let PMDEC: VOffset = 38
+    static let PMDEC_UNC: VOffset = 40
+    static let PM_UNC_FLAG: VOffset = 42
+    static let GMAG: VOffset = 44
+    static let GMAG_UNC: VOffset = 46
+    static let BPMAG: VOffset = 48
+    static let BPMAG_UNC: VOffset = 50
+    static let RPMAG: VOffset = 52
+    static let RPMAG_UNC: VOffset = 54
+    static let JMAG: VOffset = 56
+    static let JMAG_UNC: VOffset = 58
+    static let KMAG: VOffset = 60
+    static let KMAG_UNC: VOffset = 62
+    static let HMAG: VOffset = 64
+    static let HMAG_UNC: VOffset = 66
+    static let VAR_FLAG: VOffset = 68
+    static let MULT_FLAG: VOffset = 70
+    static let NEIGHBOR_ID: VOffset = 72
+    static let NEIGHBOR_FLAG: VOffset = 74
+    static let NEIGHBOR_DISTANCE: VOffset = 76
+    static let SHIFT_FLAG: VOffset = 78
+    static let SHIFT: VOffset = 80
+    static let TEFF: VOffset = 82
+    static let TEFF_UNC: VOffset = 84
+    static let LOGG: VOffset = 86
+    static let LOGG_UNC: VOffset = 88
+    static let METALLICITY: VOffset = 90
+    static let EXTINCTION_A0: VOffset = 92
+    static let RADIAL_VELOCITY: VOffset = 94
+    static let RADIAL_VELOCITY_UNC: VOffset = 96
+    static let SPECTRAL_TYPE: VOffset = 98
+    static let PROPER_NAME: VOffset = 100
+    static let BAYER_FLAMSTEED: VOffset = 102
+    static let CONSTELLATION: VOffset = 104
+    static let HR_CAT_ID: VOffset = 106
+    static let HD_CAT_ID: VOffset = 108
+    static let DESIGNATIONS: VOffset = 110
+    static let VARIABILITY_CLASS: VOffset = 112
+    static let VARIABILITY_PERIOD: VOffset = 114
+    static let VARIABILITY_AMPLITUDE: VOffset = 116
+    static let VARIABILITY_EPOCH: VOffset = 118
+    static let PHOTOMETRY: VOffset = 120
   }
 
-  ///  Band identifier; resolves to a `$PHB` BAND_ID.
-  public var BAND_ID: String? { let o = _accessor.offset(VT.BAND_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BAND_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BAND_ID) }
-  ///  Coarse region of the band, copied from its descriptor so a consumer
-  ///  can select a mode without resolving the band.
-  public var SPECTRAL_REGIME: phbSpectralRegime { let o = _accessor.offset(VT.SPECTRAL_REGIME); return o == 0 ? .unspecified : phbSpectralRegime(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Effective wavelength of the band, nanometres (vacuum). Copied from the
-  ///  descriptor; required for synthesis when the descriptor is not at hand.
-  public var WAVELENGTH_EFF_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_EFF_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Quantity VALUE states.
-  public var QUANTITY: phbQuantity { let o = _accessor.offset(VT.QUANTITY); return o == 0 ? .magnitude : phbQuantity(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .magnitude }
-  ///  Calibration system when QUANTITY is MAGNITUDE.
-  public var MAGNITUDE_SYSTEM: phbMagnitudeSystem { let o = _accessor.offset(VT.MAGNITUDE_SYSTEM); return o == 0 ? .unspecified : phbMagnitudeSystem(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  The measurement, in QUANTITY's units.
-  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  One-sigma uncertainty of VALUE, same units.
-  public var UNCERTAINTY: Double { let o = _accessor.offset(VT.UNCERTAINTY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Detection or bound.
-  public var BOUND: phbBoundKind { let o = _accessor.offset(VT.BOUND); return o == 0 ? .detection : phbBoundKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .detection }
-  ///  How the value was obtained.
-  public var DERIVATION: phbDerivation { let o = _accessor.offset(VT.DERIVATION); return o == 0 ? .unspecified : phbDerivation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Mid-time of the observation, Modified Julian Date (TT), for sources
-  ///  whose brightness varies. Absent for a catalogue mean.
-  public var EPOCH_MJD: Double { let o = _accessor.offset(VT.EPOCH_MJD); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of observations averaged into VALUE; 0 when unstated.
-  public var OBSERVATION_COUNT: UInt32 { let o = _accessor.offset(VT.OBSERVATION_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startPHBMeasurement(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(BAND_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND_ID, at: VT.BAND_ID) }
-  public static func add(SPECTRAL_REGIME: phbSpectralRegime, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECTRAL_REGIME.rawValue, def: 0, at: VT.SPECTRAL_REGIME) }
-  public static func add(WAVELENGTH_EFF_NM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WAVELENGTH_EFF_NM, def: .nan, at: VT.WAVELENGTH_EFF_NM) }
-  public static func add(QUANTITY: phbQuantity, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUANTITY.rawValue, def: 1, at: VT.QUANTITY) }
-  public static func add(MAGNITUDE_SYSTEM: phbMagnitudeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNITUDE_SYSTEM.rawValue, def: 0, at: VT.MAGNITUDE_SYSTEM) }
-  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: .nan, at: VT.VALUE) }
-  public static func add(UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNCERTAINTY, def: .nan, at: VT.UNCERTAINTY) }
-  public static func add(BOUND: phbBoundKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUND.rawValue, def: 0, at: VT.BOUND) }
-  public static func add(DERIVATION: phbDerivation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DERIVATION.rawValue, def: 0, at: VT.DERIVATION) }
-  public static func add(EPOCH_MJD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_MJD, def: .nan, at: VT.EPOCH_MJD) }
-  public static func add(OBSERVATION_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVATION_COUNT, def: 0, at: VT.OBSERVATION_COUNT) }
-  public static func endPHBMeasurement(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPHBMeasurement(
+  ///  Unique internal identifier
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
+  ///  Community satellite-tracking star catalog identifier
+  public var CS_ID: Int64 { let o = _accessor.offset(VT.CS_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  GNC star catalog identifier
+  public var GNC_CAT_ID: UInt32 { let o = _accessor.offset(VT.GNC_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Source identifier in the third data release of the all-sky space astrometry survey
+  public var GAIADR3_CAT_ID: Int64 { let o = _accessor.offset(VT.GAIADR3_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Identifier in the first space astrometry mission's main catalog
+  public var HIP_CAT_ID: UInt32 { let o = _accessor.offset(VT.HIP_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Catalog version string
+  public var CAT_VERSION: String? { let o = _accessor.offset(VT.CAT_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CAT_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CAT_VERSION) }
+  ///  Astrometry source description
+  public var ASTROMETRY_ORIGIN: String? { let o = _accessor.offset(VT.ASTROMETRY_ORIGIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ASTROMETRY_ORIGINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ASTROMETRY_ORIGIN) }
+  ///  Epoch of stellar position (Julian years)
+  public var STAR_EPOCH: Double { let o = _accessor.offset(VT.STAR_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension (degrees, ICRS)
+  public var RA: Double { let o = _accessor.offset(VT.RA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension uncertainty (arcseconds)
+  public var RA_UNC: Double { let o = _accessor.offset(VT.RA_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination (degrees, ICRS)
+  public var DEC: Double { let o = _accessor.offset(VT.DEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination uncertainty (arcseconds)
+  public var DEC_UNC: Double { let o = _accessor.offset(VT.DEC_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if position uncertainty is flagged
+  public var POS_UNC_FLAG: Bool { let o = _accessor.offset(VT.POS_UNC_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Parallax (milliarcseconds)
+  public var PARALLAX: Double { let o = _accessor.offset(VT.PARALLAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Parallax uncertainty (milliarcseconds)
+  public var PARALLAX_UNC: Double { let o = _accessor.offset(VT.PARALLAX_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Proper motion in RA (milliarcseconds/year)
+  public var PMRA: Double { let o = _accessor.offset(VT.PMRA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Proper motion in RA uncertainty (milliarcseconds/year)
+  public var PMRA_UNC: Double { let o = _accessor.offset(VT.PMRA_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Proper motion in DEC (milliarcseconds/year)
+  public var PMDEC: Double { let o = _accessor.offset(VT.PMDEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Proper motion in DEC uncertainty (milliarcseconds/year)
+  public var PMDEC_UNC: Double { let o = _accessor.offset(VT.PMDEC_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if proper motion uncertainty is flagged
+  public var PM_UNC_FLAG: Bool { let o = _accessor.offset(VT.PM_UNC_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Broad-band G magnitude of the space astrometry photometric system
+  public var GMAG: Double { let o = _accessor.offset(VT.GMAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  G-band magnitude uncertainty
+  public var GMAG_UNC: Double { let o = _accessor.offset(VT.GMAG_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  BP-band magnitude (blue prism photometer of the space astrometry system)
+  public var BPMAG: Double { let o = _accessor.offset(VT.BPMAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  BP-band magnitude uncertainty
+  public var BPMAG_UNC: Double { let o = _accessor.offset(VT.BPMAG_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RP-band magnitude (red prism photometer of the space astrometry system)
+  public var RPMAG: Double { let o = _accessor.offset(VT.RPMAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RP-band magnitude uncertainty
+  public var RPMAG_UNC: Double { let o = _accessor.offset(VT.RPMAG_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Near-infrared J-band magnitude (1.25 um)
+  public var JMAG: Double { let o = _accessor.offset(VT.JMAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  J-band magnitude uncertainty
+  public var JMAG_UNC: Double { let o = _accessor.offset(VT.JMAG_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Near-infrared Ks-band magnitude (2.17 um)
+  public var KMAG: Double { let o = _accessor.offset(VT.KMAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  K-band magnitude uncertainty
+  public var KMAG_UNC: Double { let o = _accessor.offset(VT.KMAG_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Near-infrared H-band magnitude (1.65 um)
+  public var HMAG: Double { let o = _accessor.offset(VT.HMAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  H-band magnitude uncertainty
+  public var HMAG_UNC: Double { let o = _accessor.offset(VT.HMAG_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if star is variable
+  public var VAR_FLAG: Bool { let o = _accessor.offset(VT.VAR_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if star is in a multiple system
+  public var MULT_FLAG: Bool { let o = _accessor.offset(VT.MULT_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Nearest neighbor catalog identifier
+  public var NEIGHBOR_ID: UInt32 { let o = _accessor.offset(VT.NEIGHBOR_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  True if nearest neighbor is within confusion radius
+  public var NEIGHBOR_FLAG: Bool { let o = _accessor.offset(VT.NEIGHBOR_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Distance to nearest neighbor (arcseconds)
+  public var NEIGHBOR_DISTANCE: Double { let o = _accessor.offset(VT.NEIGHBOR_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if position shift detected between catalogs
+  public var SHIFT_FLAG: Bool { let o = _accessor.offset(VT.SHIFT_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Position shift magnitude (arcseconds)
+  public var SHIFT: Double { let o = _accessor.offset(VT.SHIFT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Effective temperature (kelvin)
+  public var TEFF: Double { let o = _accessor.offset(VT.TEFF); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Effective temperature uncertainty (kelvin)
+  public var TEFF_UNC: Double { let o = _accessor.offset(VT.TEFF_UNC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Surface gravity, log10 of g in cm s^-2
+  public var LOGG: Double { let o = _accessor.offset(VT.LOGG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Surface gravity uncertainty (dex)
+  public var LOGG_UNC: Double { let o = _accessor.offset(VT.LOGG_UNC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Metallicity [M/H] (dex)
+  public var METALLICITY: Double { let o = _accessor.offset(VT.METALLICITY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Interstellar extinction at 541.4 nm, A0 (magnitudes)
+  public var EXTINCTION_A0: Double { let o = _accessor.offset(VT.EXTINCTION_A0); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Radial velocity, positive receding (km/s)
+  public var RADIAL_VELOCITY: Double { let o = _accessor.offset(VT.RADIAL_VELOCITY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Radial velocity uncertainty (km/s)
+  public var RADIAL_VELOCITY_UNC: Double { let o = _accessor.offset(VT.RADIAL_VELOCITY_UNC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Spectral type in the MK system, e.g. "A1 V"
+  public var SPECTRAL_TYPE: String? { let o = _accessor.offset(VT.SPECTRAL_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SPECTRAL_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPECTRAL_TYPE) }
+  ///  Proper name as recognised by the astronomical naming authority
+  public var PROPER_NAME: String? { let o = _accessor.offset(VT.PROPER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPER_NAME) }
+  ///  Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
+  public var BAYER_FLAMSTEED: String? { let o = _accessor.offset(VT.BAYER_FLAMSTEED); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BAYER_FLAMSTEEDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BAYER_FLAMSTEED) }
+  ///  Constellation containing the star, three-letter abbreviation
+  public var CONSTELLATION: String? { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTELLATION) }
+  ///  Bright-star catalog number (HR); 0 when not in that catalog
+  public var HR_CAT_ID: UInt32 { let o = _accessor.offset(VT.HR_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Spectral-type catalog number (HD); 0 when not in that catalog
+  public var HD_CAT_ID: UInt32 { let o = _accessor.offset(VT.HD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Other designations, each in the form its catalog uses
+  public var DESIGNATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.DESIGNATIONS, byteSize: 4) }
+  ///  Variability type in the standard variable-star classification, e.g. "DSCT" or "EA"
+  public var VARIABILITY_CLASS: String? { let o = _accessor.offset(VT.VARIABILITY_CLASS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VARIABILITY_CLASSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VARIABILITY_CLASS) }
+  ///  Period of variability (days)
+  public var VARIABILITY_PERIOD: Double { let o = _accessor.offset(VT.VARIABILITY_PERIOD); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Peak-to-peak variability amplitude (magnitudes)
+  public var VARIABILITY_AMPLITUDE: Double { let o = _accessor.offset(VT.VARIABILITY_AMPLITUDE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
+  public var VARIABILITY_EPOCH: Double { let o = _accessor.offset(VT.VARIABILITY_EPOCH); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Brightness in every band the star was measured or modelled in
+  public var PHOTOMETRY: FlatbufferVector<PHBMeasurement> { return _accessor.vector(at: VT.PHOTOMETRY, byteSize: 4) }
+  public static func startSTR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(CS_ID: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CS_ID, def: 0, at: VT.CS_ID) }
+  public static func add(GNC_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNC_CAT_ID, def: 0, at: VT.GNC_CAT_ID) }
+  public static func add(GAIADR3_CAT_ID: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIADR3_CAT_ID, def: 0, at: VT.GAIADR3_CAT_ID) }
+  public static func add(HIP_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HIP_CAT_ID, def: 0, at: VT.HIP_CAT_ID) }
+  public static func add(CAT_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAT_VERSION, at: VT.CAT_VERSION) }
+  public static func add(ASTROMETRY_ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASTROMETRY_ORIGIN, at: VT.ASTROMETRY_ORIGIN) }
+  public static func add(STAR_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STAR_EPOCH, def: 0.0, at: VT.STAR_EPOCH) }
+  public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VT.RA) }
+  public static func add(RA_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_UNC, def: 0.0, at: VT.RA_UNC) }
+  public static func add(DEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC, def: 0.0, at: VT.DEC) }
+  public static func add(DEC_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC_UNC, def: 0.0, at: VT.DEC_UNC) }
+  public static func add(POS_UNC_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_UNC_FLAG, def: false,
+   at: VT.POS_UNC_FLAG) }
+  public static func add(PARALLAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARALLAX, def: 0.0, at: VT.PARALLAX) }
+  public static func add(PARALLAX_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARALLAX_UNC, def: 0.0, at: VT.PARALLAX_UNC) }
+  public static func add(PMRA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PMRA, def: 0.0, at: VT.PMRA) }
+  public static func add(PMRA_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PMRA_UNC, def: 0.0, at: VT.PMRA_UNC) }
+  public static func add(PMDEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PMDEC, def: 0.0, at: VT.PMDEC) }
+  public static func add(PMDEC_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PMDEC_UNC, def: 0.0, at: VT.PMDEC_UNC) }
+  public static func add(PM_UNC_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PM_UNC_FLAG, def: false,
+   at: VT.PM_UNC_FLAG) }
+  public static func add(GMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GMAG, def: 0.0, at: VT.GMAG) }
+  public static func add(GMAG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GMAG_UNC, def: 0.0, at: VT.GMAG_UNC) }
+  public static func add(BPMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BPMAG, def: 0.0, at: VT.BPMAG) }
+  public static func add(BPMAG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BPMAG_UNC, def: 0.0, at: VT.BPMAG_UNC) }
+  public static func add(RPMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RPMAG, def: 0.0, at: VT.RPMAG) }
+  public static func add(RPMAG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RPMAG_UNC, def: 0.0, at: VT.RPMAG_UNC) }
+  public static func add(JMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JMAG, def: 0.0, at: VT.JMAG) }
+  public static func add(JMAG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JMAG_UNC, def: 0.0, at: VT.JMAG_UNC) }
+  public static func add(KMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KMAG, def: 0.0, at: VT.KMAG) }
+  public static func add(KMAG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KMAG_UNC, def: 0.0, at: VT.KMAG_UNC) }
+  public static func add(HMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HMAG, def: 0.0, at: VT.HMAG) }
+  public static func add(HMAG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HMAG_UNC, def: 0.0, at: VT.HMAG_UNC) }
+  public static func add(VAR_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VAR_FLAG, def: false,
+   at: VT.VAR_FLAG) }
+  public static func add(MULT_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MULT_FLAG, def: false,
+   at: VT.MULT_FLAG) }
+  public static func add(NEIGHBOR_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEIGHBOR_ID, def: 0, at: VT.NEIGHBOR_ID) }
+  public static func add(NEIGHBOR_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEIGHBOR_FLAG, def: false,
+   at: VT.NEIGHBOR_FLAG) }
+  public static func add(NEIGHBOR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEIGHBOR_DISTANCE, def: 0.0, at: VT.NEIGHBOR_DISTANCE) }
+  public static func add(SHIFT_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHIFT_FLAG, def: false,
+   at: VT.SHIFT_FLAG) }
+  public static func add(SHIFT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHIFT, def: 0.0, at: VT.SHIFT) }
+  public static func add(TEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEFF, def: .nan, at: VT.TEFF) }
+  public static func add(TEFF_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEFF_UNC, def: .nan, at: VT.TEFF_UNC) }
+  public static func add(LOGG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOGG, def: .nan, at: VT.LOGG) }
+  public static func add(LOGG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOGG_UNC, def: .nan, at: VT.LOGG_UNC) }
+  public static func add(METALLICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METALLICITY, def: .nan, at: VT.METALLICITY) }
+  public static func add(EXTINCTION_A0: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTINCTION_A0, def: .nan, at: VT.EXTINCTION_A0) }
+  public static func add(RADIAL_VELOCITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIAL_VELOCITY, def: .nan, at: VT.RADIAL_VELOCITY) }
+  public static func add(RADIAL_VELOCITY_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIAL_VELOCITY_UNC, def: .nan, at: VT.RADIAL_VELOCITY_UNC) }
+  public static func add(SPECTRAL_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_TYPE, at: VT.SPECTRAL_TYPE) }
+  public static func add(PROPER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPER_NAME, at: VT.PROPER_NAME) }
+  public static func add(BAYER_FLAMSTEED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAYER_FLAMSTEED, at: VT.BAYER_FLAMSTEED) }
+  public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VT.CONSTELLATION) }
+  public static func add(HR_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HR_CAT_ID, def: 0, at: VT.HR_CAT_ID) }
+  public static func add(HD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HD_CAT_ID, def: 0, at: VT.HD_CAT_ID) }
+  public static func addVectorOf(DESIGNATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESIGNATIONS, at: VT.DESIGNATIONS) }
+  public static func add(VARIABILITY_CLASS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIABILITY_CLASS, at: VT.VARIABILITY_CLASS) }
+  public static func add(VARIABILITY_PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIABILITY_PERIOD, def: .nan, at: VT.VARIABILITY_PERIOD) }
+  public static func add(VARIABILITY_AMPLITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIABILITY_AMPLITUDE, def: .nan, at: VT.VARIABILITY_AMPLITUDE) }
+  public static func add(VARIABILITY_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIABILITY_EPOCH, def: .nan, at: VT.VARIABILITY_EPOCH) }
+  public static func addVectorOf(PHOTOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHOTOMETRY, at: VT.PHOTOMETRY) }
+  public static func endSTR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSTR(
     _ fbb: inout FlatBufferBuilder,
-    BAND_IDOffset BAND_ID: Offset = Offset(),
-    SPECTRAL_REGIME: phbSpectralRegime = .unspecified,
-    WAVELENGTH_EFF_NM: Double = .nan,
-    QUANTITY: phbQuantity = .magnitude,
-    MAGNITUDE_SYSTEM: phbMagnitudeSystem = .unspecified,
-    VALUE: Double = .nan,
-    UNCERTAINTY: Double = .nan,
-    BOUND: phbBoundKind = .detection,
-    DERIVATION: phbDerivation = .unspecified,
-    EPOCH_MJD: Double = .nan,
-    OBSERVATION_COUNT: UInt32 = 0
+    IDOffset ID: Offset = Offset(),
+    CS_ID: Int64 = 0,
+    GNC_CAT_ID: UInt32 = 0,
+    GAIADR3_CAT_ID: Int64 = 0,
+    HIP_CAT_ID: UInt32 = 0,
+    CAT_VERSIONOffset CAT_VERSION: Offset = Offset(),
+    ASTROMETRY_ORIGINOffset ASTROMETRY_ORIGIN: Offset = Offset(),
+    STAR_EPOCH: Double = 0.0,
+    RA: Double = 0.0,
+    RA_UNC: Double = 0.0,
+    DEC: Double = 0.0,
+    DEC_UNC: Double = 0.0,
+    POS_UNC_FLAG: Bool = false,
+    PARALLAX: Double = 0.0,
+    PARALLAX_UNC: Double = 0.0,
+    PMRA: Double = 0.0,
+    PMRA_UNC: Double = 0.0,
+    PMDEC: Double = 0.0,
+    PMDEC_UNC: Double = 0.0,
+    PM_UNC_FLAG: Bool = false,
+    GMAG: Double = 0.0,
+    GMAG_UNC: Double = 0.0,
+    BPMAG: Double = 0.0,
+    BPMAG_UNC: Double = 0.0,
+    RPMAG: Double = 0.0,
+    RPMAG_UNC: Double = 0.0,
+    JMAG: Double = 0.0,
+    JMAG_UNC: Double = 0.0,
+    KMAG: Double = 0.0,
+    KMAG_UNC: Double = 0.0,
+    HMAG: Double = 0.0,
+    HMAG_UNC: Double = 0.0,
+    VAR_FLAG: Bool = false,
+    MULT_FLAG: Bool = false,
+    NEIGHBOR_ID: UInt32 = 0,
+    NEIGHBOR_FLAG: Bool = false,
+    NEIGHBOR_DISTANCE: Double = 0.0,
+    SHIFT_FLAG: Bool = false,
+    SHIFT: Double = 0.0,
+    TEFF: Double = .nan,
+    TEFF_UNC: Double = .nan,
+    LOGG: Double = .nan,
+    LOGG_UNC: Double = .nan,
+    METALLICITY: Double = .nan,
+    EXTINCTION_A0: Double = .nan,
+    RADIAL_VELOCITY: Double = .nan,
+    RADIAL_VELOCITY_UNC: Double = .nan,
+    SPECTRAL_TYPEOffset SPECTRAL_TYPE: Offset = Offset(),
+    PROPER_NAMEOffset PROPER_NAME: Offset = Offset(),
+    BAYER_FLAMSTEEDOffset BAYER_FLAMSTEED: Offset = Offset(),
+    CONSTELLATIONOffset CONSTELLATION: Offset = Offset(),
+    HR_CAT_ID: UInt32 = 0,
+    HD_CAT_ID: UInt32 = 0,
+    DESIGNATIONSVectorOffset DESIGNATIONS: Offset = Offset(),
+    VARIABILITY_CLASSOffset VARIABILITY_CLASS: Offset = Offset(),
+    VARIABILITY_PERIOD: Double = .nan,
+    VARIABILITY_AMPLITUDE: Double = .nan,
+    VARIABILITY_EPOCH: Double = .nan,
+    PHOTOMETRYVectorOffset PHOTOMETRY: Offset = Offset()
   ) -> Offset {
-    let __start = PHBMeasurement.startPHBMeasurement(&fbb)
-    PHBMeasurement.add(BAND_ID: BAND_ID, &fbb)
-    PHBMeasurement.add(SPECTRAL_REGIME: SPECTRAL_REGIME, &fbb)
-    PHBMeasurement.add(WAVELENGTH_EFF_NM: WAVELENGTH_EFF_NM, &fbb)
-    PHBMeasurement.add(QUANTITY: QUANTITY, &fbb)
-    PHBMeasurement.add(MAGNITUDE_SYSTEM: MAGNITUDE_SYSTEM, &fbb)
-    PHBMeasurement.add(VALUE: VALUE, &fbb)
-    PHBMeasurement.add(UNCERTAINTY: UNCERTAINTY, &fbb)
-    PHBMeasurement.add(BOUND: BOUND, &fbb)
-    PHBMeasurement.add(DERIVATION: DERIVATION, &fbb)
-    PHBMeasurement.add(EPOCH_MJD: EPOCH_MJD, &fbb)
-    PHBMeasurement.add(OBSERVATION_COUNT: OBSERVATION_COUNT, &fbb)
-    return PHBMeasurement.endPHBMeasurement(&fbb, start: __start)
+    let __start = STR.startSTR(&fbb)
+    STR.add(ID: ID, &fbb)
+    STR.add(CS_ID: CS_ID, &fbb)
+    STR.add(GNC_CAT_ID: GNC_CAT_ID, &fbb)
+    STR.add(GAIADR3_CAT_ID: GAIADR3_CAT_ID, &fbb)
+    STR.add(HIP_CAT_ID: HIP_CAT_ID, &fbb)
+    STR.add(CAT_VERSION: CAT_VERSION, &fbb)
+    STR.add(ASTROMETRY_ORIGIN: ASTROMETRY_ORIGIN, &fbb)
+    STR.add(STAR_EPOCH: STAR_EPOCH, &fbb)
+    STR.add(RA: RA, &fbb)
+    STR.add(RA_UNC: RA_UNC, &fbb)
+    STR.add(DEC: DEC, &fbb)
+    STR.add(DEC_UNC: DEC_UNC, &fbb)
+    STR.add(POS_UNC_FLAG: POS_UNC_FLAG, &fbb)
+    STR.add(PARALLAX: PARALLAX, &fbb)
+    STR.add(PARALLAX_UNC: PARALLAX_UNC, &fbb)
+    STR.add(PMRA: PMRA, &fbb)
+    STR.add(PMRA_UNC: PMRA_UNC, &fbb)
+    STR.add(PMDEC: PMDEC, &fbb)
+    STR.add(PMDEC_UNC: PMDEC_UNC, &fbb)
+    STR.add(PM_UNC_FLAG: PM_UNC_FLAG, &fbb)
+    STR.add(GMAG: GMAG, &fbb)
+    STR.add(GMAG_UNC: GMAG_UNC, &fbb)
+    STR.add(BPMAG: BPMAG, &fbb)
+    STR.add(BPMAG_UNC: BPMAG_UNC, &fbb)
+    STR.add(RPMAG: RPMAG, &fbb)
+    STR.add(RPMAG_UNC: RPMAG_UNC, &fbb)
+    STR.add(JMAG: JMAG, &fbb)
+    STR.add(JMAG_UNC: JMAG_UNC, &fbb)
+    STR.add(KMAG: KMAG, &fbb)
+    STR.add(KMAG_UNC: KMAG_UNC, &fbb)
+    STR.add(HMAG: HMAG, &fbb)
+    STR.add(HMAG_UNC: HMAG_UNC, &fbb)
+    STR.add(VAR_FLAG: VAR_FLAG, &fbb)
+    STR.add(MULT_FLAG: MULT_FLAG, &fbb)
+    STR.add(NEIGHBOR_ID: NEIGHBOR_ID, &fbb)
+    STR.add(NEIGHBOR_FLAG: NEIGHBOR_FLAG, &fbb)
+    STR.add(NEIGHBOR_DISTANCE: NEIGHBOR_DISTANCE, &fbb)
+    STR.add(SHIFT_FLAG: SHIFT_FLAG, &fbb)
+    STR.add(SHIFT: SHIFT, &fbb)
+    STR.add(TEFF: TEFF, &fbb)
+    STR.add(TEFF_UNC: TEFF_UNC, &fbb)
+    STR.add(LOGG: LOGG, &fbb)
+    STR.add(LOGG_UNC: LOGG_UNC, &fbb)
+    STR.add(METALLICITY: METALLICITY, &fbb)
+    STR.add(EXTINCTION_A0: EXTINCTION_A0, &fbb)
+    STR.add(RADIAL_VELOCITY: RADIAL_VELOCITY, &fbb)
+    STR.add(RADIAL_VELOCITY_UNC: RADIAL_VELOCITY_UNC, &fbb)
+    STR.add(SPECTRAL_TYPE: SPECTRAL_TYPE, &fbb)
+    STR.add(PROPER_NAME: PROPER_NAME, &fbb)
+    STR.add(BAYER_FLAMSTEED: BAYER_FLAMSTEED, &fbb)
+    STR.add(CONSTELLATION: CONSTELLATION, &fbb)
+    STR.add(HR_CAT_ID: HR_CAT_ID, &fbb)
+    STR.add(HD_CAT_ID: HD_CAT_ID, &fbb)
+    STR.addVectorOf(DESIGNATIONS: DESIGNATIONS, &fbb)
+    STR.add(VARIABILITY_CLASS: VARIABILITY_CLASS, &fbb)
+    STR.add(VARIABILITY_PERIOD: VARIABILITY_PERIOD, &fbb)
+    STR.add(VARIABILITY_AMPLITUDE: VARIABILITY_AMPLITUDE, &fbb)
+    STR.add(VARIABILITY_EPOCH: VARIABILITY_EPOCH, &fbb)
+    STR.addVectorOf(PHOTOMETRY: PHOTOMETRY, &fbb)
+    return STR.endSTR(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.BAND_ID, fieldName: "BAND_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPECTRAL_REGIME, fieldName: "SPECTRAL_REGIME", required: false, type: phbSpectralRegime.self)
-    try _v.visit(field: VT.WAVELENGTH_EFF_NM, fieldName: "WAVELENGTH_EFF_NM", required: false, type: Double.self)
-    try _v.visit(field: VT.QUANTITY, fieldName: "QUANTITY", required: false, type: phbQuantity.self)
-    try _v.visit(field: VT.MAGNITUDE_SYSTEM, fieldName: "MAGNITUDE_SYSTEM", required: false, type: phbMagnitudeSystem.self)
-    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
-    try _v.visit(field: VT.UNCERTAINTY, fieldName: "UNCERTAINTY", required: false, type: Double.self)
-    try _v.visit(field: VT.BOUND, fieldName: "BOUND", required: false, type: phbBoundKind.self)
-    try _v.visit(field: VT.DERIVATION, fieldName: "DERIVATION", required: false, type: phbDerivation.self)
-    try _v.visit(field: VT.EPOCH_MJD, fieldName: "EPOCH_MJD", required: false, type: Double.self)
-    try _v.visit(field: VT.OBSERVATION_COUNT, fieldName: "OBSERVATION_COUNT", required: false, type: UInt32.self)
-    _v.finish()
-  }
-}
-
-///  Photometric Band: one passband's place on the spectrum and its calibration.
-public struct PHB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PHB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PHB.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let BAND_ID: VOffset = 4
-    static let NAME: VOffset = 6
-    static let SYSTEM_NAME: VOffset = 8
-    static let SPECTRAL_REGIME: VOffset = 10
-    static let WAVELENGTH_EFF_NM: VOffset = 12
-    static let WAVELENGTH_MIN_NM: VOffset = 14
-    static let WAVELENGTH_MAX_NM: VOffset = 16
-    static let MAGNITUDE_SYSTEM: VOffset = 18
-    static let ZERO_POINT_JY: VOffset = 20
-    static let RESPONSE_WAVELENGTH_NM: VOffset = 22
-    static let RESPONSE: VOffset = 24
-    static let RESPONSE_IS_ENERGY: VOffset = 26
-    static let CITATION: VOffset = 28
-    static let DEFINITION_URL: VOffset = 30
-  }
-
-  ///  Stable band identifier, unique within the publishing catalogue, e.g.
-  ///  "V", "Ks", "0.5-2keV", "1.4GHz". Measurements refer to it.
-  public var BAND_ID: String! { let o = _accessor.offset(VT.BAND_ID); return _accessor.string(at: o) }
-  public var BAND_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.BAND_ID) }
-  ///  Human-readable name.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Name of the photometric system the band belongs to, as the defining
-  ///  publication states it.
-  public var SYSTEM_NAME: String? { let o = _accessor.offset(VT.SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYSTEM_NAME) }
-  ///  Coarse spectral region, by WAVELENGTH_EFF_NM.
-  public var SPECTRAL_REGIME: phbSpectralRegime { let o = _accessor.offset(VT.SPECTRAL_REGIME); return o == 0 ? .unspecified : phbSpectralRegime(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Effective (pivot) wavelength, nanometres, vacuum.
-  public var WAVELENGTH_EFF_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_EFF_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Short edge of the band at half maximum response, nanometres.
-  public var WAVELENGTH_MIN_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_MIN_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Long edge of the band at half maximum response, nanometres.
-  public var WAVELENGTH_MAX_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_MAX_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Calibration system of magnitudes stated in the band.
-  public var MAGNITUDE_SYSTEM: phbMagnitudeSystem { let o = _accessor.offset(VT.MAGNITUDE_SYSTEM); return o == 0 ? .unspecified : phbMagnitudeSystem(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Flux density at the effective wavelength of a zero-magnitude source,
-  ///  janskys.
-  public var ZERO_POINT_JY: Double { let o = _accessor.offset(VT.ZERO_POINT_JY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Wavelengths the response curve is sampled at, nanometres, ascending.
-  public var RESPONSE_WAVELENGTH_NM: FlatbufferVector<Double> { return _accessor.vector(at: VT.RESPONSE_WAVELENGTH_NM, byteSize: 8) }
-  public func withUnsafePointerToResponseWavelengthNm<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESPONSE_WAVELENGTH_NM, body: body) }
-  ///  Relative system response at each RESPONSE_WAVELENGTH_NM sample,
-  ///  peak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY.
-  public var RESPONSE: FlatbufferVector<Float32> { return _accessor.vector(at: VT.RESPONSE, byteSize: 4) }
-  public func withUnsafePointerToResponse<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESPONSE, body: body) }
-  ///  True when RESPONSE is an energy-counting response.
-  public var RESPONSE_IS_ENERGY: Bool { let o = _accessor.offset(VT.RESPONSE_IS_ENERGY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Reference to the publication that defines the band.
-  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
-  ///  URL of the band's defining document or response table.
-  public var DEFINITION_URL: String? { let o = _accessor.offset(VT.DEFINITION_URL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DEFINITION_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DEFINITION_URL) }
-  public static func startPHB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(BAND_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND_ID, at: VT.BAND_ID) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYSTEM_NAME, at: VT.SYSTEM_NAME) }
-  public static func add(SPECTRAL_REGIME: phbSpectralRegime, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECTRAL_REGIME.rawValue, def: 0, at: VT.SPECTRAL_REGIME) }
-  public static func add(WAVELENGTH_EFF_NM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WAVELENGTH_EFF_NM, def: .nan, at: VT.WAVELENGTH_EFF_NM) }
-  public static func add(WAVELENGTH_MIN_NM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WAVELENGTH_MIN_NM, def: .nan, at: VT.WAVELENGTH_MIN_NM) }
-  public static func add(WAVELENGTH_MAX_NM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WAVELENGTH_MAX_NM, def: .nan, at: VT.WAVELENGTH_MAX_NM) }
-  public static func add(MAGNITUDE_SYSTEM: phbMagnitudeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNITUDE_SYSTEM.rawValue, def: 0, at: VT.MAGNITUDE_SYSTEM) }
-  public static func add(ZERO_POINT_JY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ZERO_POINT_JY, def: .nan, at: VT.ZERO_POINT_JY) }
-  public static func addVectorOf(RESPONSE_WAVELENGTH_NM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESPONSE_WAVELENGTH_NM, at: VT.RESPONSE_WAVELENGTH_NM) }
-  public static func addVectorOf(RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESPONSE, at: VT.RESPONSE) }
-  public static func add(RESPONSE_IS_ENERGY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESPONSE_IS_ENERGY, def: false,
-   at: VT.RESPONSE_IS_ENERGY) }
-  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
-  public static func add(DEFINITION_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFINITION_URL, at: VT.DEFINITION_URL) }
-  public static func endPHB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createPHB(
-    _ fbb: inout FlatBufferBuilder,
-    BAND_IDOffset BAND_ID: Offset,
-    NAMEOffset NAME: Offset = Offset(),
-    SYSTEM_NAMEOffset SYSTEM_NAME: Offset = Offset(),
-    SPECTRAL_REGIME: phbSpectralRegime = .unspecified,
-    WAVELENGTH_EFF_NM: Double = .nan,
-    WAVELENGTH_MIN_NM: Double = .nan,
-    WAVELENGTH_MAX_NM: Double = .nan,
-    MAGNITUDE_SYSTEM: phbMagnitudeSystem = .unspecified,
-    ZERO_POINT_JY: Double = .nan,
-    RESPONSE_WAVELENGTH_NMVectorOffset RESPONSE_WAVELENGTH_NM: Offset = Offset(),
-    RESPONSEVectorOffset RESPONSE: Offset = Offset(),
-    RESPONSE_IS_ENERGY: Bool = false,
-    CITATIONOffset CITATION: Offset = Offset(),
-    DEFINITION_URLOffset DEFINITION_URL: Offset = Offset()
-  ) -> Offset {
-    let __start = PHB.startPHB(&fbb)
-    PHB.add(BAND_ID: BAND_ID, &fbb)
-    PHB.add(NAME: NAME, &fbb)
-    PHB.add(SYSTEM_NAME: SYSTEM_NAME, &fbb)
-    PHB.add(SPECTRAL_REGIME: SPECTRAL_REGIME, &fbb)
-    PHB.add(WAVELENGTH_EFF_NM: WAVELENGTH_EFF_NM, &fbb)
-    PHB.add(WAVELENGTH_MIN_NM: WAVELENGTH_MIN_NM, &fbb)
-    PHB.add(WAVELENGTH_MAX_NM: WAVELENGTH_MAX_NM, &fbb)
-    PHB.add(MAGNITUDE_SYSTEM: MAGNITUDE_SYSTEM, &fbb)
-    PHB.add(ZERO_POINT_JY: ZERO_POINT_JY, &fbb)
-    PHB.addVectorOf(RESPONSE_WAVELENGTH_NM: RESPONSE_WAVELENGTH_NM, &fbb)
-    PHB.addVectorOf(RESPONSE: RESPONSE, &fbb)
-    PHB.add(RESPONSE_IS_ENERGY: RESPONSE_IS_ENERGY, &fbb)
-    PHB.add(CITATION: CITATION, &fbb)
-    PHB.add(DEFINITION_URL: DEFINITION_URL, &fbb)
-    return PHB.endPHB(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.BAND_ID, fieldName: "BAND_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SYSTEM_NAME, fieldName: "SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPECTRAL_REGIME, fieldName: "SPECTRAL_REGIME", required: false, type: phbSpectralRegime.self)
-    try _v.visit(field: VT.WAVELENGTH_EFF_NM, fieldName: "WAVELENGTH_EFF_NM", required: false, type: Double.self)
-    try _v.visit(field: VT.WAVELENGTH_MIN_NM, fieldName: "WAVELENGTH_MIN_NM", required: false, type: Double.self)
-    try _v.visit(field: VT.WAVELENGTH_MAX_NM, fieldName: "WAVELENGTH_MAX_NM", required: false, type: Double.self)
-    try _v.visit(field: VT.MAGNITUDE_SYSTEM, fieldName: "MAGNITUDE_SYSTEM", required: false, type: phbMagnitudeSystem.self)
-    try _v.visit(field: VT.ZERO_POINT_JY, fieldName: "ZERO_POINT_JY", required: false, type: Double.self)
-    try _v.visit(field: VT.RESPONSE_WAVELENGTH_NM, fieldName: "RESPONSE_WAVELENGTH_NM", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.RESPONSE, fieldName: "RESPONSE", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
-    try _v.visit(field: VT.RESPONSE_IS_ENERGY, fieldName: "RESPONSE_IS_ENERGY", required: false, type: Bool.self)
-    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DEFINITION_URL, fieldName: "DEFINITION_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CS_ID, fieldName: "CS_ID", required: false, type: Int64.self)
+    try _v.visit(field: VT.GNC_CAT_ID, fieldName: "GNC_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.GAIADR3_CAT_ID, fieldName: "GAIADR3_CAT_ID", required: false, type: Int64.self)
+    try _v.visit(field: VT.HIP_CAT_ID, fieldName: "HIP_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CAT_VERSION, fieldName: "CAT_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ASTROMETRY_ORIGIN, fieldName: "ASTROMETRY_ORIGIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STAR_EPOCH, fieldName: "STAR_EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.RA, fieldName: "RA", required: false, type: Double.self)
+    try _v.visit(field: VT.RA_UNC, fieldName: "RA_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.DEC, fieldName: "DEC", required: false, type: Double.self)
+    try _v.visit(field: VT.DEC_UNC, fieldName: "DEC_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_UNC_FLAG, fieldName: "POS_UNC_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.PARALLAX, fieldName: "PARALLAX", required: false, type: Double.self)
+    try _v.visit(field: VT.PARALLAX_UNC, fieldName: "PARALLAX_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.PMRA, fieldName: "PMRA", required: false, type: Double.self)
+    try _v.visit(field: VT.PMRA_UNC, fieldName: "PMRA_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.PMDEC, fieldName: "PMDEC", required: false, type: Double.self)
+    try _v.visit(field: VT.PMDEC_UNC, fieldName: "PMDEC_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.PM_UNC_FLAG, fieldName: "PM_UNC_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.GMAG, fieldName: "GMAG", required: false, type: Double.self)
+    try _v.visit(field: VT.GMAG_UNC, fieldName: "GMAG_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.BPMAG, fieldName: "BPMAG", required: false, type: Double.self)
+    try _v.visit(field: VT.BPMAG_UNC, fieldName: "BPMAG_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.RPMAG, fieldName: "RPMAG", required: false, type: Double.self)
+    try _v.visit(field: VT.RPMAG_UNC, fieldName: "RPMAG_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.JMAG, fieldName: "JMAG", required: false, type: Double.self)
+    try _v.visit(field: VT.JMAG_UNC, fieldName: "JMAG_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.KMAG, fieldName: "KMAG", required: false, type: Double.self)
+    try _v.visit(field: VT.KMAG_UNC, fieldName: "KMAG_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.HMAG, fieldName: "HMAG", required: false, type: Double.self)
+    try _v.visit(field: VT.HMAG_UNC, fieldName: "HMAG_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.VAR_FLAG, fieldName: "VAR_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.MULT_FLAG, fieldName: "MULT_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.NEIGHBOR_ID, fieldName: "NEIGHBOR_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.NEIGHBOR_FLAG, fieldName: "NEIGHBOR_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.NEIGHBOR_DISTANCE, fieldName: "NEIGHBOR_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SHIFT_FLAG, fieldName: "SHIFT_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.SHIFT, fieldName: "SHIFT", required: false, type: Double.self)
+    try _v.visit(field: VT.TEFF, fieldName: "TEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.TEFF_UNC, fieldName: "TEFF_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.LOGG, fieldName: "LOGG", required: false, type: Double.self)
+    try _v.visit(field: VT.LOGG_UNC, fieldName: "LOGG_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.METALLICITY, fieldName: "METALLICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTINCTION_A0, fieldName: "EXTINCTION_A0", required: false, type: Double.self)
+    try _v.visit(field: VT.RADIAL_VELOCITY, fieldName: "RADIAL_VELOCITY", required: false, type: Double.self)
+    try _v.visit(field: VT.RADIAL_VELOCITY_UNC, fieldName: "RADIAL_VELOCITY_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.SPECTRAL_TYPE, fieldName: "SPECTRAL_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPER_NAME, fieldName: "PROPER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BAYER_FLAMSTEED, fieldName: "BAYER_FLAMSTEED", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSTELLATION, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HR_CAT_ID, fieldName: "HR_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HD_CAT_ID, fieldName: "HD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DESIGNATIONS, fieldName: "DESIGNATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.VARIABILITY_CLASS, fieldName: "VARIABILITY_CLASS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VARIABILITY_PERIOD, fieldName: "VARIABILITY_PERIOD", required: false, type: Double.self)
+    try _v.visit(field: VT.VARIABILITY_AMPLITUDE, fieldName: "VARIABILITY_AMPLITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.VARIABILITY_EPOCH, fieldName: "VARIABILITY_EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.PHOTOMETRY, fieldName: "PHOTOMETRY", required: false, type: ForwardOffset<Vector<ForwardOffset<PHBMeasurement>, PHBMeasurement>>.self)
     _v.finish()
   }
 }

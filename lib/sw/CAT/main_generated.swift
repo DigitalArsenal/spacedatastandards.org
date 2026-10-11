@@ -8,340 +8,452 @@ import Common
 
 import FlatBuffers
 
-public enum legacyCountryCode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum spaceObjectClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Arab Satellite Communications Organization
-  case ab = 0
-  ///  Asia Broadcast Satellite
-  case abs = 1
-  ///  Asia Satellite Telecommunications Company (ASIASAT)
-  case ac = 2
-  ///  Algeria
-  case alg = 3
-  ///  Angola
-  case ang = 4
-  ///  Argentina
-  case argn = 5
-  ///  Republic of Armenia
-  case arm = 6
-  ///  Austria
-  case asra = 7
-  ///  Australia
-  case aus = 8
-  ///  Azerbaijan
-  case azer = 9
-  ///  Belgium
-  case bel = 10
-  ///  Belarus
-  case bela = 11
-  ///  Bermuda
-  case berm = 12
-  ///  People's Republic of Bangladesh
-  case bgd = 13
-  ///  Kingdom of Bhutan
-  case bhut = 14
-  ///  Bolivia
-  case bol = 15
-  ///  Brazil
-  case braz = 16
-  ///  Bulgaria
-  case bul = 17
-  ///  Canada
-  case ca = 18
-  ///  China/Brazil
-  case chbz = 19
-  ///  China/Turkey
-  case chtu = 20
-  ///  Chile
-  case chle = 21
-  ///  Commonwealth of Independent States (former USSR)
-  case cis = 22
-  ///  Colombia
-  case col = 23
-  ///  Republic of Costa Rica
-  case cri = 24
-  ///  Czech Republic (former Czechoslovakia)
-  case czch = 25
-  ///  Denmark
-  case den = 26
-  ///  Republic of Djibouti
-  case dji = 27
-  ///  Ecuador
-  case ecu = 28
-  ///  Egypt
-  case egyp = 29
-  ///  European Space Agency
-  case esa = 30
-  ///  European Space Research Organization
-  case esro = 31
-  ///  Estonia
-  case est = 32
-  ///  Ethiopia
-  case eth = 33
-  ///  European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-  case eume = 34
-  ///  European Telecommunications Satellite Organization (EUTELSAT)
-  case eute = 35
-  ///  France/Germany
-  case fger = 36
-  ///  Finland
-  case fin = 37
-  ///  France
-  case fr = 38
-  ///  France/Italy
-  case frit = 39
-  ///  Germany
-  case ger = 40
-  ///  Republic of Ghana
-  case gha = 41
-  ///  Globalstar
-  case glob = 42
-  ///  Greece
-  case grec = 43
-  ///  Greece/Saudi Arabia
-  case grsa = 44
-  ///  Guatemala
-  case guat = 45
-  ///  Hungary
-  case hun = 46
-  ///  International Mobile Satellite Organization (INMARSAT)
-  case im = 47
-  ///  India
-  case ind = 48
-  ///  Indonesia
-  case indo = 49
-  ///  Iran
-  case iran = 50
-  ///  Iraq
-  case iraq = 51
-  ///  Iridium
-  case irid = 52
-  ///  Ireland
-  case irl = 53
-  ///  Israel
-  case isra = 54
-  ///  Indian Space Research Organisation
-  case isro = 55
-  ///  International Space Station
-  case iss = 56
-  ///  Italy
-  case it = 57
-  ///  International Telecommunications Satellite Organization (INTELSAT)
-  case itso = 58
-  ///  Japan
-  case jpn = 59
-  ///  Kazakhstan
-  case kaz = 60
-  ///  Republic of Kenya
-  case ken = 61
-  ///  Laos
-  case laos = 62
-  ///  Democratic Socialist Republic of Sri Lanka
-  case lka = 63
-  ///  Lithuania
-  case ltu = 64
-  ///  Luxembourg
-  case luxe = 65
-  ///  Morocco
-  case ma = 66
-  ///  Malaysia
-  case mala = 67
-  ///  Principality of Monaco
-  case mco = 68
-  ///  Republic of Moldova
-  case mda = 69
-  ///  Mexico
-  case mex = 70
-  ///  Republic of the Union of Myanmar
-  case mmr = 71
-  ///  Mongolia
-  case mng = 72
-  ///  Mauritius
-  case mus = 73
-  ///  North Atlantic Treaty Organization
-  case nato = 74
-  ///  Netherlands
-  case neth = 75
-  ///  New ICO
-  case nico = 76
-  ///  Nigeria
-  case nig = 77
-  ///  Democratic People's Republic of Korea
-  case nkor = 78
-  ///  Norway
-  case nor = 79
-  ///  Federal Democratic Republic of Nepal
-  case npl = 80
-  ///  New Zealand
-  case nz = 81
-  ///  O3b Networks
-  case o3b = 82
-  ///  ORBCOMM
-  case orb = 83
-  ///  Pakistan
-  case paki = 84
-  ///  Peru
-  case peru = 85
-  ///  Poland
-  case pol = 86
-  ///  Portugal
-  case por = 87
-  ///  People's Republic of China
-  case prc = 88
-  ///  Republic of Paraguay
-  case pry = 89
-  ///  People's Republic of China/European Space Agency
-  case pres = 90
-  ///  State of Qatar
-  case qat = 91
-  ///  RascomStar-QAF
-  case rasc = 92
-  ///  Taiwan (Republic of China)
-  case roc = 93
-  ///  Romania
-  case rom = 94
-  ///  Philippines (Republic of the Philippines)
-  case rp = 95
-  ///  Republic of Rwanda
-  case rwa = 96
-  ///  South Africa
-  case safr = 97
-  ///  Saudi Arabia
-  case saud = 98
-  ///  Republic of Sudan
-  case sdn = 99
-  ///  Sea Launch
-  case seal = 100
-  ///  SES
-  case ses = 101
-  ///  Singapore/Japan
-  case sgjp = 102
-  ///  Singapore
-  case sing = 103
-  ///  Republic of Korea
-  case skor = 104
-  ///  Spain
-  case spn = 105
-  ///  Singapore/Taiwan
-  case stct = 106
-  ///  Slovenia
-  case svn = 107
-  ///  Sweden
-  case swed = 108
-  ///  Switzerland
-  case swtz = 109
-  ///  To Be Determined
-  case tbd = 110
-  ///  Thailand
-  case thai = 111
-  ///  Turkmenistan/Monaco
-  case tmmc = 112
-  ///  Republic of Tunisia
-  case tun = 113
-  ///  Turkey
-  case turk = 114
-  ///  United Arab Emirates
-  case uae = 115
-  ///  United Kingdom
-  case uk = 116
-  ///  Ukraine
-  case ukr = 117
-  ///  Unknown
-  case unk = 118
-  ///  Uruguay
-  case ury = 119
-  ///  United States
-  case us = 120
-  ///  United States/Brazil
-  case usbz = 121
-  ///  Vatican City State
-  case vat = 122
-  ///  Venezuela
-  case venz = 123
-  ///  Vietnam
-  case vtnm = 124
-  ///  Republic of Zimbabwe
-  case zwe = 125
+  ///  0
+  case payload = 0
+  ///  1
+  case rocketBody = 1
+  ///  2
+  case debris = 2
+  ///  3
+  case unknown = 3
 
-  public static var max: legacyCountryCode { return .zwe }
-  public static var min: legacyCountryCode { return .ab }
+  public static var max: spaceObjectClass { return .unknown }
+  public static var min: spaceObjectClass { return .payload }
 }
 
 
-///  Legacy Country Code
-public struct LCC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public enum operationalState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  +
+  case operational = 0
+  ///  -
+  case nonoperational = 1
+  ///  P
+  case partiallyOperational = 2
+  ///  B
+  case backupStandby = 3
+  ///  S
+  case spare = 4
+  ///  X
+  case extendedMission = 5
+  ///  D
+  case decayed = 6
+  ///  ?
+  case unknown = 7
+
+  public static var max: operationalState { return .unknown }
+  public static var min: operationalState { return .operational }
+}
+
+
+public enum dataAvailability: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  NCE
+  case noCurrentElements = 0
+  ///  NIE
+  case noInitialElements = 1
+  ///  NEA
+  case noElementsAvailable = 2
+  ///  OK
+  case ok = 3
+
+  public static var max: dataAvailability { return .ok }
+  public static var min: dataAvailability { return .noCurrentElements }
+}
+
+
+public enum orbitRegime: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  0
+  case orbit = 0
+  ///  1
+  case landing = 1
+  ///  2
+  case impact = 2
+  ///  3
+  case docked = 3
+  ///  4
+  case roundtrip = 4
+
+  public static var max: orbitRegime { return .roundtrip }
+  public static var min: orbitRegime { return .orbit }
+}
+
+
+public enum massCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case dry = 0
+  case wet = 1
+
+  public static var max: massCategory { return .wet }
+  public static var min: massCategory { return .dry }
+}
+
+
+///  What a product the catalog selected for an object is.
+public enum catalogProductKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Not stated
+  case unspecified = 0
+  ///  $OMM with MEAN_ELEMENT_THEORY SGP4
+  case sgp4elements = 1
+  ///  $OMM with MEAN_ELEMENT_THEORY SGP4XP
+  case sgp4xpelements = 2
+  ///  $OCM: a state and its covariance
+  case statecovariance = 3
+
+  public static var max: catalogProductKind { return .statecovariance }
+  public static var min: catalogProductKind { return .unspecified }
+}
+
+
+///  One product the catalog selected for the object, by content identifier.
+public struct CATProduct: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$LCC" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LCC.id, addPrefix: prefix) }
+  public static var id: String { "$CAT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CATProduct.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let OWNER: VOffset = 4
-    static let NAME: VOffset = 6
-    static let DESCRIPTION: VOffset = 8
-    static let ACTIVE: VOffset = 10
-    static let SOURCE_URL: VOffset = 12
-    static let RETRIEVED_AT: VOffset = 14
+    static let KIND: VOffset = 4
+    static let RECORD_CID: VOffset = 6
+    static let SOURCE_ID: VOffset = 8
+    static let EPOCH: VOffset = 10
+    static let SELECTION_REASON: VOffset = 12
+    static let STALE: VOffset = 14
   }
 
-  public var OWNER: legacyCountryCode { let o = _accessor.offset(VT.OWNER); return o == 0 ? .ab : legacyCountryCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ab }
-  ///  Display name of the owner or source the code stands for.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Longer description of the owner or source.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  True while the code is in current use by the publishing catalogue.
-  public var ACTIVE: Bool { let o = _accessor.offset(VT.ACTIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  URL of the reference table the row was retrieved from.
-  public var SOURCE_URL: String? { let o = _accessor.offset(VT.SOURCE_URL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_URL) }
-  ///  ISO 8601 UTC time the reference table was retrieved.
-  public var RETRIEVED_AT: String? { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RETRIEVED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RETRIEVED_AT) }
-  public static func startLCC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(OWNER: legacyCountryCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNER.rawValue, def: 0, at: VT.OWNER) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(ACTIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTIVE, def: false,
-   at: VT.ACTIVE) }
-  public static func add(SOURCE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_URL, at: VT.SOURCE_URL) }
-  public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
-  public static func endLCC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createLCC(
+  ///  What the product is.
+  public var KIND: catalogProductKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : catalogProductKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as
+  ///  published, a size-prefixed FlatBuffer.
+  public var RECORD_CID: String? { let o = _accessor.offset(VT.RECORD_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECORD_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECORD_CID) }
+  ///  The product's source: its PROVENANCE SOURCE_ID.
+  public var SOURCE_ID: String? { let o = _accessor.offset(VT.SOURCE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_ID) }
+  ///  Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
+  ///  epoch.
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Why the catalog selected this product over the other candidates of its
+  ///  KIND, as the selecting integrator states it (for example, the lowest
+  ///  measured median error for the object's orbit regime and prediction
+  ///  horizon).
+  public var SELECTION_REASON: String? { let o = _accessor.offset(VT.SELECTION_REASON); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SELECTION_REASONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SELECTION_REASON) }
+  ///  True when a maneuver after EPOCH retired the product and no product of its
+  ///  KIND from after the maneuver has been selected yet.
+  public var STALE: Bool { let o = _accessor.offset(VT.STALE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startCATProduct(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(KIND: catalogProductKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(RECORD_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_CID, at: VT.RECORD_CID) }
+  public static func add(SOURCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ID, at: VT.SOURCE_ID) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(SELECTION_REASON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECTION_REASON, at: VT.SELECTION_REASON) }
+  public static func add(STALE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STALE, def: false,
+   at: VT.STALE) }
+  public static func endCATProduct(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCATProduct(
     _ fbb: inout FlatBufferBuilder,
-    OWNER: legacyCountryCode = .ab,
-    NAMEOffset NAME: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    ACTIVE: Bool = false,
-    SOURCE_URLOffset SOURCE_URL: Offset = Offset(),
-    RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset()
+    KIND: catalogProductKind = .unspecified,
+    RECORD_CIDOffset RECORD_CID: Offset = Offset(),
+    SOURCE_IDOffset SOURCE_ID: Offset = Offset(),
+    EPOCHOffset EPOCH: Offset = Offset(),
+    SELECTION_REASONOffset SELECTION_REASON: Offset = Offset(),
+    STALE: Bool = false
   ) -> Offset {
-    let __start = LCC.startLCC(&fbb)
-    LCC.add(OWNER: OWNER, &fbb)
-    LCC.add(NAME: NAME, &fbb)
-    LCC.add(DESCRIPTION: DESCRIPTION, &fbb)
-    LCC.add(ACTIVE: ACTIVE, &fbb)
-    LCC.add(SOURCE_URL: SOURCE_URL, &fbb)
-    LCC.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
-    return LCC.endLCC(&fbb, start: __start)
+    let __start = CATProduct.startCATProduct(&fbb)
+    CATProduct.add(KIND: KIND, &fbb)
+    CATProduct.add(RECORD_CID: RECORD_CID, &fbb)
+    CATProduct.add(SOURCE_ID: SOURCE_ID, &fbb)
+    CATProduct.add(EPOCH: EPOCH, &fbb)
+    CATProduct.add(SELECTION_REASON: SELECTION_REASON, &fbb)
+    CATProduct.add(STALE: STALE, &fbb)
+    return CATProduct.endCATProduct(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: catalogProductKind.self)
+    try _v.visit(field: VT.RECORD_CID, fieldName: "RECORD_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_ID, fieldName: "SOURCE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SELECTION_REASON, fieldName: "SELECTION_REASON", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STALE, fieldName: "STALE", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Catalog Entity Message
+public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CAT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CAT.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OBJECT_NAME: VOffset = 4
+    static let OBJECT_ID: VOffset = 6
+    static let NORAD_CAT_ID: VOffset = 8
+    static let OBJECT_TYPE: VOffset = 10
+    static let OPS_STATUS_CODE: VOffset = 12
+    static let OWNER: VOffset = 14
+    static let LAUNCH_DATE: VOffset = 16
+    static let LAUNCH_SITE: VOffset = 18
+    static let DECAY_DATE: VOffset = 20
+    static let PERIOD: VOffset = 22
+    static let INCLINATION: VOffset = 24
+    static let APOGEE: VOffset = 26
+    static let PERIGEE: VOffset = 28
+    static let RCS: VOffset = 30
+    static let DATA_STATUS_CODE: VOffset = 32
+    static let ORBIT_CENTER: VOffset = 34
+    static let ORBIT_TYPE: VOffset = 36
+    static let DEPLOYMENT_DATE: VOffset = 38
+    static let MANEUVERABLE: VOffset = 40
+    static let SIZE: VOffset = 42
+    static let MASS: VOffset = 44
+    static let MASS_TYPE: VOffset = 46
+    static let PAYLOADS: VOffset = 48
+    static let BUS_ID: VOffset = 50
+    static let CATALOG_URI: VOffset = 52
+    static let CATALOG_OBJECT_ID: VOffset = 54
+    static let PRODUCTS: VOffset = 56
+    static let PRODUCTS_AS_OF: VOffset = 58
+  }
+
+  ///  Satellite Name(s)
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  ///  International Designator (YYYY-NNNAAA)
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  ///  NORAD Catalog Number
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Object type (Payload, Rocket body, Debris, Unknown)
+  public var OBJECT_TYPE: spaceObjectClass { let o = _accessor.offset(VT.OBJECT_TYPE); return o == 0 ? .unknown : spaceObjectClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Operational Status Code
+  public var OPS_STATUS_CODE: operationalState { let o = _accessor.offset(VT.OPS_STATUS_CODE); return o == 0 ? .unknown : operationalState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Ownership, typically country or company
+  public var OWNER: legacyCountryCode { let o = _accessor.offset(VT.OWNER); return o == 0 ? .ab : legacyCountryCode(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .ab }
+  ///  Launch Date [year-month-day] (ISO 8601)
+  public var LAUNCH_DATE: String? { let o = _accessor.offset(VT.LAUNCH_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_DATE) }
+  ///  Launch Site
+  public var LAUNCH_SITE: String? { let o = _accessor.offset(VT.LAUNCH_SITE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_SITESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_SITE) }
+  ///  Decay Date, if applicable [year-month-day] (ISO 8601)
+  public var DECAY_DATE: String? { let o = _accessor.offset(VT.DECAY_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DECAY_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DECAY_DATE) }
+  ///  Orbital period [minutes]
+  public var PERIOD: Double { let o = _accessor.offset(VT.PERIOD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Inclination [degrees]
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Apogee Altitude [kilometers]
+  public var APOGEE: Double { let o = _accessor.offset(VT.APOGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Perigee Altitude [kilometers]
+  public var PERIGEE: Double { let o = _accessor.offset(VT.PERIGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Radar Cross Section [meters2]; blank if no data available
+  public var RCS: Double { let o = _accessor.offset(VT.RCS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Data status code; blank otherwise
+  public var DATA_STATUS_CODE: dataAvailability { let o = _accessor.offset(VT.DATA_STATUS_CODE); return o == 0 ? .noCurrentElements : dataAvailability(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .noCurrentElements }
+  ///  Orbit center
+  public var ORBIT_CENTER: String? { let o = _accessor.offset(VT.ORBIT_CENTER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORBIT_CENTERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORBIT_CENTER) }
+  ///  Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
+  public var ORBIT_TYPE: orbitRegime { let o = _accessor.offset(VT.ORBIT_TYPE); return o == 0 ? .orbit : orbitRegime(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .orbit }
+  ///  Deployment Date [year-month-day] (ISO 8601)
+  public var DEPLOYMENT_DATE: String? { let o = _accessor.offset(VT.DEPLOYMENT_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DEPLOYMENT_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DEPLOYMENT_DATE) }
+  ///  Indicates if the object is maneuverable
+  public var MANEUVERABLE: Bool { let o = _accessor.offset(VT.MANEUVERABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Size [meters]; blank if no data available
+  public var SIZE: Double { let o = _accessor.offset(VT.SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mass [kilograms]; blank if no data available
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mass type (Dry, Wet)
+  public var MASS_TYPE: massCategory { let o = _accessor.offset(VT.MASS_TYPE); return o == 0 ? .dry : massCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .dry }
+  ///  Vector of PAYLOADS
+  public var PAYLOADS: FlatbufferVector<PLD> { return _accessor.vector(at: VT.PAYLOADS, byteSize: 4) }
+  ///  Join key to the BUS record describing this object's satellite bus; holds
+  ///  that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+  ///  and WET_MASS are properties of the bus design and live on BUS — they are
+  ///  NOT duplicated here. Empty when the bus is unknown.
+  public var BUS_ID: String? { let o = _accessor.offset(VT.BUS_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BUS_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUS_ID) }
+  ///  Absolute URI identifying the original catalog's object-ID namespace.
+  ///  This is an identifier, not an instruction to fetch a resource. Use with
+  ///  CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+  ///  through replicas and derived catalogs; it does not assert a NORAD or
+  ///  COSPAR association. If the authority can reassign an object ID, this URI
+  ///  must identify its immutable edition or assignment interval, rather than
+  ///  the unversioned catalog. Stable IDs may use a persistent catalog URI.
+  public var CATALOG_URI: String? { let o = _accessor.offset(VT.CATALOG_URI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CATALOG_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CATALOG_URI) }
+  ///  Exact, opaque object identifier assigned by CATALOG_URI's authority.
+  ///  Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+  ///  are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+  ///  in a different namespace establishes that two records describe the same
+  ///  physical object. Publication provenance retains source and edition data.
+  public var CATALOG_OBJECT_ID: String? { let o = _accessor.offset(VT.CATALOG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CATALOG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CATALOG_OBJECT_ID) }
+  ///  The products an integrating catalog selected for the object as of
+  ///  PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+  ///  the same source and epoch where there is one. The object's maneuvers are
+  ///  its $MNV stream, not references here.
+  public var PRODUCTS: FlatbufferVector<CATProduct> { return _accessor.vector(at: VT.PRODUCTS, byteSize: 4) }
+  ///  ISO 8601 UTC instant the selection in PRODUCTS holds at.
+  public var PRODUCTS_AS_OF: String? { let o = _accessor.offset(VT.PRODUCTS_AS_OF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCTS_AS_OFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCTS_AS_OF) }
+  public static func startCAT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(OBJECT_TYPE: spaceObjectClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT_TYPE.rawValue, def: 3, at: VT.OBJECT_TYPE) }
+  public static func add(OPS_STATUS_CODE: operationalState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPS_STATUS_CODE.rawValue, def: 7, at: VT.OPS_STATUS_CODE) }
+  public static func add(OWNER: legacyCountryCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNER.rawValue, def: 0, at: VT.OWNER) }
+  public static func add(LAUNCH_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_DATE, at: VT.LAUNCH_DATE) }
+  public static func add(LAUNCH_SITE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_SITE, at: VT.LAUNCH_SITE) }
+  public static func add(DECAY_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECAY_DATE, at: VT.DECAY_DATE) }
+  public static func add(PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIOD, def: 0.0, at: VT.PERIOD) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(APOGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE, def: 0.0, at: VT.APOGEE) }
+  public static func add(PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE, def: 0.0, at: VT.PERIGEE) }
+  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: 0.0, at: VT.RCS) }
+  public static func add(DATA_STATUS_CODE: dataAvailability, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_STATUS_CODE.rawValue, def: 0, at: VT.DATA_STATUS_CODE) }
+  public static func add(ORBIT_CENTER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_CENTER, at: VT.ORBIT_CENTER) }
+  public static func add(ORBIT_TYPE: orbitRegime, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORBIT_TYPE.rawValue, def: 0, at: VT.ORBIT_TYPE) }
+  public static func add(DEPLOYMENT_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEPLOYMENT_DATE, at: VT.DEPLOYMENT_DATE) }
+  public static func add(MANEUVERABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVERABLE, def: false,
+   at: VT.MANEUVERABLE) }
+  public static func add(SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0.0, at: VT.SIZE) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(MASS_TYPE: massCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS_TYPE.rawValue, def: 0, at: VT.MASS_TYPE) }
+  public static func addVectorOf(PAYLOADS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOADS, at: VT.PAYLOADS) }
+  public static func add(BUS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUS_ID, at: VT.BUS_ID) }
+  public static func add(CATALOG_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_URI, at: VT.CATALOG_URI) }
+  public static func add(CATALOG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_OBJECT_ID, at: VT.CATALOG_OBJECT_ID) }
+  public static func addVectorOf(PRODUCTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCTS, at: VT.PRODUCTS) }
+  public static func add(PRODUCTS_AS_OF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCTS_AS_OF, at: VT.PRODUCTS_AS_OF) }
+  public static func endCAT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCAT(
+    _ fbb: inout FlatBufferBuilder,
+    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    OBJECT_TYPE: spaceObjectClass = .unknown,
+    OPS_STATUS_CODE: operationalState = .unknown,
+    OWNER: legacyCountryCode = .ab,
+    LAUNCH_DATEOffset LAUNCH_DATE: Offset = Offset(),
+    LAUNCH_SITEOffset LAUNCH_SITE: Offset = Offset(),
+    DECAY_DATEOffset DECAY_DATE: Offset = Offset(),
+    PERIOD: Double = 0.0,
+    INCLINATION: Double = 0.0,
+    APOGEE: Double = 0.0,
+    PERIGEE: Double = 0.0,
+    RCS: Double = 0.0,
+    DATA_STATUS_CODE: dataAvailability = .noCurrentElements,
+    ORBIT_CENTEROffset ORBIT_CENTER: Offset = Offset(),
+    ORBIT_TYPE: orbitRegime = .orbit,
+    DEPLOYMENT_DATEOffset DEPLOYMENT_DATE: Offset = Offset(),
+    MANEUVERABLE: Bool = false,
+    SIZE: Double = 0.0,
+    MASS: Double = 0.0,
+    MASS_TYPE: massCategory = .dry,
+    PAYLOADSVectorOffset PAYLOADS: Offset = Offset(),
+    BUS_IDOffset BUS_ID: Offset = Offset(),
+    CATALOG_URIOffset CATALOG_URI: Offset = Offset(),
+    CATALOG_OBJECT_IDOffset CATALOG_OBJECT_ID: Offset = Offset(),
+    PRODUCTSVectorOffset PRODUCTS: Offset = Offset(),
+    PRODUCTS_AS_OFOffset PRODUCTS_AS_OF: Offset = Offset()
+  ) -> Offset {
+    let __start = CAT.startCAT(&fbb)
+    CAT.add(OBJECT_NAME: OBJECT_NAME, &fbb)
+    CAT.add(OBJECT_ID: OBJECT_ID, &fbb)
+    CAT.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    CAT.add(OBJECT_TYPE: OBJECT_TYPE, &fbb)
+    CAT.add(OPS_STATUS_CODE: OPS_STATUS_CODE, &fbb)
+    CAT.add(OWNER: OWNER, &fbb)
+    CAT.add(LAUNCH_DATE: LAUNCH_DATE, &fbb)
+    CAT.add(LAUNCH_SITE: LAUNCH_SITE, &fbb)
+    CAT.add(DECAY_DATE: DECAY_DATE, &fbb)
+    CAT.add(PERIOD: PERIOD, &fbb)
+    CAT.add(INCLINATION: INCLINATION, &fbb)
+    CAT.add(APOGEE: APOGEE, &fbb)
+    CAT.add(PERIGEE: PERIGEE, &fbb)
+    CAT.add(RCS: RCS, &fbb)
+    CAT.add(DATA_STATUS_CODE: DATA_STATUS_CODE, &fbb)
+    CAT.add(ORBIT_CENTER: ORBIT_CENTER, &fbb)
+    CAT.add(ORBIT_TYPE: ORBIT_TYPE, &fbb)
+    CAT.add(DEPLOYMENT_DATE: DEPLOYMENT_DATE, &fbb)
+    CAT.add(MANEUVERABLE: MANEUVERABLE, &fbb)
+    CAT.add(SIZE: SIZE, &fbb)
+    CAT.add(MASS: MASS, &fbb)
+    CAT.add(MASS_TYPE: MASS_TYPE, &fbb)
+    CAT.addVectorOf(PAYLOADS: PAYLOADS, &fbb)
+    CAT.add(BUS_ID: BUS_ID, &fbb)
+    CAT.add(CATALOG_URI: CATALOG_URI, &fbb)
+    CAT.add(CATALOG_OBJECT_ID: CATALOG_OBJECT_ID, &fbb)
+    CAT.addVectorOf(PRODUCTS: PRODUCTS, &fbb)
+    CAT.add(PRODUCTS_AS_OF: PRODUCTS_AS_OF, &fbb)
+    return CAT.endCAT(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_TYPE, fieldName: "OBJECT_TYPE", required: false, type: spaceObjectClass.self)
+    try _v.visit(field: VT.OPS_STATUS_CODE, fieldName: "OPS_STATUS_CODE", required: false, type: operationalState.self)
     try _v.visit(field: VT.OWNER, fieldName: "OWNER", required: false, type: legacyCountryCode.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ACTIVE, fieldName: "ACTIVE", required: false, type: Bool.self)
-    try _v.visit(field: VT.SOURCE_URL, fieldName: "SOURCE_URL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_DATE, fieldName: "LAUNCH_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_SITE, fieldName: "LAUNCH_SITE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DECAY_DATE, fieldName: "DECAY_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PERIOD, fieldName: "PERIOD", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.APOGEE, fieldName: "APOGEE", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIGEE, fieldName: "PERIGEE", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS, fieldName: "RCS", required: false, type: Double.self)
+    try _v.visit(field: VT.DATA_STATUS_CODE, fieldName: "DATA_STATUS_CODE", required: false, type: dataAvailability.self)
+    try _v.visit(field: VT.ORBIT_CENTER, fieldName: "ORBIT_CENTER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORBIT_TYPE, fieldName: "ORBIT_TYPE", required: false, type: orbitRegime.self)
+    try _v.visit(field: VT.DEPLOYMENT_DATE, fieldName: "DEPLOYMENT_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MANEUVERABLE, fieldName: "MANEUVERABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.SIZE, fieldName: "SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS_TYPE, fieldName: "MASS_TYPE", required: false, type: massCategory.self)
+    try _v.visit(field: VT.PAYLOADS, fieldName: "PAYLOADS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLD>, PLD>>.self)
+    try _v.visit(field: VT.BUS_ID, fieldName: "BUS_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATALOG_URI, fieldName: "CATALOG_URI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATALOG_OBJECT_ID, fieldName: "CATALOG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRODUCTS, fieldName: "PRODUCTS", required: false, type: ForwardOffset<Vector<ForwardOffset<CATProduct>, CATProduct>>.self)
+    try _v.visit(field: VT.PRODUCTS_AS_OF, fieldName: "PRODUCTS_AS_OF", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

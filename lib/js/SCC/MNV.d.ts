@@ -1,9 +1,16 @@
 import * as flatbuffers from 'flatbuffers';
+import { PVN, PVNT } from './PVN.js';
 import { maneuverCharacterization } from './maneuverCharacterization.js';
 import { maneuverStatus } from './maneuverStatus.js';
 import { mnvOrbitalState, mnvOrbitalStateT } from './mnvOrbitalState.js';
 /**
  * Spacecraft Maneuver
+ *
+ * U, V and W are the UVW axes of an orbit state: U radial, along the position
+ * vector away from the central body; W cross-track, along the orbit normal
+ * (the direction of r x v); V in-track, W x U, completing the right-handed
+ * frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+ * pre-maneuver state at EVENT_START_TIME.
  */
 export declare class MNV implements flatbuffers.IUnpackableObject<MNVT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -78,7 +85,8 @@ export declare class MNV implements flatbuffers.IUnpackableObject<MNVT> {
     ORIG_SENSOR_ID(): string | null;
     ORIG_SENSOR_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Maneuver event identifier
+     * Maneuver event identifier. Records of one event share it: a merged event
+     * and the source records it combines.
      */
     EVENT_ID(): string | null;
     EVENT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
@@ -95,15 +103,15 @@ export declare class MNV implements flatbuffers.IUnpackableObject<MNVT> {
      */
     DELTA_VEL(): number;
     /**
-     * Delta-V along-track/U component (km/s)
+     * Delta-V along U, radial (km/s)
      */
     DELTA_VEL_U(): number;
     /**
-     * Delta-V cross-track/V component (km/s)
+     * Delta-V along V, in-track (km/s)
      */
     DELTA_VEL_V(): number;
     /**
-     * Delta-V radial/W component (km/s)
+     * Delta-V along W, cross-track (km/s)
      */
     DELTA_VEL_W(): number;
     /**
@@ -111,15 +119,15 @@ export declare class MNV implements flatbuffers.IUnpackableObject<MNVT> {
      */
     DELTA_POS(): number;
     /**
-     * Delta position U component (km)
+     * Delta position along U, radial (km)
      */
     DELTA_POS_U(): number;
     /**
-     * Delta position V component (km)
+     * Delta position along V, in-track (km)
      */
     DELTA_POS_V(): number;
     /**
-     * Delta position W component (km)
+     * Delta position along W, cross-track (km)
      */
     DELTA_POS_W(): number;
     /**
@@ -172,7 +180,8 @@ export declare class MNV implements flatbuffers.IUnpackableObject<MNVT> {
     MNVR_ACCEL_TIMES(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     mnvrAccelTimesLength(): number;
     /**
-     * Acceleration values (km/s^2, 3 components per point)
+     * Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+     * the state at that point's MNVR_ACCEL_TIMES entry
      */
     MNVR_ACCELS(index: number): number | null;
     mnvrAccelsLength(): number;
@@ -205,7 +214,9 @@ export declare class MNV implements flatbuffers.IUnpackableObject<MNVT> {
     TAGS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     tagsLength(): number;
     /**
-     * Sourced data references
+     * Sourced data references: identifiers of the records this one was
+     * determined from (CIDv1 for records of this network), such as the source
+     * records a merged event combines
      */
     SOURCED_DATA(index: number): string;
     SOURCED_DATA(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
@@ -220,6 +231,10 @@ export declare class MNV implements flatbuffers.IUnpackableObject<MNVT> {
      */
     TRANSACTION_ID(): string | null;
     TRANSACTION_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Where the maneuver's data comes from and the terms it travels under.
+     */
+    PROVENANCE(obj?: PVN): PVN | null;
     static startMNV(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addSatNo(builder: flatbuffers.Builder, SAT_NO: number): void;
@@ -290,6 +305,7 @@ export declare class MNV implements flatbuffers.IUnpackableObject<MNVT> {
     static startSourcedDataVector(builder: flatbuffers.Builder, numElems: number): void;
     static addSourcedDataTypes(builder: flatbuffers.Builder, SOURCED_DATA_TYPESOffset: flatbuffers.Offset): void;
     static addTransactionId(builder: flatbuffers.Builder, TRANSACTION_IDOffset: flatbuffers.Offset): void;
+    static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
     static endMNV(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishMNVBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedMNVBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -342,7 +358,8 @@ export declare class MNVT implements flatbuffers.IGeneratedObject {
     SOURCED_DATA: (string)[];
     SOURCED_DATA_TYPES: string | Uint8Array | null;
     TRANSACTION_ID: string | Uint8Array | null;
-    constructor(ID?: string | Uint8Array | null, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, STATUS?: maneuverStatus, CHARACTERIZATION?: maneuverCharacterization, CHARACTERIZATION_UNC?: number, REPORT_TIME?: string | Uint8Array | null, EVENT_START_TIME?: string | Uint8Array | null, EVENT_END_TIME?: string | Uint8Array | null, TOTAL_BURN_TIME?: number, OD_FIT_END_TIME?: string | Uint8Array | null, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, EVENT_ID?: string | Uint8Array | null, UCT?: boolean, MANEUVER_UNC?: number, DELTA_VEL?: number, DELTA_VEL_U?: number, DELTA_VEL_V?: number, DELTA_VEL_W?: number, DELTA_POS?: number, DELTA_POS_U?: number, DELTA_POS_V?: number, DELTA_POS_W?: number, DELTA_MASS?: number, PRE_EVENT?: mnvOrbitalStateT | null, POST_EVENT?: mnvOrbitalStateT | null, POST_MASS?: number, POST_AREA?: number, COV?: (number)[], NUM_OBS?: number, STATE_MODEL?: string | Uint8Array | null, STATE_MODEL_VERSION?: number, NUM_ACCEL_POINTS?: number, MNVR_ACCEL_TIMES?: (string)[], MNVR_ACCELS?: (number)[], MNVR_ACCEL_UNCS?: (number)[], DESCRIPTION?: string | Uint8Array | null, DESCRIPTOR?: string | Uint8Array | null, ALGORITHM?: string | Uint8Array | null, TAGS?: (string)[], SOURCED_DATA?: (string)[], SOURCED_DATA_TYPES?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null);
+    PROVENANCE: PVNT | null;
+    constructor(ID?: string | Uint8Array | null, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, STATUS?: maneuverStatus, CHARACTERIZATION?: maneuverCharacterization, CHARACTERIZATION_UNC?: number, REPORT_TIME?: string | Uint8Array | null, EVENT_START_TIME?: string | Uint8Array | null, EVENT_END_TIME?: string | Uint8Array | null, TOTAL_BURN_TIME?: number, OD_FIT_END_TIME?: string | Uint8Array | null, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, EVENT_ID?: string | Uint8Array | null, UCT?: boolean, MANEUVER_UNC?: number, DELTA_VEL?: number, DELTA_VEL_U?: number, DELTA_VEL_V?: number, DELTA_VEL_W?: number, DELTA_POS?: number, DELTA_POS_U?: number, DELTA_POS_V?: number, DELTA_POS_W?: number, DELTA_MASS?: number, PRE_EVENT?: mnvOrbitalStateT | null, POST_EVENT?: mnvOrbitalStateT | null, POST_MASS?: number, POST_AREA?: number, COV?: (number)[], NUM_OBS?: number, STATE_MODEL?: string | Uint8Array | null, STATE_MODEL_VERSION?: number, NUM_ACCEL_POINTS?: number, MNVR_ACCEL_TIMES?: (string)[], MNVR_ACCELS?: (number)[], MNVR_ACCEL_UNCS?: (number)[], DESCRIPTION?: string | Uint8Array | null, DESCRIPTOR?: string | Uint8Array | null, ALGORITHM?: string | Uint8Array | null, TAGS?: (string)[], SOURCED_DATA?: (string)[], SOURCED_DATA_TYPES?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, PROVENANCE?: PVNT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=MNV.d.ts.map

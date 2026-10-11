@@ -8,10 +8,15 @@ import Common
 
 import FlatBuffers
 
-public enum legacyCountryCode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
+///  Owner and country codes of the public satellite catalog. An ordinal is a
+///  wire value: members are appended after ZWE, never inserted, so the ones
+///  after it are out of alphabetical order. Some owners have two codes, the
+///  catalog's older one and an ISO 3166-1 alpha-3 code the catalog also uses
+///  (CA and CAN); each code is its own member.
+public enum legacyCountryCode: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
   ///  Arab Satellite Communications Organization
   case ab = 0
   ///  Asia Broadcast Satellite
@@ -264,8 +269,38 @@ public enum legacyCountryCode: Int8, FlatbuffersVectorInitializable, Enum, Verif
   case vtnm = 124
   ///  Republic of Zimbabwe
   case zwe = 125
+  ///  Angola (ISO 3166-1 alpha-3; also ANG)
+  case ago = 126
+  ///  Bulgaria (ISO 3166-1 alpha-3; also BUL)
+  case bgr = 127
+  ///  Bahrain
+  case bhr = 128
+  ///  Botswana
+  case bwa = 129
+  ///  Canada (ISO 3166-1 alpha-3; also CA)
+  case can = 130
+  ///  Czechia (ISO 3166-1 alpha-3; also CZCH)
+  case cze = 131
+  ///  Croatia
+  case hrv = 132
+  ///  Jordan
+  case jor = 133
+  ///  Kuwait
+  case kwt = 134
+  ///  Peru (ISO 3166-1 alpha-3; also PERU)
+  case per = 135
+  ///  Puerto Rico
+  case pri = 136
+  ///  Solomon Islands
+  case slb = 137
+  ///  Slovakia
+  case svk = 138
+  ///  Taiwan (ISO 3166-1 alpha-3; also ROC)
+  case twn = 139
+  ///  Uganda
+  case uga = 140
 
-  public static var max: legacyCountryCode { return .zwe }
+  public static var max: legacyCountryCode { return .uga }
   public static var min: legacyCountryCode { return .ab }
 }
 
@@ -291,7 +326,7 @@ public struct LCC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let RETRIEVED_AT: VOffset = 14
   }
 
-  public var OWNER: legacyCountryCode { let o = _accessor.offset(VT.OWNER); return o == 0 ? .ab : legacyCountryCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ab }
+  public var OWNER: legacyCountryCode { let o = _accessor.offset(VT.OWNER); return o == 0 ? .ab : legacyCountryCode(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .ab }
   ///  Display name of the owner or source the code stands for.
   public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }

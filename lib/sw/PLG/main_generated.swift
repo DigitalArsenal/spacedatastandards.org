@@ -8,411 +8,1825 @@ import Common
 
 import FlatBuffers
 
-///  Capability class of a distributable software unit (module, application, or
-///  composed flow).
+///  Plugin type category.
 ///
-///  This enum IS the ratified category vocabulary. A storefront, library, module
-///  manifest and search surface all classify against these members and nothing
-///  else; a category that is not a member here does not exist. Members name
-///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
-///  site, organization, product, protocol brand or algorithm implementation;
-///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
-///  the taxonomy.
+///  DEPRECATED as a classification vocabulary — superseded by `$CCT`
+///  `capabilityClass`, read through `PLG.PRIMARY_CATEGORY` / `PLG.CATEGORIES`.
+///  The enum and the `PLUGIN_TYPE` field remain on the wire permanently
+///  (ordinals are wire values and published manifests decode against them);
+///  only their use as the grouping vocabulary is retired.
 ///
-///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
-///  reuse an ordinal. A reorder silently re-labels every published listing.
+///  It cannot be repaired in place, which is why it is superseded rather than
+///  extended:
+///    - it is SINGLE-VALUED, and a storefront browse surface classifies one
+///      unit under several categories;
+///    - ordinal 0 is `Sensor`, a REAL family, so an unset or zero-filled value
+///      decodes as a category the publisher never stated — the reason
+///      `Unspecified` had to be appended at the tail instead of held at 0;
+///    - it mixes capability families with node-internal plumbing
+///      (`Infrastructure`, `Licensing`, `Storefront`, `Publisher`), which are
+///      not shelves a catalogue consumer browses;
+///    - it carries `Basilisk`, a vendor-derived member that owner law
+///      2026-08-06 (no vendor/site/org names in standards) forbids;
+///    - a `byte` enum cannot carry the display name, summary, route slug,
+///      ordering or icon a storefront must render, and `$CCT` publishes all of
+///      them alongside the code.
 ///
-///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
-///  default-constructed classification can never decode as a real category. The
-///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
-///  ordinal 0 is a real family — and had to append an `Unspecified` member at
-///  the tail to recover. This enum does not repeat that.
-///
-///  Each member's canonical display name is stated in its doc comment and is
-///  part of the ratified contract: a consumer rendering a category label uses
-///  that string verbatim, so every surface spells a category identically. The
-///  canonical route slug is the member identifier lowercased with `_` replaced
-///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
-///  "rf-and-communications").
-public enum capabilityClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  MIGRATION: publishers SHOULD populate `PRIMARY_CATEGORY`/`CATEGORIES` and
+///  SHOULD continue to populate `PLUGIN_TYPE` for consumers pinned before the
+///  taxonomy existed. The per-member forward mapping is normative and is stated
+///  on `PLG.PRIMARY_CATEGORY`. Consumers that can read `PRIMARY_CATEGORY` MUST
+///  prefer it; `PLUGIN_TYPE` is a fallback only when `PRIMARY_CATEGORY` is
+///  `UNSPECIFIED`.
+public enum pluginCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Sensor simulation and analysis
+  case sensor = 0
+  ///  Orbital propagation algorithms
+  case propagator = 1
+  ///  Custom rendering/visualization
+  case renderer = 2
+  ///  Data analysis and processing
+  case analysis = 3
+  ///  External data source integration
+  case datasource = 4
+  ///  Electronic warfare simulation
+  case ew = 5
+  ///  Communications modeling
+  case comms = 6
+  ///  Physics simulation
+  case physics = 7
+  ///  GLSL shader plugins for custom visualization
+  case shader = 8
+  ///  Parses raw upstream bytes into canonical SDS records
+  case parser = 9
+  ///  Validates records (integrity, physical bounds, continuity)
+  case validator = 10
+  ///  Interpolates ephemeris / state-vector records
+  case interpolator = 11
+  ///  Exports records to external formats (CSV, etc.)
+  case exporter = 12
+  ///  Foundational math / utility library module
+  case foundation = 13
+  ///  Node infrastructure (runtime, delivery, registry)
+  case infrastructure = 14
+  ///  Module-delivery licensing / key authority
+  case licensing = 15
+  ///  Storefront listing / discovery
+  case storefront = 16
+  ///  Publication: PNM signing + pub/sub announcement
+  case publisher = 17
+  ///  DEPRECATED — owner law 2026-08-06 forbids vendor/org-derived names in a
+  ///  standard's vocabulary, and this member is one. Its ordinal is wire data
+  ///  and is therefore NEVER removed or reused, and renaming it in place would
+  ///  still be a breaking change for every published manifest; the sanctioned
+  ///  repair is to stop publishing it. Publishers MUST migrate to
+  ///  `PRIMARY_CATEGORY: PROPAGATION` (astrodynamics simulation and
+  ///  dynamics-modelling) and MUST NOT set `PLUGIN_TYPE: Basilisk` on new
+  ///  manifests. Consumers MUST render an existing record carrying it as
+  ///  `Propagation` and MUST NOT surface the member identifier in any user-
+  ///  facing label.
+  case basilisk = 18
+  ///  Maneuver planning, targeting and trajectory optimization
+  case maneuver = 19
+  ///  A composed flow published as a single loadable module. The unit is a
+  ///  graph of other modules, not a leaf algorithm.
+  case flow = 20
+  ///  No family stated. Sits at the end of the enum rather than at 0 because
+  ///  this enum is append-only and `Sensor` already holds 0; it exists so a
+  ///  record can distinguish "the provider did not say" from "Sensor". A
+  ///  consumer MUST render an `Unspecified` module as ungrouped, never as a
+  ///  member of any family.
+  case unspecified = 21
+
+  public static var max: pluginCategory { return .unspecified }
+  public static var min: pluginCategory { return .sensor }
+}
+
+
+///  Storefront payment model for the plugin listing
+public enum purchaseTier: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  No payment required
+  case free = 0
+  ///  Single one-time purchase
+  case onetime = 1
+  ///  Recurring subscription purchase
+  case subscription = 2
+
+  public static var max: purchaseTier { return .subscription }
+  public static var min: purchaseTier { return .free }
+}
+
+
+///  Publication visibility for the plugin listing
+public enum publicationState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Discoverable in public storefront listings
+  case public_ = 0
+  ///  Addressable directly but hidden from public browse surfaces
+  case unlisted = 1
+  ///  No longer offered for new installs or purchases
+  case retired = 2
+
+  public static var max: publicationState { return .retired }
+  public static var min: publicationState { return .public_ }
+}
+
+
+///  Canonical invoke surfaces a plugin artifact can expose. A single
+///  artifact can support multiple.
+public enum invokeSurfaceKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  ///  No capability class stated. The publisher did not classify the unit.
-  ///  A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT
-  ///  infer a class from the unit's name, description or tags.
-  ///  Display name: "Unspecified".
-  case unspecified = 0
-  ///  Advancing an object's state forward or backward in time under a force
-  ///  model, and interpolating between computed states.
-  ///  Display name: "Propagation".
-  case propagation = 1
-  ///  Estimating an object's state or model parameters by fitting to
-  ///  observations or ephemerides.
-  ///  Display name: "Orbit Determination".
-  case orbitDetermination = 2
-  ///  Planning, targeting and optimizing trajectory changes, including
-  ///  station-keeping, transfers and collision-avoidance maneuvers.
-  ///  Display name: "Maneuver Planning".
-  case maneuverPlanning = 3
-  ///  Screening for close approaches between objects and quantifying collision
-  ///  probability and miss distance.
-  ///  Display name: "Conjunction Assessment".
-  case conjunctionAssessment = 4
-  ///  Atmospheric reentry, decay prediction, fragmentation and debris-cloud
-  ///  evolution.
-  ///  Display name: "Reentry & Breakup".
-  case reentryAndBreakup = 5
-  ///  Attitude determination and control, body orientation, and pointing or
-  ///  slew planning.
-  ///  Display name: "Attitude & Pointing".
-  case attitudeAndPointing = 6
-  ///  Coordinate frame realization and transformation, time scale conversion,
-  ///  and earth-orientation parameter handling.
-  ///  Display name: "Reference Frames & Time".
-  case referenceFramesAndTime = 7
-  ///  Sensor modelling and tasking, field-of-regard and access computation, and
-  ///  area or target coverage figures of merit.
-  ///  Display name: "Sensors & Coverage".
-  case sensorsAndCoverage = 8
-  ///  Producing, correlating or associating observations of tracked objects,
-  ///  and maintaining tracks from them.
-  ///  Display name: "Tracking & Observation".
-  case trackingAndObservation = 9
-  ///  Radio-frequency link modelling, emitter and band characterization, signal
-  ///  capture handling, and communications planning.
-  ///  Display name: "RF & Communications".
-  case rfAndCommunications = 10
-  ///  Interference, jamming, spoofing and countermeasure modelling.
-  ///  Display name: "Electronic Warfare".
-  case electronicWarfare = 11
-  ///  Atmospheric density, gravity field, magnetic field, radiation, solar and
-  ///  geomagnetic activity, and ionospheric modelling.
-  ///  Display name: "Space Environment".
-  case spaceEnvironment = 12
-  ///  Acquiring bytes from upstream providers and parsing or exporting them
-  ///  across canonical record formats.
-  ///  Display name: "Data Sources & Ingest".
-  case dataSourcesAndIngest = 13
-  ///  Validating records for integrity, physical plausibility, continuity and
-  ///  schema conformance, and scoring data quality.
-  ///  Display name: "Data Validation & Quality".
-  case dataValidationAndQuality = 14
-  ///  Object catalogue curation, cross-identifier resolution, bus and physical
-  ///  property association, and entity identity.
-  ///  Display name: "Catalog & Identity".
-  case catalogAndIdentity = 15
-  ///  Rendering, scene composition, shading and interactive display of space
-  ///  data.
-  ///  Display name: "Visualization & Rendering".
-  case visualizationAndRendering = 16
-  ///  Ground station operation and control of physical equipment, including
-  ///  antenna rotators, radios and other hardware interfaces.
-  ///  Display name: "Ground Segment & Hardware".
-  case groundSegmentAndHardware = 17
-  ///  Mission and constellation design, trade studies, performance analysis and
-  ///  report generation.
-  ///  Display name: "Mission Design & Analysis".
-  case missionDesignAndAnalysis = 18
-  ///  Composition of other units into a graph. The unit of distribution is a
-  ///  flow of modules, not a leaf algorithm.
-  ///  Display name: "Flows & Composition".
-  case flowAndComposition = 19
-  ///  Persisting, indexing and querying records; storage engines and query
-  ///  surfaces.
-  ///  Display name: "Data Storage & Query".
-  case dataStorageAndQuery = 20
-  ///  Key custody, signing and verification, authentication, authorization and
-  ///  access control.
-  ///  Display name: "Security & Identity".
-  case securityAndIdentity = 21
-  ///  Listing, purchase, subscription, entitlement and license enforcement for
-  ///  distributed units.
-  ///  Display name: "Commerce & Licensing".
-  case commerceAndLicensing = 22
-  ///  Node runtime, artifact delivery, registry, publication and peer transport
-  ///  plumbing.
-  ///  Display name: "Node Infrastructure".
-  case nodeInfrastructure = 23
-  ///  Foundational mathematics and general-purpose utility libraries consumed by
-  ///  other units rather than run on their own.
-  ///  Display name: "Foundation & Math".
-  case foundationAndMath = 24
+  ///  Direct ABI — host calls `plugin_invoke_stream` in-process.
+  case direct = 0
+  ///  Command surface — envelope is queued by a runtime host.
+  case command = 1
 
-  public static var max: capabilityClass { return .foundationAndMath }
-  public static var min: capabilityClass { return .unspecified }
+  public static var max: invokeSurfaceKind { return .command }
+  public static var min: invokeSurfaceKind { return .direct }
 }
 
 
-///  One ratified category in the taxonomy.
-///
-///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
-///  without the label a surface will render, the sentence a browse row will
-///  show, and the route a link will target. This is what stops each consumer
-///  from inventing its own wording for the same code.
-public struct CCTCategory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Drain semantics for a method that operates over queued stream frames.
+///  Enum name is deliberately distinct from any camelCase field name
+///  (`DRAIN_POLICY` would collide otherwise).
+public enum drainBehavior: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  One invocation consumes exactly one input frame.
+  case singleShot = 0
+  ///  Invocation drains queued work until it voluntarily yields.
+  case drainUntilYield = 1
+  ///  Invocation drains to empty before returning.
+  case drainToEmpty = 2
+
+  public static var max: drainBehavior { return .drainToEmpty }
+  public static var min: drainBehavior { return .singleShot }
+}
+
+
+///  Host capability classes a plugin may request. Extends the simpler
+///  `PluginCapability` (which is name+version metadata) with the richer
+///  enum-based surface that runtime hosts gate on.
+public enum hostCapabilityKind: UInt16, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt16
+  public static var byteSize: Int { return MemoryLayout<UInt16>.size }
+  public var value: UInt16 { return self.rawValue }
+  case clock = 0
+  case random = 1
+  case logging = 2
+  case timers = 3
+  case pubsub = 4
+  case protocolDial = 5
+  case protocolHandle = 6
+  case storageQuery = 7
+  case sceneAccess = 8
+  case entityAccess = 9
+  case renderHooks = 10
+  case http = 11
+  case filesystem = 12
+  case pipe = 13
+  case network = 14
+  case database = 15
+  case storageAdapter = 16
+  case storageWrite = 17
+  case walletSign = 18
+  case ipfs = 19
+  case tls = 20
+  case mqtt = 21
+  case websocket = 22
+  case tcp = 23
+  case udp = 24
+  case processExec = 25
+  case contextRead = 26
+  case contextWrite = 27
+  case cryptoHash = 28
+  case cryptoSign = 29
+  case cryptoVerify = 30
+  case cryptoEncrypt = 31
+  case cryptoDecrypt = 32
+  case cryptoKeyAgreement = 33
+  case cryptoKdf = 34
+  case scheduleCron = 35
+  ///  Batch record ingest with source provenance tags (provider id, source
+  ///  name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+  ///  single record without source attribution. Hosts gate
+  ///  storage.ingest_with_source on this capability specifically.
+  case storageIngest = 36
+
+  public static var max: hostCapabilityKind { return .storageIngest }
+  public static var min: hostCapabilityKind { return .clock }
+}
+
+
+///  Compile-time routing decision for an edge. The aligned option is legal only
+///  when the producer and consumer share the declared arena and the runtime can
+///  prove bounds, alignment, ownership, mutability, and lifetime.
+public enum flowEdgeRoutePolicy: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case canonicalOnly = 0
+  case alignedSharedArenaOrCanonical = 1
+
+  public static var max: flowEdgeRoutePolicy { return .alignedSharedArenaOrCanonical }
+  public static var min: flowEdgeRoutePolicy { return .canonicalOnly }
+}
+
+
+///  Plugin capability declaration
+public struct PluginCapability: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategory.id, addPrefix: prefix) }
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PluginCapability.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE: VOffset = 4
-    static let DISPLAY_NAME: VOffset = 6
-    static let SUMMARY: VOffset = 8
-    static let SLUG: VOffset = 10
-    static let DESCRIPTION: VOffset = 12
-    static let PARENT: VOffset = 14
-    static let SORT_ORDER: VOffset = 16
-    static let KEYWORDS: VOffset = 18
-    static let ICON_KEY: VOffset = 20
+    static let NAME: VOffset = 4
+    static let VERSION: VOffset = 6
+    static let REQUIRED: VOffset = 8
   }
 
-  ///  The ratified category code. This is the join key every consumer uses.
-  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
-  ///  name stated in the CODE member's doc comment.
-  public var DISPLAY_NAME: String! { let o = _accessor.offset(VT.DISPLAY_NAME); return _accessor.string(at: o) }
-  public var DISPLAY_NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DISPLAY_NAME) }
-  ///  One-sentence description shown on browse rows and category headers.
-  public var SUMMARY: String! { let o = _accessor.offset(VT.SUMMARY); return _accessor.string(at: o) }
-  public var SUMMARYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SUMMARY) }
-  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
-  ///  `-`. Published explicitly rather than derived so every surface routes
-  ///  identically.
-  public var SLUG: String! { let o = _accessor.offset(VT.SLUG); return _accessor.string(at: o) }
-  public var SLUGSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SLUG) }
-  ///  Longer editorial description for a category landing page.
+  ///  Capability name, e.g., "gpu_compute", "wasm_simd"
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Capability version
+  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
+  ///  Whether this capability is required
+  public var REQUIRED: Bool { let o = _accessor.offset(VT.REQUIRED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPluginCapability(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(REQUIRED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED, def: false,
+   at: VT.REQUIRED) }
+  public static func endPluginCapability(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPluginCapability(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    VERSIONOffset VERSION: Offset = Offset(),
+    REQUIRED: Bool = false
+  ) -> Offset {
+    let __start = PluginCapability.startPluginCapability(&fbb)
+    PluginCapability.add(NAME: NAME, &fbb)
+    PluginCapability.add(VERSION: VERSION, &fbb)
+    PluginCapability.add(REQUIRED: REQUIRED, &fbb)
+    return PluginCapability.endPluginCapability(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUIRED, fieldName: "REQUIRED", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Accepted schema family for a port. When a port accepts multiple wire
+///  formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE
+///  entry carries its own TAB.FlatBufferTypeRef with the schema identity,
+///  and the enclosing PLGPortManifest advertises both wire formats via
+///  ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises
+///  aligned-binary MUST also advertise the canonical flatbuffer fallback
+///  for the same schema and file identifier in the same set.
+public struct PLGAcceptedTypeSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGAcceptedTypeSet.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SET_ID: VOffset = 4
+    static let ALLOWED_TYPES: VOffset = 6
+    static let ALLOWED_WIRE_FORMATS: VOffset = 8
+    static let DESCRIPTION: VOffset = 10
+  }
+
+  ///  Stable type-set identifier within the port.
+  public var SET_ID: String! { let o = _accessor.offset(VT.SET_ID); return _accessor.string(at: o) }
+  public var SET_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SET_ID) }
+  ///  Specific FlatBuffer types accepted by the set.
+  public var ALLOWED_TYPES: FlatbufferVector<FlatBufferTypeRef> { return _accessor.vector(at: VT.ALLOWED_TYPES, byteSize: 4) }
+  ///  Wire formats this set accepts. If ALIGNED_BINARY is present,
+  ///  FLATBUFFER MUST also be present for the same schemas.
+  public var ALLOWED_WIRE_FORMATS: FlatbufferVector<payloadWireFormat> { return _accessor.vector(at: VT.ALLOWED_WIRE_FORMATS, byteSize: 1) }
+  ///  Human-readable explanation of the accepted schema family.
   public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
-  ///  top-level category. A category MUST NOT name itself as its parent.
-  public var PARENT: capabilityClass { let o = _accessor.offset(VT.PARENT); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Presentation order within its parent, ascending. Ties break on
-  ///  DISPLAY_NAME.
-  public var SORT_ORDER: UInt16 { let o = _accessor.offset(VT.SORT_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Search synonyms and alternate phrasings that resolve to this category.
-  ///  Feeds type-ahead; never rendered as the category label.
-  public var KEYWORDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.KEYWORDS, byteSize: 4) }
-  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
-  ///  URL: consuming node surfaces load zero external-origin bytes, so the
-  ///  consumer resolves this against its own local asset set.
-  public var ICON_KEY: String? { let o = _accessor.offset(VT.ICON_KEY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICON_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_KEY) }
-  public static func startCCTCategory(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
-  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
-  public static func add(SUMMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUMMARY, at: VT.SUMMARY) }
-  public static func add(SLUG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLUG, at: VT.SLUG) }
+  public static func startPLGAcceptedTypeSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SET_ID, at: VT.SET_ID) }
+  public static func addVectorOf(ALLOWED_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_TYPES, at: VT.ALLOWED_TYPES) }
+  public static func addVectorOf(ALLOWED_WIRE_FORMATS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_WIRE_FORMATS, at: VT.ALLOWED_WIRE_FORMATS) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(PARENT: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARENT.rawValue, def: 0, at: VT.PARENT) }
-  public static func add(SORT_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SORT_ORDER, def: 0, at: VT.SORT_ORDER) }
-  public static func addVectorOf(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VT.KEYWORDS) }
-  public static func add(ICON_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_KEY, at: VT.ICON_KEY) }
-  public static func endCCTCategory(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10]); return end }
-  public static func createCCTCategory(
+  public static func endPLGAcceptedTypeSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPLGAcceptedTypeSet(
     _ fbb: inout FlatBufferBuilder,
-    CODE: capabilityClass = .unspecified,
-    DISPLAY_NAMEOffset DISPLAY_NAME: Offset,
-    SUMMARYOffset SUMMARY: Offset,
-    SLUGOffset SLUG: Offset,
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    PARENT: capabilityClass = .unspecified,
-    SORT_ORDER: UInt16 = 0,
-    KEYWORDSVectorOffset KEYWORDS: Offset = Offset(),
-    ICON_KEYOffset ICON_KEY: Offset = Offset()
+    SET_IDOffset SET_ID: Offset,
+    ALLOWED_TYPESVectorOffset ALLOWED_TYPES: Offset = Offset(),
+    ALLOWED_WIRE_FORMATSVectorOffset ALLOWED_WIRE_FORMATS: Offset = Offset(),
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
   ) -> Offset {
-    let __start = CCTCategory.startCCTCategory(&fbb)
-    CCTCategory.add(CODE: CODE, &fbb)
-    CCTCategory.add(DISPLAY_NAME: DISPLAY_NAME, &fbb)
-    CCTCategory.add(SUMMARY: SUMMARY, &fbb)
-    CCTCategory.add(SLUG: SLUG, &fbb)
-    CCTCategory.add(DESCRIPTION: DESCRIPTION, &fbb)
-    CCTCategory.add(PARENT: PARENT, &fbb)
-    CCTCategory.add(SORT_ORDER: SORT_ORDER, &fbb)
-    CCTCategory.addVectorOf(KEYWORDS: KEYWORDS, &fbb)
-    CCTCategory.add(ICON_KEY: ICON_KEY, &fbb)
-    return CCTCategory.endCCTCategory(&fbb, start: __start)
+    let __start = PLGAcceptedTypeSet.startPLGAcceptedTypeSet(&fbb)
+    PLGAcceptedTypeSet.add(SET_ID: SET_ID, &fbb)
+    PLGAcceptedTypeSet.addVectorOf(ALLOWED_TYPES: ALLOWED_TYPES, &fbb)
+    PLGAcceptedTypeSet.addVectorOf(ALLOWED_WIRE_FORMATS: ALLOWED_WIRE_FORMATS, &fbb)
+    PLGAcceptedTypeSet.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return PLGAcceptedTypeSet.endPLGAcceptedTypeSet(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUMMARY, fieldName: "SUMMARY", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SLUG, fieldName: "SLUG", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SET_ID, fieldName: "SET_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALLOWED_TYPES, fieldName: "ALLOWED_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<FlatBufferTypeRef>, FlatBufferTypeRef>>.self)
+    try _v.visit(field: VT.ALLOWED_WIRE_FORMATS, fieldName: "ALLOWED_WIRE_FORMATS", required: false, type: ForwardOffset<Vector<payloadWireFormat, payloadWireFormat>>.self)
     try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PARENT, fieldName: "PARENT", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.SORT_ORDER, fieldName: "SORT_ORDER", required: false, type: UInt16.self)
-    try _v.visit(field: VT.KEYWORDS, fieldName: "KEYWORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.ICON_KEY, fieldName: "ICON_KEY", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  An observed count of catalogue items in one category.
-///
-///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
-///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
-///  count can never omit when it was taken or what it was taken over. A consumer
-///  that needs a live number computes it from the items; a consumer rendering a
-///  published rollup MUST show it as of COUNTED_AT.
-public struct CCTCategoryRollup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One input or output port on a method.
+public struct PLGPortManifest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategoryRollup.id, addPrefix: prefix) }
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGPortManifest.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE: VOffset = 4
-    static let ITEM_COUNT: VOffset = 6
-    static let SOURCE_CATALOG_ID: VOffset = 8
-    static let COUNTED_AT: VOffset = 10
+    static let PORT_ID: VOffset = 4
+    static let DISPLAY_NAME: VOffset = 6
+    static let ACCEPTED_TYPE_SETS: VOffset = 8
+    static let MIN_STREAMS: VOffset = 10
+    static let MAX_STREAMS: VOffset = 12
+    static let REQUIRED: VOffset = 14
+    static let DESCRIPTION: VOffset = 16
   }
 
-  ///  Category being counted.
-  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
-  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
-  public var ITEM_COUNT: UInt32 { let o = _accessor.offset(VT.ITEM_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Identifier of the catalogue the count was taken over.
-  public var SOURCE_CATALOG_ID: String! { let o = _accessor.offset(VT.SOURCE_CATALOG_ID); return _accessor.string(at: o) }
-  public var SOURCE_CATALOG_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE_CATALOG_ID) }
-  ///  Unix seconds when the count was taken.
-  public var COUNTED_AT: UInt64 { let o = _accessor.offset(VT.COUNTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startCCTCategoryRollup(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
-  public static func add(ITEM_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITEM_COUNT, def: 0, at: VT.ITEM_COUNT) }
-  public static func add(SOURCE_CATALOG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CATALOG_ID, at: VT.SOURCE_CATALOG_ID) }
-  public static func add(COUNTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNTED_AT, def: 0, at: VT.COUNTED_AT) }
-  public static func endCCTCategoryRollup(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8]); return end }
-  public static func createCCTCategoryRollup(
+  ///  Stable port identifier within the method.
+  public var PORT_ID: String! { let o = _accessor.offset(VT.PORT_ID); return _accessor.string(at: o) }
+  public var PORT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PORT_ID) }
+  ///  Human-readable name for UIs.
+  public var DISPLAY_NAME: String? { let o = _accessor.offset(VT.DISPLAY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DISPLAY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DISPLAY_NAME) }
+  ///  Type sets accepted on this port.
+  public var ACCEPTED_TYPE_SETS: FlatbufferVector<PLGAcceptedTypeSet> { return _accessor.vector(at: VT.ACCEPTED_TYPE_SETS, byteSize: 4) }
+  ///  Minimum number of streams that must be connected.
+  public var MIN_STREAMS: UInt16 { let o = _accessor.offset(VT.MIN_STREAMS); return o == 0 ? 1 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Maximum number of streams that may be connected.
+  public var MAX_STREAMS: UInt16 { let o = _accessor.offset(VT.MAX_STREAMS); return o == 0 ? 1 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Whether the port must be connected for invocation.
+  public var REQUIRED: Bool { let o = _accessor.offset(VT.REQUIRED); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Optional human-readable description.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public static func startPLGPortManifest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VT.PORT_ID) }
+  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
+  public static func addVectorOf(ACCEPTED_TYPE_SETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCEPTED_TYPE_SETS, at: VT.ACCEPTED_TYPE_SETS) }
+  public static func add(MIN_STREAMS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_STREAMS, def: 1, at: VT.MIN_STREAMS) }
+  public static func add(MAX_STREAMS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_STREAMS, def: 1, at: VT.MAX_STREAMS) }
+  public static func add(REQUIRED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED, def: true,
+   at: VT.REQUIRED) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func endPLGPortManifest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPLGPortManifest(
     _ fbb: inout FlatBufferBuilder,
-    CODE: capabilityClass = .unspecified,
-    ITEM_COUNT: UInt32 = 0,
-    SOURCE_CATALOG_IDOffset SOURCE_CATALOG_ID: Offset,
-    COUNTED_AT: UInt64 = 0
+    PORT_IDOffset PORT_ID: Offset,
+    DISPLAY_NAMEOffset DISPLAY_NAME: Offset = Offset(),
+    ACCEPTED_TYPE_SETSVectorOffset ACCEPTED_TYPE_SETS: Offset = Offset(),
+    MIN_STREAMS: UInt16 = 1,
+    MAX_STREAMS: UInt16 = 1,
+    REQUIRED: Bool = true,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
   ) -> Offset {
-    let __start = CCTCategoryRollup.startCCTCategoryRollup(&fbb)
-    CCTCategoryRollup.add(CODE: CODE, &fbb)
-    CCTCategoryRollup.add(ITEM_COUNT: ITEM_COUNT, &fbb)
-    CCTCategoryRollup.add(SOURCE_CATALOG_ID: SOURCE_CATALOG_ID, &fbb)
-    CCTCategoryRollup.add(COUNTED_AT: COUNTED_AT, &fbb)
-    return CCTCategoryRollup.endCCTCategoryRollup(&fbb, start: __start)
+    let __start = PLGPortManifest.startPLGPortManifest(&fbb)
+    PLGPortManifest.add(PORT_ID: PORT_ID, &fbb)
+    PLGPortManifest.add(DISPLAY_NAME: DISPLAY_NAME, &fbb)
+    PLGPortManifest.addVectorOf(ACCEPTED_TYPE_SETS: ACCEPTED_TYPE_SETS, &fbb)
+    PLGPortManifest.add(MIN_STREAMS: MIN_STREAMS, &fbb)
+    PLGPortManifest.add(MAX_STREAMS: MAX_STREAMS, &fbb)
+    PLGPortManifest.add(REQUIRED: REQUIRED, &fbb)
+    PLGPortManifest.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return PLGPortManifest.endPLGPortManifest(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.ITEM_COUNT, fieldName: "ITEM_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.SOURCE_CATALOG_ID, fieldName: "SOURCE_CATALOG_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.COUNTED_AT, fieldName: "COUNTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PORT_ID, fieldName: "PORT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACCEPTED_TYPE_SETS, fieldName: "ACCEPTED_TYPE_SETS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGAcceptedTypeSet>, PLGAcceptedTypeSet>>.self)
+    try _v.visit(field: VT.MIN_STREAMS, fieldName: "MIN_STREAMS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.MAX_STREAMS, fieldName: "MAX_STREAMS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.REQUIRED, fieldName: "REQUIRED", required: false, type: Bool.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  $CCT — Capability Category Taxonomy.
-///
-///  The ratified set of capability classes that distributable units (modules,
-///  applications, composed flows) are classified under, together with the labels
-///  and routes every consuming surface renders. One published $CCT is the single
-///  source of truth shared by a storefront, a library, a search index and the
-///  unit manifests themselves.
-///
-///  Division of labour: `$CCT` = the category vocabulary and its presentation;
-///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
-///  application's manifest, which cites categories by code; `$PMM` = which
-///  modules a provider serves; `$STO`/`$STF` = commerce.
-public struct CCT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One host capability dependency (richer form of PluginCapability).
+public struct PLGHostCapability: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCT.id, addPrefix: prefix) }
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGHostCapability.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let TAXONOMY_ID: VOffset = 4
-    static let VERSION: VOffset = 6
-    static let ISSUED_AT: VOffset = 8
-    static let TITLE: VOffset = 10
-    static let CATEGORIES: VOffset = 12
-    static let ROLLUPS: VOffset = 14
-    static let SIGNATURE: VOffset = 16
+    static let CAPABILITY: VOffset = 4
+    static let SCOPE: VOffset = 6
+    static let REQUIRED: VOffset = 8
+    static let DESCRIPTION: VOffset = 10
   }
 
-  ///  Stable identifier of this taxonomy publication.
-  public var TAXONOMY_ID: String! { let o = _accessor.offset(VT.TAXONOMY_ID); return _accessor.string(at: o) }
-  public var TAXONOMY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TAXONOMY_ID) }
-  ///  SemVer 2.0.0 version of the taxonomy content.
+  public var CAPABILITY: hostCapabilityKind { let o = _accessor.offset(VT.CAPABILITY); return o == 0 ? .clock : hostCapabilityKind(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .clock }
+  public var SCOPE: String? { let o = _accessor.offset(VT.SCOPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCOPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCOPE) }
+  public var REQUIRED: Bool { let o = _accessor.offset(VT.REQUIRED); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public static func startPLGHostCapability(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(CAPABILITY: hostCapabilityKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CAPABILITY.rawValue, def: 0, at: VT.CAPABILITY) }
+  public static func add(SCOPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCOPE, at: VT.SCOPE) }
+  public static func add(REQUIRED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED, def: true,
+   at: VT.REQUIRED) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func endPLGHostCapability(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPLGHostCapability(
+    _ fbb: inout FlatBufferBuilder,
+    CAPABILITY: hostCapabilityKind = .clock,
+    SCOPEOffset SCOPE: Offset = Offset(),
+    REQUIRED: Bool = true,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
+  ) -> Offset {
+    let __start = PLGHostCapability.startPLGHostCapability(&fbb)
+    PLGHostCapability.add(CAPABILITY: CAPABILITY, &fbb)
+    PLGHostCapability.add(SCOPE: SCOPE, &fbb)
+    PLGHostCapability.add(REQUIRED: REQUIRED, &fbb)
+    PLGHostCapability.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return PLGHostCapability.endPLGHostCapability(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CAPABILITY, fieldName: "CAPABILITY", required: false, type: hostCapabilityKind.self)
+    try _v.visit(field: VT.SCOPE, fieldName: "SCOPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUIRED, fieldName: "REQUIRED", required: false, type: Bool.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Timer entry declared by a plugin.
+public struct PLGTimerSpec: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGTimerSpec.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TIMER_ID: VOffset = 4
+    static let METHOD_ID: VOffset = 6
+    static let INPUT_PORT_ID: VOffset = 8
+    static let DEFAULT_INTERVAL_MS: VOffset = 10
+    static let DESCRIPTION: VOffset = 12
+  }
+
+  public var TIMER_ID: String! { let o = _accessor.offset(VT.TIMER_ID); return _accessor.string(at: o) }
+  public var TIMER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TIMER_ID) }
+  public var METHOD_ID: String! { let o = _accessor.offset(VT.METHOD_ID); return _accessor.string(at: o) }
+  public var METHOD_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.METHOD_ID) }
+  public var INPUT_PORT_ID: String? { let o = _accessor.offset(VT.INPUT_PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INPUT_PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INPUT_PORT_ID) }
+  public var DEFAULT_INTERVAL_MS: UInt64 { let o = _accessor.offset(VT.DEFAULT_INTERVAL_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public static func startPLGTimerSpec(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(TIMER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMER_ID, at: VT.TIMER_ID) }
+  public static func add(METHOD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_ID, at: VT.METHOD_ID) }
+  public static func add(INPUT_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUT_PORT_ID, at: VT.INPUT_PORT_ID) }
+  public static func add(DEFAULT_INTERVAL_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_INTERVAL_MS, def: 0, at: VT.DEFAULT_INTERVAL_MS) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func endPLGTimerSpec(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createPLGTimerSpec(
+    _ fbb: inout FlatBufferBuilder,
+    TIMER_IDOffset TIMER_ID: Offset,
+    METHOD_IDOffset METHOD_ID: Offset,
+    INPUT_PORT_IDOffset INPUT_PORT_ID: Offset = Offset(),
+    DEFAULT_INTERVAL_MS: UInt64 = 0,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
+  ) -> Offset {
+    let __start = PLGTimerSpec.startPLGTimerSpec(&fbb)
+    PLGTimerSpec.add(TIMER_ID: TIMER_ID, &fbb)
+    PLGTimerSpec.add(METHOD_ID: METHOD_ID, &fbb)
+    PLGTimerSpec.add(INPUT_PORT_ID: INPUT_PORT_ID, &fbb)
+    PLGTimerSpec.add(DEFAULT_INTERVAL_MS: DEFAULT_INTERVAL_MS, &fbb)
+    PLGTimerSpec.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return PLGTimerSpec.endPLGTimerSpec(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TIMER_ID, fieldName: "TIMER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.METHOD_ID, fieldName: "METHOD_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INPUT_PORT_ID, fieldName: "INPUT_PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DEFAULT_INTERVAL_MS, fieldName: "DEFAULT_INTERVAL_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Protocol handler declared by a plugin.
+public struct PLGProtocolSpec: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGProtocolSpec.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PROTOCOL_ID: VOffset = 4
+    static let METHOD_ID: VOffset = 6
+    static let INPUT_PORT_ID: VOffset = 8
+    static let OUTPUT_PORT_ID: VOffset = 10
+    static let DESCRIPTION: VOffset = 12
+    static let WIRE_ID: VOffset = 14
+    static let TRANSPORT_KIND: VOffset = 16
+    static let ROLE: VOffset = 18
+    static let SPEC_URI: VOffset = 20
+    static let AUTO_INSTALL: VOffset = 22
+    static let ADVERTISE: VOffset = 24
+    static let DISCOVERY_KEY: VOffset = 26
+    static let DEFAULT_PORT: VOffset = 28
+    static let REQUIRE_SECURE_TRANSPORT: VOffset = 30
+  }
+
+  public var PROTOCOL_ID: String! { let o = _accessor.offset(VT.PROTOCOL_ID); return _accessor.string(at: o) }
+  public var PROTOCOL_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PROTOCOL_ID) }
+  public var METHOD_ID: String! { let o = _accessor.offset(VT.METHOD_ID); return _accessor.string(at: o) }
+  public var METHOD_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.METHOD_ID) }
+  public var INPUT_PORT_ID: String? { let o = _accessor.offset(VT.INPUT_PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INPUT_PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INPUT_PORT_ID) }
+  public var OUTPUT_PORT_ID: String? { let o = _accessor.offset(VT.OUTPUT_PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OUTPUT_PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OUTPUT_PORT_ID) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public var WIRE_ID: String? { let o = _accessor.offset(VT.WIRE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WIRE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WIRE_ID) }
+  public var TRANSPORT_KIND: String? { let o = _accessor.offset(VT.TRANSPORT_KIND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSPORT_KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSPORT_KIND) }
+  public var ROLE: String? { let o = _accessor.offset(VT.ROLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ROLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROLE) }
+  public var SPEC_URI: String? { let o = _accessor.offset(VT.SPEC_URI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SPEC_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPEC_URI) }
+  public var AUTO_INSTALL: Bool { let o = _accessor.offset(VT.AUTO_INSTALL); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ADVERTISE: Bool { let o = _accessor.offset(VT.ADVERTISE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var DISCOVERY_KEY: String? { let o = _accessor.offset(VT.DISCOVERY_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DISCOVERY_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DISCOVERY_KEY) }
+  public var DEFAULT_PORT: UInt16 { let o = _accessor.offset(VT.DEFAULT_PORT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var REQUIRE_SECURE_TRANSPORT: Bool { let o = _accessor.offset(VT.REQUIRE_SECURE_TRANSPORT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPLGProtocolSpec(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func add(PROTOCOL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROTOCOL_ID, at: VT.PROTOCOL_ID) }
+  public static func add(METHOD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_ID, at: VT.METHOD_ID) }
+  public static func add(INPUT_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUT_PORT_ID, at: VT.INPUT_PORT_ID) }
+  public static func add(OUTPUT_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT_PORT_ID, at: VT.OUTPUT_PORT_ID) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(WIRE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WIRE_ID, at: VT.WIRE_ID) }
+  public static func add(TRANSPORT_KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSPORT_KIND, at: VT.TRANSPORT_KIND) }
+  public static func add(ROLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLE, at: VT.ROLE) }
+  public static func add(SPEC_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPEC_URI, at: VT.SPEC_URI) }
+  public static func add(AUTO_INSTALL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AUTO_INSTALL, def: true,
+   at: VT.AUTO_INSTALL) }
+  public static func add(ADVERTISE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADVERTISE, def: false,
+   at: VT.ADVERTISE) }
+  public static func add(DISCOVERY_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISCOVERY_KEY, at: VT.DISCOVERY_KEY) }
+  public static func add(DEFAULT_PORT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_PORT, def: 0, at: VT.DEFAULT_PORT) }
+  public static func add(REQUIRE_SECURE_TRANSPORT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRE_SECURE_TRANSPORT, def: false,
+   at: VT.REQUIRE_SECURE_TRANSPORT) }
+  public static func endPLGProtocolSpec(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createPLGProtocolSpec(
+    _ fbb: inout FlatBufferBuilder,
+    PROTOCOL_IDOffset PROTOCOL_ID: Offset,
+    METHOD_IDOffset METHOD_ID: Offset,
+    INPUT_PORT_IDOffset INPUT_PORT_ID: Offset = Offset(),
+    OUTPUT_PORT_IDOffset OUTPUT_PORT_ID: Offset = Offset(),
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    WIRE_IDOffset WIRE_ID: Offset = Offset(),
+    TRANSPORT_KINDOffset TRANSPORT_KIND: Offset = Offset(),
+    ROLEOffset ROLE: Offset = Offset(),
+    SPEC_URIOffset SPEC_URI: Offset = Offset(),
+    AUTO_INSTALL: Bool = true,
+    ADVERTISE: Bool = false,
+    DISCOVERY_KEYOffset DISCOVERY_KEY: Offset = Offset(),
+    DEFAULT_PORT: UInt16 = 0,
+    REQUIRE_SECURE_TRANSPORT: Bool = false
+  ) -> Offset {
+    let __start = PLGProtocolSpec.startPLGProtocolSpec(&fbb)
+    PLGProtocolSpec.add(PROTOCOL_ID: PROTOCOL_ID, &fbb)
+    PLGProtocolSpec.add(METHOD_ID: METHOD_ID, &fbb)
+    PLGProtocolSpec.add(INPUT_PORT_ID: INPUT_PORT_ID, &fbb)
+    PLGProtocolSpec.add(OUTPUT_PORT_ID: OUTPUT_PORT_ID, &fbb)
+    PLGProtocolSpec.add(DESCRIPTION: DESCRIPTION, &fbb)
+    PLGProtocolSpec.add(WIRE_ID: WIRE_ID, &fbb)
+    PLGProtocolSpec.add(TRANSPORT_KIND: TRANSPORT_KIND, &fbb)
+    PLGProtocolSpec.add(ROLE: ROLE, &fbb)
+    PLGProtocolSpec.add(SPEC_URI: SPEC_URI, &fbb)
+    PLGProtocolSpec.add(AUTO_INSTALL: AUTO_INSTALL, &fbb)
+    PLGProtocolSpec.add(ADVERTISE: ADVERTISE, &fbb)
+    PLGProtocolSpec.add(DISCOVERY_KEY: DISCOVERY_KEY, &fbb)
+    PLGProtocolSpec.add(DEFAULT_PORT: DEFAULT_PORT, &fbb)
+    PLGProtocolSpec.add(REQUIRE_SECURE_TRANSPORT: REQUIRE_SECURE_TRANSPORT, &fbb)
+    return PLGProtocolSpec.endPLGProtocolSpec(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PROTOCOL_ID, fieldName: "PROTOCOL_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.METHOD_ID, fieldName: "METHOD_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INPUT_PORT_ID, fieldName: "INPUT_PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OUTPUT_PORT_ID, fieldName: "OUTPUT_PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WIRE_ID, fieldName: "WIRE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSPORT_KIND, fieldName: "TRANSPORT_KIND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SPEC_URI, fieldName: "SPEC_URI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AUTO_INSTALL, fieldName: "AUTO_INSTALL", required: false, type: Bool.self)
+    try _v.visit(field: VT.ADVERTISE, fieldName: "ADVERTISE", required: false, type: Bool.self)
+    try _v.visit(field: VT.DISCOVERY_KEY, fieldName: "DISCOVERY_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DEFAULT_PORT, fieldName: "DEFAULT_PORT", required: false, type: UInt16.self)
+    try _v.visit(field: VT.REQUIRE_SECURE_TRANSPORT, fieldName: "REQUIRE_SECURE_TRANSPORT", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Build artifact emitted by the plugin toolchain.
+public struct PLGBuildArtifact: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGBuildArtifact.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ARTIFACT_ID: VOffset = 4
+    static let KIND: VOffset = 6
+    static let PATH: VOffset = 8
+    static let TARGET: VOffset = 10
+    static let ENTRY_SYMBOL: VOffset = 12
+  }
+
+  public var ARTIFACT_ID: String! { let o = _accessor.offset(VT.ARTIFACT_ID); return _accessor.string(at: o) }
+  public var ARTIFACT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ARTIFACT_ID) }
+  public var KIND: String? { let o = _accessor.offset(VT.KIND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KIND) }
+  public var PATH: String! { let o = _accessor.offset(VT.PATH); return _accessor.string(at: o) }
+  public var PATHSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PATH) }
+  public var TARGET: String? { let o = _accessor.offset(VT.TARGET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET) }
+  public var ENTRY_SYMBOL: String? { let o = _accessor.offset(VT.ENTRY_SYMBOL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENTRY_SYMBOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTRY_SYMBOL) }
+  public static func startPLGBuildArtifact(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(ARTIFACT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARTIFACT_ID, at: VT.ARTIFACT_ID) }
+  public static func add(KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KIND, at: VT.KIND) }
+  public static func add(PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH, at: VT.PATH) }
+  public static func add(TARGET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET, at: VT.TARGET) }
+  public static func add(ENTRY_SYMBOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRY_SYMBOL, at: VT.ENTRY_SYMBOL) }
+  public static func endPLGBuildArtifact(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8]); return end }
+  public static func createPLGBuildArtifact(
+    _ fbb: inout FlatBufferBuilder,
+    ARTIFACT_IDOffset ARTIFACT_ID: Offset,
+    KINDOffset KIND: Offset = Offset(),
+    PATHOffset PATH: Offset,
+    TARGETOffset TARGET: Offset = Offset(),
+    ENTRY_SYMBOLOffset ENTRY_SYMBOL: Offset = Offset()
+  ) -> Offset {
+    let __start = PLGBuildArtifact.startPLGBuildArtifact(&fbb)
+    PLGBuildArtifact.add(ARTIFACT_ID: ARTIFACT_ID, &fbb)
+    PLGBuildArtifact.add(KIND: KIND, &fbb)
+    PLGBuildArtifact.add(PATH: PATH, &fbb)
+    PLGBuildArtifact.add(TARGET: TARGET, &fbb)
+    PLGBuildArtifact.add(ENTRY_SYMBOL: ENTRY_SYMBOL, &fbb)
+    return PLGBuildArtifact.endPLGBuildArtifact(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ARTIFACT_ID, fieldName: "ARTIFACT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PATH, fieldName: "PATH", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTRY_SYMBOL, fieldName: "ENTRY_SYMBOL", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Canonical method declaration.
+public struct PLGMethodManifest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGMethodManifest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let METHOD_ID: VOffset = 4
+    static let DISPLAY_NAME: VOffset = 6
+    static let INPUT_PORTS: VOffset = 8
+    static let OUTPUT_PORTS: VOffset = 10
+    static let MAX_BATCH: VOffset = 12
+    static let DRAIN_POLICY: VOffset = 14
+    static let DESCRIPTION: VOffset = 16
+  }
+
+  public var METHOD_ID: String! { let o = _accessor.offset(VT.METHOD_ID); return _accessor.string(at: o) }
+  public var METHOD_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.METHOD_ID) }
+  public var DISPLAY_NAME: String? { let o = _accessor.offset(VT.DISPLAY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DISPLAY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DISPLAY_NAME) }
+  public var INPUT_PORTS: FlatbufferVector<PLGPortManifest> { return _accessor.vector(at: VT.INPUT_PORTS, byteSize: 4) }
+  public var OUTPUT_PORTS: FlatbufferVector<PLGPortManifest> { return _accessor.vector(at: VT.OUTPUT_PORTS, byteSize: 4) }
+  public var MAX_BATCH: UInt32 { let o = _accessor.offset(VT.MAX_BATCH); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var DRAIN_POLICY: drainBehavior { let o = _accessor.offset(VT.DRAIN_POLICY); return o == 0 ? .drainUntilYield : drainBehavior(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .drainUntilYield }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public static func startPLGMethodManifest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(METHOD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_ID, at: VT.METHOD_ID) }
+  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
+  public static func addVectorOf(INPUT_PORTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUT_PORTS, at: VT.INPUT_PORTS) }
+  public static func addVectorOf(OUTPUT_PORTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT_PORTS, at: VT.OUTPUT_PORTS) }
+  public static func add(MAX_BATCH: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_BATCH, def: 1, at: VT.MAX_BATCH) }
+  public static func add(DRAIN_POLICY: drainBehavior, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAIN_POLICY.rawValue, def: 1, at: VT.DRAIN_POLICY) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func endPLGMethodManifest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPLGMethodManifest(
+    _ fbb: inout FlatBufferBuilder,
+    METHOD_IDOffset METHOD_ID: Offset,
+    DISPLAY_NAMEOffset DISPLAY_NAME: Offset = Offset(),
+    INPUT_PORTSVectorOffset INPUT_PORTS: Offset = Offset(),
+    OUTPUT_PORTSVectorOffset OUTPUT_PORTS: Offset = Offset(),
+    MAX_BATCH: UInt32 = 1,
+    DRAIN_POLICY: drainBehavior = .drainUntilYield,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
+  ) -> Offset {
+    let __start = PLGMethodManifest.startPLGMethodManifest(&fbb)
+    PLGMethodManifest.add(METHOD_ID: METHOD_ID, &fbb)
+    PLGMethodManifest.add(DISPLAY_NAME: DISPLAY_NAME, &fbb)
+    PLGMethodManifest.addVectorOf(INPUT_PORTS: INPUT_PORTS, &fbb)
+    PLGMethodManifest.addVectorOf(OUTPUT_PORTS: OUTPUT_PORTS, &fbb)
+    PLGMethodManifest.add(MAX_BATCH: MAX_BATCH, &fbb)
+    PLGMethodManifest.add(DRAIN_POLICY: DRAIN_POLICY, &fbb)
+    PLGMethodManifest.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return PLGMethodManifest.endPLGMethodManifest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.METHOD_ID, fieldName: "METHOD_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INPUT_PORTS, fieldName: "INPUT_PORTS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGPortManifest>, PLGPortManifest>>.self)
+    try _v.visit(field: VT.OUTPUT_PORTS, fieldName: "OUTPUT_PORTS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGPortManifest>, PLGPortManifest>>.self)
+    try _v.visit(field: VT.MAX_BATCH, fieldName: "MAX_BATCH", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DRAIN_POLICY, fieldName: "DRAIN_POLICY", required: false, type: drainBehavior.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Plugin dependency on another plugin
+public struct PluginDependency: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PluginDependency.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PLUGIN_ID: VOffset = 4
+    static let MIN_VERSION: VOffset = 6
+    static let MAX_VERSION: VOffset = 8
+  }
+
+  ///  Plugin ID of the dependency
+  public var PLUGIN_ID: String? { let o = _accessor.offset(VT.PLUGIN_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PLUGIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PLUGIN_ID) }
+  ///  Minimum version required (semver)
+  public var MIN_VERSION: String? { let o = _accessor.offset(VT.MIN_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MIN_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MIN_VERSION) }
+  ///  Maximum version allowed (optional)
+  public var MAX_VERSION: String? { let o = _accessor.offset(VT.MAX_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAX_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAX_VERSION) }
+  public static func startPluginDependency(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VT.PLUGIN_ID) }
+  public static func add(MIN_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MIN_VERSION, at: VT.MIN_VERSION) }
+  public static func add(MAX_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAX_VERSION, at: VT.MAX_VERSION) }
+  public static func endPluginDependency(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPluginDependency(
+    _ fbb: inout FlatBufferBuilder,
+    PLUGIN_IDOffset PLUGIN_ID: Offset = Offset(),
+    MIN_VERSIONOffset MIN_VERSION: Offset = Offset(),
+    MAX_VERSIONOffset MAX_VERSION: Offset = Offset()
+  ) -> Offset {
+    let __start = PluginDependency.startPluginDependency(&fbb)
+    PluginDependency.add(PLUGIN_ID: PLUGIN_ID, &fbb)
+    PluginDependency.add(MIN_VERSION: MIN_VERSION, &fbb)
+    PluginDependency.add(MAX_VERSION: MAX_VERSION, &fbb)
+    return PluginDependency.endPluginDependency(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PLUGIN_ID, fieldName: "PLUGIN_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MIN_VERSION, fieldName: "MIN_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAX_VERSION, fieldName: "MAX_VERSION", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Plugin entry point function definition
+public struct EntryFunction: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EntryFunction.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let INPUT_SCHEMAS: VOffset = 8
+    static let OUTPUT_SCHEMA: VOffset = 10
+  }
+
+  ///  Function name as exported from WASM
+  public var NAME: String! { let o = _accessor.offset(VT.NAME); return _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NAME) }
+  ///  Human-readable description
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  Input parameter types (FlatBuffer schema names)
+  public var INPUT_SCHEMAS: FlatbufferVector<String?> { return _accessor.vector(at: VT.INPUT_SCHEMAS, byteSize: 4) }
+  ///  Output type (FlatBuffer schema name)
+  public var OUTPUT_SCHEMA: String? { let o = _accessor.offset(VT.OUTPUT_SCHEMA); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OUTPUT_SCHEMASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OUTPUT_SCHEMA) }
+  public static func startEntryFunction(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func addVectorOf(INPUT_SCHEMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUT_SCHEMAS, at: VT.INPUT_SCHEMAS) }
+  public static func add(OUTPUT_SCHEMA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT_SCHEMA, at: VT.OUTPUT_SCHEMA) }
+  public static func endEntryFunction(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createEntryFunction(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    INPUT_SCHEMASVectorOffset INPUT_SCHEMAS: Offset = Offset(),
+    OUTPUT_SCHEMAOffset OUTPUT_SCHEMA: Offset = Offset()
+  ) -> Offset {
+    let __start = EntryFunction.startEntryFunction(&fbb)
+    EntryFunction.add(NAME: NAME, &fbb)
+    EntryFunction.add(DESCRIPTION: DESCRIPTION, &fbb)
+    EntryFunction.addVectorOf(INPUT_SCHEMAS: INPUT_SCHEMAS, &fbb)
+    EntryFunction.add(OUTPUT_SCHEMA: OUTPUT_SCHEMA, &fbb)
+    return EntryFunction.endEntryFunction(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INPUT_SCHEMAS, fieldName: "INPUT_SCHEMAS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OUTPUT_SCHEMA, fieldName: "OUTPUT_SCHEMA", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  One node in a composed flow graph. A degenerate flow IS a module: a leaf
+///  module leaves the flow-graph fields on PLG empty; a composed flow populates
+///  them. This is how flows reuse the module schema rather than a separate one.
+public struct PLGFlowNode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGFlowNode.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NODE_ID: VOffset = 4
+    static let PLUGIN_ID: VOffset = 6
+    static let METHOD_ID: VOffset = 8
+    static let KIND: VOffset = 10
+    static let DISPATCH_MODEL: VOffset = 12
+    static let CONFIG: VOffset = 14
+    static let UI_X: VOffset = 16
+    static let UI_Y: VOffset = 18
+  }
+
+  ///  Stable node identifier within this flow
+  public var NODE_ID: String! { let o = _accessor.offset(VT.NODE_ID); return _accessor.string(at: o) }
+  public var NODE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NODE_ID) }
+  ///  Plugin id of the module this node invokes
+  public var PLUGIN_ID: String! { let o = _accessor.offset(VT.PLUGIN_ID); return _accessor.string(at: o) }
+  public var PLUGIN_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PLUGIN_ID) }
+  ///  Method id invoked on the module
+  public var METHOD_ID: String? { let o = _accessor.offset(VT.METHOD_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var METHOD_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.METHOD_ID) }
+  ///  Node kind, e.g. "transform", "trigger", "capability"
+  public var KIND: String? { let o = _accessor.offset(VT.KIND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KIND) }
+  ///  Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+  ///  independently instantiated signed WASM node, and "host-capability" = a
+  ///  generic host adapter.
+  public var DISPATCH_MODEL: String? { let o = _accessor.offset(VT.DISPATCH_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DISPATCH_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DISPATCH_MODEL) }
+  ///  Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)
+  public var CONFIG: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CONFIG, byteSize: 1) }
+  public func withUnsafePointerToConfig<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CONFIG, body: body) }
+  ///  Editor layout X position
+  public var UI_X: Float32 { let o = _accessor.offset(VT.UI_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Editor layout Y position
+  public var UI_Y: Float32 { let o = _accessor.offset(VT.UI_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public static func startPLGFlowNode(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(NODE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_ID, at: VT.NODE_ID) }
+  public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VT.PLUGIN_ID) }
+  public static func add(METHOD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_ID, at: VT.METHOD_ID) }
+  public static func add(KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KIND, at: VT.KIND) }
+  public static func add(DISPATCH_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPATCH_MODEL, at: VT.DISPATCH_MODEL) }
+  public static func addVectorOf(CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIG, at: VT.CONFIG) }
+  public static func add(UI_X: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UI_X, def: 0.0, at: VT.UI_X) }
+  public static func add(UI_Y: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UI_Y, def: 0.0, at: VT.UI_Y) }
+  public static func endPLGFlowNode(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createPLGFlowNode(
+    _ fbb: inout FlatBufferBuilder,
+    NODE_IDOffset NODE_ID: Offset,
+    PLUGIN_IDOffset PLUGIN_ID: Offset,
+    METHOD_IDOffset METHOD_ID: Offset = Offset(),
+    KINDOffset KIND: Offset = Offset(),
+    DISPATCH_MODELOffset DISPATCH_MODEL: Offset = Offset(),
+    CONFIGVectorOffset CONFIG: Offset = Offset(),
+    UI_X: Float32 = 0.0,
+    UI_Y: Float32 = 0.0
+  ) -> Offset {
+    let __start = PLGFlowNode.startPLGFlowNode(&fbb)
+    PLGFlowNode.add(NODE_ID: NODE_ID, &fbb)
+    PLGFlowNode.add(PLUGIN_ID: PLUGIN_ID, &fbb)
+    PLGFlowNode.add(METHOD_ID: METHOD_ID, &fbb)
+    PLGFlowNode.add(KIND: KIND, &fbb)
+    PLGFlowNode.add(DISPATCH_MODEL: DISPATCH_MODEL, &fbb)
+    PLGFlowNode.addVectorOf(CONFIG: CONFIG, &fbb)
+    PLGFlowNode.add(UI_X: UI_X, &fbb)
+    PLGFlowNode.add(UI_Y: UI_Y, &fbb)
+    return PLGFlowNode.endPLGFlowNode(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NODE_ID, fieldName: "NODE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLUGIN_ID, fieldName: "PLUGIN_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.METHOD_ID, fieldName: "METHOD_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DISPATCH_MODEL, fieldName: "DISPATCH_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONFIG, fieldName: "CONFIG", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.UI_X, fieldName: "UI_X", required: false, type: Float32.self)
+    try _v.visit(field: VT.UI_Y, fieldName: "UI_Y", required: false, type: Float32.self)
+    _v.finish()
+  }
+}
+
+///  Exact validated SDS and representation contract bound into a signed flow
+///  edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;
+///  ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.
+public struct PLGFlowEdgeContract: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGFlowEdgeContract.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CANONICAL_TYPE: VOffset = 4
+    static let ALIGNED_TYPE: VOffset = 6
+    static let CANONICAL_FALLBACK_AVAILABLE: VOffset = 8
+    static let ALIGNED_ELIGIBLE: VOffset = 10
+    static let ROUTE_POLICY: VOffset = 12
+    static let OPAQUE: VOffset = 14
+  }
+
+  ///  Canonical SDS identity carried by the edge. NOT `required`: an edge may
+  ///  be opaque by design (see OPAQUE), and a signer must never be forced to
+  ///  invent an identity to satisfy the schema. A contract MUST carry exactly
+  ///  one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with
+  ///  both, is invalid and MUST be rejected by the compiler that signs the flow.
+  public var CANONICAL_TYPE: FlatBufferTypeRef? { let o = _accessor.offset(VT.CANONICAL_TYPE); return o == 0 ? nil : FlatBufferTypeRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ALIGNED_TYPE: FlatBufferTypeRef? { let o = _accessor.offset(VT.ALIGNED_TYPE); return o == 0 ? nil : FlatBufferTypeRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CANONICAL_FALLBACK_AVAILABLE: Bool { let o = _accessor.offset(VT.CANONICAL_FALLBACK_AVAILABLE); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ALIGNED_ELIGIBLE: Bool { let o = _accessor.offset(VT.ALIGNED_ELIGIBLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ROUTE_POLICY: flowEdgeRoutePolicy { let o = _accessor.offset(VT.ROUTE_POLICY); return o == 0 ? .canonicalOnly : flowEdgeRoutePolicy(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .canonicalOnly }
+  ///  The edge carries bytes with no SDS identity BY DESIGN — an
+  ///  application-blind host-capability adapter (an HTTP body, a raw file
+  ///  chunk) or a timer TICK frame with no payload at all. This is a deliberate
+  ///  signed assertion of opacity, which is why it is an explicit flag rather
+  ///  than an absent CANONICAL_TYPE: a missing type must stay distinguishable
+  ///  from a declared-opaque one. An opaque edge is ineligible for the aligned
+  ///  route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.
+  public var OPAQUE: Bool { let o = _accessor.offset(VT.OPAQUE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPLGFlowEdgeContract(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(CANONICAL_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_TYPE, at: VT.CANONICAL_TYPE) }
+  public static func add(ALIGNED_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALIGNED_TYPE, at: VT.ALIGNED_TYPE) }
+  public static func add(CANONICAL_FALLBACK_AVAILABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CANONICAL_FALLBACK_AVAILABLE, def: true,
+   at: VT.CANONICAL_FALLBACK_AVAILABLE) }
+  public static func add(ALIGNED_ELIGIBLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALIGNED_ELIGIBLE, def: false,
+   at: VT.ALIGNED_ELIGIBLE) }
+  public static func add(ROUTE_POLICY: flowEdgeRoutePolicy, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROUTE_POLICY.rawValue, def: 0, at: VT.ROUTE_POLICY) }
+  public static func add(OPAQUE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPAQUE, def: false,
+   at: VT.OPAQUE) }
+  public static func endPLGFlowEdgeContract(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPLGFlowEdgeContract(
+    _ fbb: inout FlatBufferBuilder,
+    CANONICAL_TYPEOffset CANONICAL_TYPE: Offset = Offset(),
+    ALIGNED_TYPEOffset ALIGNED_TYPE: Offset = Offset(),
+    CANONICAL_FALLBACK_AVAILABLE: Bool = true,
+    ALIGNED_ELIGIBLE: Bool = false,
+    ROUTE_POLICY: flowEdgeRoutePolicy = .canonicalOnly,
+    OPAQUE: Bool = false
+  ) -> Offset {
+    let __start = PLGFlowEdgeContract.startPLGFlowEdgeContract(&fbb)
+    PLGFlowEdgeContract.add(CANONICAL_TYPE: CANONICAL_TYPE, &fbb)
+    PLGFlowEdgeContract.add(ALIGNED_TYPE: ALIGNED_TYPE, &fbb)
+    PLGFlowEdgeContract.add(CANONICAL_FALLBACK_AVAILABLE: CANONICAL_FALLBACK_AVAILABLE, &fbb)
+    PLGFlowEdgeContract.add(ALIGNED_ELIGIBLE: ALIGNED_ELIGIBLE, &fbb)
+    PLGFlowEdgeContract.add(ROUTE_POLICY: ROUTE_POLICY, &fbb)
+    PLGFlowEdgeContract.add(OPAQUE: OPAQUE, &fbb)
+    return PLGFlowEdgeContract.endPLGFlowEdgeContract(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CANONICAL_TYPE, fieldName: "CANONICAL_TYPE", required: false, type: ForwardOffset<FlatBufferTypeRef>.self)
+    try _v.visit(field: VT.ALIGNED_TYPE, fieldName: "ALIGNED_TYPE", required: false, type: ForwardOffset<FlatBufferTypeRef>.self)
+    try _v.visit(field: VT.CANONICAL_FALLBACK_AVAILABLE, fieldName: "CANONICAL_FALLBACK_AVAILABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ALIGNED_ELIGIBLE, fieldName: "ALIGNED_ELIGIBLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ROUTE_POLICY, fieldName: "ROUTE_POLICY", required: false, type: flowEdgeRoutePolicy.self)
+    try _v.visit(field: VT.OPAQUE, fieldName: "OPAQUE", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  One directed edge wiring a producer output port to a consumer input port.
+public struct PLGFlowEdge: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGFlowEdge.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EDGE_ID: VOffset = 4
+    static let FROM_NODE_ID: VOffset = 6
+    static let FROM_PORT_ID: VOffset = 8
+    static let TO_NODE_ID: VOffset = 10
+    static let TO_PORT_ID: VOffset = 12
+    static let CONTRACT: VOffset = 14
+  }
+
+  ///  Stable edge identifier
+  public var EDGE_ID: String? { let o = _accessor.offset(VT.EDGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EDGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EDGE_ID) }
+  ///  Source node id
+  public var FROM_NODE_ID: String! { let o = _accessor.offset(VT.FROM_NODE_ID); return _accessor.string(at: o) }
+  public var FROM_NODE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.FROM_NODE_ID) }
+  ///  Source output port id
+  public var FROM_PORT_ID: String! { let o = _accessor.offset(VT.FROM_PORT_ID); return _accessor.string(at: o) }
+  public var FROM_PORT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.FROM_PORT_ID) }
+  ///  Destination node id
+  public var TO_NODE_ID: String! { let o = _accessor.offset(VT.TO_NODE_ID); return _accessor.string(at: o) }
+  public var TO_NODE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TO_NODE_ID) }
+  ///  Destination input port id
+  public var TO_PORT_ID: String! { let o = _accessor.offset(VT.TO_PORT_ID); return _accessor.string(at: o) }
+  public var TO_PORT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TO_PORT_ID) }
+  ///  Exact identity/layout and compile-time representation policy. NOT
+  ///  `required`: marking a NEW field of an EXISTING table required makes the
+  ///  FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+  ///  which is a breaking change to a ratified standard. Presence is enforced
+  ///  where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+  ///  edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+  ///  without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+  public var CONTRACT: PLGFlowEdgeContract? { let o = _accessor.offset(VT.CONTRACT); return o == 0 ? nil : PLGFlowEdgeContract(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPLGFlowEdge(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(EDGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EDGE_ID, at: VT.EDGE_ID) }
+  public static func add(FROM_NODE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FROM_NODE_ID, at: VT.FROM_NODE_ID) }
+  public static func add(FROM_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FROM_PORT_ID, at: VT.FROM_PORT_ID) }
+  public static func add(TO_NODE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TO_NODE_ID, at: VT.TO_NODE_ID) }
+  public static func add(TO_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TO_PORT_ID, at: VT.TO_PORT_ID) }
+  public static func add(CONTRACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRACT, at: VT.CONTRACT) }
+  public static func endPLGFlowEdge(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10, 12]); return end }
+  public static func createPLGFlowEdge(
+    _ fbb: inout FlatBufferBuilder,
+    EDGE_IDOffset EDGE_ID: Offset = Offset(),
+    FROM_NODE_IDOffset FROM_NODE_ID: Offset,
+    FROM_PORT_IDOffset FROM_PORT_ID: Offset,
+    TO_NODE_IDOffset TO_NODE_ID: Offset,
+    TO_PORT_IDOffset TO_PORT_ID: Offset,
+    CONTRACTOffset CONTRACT: Offset = Offset()
+  ) -> Offset {
+    let __start = PLGFlowEdge.startPLGFlowEdge(&fbb)
+    PLGFlowEdge.add(EDGE_ID: EDGE_ID, &fbb)
+    PLGFlowEdge.add(FROM_NODE_ID: FROM_NODE_ID, &fbb)
+    PLGFlowEdge.add(FROM_PORT_ID: FROM_PORT_ID, &fbb)
+    PLGFlowEdge.add(TO_NODE_ID: TO_NODE_ID, &fbb)
+    PLGFlowEdge.add(TO_PORT_ID: TO_PORT_ID, &fbb)
+    PLGFlowEdge.add(CONTRACT: CONTRACT, &fbb)
+    return PLGFlowEdge.endPLGFlowEdge(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EDGE_ID, fieldName: "EDGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FROM_NODE_ID, fieldName: "FROM_NODE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FROM_PORT_ID, fieldName: "FROM_PORT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TO_NODE_ID, fieldName: "TO_NODE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TO_PORT_ID, fieldName: "TO_PORT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTRACT, fieldName: "CONTRACT", required: false, type: ForwardOffset<PLGFlowEdgeContract>.self)
+    _v.finish()
+  }
+}
+
+///  One flow trigger (e.g. a host timer or HTTP route) that starts a drain.
+public struct PLGFlowTrigger: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGFlowTrigger.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TRIGGER_ID: VOffset = 4
+    static let KIND: VOffset = 6
+    static let SOURCE: VOffset = 8
+    static let DEFAULT_INTERVAL_MS: VOffset = 10
+    static let HTTP_PATH: VOffset = 12
+  }
+
+  ///  Stable trigger identifier
+  public var TRIGGER_ID: String! { let o = _accessor.offset(VT.TRIGGER_ID); return _accessor.string(at: o) }
+  public var TRIGGER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TRIGGER_ID) }
+  ///  Trigger kind, e.g. "timer", "http"
+  public var KIND: String? { let o = _accessor.offset(VT.KIND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KIND) }
+  ///  Trigger source, e.g. "host-cron"
+  public var SOURCE: String? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE) }
+  ///  Default firing interval in milliseconds (timer triggers)
+  public var DEFAULT_INTERVAL_MS: UInt64 { let o = _accessor.offset(VT.DEFAULT_INTERVAL_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Mounted HTTP path (http triggers)
+  public var HTTP_PATH: String? { let o = _accessor.offset(VT.HTTP_PATH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HTTP_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HTTP_PATH) }
+  public static func startPLGFlowTrigger(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(TRIGGER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRIGGER_ID, at: VT.TRIGGER_ID) }
+  public static func add(KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KIND, at: VT.KIND) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func add(DEFAULT_INTERVAL_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_INTERVAL_MS, def: 0, at: VT.DEFAULT_INTERVAL_MS) }
+  public static func add(HTTP_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HTTP_PATH, at: VT.HTTP_PATH) }
+  public static func endPLGFlowTrigger(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPLGFlowTrigger(
+    _ fbb: inout FlatBufferBuilder,
+    TRIGGER_IDOffset TRIGGER_ID: Offset,
+    KINDOffset KIND: Offset = Offset(),
+    SOURCEOffset SOURCE: Offset = Offset(),
+    DEFAULT_INTERVAL_MS: UInt64 = 0,
+    HTTP_PATHOffset HTTP_PATH: Offset = Offset()
+  ) -> Offset {
+    let __start = PLGFlowTrigger.startPLGFlowTrigger(&fbb)
+    PLGFlowTrigger.add(TRIGGER_ID: TRIGGER_ID, &fbb)
+    PLGFlowTrigger.add(KIND: KIND, &fbb)
+    PLGFlowTrigger.add(SOURCE: SOURCE, &fbb)
+    PLGFlowTrigger.add(DEFAULT_INTERVAL_MS: DEFAULT_INTERVAL_MS, &fbb)
+    PLGFlowTrigger.add(HTTP_PATH: HTTP_PATH, &fbb)
+    return PLGFlowTrigger.endPLGFlowTrigger(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TRIGGER_ID, fieldName: "TRIGGER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DEFAULT_INTERVAL_MS, fieldName: "DEFAULT_INTERVAL_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.HTTP_PATH, fieldName: "HTTP_PATH", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Binds a trigger to the node + input port it delivers its frame to.
+public struct PLGFlowTriggerBinding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLGFlowTriggerBinding.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TRIGGER_ID: VOffset = 4
+    static let TARGET_NODE_ID: VOffset = 6
+    static let TARGET_PORT_ID: VOffset = 8
+  }
+
+  ///  Trigger identifier
+  public var TRIGGER_ID: String! { let o = _accessor.offset(VT.TRIGGER_ID); return _accessor.string(at: o) }
+  public var TRIGGER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TRIGGER_ID) }
+  ///  Target node id
+  public var TARGET_NODE_ID: String! { let o = _accessor.offset(VT.TARGET_NODE_ID); return _accessor.string(at: o) }
+  public var TARGET_NODE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TARGET_NODE_ID) }
+  ///  Target input port id
+  public var TARGET_PORT_ID: String! { let o = _accessor.offset(VT.TARGET_PORT_ID); return _accessor.string(at: o) }
+  public var TARGET_PORT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TARGET_PORT_ID) }
+  public static func startPLGFlowTriggerBinding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(TRIGGER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRIGGER_ID, at: VT.TRIGGER_ID) }
+  public static func add(TARGET_NODE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_NODE_ID, at: VT.TARGET_NODE_ID) }
+  public static func add(TARGET_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_PORT_ID, at: VT.TARGET_PORT_ID) }
+  public static func endPLGFlowTriggerBinding(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
+  public static func createPLGFlowTriggerBinding(
+    _ fbb: inout FlatBufferBuilder,
+    TRIGGER_IDOffset TRIGGER_ID: Offset,
+    TARGET_NODE_IDOffset TARGET_NODE_ID: Offset,
+    TARGET_PORT_IDOffset TARGET_PORT_ID: Offset
+  ) -> Offset {
+    let __start = PLGFlowTriggerBinding.startPLGFlowTriggerBinding(&fbb)
+    PLGFlowTriggerBinding.add(TRIGGER_ID: TRIGGER_ID, &fbb)
+    PLGFlowTriggerBinding.add(TARGET_NODE_ID: TARGET_NODE_ID, &fbb)
+    PLGFlowTriggerBinding.add(TARGET_PORT_ID: TARGET_PORT_ID, &fbb)
+    return PLGFlowTriggerBinding.endPLGFlowTriggerBinding(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TRIGGER_ID, fieldName: "TRIGGER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_NODE_ID, fieldName: "TARGET_NODE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_PORT_ID, fieldName: "TARGET_PORT_ID", required: true, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Plugin Manifest - canonical signed storefront and WASM distribution record
+public struct PLG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PLG" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLG.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PLUGIN_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let VERSION: VOffset = 8
+    static let DESCRIPTION: VOffset = 10
+    static let TAGLINE: VOffset = 12
+    static let PLUGIN_TYPE: VOffset = 14
+    static let PUBLISHER_NAME: VOffset = 16
+    static let PUBLISHER_HANDLE: VOffset = 18
+    static let PUBLISHER_URL: VOffset = 20
+    static let SUPPORT_URL: VOffset = 22
+    static let TAGS: VOffset = 24
+    static let FEATURES: VOffset = 26
+    static let SCREENSHOT_URLS: VOffset = 28
+    static let BANNER_URL: VOffset = 30
+    static let ABI_VERSION: VOffset = 32
+    static let WASM_HASH: VOffset = 34
+    static let WASM_SIZE: VOffset = 36
+    static let WASM_CID: VOffset = 38
+    static let ENCRYPTED_WASM_HASH: VOffset = 40
+    static let ENCRYPTED_WASM_SIZE: VOffset = 42
+    static let ENTRY_FUNCTIONS: VOffset = 44
+    static let REQUIRED_SCHEMAS: VOffset = 46
+    static let DEPENDENCIES: VOffset = 48
+    static let CAPABILITIES: VOffset = 50
+    static let PROVIDER_PEER_ID: VOffset = 52
+    static let PROVIDER_EPM_CID: VOffset = 54
+    static let ENCRYPTED: VOffset = 56
+    static let REQUIRED_SCOPE: VOffset = 58
+    static let KEY_ID: VOffset = 60
+    static let MAX_GRANT_TIMEOUT_MS: VOffset = 62
+    static let MIN_PERMISSIONS: VOffset = 64
+    static let CREATED_AT: VOffset = 66
+    static let UPDATED_AT: VOffset = 68
+    static let DOCUMENTATION_URL: VOffset = 70
+    static let CHANGELOG_URL: VOffset = 72
+    static let ICON_URL: VOffset = 74
+    static let LICENSE: VOffset = 76
+    static let PAYMENT_MODEL: VOffset = 78
+    static let PRICE_USD_CENTS: VOffset = 80
+    static let SUBSCRIPTION_PERIOD_DAYS: VOffset = 82
+    static let ACCEPTED_PAYMENT_METHODS: VOffset = 84
+    static let LISTING_STATUS: VOffset = 86
+    static let SIGNATURE: VOffset = 88
+    static let INVOKE_SURFACES: VOffset = 90
+    static let METHODS: VOffset = 92
+    static let HOST_CAPABILITIES: VOffset = 94
+    static let TIMERS: VOffset = 96
+    static let PROTOCOLS: VOffset = 98
+    static let SCHEMAS_USED: VOffset = 100
+    static let BUILD_ARTIFACTS: VOffset = 102
+    static let RUNTIME_TARGETS: VOffset = 104
+    static let ALLOWED_XPUBS: VOffset = 106
+    static let FLOW_NODES: VOffset = 108
+    static let FLOW_EDGES: VOffset = 110
+    static let FLOW_TRIGGERS: VOffset = 112
+    static let FLOW_TRIGGER_BINDINGS: VOffset = 114
+    static let PRIMARY_CATEGORY: VOffset = 116
+    static let CATEGORIES: VOffset = 118
+  }
+
+  ///  Unique identifier for the plugin
+  public var PLUGIN_ID: String! { let o = _accessor.offset(VT.PLUGIN_ID); return _accessor.string(at: o) }
+  public var PLUGIN_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PLUGIN_ID) }
+  ///  Human-readable plugin name
+  public var NAME: String! { let o = _accessor.offset(VT.NAME); return _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NAME) }
+  ///  Plugin version (semver format)
   public var VERSION: String! { let o = _accessor.offset(VT.VERSION); return _accessor.string(at: o) }
   public var VERSIONSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERSION) }
-  ///  Unix seconds when this taxonomy revision was issued.
-  public var ISSUED_AT: UInt64 { let o = _accessor.offset(VT.ISSUED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Human-readable title of the taxonomy.
-  public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
-  ///  The ratified categories. Every capabilityClass member a consumer may
-  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
-  public var CATEGORIES: FlatbufferVector<CCTCategory> { return _accessor.vector(at: VT.CATEGORIES, byteSize: 4) }
-  ///  Optional per-category item counts as observed over a named catalogue.
-  ///  Absent means counts are computed by the consumer.
-  public var ROLLUPS: FlatbufferVector<CCTCategoryRollup> { return _accessor.vector(at: VT.ROLLUPS, byteSize: 4) }
-  ///  Signature from the publishing node key over the canonical taxonomy bytes.
+  ///  Detailed description of plugin functionality
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  Short marketing summary shown in storefront listings
+  public var TAGLINE: String? { let o = _accessor.offset(VT.TAGLINE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TAGLINESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TAGLINE) }
+  ///  Type/category of the plugin
+  public var PLUGIN_TYPE: pluginCategory { let o = _accessor.offset(VT.PLUGIN_TYPE); return o == 0 ? .sensor : pluginCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sensor }
+  ///  Human-readable publisher or organization name
+  public var PUBLISHER_NAME: String? { let o = _accessor.offset(VT.PUBLISHER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLISHER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLISHER_NAME) }
+  ///  Publisher handle or username
+  public var PUBLISHER_HANDLE: String? { let o = _accessor.offset(VT.PUBLISHER_HANDLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLISHER_HANDLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLISHER_HANDLE) }
+  ///  Canonical publisher website
+  public var PUBLISHER_URL: String? { let o = _accessor.offset(VT.PUBLISHER_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLISHER_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLISHER_URL) }
+  ///  Support or helpdesk URL for this plugin
+  public var SUPPORT_URL: String? { let o = _accessor.offset(VT.SUPPORT_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SUPPORT_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SUPPORT_URL) }
+  ///  Search and categorization tags for discovery
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
+  ///  Short feature bullets highlighted in storefront listings
+  public var FEATURES: FlatbufferVector<String?> { return _accessor.vector(at: VT.FEATURES, byteSize: 4) }
+  ///  Screenshot URLs showing the plugin in use
+  public var SCREENSHOT_URLS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SCREENSHOT_URLS, byteSize: 4) }
+  ///  Optional hero/banner image URL for the listing
+  public var BANNER_URL: String? { let o = _accessor.offset(VT.BANNER_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BANNER_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BANNER_URL) }
+  ///  ABI version for compatibility checking
+  public var ABI_VERSION: UInt32 { let o = _accessor.offset(VT.ABI_VERSION); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  SHA256 hash of the decrypted WASM binary
+  public var WASM_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.WASM_HASH, byteSize: 1) }
+  public func withUnsafePointerToWasmHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.WASM_HASH, body: body) }
+  ///  Size of decrypted WASM binary in bytes
+  public var WASM_SIZE: UInt64 { let o = _accessor.offset(VT.WASM_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  IPFS CID of the encrypted WASM binary
+  public var WASM_CID: String? { let o = _accessor.offset(VT.WASM_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WASM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WASM_CID) }
+  ///  SHA256 hash of the encrypted delivery artifact bytes
+  public var ENCRYPTED_WASM_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.ENCRYPTED_WASM_HASH, byteSize: 1) }
+  public func withUnsafePointerToEncryptedWasmHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENCRYPTED_WASM_HASH, body: body) }
+  ///  Size of the encrypted delivery artifact in bytes
+  public var ENCRYPTED_WASM_SIZE: UInt64 { let o = _accessor.offset(VT.ENCRYPTED_WASM_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Entry point functions exported by the plugin
+  public var ENTRY_FUNCTIONS: FlatbufferVector<EntryFunction> { return _accessor.vector(at: VT.ENTRY_FUNCTIONS, byteSize: 4) }
+  ///  FlatBuffer schemas required by this plugin
+  public var REQUIRED_SCHEMAS: FlatbufferVector<String?> { return _accessor.vector(at: VT.REQUIRED_SCHEMAS, byteSize: 4) }
+  ///  Other plugins this depends on
+  public var DEPENDENCIES: FlatbufferVector<PluginDependency> { return _accessor.vector(at: VT.DEPENDENCIES, byteSize: 4) }
+  ///  Capabilities provided by this plugin
+  public var CAPABILITIES: FlatbufferVector<PluginCapability> { return _accessor.vector(at: VT.CAPABILITIES, byteSize: 4) }
+  ///  Peer ID of the plugin provider
+  public var PROVIDER_PEER_ID: String? { let o = _accessor.offset(VT.PROVIDER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_PEER_ID) }
+  ///  IPFS CID of provider's EPM (Entity Profile Message)
+  public var PROVIDER_EPM_CID: String? { let o = _accessor.offset(VT.PROVIDER_EPM_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_EPM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_EPM_CID) }
+  ///  Whether the WASM binary is encrypted
+  public var ENCRYPTED: Bool { let o = _accessor.offset(VT.ENCRYPTED); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Canonical required scope for grant issuance
+  public var REQUIRED_SCOPE: String? { let o = _accessor.offset(VT.REQUIRED_SCOPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUIRED_SCOPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUIRED_SCOPE) }
+  ///  Provider-local identifier for the module content key
+  public var KEY_ID: String? { let o = _accessor.offset(VT.KEY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_ID) }
+  ///  Maximum grant timeout allowed for this module publication
+  public var MAX_GRANT_TIMEOUT_MS: UInt64 { let o = _accessor.offset(VT.MAX_GRANT_TIMEOUT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Minimum permissions required to run
+  public var MIN_PERMISSIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MIN_PERMISSIONS, byteSize: 4) }
+  ///  Unix timestamp when plugin was created
+  public var CREATED_AT: UInt64 { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix timestamp when plugin was last updated
+  public var UPDATED_AT: UInt64 { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  URL to plugin documentation
+  public var DOCUMENTATION_URL: String? { let o = _accessor.offset(VT.DOCUMENTATION_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DOCUMENTATION_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DOCUMENTATION_URL) }
+  ///  URL to plugin changelog or release notes
+  public var CHANGELOG_URL: String? { let o = _accessor.offset(VT.CHANGELOG_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANGELOG_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHANGELOG_URL) }
+  ///  URL to plugin icon/logo
+  public var ICON_URL: String? { let o = _accessor.offset(VT.ICON_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ICON_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_URL) }
+  ///  License identifier (SPDX format)
+  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
+  ///  Commercial model used for storefront purchase flows
+  public var PAYMENT_MODEL: purchaseTier { let o = _accessor.offset(VT.PAYMENT_MODEL); return o == 0 ? .free : purchaseTier(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .free }
+  ///  Price in USD cents for one-time purchase or subscription period
+  public var PRICE_USD_CENTS: UInt32 { let o = _accessor.offset(VT.PRICE_USD_CENTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Subscription billing period length in days
+  public var SUBSCRIPTION_PERIOD_DAYS: UInt32 { let o = _accessor.offset(VT.SUBSCRIPTION_PERIOD_DAYS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  public var ACCEPTED_PAYMENT_METHODS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ACCEPTED_PAYMENT_METHODS, byteSize: 4) }
+  ///  Storefront publication state for this manifest version
+  public var LISTING_STATUS: publicationState { let o = _accessor.offset(VT.LISTING_STATUS); return o == 0 ? .public_ : publicationState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .public_ }
+  ///  Ed25519 signature from provider over manifest
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
-  public static func startCCT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(TAXONOMY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAXONOMY_ID, at: VT.TAXONOMY_ID) }
+  ///  Canonical invoke surfaces this artifact exposes. A single plugin
+  ///  MAY list both DIRECT and COMMAND when it supports both.
+  public var INVOKE_SURFACES: FlatbufferVector<invokeSurfaceKind> { return _accessor.vector(at: VT.INVOKE_SURFACES, byteSize: 1) }
+  ///  Rich per-method invoke manifests (port shape, drain semantics,
+  ///  accepted wire formats). ENTRY_FUNCTIONS retains the slim
+  ///  name+input_schemas+output_schema summary; METHODS carries the full
+  ///  invoke-surface detail including aligned-binary advertisement.
+  public var METHODS: FlatbufferVector<PLGMethodManifest> { return _accessor.vector(at: VT.METHODS, byteSize: 4) }
+  ///  Enum-typed host capability dependencies (richer than CAPABILITIES,
+  ///  which is string-tagged metadata).
+  public var HOST_CAPABILITIES: FlatbufferVector<PLGHostCapability> { return _accessor.vector(at: VT.HOST_CAPABILITIES, byteSize: 4) }
+  ///  Timer declarations for scheduled invocations.
+  public var TIMERS: FlatbufferVector<PLGTimerSpec> { return _accessor.vector(at: VT.TIMERS, byteSize: 4) }
+  ///  Protocol handler declarations.
+  public var PROTOCOLS: FlatbufferVector<PLGProtocolSpec> { return _accessor.vector(at: VT.PROTOCOLS, byteSize: 4) }
+  ///  FlatBuffer schemas this plugin depends on at the invoke surface.
+  public var SCHEMAS_USED: FlatbufferVector<FlatBufferTypeRef> { return _accessor.vector(at: VT.SCHEMAS_USED, byteSize: 4) }
+  ///  Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+  public var BUILD_ARTIFACTS: FlatbufferVector<PLGBuildArtifact> { return _accessor.vector(at: VT.BUILD_ARTIFACTS, byteSize: 4) }
+  ///  Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+  public var RUNTIME_TARGETS: FlatbufferVector<String?> { return _accessor.vector(at: VT.RUNTIME_TARGETS, byteSize: 4) }
+  ///  Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+  ///  a requester whose verified EPM binds an xpub in this list is granted (PKI
+  ///  identity authorization). Empty list = no xpub allowlist gate.
+  public var ALLOWED_XPUBS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALLOWED_XPUBS, byteSize: 4) }
+  ///  Composition graph (a degenerate flow is a module): the nodes this flow
+  ///  invokes. Empty for a leaf module; populated for a composed flow. The flow
+  ///  definition is this PLG FlatBuffer, not a bespoke JSON graph.
+  public var FLOW_NODES: FlatbufferVector<PLGFlowNode> { return _accessor.vector(at: VT.FLOW_NODES, byteSize: 4) }
+  ///  Composition-graph edges wiring node output ports to input ports.
+  public var FLOW_EDGES: FlatbufferVector<PLGFlowEdge> { return _accessor.vector(at: VT.FLOW_EDGES, byteSize: 4) }
+  ///  Flow triggers (timer/http) that start a drain.
+  public var FLOW_TRIGGERS: FlatbufferVector<PLGFlowTrigger> { return _accessor.vector(at: VT.FLOW_TRIGGERS, byteSize: 4) }
+  ///  Bindings from triggers to the node + input port they deliver to.
+  public var FLOW_TRIGGER_BINDINGS: FlatbufferVector<PLGFlowTriggerBinding> { return _accessor.vector(at: VT.FLOW_TRIGGER_BINDINGS, byteSize: 4) }
+  ///  The one ratified $CCT category this module is shelved under. This is the
+  ///  category a storefront capsule, a library shelf and a breadcrumb show when
+  ///  exactly one must be chosen. UNSPECIFIED means the publisher did not
+  ///  classify the module; a consumer renders it ungrouped and never guesses.
+  ///
+  ///  This supersedes PLUGIN_TYPE for all storefront, library and search
+  ///  surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+  ///  `pluginCategory` vocabulary mixes capability families with node-internal
+  ///  plumbing, carries a legacy vendor-derived member, holds a real family at
+  ///  ordinal 0, and admits only one value. Canonical migration, applied by a
+  ///  publisher rewriting an old manifest:
+  ///    Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+  ///    Renderer->VISUALIZATION_AND_RENDERING,
+  ///    Analysis->MISSION_DESIGN_AND_ANALYSIS,
+  ///    DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+  ///    Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+  ///    Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+  ///    Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+  ///    Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+  ///    Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+  ///    Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+  ///    Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+  ///    Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+  ///  The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+  ///  PLUGIN_TYPE.
+  public var PRIMARY_CATEGORY: capabilityClass { let o = _accessor.offset(VT.PRIMARY_CATEGORY); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Every ratified $CCT category this module belongs to, for browse, filter
+  ///  and per-category counting. A module MAY carry several. If nonempty it
+  ///  MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+  ///  a set PRIMARY_CATEGORY means the module belongs to that one category.
+  public var CATEGORIES: FlatbufferVector<capabilityClass> { return _accessor.vector(at: VT.CATEGORIES, byteSize: 1) }
+  public static func startPLG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 58) }
+  public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VT.PLUGIN_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
-  public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VT.ISSUED_AT) }
-  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
-  public static func addVectorOf(CATEGORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORIES, at: VT.CATEGORIES) }
-  public static func addVectorOf(ROLLUPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLLUPS, at: VT.ROLLUPS) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(TAGLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGLINE, at: VT.TAGLINE) }
+  public static func add(PLUGIN_TYPE: pluginCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLUGIN_TYPE.rawValue, def: 0, at: VT.PLUGIN_TYPE) }
+  public static func add(PUBLISHER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_NAME, at: VT.PUBLISHER_NAME) }
+  public static func add(PUBLISHER_HANDLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_HANDLE, at: VT.PUBLISHER_HANDLE) }
+  public static func add(PUBLISHER_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_URL, at: VT.PUBLISHER_URL) }
+  public static func add(SUPPORT_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUPPORT_URL, at: VT.SUPPORT_URL) }
+  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
+  public static func addVectorOf(FEATURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEATURES, at: VT.FEATURES) }
+  public static func addVectorOf(SCREENSHOT_URLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREENSHOT_URLS, at: VT.SCREENSHOT_URLS) }
+  public static func add(BANNER_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BANNER_URL, at: VT.BANNER_URL) }
+  public static func add(ABI_VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABI_VERSION, def: 1, at: VT.ABI_VERSION) }
+  public static func addVectorOf(WASM_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WASM_HASH, at: VT.WASM_HASH) }
+  public static func add(WASM_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WASM_SIZE, def: 0, at: VT.WASM_SIZE) }
+  public static func add(WASM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WASM_CID, at: VT.WASM_CID) }
+  public static func addVectorOf(ENCRYPTED_WASM_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTED_WASM_HASH, at: VT.ENCRYPTED_WASM_HASH) }
+  public static func add(ENCRYPTED_WASM_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCRYPTED_WASM_SIZE, def: 0, at: VT.ENCRYPTED_WASM_SIZE) }
+  public static func addVectorOf(ENTRY_FUNCTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRY_FUNCTIONS, at: VT.ENTRY_FUNCTIONS) }
+  public static func addVectorOf(REQUIRED_SCHEMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUIRED_SCHEMAS, at: VT.REQUIRED_SCHEMAS) }
+  public static func addVectorOf(DEPENDENCIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEPENDENCIES, at: VT.DEPENDENCIES) }
+  public static func addVectorOf(CAPABILITIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPABILITIES, at: VT.CAPABILITIES) }
+  public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
+  public static func add(PROVIDER_EPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_EPM_CID, at: VT.PROVIDER_EPM_CID) }
+  public static func add(ENCRYPTED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCRYPTED, def: true,
+   at: VT.ENCRYPTED) }
+  public static func add(REQUIRED_SCOPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUIRED_SCOPE, at: VT.REQUIRED_SCOPE) }
+  public static func add(KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ID, at: VT.KEY_ID) }
+  public static func add(MAX_GRANT_TIMEOUT_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_GRANT_TIMEOUT_MS, def: 0, at: VT.MAX_GRANT_TIMEOUT_MS) }
+  public static func addVectorOf(MIN_PERMISSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MIN_PERMISSIONS, at: VT.MIN_PERMISSIONS) }
+  public static func add(CREATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREATED_AT, def: 0, at: VT.CREATED_AT) }
+  public static func add(UPDATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT, def: 0, at: VT.UPDATED_AT) }
+  public static func add(DOCUMENTATION_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOCUMENTATION_URL, at: VT.DOCUMENTATION_URL) }
+  public static func add(CHANGELOG_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANGELOG_URL, at: VT.CHANGELOG_URL) }
+  public static func add(ICON_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_URL, at: VT.ICON_URL) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(PAYMENT_MODEL: purchaseTier, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYMENT_MODEL.rawValue, def: 0, at: VT.PAYMENT_MODEL) }
+  public static func add(PRICE_USD_CENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRICE_USD_CENTS, def: 0, at: VT.PRICE_USD_CENTS) }
+  public static func add(SUBSCRIPTION_PERIOD_DAYS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSCRIPTION_PERIOD_DAYS, def: 0, at: VT.SUBSCRIPTION_PERIOD_DAYS) }
+  public static func addVectorOf(ACCEPTED_PAYMENT_METHODS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCEPTED_PAYMENT_METHODS, at: VT.ACCEPTED_PAYMENT_METHODS) }
+  public static func add(LISTING_STATUS: publicationState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LISTING_STATUS.rawValue, def: 0, at: VT.LISTING_STATUS) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
-  public static func endCCT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 12]); return end }
-  public static func createCCT(
+  public static func addVectorOf(INVOKE_SURFACES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INVOKE_SURFACES, at: VT.INVOKE_SURFACES) }
+  public static func addVectorOf(METHODS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHODS, at: VT.METHODS) }
+  public static func addVectorOf(HOST_CAPABILITIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HOST_CAPABILITIES, at: VT.HOST_CAPABILITIES) }
+  public static func addVectorOf(TIMERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMERS, at: VT.TIMERS) }
+  public static func addVectorOf(PROTOCOLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROTOCOLS, at: VT.PROTOCOLS) }
+  public static func addVectorOf(SCHEMAS_USED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMAS_USED, at: VT.SCHEMAS_USED) }
+  public static func addVectorOf(BUILD_ARTIFACTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUILD_ARTIFACTS, at: VT.BUILD_ARTIFACTS) }
+  public static func addVectorOf(RUNTIME_TARGETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RUNTIME_TARGETS, at: VT.RUNTIME_TARGETS) }
+  public static func addVectorOf(ALLOWED_XPUBS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_XPUBS, at: VT.ALLOWED_XPUBS) }
+  public static func addVectorOf(FLOW_NODES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOW_NODES, at: VT.FLOW_NODES) }
+  public static func addVectorOf(FLOW_EDGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOW_EDGES, at: VT.FLOW_EDGES) }
+  public static func addVectorOf(FLOW_TRIGGERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOW_TRIGGERS, at: VT.FLOW_TRIGGERS) }
+  public static func addVectorOf(FLOW_TRIGGER_BINDINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOW_TRIGGER_BINDINGS, at: VT.FLOW_TRIGGER_BINDINGS) }
+  public static func add(PRIMARY_CATEGORY: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_CATEGORY.rawValue, def: 0, at: VT.PRIMARY_CATEGORY) }
+  public static func addVectorOf(CATEGORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORIES, at: VT.CATEGORIES) }
+  public static func endPLG(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
+  public static func createPLG(
     _ fbb: inout FlatBufferBuilder,
-    TAXONOMY_IDOffset TAXONOMY_ID: Offset,
+    PLUGIN_IDOffset PLUGIN_ID: Offset,
+    NAMEOffset NAME: Offset,
     VERSIONOffset VERSION: Offset,
-    ISSUED_AT: UInt64 = 0,
-    TITLEOffset TITLE: Offset = Offset(),
-    CATEGORIESVectorOffset CATEGORIES: Offset,
-    ROLLUPSVectorOffset ROLLUPS: Offset = Offset(),
-    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    TAGLINEOffset TAGLINE: Offset = Offset(),
+    PLUGIN_TYPE: pluginCategory = .sensor,
+    PUBLISHER_NAMEOffset PUBLISHER_NAME: Offset = Offset(),
+    PUBLISHER_HANDLEOffset PUBLISHER_HANDLE: Offset = Offset(),
+    PUBLISHER_URLOffset PUBLISHER_URL: Offset = Offset(),
+    SUPPORT_URLOffset SUPPORT_URL: Offset = Offset(),
+    TAGSVectorOffset TAGS: Offset = Offset(),
+    FEATURESVectorOffset FEATURES: Offset = Offset(),
+    SCREENSHOT_URLSVectorOffset SCREENSHOT_URLS: Offset = Offset(),
+    BANNER_URLOffset BANNER_URL: Offset = Offset(),
+    ABI_VERSION: UInt32 = 1,
+    WASM_HASHVectorOffset WASM_HASH: Offset = Offset(),
+    WASM_SIZE: UInt64 = 0,
+    WASM_CIDOffset WASM_CID: Offset = Offset(),
+    ENCRYPTED_WASM_HASHVectorOffset ENCRYPTED_WASM_HASH: Offset = Offset(),
+    ENCRYPTED_WASM_SIZE: UInt64 = 0,
+    ENTRY_FUNCTIONSVectorOffset ENTRY_FUNCTIONS: Offset = Offset(),
+    REQUIRED_SCHEMASVectorOffset REQUIRED_SCHEMAS: Offset = Offset(),
+    DEPENDENCIESVectorOffset DEPENDENCIES: Offset = Offset(),
+    CAPABILITIESVectorOffset CAPABILITIES: Offset = Offset(),
+    PROVIDER_PEER_IDOffset PROVIDER_PEER_ID: Offset = Offset(),
+    PROVIDER_EPM_CIDOffset PROVIDER_EPM_CID: Offset = Offset(),
+    ENCRYPTED: Bool = true,
+    REQUIRED_SCOPEOffset REQUIRED_SCOPE: Offset = Offset(),
+    KEY_IDOffset KEY_ID: Offset = Offset(),
+    MAX_GRANT_TIMEOUT_MS: UInt64 = 0,
+    MIN_PERMISSIONSVectorOffset MIN_PERMISSIONS: Offset = Offset(),
+    CREATED_AT: UInt64 = 0,
+    UPDATED_AT: UInt64 = 0,
+    DOCUMENTATION_URLOffset DOCUMENTATION_URL: Offset = Offset(),
+    CHANGELOG_URLOffset CHANGELOG_URL: Offset = Offset(),
+    ICON_URLOffset ICON_URL: Offset = Offset(),
+    LICENSEOffset LICENSE: Offset = Offset(),
+    PAYMENT_MODEL: purchaseTier = .free,
+    PRICE_USD_CENTS: UInt32 = 0,
+    SUBSCRIPTION_PERIOD_DAYS: UInt32 = 0,
+    ACCEPTED_PAYMENT_METHODSVectorOffset ACCEPTED_PAYMENT_METHODS: Offset = Offset(),
+    LISTING_STATUS: publicationState = .public_,
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset(),
+    INVOKE_SURFACESVectorOffset INVOKE_SURFACES: Offset = Offset(),
+    METHODSVectorOffset METHODS: Offset = Offset(),
+    HOST_CAPABILITIESVectorOffset HOST_CAPABILITIES: Offset = Offset(),
+    TIMERSVectorOffset TIMERS: Offset = Offset(),
+    PROTOCOLSVectorOffset PROTOCOLS: Offset = Offset(),
+    SCHEMAS_USEDVectorOffset SCHEMAS_USED: Offset = Offset(),
+    BUILD_ARTIFACTSVectorOffset BUILD_ARTIFACTS: Offset = Offset(),
+    RUNTIME_TARGETSVectorOffset RUNTIME_TARGETS: Offset = Offset(),
+    ALLOWED_XPUBSVectorOffset ALLOWED_XPUBS: Offset = Offset(),
+    FLOW_NODESVectorOffset FLOW_NODES: Offset = Offset(),
+    FLOW_EDGESVectorOffset FLOW_EDGES: Offset = Offset(),
+    FLOW_TRIGGERSVectorOffset FLOW_TRIGGERS: Offset = Offset(),
+    FLOW_TRIGGER_BINDINGSVectorOffset FLOW_TRIGGER_BINDINGS: Offset = Offset(),
+    PRIMARY_CATEGORY: capabilityClass = .unspecified,
+    CATEGORIESVectorOffset CATEGORIES: Offset = Offset()
   ) -> Offset {
-    let __start = CCT.startCCT(&fbb)
-    CCT.add(TAXONOMY_ID: TAXONOMY_ID, &fbb)
-    CCT.add(VERSION: VERSION, &fbb)
-    CCT.add(ISSUED_AT: ISSUED_AT, &fbb)
-    CCT.add(TITLE: TITLE, &fbb)
-    CCT.addVectorOf(CATEGORIES: CATEGORIES, &fbb)
-    CCT.addVectorOf(ROLLUPS: ROLLUPS, &fbb)
-    CCT.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
-    return CCT.endCCT(&fbb, start: __start)
+    let __start = PLG.startPLG(&fbb)
+    PLG.add(PLUGIN_ID: PLUGIN_ID, &fbb)
+    PLG.add(NAME: NAME, &fbb)
+    PLG.add(VERSION: VERSION, &fbb)
+    PLG.add(DESCRIPTION: DESCRIPTION, &fbb)
+    PLG.add(TAGLINE: TAGLINE, &fbb)
+    PLG.add(PLUGIN_TYPE: PLUGIN_TYPE, &fbb)
+    PLG.add(PUBLISHER_NAME: PUBLISHER_NAME, &fbb)
+    PLG.add(PUBLISHER_HANDLE: PUBLISHER_HANDLE, &fbb)
+    PLG.add(PUBLISHER_URL: PUBLISHER_URL, &fbb)
+    PLG.add(SUPPORT_URL: SUPPORT_URL, &fbb)
+    PLG.addVectorOf(TAGS: TAGS, &fbb)
+    PLG.addVectorOf(FEATURES: FEATURES, &fbb)
+    PLG.addVectorOf(SCREENSHOT_URLS: SCREENSHOT_URLS, &fbb)
+    PLG.add(BANNER_URL: BANNER_URL, &fbb)
+    PLG.add(ABI_VERSION: ABI_VERSION, &fbb)
+    PLG.addVectorOf(WASM_HASH: WASM_HASH, &fbb)
+    PLG.add(WASM_SIZE: WASM_SIZE, &fbb)
+    PLG.add(WASM_CID: WASM_CID, &fbb)
+    PLG.addVectorOf(ENCRYPTED_WASM_HASH: ENCRYPTED_WASM_HASH, &fbb)
+    PLG.add(ENCRYPTED_WASM_SIZE: ENCRYPTED_WASM_SIZE, &fbb)
+    PLG.addVectorOf(ENTRY_FUNCTIONS: ENTRY_FUNCTIONS, &fbb)
+    PLG.addVectorOf(REQUIRED_SCHEMAS: REQUIRED_SCHEMAS, &fbb)
+    PLG.addVectorOf(DEPENDENCIES: DEPENDENCIES, &fbb)
+    PLG.addVectorOf(CAPABILITIES: CAPABILITIES, &fbb)
+    PLG.add(PROVIDER_PEER_ID: PROVIDER_PEER_ID, &fbb)
+    PLG.add(PROVIDER_EPM_CID: PROVIDER_EPM_CID, &fbb)
+    PLG.add(ENCRYPTED: ENCRYPTED, &fbb)
+    PLG.add(REQUIRED_SCOPE: REQUIRED_SCOPE, &fbb)
+    PLG.add(KEY_ID: KEY_ID, &fbb)
+    PLG.add(MAX_GRANT_TIMEOUT_MS: MAX_GRANT_TIMEOUT_MS, &fbb)
+    PLG.addVectorOf(MIN_PERMISSIONS: MIN_PERMISSIONS, &fbb)
+    PLG.add(CREATED_AT: CREATED_AT, &fbb)
+    PLG.add(UPDATED_AT: UPDATED_AT, &fbb)
+    PLG.add(DOCUMENTATION_URL: DOCUMENTATION_URL, &fbb)
+    PLG.add(CHANGELOG_URL: CHANGELOG_URL, &fbb)
+    PLG.add(ICON_URL: ICON_URL, &fbb)
+    PLG.add(LICENSE: LICENSE, &fbb)
+    PLG.add(PAYMENT_MODEL: PAYMENT_MODEL, &fbb)
+    PLG.add(PRICE_USD_CENTS: PRICE_USD_CENTS, &fbb)
+    PLG.add(SUBSCRIPTION_PERIOD_DAYS: SUBSCRIPTION_PERIOD_DAYS, &fbb)
+    PLG.addVectorOf(ACCEPTED_PAYMENT_METHODS: ACCEPTED_PAYMENT_METHODS, &fbb)
+    PLG.add(LISTING_STATUS: LISTING_STATUS, &fbb)
+    PLG.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    PLG.addVectorOf(INVOKE_SURFACES: INVOKE_SURFACES, &fbb)
+    PLG.addVectorOf(METHODS: METHODS, &fbb)
+    PLG.addVectorOf(HOST_CAPABILITIES: HOST_CAPABILITIES, &fbb)
+    PLG.addVectorOf(TIMERS: TIMERS, &fbb)
+    PLG.addVectorOf(PROTOCOLS: PROTOCOLS, &fbb)
+    PLG.addVectorOf(SCHEMAS_USED: SCHEMAS_USED, &fbb)
+    PLG.addVectorOf(BUILD_ARTIFACTS: BUILD_ARTIFACTS, &fbb)
+    PLG.addVectorOf(RUNTIME_TARGETS: RUNTIME_TARGETS, &fbb)
+    PLG.addVectorOf(ALLOWED_XPUBS: ALLOWED_XPUBS, &fbb)
+    PLG.addVectorOf(FLOW_NODES: FLOW_NODES, &fbb)
+    PLG.addVectorOf(FLOW_EDGES: FLOW_EDGES, &fbb)
+    PLG.addVectorOf(FLOW_TRIGGERS: FLOW_TRIGGERS, &fbb)
+    PLG.addVectorOf(FLOW_TRIGGER_BINDINGS: FLOW_TRIGGER_BINDINGS, &fbb)
+    PLG.add(PRIMARY_CATEGORY: PRIMARY_CATEGORY, &fbb)
+    PLG.addVectorOf(CATEGORIES: CATEGORIES, &fbb)
+    return PLG.endPLG(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TAXONOMY_ID, fieldName: "TAXONOMY_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLUGIN_ID, fieldName: "PLUGIN_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ISSUED_AT, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CATEGORIES, fieldName: "CATEGORIES", required: true, type: ForwardOffset<Vector<ForwardOffset<CCTCategory>, CCTCategory>>.self)
-    try _v.visit(field: VT.ROLLUPS, fieldName: "ROLLUPS", required: false, type: ForwardOffset<Vector<ForwardOffset<CCTCategoryRollup>, CCTCategoryRollup>>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TAGLINE, fieldName: "TAGLINE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLUGIN_TYPE, fieldName: "PLUGIN_TYPE", required: false, type: pluginCategory.self)
+    try _v.visit(field: VT.PUBLISHER_NAME, fieldName: "PUBLISHER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PUBLISHER_HANDLE, fieldName: "PUBLISHER_HANDLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PUBLISHER_URL, fieldName: "PUBLISHER_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUPPORT_URL, fieldName: "SUPPORT_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.FEATURES, fieldName: "FEATURES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SCREENSHOT_URLS, fieldName: "SCREENSHOT_URLS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.BANNER_URL, fieldName: "BANNER_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ABI_VERSION, fieldName: "ABI_VERSION", required: false, type: UInt32.self)
+    try _v.visit(field: VT.WASM_HASH, fieldName: "WASM_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.WASM_SIZE, fieldName: "WASM_SIZE", required: false, type: UInt64.self)
+    try _v.visit(field: VT.WASM_CID, fieldName: "WASM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENCRYPTED_WASM_HASH, fieldName: "ENCRYPTED_WASM_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ENCRYPTED_WASM_SIZE, fieldName: "ENCRYPTED_WASM_SIZE", required: false, type: UInt64.self)
+    try _v.visit(field: VT.ENTRY_FUNCTIONS, fieldName: "ENTRY_FUNCTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<EntryFunction>, EntryFunction>>.self)
+    try _v.visit(field: VT.REQUIRED_SCHEMAS, fieldName: "REQUIRED_SCHEMAS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.DEPENDENCIES, fieldName: "DEPENDENCIES", required: false, type: ForwardOffset<Vector<ForwardOffset<PluginDependency>, PluginDependency>>.self)
+    try _v.visit(field: VT.CAPABILITIES, fieldName: "CAPABILITIES", required: false, type: ForwardOffset<Vector<ForwardOffset<PluginCapability>, PluginCapability>>.self)
+    try _v.visit(field: VT.PROVIDER_PEER_ID, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_EPM_CID, fieldName: "PROVIDER_EPM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENCRYPTED, fieldName: "ENCRYPTED", required: false, type: Bool.self)
+    try _v.visit(field: VT.REQUIRED_SCOPE, fieldName: "REQUIRED_SCOPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KEY_ID, fieldName: "KEY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAX_GRANT_TIMEOUT_MS, fieldName: "MAX_GRANT_TIMEOUT_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.MIN_PERMISSIONS, fieldName: "MIN_PERMISSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.DOCUMENTATION_URL, fieldName: "DOCUMENTATION_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANGELOG_URL, fieldName: "CHANGELOG_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ICON_URL, fieldName: "ICON_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAYMENT_MODEL, fieldName: "PAYMENT_MODEL", required: false, type: purchaseTier.self)
+    try _v.visit(field: VT.PRICE_USD_CENTS, fieldName: "PRICE_USD_CENTS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SUBSCRIPTION_PERIOD_DAYS, fieldName: "SUBSCRIPTION_PERIOD_DAYS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ACCEPTED_PAYMENT_METHODS, fieldName: "ACCEPTED_PAYMENT_METHODS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.LISTING_STATUS, fieldName: "LISTING_STATUS", required: false, type: publicationState.self)
     try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.INVOKE_SURFACES, fieldName: "INVOKE_SURFACES", required: false, type: ForwardOffset<Vector<invokeSurfaceKind, invokeSurfaceKind>>.self)
+    try _v.visit(field: VT.METHODS, fieldName: "METHODS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGMethodManifest>, PLGMethodManifest>>.self)
+    try _v.visit(field: VT.HOST_CAPABILITIES, fieldName: "HOST_CAPABILITIES", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGHostCapability>, PLGHostCapability>>.self)
+    try _v.visit(field: VT.TIMERS, fieldName: "TIMERS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGTimerSpec>, PLGTimerSpec>>.self)
+    try _v.visit(field: VT.PROTOCOLS, fieldName: "PROTOCOLS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGProtocolSpec>, PLGProtocolSpec>>.self)
+    try _v.visit(field: VT.SCHEMAS_USED, fieldName: "SCHEMAS_USED", required: false, type: ForwardOffset<Vector<ForwardOffset<FlatBufferTypeRef>, FlatBufferTypeRef>>.self)
+    try _v.visit(field: VT.BUILD_ARTIFACTS, fieldName: "BUILD_ARTIFACTS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGBuildArtifact>, PLGBuildArtifact>>.self)
+    try _v.visit(field: VT.RUNTIME_TARGETS, fieldName: "RUNTIME_TARGETS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ALLOWED_XPUBS, fieldName: "ALLOWED_XPUBS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.FLOW_NODES, fieldName: "FLOW_NODES", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGFlowNode>, PLGFlowNode>>.self)
+    try _v.visit(field: VT.FLOW_EDGES, fieldName: "FLOW_EDGES", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGFlowEdge>, PLGFlowEdge>>.self)
+    try _v.visit(field: VT.FLOW_TRIGGERS, fieldName: "FLOW_TRIGGERS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGFlowTrigger>, PLGFlowTrigger>>.self)
+    try _v.visit(field: VT.FLOW_TRIGGER_BINDINGS, fieldName: "FLOW_TRIGGER_BINDINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<PLGFlowTriggerBinding>, PLGFlowTriggerBinding>>.self)
+    try _v.visit(field: VT.PRIMARY_CATEGORY, fieldName: "PRIMARY_CATEGORY", required: false, type: capabilityClass.self)
+    try _v.visit(field: VT.CATEGORIES, fieldName: "CATEGORIES", required: false, type: ForwardOffset<Vector<capabilityClass, capabilityClass>>.self)
     _v.finish()
   }
 }

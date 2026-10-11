@@ -8,511 +8,540 @@ import Common
 
 import FlatBuffers
 
-public enum TrkTrackStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  The kind of energy store the profile models.
+public enum vepEnergyType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case active = 0
-  case dropped = 1
-  case tentative = 2
-  case confirmed = 3
-  case coasted = 4
-  case dead = 5
+  case unspecified = 0
+  case liquidFuel = 1
+  case electric = 2
+  case hybrid = 3
+  case nuclear = 4
+  case solar = 5
+  case wind = 6
 
-  public static var max: TrkTrackStatus { return .dead }
-  public static var min: TrkTrackStatus { return .active }
+  public static var max: vepEnergyType { return .wind }
+  public static var min: vepEnergyType { return .unspecified }
 }
 
 
-public enum trackEnvironment: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Operating regime a performance point is stated for. Ordinals are wire
+///  values: append only.
+public enum vepRegime: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case space = 0
-  case air = 1
-  case surface = 2
-  case subsurface = 3
-  case land = 4
-  case unknown = 5
+  case unspecified = 0
+  case takeoff = 1
+  case climb = 2
+  case cruise = 3
+  case loiter = 4
+  case descent = 5
+  case taxi = 6
+  ///  Steady transit for surface and subsurface vehicles.
+  case transit = 7
+  ///  High-consumption maneuvering.
+  case maneuver = 8
 
-  public static var max: trackEnvironment { return .unknown }
-  public static var min: trackEnvironment { return .space }
+  public static var max: vepRegime { return .maneuver }
+  public static var min: vepRegime { return .unspecified }
 }
 
 
-///  Track
-public struct TRK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  How a consumer interpolates between performance points.
+public enum vepInterpolation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  No method stated; a consumer MUST treat the table as TABLE_LOOKUP
+  ///  rather than invent an interpolant.
+  case unspecified = 0
+  ///  Nearest point in (regime, altitude, speed).
+  case nearest = 1
+  ///  Linear along the single varying axis.
+  case linear = 2
+  ///  Bilinear over altitude and speed within a regime.
+  case bilinear = 3
+  ///  Exact-key lookup only; no interpolation between points.
+  case tableLookup = 4
+
+  public static var max: vepInterpolation { return .tableLookup }
+  public static var min: vepInterpolation { return .unspecified }
+}
+
+
+///  One point of the burn-rate table: consumption at a stated regime,
+///  altitude, and speed.
+public struct VEPPerformancePoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TRK" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TRK.id, addPrefix: prefix) }
+  public static var id: String { "$VEP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VEPPerformancePoint.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ALTITUDE_M: VOffset = 4
+    static let SPEED_MPS: VOffset = 6
+    static let REGIME: VOffset = 8
+    static let BURN_RATE_VALUE: VOffset = 10
+    static let BURN_RATE_UNITS: VOffset = 12
+    static let SPECIFIC_RANGE_M_PER_UNIT: VOffset = 14
+    static let GROSS_MASS_KG: VOffset = 16
+  }
+
+  ///  Altitude the point is stated at, metres above mean sea level. NaN for
+  ///  surface and subsurface regimes where altitude does not apply.
+  public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Speed the point is stated at, metres per second.
+  public var SPEED_MPS: Double { let o = _accessor.offset(VT.SPEED_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Operating regime.
+  public var REGIME: vepRegime { let o = _accessor.offset(VT.REGIME); return o == 0 ? .unspecified : vepRegime(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Consumption rate at this point, in BURN_RATE_UNITS per second unless
+  ///  the unit token itself states another time base.
+  public var BURN_RATE_VALUE: Double { let o = _accessor.offset(VT.BURN_RATE_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units of BURN_RATE_VALUE, verbatim. Required: a rate with no unit is
+  ///  not publishable.
+  public var BURN_RATE_UNITS: String! { let o = _accessor.offset(VT.BURN_RATE_UNITS); return _accessor.string(at: o) }
+  public var BURN_RATE_UNITSSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.BURN_RATE_UNITS) }
+  ///  Distance travelled per unit of energy at this point, metres per
+  ///  CAPACITY_UNITS unit.
+  public var SPECIFIC_RANGE_M_PER_UNIT: Double { let o = _accessor.offset(VT.SPECIFIC_RANGE_M_PER_UNIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Gross mass the point is stated at, kilograms.
+  public var GROSS_MASS_KG: Double { let o = _accessor.offset(VT.GROSS_MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startVEPPerformancePoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_M, def: 0.0, at: VT.ALTITUDE_M) }
+  public static func add(SPEED_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED_MPS, def: 0.0, at: VT.SPEED_MPS) }
+  public static func add(REGIME: vepRegime, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REGIME.rawValue, def: 0, at: VT.REGIME) }
+  public static func add(BURN_RATE_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURN_RATE_VALUE, def: 0.0, at: VT.BURN_RATE_VALUE) }
+  public static func add(BURN_RATE_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BURN_RATE_UNITS, at: VT.BURN_RATE_UNITS) }
+  public static func add(SPECIFIC_RANGE_M_PER_UNIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECIFIC_RANGE_M_PER_UNIT, def: 0.0, at: VT.SPECIFIC_RANGE_M_PER_UNIT) }
+  public static func add(GROSS_MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GROSS_MASS_KG, def: 0.0, at: VT.GROSS_MASS_KG) }
+  public static func endVEPPerformancePoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [12]); return end }
+  public static func createVEPPerformancePoint(
+    _ fbb: inout FlatBufferBuilder,
+    ALTITUDE_M: Double = 0.0,
+    SPEED_MPS: Double = 0.0,
+    REGIME: vepRegime = .unspecified,
+    BURN_RATE_VALUE: Double = 0.0,
+    BURN_RATE_UNITSOffset BURN_RATE_UNITS: Offset,
+    SPECIFIC_RANGE_M_PER_UNIT: Double = 0.0,
+    GROSS_MASS_KG: Double = 0.0
+  ) -> Offset {
+    let __start = VEPPerformancePoint.startVEPPerformancePoint(&fbb)
+    VEPPerformancePoint.add(ALTITUDE_M: ALTITUDE_M, &fbb)
+    VEPPerformancePoint.add(SPEED_MPS: SPEED_MPS, &fbb)
+    VEPPerformancePoint.add(REGIME: REGIME, &fbb)
+    VEPPerformancePoint.add(BURN_RATE_VALUE: BURN_RATE_VALUE, &fbb)
+    VEPPerformancePoint.add(BURN_RATE_UNITS: BURN_RATE_UNITS, &fbb)
+    VEPPerformancePoint.add(SPECIFIC_RANGE_M_PER_UNIT: SPECIFIC_RANGE_M_PER_UNIT, &fbb)
+    VEPPerformancePoint.add(GROSS_MASS_KG: GROSS_MASS_KG, &fbb)
+    return VEPPerformancePoint.endVEPPerformancePoint(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SPEED_MPS, fieldName: "SPEED_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.REGIME, fieldName: "REGIME", required: false, type: vepRegime.self)
+    try _v.visit(field: VT.BURN_RATE_VALUE, fieldName: "BURN_RATE_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.BURN_RATE_UNITS, fieldName: "BURN_RATE_UNITS", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SPECIFIC_RANGE_M_PER_UNIT, fieldName: "SPECIFIC_RANGE_M_PER_UNIT", required: false, type: Double.self)
+    try _v.visit(field: VT.GROSS_MASS_KG, fieldName: "GROSS_MASS_KG", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  One replenishment option: how the energy store is reset.
+public struct VEPReplenishment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VEP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VEPReplenishment.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let FACILITY_ID: VOffset = 4
+    static let DURATION_S: VOffset = 6
+    static let TRANSFER_RATE_VALUE: VOffset = 8
+    static let TRANSFER_RATE_UNITS: VOffset = 10
+    static let IN_MOTION: VOffset = 12
+  }
+
+  ///  `$TFN.ID` of a facility where this replenishment is available. Absent
+  ///  for a replenishment that is not facility-bound.
+  public var FACILITY_ID: String? { let o = _accessor.offset(VT.FACILITY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FACILITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FACILITY_ID) }
+  ///  Typical duration of the replenishment, seconds.
+  public var DURATION_S: Double { let o = _accessor.offset(VT.DURATION_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Transfer rate, in TRANSFER_RATE_UNITS.
+  public var TRANSFER_RATE_VALUE: Double { let o = _accessor.offset(VT.TRANSFER_RATE_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units of TRANSFER_RATE_VALUE, verbatim.
+  public var TRANSFER_RATE_UNITS: String? { let o = _accessor.offset(VT.TRANSFER_RATE_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSFER_RATE_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSFER_RATE_UNITS) }
+  ///  Replenishment happens while the vehicle is underway (aerial
+  ///  refuelling, underway replenishment).
+  public var IN_MOTION: Bool { let o = _accessor.offset(VT.IN_MOTION); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startVEPReplenishment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(FACILITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FACILITY_ID, at: VT.FACILITY_ID) }
+  public static func add(DURATION_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_S, def: 0.0, at: VT.DURATION_S) }
+  public static func add(TRANSFER_RATE_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSFER_RATE_VALUE, def: 0.0, at: VT.TRANSFER_RATE_VALUE) }
+  public static func add(TRANSFER_RATE_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSFER_RATE_UNITS, at: VT.TRANSFER_RATE_UNITS) }
+  public static func add(IN_MOTION: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IN_MOTION, def: false,
+   at: VT.IN_MOTION) }
+  public static func endVEPReplenishment(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createVEPReplenishment(
+    _ fbb: inout FlatBufferBuilder,
+    FACILITY_IDOffset FACILITY_ID: Offset = Offset(),
+    DURATION_S: Double = 0.0,
+    TRANSFER_RATE_VALUE: Double = 0.0,
+    TRANSFER_RATE_UNITSOffset TRANSFER_RATE_UNITS: Offset = Offset(),
+    IN_MOTION: Bool = false
+  ) -> Offset {
+    let __start = VEPReplenishment.startVEPReplenishment(&fbb)
+    VEPReplenishment.add(FACILITY_ID: FACILITY_ID, &fbb)
+    VEPReplenishment.add(DURATION_S: DURATION_S, &fbb)
+    VEPReplenishment.add(TRANSFER_RATE_VALUE: TRANSFER_RATE_VALUE, &fbb)
+    VEPReplenishment.add(TRANSFER_RATE_UNITS: TRANSFER_RATE_UNITS, &fbb)
+    VEPReplenishment.add(IN_MOTION: IN_MOTION, &fbb)
+    return VEPReplenishment.endVEPReplenishment(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.FACILITY_ID, fieldName: "FACILITY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DURATION_S, fieldName: "DURATION_S", required: false, type: Double.self)
+    try _v.visit(field: VT.TRANSFER_RATE_VALUE, fieldName: "TRANSFER_RATE_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.TRANSFER_RATE_UNITS, fieldName: "TRANSFER_RATE_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IN_MOTION, fieldName: "IN_MOTION", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Dataset lineage and redistribution terms for one endurance profile.
+///
+///  Required on every record: a profile whose data source, epoch, and
+///  licence are unstated is not publishable. The standard names no dataset,
+///  provider, or site.
+public struct VEPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VEP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VEPProvenance.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let DATASET_ID: VOffset = 4
+    static let DATASET_NAME: VOffset = 6
+    static let DATASET_URL: VOffset = 8
+    static let DATASET_EPOCH: VOffset = 10
+    static let DATASET_CID: VOffset = 12
+    static let SOURCE_URL: VOffset = 14
+    static let SOURCE_QUERY: VOffset = 16
+    static let RETRIEVED_AT: VOffset = 18
+    static let LICENSE: VOffset = 20
+    static let LICENSE_URL: VOffset = 22
+    static let ATTRIBUTION: VOffset = 24
+    static let NON_COMMERCIAL_ONLY: VOffset = 26
+    static let SHARE_ALIKE: VOffset = 28
+    static let NATIVE_ID: VOffset = 30
+    static let NATIVE_MODIFIED: VOffset = 32
+  }
+
+  ///  Publisher-stable, lowercase identifier for the dataset or study this
+  ///  profile was derived from.
+  public var DATASET_ID: String! { let o = _accessor.offset(VT.DATASET_ID); return _accessor.string(at: o) }
+  public var DATASET_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DATASET_ID) }
+  ///  The dataset's own name, verbatim as its publisher states it.
+  public var DATASET_NAME: String? { let o = _accessor.offset(VT.DATASET_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATASET_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATASET_NAME) }
+  ///  Replayable URL of the dataset as published.
+  public var DATASET_URL: String? { let o = _accessor.offset(VT.DATASET_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATASET_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATASET_URL) }
+  ///  RFC 3339 UTC fixed-millisecond epoch of the dataset edition this
+  ///  profile was derived from.
+  public var DATASET_EPOCH: String! { let o = _accessor.offset(VT.DATASET_EPOCH); return _accessor.string(at: o) }
+  public var DATASET_EPOCHSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DATASET_EPOCH) }
+  ///  Content identifier of the exact dataset artifact, when one exists.
+  public var DATASET_CID: String? { let o = _accessor.offset(VT.DATASET_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATASET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATASET_CID) }
+  ///  Replayable URL identifying the source material within the dataset.
+  public var SOURCE_URL: String? { let o = _accessor.offset(VT.SOURCE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_URL) }
+  ///  The exact query, filter, or file selection used.
+  public var SOURCE_QUERY: String? { let o = _accessor.offset(VT.SOURCE_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_QUERY) }
+  ///  RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  public var RETRIEVED_AT: String! { let o = _accessor.offset(VT.RETRIEVED_AT); return _accessor.string(at: o) }
+  public var RETRIEVED_ATSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.RETRIEVED_AT) }
+  ///  Redistribution terms verbatim. Unknown terms are never public domain
+  ///  and never an implied grant.
+  public var LICENSE: String! { let o = _accessor.offset(VT.LICENSE); return _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.LICENSE) }
+  ///  URL of the full licence text as the dataset publishes it.
+  public var LICENSE_URL: String? { let o = _accessor.offset(VT.LICENSE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE_URL) }
+  ///  Attribution text the licence requires a redistributor to display.
+  public var ATTRIBUTION: String? { let o = _accessor.offset(VT.ATTRIBUTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATTRIBUTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATTRIBUTION) }
+  ///  The licence forbids commercial use.
+  public var NON_COMMERCIAL_ONLY: Bool { let o = _accessor.offset(VT.NON_COMMERCIAL_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  The licence obliges derived works to carry the same terms.
+  public var SHARE_ALIKE: Bool { let o = _accessor.offset(VT.SHARE_ALIKE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  The source's own identifier for the vehicle class or type this
+  ///  profile describes, verbatim.
+  public var NATIVE_ID: String! { let o = _accessor.offset(VT.NATIVE_ID); return _accessor.string(at: o) }
+  public var NATIVE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NATIVE_ID) }
+  ///  RFC 3339 UTC instant the source last modified this data, as it
+  ///  states.
+  public var NATIVE_MODIFIED: String? { let o = _accessor.offset(VT.NATIVE_MODIFIED); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NATIVE_MODIFIEDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NATIVE_MODIFIED) }
+  public static func startVEPProvenance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  public static func add(DATASET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_ID, at: VT.DATASET_ID) }
+  public static func add(DATASET_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_NAME, at: VT.DATASET_NAME) }
+  public static func add(DATASET_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_URL, at: VT.DATASET_URL) }
+  public static func add(DATASET_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_EPOCH, at: VT.DATASET_EPOCH) }
+  public static func add(DATASET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_CID, at: VT.DATASET_CID) }
+  public static func add(SOURCE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_URL, at: VT.SOURCE_URL) }
+  public static func add(SOURCE_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_QUERY, at: VT.SOURCE_QUERY) }
+  public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(LICENSE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_URL, at: VT.LICENSE_URL) }
+  public static func add(ATTRIBUTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTRIBUTION, at: VT.ATTRIBUTION) }
+  public static func add(NON_COMMERCIAL_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NON_COMMERCIAL_ONLY, def: false,
+   at: VT.NON_COMMERCIAL_ONLY) }
+  public static func add(SHARE_ALIKE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHARE_ALIKE, def: false,
+   at: VT.SHARE_ALIKE) }
+  public static func add(NATIVE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NATIVE_ID, at: VT.NATIVE_ID) }
+  public static func add(NATIVE_MODIFIED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NATIVE_MODIFIED, at: VT.NATIVE_MODIFIED) }
+  public static func endVEPProvenance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10, 18, 20, 30]); return end }
+  public static func createVEPProvenance(
+    _ fbb: inout FlatBufferBuilder,
+    DATASET_IDOffset DATASET_ID: Offset,
+    DATASET_NAMEOffset DATASET_NAME: Offset = Offset(),
+    DATASET_URLOffset DATASET_URL: Offset = Offset(),
+    DATASET_EPOCHOffset DATASET_EPOCH: Offset,
+    DATASET_CIDOffset DATASET_CID: Offset = Offset(),
+    SOURCE_URLOffset SOURCE_URL: Offset = Offset(),
+    SOURCE_QUERYOffset SOURCE_QUERY: Offset = Offset(),
+    RETRIEVED_ATOffset RETRIEVED_AT: Offset,
+    LICENSEOffset LICENSE: Offset,
+    LICENSE_URLOffset LICENSE_URL: Offset = Offset(),
+    ATTRIBUTIONOffset ATTRIBUTION: Offset = Offset(),
+    NON_COMMERCIAL_ONLY: Bool = false,
+    SHARE_ALIKE: Bool = false,
+    NATIVE_IDOffset NATIVE_ID: Offset,
+    NATIVE_MODIFIEDOffset NATIVE_MODIFIED: Offset = Offset()
+  ) -> Offset {
+    let __start = VEPProvenance.startVEPProvenance(&fbb)
+    VEPProvenance.add(DATASET_ID: DATASET_ID, &fbb)
+    VEPProvenance.add(DATASET_NAME: DATASET_NAME, &fbb)
+    VEPProvenance.add(DATASET_URL: DATASET_URL, &fbb)
+    VEPProvenance.add(DATASET_EPOCH: DATASET_EPOCH, &fbb)
+    VEPProvenance.add(DATASET_CID: DATASET_CID, &fbb)
+    VEPProvenance.add(SOURCE_URL: SOURCE_URL, &fbb)
+    VEPProvenance.add(SOURCE_QUERY: SOURCE_QUERY, &fbb)
+    VEPProvenance.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
+    VEPProvenance.add(LICENSE: LICENSE, &fbb)
+    VEPProvenance.add(LICENSE_URL: LICENSE_URL, &fbb)
+    VEPProvenance.add(ATTRIBUTION: ATTRIBUTION, &fbb)
+    VEPProvenance.add(NON_COMMERCIAL_ONLY: NON_COMMERCIAL_ONLY, &fbb)
+    VEPProvenance.add(SHARE_ALIKE: SHARE_ALIKE, &fbb)
+    VEPProvenance.add(NATIVE_ID: NATIVE_ID, &fbb)
+    VEPProvenance.add(NATIVE_MODIFIED: NATIVE_MODIFIED, &fbb)
+    return VEPProvenance.endVEPProvenance(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.DATASET_ID, fieldName: "DATASET_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATASET_NAME, fieldName: "DATASET_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATASET_URL, fieldName: "DATASET_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATASET_EPOCH, fieldName: "DATASET_EPOCH", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATASET_CID, fieldName: "DATASET_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_URL, fieldName: "SOURCE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_QUERY, fieldName: "SOURCE_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE_URL, fieldName: "LICENSE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATTRIBUTION, fieldName: "ATTRIBUTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NON_COMMERCIAL_ONLY, fieldName: "NON_COMMERCIAL_ONLY", required: false, type: Bool.self)
+    try _v.visit(field: VT.SHARE_ALIKE, fieldName: "SHARE_ALIKE", required: false, type: Bool.self)
+    try _v.visit(field: VT.NATIVE_ID, fieldName: "NATIVE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NATIVE_MODIFIED, fieldName: "NATIVE_MODIFIED", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Vehicle Endurance Profile
+public struct VEP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VEP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VEP.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let ID: VOffset = 4
-    static let CNTCT: VOffset = 6
-    static let MSG_TS: VOffset = 8
-    static let MSN_ID: VOffset = 10
-    static let ASSET_NAT: VOffset = 12
-    static let ASSET: VOffset = 14
-    static let SENSOR_ID: VOffset = 16
-    static let SEN_QUAL: VOffset = 18
-    static let TRK_ID: VOffset = 20
-    static let TRK_NUM: VOffset = 22
-    static let TRK_STAT: VOffset = 24
-    static let OBJ_NAT: VOffset = 26
-    static let OBJ_ID: VOffset = 28
-    static let OBJ_TYPE: VOffset = 30
-    static let OBJ_SPEC: VOffset = 32
-    static let OBJ_PLAT: VOffset = 34
-    static let OBJ_ACT: VOffset = 36
-    static let MOD_TYPE: VOffset = 38
-    static let TRK_ITM_ID: VOffset = 40
-    static let TS: VOffset = 42
-    static let TRK_QUAL: VOffset = 44
-    static let TRK_PT_TYPE: VOffset = 46
-    static let OBJ_IDENT: VOffset = 48
-    static let IDENT_CRED: VOffset = 50
-    static let IDENT_REL: VOffset = 52
-    static let IDENT_AMP: VOffset = 54
-    static let ENVIRONMENT: VOffset = 56
-    static let ENVIRONMENT_CONF: VOffset = 58
-    static let TRK_CONF: VOffset = 60
-    static let LAT: VOffset = 62
-    static let LON: VOffset = 64
-    static let ALT: VOffset = 66
-    static let SPD: VOffset = 68
-    static let HDNG: VOffset = 70
-    static let COURSE: VOffset = 72
-    static let SRC_TYPS: VOffset = 74
-    static let SRC_IDS: VOffset = 76
-    static let CALL_SIGN: VOffset = 78
-    static let MULTI_SOURCE: VOffset = 80
-    static let J_SERIES: VOffset = 82
-    static let STRENGTH: VOffset = 84
-    static let M1: VOffset = 86
-    static let M1V: VOffset = 88
-    static let M2: VOffset = 90
-    static let M2V: VOffset = 92
-    static let M3A: VOffset = 94
-    static let M3AV: VOffset = 96
-    static let TAGS: VOffset = 98
-    static let TRACK_START_TIME: VOffset = 100
-    static let TRACK_STEP_SIZE: VOffset = 102
-    static let TRACK_COMPONENTS: VOffset = 104
-    static let ECEF_POS: VOffset = 106
-    static let ECEF_VEL: VOffset = 108
-    static let ECEF_ACC: VOffset = 110
-    static let LC_POS: VOffset = 112
-    static let LC_VEL: VOffset = 114
-    static let LC_ACC: VOffset = 116
-    static let COV: VOffset = 118
-    static let ERR_ELLP: VOffset = 120
+    static let VEHICLE_CLASS_ID: VOffset = 6
+    static let VEHICLE_TYPE_DESIGNATOR: VOffset = 8
+    static let ENVIRONMENT: VOffset = 10
+    static let ENERGY_TYPE: VOffset = 12
+    static let CAPACITY_VALUE: VOffset = 14
+    static let CAPACITY_UNITS: VOffset = 16
+    static let RESERVE_FRACTION: VOffset = 18
+    static let PERFORMANCE_POINTS: VOffset = 20
+    static let INTERPOLATION: VOffset = 22
+    static let MAXIMUM_ENDURANCE_S: VOffset = 24
+    static let MAXIMUM_RANGE_M: VOffset = 26
+    static let LOITER_SPEED_MPS: VOffset = 28
+    static let SERVICE_CEILING_M: VOffset = 30
+    static let REPLENISHMENT: VOffset = 32
+    static let REFINES_ID: VOffset = 34
+    static let SOURCE: VOffset = 36
   }
 
-  ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
-  ///  Contact reference
-  public var CNTCT: String? { let o = _accessor.offset(VT.CNTCT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CNTCTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CNTCT) }
-  ///  Message timestamp (ISO 8601)
-  public var MSG_TS: String? { let o = _accessor.offset(VT.MSG_TS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSG_TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSG_TS) }
-  ///  Mission identifier
-  public var MSN_ID: String? { let o = _accessor.offset(VT.MSN_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSN_ID) }
-  ///  Asset nationality
-  public var ASSET_NAT: String? { let o = _accessor.offset(VT.ASSET_NAT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ASSET_NATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ASSET_NAT) }
-  ///  Asset identifier
-  public var ASSET: String? { let o = _accessor.offset(VT.ASSET); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ASSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ASSET) }
-  ///  Sensor identifier
-  public var SENSOR_ID: String? { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SENSOR_ID) }
-  ///  Sensor quality assessment
-  public var SEN_QUAL: String? { let o = _accessor.offset(VT.SEN_QUAL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SEN_QUALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SEN_QUAL) }
-  ///  Track identifier
-  public var TRK_ID: String? { let o = _accessor.offset(VT.TRK_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRK_ID) }
-  ///  Track number
-  public var TRK_NUM: String? { let o = _accessor.offset(VT.TRK_NUM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRK_NUMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRK_NUM) }
-  ///  Track status
-  public var TRK_STAT: TrkTrackStatus { let o = _accessor.offset(VT.TRK_STAT); return o == 0 ? .active : TrkTrackStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .active }
-  ///  Object nationality
-  public var OBJ_NAT: String? { let o = _accessor.offset(VT.OBJ_NAT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_NATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_NAT) }
-  ///  Object identifier
-  public var OBJ_ID: String? { let o = _accessor.offset(VT.OBJ_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_ID) }
-  ///  Object type classification
-  public var OBJ_TYPE: String? { let o = _accessor.offset(VT.OBJ_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_TYPE) }
-  ///  Object specific type
-  public var OBJ_SPEC: String? { let o = _accessor.offset(VT.OBJ_SPEC); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_SPECSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_SPEC) }
-  ///  Object platform type
-  public var OBJ_PLAT: String? { let o = _accessor.offset(VT.OBJ_PLAT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_PLATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_PLAT) }
-  ///  Object activity
-  public var OBJ_ACT: String? { let o = _accessor.offset(VT.OBJ_ACT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_ACTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_ACT) }
-  ///  Mode type
-  public var MOD_TYPE: String? { let o = _accessor.offset(VT.MOD_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MOD_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MOD_TYPE) }
-  ///  Track item identifier
-  public var TRK_ITM_ID: String? { let o = _accessor.offset(VT.TRK_ITM_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRK_ITM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRK_ITM_ID) }
-  ///  Track point timestamp (ISO 8601)
-  public var TS: String? { let o = _accessor.offset(VT.TS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TS) }
-  ///  Track quality (0-15)
-  public var TRK_QUAL: UInt8 { let o = _accessor.offset(VT.TRK_QUAL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Track point type
-  public var TRK_PT_TYPE: String? { let o = _accessor.offset(VT.TRK_PT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRK_PT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRK_PT_TYPE) }
-  ///  Object identity assessment
-  public var OBJ_IDENT: String? { let o = _accessor.offset(VT.OBJ_IDENT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_IDENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_IDENT) }
-  ///  Identity credibility (1-6)
-  public var IDENT_CRED: UInt8 { let o = _accessor.offset(VT.IDENT_CRED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Identity reliability (A-F)
-  public var IDENT_REL: UInt8 { let o = _accessor.offset(VT.IDENT_REL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Identity amplification
-  public var IDENT_AMP: String? { let o = _accessor.offset(VT.IDENT_AMP); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDENT_AMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IDENT_AMP) }
-  ///  Track environment
-  public var ENVIRONMENT: trackEnvironment { let o = _accessor.offset(VT.ENVIRONMENT); return o == 0 ? .space : trackEnvironment(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .space }
-  ///  Environment confidence (0-1)
-  public var ENVIRONMENT_CONF: Double { let o = _accessor.offset(VT.ENVIRONMENT_CONF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Track confidence (0-1)
-  public var TRK_CONF: Double { let o = _accessor.offset(VT.TRK_CONF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Latitude (degrees)
-  public var LAT: Double { let o = _accessor.offset(VT.LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Longitude (degrees)
-  public var LON: Double { let o = _accessor.offset(VT.LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Altitude (km)
-  public var ALT: Double { let o = _accessor.offset(VT.ALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Speed (km/s)
-  public var SPD: Double { let o = _accessor.offset(VT.SPD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Heading (degrees from north)
-  public var HDNG: Double { let o = _accessor.offset(VT.HDNG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Course (degrees from north)
-  public var COURSE: Double { let o = _accessor.offset(VT.COURSE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Source types
-  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SRC_TYPS, byteSize: 4) }
-  ///  Source identifiers
-  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SRC_IDS, byteSize: 4) }
-  ///  Call sign
-  public var CALL_SIGN: String? { let o = _accessor.offset(VT.CALL_SIGN); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CALL_SIGNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CALL_SIGN) }
-  ///  True if fused from multiple sources
-  public var MULTI_SOURCE: Bool { let o = _accessor.offset(VT.MULTI_SOURCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  J-series message type
-  public var J_SERIES: String? { let o = _accessor.offset(VT.J_SERIES); return o == 0 ? nil : _accessor.string(at: o) }
-  public var J_SERIESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.J_SERIES) }
-  ///  Force strength indicator
-  public var STRENGTH: UInt16 { let o = _accessor.offset(VT.STRENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Mode 1 code
-  public var M1: UInt16 { let o = _accessor.offset(VT.M1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Mode 1 validity
-  public var M1V: UInt8 { let o = _accessor.offset(VT.M1V); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Mode 2 code
-  public var M2: UInt16 { let o = _accessor.offset(VT.M2); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Mode 2 validity
-  public var M2V: UInt8 { let o = _accessor.offset(VT.M2V); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Mode 3A code
-  public var M3A: UInt16 { let o = _accessor.offset(VT.M3A); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Mode 3A validity
-  public var M3AV: UInt8 { let o = _accessor.offset(VT.M3AV); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Associated tags
-  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
-  ///  Start time for track data (ISO 8601)
-  public var TRACK_START_TIME: String? { let o = _accessor.offset(VT.TRACK_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACK_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACK_START_TIME) }
-  ///  Time interval between track points (seconds)
-  public var TRACK_STEP_SIZE: Double { let o = _accessor.offset(VT.TRACK_STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of components per point (default 3 for X, Y, Z)
-  public var TRACK_COMPONENTS: UInt8 { let o = _accessor.offset(VT.TRACK_COMPONENTS); return o == 0 ? 3 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
-  public var ECEF_POS: FlatbufferVector<Double> { return _accessor.vector(at: VT.ECEF_POS, byteSize: 8) }
-  public func withUnsafePointerToEcefPos<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ECEF_POS, body: body) }
-  ///  ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
-  public var ECEF_VEL: FlatbufferVector<Double> { return _accessor.vector(at: VT.ECEF_VEL, byteSize: 8) }
-  public func withUnsafePointerToEcefVel<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ECEF_VEL, body: body) }
-  ///  ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
-  public var ECEF_ACC: FlatbufferVector<Double> { return _accessor.vector(at: VT.ECEF_ACC, byteSize: 8) }
-  public func withUnsafePointerToEcefAcc<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ECEF_ACC, body: body) }
-  ///  Local coordinate position as flat array
-  public var LC_POS: FlatbufferVector<Double> { return _accessor.vector(at: VT.LC_POS, byteSize: 8) }
-  public func withUnsafePointerToLcPos<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LC_POS, body: body) }
-  ///  Local coordinate velocity as flat array
-  public var LC_VEL: FlatbufferVector<Double> { return _accessor.vector(at: VT.LC_VEL, byteSize: 8) }
-  public func withUnsafePointerToLcVel<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LC_VEL, body: body) }
-  ///  Local coordinate acceleration as flat array
-  public var LC_ACC: FlatbufferVector<Double> { return _accessor.vector(at: VT.LC_ACC, byteSize: 8) }
-  public func withUnsafePointerToLcAcc<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LC_ACC, body: body) }
-  ///  Covariance data (21 elements per point for 6x6 lower triangular)
-  public var COV: FlatbufferVector<Double> { return _accessor.vector(at: VT.COV, byteSize: 8) }
-  public func withUnsafePointerToCov<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COV, body: body) }
-  ///  Error ellipse data (6 elements per point)
-  public var ERR_ELLP: FlatbufferVector<Double> { return _accessor.vector(at: VT.ERR_ELLP, byteSize: 8) }
-  public func withUnsafePointerToErrEllp<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ERR_ELLP, body: body) }
-  public static func startTRK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
+  ///  Publisher-stable identifier for this profile record.
+  public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ID) }
+  ///  Publisher-stable identifier of the vehicle CLASS this profile models.
+  ///  Required: every profile is at least class-level.
+  public var VEHICLE_CLASS_ID: String! { let o = _accessor.offset(VT.VEHICLE_CLASS_ID); return _accessor.string(at: o) }
+  public var VEHICLE_CLASS_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VEHICLE_CLASS_ID) }
+  ///  Verbatim vehicle type token refining the class, when this profile is
+  ///  a per-type refinement.
+  public var VEHICLE_TYPE_DESIGNATOR: String? { let o = _accessor.offset(VT.VEHICLE_TYPE_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VEHICLE_TYPE_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VEHICLE_TYPE_DESIGNATOR) }
+  ///  Domain the vehicle operates in. The `$TRK` enum reused verbatim;
+  ///  ordinal 0 is SPACE, so it is defaulted to UNKNOWN explicitly.
+  public var ENVIRONMENT: trackEnvironment { let o = _accessor.offset(VT.ENVIRONMENT); return o == 0 ? .unknown : trackEnvironment(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Kind of energy store.
+  public var ENERGY_TYPE: vepEnergyType { let o = _accessor.offset(VT.ENERGY_TYPE); return o == 0 ? .unspecified : vepEnergyType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Usable energy store capacity, in CAPACITY_UNITS.
+  public var CAPACITY_VALUE: Double { let o = _accessor.offset(VT.CAPACITY_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units of CAPACITY_VALUE, verbatim. The same unit keys
+  ///  SPECIFIC_RANGE_M_PER_UNIT and the replenishment transfer rates.
+  public var CAPACITY_UNITS: String? { let o = _accessor.offset(VT.CAPACITY_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CAPACITY_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CAPACITY_UNITS) }
+  ///  Fraction of capacity [0-1] held as reserve; endurance computations
+  ///  spend down to the reserve, never through it.
+  public var RESERVE_FRACTION: Double { let o = _accessor.offset(VT.RESERVE_FRACTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The burn-rate table, keyed regime x altitude x speed. Required, and
+  ///  never a single collapsed scalar.
+  public var PERFORMANCE_POINTS: FlatbufferVector<VEPPerformancePoint> { return _accessor.vector(at: VT.PERFORMANCE_POINTS, byteSize: 4) }
+  ///  How a consumer interpolates between the points.
+  public var INTERPOLATION: vepInterpolation { let o = _accessor.offset(VT.INTERPOLATION); return o == 0 ? .unspecified : vepInterpolation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Maximum endurance, seconds, as the source publishes it.
+  public var MAXIMUM_ENDURANCE_S: Double { let o = _accessor.offset(VT.MAXIMUM_ENDURANCE_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Maximum range, metres, as the source publishes it.
+  public var MAXIMUM_RANGE_M: Double { let o = _accessor.offset(VT.MAXIMUM_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Best-loiter speed, metres per second.
+  public var LOITER_SPEED_MPS: Double { let o = _accessor.offset(VT.LOITER_SPEED_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Service ceiling, metres above mean sea level.
+  public var SERVICE_CEILING_M: Double { let o = _accessor.offset(VT.SERVICE_CEILING_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Replenishment options available to this class or type.
+  public var REPLENISHMENT: FlatbufferVector<VEPReplenishment> { return _accessor.vector(at: VT.REPLENISHMENT, byteSize: 4) }
+  ///  `$VEP.ID` of the parent profile this one refines — the class-to-type
+  ///  specialization chain. Absent for a class-level root profile.
+  public var REFINES_ID: String? { let o = _accessor.offset(VT.REFINES_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFINES_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFINES_ID) }
+  ///  Dataset lineage and licence. Required.
+  public var SOURCE: VEPProvenance! { let o = _accessor.offset(VT.SOURCE); return VEPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startVEP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(CNTCT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CNTCT, at: VT.CNTCT) }
-  public static func add(MSG_TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TS, at: VT.MSG_TS) }
-  public static func add(MSN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSN_ID, at: VT.MSN_ID) }
-  public static func add(ASSET_NAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSET_NAT, at: VT.ASSET_NAT) }
-  public static func add(ASSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSET, at: VT.ASSET) }
-  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
-  public static func add(SEN_QUAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAL, at: VT.SEN_QUAL) }
-  public static func add(TRK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_ID, at: VT.TRK_ID) }
-  public static func add(TRK_NUM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_NUM, at: VT.TRK_NUM) }
-  public static func add(TRK_STAT: TrkTrackStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_STAT.rawValue, def: 0, at: VT.TRK_STAT) }
-  public static func add(OBJ_NAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_NAT, at: VT.OBJ_NAT) }
-  public static func add(OBJ_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_ID, at: VT.OBJ_ID) }
-  public static func add(OBJ_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_TYPE, at: VT.OBJ_TYPE) }
-  public static func add(OBJ_SPEC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_SPEC, at: VT.OBJ_SPEC) }
-  public static func add(OBJ_PLAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_PLAT, at: VT.OBJ_PLAT) }
-  public static func add(OBJ_ACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_ACT, at: VT.OBJ_ACT) }
-  public static func add(MOD_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MOD_TYPE, at: VT.MOD_TYPE) }
-  public static func add(TRK_ITM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_ITM_ID, at: VT.TRK_ITM_ID) }
-  public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VT.TS) }
-  public static func add(TRK_QUAL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_QUAL, def: 0, at: VT.TRK_QUAL) }
-  public static func add(TRK_PT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_PT_TYPE, at: VT.TRK_PT_TYPE) }
-  public static func add(OBJ_IDENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_IDENT, at: VT.OBJ_IDENT) }
-  public static func add(IDENT_CRED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IDENT_CRED, def: 0, at: VT.IDENT_CRED) }
-  public static func add(IDENT_REL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IDENT_REL, def: 0, at: VT.IDENT_REL) }
-  public static func add(IDENT_AMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IDENT_AMP, at: VT.IDENT_AMP) }
-  public static func add(ENVIRONMENT: trackEnvironment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT.rawValue, def: 0, at: VT.ENVIRONMENT) }
-  public static func add(ENVIRONMENT_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT_CONF, def: 0.0, at: VT.ENVIRONMENT_CONF) }
-  public static func add(TRK_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_CONF, def: 0.0, at: VT.TRK_CONF) }
-  public static func add(LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT, def: 0.0, at: VT.LAT) }
-  public static func add(LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LON, def: 0.0, at: VT.LON) }
-  public static func add(ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALT, def: 0.0, at: VT.ALT) }
-  public static func add(SPD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPD, def: 0.0, at: VT.SPD) }
-  public static func add(HDNG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HDNG, def: 0.0, at: VT.HDNG) }
-  public static func add(COURSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COURSE, def: 0.0, at: VT.COURSE) }
-  public static func addVectorOf(SRC_TYPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_TYPS, at: VT.SRC_TYPS) }
-  public static func addVectorOf(SRC_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_IDS, at: VT.SRC_IDS) }
-  public static func add(CALL_SIGN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALL_SIGN, at: VT.CALL_SIGN) }
-  public static func add(MULTI_SOURCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MULTI_SOURCE, def: false,
-   at: VT.MULTI_SOURCE) }
-  public static func add(J_SERIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: J_SERIES, at: VT.J_SERIES) }
-  public static func add(STRENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STRENGTH, def: 0, at: VT.STRENGTH) }
-  public static func add(M1: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M1, def: 0, at: VT.M1) }
-  public static func add(M1V: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M1V, def: 0, at: VT.M1V) }
-  public static func add(M2: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M2, def: 0, at: VT.M2) }
-  public static func add(M2V: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M2V, def: 0, at: VT.M2V) }
-  public static func add(M3A: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M3A, def: 0, at: VT.M3A) }
-  public static func add(M3AV: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M3AV, def: 0, at: VT.M3AV) }
-  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
-  public static func add(TRACK_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_START_TIME, at: VT.TRACK_START_TIME) }
-  public static func add(TRACK_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACK_STEP_SIZE, def: 0.0, at: VT.TRACK_STEP_SIZE) }
-  public static func add(TRACK_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACK_COMPONENTS, def: 3, at: VT.TRACK_COMPONENTS) }
-  public static func addVectorOf(ECEF_POS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_POS, at: VT.ECEF_POS) }
-  public static func addVectorOf(ECEF_VEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_VEL, at: VT.ECEF_VEL) }
-  public static func addVectorOf(ECEF_ACC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_ACC, at: VT.ECEF_ACC) }
-  public static func addVectorOf(LC_POS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_POS, at: VT.LC_POS) }
-  public static func addVectorOf(LC_VEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_VEL, at: VT.LC_VEL) }
-  public static func addVectorOf(LC_ACC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_ACC, at: VT.LC_ACC) }
-  public static func addVectorOf(COV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV, at: VT.COV) }
-  public static func addVectorOf(ERR_ELLP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERR_ELLP, at: VT.ERR_ELLP) }
-  public static func endTRK(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTRK(
+  public static func add(VEHICLE_CLASS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEHICLE_CLASS_ID, at: VT.VEHICLE_CLASS_ID) }
+  public static func add(VEHICLE_TYPE_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEHICLE_TYPE_DESIGNATOR, at: VT.VEHICLE_TYPE_DESIGNATOR) }
+  public static func add(ENVIRONMENT: trackEnvironment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT.rawValue, def: 5, at: VT.ENVIRONMENT) }
+  public static func add(ENERGY_TYPE: vepEnergyType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENERGY_TYPE.rawValue, def: 0, at: VT.ENERGY_TYPE) }
+  public static func add(CAPACITY_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CAPACITY_VALUE, def: 0.0, at: VT.CAPACITY_VALUE) }
+  public static func add(CAPACITY_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPACITY_UNITS, at: VT.CAPACITY_UNITS) }
+  public static func add(RESERVE_FRACTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESERVE_FRACTION, def: 0.0, at: VT.RESERVE_FRACTION) }
+  public static func addVectorOf(PERFORMANCE_POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PERFORMANCE_POINTS, at: VT.PERFORMANCE_POINTS) }
+  public static func add(INTERPOLATION: vepInterpolation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATION.rawValue, def: 0, at: VT.INTERPOLATION) }
+  public static func add(MAXIMUM_ENDURANCE_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_ENDURANCE_S, def: 0.0, at: VT.MAXIMUM_ENDURANCE_S) }
+  public static func add(MAXIMUM_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_RANGE_M, def: 0.0, at: VT.MAXIMUM_RANGE_M) }
+  public static func add(LOITER_SPEED_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOITER_SPEED_MPS, def: 0.0, at: VT.LOITER_SPEED_MPS) }
+  public static func add(SERVICE_CEILING_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SERVICE_CEILING_M, def: 0.0, at: VT.SERVICE_CEILING_M) }
+  public static func addVectorOf(REPLENISHMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPLENISHMENT, at: VT.REPLENISHMENT) }
+  public static func add(REFINES_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFINES_ID, at: VT.REFINES_ID) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func endVEP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 20, 36]); return end }
+  public static func createVEP(
     _ fbb: inout FlatBufferBuilder,
-    IDOffset ID: Offset = Offset(),
-    CNTCTOffset CNTCT: Offset = Offset(),
-    MSG_TSOffset MSG_TS: Offset = Offset(),
-    MSN_IDOffset MSN_ID: Offset = Offset(),
-    ASSET_NATOffset ASSET_NAT: Offset = Offset(),
-    ASSETOffset ASSET: Offset = Offset(),
-    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
-    SEN_QUALOffset SEN_QUAL: Offset = Offset(),
-    TRK_IDOffset TRK_ID: Offset = Offset(),
-    TRK_NUMOffset TRK_NUM: Offset = Offset(),
-    TRK_STAT: TrkTrackStatus = .active,
-    OBJ_NATOffset OBJ_NAT: Offset = Offset(),
-    OBJ_IDOffset OBJ_ID: Offset = Offset(),
-    OBJ_TYPEOffset OBJ_TYPE: Offset = Offset(),
-    OBJ_SPECOffset OBJ_SPEC: Offset = Offset(),
-    OBJ_PLATOffset OBJ_PLAT: Offset = Offset(),
-    OBJ_ACTOffset OBJ_ACT: Offset = Offset(),
-    MOD_TYPEOffset MOD_TYPE: Offset = Offset(),
-    TRK_ITM_IDOffset TRK_ITM_ID: Offset = Offset(),
-    TSOffset TS: Offset = Offset(),
-    TRK_QUAL: UInt8 = 0,
-    TRK_PT_TYPEOffset TRK_PT_TYPE: Offset = Offset(),
-    OBJ_IDENTOffset OBJ_IDENT: Offset = Offset(),
-    IDENT_CRED: UInt8 = 0,
-    IDENT_REL: UInt8 = 0,
-    IDENT_AMPOffset IDENT_AMP: Offset = Offset(),
-    ENVIRONMENT: trackEnvironment = .space,
-    ENVIRONMENT_CONF: Double = 0.0,
-    TRK_CONF: Double = 0.0,
-    LAT: Double = 0.0,
-    LON: Double = 0.0,
-    ALT: Double = 0.0,
-    SPD: Double = 0.0,
-    HDNG: Double = 0.0,
-    COURSE: Double = 0.0,
-    SRC_TYPSVectorOffset SRC_TYPS: Offset = Offset(),
-    SRC_IDSVectorOffset SRC_IDS: Offset = Offset(),
-    CALL_SIGNOffset CALL_SIGN: Offset = Offset(),
-    MULTI_SOURCE: Bool = false,
-    J_SERIESOffset J_SERIES: Offset = Offset(),
-    STRENGTH: UInt16 = 0,
-    M1: UInt16 = 0,
-    M1V: UInt8 = 0,
-    M2: UInt16 = 0,
-    M2V: UInt8 = 0,
-    M3A: UInt16 = 0,
-    M3AV: UInt8 = 0,
-    TAGSVectorOffset TAGS: Offset = Offset(),
-    TRACK_START_TIMEOffset TRACK_START_TIME: Offset = Offset(),
-    TRACK_STEP_SIZE: Double = 0.0,
-    TRACK_COMPONENTS: UInt8 = 3,
-    ECEF_POSVectorOffset ECEF_POS: Offset = Offset(),
-    ECEF_VELVectorOffset ECEF_VEL: Offset = Offset(),
-    ECEF_ACCVectorOffset ECEF_ACC: Offset = Offset(),
-    LC_POSVectorOffset LC_POS: Offset = Offset(),
-    LC_VELVectorOffset LC_VEL: Offset = Offset(),
-    LC_ACCVectorOffset LC_ACC: Offset = Offset(),
-    COVVectorOffset COV: Offset = Offset(),
-    ERR_ELLPVectorOffset ERR_ELLP: Offset = Offset()
+    IDOffset ID: Offset,
+    VEHICLE_CLASS_IDOffset VEHICLE_CLASS_ID: Offset,
+    VEHICLE_TYPE_DESIGNATOROffset VEHICLE_TYPE_DESIGNATOR: Offset = Offset(),
+    ENVIRONMENT: trackEnvironment = .unknown,
+    ENERGY_TYPE: vepEnergyType = .unspecified,
+    CAPACITY_VALUE: Double = 0.0,
+    CAPACITY_UNITSOffset CAPACITY_UNITS: Offset = Offset(),
+    RESERVE_FRACTION: Double = 0.0,
+    PERFORMANCE_POINTSVectorOffset PERFORMANCE_POINTS: Offset,
+    INTERPOLATION: vepInterpolation = .unspecified,
+    MAXIMUM_ENDURANCE_S: Double = 0.0,
+    MAXIMUM_RANGE_M: Double = 0.0,
+    LOITER_SPEED_MPS: Double = 0.0,
+    SERVICE_CEILING_M: Double = 0.0,
+    REPLENISHMENTVectorOffset REPLENISHMENT: Offset = Offset(),
+    REFINES_IDOffset REFINES_ID: Offset = Offset(),
+    SOURCEOffset SOURCE: Offset
   ) -> Offset {
-    let __start = TRK.startTRK(&fbb)
-    TRK.add(ID: ID, &fbb)
-    TRK.add(CNTCT: CNTCT, &fbb)
-    TRK.add(MSG_TS: MSG_TS, &fbb)
-    TRK.add(MSN_ID: MSN_ID, &fbb)
-    TRK.add(ASSET_NAT: ASSET_NAT, &fbb)
-    TRK.add(ASSET: ASSET, &fbb)
-    TRK.add(SENSOR_ID: SENSOR_ID, &fbb)
-    TRK.add(SEN_QUAL: SEN_QUAL, &fbb)
-    TRK.add(TRK_ID: TRK_ID, &fbb)
-    TRK.add(TRK_NUM: TRK_NUM, &fbb)
-    TRK.add(TRK_STAT: TRK_STAT, &fbb)
-    TRK.add(OBJ_NAT: OBJ_NAT, &fbb)
-    TRK.add(OBJ_ID: OBJ_ID, &fbb)
-    TRK.add(OBJ_TYPE: OBJ_TYPE, &fbb)
-    TRK.add(OBJ_SPEC: OBJ_SPEC, &fbb)
-    TRK.add(OBJ_PLAT: OBJ_PLAT, &fbb)
-    TRK.add(OBJ_ACT: OBJ_ACT, &fbb)
-    TRK.add(MOD_TYPE: MOD_TYPE, &fbb)
-    TRK.add(TRK_ITM_ID: TRK_ITM_ID, &fbb)
-    TRK.add(TS: TS, &fbb)
-    TRK.add(TRK_QUAL: TRK_QUAL, &fbb)
-    TRK.add(TRK_PT_TYPE: TRK_PT_TYPE, &fbb)
-    TRK.add(OBJ_IDENT: OBJ_IDENT, &fbb)
-    TRK.add(IDENT_CRED: IDENT_CRED, &fbb)
-    TRK.add(IDENT_REL: IDENT_REL, &fbb)
-    TRK.add(IDENT_AMP: IDENT_AMP, &fbb)
-    TRK.add(ENVIRONMENT: ENVIRONMENT, &fbb)
-    TRK.add(ENVIRONMENT_CONF: ENVIRONMENT_CONF, &fbb)
-    TRK.add(TRK_CONF: TRK_CONF, &fbb)
-    TRK.add(LAT: LAT, &fbb)
-    TRK.add(LON: LON, &fbb)
-    TRK.add(ALT: ALT, &fbb)
-    TRK.add(SPD: SPD, &fbb)
-    TRK.add(HDNG: HDNG, &fbb)
-    TRK.add(COURSE: COURSE, &fbb)
-    TRK.addVectorOf(SRC_TYPS: SRC_TYPS, &fbb)
-    TRK.addVectorOf(SRC_IDS: SRC_IDS, &fbb)
-    TRK.add(CALL_SIGN: CALL_SIGN, &fbb)
-    TRK.add(MULTI_SOURCE: MULTI_SOURCE, &fbb)
-    TRK.add(J_SERIES: J_SERIES, &fbb)
-    TRK.add(STRENGTH: STRENGTH, &fbb)
-    TRK.add(M1: M1, &fbb)
-    TRK.add(M1V: M1V, &fbb)
-    TRK.add(M2: M2, &fbb)
-    TRK.add(M2V: M2V, &fbb)
-    TRK.add(M3A: M3A, &fbb)
-    TRK.add(M3AV: M3AV, &fbb)
-    TRK.addVectorOf(TAGS: TAGS, &fbb)
-    TRK.add(TRACK_START_TIME: TRACK_START_TIME, &fbb)
-    TRK.add(TRACK_STEP_SIZE: TRACK_STEP_SIZE, &fbb)
-    TRK.add(TRACK_COMPONENTS: TRACK_COMPONENTS, &fbb)
-    TRK.addVectorOf(ECEF_POS: ECEF_POS, &fbb)
-    TRK.addVectorOf(ECEF_VEL: ECEF_VEL, &fbb)
-    TRK.addVectorOf(ECEF_ACC: ECEF_ACC, &fbb)
-    TRK.addVectorOf(LC_POS: LC_POS, &fbb)
-    TRK.addVectorOf(LC_VEL: LC_VEL, &fbb)
-    TRK.addVectorOf(LC_ACC: LC_ACC, &fbb)
-    TRK.addVectorOf(COV: COV, &fbb)
-    TRK.addVectorOf(ERR_ELLP: ERR_ELLP, &fbb)
-    return TRK.endTRK(&fbb, start: __start)
+    let __start = VEP.startVEP(&fbb)
+    VEP.add(ID: ID, &fbb)
+    VEP.add(VEHICLE_CLASS_ID: VEHICLE_CLASS_ID, &fbb)
+    VEP.add(VEHICLE_TYPE_DESIGNATOR: VEHICLE_TYPE_DESIGNATOR, &fbb)
+    VEP.add(ENVIRONMENT: ENVIRONMENT, &fbb)
+    VEP.add(ENERGY_TYPE: ENERGY_TYPE, &fbb)
+    VEP.add(CAPACITY_VALUE: CAPACITY_VALUE, &fbb)
+    VEP.add(CAPACITY_UNITS: CAPACITY_UNITS, &fbb)
+    VEP.add(RESERVE_FRACTION: RESERVE_FRACTION, &fbb)
+    VEP.addVectorOf(PERFORMANCE_POINTS: PERFORMANCE_POINTS, &fbb)
+    VEP.add(INTERPOLATION: INTERPOLATION, &fbb)
+    VEP.add(MAXIMUM_ENDURANCE_S: MAXIMUM_ENDURANCE_S, &fbb)
+    VEP.add(MAXIMUM_RANGE_M: MAXIMUM_RANGE_M, &fbb)
+    VEP.add(LOITER_SPEED_MPS: LOITER_SPEED_MPS, &fbb)
+    VEP.add(SERVICE_CEILING_M: SERVICE_CEILING_M, &fbb)
+    VEP.addVectorOf(REPLENISHMENT: REPLENISHMENT, &fbb)
+    VEP.add(REFINES_ID: REFINES_ID, &fbb)
+    VEP.add(SOURCE: SOURCE, &fbb)
+    return VEP.endVEP(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CNTCT, fieldName: "CNTCT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MSG_TS, fieldName: "MSG_TS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MSN_ID, fieldName: "MSN_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ASSET_NAT, fieldName: "ASSET_NAT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ASSET, fieldName: "ASSET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SENSOR_ID, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SEN_QUAL, fieldName: "SEN_QUAL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRK_ID, fieldName: "TRK_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRK_NUM, fieldName: "TRK_NUM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRK_STAT, fieldName: "TRK_STAT", required: false, type: TrkTrackStatus.self)
-    try _v.visit(field: VT.OBJ_NAT, fieldName: "OBJ_NAT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJ_ID, fieldName: "OBJ_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJ_TYPE, fieldName: "OBJ_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJ_SPEC, fieldName: "OBJ_SPEC", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJ_PLAT, fieldName: "OBJ_PLAT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJ_ACT, fieldName: "OBJ_ACT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MOD_TYPE, fieldName: "MOD_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRK_ITM_ID, fieldName: "TRK_ITM_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TS, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRK_QUAL, fieldName: "TRK_QUAL", required: false, type: UInt8.self)
-    try _v.visit(field: VT.TRK_PT_TYPE, fieldName: "TRK_PT_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJ_IDENT, fieldName: "OBJ_IDENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.IDENT_CRED, fieldName: "IDENT_CRED", required: false, type: UInt8.self)
-    try _v.visit(field: VT.IDENT_REL, fieldName: "IDENT_REL", required: false, type: UInt8.self)
-    try _v.visit(field: VT.IDENT_AMP, fieldName: "IDENT_AMP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VEHICLE_CLASS_ID, fieldName: "VEHICLE_CLASS_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VEHICLE_TYPE_DESIGNATOR, fieldName: "VEHICLE_TYPE_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ENVIRONMENT, fieldName: "ENVIRONMENT", required: false, type: trackEnvironment.self)
-    try _v.visit(field: VT.ENVIRONMENT_CONF, fieldName: "ENVIRONMENT_CONF", required: false, type: Double.self)
-    try _v.visit(field: VT.TRK_CONF, fieldName: "TRK_CONF", required: false, type: Double.self)
-    try _v.visit(field: VT.LAT, fieldName: "LAT", required: false, type: Double.self)
-    try _v.visit(field: VT.LON, fieldName: "LON", required: false, type: Double.self)
-    try _v.visit(field: VT.ALT, fieldName: "ALT", required: false, type: Double.self)
-    try _v.visit(field: VT.SPD, fieldName: "SPD", required: false, type: Double.self)
-    try _v.visit(field: VT.HDNG, fieldName: "HDNG", required: false, type: Double.self)
-    try _v.visit(field: VT.COURSE, fieldName: "COURSE", required: false, type: Double.self)
-    try _v.visit(field: VT.SRC_TYPS, fieldName: "SRC_TYPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.SRC_IDS, fieldName: "SRC_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.CALL_SIGN, fieldName: "CALL_SIGN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MULTI_SOURCE, fieldName: "MULTI_SOURCE", required: false, type: Bool.self)
-    try _v.visit(field: VT.J_SERIES, fieldName: "J_SERIES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.STRENGTH, fieldName: "STRENGTH", required: false, type: UInt16.self)
-    try _v.visit(field: VT.M1, fieldName: "M1", required: false, type: UInt16.self)
-    try _v.visit(field: VT.M1V, fieldName: "M1V", required: false, type: UInt8.self)
-    try _v.visit(field: VT.M2, fieldName: "M2", required: false, type: UInt16.self)
-    try _v.visit(field: VT.M2V, fieldName: "M2V", required: false, type: UInt8.self)
-    try _v.visit(field: VT.M3A, fieldName: "M3A", required: false, type: UInt16.self)
-    try _v.visit(field: VT.M3AV, fieldName: "M3AV", required: false, type: UInt8.self)
-    try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.TRACK_START_TIME, fieldName: "TRACK_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRACK_STEP_SIZE, fieldName: "TRACK_STEP_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VT.TRACK_COMPONENTS, fieldName: "TRACK_COMPONENTS", required: false, type: UInt8.self)
-    try _v.visit(field: VT.ECEF_POS, fieldName: "ECEF_POS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.ECEF_VEL, fieldName: "ECEF_VEL", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.ECEF_ACC, fieldName: "ECEF_ACC", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.LC_POS, fieldName: "LC_POS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.LC_VEL, fieldName: "LC_VEL", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.LC_ACC, fieldName: "LC_ACC", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.COV, fieldName: "COV", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.ERR_ELLP, fieldName: "ERR_ELLP", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ENERGY_TYPE, fieldName: "ENERGY_TYPE", required: false, type: vepEnergyType.self)
+    try _v.visit(field: VT.CAPACITY_VALUE, fieldName: "CAPACITY_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.CAPACITY_UNITS, fieldName: "CAPACITY_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RESERVE_FRACTION, fieldName: "RESERVE_FRACTION", required: false, type: Double.self)
+    try _v.visit(field: VT.PERFORMANCE_POINTS, fieldName: "PERFORMANCE_POINTS", required: true, type: ForwardOffset<Vector<ForwardOffset<VEPPerformancePoint>, VEPPerformancePoint>>.self)
+    try _v.visit(field: VT.INTERPOLATION, fieldName: "INTERPOLATION", required: false, type: vepInterpolation.self)
+    try _v.visit(field: VT.MAXIMUM_ENDURANCE_S, fieldName: "MAXIMUM_ENDURANCE_S", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_RANGE_M, fieldName: "MAXIMUM_RANGE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.LOITER_SPEED_MPS, fieldName: "LOITER_SPEED_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.SERVICE_CEILING_M, fieldName: "SERVICE_CEILING_M", required: false, type: Double.self)
+    try _v.visit(field: VT.REPLENISHMENT, fieldName: "REPLENISHMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<VEPReplenishment>, VEPReplenishment>>.self)
+    try _v.visit(field: VT.REFINES_ID, fieldName: "REFINES_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: true, type: ForwardOffset<VEPProvenance>.self)
     _v.finish()
   }
 }

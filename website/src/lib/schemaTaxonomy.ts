@@ -31,6 +31,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "PCF", desc: "Propagator Configuration" },
       { abbr: "VCM", desc: "Vector Covariance Message" },
       { abbr: "PPE", desc: "Polynomial Ephemeris" },
+      { abbr: "CVR", desc: "Covariance Realism" },
     ],
   },
   {
@@ -231,6 +232,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "REC", desc: "Record Wrapper" },
       { abbr: "STF", desc: "Spatial Coverage Definition" },
       { abbr: "PLG", desc: "Plugin Declaration" },
+      { abbr: "PVN", desc: "Product Provenance" },
     ],
   },
   {

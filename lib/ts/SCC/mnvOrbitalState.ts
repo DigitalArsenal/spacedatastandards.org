@@ -204,7 +204,7 @@ DRIFT_RATE():number {
 }
 
 /**
- * Position uncertainty U (km, 1-sigma)
+ * Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
  */
 SIGMA_U():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
@@ -212,7 +212,7 @@ SIGMA_U():number {
 }
 
 /**
- * Position uncertainty V (km, 1-sigma)
+ * Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
  */
 SIGMA_V():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
@@ -220,7 +220,7 @@ SIGMA_V():number {
 }
 
 /**
- * Position uncertainty W (km, 1-sigma)
+ * Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
  */
 SIGMA_W():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);

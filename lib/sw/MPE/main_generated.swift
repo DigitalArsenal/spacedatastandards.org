@@ -8,57 +8,301 @@ import Common
 
 import FlatBuffers
 
-public enum meanElementSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Simplified General Perturbation Model 4
-  case sgp4 = 0
-  ///  Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
-  ///  as published in the 2022 astrodynamics conference literature.
-  case sgp4xp = 1
-  ///  Draper Semi-analytical Satellite Theory
-  case dsst = 2
-  ///  Universal Semianalytical Method
-  case usm = 3
-
-  public static var max: meanElementSource { return .usm }
-  public static var min: meanElementSource { return .sgp4 }
-}
-
-
-///  Mean Element Theory
-public struct MET: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One constraint in a maneuver-targeting problem and how well the converged
+///  solution satisfies it.
+public struct MPETargeterConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$MET" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: MET.id, addPrefix: prefix) }
+  public static var id: String { "$MPE" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: MPETargeterConstraint.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let MEAN_ELEMENT_THEORY: VOffset = 4
+    static let NAME: VOffset = 4
+    static let FRAME: VOffset = 6
+    static let EPOCH: VOffset = 8
+    static let EVENT: VOffset = 10
+    static let TARGET_VALUE: VOffset = 12
+    static let ACHIEVED_VALUE: VOffset = 14
+    static let TOLERANCE: VOffset = 16
+    static let WEIGHT: VOffset = 18
   }
 
-  public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VT.MEAN_ELEMENT_THEORY); return o == 0 ? .sgp4 : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
-  public static func startMET(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VT.MEAN_ELEMENT_THEORY) }
-  public static func endMET(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createMET(
+  ///  Constraint identifier, e.g. "SMA", "INC", "RIC_R"
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Reference frame the constraint is expressed in
+  public var FRAME: String? { let o = _accessor.offset(VT.FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FRAME) }
+  ///  Epoch the constraint applies at (UNIX timestamp) [numeric seconds since
+  ///  1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"
+  public var EVENT: String? { let o = _accessor.offset(VT.EVENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT) }
+  ///  Target value of the constrained quantity
+  public var TARGET_VALUE: Double { let o = _accessor.offset(VT.TARGET_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Value achieved by the converged solution
+  public var ACHIEVED_VALUE: Double { let o = _accessor.offset(VT.ACHIEVED_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Acceptable tolerance on the constrained quantity
+  public var TOLERANCE: Double { let o = _accessor.offset(VT.TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Relative weight of this constraint in the corrector
+  public var WEIGHT: Double { let o = _accessor.offset(VT.WEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startMPETargeterConstraint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FRAME, at: VT.FRAME) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
+  public static func add(EVENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT, at: VT.EVENT) }
+  public static func add(TARGET_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_VALUE, def: 0.0, at: VT.TARGET_VALUE) }
+  public static func add(ACHIEVED_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACHIEVED_VALUE, def: 0.0, at: VT.ACHIEVED_VALUE) }
+  public static func add(TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE, def: 0.0, at: VT.TOLERANCE) }
+  public static func add(WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHT, def: 0.0, at: VT.WEIGHT) }
+  public static func endMPETargeterConstraint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createMPETargeterConstraint(
     _ fbb: inout FlatBufferBuilder,
-    MEAN_ELEMENT_THEORY: meanElementSource = .sgp4
+    NAMEOffset NAME: Offset = Offset(),
+    FRAMEOffset FRAME: Offset = Offset(),
+    EPOCH: Double = 0.0,
+    EVENTOffset EVENT: Offset = Offset(),
+    TARGET_VALUE: Double = 0.0,
+    ACHIEVED_VALUE: Double = 0.0,
+    TOLERANCE: Double = 0.0,
+    WEIGHT: Double = 0.0
   ) -> Offset {
-    let __start = MET.startMET(&fbb)
-    MET.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
-    return MET.endMET(&fbb, start: __start)
+    let __start = MPETargeterConstraint.startMPETargeterConstraint(&fbb)
+    MPETargeterConstraint.add(NAME: NAME, &fbb)
+    MPETargeterConstraint.add(FRAME: FRAME, &fbb)
+    MPETargeterConstraint.add(EPOCH: EPOCH, &fbb)
+    MPETargeterConstraint.add(EVENT: EVENT, &fbb)
+    MPETargeterConstraint.add(TARGET_VALUE: TARGET_VALUE, &fbb)
+    MPETargeterConstraint.add(ACHIEVED_VALUE: ACHIEVED_VALUE, &fbb)
+    MPETargeterConstraint.add(TOLERANCE: TOLERANCE, &fbb)
+    MPETargeterConstraint.add(WEIGHT: WEIGHT, &fbb)
+    return MPETargeterConstraint.endMPETargeterConstraint(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FRAME, fieldName: "FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.EVENT, fieldName: "EVENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_VALUE, fieldName: "TARGET_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.ACHIEVED_VALUE, fieldName: "ACHIEVED_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.TOLERANCE, fieldName: "TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.WEIGHT, fieldName: "WEIGHT", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Maneuver-targeter solution and convergence metadata carried with an
+///  extended MPE: the solver that produced the targeted element set, its
+///  iteration/residual history, and the constraint set it satisfied.
+public struct MPETargeterSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$MPE" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: MPETargeterSolution.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SOLVER: VOffset = 4
+    static let DYNAMICS: VOffset = 6
+    static let CONVERGED: VOffset = 8
+    static let ITERATIONS: VOffset = 10
+    static let RESIDUAL_RMS: VOffset = 12
+    static let RESIDUALS: VOffset = 14
+    static let CONSTRAINTS: VOffset = 16
+    static let TOTAL_DELTA_V: VOffset = 18
+    static let SOLVED_AT: VOffset = 20
+  }
+
+  ///  Solver used, e.g. "differential-corrector"
+  public var SOLVER: String? { let o = _accessor.offset(VT.SOLVER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOLVERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLVER) }
+  ///  Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  public var DYNAMICS: String? { let o = _accessor.offset(VT.DYNAMICS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DYNAMICSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DYNAMICS) }
+  ///  Whether the corrector converged within tolerance
+  public var CONVERGED: Bool { let o = _accessor.offset(VT.CONVERGED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Number of corrector iterations executed
+  public var ITERATIONS: UInt32 { let o = _accessor.offset(VT.ITERATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  RMS of the final-iteration constraint residuals
+  public var RESIDUAL_RMS: Double { let o = _accessor.offset(VT.RESIDUAL_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Final-iteration residual per constraint, aligned with CONSTRAINTS
+  public var RESIDUALS: FlatbufferVector<Double> { return _accessor.vector(at: VT.RESIDUALS, byteSize: 8) }
+  public func withUnsafePointerToResiduals<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESIDUALS, body: body) }
+  ///  The constraint set the solution was targeted against
+  public var CONSTRAINTS: FlatbufferVector<MPETargeterConstraint> { return _accessor.vector(at: VT.CONSTRAINTS, byteSize: 4) }
+  ///  Total delta-v of the solved maneuver sequence in m/s
+  public var TOTAL_DELTA_V: Double { let o = _accessor.offset(VT.TOTAL_DELTA_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Unix ms the solution was produced
+  public var SOLVED_AT: UInt64 { let o = _accessor.offset(VT.SOLVED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startMPETargeterSolution(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(SOLVER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLVER, at: VT.SOLVER) }
+  public static func add(DYNAMICS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DYNAMICS, at: VT.DYNAMICS) }
+  public static func add(CONVERGED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONVERGED, def: false,
+   at: VT.CONVERGED) }
+  public static func add(ITERATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITERATIONS, def: 0, at: VT.ITERATIONS) }
+  public static func add(RESIDUAL_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESIDUAL_RMS, def: 0.0, at: VT.RESIDUAL_RMS) }
+  public static func addVectorOf(RESIDUALS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESIDUALS, at: VT.RESIDUALS) }
+  public static func addVectorOf(CONSTRAINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINTS, at: VT.CONSTRAINTS) }
+  public static func add(TOTAL_DELTA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_DELTA_V, def: 0.0, at: VT.TOTAL_DELTA_V) }
+  public static func add(SOLVED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLVED_AT, def: 0, at: VT.SOLVED_AT) }
+  public static func endMPETargeterSolution(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createMPETargeterSolution(
+    _ fbb: inout FlatBufferBuilder,
+    SOLVEROffset SOLVER: Offset = Offset(),
+    DYNAMICSOffset DYNAMICS: Offset = Offset(),
+    CONVERGED: Bool = false,
+    ITERATIONS: UInt32 = 0,
+    RESIDUAL_RMS: Double = 0.0,
+    RESIDUALSVectorOffset RESIDUALS: Offset = Offset(),
+    CONSTRAINTSVectorOffset CONSTRAINTS: Offset = Offset(),
+    TOTAL_DELTA_V: Double = 0.0,
+    SOLVED_AT: UInt64 = 0
+  ) -> Offset {
+    let __start = MPETargeterSolution.startMPETargeterSolution(&fbb)
+    MPETargeterSolution.add(SOLVER: SOLVER, &fbb)
+    MPETargeterSolution.add(DYNAMICS: DYNAMICS, &fbb)
+    MPETargeterSolution.add(CONVERGED: CONVERGED, &fbb)
+    MPETargeterSolution.add(ITERATIONS: ITERATIONS, &fbb)
+    MPETargeterSolution.add(RESIDUAL_RMS: RESIDUAL_RMS, &fbb)
+    MPETargeterSolution.addVectorOf(RESIDUALS: RESIDUALS, &fbb)
+    MPETargeterSolution.addVectorOf(CONSTRAINTS: CONSTRAINTS, &fbb)
+    MPETargeterSolution.add(TOTAL_DELTA_V: TOTAL_DELTA_V, &fbb)
+    MPETargeterSolution.add(SOLVED_AT: SOLVED_AT, &fbb)
+    return MPETargeterSolution.endMPETargeterSolution(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SOLVER, fieldName: "SOLVER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DYNAMICS, fieldName: "DYNAMICS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONVERGED, fieldName: "CONVERGED", required: false, type: Bool.self)
+    try _v.visit(field: VT.ITERATIONS, fieldName: "ITERATIONS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.RESIDUAL_RMS, fieldName: "RESIDUAL_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.RESIDUALS, fieldName: "RESIDUALS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CONSTRAINTS, fieldName: "CONSTRAINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<MPETargeterConstraint>, MPETargeterConstraint>>.self)
+    try _v.visit(field: VT.TOTAL_DELTA_V, fieldName: "TOTAL_DELTA_V", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLVED_AT, fieldName: "SOLVED_AT", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+///  Minimum Propagatable Element Set
+public struct MPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$MPE" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: MPE.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ENTITY_ID: VOffset = 4
+    static let EPOCH: VOffset = 6
+    static let MEAN_MOTION: VOffset = 8
+    static let ECCENTRICITY: VOffset = 10
+    static let INCLINATION: VOffset = 12
+    static let RA_OF_ASC_NODE: VOffset = 14
+    static let ARG_OF_PERICENTER: VOffset = 16
+    static let MEAN_ANOMALY: VOffset = 18
+    static let BSTAR: VOffset = 20
+    static let MEAN_ELEMENT_THEORY: VOffset = 22
+    static let TARGETER: VOffset = 24
+  }
+
+  ///  Unique ID as a String [no units]
+  public var ENTITY_ID: String? { let o = _accessor.offset(VT.ENTITY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENTITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTITY_ID) }
+  ///  Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
+  public var MEAN_MOTION: Double { let o = _accessor.offset(VT.MEAN_MOTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentricity (unitless)
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Inclination in degrees
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of ascending node in degrees
+  public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VT.RA_OF_ASC_NODE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Argument of pericenter in degrees
+  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VT.ARG_OF_PERICENTER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mean anomaly in degrees
+  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VT.MEAN_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
+  public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Description of the Mean Element Theory (SGP4, DSST, USM)
+  public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VT.MEAN_ELEMENT_THEORY); return o == 0 ? .sgp4 : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
+  ///  Targeter solution + convergence metadata when this element set is the
+  ///  product of maneuver targeting (absent for ordinary element sets)
+  public var TARGETER: MPETargeterSolution? { let o = _accessor.offset(VT.TARGETER); return o == 0 ? nil : MPETargeterSolution(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startMPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
+  public static func add(MEAN_MOTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION, def: 0.0, at: VT.MEAN_MOTION) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(RA_OF_ASC_NODE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_OF_ASC_NODE, def: 0.0, at: VT.RA_OF_ASC_NODE) }
+  public static func add(ARG_OF_PERICENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERICENTER, def: 0.0, at: VT.ARG_OF_PERICENTER) }
+  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VT.MEAN_ANOMALY) }
+  public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VT.BSTAR) }
+  public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VT.MEAN_ELEMENT_THEORY) }
+  public static func add(TARGETER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGETER, at: VT.TARGETER) }
+  public static func endMPE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createMPE(
+    _ fbb: inout FlatBufferBuilder,
+    ENTITY_IDOffset ENTITY_ID: Offset = Offset(),
+    EPOCH: Double = 0.0,
+    MEAN_MOTION: Double = 0.0,
+    ECCENTRICITY: Double = 0.0,
+    INCLINATION: Double = 0.0,
+    RA_OF_ASC_NODE: Double = 0.0,
+    ARG_OF_PERICENTER: Double = 0.0,
+    MEAN_ANOMALY: Double = 0.0,
+    BSTAR: Double = 0.0,
+    MEAN_ELEMENT_THEORY: meanElementSource = .sgp4,
+    TARGETEROffset TARGETER: Offset = Offset()
+  ) -> Offset {
+    let __start = MPE.startMPE(&fbb)
+    MPE.add(ENTITY_ID: ENTITY_ID, &fbb)
+    MPE.add(EPOCH: EPOCH, &fbb)
+    MPE.add(MEAN_MOTION: MEAN_MOTION, &fbb)
+    MPE.add(ECCENTRICITY: ECCENTRICITY, &fbb)
+    MPE.add(INCLINATION: INCLINATION, &fbb)
+    MPE.add(RA_OF_ASC_NODE: RA_OF_ASC_NODE, &fbb)
+    MPE.add(ARG_OF_PERICENTER: ARG_OF_PERICENTER, &fbb)
+    MPE.add(MEAN_ANOMALY: MEAN_ANOMALY, &fbb)
+    MPE.add(BSTAR: BSTAR, &fbb)
+    MPE.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
+    MPE.add(TARGETER: TARGETER, &fbb)
+    return MPE.endMPE(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ENTITY_ID, fieldName: "ENTITY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION, fieldName: "MEAN_MOTION", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.RA_OF_ASC_NODE, fieldName: "RA_OF_ASC_NODE", required: false, type: Double.self)
+    try _v.visit(field: VT.ARG_OF_PERICENTER, fieldName: "ARG_OF_PERICENTER", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_ANOMALY, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.BSTAR, fieldName: "BSTAR", required: false, type: Double.self)
     try _v.visit(field: VT.MEAN_ELEMENT_THEORY, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
+    try _v.visit(field: VT.TARGETER, fieldName: "TARGETER", required: false, type: ForwardOffset<MPETargeterSolution>.self)
     _v.finish()
   }
 }

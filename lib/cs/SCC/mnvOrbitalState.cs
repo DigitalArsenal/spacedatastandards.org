@@ -83,11 +83,11 @@ public struct mnvOrbitalState : IFlatbufferObject
   public double GEO_LONGITUDE { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Longitude drift rate (degrees/day)
   public double DRIFT_RATE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Position uncertainty U (km, 1-sigma)
+  /// Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
   public double SIGMA_U { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Position uncertainty V (km, 1-sigma)
+  /// Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
   public double SIGMA_V { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Position uncertainty W (km, 1-sigma)
+  /// Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
   public double SIGMA_W { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<mnvOrbitalState> CreatemnvOrbitalState(FlatBufferBuilder builder,

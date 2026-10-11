@@ -5,197 +5,543 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Capability class of a distributable software unit (module, application, or
-///  composed flow).
-///
-///  This enum IS the ratified category vocabulary. A storefront, library, module
-///  manifest and search surface all classify against these members and nothing
-///  else; a category that is not a member here does not exist. Members name
-///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
-///  site, organization, product, protocol brand or algorithm implementation;
-///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
-///  the taxonomy.
-///
-///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
-///  reuse an ordinal. A reorder silently re-labels every published listing.
-///
-///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
-///  default-constructed classification can never decode as a real category. The
-///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
-///  ordinal 0 is a real family — and had to append an `Unspecified` member at
-///  the tail to recover. This enum does not repeat that.
-///
-///  Each member's canonical display name is stated in its doc comment and is
-///  part of the ratified contract: a consumer rendering a category label uses
-///  that string verbatim, so every surface spells a category identically. The
-///  canonical route slug is the member identifier lowercased with `_` replaced
-///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
-///  "rf-and-communications").
-enum capabilityClass {
+///  Provider-declared standing of a module in its own offering. Append new
+///  values only; never reorder or reuse existing values.
+enum pmmTrustTier {
   UNSPECIFIED(0),
-  PROPAGATION(1),
-  ORBIT_DETERMINATION(2),
-  MANEUVER_PLANNING(3),
-  CONJUNCTION_ASSESSMENT(4),
-  REENTRY_AND_BREAKUP(5),
-  ATTITUDE_AND_POINTING(6),
-  REFERENCE_FRAMES_AND_TIME(7),
-  SENSORS_AND_COVERAGE(8),
-  TRACKING_AND_OBSERVATION(9),
-  RF_AND_COMMUNICATIONS(10),
-  ELECTRONIC_WARFARE(11),
-  SPACE_ENVIRONMENT(12),
-  DATA_SOURCES_AND_INGEST(13),
-  DATA_VALIDATION_AND_QUALITY(14),
-  CATALOG_AND_IDENTITY(15),
-  VISUALIZATION_AND_RENDERING(16),
-  GROUND_SEGMENT_AND_HARDWARE(17),
-  MISSION_DESIGN_AND_ANALYSIS(18),
-  FLOW_AND_COMPOSITION(19),
-  DATA_STORAGE_AND_QUERY(20),
-  SECURITY_AND_IDENTITY(21),
-  COMMERCE_AND_LICENSING(22),
-  NODE_INFRASTRUCTURE(23),
-  FOUNDATION_AND_MATH(24);
+  CORE(1),
+  RECOMMENDED(2),
+  OPTIONAL(3);
 
   final int value;
-  const capabilityClass(this.value);
+  const pmmTrustTier(this.value);
 
-  factory capabilityClass.fromValue(int value) {
+  factory pmmTrustTier.fromValue(int value) {
     switch (value) {
-      case 0: return capabilityClass.UNSPECIFIED;
-      case 1: return capabilityClass.PROPAGATION;
-      case 2: return capabilityClass.ORBIT_DETERMINATION;
-      case 3: return capabilityClass.MANEUVER_PLANNING;
-      case 4: return capabilityClass.CONJUNCTION_ASSESSMENT;
-      case 5: return capabilityClass.REENTRY_AND_BREAKUP;
-      case 6: return capabilityClass.ATTITUDE_AND_POINTING;
-      case 7: return capabilityClass.REFERENCE_FRAMES_AND_TIME;
-      case 8: return capabilityClass.SENSORS_AND_COVERAGE;
-      case 9: return capabilityClass.TRACKING_AND_OBSERVATION;
-      case 10: return capabilityClass.RF_AND_COMMUNICATIONS;
-      case 11: return capabilityClass.ELECTRONIC_WARFARE;
-      case 12: return capabilityClass.SPACE_ENVIRONMENT;
-      case 13: return capabilityClass.DATA_SOURCES_AND_INGEST;
-      case 14: return capabilityClass.DATA_VALIDATION_AND_QUALITY;
-      case 15: return capabilityClass.CATALOG_AND_IDENTITY;
-      case 16: return capabilityClass.VISUALIZATION_AND_RENDERING;
-      case 17: return capabilityClass.GROUND_SEGMENT_AND_HARDWARE;
-      case 18: return capabilityClass.MISSION_DESIGN_AND_ANALYSIS;
-      case 19: return capabilityClass.FLOW_AND_COMPOSITION;
-      case 20: return capabilityClass.DATA_STORAGE_AND_QUERY;
-      case 21: return capabilityClass.SECURITY_AND_IDENTITY;
-      case 22: return capabilityClass.COMMERCE_AND_LICENSING;
-      case 23: return capabilityClass.NODE_INFRASTRUCTURE;
-      case 24: return capabilityClass.FOUNDATION_AND_MATH;
+      case 0: return pmmTrustTier.UNSPECIFIED;
+      case 1: return pmmTrustTier.CORE;
+      case 2: return pmmTrustTier.RECOMMENDED;
+      case 3: return pmmTrustTier.OPTIONAL;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static capabilityClass? _createOrNull(int? value) =>
-      value == null ? null : capabilityClass.fromValue(value);
+  static pmmTrustTier? _createOrNull(int? value) =>
+      value == null ? null : pmmTrustTier.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 24;
-  static const fb.Reader<capabilityClass> reader = _capabilityClassReader();
+  static const int maxValue = 3;
+  static const fb.Reader<pmmTrustTier> reader = _pmmTrustTierReader();
 }
 
-class _capabilityClassReader extends fb.Reader<capabilityClass> {
-  const _capabilityClassReader();
+class _pmmTrustTierReader extends fb.Reader<pmmTrustTier> {
+  const _pmmTrustTierReader();
 
   @override
   int get size => 1;
 
   @override
-  capabilityClass read(fb.BufferContext bc, int offset) =>
-      capabilityClass.fromValue(const fb.Uint8Reader().read(bc, offset));
+  pmmTrustTier read(fb.BufferContext bc, int offset) =>
+      pmmTrustTier.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  One ratified category in the taxonomy.
-///
-///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
-///  without the label a surface will render, the sentence a browse row will
-///  show, and the route a link will target. This is what stops each consumer
-///  from inventing its own wording for the same code.
-class CCTCategory {
-  CCTCategory._(this._bc, this._bcOffset);
-  factory CCTCategory(List<int> bytes) {
+///  What a client must hold before the artifact may be fetched and
+///  instantiated. Append new values only; never reorder or reuse existing
+///  values.
+enum pmmAccessPolicy {
+  ANONYMOUS(0),
+  AUTHENTICATED(1),
+  ENTITLED(2);
+
+  final int value;
+  const pmmAccessPolicy(this.value);
+
+  factory pmmAccessPolicy.fromValue(int value) {
+    switch (value) {
+      case 0: return pmmAccessPolicy.ANONYMOUS;
+      case 1: return pmmAccessPolicy.AUTHENTICATED;
+      case 2: return pmmAccessPolicy.ENTITLED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pmmAccessPolicy? _createOrNull(int? value) =>
+      value == null ? null : pmmAccessPolicy.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<pmmAccessPolicy> reader = _pmmAccessPolicyReader();
+}
+
+class _pmmAccessPolicyReader extends fb.Reader<pmmAccessPolicy> {
+  const _pmmAccessPolicyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pmmAccessPolicy read(fb.BufferContext bc, int offset) =>
+      pmmAccessPolicy.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Lifecycle of one manifest entry. Append new values only; never reorder or
+///  reuse existing values.
+enum pmmEntryState {
+  ACTIVE(0),
+  DEPRECATED(1),
+  WITHDRAWN(2),
+  REVOKED(3);
+
+  final int value;
+  const pmmEntryState(this.value);
+
+  factory pmmEntryState.fromValue(int value) {
+    switch (value) {
+      case 0: return pmmEntryState.ACTIVE;
+      case 1: return pmmEntryState.DEPRECATED;
+      case 2: return pmmEntryState.WITHDRAWN;
+      case 3: return pmmEntryState.REVOKED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pmmEntryState? _createOrNull(int? value) =>
+      value == null ? null : pmmEntryState.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<pmmEntryState> reader = _pmmEntryStateReader();
+}
+
+class _pmmEntryStateReader extends fb.Reader<pmmEntryState> {
+  const _pmmEntryStateReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pmmEntryState read(fb.BufferContext bc, int offset) =>
+      pmmEntryState.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  The single key identity every signature in this manifest resolves to, and
+///  the two external anchors that give that key its weight: the DNS proof that
+///  binds it to the domain, and the Adversarial-Security bond that prices
+///  trust in it.
+class PMMTrustAnchor {
+  PMMTrustAnchor._(this._bc, this._bcOffset);
+  factory PMMTrustAnchor(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CCTCategory> reader = _CCTCategoryReader();
+  static const fb.Reader<PMMTrustAnchor> reader = _PMMTrustAnchorReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  The ratified category code. This is the join key every consumer uses.
-  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
-  ///  name stated in the CODE member's doc comment.
-  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get displayName => DISPLAY_NAME;
-  ///  One-sentence description shown on browse rows and category headers.
-  String? get SUMMARY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
-  ///  `-`. Published explicitly rather than derived so every surface routes
-  ///  identically.
-  String? get SLUG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Longer editorial description for a category landing page.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
-  ///  top-level category. A category MUST NOT name itself as its parent.
-  capabilityClass get PARENT => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ///  Presentation order within its parent, ascending. Ties break on
-  ///  DISPLAY_NAME.
-  int get SORT_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get sortOrder => SORT_ORDER;
-  ///  Search synonyms and alternate phrasings that resolve to this category.
-  ///  Feeds type-ahead; never rendered as the category label.
-  List<String>? get KEYWORDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
-  ///  URL: consuming node surfaces load zero external-origin bytes, so the
-  ///  consumer resolves this against its own local asset set.
-  String? get ICON_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get iconKey => ICON_KEY;
+  ///  Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and
+  ///  MUST equal the origin the manifest was fetched from.
+  String? get PROVIDER_DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get providerDomain => PROVIDER_DOMAIN;
+  ///  libp2p peer id of the provider node.
+  String? get NODE_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get nodePeerId => NODE_PEER_ID;
+  ///  BIP-32 account xpub of the node identity, verbatim as advertised in the
+  ///  node's `$EPM`.
+  String? get NODE_XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get nodeXpub => NODE_XPUB;
+  ///  Hex-encoded public key that verifies `PMM.SIGNATURE` and every
+  ///  `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.
+  String? get SIGNING_PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get signingPublicKey => SIGNING_PUBLIC_KEY;
+  ///  HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.
+  String? get SIGNING_KEY_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get signingKeyPath => SIGNING_KEY_PATH;
+  ///  Signature algorithm identifier, e.g. "ed25519",
+  ///  "secp256k1-compact-ethereum". Empty means "ed25519".
+  String? get SIGNATURE_ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get signatureAlgorithm => SIGNATURE_ALGORITHM;
+  ///  IPFS CID of the provider node's `$EPM`.
+  String? get EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get epmCid => EPM_CID;
+  ///  Fully-qualified DNS name of the TXT record carrying the signed
+  ///  domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client
+  ///  resolves this itself (DNS-over-HTTPS) rather than trusting the copy
+  ///  below.
+  String? get DNS_PROOF_RECORD_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get dnsProofRecordName => DNS_PROOF_RECORD_NAME;
+  ///  Verbatim TXT value of that proof, carried only so a client can detect
+  ///  disagreement with what DNS returns. The resolved record always wins.
+  String? get DNS_PROOF_TXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get dnsProofTxt => DNS_PROOF_TXT;
+  ///  The canonical statement the DNS proof signs, verbatim, when the proof
+  ///  format keeps it out of the TXT value.
+  String? get DNS_PROOF_STATEMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get dnsProofStatement => DNS_PROOF_STATEMENT;
+  ///  Chain addresses derived from this same node key that hold the provider's
+  ///  Adversarial-Security bond. Each entry proves, through `ChainProof`, that
+  ///  the address derives from the key that signed this manifest.
+  List<ChainProof>? get BOND_ADDRESSES => const fb.ListReader<ChainProof>(ChainProof.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  List<ChainProof>? get bondAddresses => BOND_ADDRESSES;
+  ///  Optional URL of a machine-readable bond attestation (bonded value,
+  ///  duration unspent) for clients that price trust rather than gate on it.
+  String? get BOND_ATTESTATION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get bondAttestationUrl => BOND_ATTESTATION_URL;
 
   @override
   String toString() {
-    return 'CCTCategory{CODE: ${CODE}, displayName: ${displayName}, SUMMARY: ${SUMMARY}, SLUG: ${SLUG}, DESCRIPTION: ${DESCRIPTION}, PARENT: ${PARENT}, sortOrder: ${sortOrder}, KEYWORDS: ${KEYWORDS}, iconKey: ${iconKey}}';
+    return 'PMMTrustAnchor{providerDomain: ${providerDomain}, nodePeerId: ${nodePeerId}, nodeXpub: ${nodeXpub}, signingPublicKey: ${signingPublicKey}, signingKeyPath: ${signingKeyPath}, signatureAlgorithm: ${signatureAlgorithm}, epmCid: ${epmCid}, dnsProofRecordName: ${dnsProofRecordName}, dnsProofTxt: ${dnsProofTxt}, dnsProofStatement: ${dnsProofStatement}, bondAddresses: ${bondAddresses}, bondAttestationUrl: ${bondAttestationUrl}}';
   }
 }
 
-class _CCTCategoryReader extends fb.TableReader<CCTCategory> {
-  const _CCTCategoryReader();
+class _PMMTrustAnchorReader extends fb.TableReader<PMMTrustAnchor> {
+  const _PMMTrustAnchorReader();
 
   @override
-  CCTCategory createObject(fb.BufferContext bc, int offset) =>
-    CCTCategory._(bc, offset);
+  PMMTrustAnchor createObject(fb.BufferContext bc, int offset) =>
+    PMMTrustAnchor._(bc, offset);
 }
 
-class CCTCategoryBuilder {
-  CCTCategoryBuilder(this.fbBuilder);
+class PMMTrustAnchorBuilder {
+  PMMTrustAnchorBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(12);
   }
 
-  int addCode(capabilityClass? CODE) {
-    fbBuilder.addUint8(0, CODE?.value);
+  int addProviderDomainOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addDisplayNameOffset(int? offset) {
+  int addNodePeerIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSummaryOffset(int? offset) {
+  int addNodeXpubOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addSlugOffset(int? offset) {
+  int addSigningPublicKeyOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSigningKeyPathOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addEpmCidOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addDnsProofRecordNameOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addDnsProofTxtOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addDnsProofStatementOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addBondAddressesOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addBondAttestationUrlOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PMMTrustAnchorObjectBuilder extends fb.ObjectBuilder {
+  final String? _PROVIDER_DOMAIN;
+  final String? _NODE_PEER_ID;
+  final String? _NODE_XPUB;
+  final String? _SIGNING_PUBLIC_KEY;
+  final String? _SIGNING_KEY_PATH;
+  final String? _SIGNATURE_ALGORITHM;
+  final String? _EPM_CID;
+  final String? _DNS_PROOF_RECORD_NAME;
+  final String? _DNS_PROOF_TXT;
+  final String? _DNS_PROOF_STATEMENT;
+  final List<ChainProofObjectBuilder>? _BOND_ADDRESSES;
+  final String? _BOND_ATTESTATION_URL;
+
+  PMMTrustAnchorObjectBuilder({
+    String? PROVIDER_DOMAIN,
+    String? providerDomain,
+    String? NODE_PEER_ID,
+    String? nodePeerId,
+    String? NODE_XPUB,
+    String? nodeXpub,
+    String? SIGNING_PUBLIC_KEY,
+    String? signingPublicKey,
+    String? SIGNING_KEY_PATH,
+    String? signingKeyPath,
+    String? SIGNATURE_ALGORITHM,
+    String? signatureAlgorithm,
+    String? EPM_CID,
+    String? epmCid,
+    String? DNS_PROOF_RECORD_NAME,
+    String? dnsProofRecordName,
+    String? DNS_PROOF_TXT,
+    String? dnsProofTxt,
+    String? DNS_PROOF_STATEMENT,
+    String? dnsProofStatement,
+    List<ChainProofObjectBuilder>? BOND_ADDRESSES,
+    List<ChainProofObjectBuilder>? bondAddresses,
+    String? BOND_ATTESTATION_URL,
+    String? bondAttestationUrl,
+  })
+      : _PROVIDER_DOMAIN = providerDomain ?? PROVIDER_DOMAIN,
+        _NODE_PEER_ID = nodePeerId ?? NODE_PEER_ID,
+        _NODE_XPUB = nodeXpub ?? NODE_XPUB,
+        _SIGNING_PUBLIC_KEY = signingPublicKey ?? SIGNING_PUBLIC_KEY,
+        _SIGNING_KEY_PATH = signingKeyPath ?? SIGNING_KEY_PATH,
+        _SIGNATURE_ALGORITHM = signatureAlgorithm ?? SIGNATURE_ALGORITHM,
+        _EPM_CID = epmCid ?? EPM_CID,
+        _DNS_PROOF_RECORD_NAME = dnsProofRecordName ?? DNS_PROOF_RECORD_NAME,
+        _DNS_PROOF_TXT = dnsProofTxt ?? DNS_PROOF_TXT,
+        _DNS_PROOF_STATEMENT = dnsProofStatement ?? DNS_PROOF_STATEMENT,
+        _BOND_ADDRESSES = bondAddresses ?? BOND_ADDRESSES,
+        _BOND_ATTESTATION_URL = bondAttestationUrl ?? BOND_ATTESTATION_URL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PROVIDER_DOMAINOffset = _PROVIDER_DOMAIN == null ? null
+        : fbBuilder.writeString(_PROVIDER_DOMAIN!);
+    final int? NODE_PEER_IDOffset = _NODE_PEER_ID == null ? null
+        : fbBuilder.writeString(_NODE_PEER_ID!);
+    final int? NODE_XPUBOffset = _NODE_XPUB == null ? null
+        : fbBuilder.writeString(_NODE_XPUB!);
+    final int? SIGNING_PUBLIC_KEYOffset = _SIGNING_PUBLIC_KEY == null ? null
+        : fbBuilder.writeString(_SIGNING_PUBLIC_KEY!);
+    final int? SIGNING_KEY_PATHOffset = _SIGNING_KEY_PATH == null ? null
+        : fbBuilder.writeString(_SIGNING_KEY_PATH!);
+    final int? SIGNATURE_ALGORITHMOffset = _SIGNATURE_ALGORITHM == null ? null
+        : fbBuilder.writeString(_SIGNATURE_ALGORITHM!);
+    final int? EPM_CIDOffset = _EPM_CID == null ? null
+        : fbBuilder.writeString(_EPM_CID!);
+    final int? DNS_PROOF_RECORD_NAMEOffset = _DNS_PROOF_RECORD_NAME == null ? null
+        : fbBuilder.writeString(_DNS_PROOF_RECORD_NAME!);
+    final int? DNS_PROOF_TXTOffset = _DNS_PROOF_TXT == null ? null
+        : fbBuilder.writeString(_DNS_PROOF_TXT!);
+    final int? DNS_PROOF_STATEMENTOffset = _DNS_PROOF_STATEMENT == null ? null
+        : fbBuilder.writeString(_DNS_PROOF_STATEMENT!);
+    final int? BOND_ADDRESSESOffset = _BOND_ADDRESSES == null ? null
+        : fbBuilder.writeList(_BOND_ADDRESSES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? BOND_ATTESTATION_URLOffset = _BOND_ATTESTATION_URL == null ? null
+        : fbBuilder.writeString(_BOND_ATTESTATION_URL!);
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, PROVIDER_DOMAINOffset);
+    fbBuilder.addOffset(1, NODE_PEER_IDOffset);
+    fbBuilder.addOffset(2, NODE_XPUBOffset);
+    fbBuilder.addOffset(3, SIGNING_PUBLIC_KEYOffset);
+    fbBuilder.addOffset(4, SIGNING_KEY_PATHOffset);
+    fbBuilder.addOffset(5, SIGNATURE_ALGORITHMOffset);
+    fbBuilder.addOffset(6, EPM_CIDOffset);
+    fbBuilder.addOffset(7, DNS_PROOF_RECORD_NAMEOffset);
+    fbBuilder.addOffset(8, DNS_PROOF_TXTOffset);
+    fbBuilder.addOffset(9, DNS_PROOF_STATEMENTOffset);
+    fbBuilder.addOffset(10, BOND_ADDRESSESOffset);
+    fbBuilder.addOffset(11, BOND_ATTESTATION_URLOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One module the provider offers.
+class PMMModuleEntry {
+  PMMModuleEntry._(this._bc, this._bcOffset);
+  factory PMMModuleEntry(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PMMModuleEntry> reader = _PMMModuleEntryReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable
+  ///  across versions. Required and unique within the manifest.
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get moduleId => MODULE_ID;
+  ///  `$PLG.PLUGIN_ID` of the full listing for this module, when one is
+  ///  published.
+  String? get PLUGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get pluginId => PLUGIN_ID;
+  ///  IPFS CID of that `$PLG` record.
+  String? get PLG_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get plgCid => PLG_CID;
+  ///  Display name.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Human-readable summary.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  SemVer 2.0.0 version of the offered artifact.
+  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Monotonic publication counter for this MODULE_ID. Increases on every
+  ///  re-publication, including a rebuild at the same VERSION.
+  int get EPOCH => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  64 lowercase hexadecimal characters encoding SHA-256 of the module's
+  ///  portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical
+  ///  in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity
+  ///  capability and signature policies key on.
+  String? get CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get contentHash => CONTENT_HASH;
+  ///  Size of those portable WASM bytes.
+  int get ARTIFACT_SIZE_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get artifactSizeBytes => ARTIFACT_SIZE_BYTES;
+  ///  Path, relative to the provider origin, from which the artifact is
+  ///  fetched. Relative on purpose: the bytes must come from the same origin
+  ///  whose domain the DNS proof binds.
+  String? get ARTIFACT_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get artifactPath => ARTIFACT_PATH;
+  ///  IPFS CID of the artifact, for content-addressed retrieval.
+  String? get ARTIFACT_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get artifactCid => ARTIFACT_CID;
+  ///  Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`
+  ///  over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry
+  ///  before spending a byte of bandwidth. The artifact's own publication
+  ///  trailer remains authoritative after download.
+  List<int>? get ARTIFACT_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 26);
+  List<int>? get artifactSignature => ARTIFACT_SIGNATURE;
+  ///  Provider-declared standing. Gates anonymous loading.
+  pmmTrustTier get TRUST_TIER => pmmTrustTier.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  pmmTrustTier get trustTier => TRUST_TIER;
+  ///  True when the provider ships this module enabled by default. A recorded
+  ///  user choice overrides it permanently.
+  bool get DEFAULT_ENABLED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get defaultEnabled => DEFAULT_ENABLED;
+  ///  What the client must hold to fetch and run it.
+  pmmAccessPolicy get ACCESS_POLICY => pmmAccessPolicy.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 32, 1));
+  pmmAccessPolicy get accessPolicy => ACCESS_POLICY;
+  ///  Entry lifecycle.
+  pmmEntryState get ENTRY_STATE => pmmEntryState.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 34, 0));
+  pmmEntryState get entryState => ENTRY_STATE;
+  ///  Opaque runtime-target tags this artifact is built for, e.g. "browser",
+  ///  "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.
+  List<String>? get RUNTIME_TARGETS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<String>? get runtimeTargets => RUNTIME_TARGETS;
+  ///  SDS schema codes at this module's invoke surface, e.g. "OMM", "OEM".
+  List<String>? get REQUIRED_SCHEMAS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 38);
+  List<String>? get requiredSchemas => REQUIRED_SCHEMAS;
+  ///  Minimum host permissions the module needs, same vocabulary as
+  ///  `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an
+  ///  anonymously-loaded CORE module is allowed to do.
+  List<String>? get MIN_PERMISSIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 40);
+  List<String>? get minPermissions => MIN_PERMISSIONS;
+  ///  SPDX license identifier of the module.
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  URL to the module's documentation.
+  String? get DOCUMENTATION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get documentationUrl => DOCUMENTATION_URL;
+  ///  URL to the module's icon.
+  String? get ICON_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get iconUrl => ICON_URL;
+  ///  `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.
+  String? get SUPERSEDES_CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get supersedesContentHash => SUPERSEDES_CONTENT_HASH;
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of
+  ///  the last change to this entry.
+  String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get updatedAt => UPDATED_AT;
+  ///  Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+  ///  is the ONLY sanctioned way to group an offering: a client grouping a
+  ///  catalogue MUST read this field and MUST NOT infer family from the shape
+  ///  of `MODULE_ID`, which carries no normative structure. Defaults to
+  ///  `Unspecified`, which a client MUST render as ungrouped — never silently
+  ///  as `Sensor`. Present here, rather than only on
+  ///  the linked `$PLG`, so an anonymous client can section the catalogue at
+  ///  boot without fetching one `$PLG` per module.
+  pluginCategory get PLUGIN_TYPE => pluginCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 52, 21));
+  pluginCategory get pluginType => PLUGIN_TYPE;
+  ///  The one ratified `$CCT` category this module is shelved under. Mirrors
+  ///  `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the
+  ///  sanctioned way to group an offering: `pluginCategory` is single-valued,
+  ///  holds a real family at ordinal 0, mixes capability families with
+  ///  node-internal plumbing, and carries a deprecated vendor-derived member.
+  ///  Present here, rather than only on the linked `$PLG`, so an anonymous
+  ///  client can section the catalogue at boot without fetching one `$PLG` per
+  ///  module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.
+  ///
+  ///  SIGNATURE SEAM — normative. Under the `SDN-MODULE-MANIFEST-V1` canonical
+  ///  statement this field is NOT covered by `PMM.SIGNATURE`, exactly like
+  ///  `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM
+  ///  resting on a signed content hash. A consumer that shelves, filters or
+  ///  counts by this field MUST NOT present the resulting grouping as
+  ///  authenticated, and MUST keep the verified identity (`MODULE_ID`,
+  ///  `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable
+  ///  from provider-supplied presentation. Extending the canonical statement to
+  ///  cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves
+  ///  every verifier in lockstep and is not made implicitly by adopting this
+  ///  field.
+  capabilityClass get PRIMARY_CATEGORY => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 54, 0));
+  capabilityClass get primaryCategory => PRIMARY_CATEGORY;
+  ///  Every ratified `$CCT` category this module belongs to, for browse, filter
+  ///  and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST
+  ///  include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
+  ///  PRIMARY_CATEGORY.
+  List<capabilityClass>? get CATEGORIES => const fb.ListReader<capabilityClass>(capabilityClass.reader).vTableGetNullable(_bc, _bcOffset, 56);
+
+  @override
+  String toString() {
+    return 'PMMModuleEntry{moduleId: ${moduleId}, pluginId: ${pluginId}, plgCid: ${plgCid}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VERSION: ${VERSION}, EPOCH: ${EPOCH}, contentHash: ${contentHash}, artifactSizeBytes: ${artifactSizeBytes}, artifactPath: ${artifactPath}, artifactCid: ${artifactCid}, artifactSignature: ${artifactSignature}, trustTier: ${trustTier}, defaultEnabled: ${defaultEnabled}, accessPolicy: ${accessPolicy}, entryState: ${entryState}, runtimeTargets: ${runtimeTargets}, requiredSchemas: ${requiredSchemas}, minPermissions: ${minPermissions}, LICENSE: ${LICENSE}, documentationUrl: ${documentationUrl}, iconUrl: ${iconUrl}, supersedesContentHash: ${supersedesContentHash}, updatedAt: ${updatedAt}, pluginType: ${pluginType}, primaryCategory: ${primaryCategory}, CATEGORIES: ${CATEGORIES}}';
+  }
+}
+
+class _PMMModuleEntryReader extends fb.TableReader<PMMModuleEntry> {
+  const _PMMModuleEntryReader();
+
+  @override
+  PMMModuleEntry createObject(fb.BufferContext bc, int offset) =>
+    PMMModuleEntry._(bc, offset);
+}
+
+class PMMModuleEntryBuilder {
+  PMMModuleEntryBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(27);
+  }
+
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPluginIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPlgCidOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
@@ -203,309 +549,92 @@ class CCTCategoryBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addParent(capabilityClass? PARENT) {
-    fbBuilder.addUint8(5, PARENT?.value);
-    return fbBuilder.offset;
-  }
-  int addSortOrder(int? SORT_ORDER) {
-    fbBuilder.addUint16(6, SORT_ORDER);
-    return fbBuilder.offset;
-  }
-  int addKeywordsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addIconKeyOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CCTCategoryObjectBuilder extends fb.ObjectBuilder {
-  final capabilityClass? _CODE;
-  final String? _DISPLAY_NAME;
-  final String? _SUMMARY;
-  final String? _SLUG;
-  final String? _DESCRIPTION;
-  final capabilityClass? _PARENT;
-  final int? _SORT_ORDER;
-  final List<String>? _KEYWORDS;
-  final String? _ICON_KEY;
-
-  CCTCategoryObjectBuilder({
-    capabilityClass? CODE,
-    String? DISPLAY_NAME,
-    String? displayName,
-    String? SUMMARY,
-    String? SLUG,
-    String? DESCRIPTION,
-    capabilityClass? PARENT,
-    int? SORT_ORDER,
-    int? sortOrder,
-    List<String>? KEYWORDS,
-    String? ICON_KEY,
-    String? iconKey,
-  })
-      : _CODE = CODE,
-        _DISPLAY_NAME = displayName ?? DISPLAY_NAME,
-        _SUMMARY = SUMMARY,
-        _SLUG = SLUG,
-        _DESCRIPTION = DESCRIPTION,
-        _PARENT = PARENT,
-        _SORT_ORDER = sortOrder ?? SORT_ORDER,
-        _KEYWORDS = KEYWORDS,
-        _ICON_KEY = iconKey ?? ICON_KEY;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
-        : fbBuilder.writeString(_DISPLAY_NAME!);
-    final int? SUMMARYOffset = _SUMMARY == null ? null
-        : fbBuilder.writeString(_SUMMARY!);
-    final int? SLUGOffset = _SLUG == null ? null
-        : fbBuilder.writeString(_SLUG!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? KEYWORDSOffset = _KEYWORDS == null ? null
-        : fbBuilder.writeList(_KEYWORDS!.map(fbBuilder.writeString).toList());
-    final int? ICON_KEYOffset = _ICON_KEY == null ? null
-        : fbBuilder.writeString(_ICON_KEY!);
-    fbBuilder.startTable(9);
-    fbBuilder.addUint8(0, _CODE?.value);
-    fbBuilder.addOffset(1, DISPLAY_NAMEOffset);
-    fbBuilder.addOffset(2, SUMMARYOffset);
-    fbBuilder.addOffset(3, SLUGOffset);
-    fbBuilder.addOffset(4, DESCRIPTIONOffset);
-    fbBuilder.addUint8(5, _PARENT?.value);
-    fbBuilder.addUint16(6, _SORT_ORDER);
-    fbBuilder.addOffset(7, KEYWORDSOffset);
-    fbBuilder.addOffset(8, ICON_KEYOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  An observed count of catalogue items in one category.
-///
-///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
-///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
-///  count can never omit when it was taken or what it was taken over. A consumer
-///  that needs a live number computes it from the items; a consumer rendering a
-///  published rollup MUST show it as of COUNTED_AT.
-class CCTCategoryRollup {
-  CCTCategoryRollup._(this._bc, this._bcOffset);
-  factory CCTCategoryRollup(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CCTCategoryRollup> reader = _CCTCategoryRollupReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Category being counted.
-  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
-  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
-  int get ITEM_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get itemCount => ITEM_COUNT;
-  ///  Identifier of the catalogue the count was taken over.
-  String? get SOURCE_CATALOG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get sourceCatalogId => SOURCE_CATALOG_ID;
-  ///  Unix seconds when the count was taken.
-  int get COUNTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get countedAt => COUNTED_AT;
-
-  @override
-  String toString() {
-    return 'CCTCategoryRollup{CODE: ${CODE}, itemCount: ${itemCount}, sourceCatalogId: ${sourceCatalogId}, countedAt: ${countedAt}}';
-  }
-}
-
-class _CCTCategoryRollupReader extends fb.TableReader<CCTCategoryRollup> {
-  const _CCTCategoryRollupReader();
-
-  @override
-  CCTCategoryRollup createObject(fb.BufferContext bc, int offset) =>
-    CCTCategoryRollup._(bc, offset);
-}
-
-class CCTCategoryRollupBuilder {
-  CCTCategoryRollupBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCode(capabilityClass? CODE) {
-    fbBuilder.addUint8(0, CODE?.value);
-    return fbBuilder.offset;
-  }
-  int addItemCount(int? ITEM_COUNT) {
-    fbBuilder.addUint32(1, ITEM_COUNT);
-    return fbBuilder.offset;
-  }
-  int addSourceCatalogIdOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addCountedAt(int? COUNTED_AT) {
-    fbBuilder.addUint64(3, COUNTED_AT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CCTCategoryRollupObjectBuilder extends fb.ObjectBuilder {
-  final capabilityClass? _CODE;
-  final int? _ITEM_COUNT;
-  final String? _SOURCE_CATALOG_ID;
-  final int? _COUNTED_AT;
-
-  CCTCategoryRollupObjectBuilder({
-    capabilityClass? CODE,
-    int? ITEM_COUNT,
-    int? itemCount,
-    String? SOURCE_CATALOG_ID,
-    String? sourceCatalogId,
-    int? COUNTED_AT,
-    int? countedAt,
-  })
-      : _CODE = CODE,
-        _ITEM_COUNT = itemCount ?? ITEM_COUNT,
-        _SOURCE_CATALOG_ID = sourceCatalogId ?? SOURCE_CATALOG_ID,
-        _COUNTED_AT = countedAt ?? COUNTED_AT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCE_CATALOG_IDOffset = _SOURCE_CATALOG_ID == null ? null
-        : fbBuilder.writeString(_SOURCE_CATALOG_ID!);
-    fbBuilder.startTable(4);
-    fbBuilder.addUint8(0, _CODE?.value);
-    fbBuilder.addUint32(1, _ITEM_COUNT);
-    fbBuilder.addOffset(2, SOURCE_CATALOG_IDOffset);
-    fbBuilder.addUint64(3, _COUNTED_AT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  $CCT — Capability Category Taxonomy.
-///
-///  The ratified set of capability classes that distributable units (modules,
-///  applications, composed flows) are classified under, together with the labels
-///  and routes every consuming surface renders. One published $CCT is the single
-///  source of truth shared by a storefront, a library, a search index and the
-///  unit manifests themselves.
-///
-///  Division of labour: `$CCT` = the category vocabulary and its presentation;
-///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
-///  application's manifest, which cites categories by code; `$PMM` = which
-///  modules a provider serves; `$STO`/`$STF` = commerce.
-class CCT {
-  CCT._(this._bc, this._bcOffset);
-  factory CCT(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CCT> reader = _CCTReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stable identifier of this taxonomy publication.
-  String? get TAXONOMY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get taxonomyId => TAXONOMY_ID;
-  ///  SemVer 2.0.0 version of the taxonomy content.
-  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Unix seconds when this taxonomy revision was issued.
-  int get ISSUED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get issuedAt => ISSUED_AT;
-  ///  Human-readable title of the taxonomy.
-  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  The ratified categories. Every capabilityClass member a consumer may
-  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
-  List<CCTCategory>? get CATEGORIES => const fb.ListReader<CCTCategory>(CCTCategory.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Optional per-category item counts as observed over a named catalogue.
-  ///  Absent means counts are computed by the consumer.
-  List<CCTCategoryRollup>? get ROLLUPS => const fb.ListReader<CCTCategoryRollup>(CCTCategoryRollup.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Signature from the publishing node key over the canonical taxonomy bytes.
-  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
-
-  @override
-  String toString() {
-    return 'CCT{taxonomyId: ${taxonomyId}, VERSION: ${VERSION}, issuedAt: ${issuedAt}, TITLE: ${TITLE}, CATEGORIES: ${CATEGORIES}, ROLLUPS: ${ROLLUPS}, SIGNATURE: ${SIGNATURE}}';
-  }
-}
-
-class _CCTReader extends fb.TableReader<CCT> {
-  const _CCTReader();
-
-  @override
-  CCT createObject(fb.BufferContext bc, int offset) =>
-    CCT._(bc, offset);
-}
-
-class CCTBuilder {
-  CCTBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addTaxonomyIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
   int addVersionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addIssuedAt(int? ISSUED_AT) {
-    fbBuilder.addUint64(2, ISSUED_AT);
-    return fbBuilder.offset;
-  }
-  int addTitleOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addCategoriesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addRollupsOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addSignatureOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addEpoch(int? EPOCH) {
+    fbBuilder.addUint64(6, EPOCH);
+    return fbBuilder.offset;
+  }
+  int addContentHashOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addArtifactSizeBytes(int? ARTIFACT_SIZE_BYTES) {
+    fbBuilder.addUint64(8, ARTIFACT_SIZE_BYTES);
+    return fbBuilder.offset;
+  }
+  int addArtifactPathOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addArtifactCidOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addArtifactSignatureOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addTrustTier(pmmTrustTier? TRUST_TIER) {
+    fbBuilder.addUint8(12, TRUST_TIER?.value);
+    return fbBuilder.offset;
+  }
+  int addDefaultEnabled(bool? DEFAULT_ENABLED) {
+    fbBuilder.addBool(13, DEFAULT_ENABLED);
+    return fbBuilder.offset;
+  }
+  int addAccessPolicy(pmmAccessPolicy? ACCESS_POLICY) {
+    fbBuilder.addUint8(14, ACCESS_POLICY?.value);
+    return fbBuilder.offset;
+  }
+  int addEntryState(pmmEntryState? ENTRY_STATE) {
+    fbBuilder.addUint8(15, ENTRY_STATE?.value);
+    return fbBuilder.offset;
+  }
+  int addRuntimeTargetsOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addRequiredSchemasOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addMinPermissionsOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addDocumentationUrlOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addIconUrlOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addSupersedesContentHashOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAtOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addPluginType(pluginCategory? PLUGIN_TYPE) {
+    fbBuilder.addInt8(24, PLUGIN_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addPrimaryCategory(capabilityClass? PRIMARY_CATEGORY) {
+    fbBuilder.addUint8(25, PRIMARY_CATEGORY?.value);
+    return fbBuilder.offset;
+  }
+  int addCategoriesOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
     return fbBuilder.offset;
   }
 
@@ -514,57 +643,410 @@ class CCTBuilder {
   }
 }
 
-class CCTObjectBuilder extends fb.ObjectBuilder {
-  final String? _TAXONOMY_ID;
+class PMMModuleEntryObjectBuilder extends fb.ObjectBuilder {
+  final String? _MODULE_ID;
+  final String? _PLUGIN_ID;
+  final String? _PLG_CID;
+  final String? _NAME;
+  final String? _DESCRIPTION;
   final String? _VERSION;
-  final int? _ISSUED_AT;
-  final String? _TITLE;
-  final List<CCTCategoryObjectBuilder>? _CATEGORIES;
-  final List<CCTCategoryRollupObjectBuilder>? _ROLLUPS;
-  final List<int>? _SIGNATURE;
+  final int? _EPOCH;
+  final String? _CONTENT_HASH;
+  final int? _ARTIFACT_SIZE_BYTES;
+  final String? _ARTIFACT_PATH;
+  final String? _ARTIFACT_CID;
+  final List<int>? _ARTIFACT_SIGNATURE;
+  final pmmTrustTier? _TRUST_TIER;
+  final bool? _DEFAULT_ENABLED;
+  final pmmAccessPolicy? _ACCESS_POLICY;
+  final pmmEntryState? _ENTRY_STATE;
+  final List<String>? _RUNTIME_TARGETS;
+  final List<String>? _REQUIRED_SCHEMAS;
+  final List<String>? _MIN_PERMISSIONS;
+  final String? _LICENSE;
+  final String? _DOCUMENTATION_URL;
+  final String? _ICON_URL;
+  final String? _SUPERSEDES_CONTENT_HASH;
+  final String? _UPDATED_AT;
+  final pluginCategory? _PLUGIN_TYPE;
+  final capabilityClass? _PRIMARY_CATEGORY;
+  final List<capabilityClass>? _CATEGORIES;
 
-  CCTObjectBuilder({
-    String? TAXONOMY_ID,
-    String? taxonomyId,
+  PMMModuleEntryObjectBuilder({
+    String? MODULE_ID,
+    String? moduleId,
+    String? PLUGIN_ID,
+    String? pluginId,
+    String? PLG_CID,
+    String? plgCid,
+    String? NAME,
+    String? DESCRIPTION,
     String? VERSION,
-    int? ISSUED_AT,
-    int? issuedAt,
-    String? TITLE,
-    List<CCTCategoryObjectBuilder>? CATEGORIES,
-    List<CCTCategoryRollupObjectBuilder>? ROLLUPS,
-    List<int>? SIGNATURE,
+    int? EPOCH,
+    String? CONTENT_HASH,
+    String? contentHash,
+    int? ARTIFACT_SIZE_BYTES,
+    int? artifactSizeBytes,
+    String? ARTIFACT_PATH,
+    String? artifactPath,
+    String? ARTIFACT_CID,
+    String? artifactCid,
+    List<int>? ARTIFACT_SIGNATURE,
+    List<int>? artifactSignature,
+    pmmTrustTier? TRUST_TIER,
+    pmmTrustTier? trustTier,
+    bool? DEFAULT_ENABLED,
+    bool? defaultEnabled,
+    pmmAccessPolicy? ACCESS_POLICY,
+    pmmAccessPolicy? accessPolicy,
+    pmmEntryState? ENTRY_STATE,
+    pmmEntryState? entryState,
+    List<String>? RUNTIME_TARGETS,
+    List<String>? runtimeTargets,
+    List<String>? REQUIRED_SCHEMAS,
+    List<String>? requiredSchemas,
+    List<String>? MIN_PERMISSIONS,
+    List<String>? minPermissions,
+    String? LICENSE,
+    String? DOCUMENTATION_URL,
+    String? documentationUrl,
+    String? ICON_URL,
+    String? iconUrl,
+    String? SUPERSEDES_CONTENT_HASH,
+    String? supersedesContentHash,
+    String? UPDATED_AT,
+    String? updatedAt,
+    pluginCategory? PLUGIN_TYPE,
+    pluginCategory? pluginType,
+    capabilityClass? PRIMARY_CATEGORY,
+    capabilityClass? primaryCategory,
+    List<capabilityClass>? CATEGORIES,
   })
-      : _TAXONOMY_ID = taxonomyId ?? TAXONOMY_ID,
+      : _MODULE_ID = moduleId ?? MODULE_ID,
+        _PLUGIN_ID = pluginId ?? PLUGIN_ID,
+        _PLG_CID = plgCid ?? PLG_CID,
+        _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
         _VERSION = VERSION,
-        _ISSUED_AT = issuedAt ?? ISSUED_AT,
-        _TITLE = TITLE,
-        _CATEGORIES = CATEGORIES,
-        _ROLLUPS = ROLLUPS,
-        _SIGNATURE = SIGNATURE;
+        _EPOCH = EPOCH,
+        _CONTENT_HASH = contentHash ?? CONTENT_HASH,
+        _ARTIFACT_SIZE_BYTES = artifactSizeBytes ?? ARTIFACT_SIZE_BYTES,
+        _ARTIFACT_PATH = artifactPath ?? ARTIFACT_PATH,
+        _ARTIFACT_CID = artifactCid ?? ARTIFACT_CID,
+        _ARTIFACT_SIGNATURE = artifactSignature ?? ARTIFACT_SIGNATURE,
+        _TRUST_TIER = trustTier ?? TRUST_TIER,
+        _DEFAULT_ENABLED = defaultEnabled ?? DEFAULT_ENABLED,
+        _ACCESS_POLICY = accessPolicy ?? ACCESS_POLICY,
+        _ENTRY_STATE = entryState ?? ENTRY_STATE,
+        _RUNTIME_TARGETS = runtimeTargets ?? RUNTIME_TARGETS,
+        _REQUIRED_SCHEMAS = requiredSchemas ?? REQUIRED_SCHEMAS,
+        _MIN_PERMISSIONS = minPermissions ?? MIN_PERMISSIONS,
+        _LICENSE = LICENSE,
+        _DOCUMENTATION_URL = documentationUrl ?? DOCUMENTATION_URL,
+        _ICON_URL = iconUrl ?? ICON_URL,
+        _SUPERSEDES_CONTENT_HASH = supersedesContentHash ?? SUPERSEDES_CONTENT_HASH,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+        _PLUGIN_TYPE = pluginType ?? PLUGIN_TYPE,
+        _PRIMARY_CATEGORY = primaryCategory ?? PRIMARY_CATEGORY,
+        _CATEGORIES = CATEGORIES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? TAXONOMY_IDOffset = _TAXONOMY_ID == null ? null
-        : fbBuilder.writeString(_TAXONOMY_ID!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? PLUGIN_IDOffset = _PLUGIN_ID == null ? null
+        : fbBuilder.writeString(_PLUGIN_ID!);
+    final int? PLG_CIDOffset = _PLG_CID == null ? null
+        : fbBuilder.writeString(_PLG_CID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
     final int? VERSIONOffset = _VERSION == null ? null
         : fbBuilder.writeString(_VERSION!);
-    final int? TITLEOffset = _TITLE == null ? null
-        : fbBuilder.writeString(_TITLE!);
+    final int? CONTENT_HASHOffset = _CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_CONTENT_HASH!);
+    final int? ARTIFACT_PATHOffset = _ARTIFACT_PATH == null ? null
+        : fbBuilder.writeString(_ARTIFACT_PATH!);
+    final int? ARTIFACT_CIDOffset = _ARTIFACT_CID == null ? null
+        : fbBuilder.writeString(_ARTIFACT_CID!);
+    final int? ARTIFACT_SIGNATUREOffset = _ARTIFACT_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_ARTIFACT_SIGNATURE!);
+    final int? RUNTIME_TARGETSOffset = _RUNTIME_TARGETS == null ? null
+        : fbBuilder.writeList(_RUNTIME_TARGETS!.map(fbBuilder.writeString).toList());
+    final int? REQUIRED_SCHEMASOffset = _REQUIRED_SCHEMAS == null ? null
+        : fbBuilder.writeList(_REQUIRED_SCHEMAS!.map(fbBuilder.writeString).toList());
+    final int? MIN_PERMISSIONSOffset = _MIN_PERMISSIONS == null ? null
+        : fbBuilder.writeList(_MIN_PERMISSIONS!.map(fbBuilder.writeString).toList());
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? DOCUMENTATION_URLOffset = _DOCUMENTATION_URL == null ? null
+        : fbBuilder.writeString(_DOCUMENTATION_URL!);
+    final int? ICON_URLOffset = _ICON_URL == null ? null
+        : fbBuilder.writeString(_ICON_URL!);
+    final int? SUPERSEDES_CONTENT_HASHOffset = _SUPERSEDES_CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_SUPERSEDES_CONTENT_HASH!);
+    final int? UPDATED_ATOffset = _UPDATED_AT == null ? null
+        : fbBuilder.writeString(_UPDATED_AT!);
     final int? CATEGORIESOffset = _CATEGORIES == null ? null
-        : fbBuilder.writeList(_CATEGORIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ROLLUPSOffset = _ROLLUPS == null ? null
-        : fbBuilder.writeList(_ROLLUPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+        : fbBuilder.writeListUint8(_CATEGORIES!.map((f) => f.value).toList());
+    fbBuilder.startTable(27);
+    fbBuilder.addOffset(0, MODULE_IDOffset);
+    fbBuilder.addOffset(1, PLUGIN_IDOffset);
+    fbBuilder.addOffset(2, PLG_CIDOffset);
+    fbBuilder.addOffset(3, NAMEOffset);
+    fbBuilder.addOffset(4, DESCRIPTIONOffset);
+    fbBuilder.addOffset(5, VERSIONOffset);
+    fbBuilder.addUint64(6, _EPOCH);
+    fbBuilder.addOffset(7, CONTENT_HASHOffset);
+    fbBuilder.addUint64(8, _ARTIFACT_SIZE_BYTES);
+    fbBuilder.addOffset(9, ARTIFACT_PATHOffset);
+    fbBuilder.addOffset(10, ARTIFACT_CIDOffset);
+    fbBuilder.addOffset(11, ARTIFACT_SIGNATUREOffset);
+    fbBuilder.addUint8(12, _TRUST_TIER?.value);
+    fbBuilder.addBool(13, _DEFAULT_ENABLED);
+    fbBuilder.addUint8(14, _ACCESS_POLICY?.value);
+    fbBuilder.addUint8(15, _ENTRY_STATE?.value);
+    fbBuilder.addOffset(16, RUNTIME_TARGETSOffset);
+    fbBuilder.addOffset(17, REQUIRED_SCHEMASOffset);
+    fbBuilder.addOffset(18, MIN_PERMISSIONSOffset);
+    fbBuilder.addOffset(19, LICENSEOffset);
+    fbBuilder.addOffset(20, DOCUMENTATION_URLOffset);
+    fbBuilder.addOffset(21, ICON_URLOffset);
+    fbBuilder.addOffset(22, SUPERSEDES_CONTENT_HASHOffset);
+    fbBuilder.addOffset(23, UPDATED_ATOffset);
+    fbBuilder.addInt8(24, _PLUGIN_TYPE?.value);
+    fbBuilder.addUint8(25, _PRIMARY_CATEGORY?.value);
+    fbBuilder.addOffset(26, CATEGORIESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Provider Module Manifest — what one provider node offers, signed by that
+///  node's key.
+class PMM {
+  PMM._(this._bc, this._bcOffset);
+  factory PMM(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PMM> reader = _PMMReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Domain of the provider, e.g. "node.example.org". Required. MUST equal
+  ///  the origin the manifest was served from.
+  String? get PROVIDER_DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get providerDomain => PROVIDER_DOMAIN;
+  ///  Display name of the provider.
+  String? get PROVIDER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get providerName => PROVIDER_NAME;
+  ///  Human-readable summary of what the provider serves.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Monotonic manifest epoch. A client MUST reject an epoch lower than the
+  ///  highest it has already verified for `PROVIDER_DOMAIN`.
+  int get EPOCH => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  The key identity and its external anchors.
+  PMMTrustAnchor? get TRUST => PMMTrustAnchor.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  ///  The offered modules.
+  List<PMMModuleEntry>? get MODULES => const fb.ListReader<PMMModuleEntry>(PMMModuleEntry.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Canonical absolute URL this manifest is served from.
+  String? get CANONICAL_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get canonicalUrl => CANONICAL_URL;
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  when the manifest was created.
+  String? get CREATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get createdAt => CREATED_AT;
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  when the manifest was last signed.
+  String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get updatedAt => UPDATED_AT;
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  after which a verifier MUST refuse anonymous CORE loading from this
+  ///  manifest and re-fetch. Required in practice for anonymous trust: an
+  ///  unexpiring signed manifest cannot be withdrawn.
+  String? get EXPIRES_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get expiresAt => EXPIRES_AT;
+  ///  Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement
+  ///  defined in this file's header.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  The canonical statement, verbatim. A verifier MUST rebuild it from this
+  ///  record and reject any difference.
+  String? get SIGNED_STATEMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get signedStatement => SIGNED_STATEMENT;
+
+  @override
+  String toString() {
+    return 'PMM{providerDomain: ${providerDomain}, providerName: ${providerName}, DESCRIPTION: ${DESCRIPTION}, EPOCH: ${EPOCH}, TRUST: ${TRUST}, MODULES: ${MODULES}, canonicalUrl: ${canonicalUrl}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, expiresAt: ${expiresAt}, SIGNATURE: ${SIGNATURE}, signedStatement: ${signedStatement}}';
+  }
+}
+
+class _PMMReader extends fb.TableReader<PMM> {
+  const _PMMReader();
+
+  @override
+  PMM createObject(fb.BufferContext bc, int offset) =>
+    PMM._(bc, offset);
+}
+
+class PMMBuilder {
+  PMMBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addProviderDomainOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEpoch(int? EPOCH) {
+    fbBuilder.addUint64(3, EPOCH);
+    return fbBuilder.offset;
+  }
+  int addTrustOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addModulesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalUrlOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addCreatedAtOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAtOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addExpiresAtOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addSignedStatementOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PMMObjectBuilder extends fb.ObjectBuilder {
+  final String? _PROVIDER_DOMAIN;
+  final String? _PROVIDER_NAME;
+  final String? _DESCRIPTION;
+  final int? _EPOCH;
+  final PMMTrustAnchorObjectBuilder? _TRUST;
+  final List<PMMModuleEntryObjectBuilder>? _MODULES;
+  final String? _CANONICAL_URL;
+  final String? _CREATED_AT;
+  final String? _UPDATED_AT;
+  final String? _EXPIRES_AT;
+  final List<int>? _SIGNATURE;
+  final String? _SIGNED_STATEMENT;
+
+  PMMObjectBuilder({
+    String? PROVIDER_DOMAIN,
+    String? providerDomain,
+    String? PROVIDER_NAME,
+    String? providerName,
+    String? DESCRIPTION,
+    int? EPOCH,
+    PMMTrustAnchorObjectBuilder? TRUST,
+    List<PMMModuleEntryObjectBuilder>? MODULES,
+    String? CANONICAL_URL,
+    String? canonicalUrl,
+    String? CREATED_AT,
+    String? createdAt,
+    String? UPDATED_AT,
+    String? updatedAt,
+    String? EXPIRES_AT,
+    String? expiresAt,
+    List<int>? SIGNATURE,
+    String? SIGNED_STATEMENT,
+    String? signedStatement,
+  })
+      : _PROVIDER_DOMAIN = providerDomain ?? PROVIDER_DOMAIN,
+        _PROVIDER_NAME = providerName ?? PROVIDER_NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _EPOCH = EPOCH,
+        _TRUST = TRUST,
+        _MODULES = MODULES,
+        _CANONICAL_URL = canonicalUrl ?? CANONICAL_URL,
+        _CREATED_AT = createdAt ?? CREATED_AT,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+        _EXPIRES_AT = expiresAt ?? EXPIRES_AT,
+        _SIGNATURE = SIGNATURE,
+        _SIGNED_STATEMENT = signedStatement ?? SIGNED_STATEMENT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PROVIDER_DOMAINOffset = _PROVIDER_DOMAIN == null ? null
+        : fbBuilder.writeString(_PROVIDER_DOMAIN!);
+    final int? PROVIDER_NAMEOffset = _PROVIDER_NAME == null ? null
+        : fbBuilder.writeString(_PROVIDER_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? TRUSTOffset = _TRUST?.getOrCreateOffset(fbBuilder);
+    final int? MODULESOffset = _MODULES == null ? null
+        : fbBuilder.writeList(_MODULES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CANONICAL_URLOffset = _CANONICAL_URL == null ? null
+        : fbBuilder.writeString(_CANONICAL_URL!);
+    final int? CREATED_ATOffset = _CREATED_AT == null ? null
+        : fbBuilder.writeString(_CREATED_AT!);
+    final int? UPDATED_ATOffset = _UPDATED_AT == null ? null
+        : fbBuilder.writeString(_UPDATED_AT!);
+    final int? EXPIRES_ATOffset = _EXPIRES_AT == null ? null
+        : fbBuilder.writeString(_EXPIRES_AT!);
     final int? SIGNATUREOffset = _SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_SIGNATURE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, TAXONOMY_IDOffset);
-    fbBuilder.addOffset(1, VERSIONOffset);
-    fbBuilder.addUint64(2, _ISSUED_AT);
-    fbBuilder.addOffset(3, TITLEOffset);
-    fbBuilder.addOffset(4, CATEGORIESOffset);
-    fbBuilder.addOffset(5, ROLLUPSOffset);
-    fbBuilder.addOffset(6, SIGNATUREOffset);
+    final int? SIGNED_STATEMENTOffset = _SIGNED_STATEMENT == null ? null
+        : fbBuilder.writeString(_SIGNED_STATEMENT!);
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, PROVIDER_DOMAINOffset);
+    fbBuilder.addOffset(1, PROVIDER_NAMEOffset);
+    fbBuilder.addOffset(2, DESCRIPTIONOffset);
+    fbBuilder.addUint64(3, _EPOCH);
+    fbBuilder.addOffset(4, TRUSTOffset);
+    fbBuilder.addOffset(5, MODULESOffset);
+    fbBuilder.addOffset(6, CANONICAL_URLOffset);
+    fbBuilder.addOffset(7, CREATED_ATOffset);
+    fbBuilder.addOffset(8, UPDATED_ATOffset);
+    fbBuilder.addOffset(9, EXPIRES_ATOffset);
+    fbBuilder.addOffset(10, SIGNATUREOffset);
+    fbBuilder.addOffset(11, SIGNED_STATEMENTOffset);
     return fbBuilder.endTable();
   }
 

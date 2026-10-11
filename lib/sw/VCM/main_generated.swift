@@ -8,57 +8,867 @@ import Common
 
 import FlatBuffers
 
-public enum meanElementSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum elementType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Simplified General Perturbation Model 4
-  case sgp4 = 0
-  ///  Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
-  ///  as published in the 2022 astrodynamics conference literature.
-  case sgp4xp = 1
-  ///  Draper Semi-analytical Satellite Theory
-  case dsst = 2
-  ///  Universal Semianalytical Method
-  case usm = 3
+  case osculating = 0
+  case mean = 1
 
-  public static var max: meanElementSource { return .usm }
-  public static var min: meanElementSource { return .sgp4 }
+  public static var max: elementType { return .mean }
+  public static var min: elementType { return .osculating }
 }
 
 
-///  Mean Element Theory
-public struct MET: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public enum anomalyConvention: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case trueAnomaly = 0
+  case meanAnomaly = 1
+
+  public static var max: anomalyConvention { return .meanAnomaly }
+  public static var min: anomalyConvention { return .trueAnomaly }
+}
+
+
+///  Enum to represent common atmospheric models
+public enum atmosphericSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case jacchia70 = 1
+  case jb2008 = 2
+  case nrlmsise00 = 3
+  case dtm2000 = 4
+  case hwm14 = 5
+  case hasdm = 6
+
+  public static var max: atmosphericSource { return .hasdm }
+  public static var min: atmosphericSource { return .none_ }
+}
+
+
+///  Enum to represent common geopotential models
+public enum geopotentialSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case egm96 = 1
+  case wgs84 = 2
+  case jgm2 = 3
+  case gemt3 = 4
+  case egm96J5 = 5
+
+  public static var max: geopotentialSource { return .egm96J5 }
+  public static var min: geopotentialSource { return .none_ }
+}
+
+
+///  Enum to represent zonal harmonics
+public enum zonalHarmonic: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case j2 = 1
+  case j3 = 2
+  case j4 = 3
+  case j5 = 4
+  case j6 = 5
+  case j7 = 6
+  case j8 = 7
+  case j9 = 8
+  case j10 = 9
+  case j11 = 10
+  case j12 = 11
+
+  public static var max: zonalHarmonic { return .j12 }
+  public static var min: zonalHarmonic { return .none_ }
+}
+
+
+///  Enum to represent solar radiation pressure models
+public enum solarRadiationPressureModel: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case sphericalModel = 1
+  case flatPlateModel = 2
+
+  public static var max: solarRadiationPressureModel { return .flatPlateModel }
+  public static var min: solarRadiationPressureModel { return .none_ }
+}
+
+
+///  Enum to represent common lunar perturbation models
+public enum lunarPerturbationSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case de430 = 1
+  case de431 = 2
+  case lp150q = 3
+
+  public static var max: lunarPerturbationSource { return .lp150q }
+  public static var min: lunarPerturbationSource { return .none_ }
+}
+
+
+///  Enum to represent various solar perturbation models
+public enum solarPerturbationSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case de430 = 1
+  case de431 = 2
+
+  public static var max: solarPerturbationSource { return .de431 }
+  public static var min: solarPerturbationSource { return .none_ }
+}
+
+
+///  Enum to represent resonance models
+public enum resonanceSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case highAltitudeResonance = 1
+  case lowAltitudeResonance = 2
+  case lunarResonance = 3
+  case solarResonance = 4
+
+  public static var max: resonanceSource { return .solarResonance }
+  public static var min: resonanceSource { return .none_ }
+}
+
+
+///  Enum to represent the status of various perturbations (ON/OFF)
+public enum perturbationStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case off = 0
+  case on = 1
+
+  public static var max: perturbationStatus { return .on }
+  public static var min: perturbationStatus { return .off }
+}
+
+
+///  Enum to represent propagator types
+public enum propagatorFamily: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case semiAnalytical = 1
+  case vinti = 2
+  case sgp4 = 3
+  case cowell = 4
+  case rk4 = 5
+  case nyx = 6
+  case gmat = 7
+  case spice = 8
+  case sgp = 9
+  case sdp4 = 10
+  case sgp8 = 11
+  case sdp8 = 12
+
+  public static var max: propagatorFamily { return .sdp8 }
+  public static var min: propagatorFamily { return .none_ }
+}
+
+
+///  Propagator configuration structure to describe propagation settings
+public struct propagatorConfig: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$MET" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: MET.id, addPrefix: prefix) }
+  public static var id: String { "$VCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: propagatorConfig.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let MEAN_ELEMENT_THEORY: VOffset = 4
+    static let PROPAGATOR_NAME: VOffset = 4
+    static let PROPAGATOR_TYPE: VOffset = 6
+    static let FORCE_MODELS: VOffset = 8
+    static let EPOCH: VOffset = 10
+    static let TIME_STEP: VOffset = 12
+    static let ZONAL_HARMONIC_TERMS: VOffset = 14
   }
 
-  public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VT.MEAN_ELEMENT_THEORY); return o == 0 ? .sgp4 : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
-  public static func startMET(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VT.MEAN_ELEMENT_THEORY) }
-  public static func endMET(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createMET(
+  public var PROPAGATOR_NAME: String? { let o = _accessor.offset(VT.PROPAGATOR_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_NAME) }
+  public var PROPAGATOR_TYPE: propagatorFamily { let o = _accessor.offset(VT.PROPAGATOR_TYPE); return o == 0 ? .none_ : propagatorFamily(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var FORCE_MODELS: FlatbufferVector<String?> { return _accessor.vector(at: VT.FORCE_MODELS, byteSize: 4) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  public var TIME_STEP: Double { let o = _accessor.offset(VT.TIME_STEP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ZONAL_HARMONIC_TERMS: FlatbufferVector<zonalHarmonic> { return _accessor.vector(at: VT.ZONAL_HARMONIC_TERMS, byteSize: 1) }
+  public static func startpropagatorConfig(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(PROPAGATOR_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_NAME, at: VT.PROPAGATOR_NAME) }
+  public static func add(PROPAGATOR_TYPE: propagatorFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPAGATOR_TYPE.rawValue, def: 0, at: VT.PROPAGATOR_TYPE) }
+  public static func addVectorOf(FORCE_MODELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORCE_MODELS, at: VT.FORCE_MODELS) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(TIME_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_STEP, def: 0.0, at: VT.TIME_STEP) }
+  public static func addVectorOf(ZONAL_HARMONIC_TERMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ZONAL_HARMONIC_TERMS, at: VT.ZONAL_HARMONIC_TERMS) }
+  public static func endpropagatorConfig(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createpropagatorConfig(
     _ fbb: inout FlatBufferBuilder,
-    MEAN_ELEMENT_THEORY: meanElementSource = .sgp4
+    PROPAGATOR_NAMEOffset PROPAGATOR_NAME: Offset = Offset(),
+    PROPAGATOR_TYPE: propagatorFamily = .none_,
+    FORCE_MODELSVectorOffset FORCE_MODELS: Offset = Offset(),
+    EPOCHOffset EPOCH: Offset = Offset(),
+    TIME_STEP: Double = 0.0,
+    ZONAL_HARMONIC_TERMSVectorOffset ZONAL_HARMONIC_TERMS: Offset = Offset()
   ) -> Offset {
-    let __start = MET.startMET(&fbb)
-    MET.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
-    return MET.endMET(&fbb, start: __start)
+    let __start = propagatorConfig.startpropagatorConfig(&fbb)
+    propagatorConfig.add(PROPAGATOR_NAME: PROPAGATOR_NAME, &fbb)
+    propagatorConfig.add(PROPAGATOR_TYPE: PROPAGATOR_TYPE, &fbb)
+    propagatorConfig.addVectorOf(FORCE_MODELS: FORCE_MODELS, &fbb)
+    propagatorConfig.add(EPOCH: EPOCH, &fbb)
+    propagatorConfig.add(TIME_STEP: TIME_STEP, &fbb)
+    propagatorConfig.addVectorOf(ZONAL_HARMONIC_TERMS: ZONAL_HARMONIC_TERMS, &fbb)
+    return propagatorConfig.endpropagatorConfig(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.MEAN_ELEMENT_THEORY, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
+    try _v.visit(field: VT.PROPAGATOR_NAME, fieldName: "PROPAGATOR_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_TYPE, fieldName: "PROPAGATOR_TYPE", required: false, type: propagatorFamily.self)
+    try _v.visit(field: VT.FORCE_MODELS, fieldName: "FORCE_MODELS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_STEP, fieldName: "TIME_STEP", required: false, type: Double.self)
+    try _v.visit(field: VT.ZONAL_HARMONIC_TERMS, fieldName: "ZONAL_HARMONIC_TERMS", required: false, type: ForwardOffset<Vector<zonalHarmonic, zonalHarmonic>>.self)
+    _v.finish()
+  }
+}
+
+///  VCM State Vector (position and velocity)
+public struct VCMStateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VCMStateVector.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let X: VOffset = 6
+    static let Y: VOffset = 8
+    static let Z: VOffset = 10
+    static let X_DOT: VOffset = 12
+    static let Y_DOT: VOffset = 14
+    static let Z_DOT: VOffset = 16
+  }
+
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  public var X: Double { let o = _accessor.offset(VT.X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y: Double { let o = _accessor.offset(VT.Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Z: Double { let o = _accessor.offset(VT.Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var X_DOT: Double { let o = _accessor.offset(VT.X_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y_DOT: Double { let o = _accessor.offset(VT.Y_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Z_DOT: Double { let o = _accessor.offset(VT.Z_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startVCMStateVector(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VT.X) }
+  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VT.Y) }
+  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VT.Z) }
+  public static func add(X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DOT, def: 0.0, at: VT.X_DOT) }
+  public static func add(Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DOT, def: 0.0, at: VT.Y_DOT) }
+  public static func add(Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DOT, def: 0.0, at: VT.Z_DOT) }
+  public static func endVCMStateVector(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createVCMStateVector(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset = Offset(),
+    X: Double = 0.0,
+    Y: Double = 0.0,
+    Z: Double = 0.0,
+    X_DOT: Double = 0.0,
+    Y_DOT: Double = 0.0,
+    Z_DOT: Double = 0.0
+  ) -> Offset {
+    let __start = VCMStateVector.startVCMStateVector(&fbb)
+    VCMStateVector.add(EPOCH: EPOCH, &fbb)
+    VCMStateVector.add(X: X, &fbb)
+    VCMStateVector.add(Y: Y, &fbb)
+    VCMStateVector.add(Z: Z, &fbb)
+    VCMStateVector.add(X_DOT: X_DOT, &fbb)
+    VCMStateVector.add(Y_DOT: Y_DOT, &fbb)
+    VCMStateVector.add(Z_DOT: Z_DOT, &fbb)
+    return VCMStateVector.endVCMStateVector(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.X, fieldName: "X", required: false, type: Double.self)
+    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: Double.self)
+    try _v.visit(field: VT.Z, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VT.X_DOT, fieldName: "X_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_DOT, fieldName: "Y_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Z_DOT, fieldName: "Z_DOT", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Keplerian Elements
+public struct keplerianElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: keplerianElements.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SEMI_MAJOR_AXIS: VOffset = 4
+    static let ECCENTRICITY: VOffset = 6
+    static let INCLINATION: VOffset = 8
+    static let RA_OF_ASC_NODE: VOffset = 10
+    static let ARG_OF_PERICENTER: VOffset = 12
+    static let ANOMALY_TYPE: VOffset = 14
+    static let ANOMALY: VOffset = 16
+    static let PERIAPSIS_RADIUS: VOffset = 18
+  }
+
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VT.RA_OF_ASC_NODE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VT.ARG_OF_PERICENTER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ANOMALY_TYPE: anomalyConvention { let o = _accessor.offset(VT.ANOMALY_TYPE); return o == 0 ? .trueAnomaly : anomalyConvention(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trueAnomaly }
+  public var ANOMALY: Double { let o = _accessor.offset(VT.ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERIAPSIS_RADIUS: Double { let o = _accessor.offset(VT.PERIAPSIS_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startkeplerianElements(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(RA_OF_ASC_NODE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_OF_ASC_NODE, def: 0.0, at: VT.RA_OF_ASC_NODE) }
+  public static func add(ARG_OF_PERICENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERICENTER, def: 0.0, at: VT.ARG_OF_PERICENTER) }
+  public static func add(ANOMALY_TYPE: anomalyConvention, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANOMALY_TYPE.rawValue, def: 0, at: VT.ANOMALY_TYPE) }
+  public static func add(ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANOMALY, def: 0.0, at: VT.ANOMALY) }
+  public static func add(PERIAPSIS_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIAPSIS_RADIUS, def: 0.0, at: VT.PERIAPSIS_RADIUS) }
+  public static func endkeplerianElements(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createkeplerianElements(
+    _ fbb: inout FlatBufferBuilder,
+    SEMI_MAJOR_AXIS: Double = 0.0,
+    ECCENTRICITY: Double = 0.0,
+    INCLINATION: Double = 0.0,
+    RA_OF_ASC_NODE: Double = 0.0,
+    ARG_OF_PERICENTER: Double = 0.0,
+    ANOMALY_TYPE: anomalyConvention = .trueAnomaly,
+    ANOMALY: Double = 0.0,
+    PERIAPSIS_RADIUS: Double = 0.0
+  ) -> Offset {
+    let __start = keplerianElements.startkeplerianElements(&fbb)
+    keplerianElements.add(SEMI_MAJOR_AXIS: SEMI_MAJOR_AXIS, &fbb)
+    keplerianElements.add(ECCENTRICITY: ECCENTRICITY, &fbb)
+    keplerianElements.add(INCLINATION: INCLINATION, &fbb)
+    keplerianElements.add(RA_OF_ASC_NODE: RA_OF_ASC_NODE, &fbb)
+    keplerianElements.add(ARG_OF_PERICENTER: ARG_OF_PERICENTER, &fbb)
+    keplerianElements.add(ANOMALY_TYPE: ANOMALY_TYPE, &fbb)
+    keplerianElements.add(ANOMALY: ANOMALY, &fbb)
+    keplerianElements.add(PERIAPSIS_RADIUS: PERIAPSIS_RADIUS, &fbb)
+    return keplerianElements.endkeplerianElements(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.RA_OF_ASC_NODE, fieldName: "RA_OF_ASC_NODE", required: false, type: Double.self)
+    try _v.visit(field: VT.ARG_OF_PERICENTER, fieldName: "ARG_OF_PERICENTER", required: false, type: Double.self)
+    try _v.visit(field: VT.ANOMALY_TYPE, fieldName: "ANOMALY_TYPE", required: false, type: anomalyConvention.self)
+    try _v.visit(field: VT.ANOMALY, fieldName: "ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIAPSIS_RADIUS, fieldName: "PERIAPSIS_RADIUS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Equinoctial Elements
+public struct equinoctialElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: equinoctialElements.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let AF: VOffset = 4
+    static let AG: VOffset = 6
+    static let L: VOffset = 8
+    static let N: VOffset = 10
+    static let CHI: VOffset = 12
+    static let PSI: VOffset = 14
+  }
+
+  public var AF: Double { let o = _accessor.offset(VT.AF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AG: Double { let o = _accessor.offset(VT.AG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var L: Double { let o = _accessor.offset(VT.L); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var N: Double { let o = _accessor.offset(VT.N); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CHI: Double { let o = _accessor.offset(VT.CHI); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PSI: Double { let o = _accessor.offset(VT.PSI); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startequinoctialElements(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(AF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AF, def: 0.0, at: VT.AF) }
+  public static func add(AG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AG, def: 0.0, at: VT.AG) }
+  public static func add(L: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: L, def: 0.0, at: VT.L) }
+  public static func add(N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: N, def: 0.0, at: VT.N) }
+  public static func add(CHI: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHI, def: 0.0, at: VT.CHI) }
+  public static func add(PSI: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PSI, def: 0.0, at: VT.PSI) }
+  public static func endequinoctialElements(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createequinoctialElements(
+    _ fbb: inout FlatBufferBuilder,
+    AF: Double = 0.0,
+    AG: Double = 0.0,
+    L: Double = 0.0,
+    N: Double = 0.0,
+    CHI: Double = 0.0,
+    PSI: Double = 0.0
+  ) -> Offset {
+    let __start = equinoctialElements.startequinoctialElements(&fbb)
+    equinoctialElements.add(AF: AF, &fbb)
+    equinoctialElements.add(AG: AG, &fbb)
+    equinoctialElements.add(L: L, &fbb)
+    equinoctialElements.add(N: N, &fbb)
+    equinoctialElements.add(CHI: CHI, &fbb)
+    equinoctialElements.add(PSI: PSI, &fbb)
+    return equinoctialElements.endequinoctialElements(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.AF, fieldName: "AF", required: false, type: Double.self)
+    try _v.visit(field: VT.AG, fieldName: "AG", required: false, type: Double.self)
+    try _v.visit(field: VT.L, fieldName: "L", required: false, type: Double.self)
+    try _v.visit(field: VT.N, fieldName: "N", required: false, type: Double.self)
+    try _v.visit(field: VT.CHI, fieldName: "CHI", required: false, type: Double.self)
+    try _v.visit(field: VT.PSI, fieldName: "PSI", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  UVW Sigmas (Covariance matrix in UVW frame)
+public struct uvwSigmas: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: uvwSigmas.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let U_SIGMA: VOffset = 4
+    static let V_SIGMA: VOffset = 6
+    static let W_SIGMA: VOffset = 8
+    static let UD_SIGMA: VOffset = 10
+    static let VD_SIGMA: VOffset = 12
+    static let WD_SIGMA: VOffset = 14
+  }
+
+  public var U_SIGMA: Double { let o = _accessor.offset(VT.U_SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var V_SIGMA: Double { let o = _accessor.offset(VT.V_SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var W_SIGMA: Double { let o = _accessor.offset(VT.W_SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UD_SIGMA: Double { let o = _accessor.offset(VT.UD_SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VD_SIGMA: Double { let o = _accessor.offset(VT.VD_SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WD_SIGMA: Double { let o = _accessor.offset(VT.WD_SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startuvwSigmas(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(U_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: U_SIGMA, def: 0.0, at: VT.U_SIGMA) }
+  public static func add(V_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: V_SIGMA, def: 0.0, at: VT.V_SIGMA) }
+  public static func add(W_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: W_SIGMA, def: 0.0, at: VT.W_SIGMA) }
+  public static func add(UD_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UD_SIGMA, def: 0.0, at: VT.UD_SIGMA) }
+  public static func add(VD_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VD_SIGMA, def: 0.0, at: VT.VD_SIGMA) }
+  public static func add(WD_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WD_SIGMA, def: 0.0, at: VT.WD_SIGMA) }
+  public static func enduvwSigmas(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createuvwSigmas(
+    _ fbb: inout FlatBufferBuilder,
+    U_SIGMA: Double = 0.0,
+    V_SIGMA: Double = 0.0,
+    W_SIGMA: Double = 0.0,
+    UD_SIGMA: Double = 0.0,
+    VD_SIGMA: Double = 0.0,
+    WD_SIGMA: Double = 0.0
+  ) -> Offset {
+    let __start = uvwSigmas.startuvwSigmas(&fbb)
+    uvwSigmas.add(U_SIGMA: U_SIGMA, &fbb)
+    uvwSigmas.add(V_SIGMA: V_SIGMA, &fbb)
+    uvwSigmas.add(W_SIGMA: W_SIGMA, &fbb)
+    uvwSigmas.add(UD_SIGMA: UD_SIGMA, &fbb)
+    uvwSigmas.add(VD_SIGMA: VD_SIGMA, &fbb)
+    uvwSigmas.add(WD_SIGMA: WD_SIGMA, &fbb)
+    return uvwSigmas.enduvwSigmas(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.U_SIGMA, fieldName: "U_SIGMA", required: false, type: Double.self)
+    try _v.visit(field: VT.V_SIGMA, fieldName: "V_SIGMA", required: false, type: Double.self)
+    try _v.visit(field: VT.W_SIGMA, fieldName: "W_SIGMA", required: false, type: Double.self)
+    try _v.visit(field: VT.UD_SIGMA, fieldName: "UD_SIGMA", required: false, type: Double.self)
+    try _v.visit(field: VT.VD_SIGMA, fieldName: "VD_SIGMA", required: false, type: Double.self)
+    try _v.visit(field: VT.WD_SIGMA, fieldName: "WD_SIGMA", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  VCM Atmospheric and Perturbation Model Data
+public struct VCMAtmosphericModelData: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VCMAtmosphericModelData.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ATMOSPHERIC_MODEL: VOffset = 4
+    static let GEOPOTENTIAL_MODEL: VOffset = 6
+    static let LUNAR_SOLAR_PERTURBATION: VOffset = 8
+    static let LUNAR_PERTURBATION_MODEL: VOffset = 10
+    static let SOLAR_PERTURBATION_MODEL: VOffset = 12
+    static let SOLAR_RADIATION_PRESSURE: VOffset = 14
+    static let SRP_MODEL: VOffset = 16
+    static let RESONANCE_MODEL: VOffset = 18
+  }
+
+  public var ATMOSPHERIC_MODEL: atmosphericSource { let o = _accessor.offset(VT.ATMOSPHERIC_MODEL); return o == 0 ? .none_ : atmosphericSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var GEOPOTENTIAL_MODEL: geopotentialSource { let o = _accessor.offset(VT.GEOPOTENTIAL_MODEL); return o == 0 ? .none_ : geopotentialSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var LUNAR_SOLAR_PERTURBATION: perturbationStatus { let o = _accessor.offset(VT.LUNAR_SOLAR_PERTURBATION); return o == 0 ? .off : perturbationStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .off }
+  public var LUNAR_PERTURBATION_MODEL: lunarPerturbationSource { let o = _accessor.offset(VT.LUNAR_PERTURBATION_MODEL); return o == 0 ? .none_ : lunarPerturbationSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var SOLAR_PERTURBATION_MODEL: solarPerturbationSource { let o = _accessor.offset(VT.SOLAR_PERTURBATION_MODEL); return o == 0 ? .none_ : solarPerturbationSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var SOLAR_RADIATION_PRESSURE: perturbationStatus { let o = _accessor.offset(VT.SOLAR_RADIATION_PRESSURE); return o == 0 ? .off : perturbationStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .off }
+  public var SRP_MODEL: solarRadiationPressureModel { let o = _accessor.offset(VT.SRP_MODEL); return o == 0 ? .none_ : solarRadiationPressureModel(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var RESONANCE_MODEL: resonanceSource { let o = _accessor.offset(VT.RESONANCE_MODEL); return o == 0 ? .none_ : resonanceSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public static func startVCMAtmosphericModelData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(ATMOSPHERIC_MODEL: atmosphericSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATMOSPHERIC_MODEL.rawValue, def: 0, at: VT.ATMOSPHERIC_MODEL) }
+  public static func add(GEOPOTENTIAL_MODEL: geopotentialSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOPOTENTIAL_MODEL.rawValue, def: 0, at: VT.GEOPOTENTIAL_MODEL) }
+  public static func add(LUNAR_SOLAR_PERTURBATION: perturbationStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LUNAR_SOLAR_PERTURBATION.rawValue, def: 0, at: VT.LUNAR_SOLAR_PERTURBATION) }
+  public static func add(LUNAR_PERTURBATION_MODEL: lunarPerturbationSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LUNAR_PERTURBATION_MODEL.rawValue, def: 0, at: VT.LUNAR_PERTURBATION_MODEL) }
+  public static func add(SOLAR_PERTURBATION_MODEL: solarPerturbationSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_PERTURBATION_MODEL.rawValue, def: 0, at: VT.SOLAR_PERTURBATION_MODEL) }
+  public static func add(SOLAR_RADIATION_PRESSURE: perturbationStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RADIATION_PRESSURE.rawValue, def: 0, at: VT.SOLAR_RADIATION_PRESSURE) }
+  public static func add(SRP_MODEL: solarRadiationPressureModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_MODEL.rawValue, def: 0, at: VT.SRP_MODEL) }
+  public static func add(RESONANCE_MODEL: resonanceSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESONANCE_MODEL.rawValue, def: 0, at: VT.RESONANCE_MODEL) }
+  public static func endVCMAtmosphericModelData(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createVCMAtmosphericModelData(
+    _ fbb: inout FlatBufferBuilder,
+    ATMOSPHERIC_MODEL: atmosphericSource = .none_,
+    GEOPOTENTIAL_MODEL: geopotentialSource = .none_,
+    LUNAR_SOLAR_PERTURBATION: perturbationStatus = .off,
+    LUNAR_PERTURBATION_MODEL: lunarPerturbationSource = .none_,
+    SOLAR_PERTURBATION_MODEL: solarPerturbationSource = .none_,
+    SOLAR_RADIATION_PRESSURE: perturbationStatus = .off,
+    SRP_MODEL: solarRadiationPressureModel = .none_,
+    RESONANCE_MODEL: resonanceSource = .none_
+  ) -> Offset {
+    let __start = VCMAtmosphericModelData.startVCMAtmosphericModelData(&fbb)
+    VCMAtmosphericModelData.add(ATMOSPHERIC_MODEL: ATMOSPHERIC_MODEL, &fbb)
+    VCMAtmosphericModelData.add(GEOPOTENTIAL_MODEL: GEOPOTENTIAL_MODEL, &fbb)
+    VCMAtmosphericModelData.add(LUNAR_SOLAR_PERTURBATION: LUNAR_SOLAR_PERTURBATION, &fbb)
+    VCMAtmosphericModelData.add(LUNAR_PERTURBATION_MODEL: LUNAR_PERTURBATION_MODEL, &fbb)
+    VCMAtmosphericModelData.add(SOLAR_PERTURBATION_MODEL: SOLAR_PERTURBATION_MODEL, &fbb)
+    VCMAtmosphericModelData.add(SOLAR_RADIATION_PRESSURE: SOLAR_RADIATION_PRESSURE, &fbb)
+    VCMAtmosphericModelData.add(SRP_MODEL: SRP_MODEL, &fbb)
+    VCMAtmosphericModelData.add(RESONANCE_MODEL: RESONANCE_MODEL, &fbb)
+    return VCMAtmosphericModelData.endVCMAtmosphericModelData(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ATMOSPHERIC_MODEL, fieldName: "ATMOSPHERIC_MODEL", required: false, type: atmosphericSource.self)
+    try _v.visit(field: VT.GEOPOTENTIAL_MODEL, fieldName: "GEOPOTENTIAL_MODEL", required: false, type: geopotentialSource.self)
+    try _v.visit(field: VT.LUNAR_SOLAR_PERTURBATION, fieldName: "LUNAR_SOLAR_PERTURBATION", required: false, type: perturbationStatus.self)
+    try _v.visit(field: VT.LUNAR_PERTURBATION_MODEL, fieldName: "LUNAR_PERTURBATION_MODEL", required: false, type: lunarPerturbationSource.self)
+    try _v.visit(field: VT.SOLAR_PERTURBATION_MODEL, fieldName: "SOLAR_PERTURBATION_MODEL", required: false, type: solarPerturbationSource.self)
+    try _v.visit(field: VT.SOLAR_RADIATION_PRESSURE, fieldName: "SOLAR_RADIATION_PRESSURE", required: false, type: perturbationStatus.self)
+    try _v.visit(field: VT.SRP_MODEL, fieldName: "SRP_MODEL", required: false, type: solarRadiationPressureModel.self)
+    try _v.visit(field: VT.RESONANCE_MODEL, fieldName: "RESONANCE_MODEL", required: false, type: resonanceSource.self)
+    _v.finish()
+  }
+}
+
+///  DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
+public struct VCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VCM.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CCSDS_OMM_VERS: VOffset = 4
+    static let CREATION_DATE: VOffset = 6
+    static let ORIGINATOR: VOffset = 8
+    static let OBJECT_NAME: VOffset = 10
+    static let OBJECT_ID: VOffset = 12
+    static let CENTER_NAME: VOffset = 14
+    static let REF_FRAME: VOffset = 16
+    static let TIME_SYSTEM: VOffset = 18
+    static let STATE_VECTOR: VOffset = 20
+    static let KEPLERIAN_ELEMENTS: VOffset = 22
+    static let EQUINOCTIAL_ELEMENTS: VOffset = 24
+    static let GM: VOffset = 26
+    static let ATMOSPHERIC_MODEL_DATA: VOffset = 28
+    static let PROPAGATOR_SETTINGS: VOffset = 30
+    static let UVW_SIGMAS: VOffset = 32
+    static let MASS: VOffset = 34
+    static let SOLAR_RAD_AREA: VOffset = 36
+    static let SOLAR_RAD_COEFF: VOffset = 38
+    static let DRAG_AREA: VOffset = 40
+    static let DRAG_COEFF: VOffset = 42
+    static let SRP: VOffset = 44
+    static let CLASSIFICATION_TYPE: VOffset = 46
+    static let NORAD_CAT_ID: VOffset = 48
+    static let ELEMENT_SET_NO: VOffset = 50
+    static let REV_AT_EPOCH: VOffset = 52
+    static let BSTAR: VOffset = 54
+    static let MEAN_MOTION_DOT: VOffset = 56
+    static let MEAN_MOTION_DDOT: VOffset = 58
+    static let COV_REFERENCE_FRAME: VOffset = 60
+    static let COVARIANCE: VOffset = 62
+    static let USER_DEFINED_BIP_0044_TYPE: VOffset = 64
+    static let USER_DEFINED_OBJECT_DESIGNATOR: VOffset = 66
+    static let USER_DEFINED_EARTH_MODEL: VOffset = 68
+    static let USER_DEFINED_EPOCH_TIMESTAMP: VOffset = 70
+    static let USER_DEFINED_MICROSECONDS: VOffset = 72
+  }
+
+  public var CCSDS_OMM_VERS: Double { let o = _accessor.offset(VT.CCSDS_OMM_VERS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  public var REF_FRAME: String? { let o = _accessor.offset(VT.REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME) }
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  public var STATE_VECTOR: VCMStateVector? { let o = _accessor.offset(VT.STATE_VECTOR); return o == 0 ? nil : VCMStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var KEPLERIAN_ELEMENTS: keplerianElements? { let o = _accessor.offset(VT.KEPLERIAN_ELEMENTS); return o == 0 ? nil : keplerianElements(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EQUINOCTIAL_ELEMENTS: equinoctialElements? { let o = _accessor.offset(VT.EQUINOCTIAL_ELEMENTS); return o == 0 ? nil : equinoctialElements(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var GM: Double { let o = _accessor.offset(VT.GM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATMOSPHERIC_MODEL_DATA: VCMAtmosphericModelData? { let o = _accessor.offset(VT.ATMOSPHERIC_MODEL_DATA); return o == 0 ? nil : VCMAtmosphericModelData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PROPAGATOR_SETTINGS: propagatorConfig? { let o = _accessor.offset(VT.PROPAGATOR_SETTINGS); return o == 0 ? nil : propagatorConfig(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var UVW_SIGMAS: uvwSigmas? { let o = _accessor.offset(VT.UVW_SIGMAS); return o == 0 ? nil : uvwSigmas(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOLAR_RAD_AREA: Double { let o = _accessor.offset(VT.SOLAR_RAD_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOLAR_RAD_COEFF: Double { let o = _accessor.offset(VT.SOLAR_RAD_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRAG_AREA: Double { let o = _accessor.offset(VT.DRAG_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRAG_COEFF: Double { let o = _accessor.offset(VT.DRAG_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SRP: perturbationStatus { let o = _accessor.offset(VT.SRP); return o == 0 ? .off : perturbationStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .off }
+  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VT.CLASSIFICATION_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION_TYPE) }
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ELEMENT_SET_NO: UInt32 { let o = _accessor.offset(VT.ELEMENT_SET_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var REV_AT_EPOCH: Double { let o = _accessor.offset(VT.REV_AT_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COV_REFERENCE_FRAME: String? { let o = _accessor.offset(VT.COV_REFERENCE_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_REFERENCE_FRAME) }
+  ///  Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  ///  Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///          CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///          CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///          CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  ///  Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  public var COVARIANCE: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE, byteSize: 8) }
+  public func withUnsafePointerToCovariance<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE, body: body) }
+  public var USER_DEFINED_BIP_0044_TYPE: UInt32 { let o = _accessor.offset(VT.USER_DEFINED_BIP_0044_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var USER_DEFINED_OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VT.USER_DEFINED_OBJECT_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var USER_DEFINED_OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.USER_DEFINED_OBJECT_DESIGNATOR) }
+  public var USER_DEFINED_EARTH_MODEL: String? { let o = _accessor.offset(VT.USER_DEFINED_EARTH_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var USER_DEFINED_EARTH_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.USER_DEFINED_EARTH_MODEL) }
+  public var USER_DEFINED_EPOCH_TIMESTAMP: Double { let o = _accessor.offset(VT.USER_DEFINED_EPOCH_TIMESTAMP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var USER_DEFINED_MICROSECONDS: Double { let o = _accessor.offset(VT.USER_DEFINED_MICROSECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startVCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
+  public static func add(CCSDS_OMM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_OMM_VERS, def: 0.0, at: VT.CCSDS_OMM_VERS) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VT.REF_FRAME) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func add(STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_VECTOR, at: VT.STATE_VECTOR) }
+  public static func add(KEPLERIAN_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEPLERIAN_ELEMENTS, at: VT.KEPLERIAN_ELEMENTS) }
+  public static func add(EQUINOCTIAL_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EQUINOCTIAL_ELEMENTS, at: VT.EQUINOCTIAL_ELEMENTS) }
+  public static func add(GM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GM, def: 0.0, at: VT.GM) }
+  public static func add(ATMOSPHERIC_MODEL_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL_DATA, at: VT.ATMOSPHERIC_MODEL_DATA) }
+  public static func add(PROPAGATOR_SETTINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_SETTINGS, at: VT.PROPAGATOR_SETTINGS) }
+  public static func add(UVW_SIGMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UVW_SIGMAS, at: VT.UVW_SIGMAS) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(SOLAR_RAD_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_AREA, def: 0.0, at: VT.SOLAR_RAD_AREA) }
+  public static func add(SOLAR_RAD_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_COEFF, def: 0.0, at: VT.SOLAR_RAD_COEFF) }
+  public static func add(DRAG_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA, def: 0.0, at: VT.DRAG_AREA) }
+  public static func add(DRAG_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFF, def: 0.0, at: VT.DRAG_COEFF) }
+  public static func add(SRP: perturbationStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP.rawValue, def: 0, at: VT.SRP) }
+  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VT.CLASSIFICATION_TYPE) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(ELEMENT_SET_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEMENT_SET_NO, def: 0, at: VT.ELEMENT_SET_NO) }
+  public static func add(REV_AT_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REV_AT_EPOCH, def: 0.0, at: VT.REV_AT_EPOCH) }
+  public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VT.BSTAR) }
+  public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VT.MEAN_MOTION_DOT) }
+  public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VT.MEAN_MOTION_DDOT) }
+  public static func add(COV_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REFERENCE_FRAME, at: VT.COV_REFERENCE_FRAME) }
+  public static func addVectorOf(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VT.COVARIANCE) }
+  public static func add(USER_DEFINED_BIP_0044_TYPE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USER_DEFINED_BIP_0044_TYPE, def: 0, at: VT.USER_DEFINED_BIP_0044_TYPE) }
+  public static func add(USER_DEFINED_OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_OBJECT_DESIGNATOR, at: VT.USER_DEFINED_OBJECT_DESIGNATOR) }
+  public static func add(USER_DEFINED_EARTH_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_EARTH_MODEL, at: VT.USER_DEFINED_EARTH_MODEL) }
+  public static func add(USER_DEFINED_EPOCH_TIMESTAMP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USER_DEFINED_EPOCH_TIMESTAMP, def: 0.0, at: VT.USER_DEFINED_EPOCH_TIMESTAMP) }
+  public static func add(USER_DEFINED_MICROSECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USER_DEFINED_MICROSECONDS, def: 0.0, at: VT.USER_DEFINED_MICROSECONDS) }
+  public static func endVCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createVCM(
+    _ fbb: inout FlatBufferBuilder,
+    CCSDS_OMM_VERS: Double = 0.0,
+    CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
+    ORIGINATOROffset ORIGINATOR: Offset = Offset(),
+    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    REF_FRAMEOffset REF_FRAME: Offset = Offset(),
+    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset(),
+    STATE_VECTOROffset STATE_VECTOR: Offset = Offset(),
+    KEPLERIAN_ELEMENTSOffset KEPLERIAN_ELEMENTS: Offset = Offset(),
+    EQUINOCTIAL_ELEMENTSOffset EQUINOCTIAL_ELEMENTS: Offset = Offset(),
+    GM: Double = 0.0,
+    ATMOSPHERIC_MODEL_DATAOffset ATMOSPHERIC_MODEL_DATA: Offset = Offset(),
+    PROPAGATOR_SETTINGSOffset PROPAGATOR_SETTINGS: Offset = Offset(),
+    UVW_SIGMASOffset UVW_SIGMAS: Offset = Offset(),
+    MASS: Double = 0.0,
+    SOLAR_RAD_AREA: Double = 0.0,
+    SOLAR_RAD_COEFF: Double = 0.0,
+    DRAG_AREA: Double = 0.0,
+    DRAG_COEFF: Double = 0.0,
+    SRP: perturbationStatus = .off,
+    CLASSIFICATION_TYPEOffset CLASSIFICATION_TYPE: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    ELEMENT_SET_NO: UInt32 = 0,
+    REV_AT_EPOCH: Double = 0.0,
+    BSTAR: Double = 0.0,
+    MEAN_MOTION_DOT: Double = 0.0,
+    MEAN_MOTION_DDOT: Double = 0.0,
+    COV_REFERENCE_FRAMEOffset COV_REFERENCE_FRAME: Offset = Offset(),
+    COVARIANCEVectorOffset COVARIANCE: Offset = Offset(),
+    USER_DEFINED_BIP_0044_TYPE: UInt32 = 0,
+    USER_DEFINED_OBJECT_DESIGNATOROffset USER_DEFINED_OBJECT_DESIGNATOR: Offset = Offset(),
+    USER_DEFINED_EARTH_MODELOffset USER_DEFINED_EARTH_MODEL: Offset = Offset(),
+    USER_DEFINED_EPOCH_TIMESTAMP: Double = 0.0,
+    USER_DEFINED_MICROSECONDS: Double = 0.0
+  ) -> Offset {
+    let __start = VCM.startVCM(&fbb)
+    VCM.add(CCSDS_OMM_VERS: CCSDS_OMM_VERS, &fbb)
+    VCM.add(CREATION_DATE: CREATION_DATE, &fbb)
+    VCM.add(ORIGINATOR: ORIGINATOR, &fbb)
+    VCM.add(OBJECT_NAME: OBJECT_NAME, &fbb)
+    VCM.add(OBJECT_ID: OBJECT_ID, &fbb)
+    VCM.add(CENTER_NAME: CENTER_NAME, &fbb)
+    VCM.add(REF_FRAME: REF_FRAME, &fbb)
+    VCM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    VCM.add(STATE_VECTOR: STATE_VECTOR, &fbb)
+    VCM.add(KEPLERIAN_ELEMENTS: KEPLERIAN_ELEMENTS, &fbb)
+    VCM.add(EQUINOCTIAL_ELEMENTS: EQUINOCTIAL_ELEMENTS, &fbb)
+    VCM.add(GM: GM, &fbb)
+    VCM.add(ATMOSPHERIC_MODEL_DATA: ATMOSPHERIC_MODEL_DATA, &fbb)
+    VCM.add(PROPAGATOR_SETTINGS: PROPAGATOR_SETTINGS, &fbb)
+    VCM.add(UVW_SIGMAS: UVW_SIGMAS, &fbb)
+    VCM.add(MASS: MASS, &fbb)
+    VCM.add(SOLAR_RAD_AREA: SOLAR_RAD_AREA, &fbb)
+    VCM.add(SOLAR_RAD_COEFF: SOLAR_RAD_COEFF, &fbb)
+    VCM.add(DRAG_AREA: DRAG_AREA, &fbb)
+    VCM.add(DRAG_COEFF: DRAG_COEFF, &fbb)
+    VCM.add(SRP: SRP, &fbb)
+    VCM.add(CLASSIFICATION_TYPE: CLASSIFICATION_TYPE, &fbb)
+    VCM.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    VCM.add(ELEMENT_SET_NO: ELEMENT_SET_NO, &fbb)
+    VCM.add(REV_AT_EPOCH: REV_AT_EPOCH, &fbb)
+    VCM.add(BSTAR: BSTAR, &fbb)
+    VCM.add(MEAN_MOTION_DOT: MEAN_MOTION_DOT, &fbb)
+    VCM.add(MEAN_MOTION_DDOT: MEAN_MOTION_DDOT, &fbb)
+    VCM.add(COV_REFERENCE_FRAME: COV_REFERENCE_FRAME, &fbb)
+    VCM.addVectorOf(COVARIANCE: COVARIANCE, &fbb)
+    VCM.add(USER_DEFINED_BIP_0044_TYPE: USER_DEFINED_BIP_0044_TYPE, &fbb)
+    VCM.add(USER_DEFINED_OBJECT_DESIGNATOR: USER_DEFINED_OBJECT_DESIGNATOR, &fbb)
+    VCM.add(USER_DEFINED_EARTH_MODEL: USER_DEFINED_EARTH_MODEL, &fbb)
+    VCM.add(USER_DEFINED_EPOCH_TIMESTAMP: USER_DEFINED_EPOCH_TIMESTAMP, &fbb)
+    VCM.add(USER_DEFINED_MICROSECONDS: USER_DEFINED_MICROSECONDS, &fbb)
+    return VCM.endVCM(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CCSDS_OMM_VERS, fieldName: "CCSDS_OMM_VERS", required: false, type: Double.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE_VECTOR, fieldName: "STATE_VECTOR", required: false, type: ForwardOffset<VCMStateVector>.self)
+    try _v.visit(field: VT.KEPLERIAN_ELEMENTS, fieldName: "KEPLERIAN_ELEMENTS", required: false, type: ForwardOffset<keplerianElements>.self)
+    try _v.visit(field: VT.EQUINOCTIAL_ELEMENTS, fieldName: "EQUINOCTIAL_ELEMENTS", required: false, type: ForwardOffset<equinoctialElements>.self)
+    try _v.visit(field: VT.GM, fieldName: "GM", required: false, type: Double.self)
+    try _v.visit(field: VT.ATMOSPHERIC_MODEL_DATA, fieldName: "ATMOSPHERIC_MODEL_DATA", required: false, type: ForwardOffset<VCMAtmosphericModelData>.self)
+    try _v.visit(field: VT.PROPAGATOR_SETTINGS, fieldName: "PROPAGATOR_SETTINGS", required: false, type: ForwardOffset<propagatorConfig>.self)
+    try _v.visit(field: VT.UVW_SIGMAS, fieldName: "UVW_SIGMAS", required: false, type: ForwardOffset<uvwSigmas>.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLAR_RAD_AREA, fieldName: "SOLAR_RAD_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLAR_RAD_COEFF, fieldName: "SOLAR_RAD_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_AREA, fieldName: "DRAG_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_COEFF, fieldName: "DRAG_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.SRP, fieldName: "SRP", required: false, type: perturbationStatus.self)
+    try _v.visit(field: VT.CLASSIFICATION_TYPE, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ELEMENT_SET_NO, fieldName: "ELEMENT_SET_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REV_AT_EPOCH, fieldName: "REV_AT_EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.BSTAR, fieldName: "BSTAR", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION_DOT, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION_DDOT, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
+    try _v.visit(field: VT.COV_REFERENCE_FRAME, fieldName: "COV_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COVARIANCE, fieldName: "COVARIANCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.USER_DEFINED_BIP_0044_TYPE, fieldName: "USER_DEFINED_BIP_0044_TYPE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.USER_DEFINED_OBJECT_DESIGNATOR, fieldName: "USER_DEFINED_OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USER_DEFINED_EARTH_MODEL, fieldName: "USER_DEFINED_EARTH_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USER_DEFINED_EPOCH_TIMESTAMP, fieldName: "USER_DEFINED_EPOCH_TIMESTAMP", required: false, type: Double.self)
+    try _v.visit(field: VT.USER_DEFINED_MICROSECONDS, fieldName: "USER_DEFINED_MICROSECONDS", required: false, type: Double.self)
     _v.finish()
   }
 }

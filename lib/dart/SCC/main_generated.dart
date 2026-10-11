@@ -5,655 +5,178 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Viewer map style for scenario display.
-enum viewerMapMode {
+///  Scenario controls message discriminator.
+enum controlMessageKind {
   UNKNOWN(0),
-  GEOGRAPHICAL_DAY_NIGHT(1),
-  GEOGRAPHICAL_CONSTANT(2),
-  POLITICAL(3);
+  READY(1),
+  SCENARIO_SETUP(2),
+  REQUEST_STATE(3),
+  STATE_RESPONSE(4),
+  OPEN_ASSET_PICKER(5),
+  OPEN_ASSET_PICKER_ACK(6),
+  ASSETS_CHANGED(7);
 
   final int value;
-  const viewerMapMode(this.value);
+  const controlMessageKind(this.value);
 
-  factory viewerMapMode.fromValue(int value) {
+  factory controlMessageKind.fromValue(int value) {
     switch (value) {
-      case 0: return viewerMapMode.UNKNOWN;
-      case 1: return viewerMapMode.GEOGRAPHICAL_DAY_NIGHT;
-      case 2: return viewerMapMode.GEOGRAPHICAL_CONSTANT;
-      case 3: return viewerMapMode.POLITICAL;
+      case 0: return controlMessageKind.UNKNOWN;
+      case 1: return controlMessageKind.READY;
+      case 2: return controlMessageKind.SCENARIO_SETUP;
+      case 3: return controlMessageKind.REQUEST_STATE;
+      case 4: return controlMessageKind.STATE_RESPONSE;
+      case 5: return controlMessageKind.OPEN_ASSET_PICKER;
+      case 6: return controlMessageKind.OPEN_ASSET_PICKER_ACK;
+      case 7: return controlMessageKind.ASSETS_CHANGED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static viewerMapMode? _createOrNull(int? value) =>
-      value == null ? null : viewerMapMode.fromValue(value);
+  static controlMessageKind? _createOrNull(int? value) =>
+      value == null ? null : controlMessageKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<viewerMapMode> reader = _viewerMapModeReader();
+  static const int maxValue = 7;
+  static const fb.Reader<controlMessageKind> reader = _controlMessageKindReader();
 }
 
-class _viewerMapModeReader extends fb.Reader<viewerMapMode> {
-  const _viewerMapModeReader();
+class _controlMessageKindReader extends fb.Reader<controlMessageKind> {
+  const _controlMessageKindReader();
 
   @override
   int get size => 1;
 
   @override
-  viewerMapMode read(fb.BufferContext bc, int offset) =>
-      viewerMapMode.fromValue(const fb.Int8Reader().read(bc, offset));
+  controlMessageKind read(fb.BufferContext bc, int offset) =>
+      controlMessageKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Camera frame mode relative to a focused satellite or default scene frame.
-enum viewerCameraFrameMode {
-  DEFAULT(0),
-  RADIAL_INTRACK(1),
-  CROSSTRACK_INTRACK(2),
-  RADIAL_CROSSTRACK(3);
-
-  final int value;
-  const viewerCameraFrameMode(this.value);
-
-  factory viewerCameraFrameMode.fromValue(int value) {
-    switch (value) {
-      case 0: return viewerCameraFrameMode.DEFAULT;
-      case 1: return viewerCameraFrameMode.RADIAL_INTRACK;
-      case 2: return viewerCameraFrameMode.CROSSTRACK_INTRACK;
-      case 3: return viewerCameraFrameMode.RADIAL_CROSSTRACK;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static viewerCameraFrameMode? _createOrNull(int? value) =>
-      value == null ? null : viewerCameraFrameMode.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<viewerCameraFrameMode> reader = _viewerCameraFrameModeReader();
-}
-
-class _viewerCameraFrameModeReader extends fb.Reader<viewerCameraFrameMode> {
-  const _viewerCameraFrameModeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  viewerCameraFrameMode read(fb.BufferContext bc, int offset) =>
-      viewerCameraFrameMode.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Satellite body alignment used by a 3D viewer when focused on a satellite.
-enum viewerSatelliteAlignmentMode {
+///  State request kind for a control-message request/response pair.
+enum stateRequestKind {
   UNKNOWN(0),
-  ORBITAL(1),
-  NADIR(2);
+  SCENARIO(1),
+  REFERENCES(2);
 
   final int value;
-  const viewerSatelliteAlignmentMode(this.value);
+  const stateRequestKind(this.value);
 
-  factory viewerSatelliteAlignmentMode.fromValue(int value) {
+  factory stateRequestKind.fromValue(int value) {
     switch (value) {
-      case 0: return viewerSatelliteAlignmentMode.UNKNOWN;
-      case 1: return viewerSatelliteAlignmentMode.ORBITAL;
-      case 2: return viewerSatelliteAlignmentMode.NADIR;
+      case 0: return stateRequestKind.UNKNOWN;
+      case 1: return stateRequestKind.SCENARIO;
+      case 2: return stateRequestKind.REFERENCES;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static viewerSatelliteAlignmentMode? _createOrNull(int? value) =>
-      value == null ? null : viewerSatelliteAlignmentMode.fromValue(value);
+  static stateRequestKind? _createOrNull(int? value) =>
+      value == null ? null : stateRequestKind.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 2;
-  static const fb.Reader<viewerSatelliteAlignmentMode> reader = _viewerSatelliteAlignmentModeReader();
+  static const fb.Reader<stateRequestKind> reader = _stateRequestKindReader();
 }
 
-class _viewerSatelliteAlignmentModeReader extends fb.Reader<viewerSatelliteAlignmentMode> {
-  const _viewerSatelliteAlignmentModeReader();
+class _stateRequestKindReader extends fb.Reader<stateRequestKind> {
+  const _stateRequestKindReader();
 
   @override
   int get size => 1;
 
   @override
-  viewerSatelliteAlignmentMode read(fb.BufferContext bc, int offset) =>
-      viewerSatelliteAlignmentMode.fromValue(const fb.Int8Reader().read(bc, offset));
+  stateRequestKind read(fb.BufferContext bc, int offset) =>
+      stateRequestKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Camera rotation offset. Quaternions are preferred when present; Euler
-///  angles are retained for import of older scenario JSON.
-class VSTCameraRotation {
-  VSTCameraRotation._(this._bc, this._bcOffset);
-  factory VSTCameraRotation(List<int> bytes) {
+///  Asset catalog tab requested by a host or embedded scenario controls surface.
+enum assetCatalogTab {
+  UNKNOWN(0),
+  SATELLITES(1),
+  SENSORS(2);
+
+  final int value;
+  const assetCatalogTab(this.value);
+
+  factory assetCatalogTab.fromValue(int value) {
+    switch (value) {
+      case 0: return assetCatalogTab.UNKNOWN;
+      case 1: return assetCatalogTab.SATELLITES;
+      case 2: return assetCatalogTab.SENSORS;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static assetCatalogTab? _createOrNull(int? value) =>
+      value == null ? null : assetCatalogTab.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<assetCatalogTab> reader = _assetCatalogTabReader();
+}
+
+class _assetCatalogTabReader extends fb.Reader<assetCatalogTab> {
+  const _assetCatalogTabReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  assetCatalogTab read(fb.BufferContext bc, int offset) =>
+      assetCatalogTab.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Request current state from a scenario controls host.
+class SCCRequestState {
+  SCCRequestState._(this._bc, this._bcOffset);
+  factory SCCRequestState(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<VSTCameraRotation> reader = _VSTCameraRotationReader();
+  static const fb.Reader<SCCRequestState> reader = _SCCRequestStateReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Yaw angle in degrees for Euler-angle camera imports.
-  double get YAW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Pitch angle in degrees for Euler-angle camera imports.
-  double get PITCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  ///  Roll angle in degrees for Euler-angle camera imports.
-  double get ROLL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///  Quaternion x component for camera orientation.
-  double get QUATERNION_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get quaternionX => QUATERNION_X;
-  ///  Quaternion y component for camera orientation.
-  double get QUATERNION_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get quaternionY => QUATERNION_Y;
-  ///  Quaternion z component for camera orientation.
-  double get QUATERNION_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get quaternionZ => QUATERNION_Z;
-  ///  Quaternion w component for camera orientation.
-  double get QUATERNION_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get quaternionW => QUATERNION_W;
-  ///  True when quaternion fields define the authoritative rotation.
-  bool get USES_QUATERNION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, true);
-  bool get usesQuaternion => USES_QUATERNION;
+  ///  Request correlation id echoed by the matching state response.
+  String? get REQUEST_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get requestId => REQUEST_ID;
+  ///  State payload requested by the caller.
+  stateRequestKind get REQUEST_KIND => stateRequestKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  stateRequestKind get requestKind => REQUEST_KIND;
 
   @override
   String toString() {
-    return 'VSTCameraRotation{YAW: ${YAW}, PITCH: ${PITCH}, ROLL: ${ROLL}, quaternionX: ${quaternionX}, quaternionY: ${quaternionY}, quaternionZ: ${quaternionZ}, quaternionW: ${quaternionW}, usesQuaternion: ${usesQuaternion}}';
+    return 'SCCRequestState{requestId: ${requestId}, requestKind: ${requestKind}}';
   }
 }
 
-class _VSTCameraRotationReader extends fb.TableReader<VSTCameraRotation> {
-  const _VSTCameraRotationReader();
+class _SCCRequestStateReader extends fb.TableReader<SCCRequestState> {
+  const _SCCRequestStateReader();
 
   @override
-  VSTCameraRotation createObject(fb.BufferContext bc, int offset) =>
-    VSTCameraRotation._(bc, offset);
+  SCCRequestState createObject(fb.BufferContext bc, int offset) =>
+    SCCRequestState._(bc, offset);
 }
 
-class VSTCameraRotationBuilder {
-  VSTCameraRotationBuilder(this.fbBuilder);
+class SCCRequestStateBuilder {
+  SCCRequestStateBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(2);
   }
 
-  int addYaw(double? YAW) {
-    fbBuilder.addFloat64(0, YAW);
-    return fbBuilder.offset;
-  }
-  int addPitch(double? PITCH) {
-    fbBuilder.addFloat64(1, PITCH);
-    return fbBuilder.offset;
-  }
-  int addRoll(double? ROLL) {
-    fbBuilder.addFloat64(2, ROLL);
-    return fbBuilder.offset;
-  }
-  int addQuaternionX(double? QUATERNION_X) {
-    fbBuilder.addFloat64(3, QUATERNION_X);
-    return fbBuilder.offset;
-  }
-  int addQuaternionY(double? QUATERNION_Y) {
-    fbBuilder.addFloat64(4, QUATERNION_Y);
-    return fbBuilder.offset;
-  }
-  int addQuaternionZ(double? QUATERNION_Z) {
-    fbBuilder.addFloat64(5, QUATERNION_Z);
-    return fbBuilder.offset;
-  }
-  int addQuaternionW(double? QUATERNION_W) {
-    fbBuilder.addFloat64(6, QUATERNION_W);
-    return fbBuilder.offset;
-  }
-  int addUsesQuaternion(bool? USES_QUATERNION) {
-    fbBuilder.addBool(7, USES_QUATERNION);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class VSTCameraRotationObjectBuilder extends fb.ObjectBuilder {
-  final double? _YAW;
-  final double? _PITCH;
-  final double? _ROLL;
-  final double? _QUATERNION_X;
-  final double? _QUATERNION_Y;
-  final double? _QUATERNION_Z;
-  final double? _QUATERNION_W;
-  final bool? _USES_QUATERNION;
-
-  VSTCameraRotationObjectBuilder({
-    double? YAW,
-    double? PITCH,
-    double? ROLL,
-    double? QUATERNION_X,
-    double? quaternionX,
-    double? QUATERNION_Y,
-    double? quaternionY,
-    double? QUATERNION_Z,
-    double? quaternionZ,
-    double? QUATERNION_W,
-    double? quaternionW,
-    bool? USES_QUATERNION,
-    bool? usesQuaternion,
-  })
-      : _YAW = YAW,
-        _PITCH = PITCH,
-        _ROLL = ROLL,
-        _QUATERNION_X = quaternionX ?? QUATERNION_X,
-        _QUATERNION_Y = quaternionY ?? QUATERNION_Y,
-        _QUATERNION_Z = quaternionZ ?? QUATERNION_Z,
-        _QUATERNION_W = quaternionW ?? QUATERNION_W,
-        _USES_QUATERNION = usesQuaternion ?? USES_QUATERNION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(8);
-    fbBuilder.addFloat64(0, _YAW);
-    fbBuilder.addFloat64(1, _PITCH);
-    fbBuilder.addFloat64(2, _ROLL);
-    fbBuilder.addFloat64(3, _QUATERNION_X);
-    fbBuilder.addFloat64(4, _QUATERNION_Y);
-    fbBuilder.addFloat64(5, _QUATERNION_Z);
-    fbBuilder.addFloat64(6, _QUATERNION_W);
-    fbBuilder.addBool(7, _USES_QUATERNION);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  App display toggles for a scenario viewer.
-class VSTDisplaySettings {
-  VSTDisplaySettings._(this._bc, this._bcOffset);
-  factory VSTDisplaySettings(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<VSTDisplaySettings> reader = _VSTDisplaySettingsReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Active map rendering mode for the scenario viewer.
-  viewerMapMode get MAP_MODE => viewerMapMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  viewerMapMode get mapMode => MAP_MODE;
-  ///  Show geosynchronous belt reference markers.
-  bool get SHOW_GEO_BELT_MARKERS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
-  bool get showGeoBeltMarkers => SHOW_GEO_BELT_MARKERS;
-  ///  Show cislunar reference content.
-  bool get SHOW_CIS_LUNAR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
-  bool get showCisLunar => SHOW_CIS_LUNAR;
-  ///  Show the equator overlay.
-  bool get SHOW_EQUATOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
-  bool get showEquator => SHOW_EQUATOR;
-  ///  Show latitude grid lines.
-  bool get SHOW_LATITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
-  bool get showLatitude => SHOW_LATITUDE;
-  ///  Show longitude grid lines.
-  bool get SHOW_LONGITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
-  bool get showLongitude => SHOW_LONGITUDE;
-  ///  Show body shadow-cone overlays.
-  bool get SHOW_SHADOW_CONES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  bool get showShadowCones => SHOW_SHADOW_CONES;
-  ///  Show animated capture or GIF export controls.
-  bool get SHOW_GIF_CONTROLS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
-  bool get showGifControls => SHOW_GIF_CONTROLS;
-  ///  Render the atmospheric shell around the central body.
-  bool get SHOW_ATMOSPHERE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
-  bool get showAtmosphere => SHOW_ATMOSPHERE;
-  ///  Show the sun-direction indicator overlay.
-  bool get SHOW_SUN_DIRECTION_INDICATOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
-  bool get showSunDirectionIndicator => SHOW_SUN_DIRECTION_INDICATOR;
-  ///  Render the starfield background.
-  bool get USE_STARFIELD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
-  bool get useStarfield => USE_STARFIELD;
-  ///  Render orbits as stitched continuous paths.
-  bool get USE_STITCHED_ORBIT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
-  bool get useStitchedOrbit => USE_STITCHED_ORBIT;
-
-  @override
-  String toString() {
-    return 'VSTDisplaySettings{mapMode: ${mapMode}, showGeoBeltMarkers: ${showGeoBeltMarkers}, showCisLunar: ${showCisLunar}, showEquator: ${showEquator}, showLatitude: ${showLatitude}, showLongitude: ${showLongitude}, showShadowCones: ${showShadowCones}, showGifControls: ${showGifControls}, showAtmosphere: ${showAtmosphere}, showSunDirectionIndicator: ${showSunDirectionIndicator}, useStarfield: ${useStarfield}, useStitchedOrbit: ${useStitchedOrbit}}';
-  }
-}
-
-class _VSTDisplaySettingsReader extends fb.TableReader<VSTDisplaySettings> {
-  const _VSTDisplaySettingsReader();
-
-  @override
-  VSTDisplaySettings createObject(fb.BufferContext bc, int offset) =>
-    VSTDisplaySettings._(bc, offset);
-}
-
-class VSTDisplaySettingsBuilder {
-  VSTDisplaySettingsBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(12);
-  }
-
-  int addMapMode(viewerMapMode? MAP_MODE) {
-    fbBuilder.addInt8(0, MAP_MODE?.value);
-    return fbBuilder.offset;
-  }
-  int addShowGeoBeltMarkers(bool? SHOW_GEO_BELT_MARKERS) {
-    fbBuilder.addBool(1, SHOW_GEO_BELT_MARKERS);
-    return fbBuilder.offset;
-  }
-  int addShowCisLunar(bool? SHOW_CIS_LUNAR) {
-    fbBuilder.addBool(2, SHOW_CIS_LUNAR);
-    return fbBuilder.offset;
-  }
-  int addShowEquator(bool? SHOW_EQUATOR) {
-    fbBuilder.addBool(3, SHOW_EQUATOR);
-    return fbBuilder.offset;
-  }
-  int addShowLatitude(bool? SHOW_LATITUDE) {
-    fbBuilder.addBool(4, SHOW_LATITUDE);
-    return fbBuilder.offset;
-  }
-  int addShowLongitude(bool? SHOW_LONGITUDE) {
-    fbBuilder.addBool(5, SHOW_LONGITUDE);
-    return fbBuilder.offset;
-  }
-  int addShowShadowCones(bool? SHOW_SHADOW_CONES) {
-    fbBuilder.addBool(6, SHOW_SHADOW_CONES);
-    return fbBuilder.offset;
-  }
-  int addShowGifControls(bool? SHOW_GIF_CONTROLS) {
-    fbBuilder.addBool(7, SHOW_GIF_CONTROLS);
-    return fbBuilder.offset;
-  }
-  int addShowAtmosphere(bool? SHOW_ATMOSPHERE) {
-    fbBuilder.addBool(8, SHOW_ATMOSPHERE);
-    return fbBuilder.offset;
-  }
-  int addShowSunDirectionIndicator(bool? SHOW_SUN_DIRECTION_INDICATOR) {
-    fbBuilder.addBool(9, SHOW_SUN_DIRECTION_INDICATOR);
-    return fbBuilder.offset;
-  }
-  int addUseStarfield(bool? USE_STARFIELD) {
-    fbBuilder.addBool(10, USE_STARFIELD);
-    return fbBuilder.offset;
-  }
-  int addUseStitchedOrbit(bool? USE_STITCHED_ORBIT) {
-    fbBuilder.addBool(11, USE_STITCHED_ORBIT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class VSTDisplaySettingsObjectBuilder extends fb.ObjectBuilder {
-  final viewerMapMode? _MAP_MODE;
-  final bool? _SHOW_GEO_BELT_MARKERS;
-  final bool? _SHOW_CIS_LUNAR;
-  final bool? _SHOW_EQUATOR;
-  final bool? _SHOW_LATITUDE;
-  final bool? _SHOW_LONGITUDE;
-  final bool? _SHOW_SHADOW_CONES;
-  final bool? _SHOW_GIF_CONTROLS;
-  final bool? _SHOW_ATMOSPHERE;
-  final bool? _SHOW_SUN_DIRECTION_INDICATOR;
-  final bool? _USE_STARFIELD;
-  final bool? _USE_STITCHED_ORBIT;
-
-  VSTDisplaySettingsObjectBuilder({
-    viewerMapMode? MAP_MODE,
-    viewerMapMode? mapMode,
-    bool? SHOW_GEO_BELT_MARKERS,
-    bool? showGeoBeltMarkers,
-    bool? SHOW_CIS_LUNAR,
-    bool? showCisLunar,
-    bool? SHOW_EQUATOR,
-    bool? showEquator,
-    bool? SHOW_LATITUDE,
-    bool? showLatitude,
-    bool? SHOW_LONGITUDE,
-    bool? showLongitude,
-    bool? SHOW_SHADOW_CONES,
-    bool? showShadowCones,
-    bool? SHOW_GIF_CONTROLS,
-    bool? showGifControls,
-    bool? SHOW_ATMOSPHERE,
-    bool? showAtmosphere,
-    bool? SHOW_SUN_DIRECTION_INDICATOR,
-    bool? showSunDirectionIndicator,
-    bool? USE_STARFIELD,
-    bool? useStarfield,
-    bool? USE_STITCHED_ORBIT,
-    bool? useStitchedOrbit,
-  })
-      : _MAP_MODE = mapMode ?? MAP_MODE,
-        _SHOW_GEO_BELT_MARKERS = showGeoBeltMarkers ?? SHOW_GEO_BELT_MARKERS,
-        _SHOW_CIS_LUNAR = showCisLunar ?? SHOW_CIS_LUNAR,
-        _SHOW_EQUATOR = showEquator ?? SHOW_EQUATOR,
-        _SHOW_LATITUDE = showLatitude ?? SHOW_LATITUDE,
-        _SHOW_LONGITUDE = showLongitude ?? SHOW_LONGITUDE,
-        _SHOW_SHADOW_CONES = showShadowCones ?? SHOW_SHADOW_CONES,
-        _SHOW_GIF_CONTROLS = showGifControls ?? SHOW_GIF_CONTROLS,
-        _SHOW_ATMOSPHERE = showAtmosphere ?? SHOW_ATMOSPHERE,
-        _SHOW_SUN_DIRECTION_INDICATOR = showSunDirectionIndicator ?? SHOW_SUN_DIRECTION_INDICATOR,
-        _USE_STARFIELD = useStarfield ?? USE_STARFIELD,
-        _USE_STITCHED_ORBIT = useStitchedOrbit ?? USE_STITCHED_ORBIT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(12);
-    fbBuilder.addInt8(0, _MAP_MODE?.value);
-    fbBuilder.addBool(1, _SHOW_GEO_BELT_MARKERS);
-    fbBuilder.addBool(2, _SHOW_CIS_LUNAR);
-    fbBuilder.addBool(3, _SHOW_EQUATOR);
-    fbBuilder.addBool(4, _SHOW_LATITUDE);
-    fbBuilder.addBool(5, _SHOW_LONGITUDE);
-    fbBuilder.addBool(6, _SHOW_SHADOW_CONES);
-    fbBuilder.addBool(7, _SHOW_GIF_CONTROLS);
-    fbBuilder.addBool(8, _SHOW_ATMOSPHERE);
-    fbBuilder.addBool(9, _SHOW_SUN_DIRECTION_INDICATOR);
-    fbBuilder.addBool(10, _USE_STARFIELD);
-    fbBuilder.addBool(11, _USE_STITCHED_ORBIT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Camera options for a space-domain scenario viewer.
-class VSTCameraOptions {
-  VSTCameraOptions._(this._bc, this._bcOffset);
-  factory VSTCameraOptions(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<VSTCameraOptions> reader = _VSTCameraOptionsReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Camera frame relative to the focused target or default scene.
-  viewerCameraFrameMode get CAMERA_FRAME_MODE => viewerCameraFrameMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  viewerCameraFrameMode get cameraFrameMode => CAMERA_FRAME_MODE;
-  ///  Satellite body alignment mode when focused on a satellite.
-  viewerSatelliteAlignmentMode get SATELLITE_ALIGNMENT => viewerSatelliteAlignmentMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  viewerSatelliteAlignmentMode get satelliteAlignment => SATELLITE_ALIGNMENT;
-  ///  Camera distance from the current target in kilometers.
-  double get DISTANCE_FROM_TARGET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get distanceFromTarget => DISTANCE_FROM_TARGET;
-  ///  Camera orientation offset.
-  VSTCameraRotation? get ROTATION => VSTCameraRotation.reader.vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'VSTCameraOptions{cameraFrameMode: ${cameraFrameMode}, satelliteAlignment: ${satelliteAlignment}, distanceFromTarget: ${distanceFromTarget}, ROTATION: ${ROTATION}}';
-  }
-}
-
-class _VSTCameraOptionsReader extends fb.TableReader<VSTCameraOptions> {
-  const _VSTCameraOptionsReader();
-
-  @override
-  VSTCameraOptions createObject(fb.BufferContext bc, int offset) =>
-    VSTCameraOptions._(bc, offset);
-}
-
-class VSTCameraOptionsBuilder {
-  VSTCameraOptionsBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCameraFrameMode(viewerCameraFrameMode? CAMERA_FRAME_MODE) {
-    fbBuilder.addInt8(0, CAMERA_FRAME_MODE?.value);
-    return fbBuilder.offset;
-  }
-  int addSatelliteAlignment(viewerSatelliteAlignmentMode? SATELLITE_ALIGNMENT) {
-    fbBuilder.addInt8(1, SATELLITE_ALIGNMENT?.value);
-    return fbBuilder.offset;
-  }
-  int addDistanceFromTarget(double? DISTANCE_FROM_TARGET) {
-    fbBuilder.addFloat64(2, DISTANCE_FROM_TARGET);
-    return fbBuilder.offset;
-  }
-  int addRotationOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class VSTCameraOptionsObjectBuilder extends fb.ObjectBuilder {
-  final viewerCameraFrameMode? _CAMERA_FRAME_MODE;
-  final viewerSatelliteAlignmentMode? _SATELLITE_ALIGNMENT;
-  final double? _DISTANCE_FROM_TARGET;
-  final VSTCameraRotationObjectBuilder? _ROTATION;
-
-  VSTCameraOptionsObjectBuilder({
-    viewerCameraFrameMode? CAMERA_FRAME_MODE,
-    viewerCameraFrameMode? cameraFrameMode,
-    viewerSatelliteAlignmentMode? SATELLITE_ALIGNMENT,
-    viewerSatelliteAlignmentMode? satelliteAlignment,
-    double? DISTANCE_FROM_TARGET,
-    double? distanceFromTarget,
-    VSTCameraRotationObjectBuilder? ROTATION,
-  })
-      : _CAMERA_FRAME_MODE = cameraFrameMode ?? CAMERA_FRAME_MODE,
-        _SATELLITE_ALIGNMENT = satelliteAlignment ?? SATELLITE_ALIGNMENT,
-        _DISTANCE_FROM_TARGET = distanceFromTarget ?? DISTANCE_FROM_TARGET,
-        _ROTATION = ROTATION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ROTATIONOffset = _ROTATION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addInt8(0, _CAMERA_FRAME_MODE?.value);
-    fbBuilder.addInt8(1, _SATELLITE_ALIGNMENT?.value);
-    fbBuilder.addFloat64(2, _DISTANCE_FROM_TARGET);
-    fbBuilder.addOffset(3, ROTATIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Viewer State - display and camera state associated with a scenario.
-class VST {
-  VST._(this._bc, this._bcOffset);
-  factory VST(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<VST> reader = _VSTReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Camera settings for the current viewer state.
-  VSTCameraOptions? get CAMERA => VSTCameraOptions.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Display toggles and map style for the current viewer state.
-  VSTDisplaySettings? get DISPLAY_SETTINGS => VSTDisplaySettings.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  VSTDisplaySettings? get displaySettings => DISPLAY_SETTINGS;
-  ///  Reference id of the currently focused scenario object.
-  String? get FOCUSED_REFERENCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get focusedReferenceId => FOCUSED_REFERENCE_ID;
-  ///  Zero-based focused reference index, or -1 when no index is focused.
-  int get FOCUSED_REFERENCE_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, -1);
-  int get focusedReferenceIndex => FOCUSED_REFERENCE_INDEX;
-
-  @override
-  String toString() {
-    return 'VST{CAMERA: ${CAMERA}, displaySettings: ${displaySettings}, focusedReferenceId: ${focusedReferenceId}, focusedReferenceIndex: ${focusedReferenceIndex}}';
-  }
-}
-
-class _VSTReader extends fb.TableReader<VST> {
-  const _VSTReader();
-
-  @override
-  VST createObject(fb.BufferContext bc, int offset) =>
-    VST._(bc, offset);
-}
-
-class VSTBuilder {
-  VSTBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCameraOffset(int? offset) {
+  int addRequestIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addDisplaySettingsOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addFocusedReferenceIdOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addFocusedReferenceIndex(int? FOCUSED_REFERENCE_INDEX) {
-    fbBuilder.addInt32(3, FOCUSED_REFERENCE_INDEX);
+  int addRequestKind(stateRequestKind? REQUEST_KIND) {
+    fbBuilder.addInt8(1, REQUEST_KIND?.value);
     return fbBuilder.offset;
   }
 
@@ -662,38 +185,501 @@ class VSTBuilder {
   }
 }
 
-class VSTObjectBuilder extends fb.ObjectBuilder {
-  final VSTCameraOptionsObjectBuilder? _CAMERA;
-  final VSTDisplaySettingsObjectBuilder? _DISPLAY_SETTINGS;
-  final String? _FOCUSED_REFERENCE_ID;
-  final int? _FOCUSED_REFERENCE_INDEX;
+class SCCRequestStateObjectBuilder extends fb.ObjectBuilder {
+  final String? _REQUEST_ID;
+  final stateRequestKind? _REQUEST_KIND;
 
-  VSTObjectBuilder({
-    VSTCameraOptionsObjectBuilder? CAMERA,
-    VSTDisplaySettingsObjectBuilder? DISPLAY_SETTINGS,
-    VSTDisplaySettingsObjectBuilder? displaySettings,
-    String? FOCUSED_REFERENCE_ID,
-    String? focusedReferenceId,
-    int? FOCUSED_REFERENCE_INDEX,
-    int? focusedReferenceIndex,
+  SCCRequestStateObjectBuilder({
+    String? REQUEST_ID,
+    String? requestId,
+    stateRequestKind? REQUEST_KIND,
+    stateRequestKind? requestKind,
   })
-      : _CAMERA = CAMERA,
-        _DISPLAY_SETTINGS = displaySettings ?? DISPLAY_SETTINGS,
-        _FOCUSED_REFERENCE_ID = focusedReferenceId ?? FOCUSED_REFERENCE_ID,
-        _FOCUSED_REFERENCE_INDEX = focusedReferenceIndex ?? FOCUSED_REFERENCE_INDEX;
+      : _REQUEST_ID = requestId ?? REQUEST_ID,
+        _REQUEST_KIND = requestKind ?? REQUEST_KIND;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? CAMERAOffset = _CAMERA?.getOrCreateOffset(fbBuilder);
-    final int? DISPLAY_SETTINGSOffset = _DISPLAY_SETTINGS?.getOrCreateOffset(fbBuilder);
-    final int? FOCUSED_REFERENCE_IDOffset = _FOCUSED_REFERENCE_ID == null ? null
-        : fbBuilder.writeString(_FOCUSED_REFERENCE_ID!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, CAMERAOffset);
-    fbBuilder.addOffset(1, DISPLAY_SETTINGSOffset);
-    fbBuilder.addOffset(2, FOCUSED_REFERENCE_IDOffset);
-    fbBuilder.addInt32(3, _FOCUSED_REFERENCE_INDEX);
+    final int? REQUEST_IDOffset = _REQUEST_ID == null ? null
+        : fbBuilder.writeString(_REQUEST_ID!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, REQUEST_IDOffset);
+    fbBuilder.addInt8(1, _REQUEST_KIND?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  State response. SCENARIO carries full scenario state; REFERENCES can carry
+///  the lighter reference-list response for reference-only requests.
+class SCCStateResponse {
+  SCCStateResponse._(this._bc, this._bcOffset);
+  factory SCCStateResponse(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCCStateResponse> reader = _SCCStateResponseReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Request correlation id from the matching state request.
+  String? get REQUEST_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get requestId => REQUEST_ID;
+  ///  State payload represented by this response.
+  stateRequestKind get REQUEST_KIND => stateRequestKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  stateRequestKind get requestKind => REQUEST_KIND;
+  ///  Full scenario state for scenario-state responses.
+  SCN? get SCENARIO => SCN.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Reference-list payload for reference-only responses.
+  List<SCNReference>? get REFERENCES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Zero-based focused reference index, or -1 when no index is focused.
+  int get FOCUSED_REFERENCE_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, -1);
+  int get focusedReferenceIndex => FOCUSED_REFERENCE_INDEX;
+  ///  Human-readable error message when state cannot be returned.
+  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get errorMessage => ERROR_MESSAGE;
+
+  @override
+  String toString() {
+    return 'SCCStateResponse{requestId: ${requestId}, requestKind: ${requestKind}, SCENARIO: ${SCENARIO}, REFERENCES: ${REFERENCES}, focusedReferenceIndex: ${focusedReferenceIndex}, errorMessage: ${errorMessage}}';
+  }
+}
+
+class _SCCStateResponseReader extends fb.TableReader<SCCStateResponse> {
+  const _SCCStateResponseReader();
+
+  @override
+  SCCStateResponse createObject(fb.BufferContext bc, int offset) =>
+    SCCStateResponse._(bc, offset);
+}
+
+class SCCStateResponseBuilder {
+  SCCStateResponseBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addRequestIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addRequestKind(stateRequestKind? REQUEST_KIND) {
+    fbBuilder.addInt8(1, REQUEST_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addScenarioOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addReferencesOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addFocusedReferenceIndex(int? FOCUSED_REFERENCE_INDEX) {
+    fbBuilder.addInt32(4, FOCUSED_REFERENCE_INDEX);
+    return fbBuilder.offset;
+  }
+  int addErrorMessageOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCCStateResponseObjectBuilder extends fb.ObjectBuilder {
+  final String? _REQUEST_ID;
+  final stateRequestKind? _REQUEST_KIND;
+  final SCNObjectBuilder? _SCENARIO;
+  final List<SCNReferenceObjectBuilder>? _REFERENCES;
+  final int? _FOCUSED_REFERENCE_INDEX;
+  final String? _ERROR_MESSAGE;
+
+  SCCStateResponseObjectBuilder({
+    String? REQUEST_ID,
+    String? requestId,
+    stateRequestKind? REQUEST_KIND,
+    stateRequestKind? requestKind,
+    SCNObjectBuilder? SCENARIO,
+    List<SCNReferenceObjectBuilder>? REFERENCES,
+    int? FOCUSED_REFERENCE_INDEX,
+    int? focusedReferenceIndex,
+    String? ERROR_MESSAGE,
+    String? errorMessage,
+  })
+      : _REQUEST_ID = requestId ?? REQUEST_ID,
+        _REQUEST_KIND = requestKind ?? REQUEST_KIND,
+        _SCENARIO = SCENARIO,
+        _REFERENCES = REFERENCES,
+        _FOCUSED_REFERENCE_INDEX = focusedReferenceIndex ?? FOCUSED_REFERENCE_INDEX,
+        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REQUEST_IDOffset = _REQUEST_ID == null ? null
+        : fbBuilder.writeString(_REQUEST_ID!);
+    final int? SCENARIOOffset = _SCENARIO?.getOrCreateOffset(fbBuilder);
+    final int? REFERENCESOffset = _REFERENCES == null ? null
+        : fbBuilder.writeList(_REFERENCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
+        : fbBuilder.writeString(_ERROR_MESSAGE!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, REQUEST_IDOffset);
+    fbBuilder.addInt8(1, _REQUEST_KIND?.value);
+    fbBuilder.addOffset(2, SCENARIOOffset);
+    fbBuilder.addOffset(3, REFERENCESOffset);
+    fbBuilder.addInt32(4, _FOCUSED_REFERENCE_INDEX);
+    fbBuilder.addOffset(5, ERROR_MESSAGEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Asset-picker request or acknowledgement.
+class SCCAssetPicker {
+  SCCAssetPicker._(this._bc, this._bcOffset);
+  factory SCCAssetPicker(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCCAssetPicker> reader = _SCCAssetPickerReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Request correlation id for the asset-picker exchange.
+  String? get REQUEST_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get requestId => REQUEST_ID;
+  ///  Initial catalog tab to display in the asset picker.
+  assetCatalogTab get CATALOG_TAB => assetCatalogTab.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  assetCatalogTab get catalogTab => CATALOG_TAB;
+  ///  True when the receiver accepted or completed the picker request.
+  bool get ACKNOWLEDGED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+
+  @override
+  String toString() {
+    return 'SCCAssetPicker{requestId: ${requestId}, catalogTab: ${catalogTab}, ACKNOWLEDGED: ${ACKNOWLEDGED}}';
+  }
+}
+
+class _SCCAssetPickerReader extends fb.TableReader<SCCAssetPicker> {
+  const _SCCAssetPickerReader();
+
+  @override
+  SCCAssetPicker createObject(fb.BufferContext bc, int offset) =>
+    SCCAssetPicker._(bc, offset);
+}
+
+class SCCAssetPickerBuilder {
+  SCCAssetPickerBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addRequestIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogTab(assetCatalogTab? CATALOG_TAB) {
+    fbBuilder.addInt8(1, CATALOG_TAB?.value);
+    return fbBuilder.offset;
+  }
+  int addAcknowledged(bool? ACKNOWLEDGED) {
+    fbBuilder.addBool(2, ACKNOWLEDGED);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCCAssetPickerObjectBuilder extends fb.ObjectBuilder {
+  final String? _REQUEST_ID;
+  final assetCatalogTab? _CATALOG_TAB;
+  final bool? _ACKNOWLEDGED;
+
+  SCCAssetPickerObjectBuilder({
+    String? REQUEST_ID,
+    String? requestId,
+    assetCatalogTab? CATALOG_TAB,
+    assetCatalogTab? catalogTab,
+    bool? ACKNOWLEDGED,
+  })
+      : _REQUEST_ID = requestId ?? REQUEST_ID,
+        _CATALOG_TAB = catalogTab ?? CATALOG_TAB,
+        _ACKNOWLEDGED = ACKNOWLEDGED;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REQUEST_IDOffset = _REQUEST_ID == null ? null
+        : fbBuilder.writeString(_REQUEST_ID!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, REQUEST_IDOffset);
+    fbBuilder.addInt8(1, _CATALOG_TAB?.value);
+    fbBuilder.addBool(2, _ACKNOWLEDGED);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Startup readiness message.
+class SCCReady {
+  SCCReady._(this._bc, this._bcOffset);
+  factory SCCReady(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCCReady> reader = _SCCReadyReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  True when the scenario controls surface is ready for messages.
+  bool get READY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, true);
+
+  @override
+  String toString() {
+    return 'SCCReady{READY: ${READY}}';
+  }
+}
+
+class _SCCReadyReader extends fb.TableReader<SCCReady> {
+  const _SCCReadyReader();
+
+  @override
+  SCCReady createObject(fb.BufferContext bc, int offset) =>
+    SCCReady._(bc, offset);
+}
+
+class SCCReadyBuilder {
+  SCCReadyBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addReady(bool? READY) {
+    fbBuilder.addBool(0, READY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCCReadyObjectBuilder extends fb.ObjectBuilder {
+  final bool? _READY;
+
+  SCCReadyObjectBuilder({
+    bool? READY,
+  })
+      : _READY = READY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(1);
+    fbBuilder.addBool(0, _READY);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Scenario Controls - message-bus envelope for scenario setup, state
+///  requests/responses, startup readiness, and asset-picker delegation.
+class SCC {
+  SCC._(this._bc, this._bcOffset);
+  factory SCC(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCC> reader = _SCCReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Payload discriminator for the message carried by this envelope.
+  controlMessageKind get MESSAGE_KIND => controlMessageKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  controlMessageKind get messageKind => MESSAGE_KIND;
+  ///  Optional trace id for correlating messages across systems.
+  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get traceId => TRACE_ID;
+  ///  Scenario list carried by setup or selection messages.
+  List<SCN>? get SCENARIOS => const fb.ListReader<SCN>(SCN.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Single scenario payload carried by setup or state messages.
+  SCN? get SCENARIO => SCN.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Request-current-state payload.
+  SCCRequestState? get REQUEST_STATE => SCCRequestState.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  SCCRequestState? get requestState => REQUEST_STATE;
+  ///  Current-state response payload.
+  SCCStateResponse? get STATE_RESPONSE => SCCStateResponse.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  SCCStateResponse? get stateResponse => STATE_RESPONSE;
+  ///  Asset-picker request or acknowledgement payload.
+  SCCAssetPicker? get ASSET_PICKER => SCCAssetPicker.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  SCCAssetPicker? get assetPicker => ASSET_PICKER;
+  ///  Startup readiness payload.
+  SCCReady? get READY => SCCReady.reader.vTableGetNullable(_bc, _bcOffset, 18);
+
+  @override
+  String toString() {
+    return 'SCC{messageKind: ${messageKind}, traceId: ${traceId}, SCENARIOS: ${SCENARIOS}, SCENARIO: ${SCENARIO}, requestState: ${requestState}, stateResponse: ${stateResponse}, assetPicker: ${assetPicker}, READY: ${READY}}';
+  }
+}
+
+class _SCCReader extends fb.TableReader<SCC> {
+  const _SCCReader();
+
+  @override
+  SCC createObject(fb.BufferContext bc, int offset) =>
+    SCC._(bc, offset);
+}
+
+class SCCBuilder {
+  SCCBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addMessageKind(controlMessageKind? MESSAGE_KIND) {
+    fbBuilder.addInt8(0, MESSAGE_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addTraceIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addScenariosOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addScenarioOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addRequestStateOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addStateResponseOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addAssetPickerOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addReadyOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCCObjectBuilder extends fb.ObjectBuilder {
+  final controlMessageKind? _MESSAGE_KIND;
+  final String? _TRACE_ID;
+  final List<SCNObjectBuilder>? _SCENARIOS;
+  final SCNObjectBuilder? _SCENARIO;
+  final SCCRequestStateObjectBuilder? _REQUEST_STATE;
+  final SCCStateResponseObjectBuilder? _STATE_RESPONSE;
+  final SCCAssetPickerObjectBuilder? _ASSET_PICKER;
+  final SCCReadyObjectBuilder? _READY;
+
+  SCCObjectBuilder({
+    controlMessageKind? MESSAGE_KIND,
+    controlMessageKind? messageKind,
+    String? TRACE_ID,
+    String? traceId,
+    List<SCNObjectBuilder>? SCENARIOS,
+    SCNObjectBuilder? SCENARIO,
+    SCCRequestStateObjectBuilder? REQUEST_STATE,
+    SCCRequestStateObjectBuilder? requestState,
+    SCCStateResponseObjectBuilder? STATE_RESPONSE,
+    SCCStateResponseObjectBuilder? stateResponse,
+    SCCAssetPickerObjectBuilder? ASSET_PICKER,
+    SCCAssetPickerObjectBuilder? assetPicker,
+    SCCReadyObjectBuilder? READY,
+  })
+      : _MESSAGE_KIND = messageKind ?? MESSAGE_KIND,
+        _TRACE_ID = traceId ?? TRACE_ID,
+        _SCENARIOS = SCENARIOS,
+        _SCENARIO = SCENARIO,
+        _REQUEST_STATE = requestState ?? REQUEST_STATE,
+        _STATE_RESPONSE = stateResponse ?? STATE_RESPONSE,
+        _ASSET_PICKER = assetPicker ?? ASSET_PICKER,
+        _READY = READY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TRACE_IDOffset = _TRACE_ID == null ? null
+        : fbBuilder.writeString(_TRACE_ID!);
+    final int? SCENARIOSOffset = _SCENARIOS == null ? null
+        : fbBuilder.writeList(_SCENARIOS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SCENARIOOffset = _SCENARIO?.getOrCreateOffset(fbBuilder);
+    final int? REQUEST_STATEOffset = _REQUEST_STATE?.getOrCreateOffset(fbBuilder);
+    final int? STATE_RESPONSEOffset = _STATE_RESPONSE?.getOrCreateOffset(fbBuilder);
+    final int? ASSET_PICKEROffset = _ASSET_PICKER?.getOrCreateOffset(fbBuilder);
+    final int? READYOffset = _READY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(8);
+    fbBuilder.addInt8(0, _MESSAGE_KIND?.value);
+    fbBuilder.addOffset(1, TRACE_IDOffset);
+    fbBuilder.addOffset(2, SCENARIOSOffset);
+    fbBuilder.addOffset(3, SCENARIOOffset);
+    fbBuilder.addOffset(4, REQUEST_STATEOffset);
+    fbBuilder.addOffset(5, STATE_RESPONSEOffset);
+    fbBuilder.addOffset(6, ASSET_PICKEROffset);
+    fbBuilder.addOffset(7, READYOffset);
     return fbBuilder.endTable();
   }
 

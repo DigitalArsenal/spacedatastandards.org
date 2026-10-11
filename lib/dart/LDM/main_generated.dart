@@ -5,89 +5,234 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Burn Out Vector Message
-class BOV {
-  BOV._(this._bc, this._bcOffset);
-  factory BOV(List<int> bytes) {
+///  Launch Data Message
+class LDM {
+  LDM._(this._bc, this._bcOffset);
+  factory LDM(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<BOV> reader = _BOVReader();
+  static const fb.Reader<LDM> reader = _LDMReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  double get E_COORDINATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get eCoordinate => E_COORDINATE;
-  double get F_COORDINATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get fCoordinate => F_COORDINATE;
-  double get G_COORDINATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get gCoordinate => G_COORDINATE;
-  double get E_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get eDot => E_DOT;
-  double get F_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get fDot => F_DOT;
-  double get G_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get gDot => G_DOT;
-  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  double get TIME_FROM_LAUNCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get timeFromLaunch => TIME_FROM_LAUNCH;
+  ///  Launch Site Information
+  SIT? get SITE => SIT.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Azimuth at Launch (in Degrees)
+  double get AZIMUTH => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  References for Launch Data
+  String? get REFERENCES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Launching Agency Name
+  String? get AGENCY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get agencyName => AGENCY_NAME;
+  ///  Points of Contact for Launch
+  List<EPM>? get POINTS_OF_CONTACT => const fb.ListReader<EPM>(EPM.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  List<EPM>? get pointsOfContact => POINTS_OF_CONTACT;
+  ///  Operations Points of Contact for Launch
+  List<EPM>? get OPERATIONS_POINTS_OF_CONTACT => const fb.ListReader<EPM>(EPM.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<EPM>? get operationsPointsOfContact => OPERATIONS_POINTS_OF_CONTACT;
+  ///  Net Launch Time (UTC Format)
+  String? get NET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Rocket Configuration Details
+  ROC? get ROCKET_CONFIGURATION => ROC.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  ROC? get rocketConfiguration => ROCKET_CONFIGURATION;
+  ///  Mission Name
+  String? get MISSION_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get missionName => MISSION_NAME;
+  ///  Description of the Mission
+  String? get MISSION_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get missionDescription => MISSION_DESCRIPTION;
+  ///  Type of the Mission (e.g., Test Flight, Satellite Deployment)
+  String? get MISSION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get missionType => MISSION_TYPE;
+  ///  Target Orbit Type (e.g., LEO, GEO)
+  String? get ORBIT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get orbitType => ORBIT_TYPE;
+  ///  Weather and Environmental Conditions at Launch
+  String? get WEATHER_CONDITIONS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get weatherConditions => WEATHER_CONDITIONS;
+  ///  Launch Outcome and Status (e.g., Successful, Failed)
+  String? get LAUNCH_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get launchStatus => LAUNCH_STATUS;
+  ///  Webcast URL for the Launch
+  String? get WEBCAST_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get webcastUrl => WEBCAST_URL;
+  ///  Media Links Related to the Launch
+  List<String>? get MEDIA_LINKS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 34);
+  List<String>? get mediaLinks => MEDIA_LINKS;
+  ///  Earliest Possible Launch Times
+  List<String>? get EARLIEST_LAUNCH_TIMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<String>? get earliestLaunchTimes => EARLIEST_LAUNCH_TIMES;
+  ///  Latest Possible Launch Times
+  List<String>? get LATEST_LAUNCH_TIMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 38);
+  List<String>? get latestLaunchTimes => LATEST_LAUNCH_TIMES;
+  ///  Launch Collision Avoidance Information
+  List<String>? get LCOLA_WINDOW_CLOSURES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 40);
+  List<String>? get lcolaWindowClosures => LCOLA_WINDOW_CLOSURES;
+  ///  Payload Information (Catalog Entities)
+  List<CAT>? get OBJECTS => const fb.ListReader<CAT>(CAT.reader).vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Tracking and Collision Avoidance Requirements
+  List<String>? get TRACKING_REQUIREMENTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<String>? get trackingRequirements => TRACKING_REQUIREMENTS;
+  ///  Duration of Collision Avoidance Screen (in Seconds)
+  String? get COLA_SCREEN_DURATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get colaScreenDuration => COLA_SCREEN_DURATION;
+  ///  Probability of Collision Threshold (Percentage)
+  String? get PROBABILITY_OF_COLLISION_THRESHOLD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get probabilityOfCollisionThreshold => PROBABILITY_OF_COLLISION_THRESHOLD;
+  ///  Number of Required Collision Avoidance Runs
+  String? get COLA_RUNS_REQUIRED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get colaRunsRequired => COLA_RUNS_REQUIRED;
+  ///  Points of Contact for Collision Avoidance
+  List<EPM>? get COLA_POINTS_OF_CONTACT => const fb.ListReader<EPM>(EPM.reader).vTableGetNullable(_bc, _bcOffset, 52);
+  List<EPM>? get colaPointsOfContact => COLA_POINTS_OF_CONTACT;
+  ///  Orbital Parameters of the Launch
+  List<String>? get ORBITAL_PARAMETERS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 54);
+  List<String>? get orbitalParameters => ORBITAL_PARAMETERS;
+  ///  Burn Out Vectors for the Launch
+  List<BOV>? get BURN_OUT_VECTORS => const fb.ListReader<BOV>(BOV.reader).vTableGetNullable(_bc, _bcOffset, 56);
+  List<BOV>? get burnOutVectors => BURN_OUT_VECTORS;
+  ///  APPENDED. Stable identifier of this launch in the registry that
+  ///  published it; unchanged when the launch time or status changes.
+  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
 
   @override
   String toString() {
-    return 'BOV{eCoordinate: ${eCoordinate}, fCoordinate: ${fCoordinate}, gCoordinate: ${gCoordinate}, eDot: ${eDot}, fDot: ${fDot}, gDot: ${gDot}, EPOCH: ${EPOCH}, timeFromLaunch: ${timeFromLaunch}}';
+    return 'LDM{SITE: ${SITE}, AZIMUTH: ${AZIMUTH}, REFERENCES: ${REFERENCES}, agencyName: ${agencyName}, pointsOfContact: ${pointsOfContact}, operationsPointsOfContact: ${operationsPointsOfContact}, NET: ${NET}, rocketConfiguration: ${rocketConfiguration}, missionName: ${missionName}, missionDescription: ${missionDescription}, missionType: ${missionType}, orbitType: ${orbitType}, weatherConditions: ${weatherConditions}, launchStatus: ${launchStatus}, webcastUrl: ${webcastUrl}, mediaLinks: ${mediaLinks}, earliestLaunchTimes: ${earliestLaunchTimes}, latestLaunchTimes: ${latestLaunchTimes}, lcolaWindowClosures: ${lcolaWindowClosures}, OBJECTS: ${OBJECTS}, trackingRequirements: ${trackingRequirements}, colaScreenDuration: ${colaScreenDuration}, probabilityOfCollisionThreshold: ${probabilityOfCollisionThreshold}, colaRunsRequired: ${colaRunsRequired}, colaPointsOfContact: ${colaPointsOfContact}, orbitalParameters: ${orbitalParameters}, burnOutVectors: ${burnOutVectors}, ID: ${ID}}';
   }
 }
 
-class _BOVReader extends fb.TableReader<BOV> {
-  const _BOVReader();
+class _LDMReader extends fb.TableReader<LDM> {
+  const _LDMReader();
 
   @override
-  BOV createObject(fb.BufferContext bc, int offset) =>
-    BOV._(bc, offset);
+  LDM createObject(fb.BufferContext bc, int offset) =>
+    LDM._(bc, offset);
 }
 
-class BOVBuilder {
-  BOVBuilder(this.fbBuilder);
+class LDMBuilder {
+  LDMBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(28);
   }
 
-  int addECoordinate(double? E_COORDINATE) {
-    fbBuilder.addFloat64(0, E_COORDINATE);
+  int addSiteOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addFCoordinate(double? F_COORDINATE) {
-    fbBuilder.addFloat64(1, F_COORDINATE);
+  int addAzimuth(double? AZIMUTH) {
+    fbBuilder.addFloat32(1, AZIMUTH);
     return fbBuilder.offset;
   }
-  int addGCoordinate(double? G_COORDINATE) {
-    fbBuilder.addFloat64(2, G_COORDINATE);
+  int addReferencesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addEDot(double? E_DOT) {
-    fbBuilder.addFloat64(3, E_DOT);
+  int addAgencyNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addFDot(double? F_DOT) {
-    fbBuilder.addFloat64(4, F_DOT);
+  int addPointsOfContactOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addGDot(double? G_DOT) {
-    fbBuilder.addFloat64(5, G_DOT);
+  int addOperationsPointsOfContactOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addEpochOffset(int? offset) {
+  int addNetOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addTimeFromLaunch(double? TIME_FROM_LAUNCH) {
-    fbBuilder.addFloat64(7, TIME_FROM_LAUNCH);
+  int addRocketConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addMissionNameOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addMissionDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addMissionTypeOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitTypeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addWeatherConditionsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchStatusOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addWebcastUrlOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addMediaLinksOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addEarliestLaunchTimesOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addLatestLaunchTimesOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addLcolaWindowClosuresOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectsOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addTrackingRequirementsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addColaScreenDurationOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addProbabilityOfCollisionThresholdOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addColaRunsRequiredOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addColaPointsOfContactOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitalParametersOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addBurnOutVectorsOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addIdOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
     return fbBuilder.offset;
   }
 
@@ -96,56 +241,201 @@ class BOVBuilder {
   }
 }
 
-class BOVObjectBuilder extends fb.ObjectBuilder {
-  final double? _E_COORDINATE;
-  final double? _F_COORDINATE;
-  final double? _G_COORDINATE;
-  final double? _E_DOT;
-  final double? _F_DOT;
-  final double? _G_DOT;
-  final String? _EPOCH;
-  final double? _TIME_FROM_LAUNCH;
+class LDMObjectBuilder extends fb.ObjectBuilder {
+  final SITObjectBuilder? _SITE;
+  final double? _AZIMUTH;
+  final String? _REFERENCES;
+  final String? _AGENCY_NAME;
+  final List<EPMObjectBuilder>? _POINTS_OF_CONTACT;
+  final List<EPMObjectBuilder>? _OPERATIONS_POINTS_OF_CONTACT;
+  final String? _NET;
+  final ROCObjectBuilder? _ROCKET_CONFIGURATION;
+  final String? _MISSION_NAME;
+  final String? _MISSION_DESCRIPTION;
+  final String? _MISSION_TYPE;
+  final String? _ORBIT_TYPE;
+  final String? _WEATHER_CONDITIONS;
+  final String? _LAUNCH_STATUS;
+  final String? _WEBCAST_URL;
+  final List<String>? _MEDIA_LINKS;
+  final List<String>? _EARLIEST_LAUNCH_TIMES;
+  final List<String>? _LATEST_LAUNCH_TIMES;
+  final List<String>? _LCOLA_WINDOW_CLOSURES;
+  final List<CATObjectBuilder>? _OBJECTS;
+  final List<String>? _TRACKING_REQUIREMENTS;
+  final String? _COLA_SCREEN_DURATION;
+  final String? _PROBABILITY_OF_COLLISION_THRESHOLD;
+  final String? _COLA_RUNS_REQUIRED;
+  final List<EPMObjectBuilder>? _COLA_POINTS_OF_CONTACT;
+  final List<String>? _ORBITAL_PARAMETERS;
+  final List<BOVObjectBuilder>? _BURN_OUT_VECTORS;
+  final String? _ID;
 
-  BOVObjectBuilder({
-    double? E_COORDINATE,
-    double? eCoordinate,
-    double? F_COORDINATE,
-    double? fCoordinate,
-    double? G_COORDINATE,
-    double? gCoordinate,
-    double? E_DOT,
-    double? eDot,
-    double? F_DOT,
-    double? fDot,
-    double? G_DOT,
-    double? gDot,
-    String? EPOCH,
-    double? TIME_FROM_LAUNCH,
-    double? timeFromLaunch,
+  LDMObjectBuilder({
+    SITObjectBuilder? SITE,
+    double? AZIMUTH,
+    String? REFERENCES,
+    String? AGENCY_NAME,
+    String? agencyName,
+    List<EPMObjectBuilder>? POINTS_OF_CONTACT,
+    List<EPMObjectBuilder>? pointsOfContact,
+    List<EPMObjectBuilder>? OPERATIONS_POINTS_OF_CONTACT,
+    List<EPMObjectBuilder>? operationsPointsOfContact,
+    String? NET,
+    ROCObjectBuilder? ROCKET_CONFIGURATION,
+    ROCObjectBuilder? rocketConfiguration,
+    String? MISSION_NAME,
+    String? missionName,
+    String? MISSION_DESCRIPTION,
+    String? missionDescription,
+    String? MISSION_TYPE,
+    String? missionType,
+    String? ORBIT_TYPE,
+    String? orbitType,
+    String? WEATHER_CONDITIONS,
+    String? weatherConditions,
+    String? LAUNCH_STATUS,
+    String? launchStatus,
+    String? WEBCAST_URL,
+    String? webcastUrl,
+    List<String>? MEDIA_LINKS,
+    List<String>? mediaLinks,
+    List<String>? EARLIEST_LAUNCH_TIMES,
+    List<String>? earliestLaunchTimes,
+    List<String>? LATEST_LAUNCH_TIMES,
+    List<String>? latestLaunchTimes,
+    List<String>? LCOLA_WINDOW_CLOSURES,
+    List<String>? lcolaWindowClosures,
+    List<CATObjectBuilder>? OBJECTS,
+    List<String>? TRACKING_REQUIREMENTS,
+    List<String>? trackingRequirements,
+    String? COLA_SCREEN_DURATION,
+    String? colaScreenDuration,
+    String? PROBABILITY_OF_COLLISION_THRESHOLD,
+    String? probabilityOfCollisionThreshold,
+    String? COLA_RUNS_REQUIRED,
+    String? colaRunsRequired,
+    List<EPMObjectBuilder>? COLA_POINTS_OF_CONTACT,
+    List<EPMObjectBuilder>? colaPointsOfContact,
+    List<String>? ORBITAL_PARAMETERS,
+    List<String>? orbitalParameters,
+    List<BOVObjectBuilder>? BURN_OUT_VECTORS,
+    List<BOVObjectBuilder>? burnOutVectors,
+    String? ID,
   })
-      : _E_COORDINATE = eCoordinate ?? E_COORDINATE,
-        _F_COORDINATE = fCoordinate ?? F_COORDINATE,
-        _G_COORDINATE = gCoordinate ?? G_COORDINATE,
-        _E_DOT = eDot ?? E_DOT,
-        _F_DOT = fDot ?? F_DOT,
-        _G_DOT = gDot ?? G_DOT,
-        _EPOCH = EPOCH,
-        _TIME_FROM_LAUNCH = timeFromLaunch ?? TIME_FROM_LAUNCH;
+      : _SITE = SITE,
+        _AZIMUTH = AZIMUTH,
+        _REFERENCES = REFERENCES,
+        _AGENCY_NAME = agencyName ?? AGENCY_NAME,
+        _POINTS_OF_CONTACT = pointsOfContact ?? POINTS_OF_CONTACT,
+        _OPERATIONS_POINTS_OF_CONTACT = operationsPointsOfContact ?? OPERATIONS_POINTS_OF_CONTACT,
+        _NET = NET,
+        _ROCKET_CONFIGURATION = rocketConfiguration ?? ROCKET_CONFIGURATION,
+        _MISSION_NAME = missionName ?? MISSION_NAME,
+        _MISSION_DESCRIPTION = missionDescription ?? MISSION_DESCRIPTION,
+        _MISSION_TYPE = missionType ?? MISSION_TYPE,
+        _ORBIT_TYPE = orbitType ?? ORBIT_TYPE,
+        _WEATHER_CONDITIONS = weatherConditions ?? WEATHER_CONDITIONS,
+        _LAUNCH_STATUS = launchStatus ?? LAUNCH_STATUS,
+        _WEBCAST_URL = webcastUrl ?? WEBCAST_URL,
+        _MEDIA_LINKS = mediaLinks ?? MEDIA_LINKS,
+        _EARLIEST_LAUNCH_TIMES = earliestLaunchTimes ?? EARLIEST_LAUNCH_TIMES,
+        _LATEST_LAUNCH_TIMES = latestLaunchTimes ?? LATEST_LAUNCH_TIMES,
+        _LCOLA_WINDOW_CLOSURES = lcolaWindowClosures ?? LCOLA_WINDOW_CLOSURES,
+        _OBJECTS = OBJECTS,
+        _TRACKING_REQUIREMENTS = trackingRequirements ?? TRACKING_REQUIREMENTS,
+        _COLA_SCREEN_DURATION = colaScreenDuration ?? COLA_SCREEN_DURATION,
+        _PROBABILITY_OF_COLLISION_THRESHOLD = probabilityOfCollisionThreshold ?? PROBABILITY_OF_COLLISION_THRESHOLD,
+        _COLA_RUNS_REQUIRED = colaRunsRequired ?? COLA_RUNS_REQUIRED,
+        _COLA_POINTS_OF_CONTACT = colaPointsOfContact ?? COLA_POINTS_OF_CONTACT,
+        _ORBITAL_PARAMETERS = orbitalParameters ?? ORBITAL_PARAMETERS,
+        _BURN_OUT_VECTORS = burnOutVectors ?? BURN_OUT_VECTORS,
+        _ID = ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? EPOCHOffset = _EPOCH == null ? null
-        : fbBuilder.writeString(_EPOCH!);
-    fbBuilder.startTable(8);
-    fbBuilder.addFloat64(0, _E_COORDINATE);
-    fbBuilder.addFloat64(1, _F_COORDINATE);
-    fbBuilder.addFloat64(2, _G_COORDINATE);
-    fbBuilder.addFloat64(3, _E_DOT);
-    fbBuilder.addFloat64(4, _F_DOT);
-    fbBuilder.addFloat64(5, _G_DOT);
-    fbBuilder.addOffset(6, EPOCHOffset);
-    fbBuilder.addFloat64(7, _TIME_FROM_LAUNCH);
+    final int? SITEOffset = _SITE?.getOrCreateOffset(fbBuilder);
+    final int? REFERENCESOffset = _REFERENCES == null ? null
+        : fbBuilder.writeString(_REFERENCES!);
+    final int? AGENCY_NAMEOffset = _AGENCY_NAME == null ? null
+        : fbBuilder.writeString(_AGENCY_NAME!);
+    final int? POINTS_OF_CONTACTOffset = _POINTS_OF_CONTACT == null ? null
+        : fbBuilder.writeList(_POINTS_OF_CONTACT!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? OPERATIONS_POINTS_OF_CONTACTOffset = _OPERATIONS_POINTS_OF_CONTACT == null ? null
+        : fbBuilder.writeList(_OPERATIONS_POINTS_OF_CONTACT!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? NETOffset = _NET == null ? null
+        : fbBuilder.writeString(_NET!);
+    final int? ROCKET_CONFIGURATIONOffset = _ROCKET_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    final int? MISSION_NAMEOffset = _MISSION_NAME == null ? null
+        : fbBuilder.writeString(_MISSION_NAME!);
+    final int? MISSION_DESCRIPTIONOffset = _MISSION_DESCRIPTION == null ? null
+        : fbBuilder.writeString(_MISSION_DESCRIPTION!);
+    final int? MISSION_TYPEOffset = _MISSION_TYPE == null ? null
+        : fbBuilder.writeString(_MISSION_TYPE!);
+    final int? ORBIT_TYPEOffset = _ORBIT_TYPE == null ? null
+        : fbBuilder.writeString(_ORBIT_TYPE!);
+    final int? WEATHER_CONDITIONSOffset = _WEATHER_CONDITIONS == null ? null
+        : fbBuilder.writeString(_WEATHER_CONDITIONS!);
+    final int? LAUNCH_STATUSOffset = _LAUNCH_STATUS == null ? null
+        : fbBuilder.writeString(_LAUNCH_STATUS!);
+    final int? WEBCAST_URLOffset = _WEBCAST_URL == null ? null
+        : fbBuilder.writeString(_WEBCAST_URL!);
+    final int? MEDIA_LINKSOffset = _MEDIA_LINKS == null ? null
+        : fbBuilder.writeList(_MEDIA_LINKS!.map(fbBuilder.writeString).toList());
+    final int? EARLIEST_LAUNCH_TIMESOffset = _EARLIEST_LAUNCH_TIMES == null ? null
+        : fbBuilder.writeList(_EARLIEST_LAUNCH_TIMES!.map(fbBuilder.writeString).toList());
+    final int? LATEST_LAUNCH_TIMESOffset = _LATEST_LAUNCH_TIMES == null ? null
+        : fbBuilder.writeList(_LATEST_LAUNCH_TIMES!.map(fbBuilder.writeString).toList());
+    final int? LCOLA_WINDOW_CLOSURESOffset = _LCOLA_WINDOW_CLOSURES == null ? null
+        : fbBuilder.writeList(_LCOLA_WINDOW_CLOSURES!.map(fbBuilder.writeString).toList());
+    final int? OBJECTSOffset = _OBJECTS == null ? null
+        : fbBuilder.writeList(_OBJECTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TRACKING_REQUIREMENTSOffset = _TRACKING_REQUIREMENTS == null ? null
+        : fbBuilder.writeList(_TRACKING_REQUIREMENTS!.map(fbBuilder.writeString).toList());
+    final int? COLA_SCREEN_DURATIONOffset = _COLA_SCREEN_DURATION == null ? null
+        : fbBuilder.writeString(_COLA_SCREEN_DURATION!);
+    final int? PROBABILITY_OF_COLLISION_THRESHOLDOffset = _PROBABILITY_OF_COLLISION_THRESHOLD == null ? null
+        : fbBuilder.writeString(_PROBABILITY_OF_COLLISION_THRESHOLD!);
+    final int? COLA_RUNS_REQUIREDOffset = _COLA_RUNS_REQUIRED == null ? null
+        : fbBuilder.writeString(_COLA_RUNS_REQUIRED!);
+    final int? COLA_POINTS_OF_CONTACTOffset = _COLA_POINTS_OF_CONTACT == null ? null
+        : fbBuilder.writeList(_COLA_POINTS_OF_CONTACT!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ORBITAL_PARAMETERSOffset = _ORBITAL_PARAMETERS == null ? null
+        : fbBuilder.writeList(_ORBITAL_PARAMETERS!.map(fbBuilder.writeString).toList());
+    final int? BURN_OUT_VECTORSOffset = _BURN_OUT_VECTORS == null ? null
+        : fbBuilder.writeList(_BURN_OUT_VECTORS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? IDOffset = _ID == null ? null
+        : fbBuilder.writeString(_ID!);
+    fbBuilder.startTable(28);
+    fbBuilder.addOffset(0, SITEOffset);
+    fbBuilder.addFloat32(1, _AZIMUTH);
+    fbBuilder.addOffset(2, REFERENCESOffset);
+    fbBuilder.addOffset(3, AGENCY_NAMEOffset);
+    fbBuilder.addOffset(4, POINTS_OF_CONTACTOffset);
+    fbBuilder.addOffset(5, OPERATIONS_POINTS_OF_CONTACTOffset);
+    fbBuilder.addOffset(6, NETOffset);
+    fbBuilder.addOffset(7, ROCKET_CONFIGURATIONOffset);
+    fbBuilder.addOffset(8, MISSION_NAMEOffset);
+    fbBuilder.addOffset(9, MISSION_DESCRIPTIONOffset);
+    fbBuilder.addOffset(10, MISSION_TYPEOffset);
+    fbBuilder.addOffset(11, ORBIT_TYPEOffset);
+    fbBuilder.addOffset(12, WEATHER_CONDITIONSOffset);
+    fbBuilder.addOffset(13, LAUNCH_STATUSOffset);
+    fbBuilder.addOffset(14, WEBCAST_URLOffset);
+    fbBuilder.addOffset(15, MEDIA_LINKSOffset);
+    fbBuilder.addOffset(16, EARLIEST_LAUNCH_TIMESOffset);
+    fbBuilder.addOffset(17, LATEST_LAUNCH_TIMESOffset);
+    fbBuilder.addOffset(18, LCOLA_WINDOW_CLOSURESOffset);
+    fbBuilder.addOffset(19, OBJECTSOffset);
+    fbBuilder.addOffset(20, TRACKING_REQUIREMENTSOffset);
+    fbBuilder.addOffset(21, COLA_SCREEN_DURATIONOffset);
+    fbBuilder.addOffset(22, PROBABILITY_OF_COLLISION_THRESHOLDOffset);
+    fbBuilder.addOffset(23, COLA_RUNS_REQUIREDOffset);
+    fbBuilder.addOffset(24, COLA_POINTS_OF_CONTACTOffset);
+    fbBuilder.addOffset(25, ORBITAL_PARAMETERSOffset);
+    fbBuilder.addOffset(26, BURN_OUT_VECTORSOffset);
+    fbBuilder.addOffset(27, IDOffset);
     return fbBuilder.endTable();
   }
 

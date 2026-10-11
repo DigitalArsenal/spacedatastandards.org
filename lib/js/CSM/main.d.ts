@@ -1,5 +1,7 @@
 export * from './Band.js';
 export * from './CAT.js';
+export * from './catalogProductKind.js';
+export * from './CATProduct.js';
 export * from './CSM.js';
 export * from './dataAvailability.js';
 export * from './DataMode.js';

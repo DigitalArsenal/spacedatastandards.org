@@ -5,1043 +5,172 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-
-///  https://www.sanaregistry.org/r/celestial_body_reference_frames/
-///  Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
-enum CelestialFrame {
-  GCRF(0),
-  ICRF(1),
-  J2000(2),
-  J2000A(3),
-  EME2000(4),
-  TEMEOFDATE(5),
-  GTOD(6),
-  CIRS(7),
-  MOD_EARTH(8),
-  MOD_CB(9),
-  MOD_MOON(10),
-  TOD_EARTH(11),
-  TOD_CB(12),
-  TOD_MOON(13),
-  TOE_EARTH(14),
-  TOE_CB(15),
-  TOE_MOON(16),
-  ITRF2000(17),
-  ITRF93(18),
-  ITRF97(19),
-  EFG(20),
-  FIXED_CB(21),
-  FIXED_EARTH(22),
-  WGS84(23),
-  DTRFYYYY(24),
-  ALIGN_EARTH(25),
-  ALIGN_CB(26),
-  B1950(27);
-
-  final int value;
-  const CelestialFrame(this.value);
-
-  factory CelestialFrame.fromValue(int value) {
-    switch (value) {
-      case 0: return CelestialFrame.GCRF;
-      case 1: return CelestialFrame.ICRF;
-      case 2: return CelestialFrame.J2000;
-      case 3: return CelestialFrame.J2000A;
-      case 4: return CelestialFrame.EME2000;
-      case 5: return CelestialFrame.TEMEOFDATE;
-      case 6: return CelestialFrame.GTOD;
-      case 7: return CelestialFrame.CIRS;
-      case 8: return CelestialFrame.MOD_EARTH;
-      case 9: return CelestialFrame.MOD_CB;
-      case 10: return CelestialFrame.MOD_MOON;
-      case 11: return CelestialFrame.TOD_EARTH;
-      case 12: return CelestialFrame.TOD_CB;
-      case 13: return CelestialFrame.TOD_MOON;
-      case 14: return CelestialFrame.TOE_EARTH;
-      case 15: return CelestialFrame.TOE_CB;
-      case 16: return CelestialFrame.TOE_MOON;
-      case 17: return CelestialFrame.ITRF2000;
-      case 18: return CelestialFrame.ITRF93;
-      case 19: return CelestialFrame.ITRF97;
-      case 20: return CelestialFrame.EFG;
-      case 21: return CelestialFrame.FIXED_CB;
-      case 22: return CelestialFrame.FIXED_EARTH;
-      case 23: return CelestialFrame.WGS84;
-      case 24: return CelestialFrame.DTRFYYYY;
-      case 25: return CelestialFrame.ALIGN_EARTH;
-      case 26: return CelestialFrame.ALIGN_CB;
-      case 27: return CelestialFrame.B1950;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static CelestialFrame? _createOrNull(int? value) =>
-      value == null ? null : CelestialFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 27;
-  static const fb.Reader<CelestialFrame> reader = _CelestialFrameReader();
-}
-
-class _CelestialFrameReader extends fb.Reader<CelestialFrame> {
-  const _CelestialFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  CelestialFrame read(fb.BufferContext bc, int offset) =>
-      CelestialFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  https://sanaregistry.org/r/spacecraft_body_reference_frames/
-///  Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
-enum SpacecraftFrame {
-  ACC_i(0),
-  ACTUATOR_i(1),
-  AST_i(2),
-  CSS_i(3),
-  DSS_i(4),
-  ESA_i(5),
-  GYRO_FRAME_i(6),
-  IMU_FRAME_i(7),
-  INSTRUMENT_i(8),
-  MTA_i(9),
-  RW_i(10),
-  SA_i(11),
-  SC_BODY_i(12),
-  SENSOR_i(13),
-  STARTRACKER_i(14),
-  TAM_i(15);
-
-  final int value;
-  const SpacecraftFrame(this.value);
-
-  factory SpacecraftFrame.fromValue(int value) {
-    switch (value) {
-      case 0: return SpacecraftFrame.ACC_i;
-      case 1: return SpacecraftFrame.ACTUATOR_i;
-      case 2: return SpacecraftFrame.AST_i;
-      case 3: return SpacecraftFrame.CSS_i;
-      case 4: return SpacecraftFrame.DSS_i;
-      case 5: return SpacecraftFrame.ESA_i;
-      case 6: return SpacecraftFrame.GYRO_FRAME_i;
-      case 7: return SpacecraftFrame.IMU_FRAME_i;
-      case 8: return SpacecraftFrame.INSTRUMENT_i;
-      case 9: return SpacecraftFrame.MTA_i;
-      case 10: return SpacecraftFrame.RW_i;
-      case 11: return SpacecraftFrame.SA_i;
-      case 12: return SpacecraftFrame.SC_BODY_i;
-      case 13: return SpacecraftFrame.SENSOR_i;
-      case 14: return SpacecraftFrame.STARTRACKER_i;
-      case 15: return SpacecraftFrame.TAM_i;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static SpacecraftFrame? _createOrNull(int? value) =>
-      value == null ? null : SpacecraftFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 15;
-  static const fb.Reader<SpacecraftFrame> reader = _SpacecraftFrameReader();
-}
-
-class _SpacecraftFrameReader extends fb.Reader<SpacecraftFrame> {
-  const _SpacecraftFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  SpacecraftFrame read(fb.BufferContext bc, int offset) =>
-      SpacecraftFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  https://sanaregistry.org/r/orbit_relative_reference_frames/
-///  Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
-enum OrbitFrame {
-  EQW_INERTIAL(0),
-  LVLH_INERTIAL(1),
-  LVLH_ROTATING(2),
-  NSW_INERTIAL(3),
-  NSW_ROTATING(4),
-  NTW_INERTIAL(5),
-  NTW_ROTATING(6),
-  PQW_INERTIAL(7),
-  RSW_INERTIAL(8),
-  RSW_ROTATING(9),
-  SEZ_INERTIAL(10),
-  SEZ_ROTATING(11),
-  TNW_INERTIAL(12),
-  TNW_ROTATING(13),
-  VNC_INERTIAL(14),
-  VNC_ROTATING(15);
-
-  final int value;
-  const OrbitFrame(this.value);
-
-  factory OrbitFrame.fromValue(int value) {
-    switch (value) {
-      case 0: return OrbitFrame.EQW_INERTIAL;
-      case 1: return OrbitFrame.LVLH_INERTIAL;
-      case 2: return OrbitFrame.LVLH_ROTATING;
-      case 3: return OrbitFrame.NSW_INERTIAL;
-      case 4: return OrbitFrame.NSW_ROTATING;
-      case 5: return OrbitFrame.NTW_INERTIAL;
-      case 6: return OrbitFrame.NTW_ROTATING;
-      case 7: return OrbitFrame.PQW_INERTIAL;
-      case 8: return OrbitFrame.RSW_INERTIAL;
-      case 9: return OrbitFrame.RSW_ROTATING;
-      case 10: return OrbitFrame.SEZ_INERTIAL;
-      case 11: return OrbitFrame.SEZ_ROTATING;
-      case 12: return OrbitFrame.TNW_INERTIAL;
-      case 13: return OrbitFrame.TNW_ROTATING;
-      case 14: return OrbitFrame.VNC_INERTIAL;
-      case 15: return OrbitFrame.VNC_ROTATING;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static OrbitFrame? _createOrNull(int? value) =>
-      value == null ? null : OrbitFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 15;
-  static const fb.Reader<OrbitFrame> reader = _OrbitFrameReader();
-}
-
-class _OrbitFrameReader extends fb.Reader<OrbitFrame> {
-  const _OrbitFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  OrbitFrame read(fb.BufferContext bc, int offset) =>
-      OrbitFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Non-registered or local use frames
-enum CustomFrame {
-  ECEF(0),
-  TEME(1),
-  TEMEOFEPOCH(2),
-  ENU(3),
-  NED(4),
-  NEU(5),
-  RIC(6),
-  RTN(7),
-  TVN(8),
-  VVLH(9),
-  QSW(10),
-  LTP(11),
-  LVLH(12),
-  PNE(13),
-  BRF(14),
-  RSW(15),
-  TNW(16),
-  UVW(17);
-
-  final int value;
-  const CustomFrame(this.value);
-
-  factory CustomFrame.fromValue(int value) {
-    switch (value) {
-      case 0: return CustomFrame.ECEF;
-      case 1: return CustomFrame.TEME;
-      case 2: return CustomFrame.TEMEOFEPOCH;
-      case 3: return CustomFrame.ENU;
-      case 4: return CustomFrame.NED;
-      case 5: return CustomFrame.NEU;
-      case 6: return CustomFrame.RIC;
-      case 7: return CustomFrame.RTN;
-      case 8: return CustomFrame.TVN;
-      case 9: return CustomFrame.VVLH;
-      case 10: return CustomFrame.QSW;
-      case 11: return CustomFrame.LTP;
-      case 12: return CustomFrame.LVLH;
-      case 13: return CustomFrame.PNE;
-      case 14: return CustomFrame.BRF;
-      case 15: return CustomFrame.RSW;
-      case 16: return CustomFrame.TNW;
-      case 17: return CustomFrame.UVW;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static CustomFrame? _createOrNull(int? value) =>
-      value == null ? null : CustomFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 17;
-  static const fb.Reader<CustomFrame> reader = _CustomFrameReader();
-}
-
-class _CustomFrameReader extends fb.Reader<CustomFrame> {
-  const _CustomFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  CustomFrame read(fb.BufferContext bc, int offset) =>
-      CustomFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Axis-set capability classes for a fully specified coordinate system.
-///  These name the ORIENTATION rule only; the ORIGIN is carried separately in
-///  RFMOrigin, so any axis set below combines with any origin. Append new
-///  values only; never reorder or reuse existing values.
-enum rfmAxisType {
-  UNSPECIFIED(0),
-  MEAN_EQUATOR_EQUINOX_J2000(1),
-  MEAN_ECLIPTIC_EQUINOX_J2000(2),
-  ICRF(3),
-  TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE(4),
-  MEAN_OF_DATE_EQUATOR(5),
-  MEAN_OF_DATE_ECLIPTIC(6),
-  TRUE_OF_DATE_EQUATOR(7),
-  TRUE_OF_DATE_ECLIPTIC(8),
-  MEAN_OF_EPOCH_EQUATOR(9),
-  MEAN_OF_EPOCH_ECLIPTIC(10),
-  TRUE_OF_EPOCH_EQUATOR(11),
-  TRUE_OF_EPOCH_ECLIPTIC(12),
-  BODY_FIXED(13),
-  BODY_INERTIAL(14),
-  OBJECT_REFERENCED(15),
-  LOCAL_ALIGNED_CONSTRAINED(16),
-  BODY_EQUATOR(17),
-  SOLAR_ECLIPTIC_MAGNETOSPHERIC(18),
-  SOLAR_MAGNETOSPHERIC(19),
-  TOPOCENTRIC(20),
-  BODY_SPIN_SUN(21),
-  EPHEMERIS_KERNEL_DEFINED(22),
-  MEAN_OF_DATE_EQUATOR_FK5(23),
-  TRUE_OF_DATE_EQUATOR_FK5(24),
-  TRUE_OF_DATE_EQUATOR_IERS1996(25),
-  TRUE_OF_DATE_EQUATOR_IERS2003(26),
-  TOPOCENTRIC_EAST_NORTH_UP(27),
-  TOPOCENTRIC_NORTH_EAST_DOWN(28),
-  TOPOCENTRIC_SOUTH_EAST_ZENITH(29),
-  ORBITAL_VELOCITY_NORMAL_CONORMAL(30),
-  ORBITAL_RADIAL_TRANSVERSE_NORMAL(31),
-  ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL(32);
-
-  final int value;
-  const rfmAxisType(this.value);
-
-  factory rfmAxisType.fromValue(int value) {
-    switch (value) {
-      case 0: return rfmAxisType.UNSPECIFIED;
-      case 1: return rfmAxisType.MEAN_EQUATOR_EQUINOX_J2000;
-      case 2: return rfmAxisType.MEAN_ECLIPTIC_EQUINOX_J2000;
-      case 3: return rfmAxisType.ICRF;
-      case 4: return rfmAxisType.TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE;
-      case 5: return rfmAxisType.MEAN_OF_DATE_EQUATOR;
-      case 6: return rfmAxisType.MEAN_OF_DATE_ECLIPTIC;
-      case 7: return rfmAxisType.TRUE_OF_DATE_EQUATOR;
-      case 8: return rfmAxisType.TRUE_OF_DATE_ECLIPTIC;
-      case 9: return rfmAxisType.MEAN_OF_EPOCH_EQUATOR;
-      case 10: return rfmAxisType.MEAN_OF_EPOCH_ECLIPTIC;
-      case 11: return rfmAxisType.TRUE_OF_EPOCH_EQUATOR;
-      case 12: return rfmAxisType.TRUE_OF_EPOCH_ECLIPTIC;
-      case 13: return rfmAxisType.BODY_FIXED;
-      case 14: return rfmAxisType.BODY_INERTIAL;
-      case 15: return rfmAxisType.OBJECT_REFERENCED;
-      case 16: return rfmAxisType.LOCAL_ALIGNED_CONSTRAINED;
-      case 17: return rfmAxisType.BODY_EQUATOR;
-      case 18: return rfmAxisType.SOLAR_ECLIPTIC_MAGNETOSPHERIC;
-      case 19: return rfmAxisType.SOLAR_MAGNETOSPHERIC;
-      case 20: return rfmAxisType.TOPOCENTRIC;
-      case 21: return rfmAxisType.BODY_SPIN_SUN;
-      case 22: return rfmAxisType.EPHEMERIS_KERNEL_DEFINED;
-      case 23: return rfmAxisType.MEAN_OF_DATE_EQUATOR_FK5;
-      case 24: return rfmAxisType.TRUE_OF_DATE_EQUATOR_FK5;
-      case 25: return rfmAxisType.TRUE_OF_DATE_EQUATOR_IERS1996;
-      case 26: return rfmAxisType.TRUE_OF_DATE_EQUATOR_IERS2003;
-      case 27: return rfmAxisType.TOPOCENTRIC_EAST_NORTH_UP;
-      case 28: return rfmAxisType.TOPOCENTRIC_NORTH_EAST_DOWN;
-      case 29: return rfmAxisType.TOPOCENTRIC_SOUTH_EAST_ZENITH;
-      case 30: return rfmAxisType.ORBITAL_VELOCITY_NORMAL_CONORMAL;
-      case 31: return rfmAxisType.ORBITAL_RADIAL_TRANSVERSE_NORMAL;
-      case 32: return rfmAxisType.ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static rfmAxisType? _createOrNull(int? value) =>
-      value == null ? null : rfmAxisType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 32;
-  static const fb.Reader<rfmAxisType> reader = _rfmAxisTypeReader();
-}
-
-class _rfmAxisTypeReader extends fb.Reader<rfmAxisType> {
-  const _rfmAxisTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  rfmAxisType read(fb.BufferContext bc, int offset) =>
-      rfmAxisType.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  What kind of point a coordinate system is centred on. Append new values
-///  only; never reorder or reuse existing values.
-enum rfmOriginKind {
-  UNSPECIFIED(0),
-  CELESTIAL_BODY(1),
-  BARYCENTRE(2),
-  LIBRATION_POINT(3),
-  SPACE_OBJECT(4),
-  GROUND_SITE(5);
-
-  final int value;
-  const rfmOriginKind(this.value);
-
-  factory rfmOriginKind.fromValue(int value) {
-    switch (value) {
-      case 0: return rfmOriginKind.UNSPECIFIED;
-      case 1: return rfmOriginKind.CELESTIAL_BODY;
-      case 2: return rfmOriginKind.BARYCENTRE;
-      case 3: return rfmOriginKind.LIBRATION_POINT;
-      case 4: return rfmOriginKind.SPACE_OBJECT;
-      case 5: return rfmOriginKind.GROUND_SITE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static rfmOriginKind? _createOrNull(int? value) =>
-      value == null ? null : rfmOriginKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<rfmOriginKind> reader = _rfmOriginKindReader();
-}
-
-class _rfmOriginKindReader extends fb.Reader<rfmOriginKind> {
-  const _rfmOriginKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  rfmOriginKind read(fb.BufferContext bc, int offset) =>
-      rfmOriginKind.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Libration point of the primary/secondary pair named on RFMOrigin. Append
-///  new values only; never reorder or reuse existing values.
-enum rfmLibrationPoint {
-  UNSPECIFIED(0),
-  L1(1),
-  L2(2),
-  L3(3),
-  L4(4),
-  L5(5);
-
-  final int value;
-  const rfmLibrationPoint(this.value);
-
-  factory rfmLibrationPoint.fromValue(int value) {
-    switch (value) {
-      case 0: return rfmLibrationPoint.UNSPECIFIED;
-      case 1: return rfmLibrationPoint.L1;
-      case 2: return rfmLibrationPoint.L2;
-      case 3: return rfmLibrationPoint.L3;
-      case 4: return rfmLibrationPoint.L4;
-      case 5: return rfmLibrationPoint.L5;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static rfmLibrationPoint? _createOrNull(int? value) =>
-      value == null ? null : rfmLibrationPoint.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<rfmLibrationPoint> reader = _rfmLibrationPointReader();
-}
-
-class _rfmLibrationPointReader extends fb.Reader<rfmLibrationPoint> {
-  const _rfmLibrationPointReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  rfmLibrationPoint read(fb.BufferContext bc, int offset) =>
-      rfmLibrationPoint.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Axis direction choices for OBJECT_REFERENCED axes. Append new values only.
-enum rfmVectorSpecification {
-  UNSPECIFIED(0),
-  RADIAL(1),
-  ANTI_RADIAL(2),
-  VELOCITY(3),
-  ANTI_VELOCITY(4),
-  ORBIT_NORMAL(5),
-  ANTI_ORBIT_NORMAL(6);
-
-  final int value;
-  const rfmVectorSpecification(this.value);
-
-  factory rfmVectorSpecification.fromValue(int value) {
-    switch (value) {
-      case 0: return rfmVectorSpecification.UNSPECIFIED;
-      case 1: return rfmVectorSpecification.RADIAL;
-      case 2: return rfmVectorSpecification.ANTI_RADIAL;
-      case 3: return rfmVectorSpecification.VELOCITY;
-      case 4: return rfmVectorSpecification.ANTI_VELOCITY;
-      case 5: return rfmVectorSpecification.ORBIT_NORMAL;
-      case 6: return rfmVectorSpecification.ANTI_ORBIT_NORMAL;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static rfmVectorSpecification? _createOrNull(int? value) =>
-      value == null ? null : rfmVectorSpecification.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 6;
-  static const fb.Reader<rfmVectorSpecification> reader = _rfmVectorSpecificationReader();
-}
-
-class _rfmVectorSpecificationReader extends fb.Reader<rfmVectorSpecification> {
-  const _rfmVectorSpecificationReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  rfmVectorSpecification read(fb.BufferContext bc, int offset) =>
-      rfmVectorSpecification.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Union ordinals are WIRE. Append new members LAST; never reorder.
-enum RFMUnionTypeId {
-  NONE(0),
-  CelestialFrameWrapper(1),
-  SpacecraftFrameWrapper(2),
-  OrbitFrameWrapper(3),
-  CustomFrameWrapper(4),
-  RFMCoordinateSystemWrapper(5);
-
-  final int value;
-  const RFMUnionTypeId(this.value);
-
-  factory RFMUnionTypeId.fromValue(int value) {
-    switch (value) {
-      case 0: return RFMUnionTypeId.NONE;
-      case 1: return RFMUnionTypeId.CelestialFrameWrapper;
-      case 2: return RFMUnionTypeId.SpacecraftFrameWrapper;
-      case 3: return RFMUnionTypeId.OrbitFrameWrapper;
-      case 4: return RFMUnionTypeId.CustomFrameWrapper;
-      case 5: return RFMUnionTypeId.RFMCoordinateSystemWrapper;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static RFMUnionTypeId? _createOrNull(int? value) =>
-      value == null ? null : RFMUnionTypeId.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<RFMUnionTypeId> reader = _RFMUnionTypeIdReader();
-}
-
-class _RFMUnionTypeIdReader extends fb.Reader<RFMUnionTypeId> {
-  const _RFMUnionTypeIdReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  RFMUnionTypeId read(fb.BufferContext bc, int offset) =>
-      RFMUnionTypeId.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  The point a coordinate system is centred on. Body and barycentre
-///  identifiers are integer ephemeris body codes; text NAME is descriptive
-///  only and is never the machine key.
-class RFMOrigin {
-  RFMOrigin._(this._bc, this._bcOffset);
-  factory RFMOrigin(List<int> bytes) {
+import './main_generated.dart';
+
+///  One uplink transmitter frequency ramp applying over a closed time interval.
+///
+///  SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single
+///  TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space
+///  radiometric archives carry an explicit ramp table and the Doppler observables
+///  are NOT reconstructible without it. Ramps are optional; a record that omits
+///  TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.
+///
+///  Frequency over the interval is the linear polynomial
+///    f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME)
+///  which is the common form of the two archive representations: DSN ODF
+///  (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp
+///  start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a
+///  ramp reference time with constant and linear transmission-frequency terms,
+///  so REFERENCE_TIME is that reference time and may precede START_TIME.
+///  Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer
+///  assume which convention was used.
+class TDMTransmitRamp {
+  TDMTransmitRamp._(this._bc, this._bcOffset);
+  factory TDMTransmitRamp(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<RFMOrigin> reader = _RFMOriginReader();
+  static const fb.Reader<TDMTransmitRamp> reader = _TDMTransmitRampReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  rfmOriginKind get KIND => rfmOriginKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Ephemeris body code when KIND is CELESTIAL_BODY.
-  int get CELESTIAL_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get celestialBodyId => CELESTIAL_BODY_ID;
-  ///  Ephemeris body code of the barycentre when KIND is BARYCENTRE.
-  int get BARYCENTRE_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get barycentreId => BARYCENTRE_ID;
-  ///  Which libration point, when KIND is LIBRATION_POINT.
-  rfmLibrationPoint get LIBRATION_POINT => rfmLibrationPoint.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  rfmLibrationPoint get librationPoint => LIBRATION_POINT;
-  ///  Ephemeris body code of the libration system primary.
-  int get LIBRATION_PRIMARY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get librationPrimaryId => LIBRATION_PRIMARY_ID;
-  ///  Ephemeris body code of the libration system secondary.
-  int get LIBRATION_SECONDARY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get librationSecondaryId => LIBRATION_SECONDARY_ID;
-  ///  Identifier of the space object when KIND is SPACE_OBJECT.
-  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get objectId => OBJECT_ID;
-  ///  Identifier of the surface site when KIND is GROUND_SITE.
-  String? get SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get siteId => SITE_ID;
-  ///  Ephemeris body code of the body the site sits on.
-  int get SITE_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get siteBodyId => SITE_BODY_ID;
-  ///  Geodetic latitude of the site, degrees, positive north.
-  double get SITE_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get siteLatitude => SITE_LATITUDE;
-  ///  Geodetic longitude of the site, degrees, positive east.
-  double get SITE_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get siteLongitude => SITE_LONGITUDE;
-  ///  Height of the site above the reference ellipsoid, metres.
-  double get SITE_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get siteAltitude => SITE_ALTITUDE;
-  ///  Human-readable label. Descriptive only.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Start of the interval over which this ramp applies, ISO 8601.
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get startTime => START_TIME;
+  ///  End of the interval over which this ramp applies, ISO 8601.
+  String? get END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get endTime => END_TIME;
+  ///  Epoch at which FREQUENCY_HZ is the instantaneous value, ISO 8601.
+  String? get REFERENCE_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get referenceTime => REFERENCE_TIME;
+  ///  Transmitted frequency at REFERENCE_TIME, Hz.
+  double get FREQUENCY_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get frequencyHz => FREQUENCY_HZ;
+  ///  Constant ramp rate over the interval, Hz per second.
+  double get FREQUENCY_RATE_HZ_PER_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get frequencyRateHzPerS => FREQUENCY_RATE_HZ_PER_S;
+  ///  Identifier of the transmitting station the ramp applies to. Must match
+  ///  the PARTICIPANT_n naming used by the segment when both are present.
+  String? get TRANSMITTING_STATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get transmittingStationId => TRANSMITTING_STATION_ID;
+  ///  Uplink band the ramp applies to, using the same vocabulary as
+  ///  TRANSMIT_BAND (e.g. "S", "X", "Ka", "Ku").
+  String? get TRANSMIT_BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get transmitBand => TRANSMIT_BAND;
 
   @override
   String toString() {
-    return 'RFMOrigin{KIND: ${KIND}, celestialBodyId: ${celestialBodyId}, barycentreId: ${barycentreId}, librationPoint: ${librationPoint}, librationPrimaryId: ${librationPrimaryId}, librationSecondaryId: ${librationSecondaryId}, objectId: ${objectId}, siteId: ${siteId}, siteBodyId: ${siteBodyId}, siteLatitude: ${siteLatitude}, siteLongitude: ${siteLongitude}, siteAltitude: ${siteAltitude}, NAME: ${NAME}}';
+    return 'TDMTransmitRamp{startTime: ${startTime}, endTime: ${endTime}, referenceTime: ${referenceTime}, frequencyHz: ${frequencyHz}, frequencyRateHzPerS: ${frequencyRateHzPerS}, transmittingStationId: ${transmittingStationId}, transmitBand: ${transmitBand}}';
   }
 }
 
-class _RFMOriginReader extends fb.TableReader<RFMOrigin> {
-  const _RFMOriginReader();
+class _TDMTransmitRampReader extends fb.TableReader<TDMTransmitRamp> {
+  const _TDMTransmitRampReader();
 
   @override
-  RFMOrigin createObject(fb.BufferContext bc, int offset) =>
-    RFMOrigin._(bc, offset);
+  TDMTransmitRamp createObject(fb.BufferContext bc, int offset) =>
+    TDMTransmitRamp._(bc, offset);
 }
 
-class RFMOriginBuilder {
-  RFMOriginBuilder(this.fbBuilder);
+class TDMTransmitRampBuilder {
+  TDMTransmitRampBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(7);
   }
 
-  int addKind(rfmOriginKind? KIND) {
-    fbBuilder.addUint8(0, KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addCelestialBodyId(int? CELESTIAL_BODY_ID) {
-    fbBuilder.addInt32(1, CELESTIAL_BODY_ID);
-    return fbBuilder.offset;
-  }
-  int addBarycentreId(int? BARYCENTRE_ID) {
-    fbBuilder.addInt32(2, BARYCENTRE_ID);
-    return fbBuilder.offset;
-  }
-  int addLibrationPoint(rfmLibrationPoint? LIBRATION_POINT) {
-    fbBuilder.addUint8(3, LIBRATION_POINT?.value);
-    return fbBuilder.offset;
-  }
-  int addLibrationPrimaryId(int? LIBRATION_PRIMARY_ID) {
-    fbBuilder.addInt32(4, LIBRATION_PRIMARY_ID);
-    return fbBuilder.offset;
-  }
-  int addLibrationSecondaryId(int? LIBRATION_SECONDARY_ID) {
-    fbBuilder.addInt32(5, LIBRATION_SECONDARY_ID);
-    return fbBuilder.offset;
-  }
-  int addObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addSiteIdOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addSiteBodyId(int? SITE_BODY_ID) {
-    fbBuilder.addInt32(8, SITE_BODY_ID);
-    return fbBuilder.offset;
-  }
-  int addSiteLatitude(double? SITE_LATITUDE) {
-    fbBuilder.addFloat64(9, SITE_LATITUDE);
-    return fbBuilder.offset;
-  }
-  int addSiteLongitude(double? SITE_LONGITUDE) {
-    fbBuilder.addFloat64(10, SITE_LONGITUDE);
-    return fbBuilder.offset;
-  }
-  int addSiteAltitude(double? SITE_ALTITUDE) {
-    fbBuilder.addFloat64(11, SITE_ALTITUDE);
-    return fbBuilder.offset;
-  }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RFMOriginObjectBuilder extends fb.ObjectBuilder {
-  final rfmOriginKind? _KIND;
-  final int? _CELESTIAL_BODY_ID;
-  final int? _BARYCENTRE_ID;
-  final rfmLibrationPoint? _LIBRATION_POINT;
-  final int? _LIBRATION_PRIMARY_ID;
-  final int? _LIBRATION_SECONDARY_ID;
-  final String? _OBJECT_ID;
-  final String? _SITE_ID;
-  final int? _SITE_BODY_ID;
-  final double? _SITE_LATITUDE;
-  final double? _SITE_LONGITUDE;
-  final double? _SITE_ALTITUDE;
-  final String? _NAME;
-
-  RFMOriginObjectBuilder({
-    rfmOriginKind? KIND,
-    int? CELESTIAL_BODY_ID,
-    int? celestialBodyId,
-    int? BARYCENTRE_ID,
-    int? barycentreId,
-    rfmLibrationPoint? LIBRATION_POINT,
-    rfmLibrationPoint? librationPoint,
-    int? LIBRATION_PRIMARY_ID,
-    int? librationPrimaryId,
-    int? LIBRATION_SECONDARY_ID,
-    int? librationSecondaryId,
-    String? OBJECT_ID,
-    String? objectId,
-    String? SITE_ID,
-    String? siteId,
-    int? SITE_BODY_ID,
-    int? siteBodyId,
-    double? SITE_LATITUDE,
-    double? siteLatitude,
-    double? SITE_LONGITUDE,
-    double? siteLongitude,
-    double? SITE_ALTITUDE,
-    double? siteAltitude,
-    String? NAME,
-  })
-      : _KIND = KIND,
-        _CELESTIAL_BODY_ID = celestialBodyId ?? CELESTIAL_BODY_ID,
-        _BARYCENTRE_ID = barycentreId ?? BARYCENTRE_ID,
-        _LIBRATION_POINT = librationPoint ?? LIBRATION_POINT,
-        _LIBRATION_PRIMARY_ID = librationPrimaryId ?? LIBRATION_PRIMARY_ID,
-        _LIBRATION_SECONDARY_ID = librationSecondaryId ?? LIBRATION_SECONDARY_ID,
-        _OBJECT_ID = objectId ?? OBJECT_ID,
-        _SITE_ID = siteId ?? SITE_ID,
-        _SITE_BODY_ID = siteBodyId ?? SITE_BODY_ID,
-        _SITE_LATITUDE = siteLatitude ?? SITE_LATITUDE,
-        _SITE_LONGITUDE = siteLongitude ?? SITE_LONGITUDE,
-        _SITE_ALTITUDE = siteAltitude ?? SITE_ALTITUDE,
-        _NAME = NAME;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
-        : fbBuilder.writeString(_OBJECT_ID!);
-    final int? SITE_IDOffset = _SITE_ID == null ? null
-        : fbBuilder.writeString(_SITE_ID!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    fbBuilder.startTable(13);
-    fbBuilder.addUint8(0, _KIND?.value);
-    fbBuilder.addInt32(1, _CELESTIAL_BODY_ID);
-    fbBuilder.addInt32(2, _BARYCENTRE_ID);
-    fbBuilder.addUint8(3, _LIBRATION_POINT?.value);
-    fbBuilder.addInt32(4, _LIBRATION_PRIMARY_ID);
-    fbBuilder.addInt32(5, _LIBRATION_SECONDARY_ID);
-    fbBuilder.addOffset(6, OBJECT_IDOffset);
-    fbBuilder.addOffset(7, SITE_IDOffset);
-    fbBuilder.addInt32(8, _SITE_BODY_ID);
-    fbBuilder.addFloat64(9, _SITE_LATITUDE);
-    fbBuilder.addFloat64(10, _SITE_LONGITUDE);
-    fbBuilder.addFloat64(11, _SITE_ALTITUDE);
-    fbBuilder.addOffset(12, NAMEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Axes built from the relative geometry of two objects. Exactly two of the
-///  three axis assignments are independent; the third completes the triad.
-class RFMObjectReferencedAxes {
-  RFMObjectReferencedAxes._(this._bc, this._bcOffset);
-  factory RFMObjectReferencedAxes(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFMObjectReferencedAxes> reader = _RFMObjectReferencedAxesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get PRIMARY_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get primaryObjectId => PRIMARY_OBJECT_ID;
-  String? get SECONDARY_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get secondaryObjectId => SECONDARY_OBJECT_ID;
-  rfmVectorSpecification get X_AXIS => rfmVectorSpecification.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  rfmVectorSpecification get xAxis => X_AXIS;
-  rfmVectorSpecification get Y_AXIS => rfmVectorSpecification.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  rfmVectorSpecification get yAxis => Y_AXIS;
-  rfmVectorSpecification get Z_AXIS => rfmVectorSpecification.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  rfmVectorSpecification get zAxis => Z_AXIS;
-
-  @override
-  String toString() {
-    return 'RFMObjectReferencedAxes{primaryObjectId: ${primaryObjectId}, secondaryObjectId: ${secondaryObjectId}, xAxis: ${xAxis}, yAxis: ${yAxis}, zAxis: ${zAxis}}';
-  }
-}
-
-class _RFMObjectReferencedAxesReader extends fb.TableReader<RFMObjectReferencedAxes> {
-  const _RFMObjectReferencedAxesReader();
-
-  @override
-  RFMObjectReferencedAxes createObject(fb.BufferContext bc, int offset) =>
-    RFMObjectReferencedAxes._(bc, offset);
-}
-
-class RFMObjectReferencedAxesBuilder {
-  RFMObjectReferencedAxesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addPrimaryObjectIdOffset(int? offset) {
+  int addStartTimeOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addSecondaryObjectIdOffset(int? offset) {
+  int addEndTimeOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addXAxis(rfmVectorSpecification? X_AXIS) {
-    fbBuilder.addUint8(2, X_AXIS?.value);
-    return fbBuilder.offset;
-  }
-  int addYAxis(rfmVectorSpecification? Y_AXIS) {
-    fbBuilder.addUint8(3, Y_AXIS?.value);
-    return fbBuilder.offset;
-  }
-  int addZAxis(rfmVectorSpecification? Z_AXIS) {
-    fbBuilder.addUint8(4, Z_AXIS?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RFMObjectReferencedAxesObjectBuilder extends fb.ObjectBuilder {
-  final String? _PRIMARY_OBJECT_ID;
-  final String? _SECONDARY_OBJECT_ID;
-  final rfmVectorSpecification? _X_AXIS;
-  final rfmVectorSpecification? _Y_AXIS;
-  final rfmVectorSpecification? _Z_AXIS;
-
-  RFMObjectReferencedAxesObjectBuilder({
-    String? PRIMARY_OBJECT_ID,
-    String? primaryObjectId,
-    String? SECONDARY_OBJECT_ID,
-    String? secondaryObjectId,
-    rfmVectorSpecification? X_AXIS,
-    rfmVectorSpecification? xAxis,
-    rfmVectorSpecification? Y_AXIS,
-    rfmVectorSpecification? yAxis,
-    rfmVectorSpecification? Z_AXIS,
-    rfmVectorSpecification? zAxis,
-  })
-      : _PRIMARY_OBJECT_ID = primaryObjectId ?? PRIMARY_OBJECT_ID,
-        _SECONDARY_OBJECT_ID = secondaryObjectId ?? SECONDARY_OBJECT_ID,
-        _X_AXIS = xAxis ?? X_AXIS,
-        _Y_AXIS = yAxis ?? Y_AXIS,
-        _Z_AXIS = zAxis ?? Z_AXIS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PRIMARY_OBJECT_IDOffset = _PRIMARY_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_PRIMARY_OBJECT_ID!);
-    final int? SECONDARY_OBJECT_IDOffset = _SECONDARY_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_SECONDARY_OBJECT_ID!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, PRIMARY_OBJECT_IDOffset);
-    fbBuilder.addOffset(1, SECONDARY_OBJECT_IDOffset);
-    fbBuilder.addUint8(2, _X_AXIS?.value);
-    fbBuilder.addUint8(3, _Y_AXIS?.value);
-    fbBuilder.addUint8(4, _Z_AXIS?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Axes built by aligning one vector with a reference direction and using a
-///  second vector as a constraint. Vectors are 3-element, expressed in the
-///  coordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.
-class RFMLocalAlignedConstrainedAxes {
-  RFMLocalAlignedConstrainedAxes._(this._bc, this._bcOffset);
-  factory RFMLocalAlignedConstrainedAxes(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFMLocalAlignedConstrainedAxes> reader = _RFMLocalAlignedConstrainedAxesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get REFERENCE_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get referenceObjectId => REFERENCE_OBJECT_ID;
-  String? get REFERENCE_COORDINATE_SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get referenceCoordinateSystemName => REFERENCE_COORDINATE_SYSTEM_NAME;
-  List<double>? get ALIGNMENT_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
-  List<double>? get alignmentVector => ALIGNMENT_VECTOR;
-  List<double>? get ALIGNMENT_REFERENCE_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
-  List<double>? get alignmentReferenceVector => ALIGNMENT_REFERENCE_VECTOR;
-  List<double>? get CONSTRAINT_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
-  List<double>? get constraintVector => CONSTRAINT_VECTOR;
-  List<double>? get CONSTRAINT_REFERENCE_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
-  List<double>? get constraintReferenceVector => CONSTRAINT_REFERENCE_VECTOR;
-
-  @override
-  String toString() {
-    return 'RFMLocalAlignedConstrainedAxes{referenceObjectId: ${referenceObjectId}, referenceCoordinateSystemName: ${referenceCoordinateSystemName}, alignmentVector: ${alignmentVector}, alignmentReferenceVector: ${alignmentReferenceVector}, constraintVector: ${constraintVector}, constraintReferenceVector: ${constraintReferenceVector}}';
-  }
-}
-
-class _RFMLocalAlignedConstrainedAxesReader extends fb.TableReader<RFMLocalAlignedConstrainedAxes> {
-  const _RFMLocalAlignedConstrainedAxesReader();
-
-  @override
-  RFMLocalAlignedConstrainedAxes createObject(fb.BufferContext bc, int offset) =>
-    RFMLocalAlignedConstrainedAxes._(bc, offset);
-}
-
-class RFMLocalAlignedConstrainedAxesBuilder {
-  RFMLocalAlignedConstrainedAxesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addReferenceObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addReferenceCoordinateSystemNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addAlignmentVectorOffset(int? offset) {
+  int addReferenceTimeOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addAlignmentReferenceVectorOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addFrequencyHz(double? FREQUENCY_HZ) {
+    fbBuilder.addFloat64(3, FREQUENCY_HZ);
     return fbBuilder.offset;
   }
-  int addConstraintVectorOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addFrequencyRateHzPerS(double? FREQUENCY_RATE_HZ_PER_S) {
+    fbBuilder.addFloat64(4, FREQUENCY_RATE_HZ_PER_S);
     return fbBuilder.offset;
   }
-  int addConstraintReferenceVectorOffset(int? offset) {
+  int addTransmittingStationIdOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addTransmitBandOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
   }
 }
 
-class RFMLocalAlignedConstrainedAxesObjectBuilder extends fb.ObjectBuilder {
-  final String? _REFERENCE_OBJECT_ID;
-  final String? _REFERENCE_COORDINATE_SYSTEM_NAME;
-  final List<double>? _ALIGNMENT_VECTOR;
-  final List<double>? _ALIGNMENT_REFERENCE_VECTOR;
-  final List<double>? _CONSTRAINT_VECTOR;
-  final List<double>? _CONSTRAINT_REFERENCE_VECTOR;
+class TDMTransmitRampObjectBuilder extends fb.ObjectBuilder {
+  final String? _START_TIME;
+  final String? _END_TIME;
+  final String? _REFERENCE_TIME;
+  final double? _FREQUENCY_HZ;
+  final double? _FREQUENCY_RATE_HZ_PER_S;
+  final String? _TRANSMITTING_STATION_ID;
+  final String? _TRANSMIT_BAND;
 
-  RFMLocalAlignedConstrainedAxesObjectBuilder({
-    String? REFERENCE_OBJECT_ID,
-    String? referenceObjectId,
-    String? REFERENCE_COORDINATE_SYSTEM_NAME,
-    String? referenceCoordinateSystemName,
-    List<double>? ALIGNMENT_VECTOR,
-    List<double>? alignmentVector,
-    List<double>? ALIGNMENT_REFERENCE_VECTOR,
-    List<double>? alignmentReferenceVector,
-    List<double>? CONSTRAINT_VECTOR,
-    List<double>? constraintVector,
-    List<double>? CONSTRAINT_REFERENCE_VECTOR,
-    List<double>? constraintReferenceVector,
+  TDMTransmitRampObjectBuilder({
+    String? START_TIME,
+    String? startTime,
+    String? END_TIME,
+    String? endTime,
+    String? REFERENCE_TIME,
+    String? referenceTime,
+    double? FREQUENCY_HZ,
+    double? frequencyHz,
+    double? FREQUENCY_RATE_HZ_PER_S,
+    double? frequencyRateHzPerS,
+    String? TRANSMITTING_STATION_ID,
+    String? transmittingStationId,
+    String? TRANSMIT_BAND,
+    String? transmitBand,
   })
-      : _REFERENCE_OBJECT_ID = referenceObjectId ?? REFERENCE_OBJECT_ID,
-        _REFERENCE_COORDINATE_SYSTEM_NAME = referenceCoordinateSystemName ?? REFERENCE_COORDINATE_SYSTEM_NAME,
-        _ALIGNMENT_VECTOR = alignmentVector ?? ALIGNMENT_VECTOR,
-        _ALIGNMENT_REFERENCE_VECTOR = alignmentReferenceVector ?? ALIGNMENT_REFERENCE_VECTOR,
-        _CONSTRAINT_VECTOR = constraintVector ?? CONSTRAINT_VECTOR,
-        _CONSTRAINT_REFERENCE_VECTOR = constraintReferenceVector ?? CONSTRAINT_REFERENCE_VECTOR;
+      : _START_TIME = startTime ?? START_TIME,
+        _END_TIME = endTime ?? END_TIME,
+        _REFERENCE_TIME = referenceTime ?? REFERENCE_TIME,
+        _FREQUENCY_HZ = frequencyHz ?? FREQUENCY_HZ,
+        _FREQUENCY_RATE_HZ_PER_S = frequencyRateHzPerS ?? FREQUENCY_RATE_HZ_PER_S,
+        _TRANSMITTING_STATION_ID = transmittingStationId ?? TRANSMITTING_STATION_ID,
+        _TRANSMIT_BAND = transmitBand ?? TRANSMIT_BAND;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? REFERENCE_OBJECT_IDOffset = _REFERENCE_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_REFERENCE_OBJECT_ID!);
-    final int? REFERENCE_COORDINATE_SYSTEM_NAMEOffset = _REFERENCE_COORDINATE_SYSTEM_NAME == null ? null
-        : fbBuilder.writeString(_REFERENCE_COORDINATE_SYSTEM_NAME!);
-    final int? ALIGNMENT_VECTOROffset = _ALIGNMENT_VECTOR == null ? null
-        : fbBuilder.writeListFloat64(_ALIGNMENT_VECTOR!);
-    final int? ALIGNMENT_REFERENCE_VECTOROffset = _ALIGNMENT_REFERENCE_VECTOR == null ? null
-        : fbBuilder.writeListFloat64(_ALIGNMENT_REFERENCE_VECTOR!);
-    final int? CONSTRAINT_VECTOROffset = _CONSTRAINT_VECTOR == null ? null
-        : fbBuilder.writeListFloat64(_CONSTRAINT_VECTOR!);
-    final int? CONSTRAINT_REFERENCE_VECTOROffset = _CONSTRAINT_REFERENCE_VECTOR == null ? null
-        : fbBuilder.writeListFloat64(_CONSTRAINT_REFERENCE_VECTOR!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, REFERENCE_OBJECT_IDOffset);
-    fbBuilder.addOffset(1, REFERENCE_COORDINATE_SYSTEM_NAMEOffset);
-    fbBuilder.addOffset(2, ALIGNMENT_VECTOROffset);
-    fbBuilder.addOffset(3, ALIGNMENT_REFERENCE_VECTOROffset);
-    fbBuilder.addOffset(4, CONSTRAINT_VECTOROffset);
-    fbBuilder.addOffset(5, CONSTRAINT_REFERENCE_VECTOROffset);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? END_TIMEOffset = _END_TIME == null ? null
+        : fbBuilder.writeString(_END_TIME!);
+    final int? REFERENCE_TIMEOffset = _REFERENCE_TIME == null ? null
+        : fbBuilder.writeString(_REFERENCE_TIME!);
+    final int? TRANSMITTING_STATION_IDOffset = _TRANSMITTING_STATION_ID == null ? null
+        : fbBuilder.writeString(_TRANSMITTING_STATION_ID!);
+    final int? TRANSMIT_BANDOffset = _TRANSMIT_BAND == null ? null
+        : fbBuilder.writeString(_TRANSMIT_BAND!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, START_TIMEOffset);
+    fbBuilder.addOffset(1, END_TIMEOffset);
+    fbBuilder.addOffset(2, REFERENCE_TIMEOffset);
+    fbBuilder.addFloat64(3, _FREQUENCY_HZ);
+    fbBuilder.addFloat64(4, _FREQUENCY_RATE_HZ_PER_S);
+    fbBuilder.addOffset(5, TRANSMITTING_STATION_IDOffset);
+    fbBuilder.addOffset(6, TRANSMIT_BANDOffset);
     return fbBuilder.endTable();
   }
 
@@ -1053,641 +182,83 @@ class RFMLocalAlignedConstrainedAxesObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  A fully specified coordinate system: an axis set, an origin, and the epoch
-///  and time system the axis set is evaluated at. This is the unit a frames
-///  consumer needs; the pre-existing RFMUnion members name an axis convention
-///  alone and cannot express an origin.
-class RFMCoordinateSystem {
-  RFMCoordinateSystem._(this._bc, this._bcOffset);
-  factory RFMCoordinateSystem(List<int> bytes) {
+///  ONE CCSDS TDM observation: a single data-section line.
+///
+///  A TDM data section is NOT a uniform grid. Every line in every published
+///  example (CCSDS 503.0-B-2 Cor.1 annex E, 18 figures) has the literal form
+///
+///      KEYWORD = <epoch> <value>
+///
+///  and the epochs are chosen INDEPENDENTLY PER KEYWORD. Figure E-17 (ground
+///  based radar tracking with RCS) is decisive: RANGE, ANGLE_1, ANGLE_2 and
+///  CARRIER_POWER share epochs, while the final RCS line repeats the EARLIER
+///  epoch 2011-05-11T10:26:33.7008 after a 10:26:33.9686 line. No single
+///  OBSERVATION_START_TIME + i * OBSERVATION_STEP_SIZE grid can express that,
+///  which is why the parallel observation arrays on the TDM root cannot
+///  round-trip a conformant TDM.
+///
+///  KEYWORD is the CCSDS data keyword verbatim and case-exact, e.g. "RANGE",
+///  "ANGLE_1", "CARRIER_POWER", "RCS", "DOPPLER_INTEGRATED", "PR_N0",
+///  "RECEIVE_FREQ_1", "TRANSMIT_PHASE_CT_1", "VLBI_DELAY", "DOR", "MAG",
+///  "CLOCK_BIAS", "STEC", "TROPO_DRY", "PRESSURE". Carrying the keyword rather
+///  than a fixed field per observable is what lets this form transport the whole
+///  503.0-B-2 data vocabulary, including keywords a future issue adds, without
+///  a wire change and without inventing a name the standard does not define.
+///
+///  Units are those the standard assigns to that keyword; RANGE additionally
+///  depends on RANGE_UNITS, which is metadata, not data.
+class TDMObservation {
+  TDMObservation._(this._bc, this._bcOffset);
+  factory TDMObservation(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<RFMCoordinateSystem> reader = _RFMCoordinateSystemReader();
+  static const fb.Reader<TDMObservation> reader = _TDMObservationReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Stable name for this coordinate system within the producing data set.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Orientation rule.
-  rfmAxisType get AXIS_TYPE => rfmAxisType.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  rfmAxisType get axisType => AXIS_TYPE;
-  ///  Centre of the system.
-  RFMOrigin? get ORIGIN => RFMOrigin.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Ephemeris body code whose equator/rotation defines the axes, for the
-  ///  body-referenced axis types. Independent of ORIGIN.
-  int get AXIS_REFERENCE_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get axisReferenceBodyId => AXIS_REFERENCE_BODY_ID;
-  ///  Reference epoch the axis set is evaluated at, ISO 8601. Required for the
-  ///  of-date and of-epoch axis types; ignored by the inertial ones.
-  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Time system the EPOCH is expressed in, named by the $TIM timingStandard
-  ///  member name (for example "UTC", "TAI", "TT", "TDB", "A1").
-  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
-  ///  Extra parameters for OBJECT_REFERENCED axes.
-  RFMObjectReferencedAxes? get OBJECT_REFERENCED_AXES => RFMObjectReferencedAxes.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  RFMObjectReferencedAxes? get objectReferencedAxes => OBJECT_REFERENCED_AXES;
-  ///  Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.
-  RFMLocalAlignedConstrainedAxes? get LOCAL_ALIGNED_CONSTRAINED_AXES => RFMLocalAlignedConstrainedAxes.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  RFMLocalAlignedConstrainedAxes? get localAlignedConstrainedAxes => LOCAL_ALIGNED_CONSTRAINED_AXES;
-  ///  Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.
-  String? get KERNEL_FRAME_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get kernelFrameName => KERNEL_FRAME_NAME;
-  ///  Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.
-  int get KERNEL_FRAME_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get kernelFrameId => KERNEL_FRAME_ID;
-  ///  Content identifier of the Earth-orientation data set used to realise
-  ///  this system, when the axis chain requires one. Recorded so that two
-  ///  consumers can prove they used the same table rather than assume it.
-  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get eopDataSetCid => EOP_DATA_SET_CID;
+  ///  CCSDS data keyword, verbatim and case-exact.
+  String? get KEYWORD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Epoch of this single observation, ISO 8601, in the segment TIME_SYSTEM.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Observed value.
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
 
   @override
   String toString() {
-    return 'RFMCoordinateSystem{NAME: ${NAME}, axisType: ${axisType}, ORIGIN: ${ORIGIN}, axisReferenceBodyId: ${axisReferenceBodyId}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, objectReferencedAxes: ${objectReferencedAxes}, localAlignedConstrainedAxes: ${localAlignedConstrainedAxes}, kernelFrameName: ${kernelFrameName}, kernelFrameId: ${kernelFrameId}, eopDataSetCid: ${eopDataSetCid}}';
+    return 'TDMObservation{KEYWORD: ${KEYWORD}, EPOCH: ${EPOCH}, VALUE: ${VALUE}}';
   }
 }
 
-class _RFMCoordinateSystemReader extends fb.TableReader<RFMCoordinateSystem> {
-  const _RFMCoordinateSystemReader();
+class _TDMObservationReader extends fb.TableReader<TDMObservation> {
+  const _TDMObservationReader();
 
   @override
-  RFMCoordinateSystem createObject(fb.BufferContext bc, int offset) =>
-    RFMCoordinateSystem._(bc, offset);
+  TDMObservation createObject(fb.BufferContext bc, int offset) =>
+    TDMObservation._(bc, offset);
 }
 
-class RFMCoordinateSystemBuilder {
-  RFMCoordinateSystemBuilder(this.fbBuilder);
+class TDMObservationBuilder {
+  TDMObservationBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(3);
   }
 
-  int addNameOffset(int? offset) {
+  int addKeywordOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addAxisType(rfmAxisType? AXIS_TYPE) {
-    fbBuilder.addUint8(1, AXIS_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addOriginOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addAxisReferenceBodyId(int? AXIS_REFERENCE_BODY_ID) {
-    fbBuilder.addInt32(3, AXIS_REFERENCE_BODY_ID);
     return fbBuilder.offset;
   }
   int addEpochOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addEpochTimeSystemOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addObjectReferencedAxesOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addLocalAlignedConstrainedAxesOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addKernelFrameNameOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addKernelFrameId(int? KERNEL_FRAME_ID) {
-    fbBuilder.addInt32(9, KERNEL_FRAME_ID);
-    return fbBuilder.offset;
-  }
-  int addEopDataSetCidOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RFMCoordinateSystemObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final rfmAxisType? _AXIS_TYPE;
-  final RFMOriginObjectBuilder? _ORIGIN;
-  final int? _AXIS_REFERENCE_BODY_ID;
-  final String? _EPOCH;
-  final String? _EPOCH_TIME_SYSTEM;
-  final RFMObjectReferencedAxesObjectBuilder? _OBJECT_REFERENCED_AXES;
-  final RFMLocalAlignedConstrainedAxesObjectBuilder? _LOCAL_ALIGNED_CONSTRAINED_AXES;
-  final String? _KERNEL_FRAME_NAME;
-  final int? _KERNEL_FRAME_ID;
-  final String? _EOP_DATA_SET_CID;
-
-  RFMCoordinateSystemObjectBuilder({
-    String? NAME,
-    rfmAxisType? AXIS_TYPE,
-    rfmAxisType? axisType,
-    RFMOriginObjectBuilder? ORIGIN,
-    int? AXIS_REFERENCE_BODY_ID,
-    int? axisReferenceBodyId,
-    String? EPOCH,
-    String? EPOCH_TIME_SYSTEM,
-    String? epochTimeSystem,
-    RFMObjectReferencedAxesObjectBuilder? OBJECT_REFERENCED_AXES,
-    RFMObjectReferencedAxesObjectBuilder? objectReferencedAxes,
-    RFMLocalAlignedConstrainedAxesObjectBuilder? LOCAL_ALIGNED_CONSTRAINED_AXES,
-    RFMLocalAlignedConstrainedAxesObjectBuilder? localAlignedConstrainedAxes,
-    String? KERNEL_FRAME_NAME,
-    String? kernelFrameName,
-    int? KERNEL_FRAME_ID,
-    int? kernelFrameId,
-    String? EOP_DATA_SET_CID,
-    String? eopDataSetCid,
-  })
-      : _NAME = NAME,
-        _AXIS_TYPE = axisType ?? AXIS_TYPE,
-        _ORIGIN = ORIGIN,
-        _AXIS_REFERENCE_BODY_ID = axisReferenceBodyId ?? AXIS_REFERENCE_BODY_ID,
-        _EPOCH = EPOCH,
-        _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
-        _OBJECT_REFERENCED_AXES = objectReferencedAxes ?? OBJECT_REFERENCED_AXES,
-        _LOCAL_ALIGNED_CONSTRAINED_AXES = localAlignedConstrainedAxes ?? LOCAL_ALIGNED_CONSTRAINED_AXES,
-        _KERNEL_FRAME_NAME = kernelFrameName ?? KERNEL_FRAME_NAME,
-        _KERNEL_FRAME_ID = kernelFrameId ?? KERNEL_FRAME_ID,
-        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? ORIGINOffset = _ORIGIN?.getOrCreateOffset(fbBuilder);
-    final int? EPOCHOffset = _EPOCH == null ? null
-        : fbBuilder.writeString(_EPOCH!);
-    final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
-        : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
-    final int? OBJECT_REFERENCED_AXESOffset = _OBJECT_REFERENCED_AXES?.getOrCreateOffset(fbBuilder);
-    final int? LOCAL_ALIGNED_CONSTRAINED_AXESOffset = _LOCAL_ALIGNED_CONSTRAINED_AXES?.getOrCreateOffset(fbBuilder);
-    final int? KERNEL_FRAME_NAMEOffset = _KERNEL_FRAME_NAME == null ? null
-        : fbBuilder.writeString(_KERNEL_FRAME_NAME!);
-    final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
-        : fbBuilder.writeString(_EOP_DATA_SET_CID!);
-    fbBuilder.startTable(11);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addUint8(1, _AXIS_TYPE?.value);
-    fbBuilder.addOffset(2, ORIGINOffset);
-    fbBuilder.addInt32(3, _AXIS_REFERENCE_BODY_ID);
-    fbBuilder.addOffset(4, EPOCHOffset);
-    fbBuilder.addOffset(5, EPOCH_TIME_SYSTEMOffset);
-    fbBuilder.addOffset(6, OBJECT_REFERENCED_AXESOffset);
-    fbBuilder.addOffset(7, LOCAL_ALIGNED_CONSTRAINED_AXESOffset);
-    fbBuilder.addOffset(8, KERNEL_FRAME_NAMEOffset);
-    fbBuilder.addInt32(9, _KERNEL_FRAME_ID);
-    fbBuilder.addOffset(10, EOP_DATA_SET_CIDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class CelestialFrameWrapper {
-  CelestialFrameWrapper._(this._bc, this._bcOffset);
-  factory CelestialFrameWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CelestialFrameWrapper> reader = _CelestialFrameWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  CelestialFrame get frame => CelestialFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-
-  @override
-  String toString() {
-    return 'CelestialFrameWrapper{frame: ${frame}}';
-  }
-}
-
-class _CelestialFrameWrapperReader extends fb.TableReader<CelestialFrameWrapper> {
-  const _CelestialFrameWrapperReader();
-
-  @override
-  CelestialFrameWrapper createObject(fb.BufferContext bc, int offset) =>
-    CelestialFrameWrapper._(bc, offset);
-}
-
-class CelestialFrameWrapperBuilder {
-  CelestialFrameWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addFrame(CelestialFrame? frame) {
-    fbBuilder.addInt8(0, frame?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CelestialFrameWrapperObjectBuilder extends fb.ObjectBuilder {
-  final CelestialFrame? _frame;
-
-  CelestialFrameWrapperObjectBuilder({
-    CelestialFrame? frame,
-  })
-      : _frame = frame;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _frame?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class SpacecraftFrameWrapper {
-  SpacecraftFrameWrapper._(this._bc, this._bcOffset);
-  factory SpacecraftFrameWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SpacecraftFrameWrapper> reader = _SpacecraftFrameWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  SpacecraftFrame get frame => SpacecraftFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-
-  @override
-  String toString() {
-    return 'SpacecraftFrameWrapper{frame: ${frame}}';
-  }
-}
-
-class _SpacecraftFrameWrapperReader extends fb.TableReader<SpacecraftFrameWrapper> {
-  const _SpacecraftFrameWrapperReader();
-
-  @override
-  SpacecraftFrameWrapper createObject(fb.BufferContext bc, int offset) =>
-    SpacecraftFrameWrapper._(bc, offset);
-}
-
-class SpacecraftFrameWrapperBuilder {
-  SpacecraftFrameWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addFrame(SpacecraftFrame? frame) {
-    fbBuilder.addInt8(0, frame?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SpacecraftFrameWrapperObjectBuilder extends fb.ObjectBuilder {
-  final SpacecraftFrame? _frame;
-
-  SpacecraftFrameWrapperObjectBuilder({
-    SpacecraftFrame? frame,
-  })
-      : _frame = frame;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _frame?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class OrbitFrameWrapper {
-  OrbitFrameWrapper._(this._bc, this._bcOffset);
-  factory OrbitFrameWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<OrbitFrameWrapper> reader = _OrbitFrameWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  OrbitFrame get frame => OrbitFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-
-  @override
-  String toString() {
-    return 'OrbitFrameWrapper{frame: ${frame}}';
-  }
-}
-
-class _OrbitFrameWrapperReader extends fb.TableReader<OrbitFrameWrapper> {
-  const _OrbitFrameWrapperReader();
-
-  @override
-  OrbitFrameWrapper createObject(fb.BufferContext bc, int offset) =>
-    OrbitFrameWrapper._(bc, offset);
-}
-
-class OrbitFrameWrapperBuilder {
-  OrbitFrameWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addFrame(OrbitFrame? frame) {
-    fbBuilder.addInt8(0, frame?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class OrbitFrameWrapperObjectBuilder extends fb.ObjectBuilder {
-  final OrbitFrame? _frame;
-
-  OrbitFrameWrapperObjectBuilder({
-    OrbitFrame? frame,
-  })
-      : _frame = frame;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _frame?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class CustomFrameWrapper {
-  CustomFrameWrapper._(this._bc, this._bcOffset);
-  factory CustomFrameWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CustomFrameWrapper> reader = _CustomFrameWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  CustomFrame get frame => CustomFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-
-  @override
-  String toString() {
-    return 'CustomFrameWrapper{frame: ${frame}}';
-  }
-}
-
-class _CustomFrameWrapperReader extends fb.TableReader<CustomFrameWrapper> {
-  const _CustomFrameWrapperReader();
-
-  @override
-  CustomFrameWrapper createObject(fb.BufferContext bc, int offset) =>
-    CustomFrameWrapper._(bc, offset);
-}
-
-class CustomFrameWrapperBuilder {
-  CustomFrameWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addFrame(CustomFrame? frame) {
-    fbBuilder.addInt8(0, frame?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CustomFrameWrapperObjectBuilder extends fb.ObjectBuilder {
-  final CustomFrame? _frame;
-
-  CustomFrameWrapperObjectBuilder({
-    CustomFrame? frame,
-  })
-      : _frame = frame;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _frame?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class RFMCoordinateSystemWrapper {
-  RFMCoordinateSystemWrapper._(this._bc, this._bcOffset);
-  factory RFMCoordinateSystemWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFMCoordinateSystemWrapper> reader = _RFMCoordinateSystemWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  RFMCoordinateSystem? get COORDINATE_SYSTEM => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  RFMCoordinateSystem? get coordinateSystem => COORDINATE_SYSTEM;
-
-  @override
-  String toString() {
-    return 'RFMCoordinateSystemWrapper{coordinateSystem: ${coordinateSystem}}';
-  }
-}
-
-class _RFMCoordinateSystemWrapperReader extends fb.TableReader<RFMCoordinateSystemWrapper> {
-  const _RFMCoordinateSystemWrapperReader();
-
-  @override
-  RFMCoordinateSystemWrapper createObject(fb.BufferContext bc, int offset) =>
-    RFMCoordinateSystemWrapper._(bc, offset);
-}
-
-class RFMCoordinateSystemWrapperBuilder {
-  RFMCoordinateSystemWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addCoordinateSystemOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RFMCoordinateSystemWrapperObjectBuilder extends fb.ObjectBuilder {
-  final RFMCoordinateSystemObjectBuilder? _COORDINATE_SYSTEM;
-
-  RFMCoordinateSystemWrapperObjectBuilder({
-    RFMCoordinateSystemObjectBuilder? COORDINATE_SYSTEM,
-    RFMCoordinateSystemObjectBuilder? coordinateSystem,
-  })
-      : _COORDINATE_SYSTEM = coordinateSystem ?? COORDINATE_SYSTEM;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? COORDINATE_SYSTEMOffset = _COORDINATE_SYSTEM?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, COORDINATE_SYSTEMOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Reference Frame Message
-class RFM {
-  RFM._(this._bc, this._bcOffset);
-  factory RFM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFM> reader = _RFMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  RFMUnionTypeId? get REFERENCE_FRAME_type => RFMUnionTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 4));
-  RFMUnionTypeId? get referenceFrameType => REFERENCE_FRAME_type;
-  RFMUnionTypeId? get REFERENCE_FRAMEType => REFERENCE_FRAME_type;
-  dynamic get REFERENCE_FRAME {
-    switch (REFERENCE_FRAMEType?.value) {
-      case 1: return CelestialFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 2: return SpacecraftFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 3: return OrbitFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 4: return CustomFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 5: return RFMCoordinateSystemWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      default: return null;
-    }
-  }
-  dynamic get referenceFrame => REFERENCE_FRAME;
-  int get INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'RFM{referenceFrameType: ${referenceFrameType}, referenceFrame: ${referenceFrame}, INDEX: ${INDEX}, NAME: ${NAME}}';
-  }
-}
-
-class _RFMReader extends fb.TableReader<RFM> {
-  const _RFMReader();
-
-  @override
-  RFM createObject(fb.BufferContext bc, int offset) =>
-    RFM._(bc, offset);
-}
-
-class RFMBuilder {
-  RFMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addReferenceFrameType(RFMUnionTypeId? REFERENCE_FRAME_type) {
-    fbBuilder.addUint8(0, REFERENCE_FRAME_type?.value);
-    return fbBuilder.offset;
-  }
-  int addReferenceFrameOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addIndex(int? INDEX) {
-    fbBuilder.addInt32(2, INDEX);
-    return fbBuilder.offset;
-  }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(2, VALUE);
     return fbBuilder.offset;
   }
 
@@ -1696,36 +267,2520 @@ class RFMBuilder {
   }
 }
 
-class RFMObjectBuilder extends fb.ObjectBuilder {
-  final RFMUnionTypeId? _REFERENCE_FRAME_type;
-  final dynamic _REFERENCE_FRAME;
-  final int? _INDEX;
-  final String? _NAME;
+class TDMObservationObjectBuilder extends fb.ObjectBuilder {
+  final String? _KEYWORD;
+  final String? _EPOCH;
+  final double? _VALUE;
 
-  RFMObjectBuilder({
-    RFMUnionTypeId? REFERENCE_FRAME_type,
-    RFMUnionTypeId? referenceFrameType,
-    dynamic REFERENCE_FRAME,
-    dynamic? referenceFrame,
-    int? INDEX,
-    String? NAME,
+  TDMObservationObjectBuilder({
+    String? KEYWORD,
+    String? EPOCH,
+    double? VALUE,
   })
-      : _REFERENCE_FRAME_type = referenceFrameType ?? REFERENCE_FRAME_type,
-        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
-        _INDEX = INDEX,
-        _NAME = NAME;
+      : _KEYWORD = KEYWORD,
+        _EPOCH = EPOCH,
+        _VALUE = VALUE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    fbBuilder.startTable(4);
-    fbBuilder.addUint8(0, _REFERENCE_FRAME_type?.value);
-    fbBuilder.addOffset(1, REFERENCE_FRAMEOffset);
-    fbBuilder.addInt32(2, _INDEX);
-    fbBuilder.addOffset(3, NAMEOffset);
+    final int? KEYWORDOffset = _KEYWORD == null ? null
+        : fbBuilder.writeString(_KEYWORD!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, KEYWORDOffset);
+    fbBuilder.addOffset(1, EPOCHOffset);
+    fbBuilder.addFloat64(2, _VALUE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One TDM metadata + data segment.
+///
+///  A TDM file may carry MANY segments, each with its own META_START/META_STOP
+///  block and its own DATA_START/DATA_STOP block (503.0-B-2 Cor.1 annex E,
+///  figures E-16 and E-18). The TDM root models a SINGLE segment, so a
+///  multi-segment file cannot be represented without this vector.
+class TDMSegment {
+  TDMSegment._(this._bc, this._bcOffset);
+  factory TDMSegment(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TDMSegment> reader = _TDMSegmentReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Comments carried in this segment's metadata block, in file order.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 4);
+  String? get META_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get metaStart => META_START;
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get timeSystem => TIME_SYSTEM;
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get startTime => START_TIME;
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get stopTime => STOP_TIME;
+  String? get PARTICIPANT_1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get participant1 => PARTICIPANT_1;
+  String? get PARTICIPANT_2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get participant2 => PARTICIPANT_2;
+  String? get PARTICIPANT_3 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get participant3 => PARTICIPANT_3;
+  String? get PARTICIPANT_4 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get participant4 => PARTICIPANT_4;
+  String? get PARTICIPANT_5 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get participant5 => PARTICIPANT_5;
+  String? get MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  int get PATH_1 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get path1 => PATH_1;
+  int get PATH_2 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get path2 => PATH_2;
+  String? get TRANSMIT_BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get transmitBand => TRANSMIT_BAND;
+  String? get RECEIVE_BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get receiveBand => RECEIVE_BAND;
+  double get INTEGRATION_INTERVAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get integrationInterval => INTEGRATION_INTERVAL;
+  String? get INTEGRATION_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get integrationRef => INTEGRATION_REF;
+  String? get TIMETAG_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get timetagRef => TIMETAG_REF;
+  String? get ANGLE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get angleType => ANGLE_TYPE;
+  String? get RANGE_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get rangeMode => RANGE_MODE;
+  double get RANGE_MODULUS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get rangeModulus => RANGE_MODULUS;
+  double get CORRECTION_ANGLE_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  double get correctionAngle1 => CORRECTION_ANGLE_1;
+  double get CORRECTION_ANGLE_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  double get correctionAngle2 => CORRECTION_ANGLE_2;
+  String? get CORRECTIONS_APPLIED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get correctionsApplied => CORRECTIONS_APPLIED;
+  String? get DATA_QUALITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get dataQuality => DATA_QUALITY;
+  double get RECEIVE_DELAY_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  double get receiveDelay2 => RECEIVE_DELAY_2;
+  double get RECEIVE_DELAY_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  double get receiveDelay3 => RECEIVE_DELAY_3;
+  double get TRANSMIT_FREQ_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  double get transmitFreq1 => TRANSMIT_FREQ_1;
+  double get TRANSMIT_FREQ_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  double get transmitFreq2 => TRANSMIT_FREQ_2;
+  double get TRANSMIT_FREQ_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get transmitFreq3 => TRANSMIT_FREQ_3;
+  double get TRANSMIT_FREQ_4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get transmitFreq4 => TRANSMIT_FREQ_4;
+  double get TRANSMIT_FREQ_5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get transmitFreq5 => TRANSMIT_FREQ_5;
+  double get TRANSMIT_FREQ_RATE_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  double get transmitFreqRate1 => TRANSMIT_FREQ_RATE_1;
+  double get TRANSMIT_FREQ_RATE_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  double get transmitFreqRate2 => TRANSMIT_FREQ_RATE_2;
+  double get TRANSMIT_FREQ_RATE_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
+  double get transmitFreqRate3 => TRANSMIT_FREQ_RATE_3;
+  double get TRANSMIT_FREQ_RATE_4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
+  double get transmitFreqRate4 => TRANSMIT_FREQ_RATE_4;
+  double get TRANSMIT_FREQ_RATE_5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
+  double get transmitFreqRate5 => TRANSMIT_FREQ_RATE_5;
+  String? get META_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  String? get metaStop => META_STOP;
+  String? get DATA_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  String? get dataStart => DATA_START;
+  ///  The segment's observations, in FILE ORDER. This is the authoritative
+  ///  data-section representation.
+  List<TDMObservation>? get OBSERVATIONS => const fb.ListReader<TDMObservation>(TDMObservation.reader).vTableGetNullable(_bc, _bcOffset, 82);
+  String? get DATA_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  String? get dataStop => DATA_STOP;
+  ///  Uplink frequency ramp table applying to this segment. SDS EXTENSION;
+  ///  absent (not empty) for a ramp-free, exactly CCSDS-conformant segment.
+  List<TDMTransmitRamp>? get TRANSMIT_RAMPS => const fb.ListReader<TDMTransmitRamp>(TDMTransmitRamp.reader).vTableGetNullable(_bc, _bcOffset, 86);
+  List<TDMTransmitRamp>? get transmitRamps => TRANSMIT_RAMPS;
+  ///  Unique message identifier (503.0-B-2 table 3-2).
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  String? get messageId => MESSAGE_ID;
+  ///  Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
+  String? get trackId => TRACK_ID;
+  ///  Comma-separated list of the data keywords present in the data section.
+  String? get DATA_TYPES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
+  String? get dataTypes => DATA_TYPES;
+  ///  Signal path through the participants as an ordered comma-separated list,
+  ///  e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  String? get PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  ///  Name of the ephemeris used to generate the data, per participant.
+  String? get EPHEMERIS_NAME_1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
+  String? get ephemerisName1 => EPHEMERIS_NAME_1;
+  String? get EPHEMERIS_NAME_2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 98);
+  String? get ephemerisName2 => EPHEMERIS_NAME_2;
+  String? get EPHEMERIS_NAME_3 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
+  String? get ephemerisName3 => EPHEMERIS_NAME_3;
+  String? get EPHEMERIS_NAME_4 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
+  String? get ephemerisName4 => EPHEMERIS_NAME_4;
+  String? get EPHEMERIS_NAME_5 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 104);
+  String? get ephemerisName5 => EPHEMERIS_NAME_5;
+  ///  Units of the RANGE observable: "km", "s" or "RU" (range units).
+  ///  RANGE is meaningless without it.
+  String? get RANGE_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 106);
+  String? get rangeUnits => RANGE_UNITS;
+  ///  Reference frame for angle and position data, as the verbatim CCSDS
+  ///  keyword value (503.0-B-2 annex B).
+  String? get REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 108);
+  String? get referenceFrame => REFERENCE_FRAME;
+  ///  Recommended interpolation method for the observations.
+  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 110);
+  ///  Recommended interpolation degree.
+  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 112, 0);
+  int get interpolationDegree => INTERPOLATION_DEGREE;
+  ///  Frequency offset applied to the observations, Hz.
+  double get FREQ_OFFSET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
+  double get freqOffset => FREQ_OFFSET;
+  ///  Transponder turnaround ratio numerator.
+  int get TURNAROUND_NUMERATOR => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 116, 0);
+  int get turnaroundNumerator => TURNAROUND_NUMERATOR;
+  ///  Transponder turnaround ratio denominator.
+  int get TURNAROUND_DENOMINATOR => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 118, 0);
+  int get turnaroundDenominator => TURNAROUND_DENOMINATOR;
+  ///  Transmit delays by participant, s.
+  double get TRANSMIT_DELAY_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
+  double get transmitDelay1 => TRANSMIT_DELAY_1;
+  double get TRANSMIT_DELAY_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 122, 0.0);
+  double get transmitDelay2 => TRANSMIT_DELAY_2;
+  double get TRANSMIT_DELAY_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 124, 0.0);
+  double get transmitDelay3 => TRANSMIT_DELAY_3;
+  double get TRANSMIT_DELAY_4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 126, 0.0);
+  double get transmitDelay4 => TRANSMIT_DELAY_4;
+  double get TRANSMIT_DELAY_5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 128, 0.0);
+  double get transmitDelay5 => TRANSMIT_DELAY_5;
+  ///  Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  ///  RECEIVE_DELAY_3 already exist on the TDM root.)
+  double get RECEIVE_DELAY_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 130, 0.0);
+  double get receiveDelay1 => RECEIVE_DELAY_1;
+  double get RECEIVE_DELAY_4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 132, 0.0);
+  double get receiveDelay4 => RECEIVE_DELAY_4;
+  double get RECEIVE_DELAY_5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 134, 0.0);
+  double get receiveDelay5 => RECEIVE_DELAY_5;
+  ///  Doppler count bias, Hz.
+  double get DOPPLER_COUNT_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 136, 0.0);
+  double get dopplerCountBias => DOPPLER_COUNT_BIAS;
+  ///  Doppler count scale factor.
+  int get DOPPLER_COUNT_SCALE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 138, 0);
+  int get dopplerCountScale => DOPPLER_COUNT_SCALE;
+  ///  Whether the Doppler counter rolls over (CCSDS YES/NO).
+  bool get DOPPLER_COUNT_ROLLOVER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 140, false);
+  bool get dopplerCountRollover => DOPPLER_COUNT_ROLLOVER;
+  ///  Corrections that a consumer must apply, or that were applied when
+  ///  CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  double get CORRECTION_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 142, 0.0);
+  double get correctionRange => CORRECTION_RANGE;
+  double get CORRECTION_DOPPLER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 144, 0.0);
+  double get correctionDoppler => CORRECTION_DOPPLER;
+  double get CORRECTION_MAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 146, 0.0);
+  double get correctionMag => CORRECTION_MAG;
+  double get CORRECTION_RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 148, 0.0);
+  double get correctionRcs => CORRECTION_RCS;
+  double get CORRECTION_RECEIVE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 150, 0.0);
+  double get correctionReceive => CORRECTION_RECEIVE;
+  double get CORRECTION_TRANSMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 152, 0.0);
+  double get correctionTransmit => CORRECTION_TRANSMIT;
+  double get CORRECTION_ABERRATION_YEARLY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 154, 0.0);
+  double get correctionAberrationYearly => CORRECTION_ABERRATION_YEARLY;
+  double get CORRECTION_ABERRATION_DIURNAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 156, 0.0);
+  double get correctionAberrationDiurnal => CORRECTION_ABERRATION_DIURNAL;
+
+  @override
+  String toString() {
+    return 'TDMSegment{COMMENT: ${COMMENT}, metaStart: ${metaStart}, timeSystem: ${timeSystem}, startTime: ${startTime}, stopTime: ${stopTime}, participant1: ${participant1}, participant2: ${participant2}, participant3: ${participant3}, participant4: ${participant4}, participant5: ${participant5}, MODE: ${MODE}, path1: ${path1}, path2: ${path2}, transmitBand: ${transmitBand}, receiveBand: ${receiveBand}, integrationInterval: ${integrationInterval}, integrationRef: ${integrationRef}, timetagRef: ${timetagRef}, angleType: ${angleType}, rangeMode: ${rangeMode}, rangeModulus: ${rangeModulus}, correctionAngle1: ${correctionAngle1}, correctionAngle2: ${correctionAngle2}, correctionsApplied: ${correctionsApplied}, dataQuality: ${dataQuality}, receiveDelay2: ${receiveDelay2}, receiveDelay3: ${receiveDelay3}, transmitFreq1: ${transmitFreq1}, transmitFreq2: ${transmitFreq2}, transmitFreq3: ${transmitFreq3}, transmitFreq4: ${transmitFreq4}, transmitFreq5: ${transmitFreq5}, transmitFreqRate1: ${transmitFreqRate1}, transmitFreqRate2: ${transmitFreqRate2}, transmitFreqRate3: ${transmitFreqRate3}, transmitFreqRate4: ${transmitFreqRate4}, transmitFreqRate5: ${transmitFreqRate5}, metaStop: ${metaStop}, dataStart: ${dataStart}, OBSERVATIONS: ${OBSERVATIONS}, dataStop: ${dataStop}, transmitRamps: ${transmitRamps}, messageId: ${messageId}, trackId: ${trackId}, dataTypes: ${dataTypes}, PATH: ${PATH}, ephemerisName1: ${ephemerisName1}, ephemerisName2: ${ephemerisName2}, ephemerisName3: ${ephemerisName3}, ephemerisName4: ${ephemerisName4}, ephemerisName5: ${ephemerisName5}, rangeUnits: ${rangeUnits}, referenceFrame: ${referenceFrame}, INTERPOLATION: ${INTERPOLATION}, interpolationDegree: ${interpolationDegree}, freqOffset: ${freqOffset}, turnaroundNumerator: ${turnaroundNumerator}, turnaroundDenominator: ${turnaroundDenominator}, transmitDelay1: ${transmitDelay1}, transmitDelay2: ${transmitDelay2}, transmitDelay3: ${transmitDelay3}, transmitDelay4: ${transmitDelay4}, transmitDelay5: ${transmitDelay5}, receiveDelay1: ${receiveDelay1}, receiveDelay4: ${receiveDelay4}, receiveDelay5: ${receiveDelay5}, dopplerCountBias: ${dopplerCountBias}, dopplerCountScale: ${dopplerCountScale}, dopplerCountRollover: ${dopplerCountRollover}, correctionRange: ${correctionRange}, correctionDoppler: ${correctionDoppler}, correctionMag: ${correctionMag}, correctionRcs: ${correctionRcs}, correctionReceive: ${correctionReceive}, correctionTransmit: ${correctionTransmit}, correctionAberrationYearly: ${correctionAberrationYearly}, correctionAberrationDiurnal: ${correctionAberrationDiurnal}}';
+  }
+}
+
+class _TDMSegmentReader extends fb.TableReader<TDMSegment> {
+  const _TDMSegmentReader();
+
+  @override
+  TDMSegment createObject(fb.BufferContext bc, int offset) =>
+    TDMSegment._(bc, offset);
+}
+
+class TDMSegmentBuilder {
+  TDMSegmentBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(77);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addMetaStartOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant1Offset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant2Offset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant3Offset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant4Offset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant5Offset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addModeOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addPath1(int? PATH_1) {
+    fbBuilder.addUint16(11, PATH_1);
+    return fbBuilder.offset;
+  }
+  int addPath2(int? PATH_2) {
+    fbBuilder.addUint16(12, PATH_2);
+    return fbBuilder.offset;
+  }
+  int addTransmitBandOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiveBandOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addIntegrationInterval(double? INTEGRATION_INTERVAL) {
+    fbBuilder.addFloat64(15, INTEGRATION_INTERVAL);
+    return fbBuilder.offset;
+  }
+  int addIntegrationRefOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addTimetagRefOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addAngleTypeOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeModeOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeModulus(double? RANGE_MODULUS) {
+    fbBuilder.addFloat64(20, RANGE_MODULUS);
+    return fbBuilder.offset;
+  }
+  int addCorrectionAngle1(double? CORRECTION_ANGLE_1) {
+    fbBuilder.addFloat64(21, CORRECTION_ANGLE_1);
+    return fbBuilder.offset;
+  }
+  int addCorrectionAngle2(double? CORRECTION_ANGLE_2) {
+    fbBuilder.addFloat64(22, CORRECTION_ANGLE_2);
+    return fbBuilder.offset;
+  }
+  int addCorrectionsAppliedOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addDataQualityOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay2(double? RECEIVE_DELAY_2) {
+    fbBuilder.addFloat64(25, RECEIVE_DELAY_2);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay3(double? RECEIVE_DELAY_3) {
+    fbBuilder.addFloat64(26, RECEIVE_DELAY_3);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq1(double? TRANSMIT_FREQ_1) {
+    fbBuilder.addFloat64(27, TRANSMIT_FREQ_1);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq2(double? TRANSMIT_FREQ_2) {
+    fbBuilder.addFloat64(28, TRANSMIT_FREQ_2);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq3(double? TRANSMIT_FREQ_3) {
+    fbBuilder.addFloat64(29, TRANSMIT_FREQ_3);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq4(double? TRANSMIT_FREQ_4) {
+    fbBuilder.addFloat64(30, TRANSMIT_FREQ_4);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq5(double? TRANSMIT_FREQ_5) {
+    fbBuilder.addFloat64(31, TRANSMIT_FREQ_5);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate1(double? TRANSMIT_FREQ_RATE_1) {
+    fbBuilder.addFloat64(32, TRANSMIT_FREQ_RATE_1);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate2(double? TRANSMIT_FREQ_RATE_2) {
+    fbBuilder.addFloat64(33, TRANSMIT_FREQ_RATE_2);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate3(double? TRANSMIT_FREQ_RATE_3) {
+    fbBuilder.addFloat64(34, TRANSMIT_FREQ_RATE_3);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate4(double? TRANSMIT_FREQ_RATE_4) {
+    fbBuilder.addFloat64(35, TRANSMIT_FREQ_RATE_4);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate5(double? TRANSMIT_FREQ_RATE_5) {
+    fbBuilder.addFloat64(36, TRANSMIT_FREQ_RATE_5);
+    return fbBuilder.offset;
+  }
+  int addMetaStopOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addDataStartOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addObservationsOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addDataStopOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitRampsOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addTrackIdOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addDataTypesOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
+    return fbBuilder.offset;
+  }
+  int addPathOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName1Offset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName2Offset(int? offset) {
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName3Offset(int? offset) {
+    fbBuilder.addOffset(48, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName4Offset(int? offset) {
+    fbBuilder.addOffset(49, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName5Offset(int? offset) {
+    fbBuilder.addOffset(50, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeUnitsOffset(int? offset) {
+    fbBuilder.addOffset(51, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(52, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationOffset(int? offset) {
+    fbBuilder.addOffset(53, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationDegree(int? INTERPOLATION_DEGREE) {
+    fbBuilder.addUint32(54, INTERPOLATION_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addFreqOffset(double? FREQ_OFFSET) {
+    fbBuilder.addFloat64(55, FREQ_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addTurnaroundNumerator(int? TURNAROUND_NUMERATOR) {
+    fbBuilder.addInt32(56, TURNAROUND_NUMERATOR);
+    return fbBuilder.offset;
+  }
+  int addTurnaroundDenominator(int? TURNAROUND_DENOMINATOR) {
+    fbBuilder.addInt32(57, TURNAROUND_DENOMINATOR);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay1(double? TRANSMIT_DELAY_1) {
+    fbBuilder.addFloat64(58, TRANSMIT_DELAY_1);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay2(double? TRANSMIT_DELAY_2) {
+    fbBuilder.addFloat64(59, TRANSMIT_DELAY_2);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay3(double? TRANSMIT_DELAY_3) {
+    fbBuilder.addFloat64(60, TRANSMIT_DELAY_3);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay4(double? TRANSMIT_DELAY_4) {
+    fbBuilder.addFloat64(61, TRANSMIT_DELAY_4);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay5(double? TRANSMIT_DELAY_5) {
+    fbBuilder.addFloat64(62, TRANSMIT_DELAY_5);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay1(double? RECEIVE_DELAY_1) {
+    fbBuilder.addFloat64(63, RECEIVE_DELAY_1);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay4(double? RECEIVE_DELAY_4) {
+    fbBuilder.addFloat64(64, RECEIVE_DELAY_4);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay5(double? RECEIVE_DELAY_5) {
+    fbBuilder.addFloat64(65, RECEIVE_DELAY_5);
+    return fbBuilder.offset;
+  }
+  int addDopplerCountBias(double? DOPPLER_COUNT_BIAS) {
+    fbBuilder.addFloat64(66, DOPPLER_COUNT_BIAS);
+    return fbBuilder.offset;
+  }
+  int addDopplerCountScale(int? DOPPLER_COUNT_SCALE) {
+    fbBuilder.addUint32(67, DOPPLER_COUNT_SCALE);
+    return fbBuilder.offset;
+  }
+  int addDopplerCountRollover(bool? DOPPLER_COUNT_ROLLOVER) {
+    fbBuilder.addBool(68, DOPPLER_COUNT_ROLLOVER);
+    return fbBuilder.offset;
+  }
+  int addCorrectionRange(double? CORRECTION_RANGE) {
+    fbBuilder.addFloat64(69, CORRECTION_RANGE);
+    return fbBuilder.offset;
+  }
+  int addCorrectionDoppler(double? CORRECTION_DOPPLER) {
+    fbBuilder.addFloat64(70, CORRECTION_DOPPLER);
+    return fbBuilder.offset;
+  }
+  int addCorrectionMag(double? CORRECTION_MAG) {
+    fbBuilder.addFloat64(71, CORRECTION_MAG);
+    return fbBuilder.offset;
+  }
+  int addCorrectionRcs(double? CORRECTION_RCS) {
+    fbBuilder.addFloat64(72, CORRECTION_RCS);
+    return fbBuilder.offset;
+  }
+  int addCorrectionReceive(double? CORRECTION_RECEIVE) {
+    fbBuilder.addFloat64(73, CORRECTION_RECEIVE);
+    return fbBuilder.offset;
+  }
+  int addCorrectionTransmit(double? CORRECTION_TRANSMIT) {
+    fbBuilder.addFloat64(74, CORRECTION_TRANSMIT);
+    return fbBuilder.offset;
+  }
+  int addCorrectionAberrationYearly(double? CORRECTION_ABERRATION_YEARLY) {
+    fbBuilder.addFloat64(75, CORRECTION_ABERRATION_YEARLY);
+    return fbBuilder.offset;
+  }
+  int addCorrectionAberrationDiurnal(double? CORRECTION_ABERRATION_DIURNAL) {
+    fbBuilder.addFloat64(76, CORRECTION_ABERRATION_DIURNAL);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TDMSegmentObjectBuilder extends fb.ObjectBuilder {
+  final List<String>? _COMMENT;
+  final String? _META_START;
+  final String? _TIME_SYSTEM;
+  final String? _START_TIME;
+  final String? _STOP_TIME;
+  final String? _PARTICIPANT_1;
+  final String? _PARTICIPANT_2;
+  final String? _PARTICIPANT_3;
+  final String? _PARTICIPANT_4;
+  final String? _PARTICIPANT_5;
+  final String? _MODE;
+  final int? _PATH_1;
+  final int? _PATH_2;
+  final String? _TRANSMIT_BAND;
+  final String? _RECEIVE_BAND;
+  final double? _INTEGRATION_INTERVAL;
+  final String? _INTEGRATION_REF;
+  final String? _TIMETAG_REF;
+  final String? _ANGLE_TYPE;
+  final String? _RANGE_MODE;
+  final double? _RANGE_MODULUS;
+  final double? _CORRECTION_ANGLE_1;
+  final double? _CORRECTION_ANGLE_2;
+  final String? _CORRECTIONS_APPLIED;
+  final String? _DATA_QUALITY;
+  final double? _RECEIVE_DELAY_2;
+  final double? _RECEIVE_DELAY_3;
+  final double? _TRANSMIT_FREQ_1;
+  final double? _TRANSMIT_FREQ_2;
+  final double? _TRANSMIT_FREQ_3;
+  final double? _TRANSMIT_FREQ_4;
+  final double? _TRANSMIT_FREQ_5;
+  final double? _TRANSMIT_FREQ_RATE_1;
+  final double? _TRANSMIT_FREQ_RATE_2;
+  final double? _TRANSMIT_FREQ_RATE_3;
+  final double? _TRANSMIT_FREQ_RATE_4;
+  final double? _TRANSMIT_FREQ_RATE_5;
+  final String? _META_STOP;
+  final String? _DATA_START;
+  final List<TDMObservationObjectBuilder>? _OBSERVATIONS;
+  final String? _DATA_STOP;
+  final List<TDMTransmitRampObjectBuilder>? _TRANSMIT_RAMPS;
+  final String? _MESSAGE_ID;
+  final String? _TRACK_ID;
+  final String? _DATA_TYPES;
+  final String? _PATH;
+  final String? _EPHEMERIS_NAME_1;
+  final String? _EPHEMERIS_NAME_2;
+  final String? _EPHEMERIS_NAME_3;
+  final String? _EPHEMERIS_NAME_4;
+  final String? _EPHEMERIS_NAME_5;
+  final String? _RANGE_UNITS;
+  final String? _REFERENCE_FRAME;
+  final String? _INTERPOLATION;
+  final int? _INTERPOLATION_DEGREE;
+  final double? _FREQ_OFFSET;
+  final int? _TURNAROUND_NUMERATOR;
+  final int? _TURNAROUND_DENOMINATOR;
+  final double? _TRANSMIT_DELAY_1;
+  final double? _TRANSMIT_DELAY_2;
+  final double? _TRANSMIT_DELAY_3;
+  final double? _TRANSMIT_DELAY_4;
+  final double? _TRANSMIT_DELAY_5;
+  final double? _RECEIVE_DELAY_1;
+  final double? _RECEIVE_DELAY_4;
+  final double? _RECEIVE_DELAY_5;
+  final double? _DOPPLER_COUNT_BIAS;
+  final int? _DOPPLER_COUNT_SCALE;
+  final bool? _DOPPLER_COUNT_ROLLOVER;
+  final double? _CORRECTION_RANGE;
+  final double? _CORRECTION_DOPPLER;
+  final double? _CORRECTION_MAG;
+  final double? _CORRECTION_RCS;
+  final double? _CORRECTION_RECEIVE;
+  final double? _CORRECTION_TRANSMIT;
+  final double? _CORRECTION_ABERRATION_YEARLY;
+  final double? _CORRECTION_ABERRATION_DIURNAL;
+
+  TDMSegmentObjectBuilder({
+    List<String>? COMMENT,
+    String? META_START,
+    String? metaStart,
+    String? TIME_SYSTEM,
+    String? timeSystem,
+    String? START_TIME,
+    String? startTime,
+    String? STOP_TIME,
+    String? stopTime,
+    String? PARTICIPANT_1,
+    String? participant1,
+    String? PARTICIPANT_2,
+    String? participant2,
+    String? PARTICIPANT_3,
+    String? participant3,
+    String? PARTICIPANT_4,
+    String? participant4,
+    String? PARTICIPANT_5,
+    String? participant5,
+    String? MODE,
+    int? PATH_1,
+    int? path1,
+    int? PATH_2,
+    int? path2,
+    String? TRANSMIT_BAND,
+    String? transmitBand,
+    String? RECEIVE_BAND,
+    String? receiveBand,
+    double? INTEGRATION_INTERVAL,
+    double? integrationInterval,
+    String? INTEGRATION_REF,
+    String? integrationRef,
+    String? TIMETAG_REF,
+    String? timetagRef,
+    String? ANGLE_TYPE,
+    String? angleType,
+    String? RANGE_MODE,
+    String? rangeMode,
+    double? RANGE_MODULUS,
+    double? rangeModulus,
+    double? CORRECTION_ANGLE_1,
+    double? correctionAngle1,
+    double? CORRECTION_ANGLE_2,
+    double? correctionAngle2,
+    String? CORRECTIONS_APPLIED,
+    String? correctionsApplied,
+    String? DATA_QUALITY,
+    String? dataQuality,
+    double? RECEIVE_DELAY_2,
+    double? receiveDelay2,
+    double? RECEIVE_DELAY_3,
+    double? receiveDelay3,
+    double? TRANSMIT_FREQ_1,
+    double? transmitFreq1,
+    double? TRANSMIT_FREQ_2,
+    double? transmitFreq2,
+    double? TRANSMIT_FREQ_3,
+    double? transmitFreq3,
+    double? TRANSMIT_FREQ_4,
+    double? transmitFreq4,
+    double? TRANSMIT_FREQ_5,
+    double? transmitFreq5,
+    double? TRANSMIT_FREQ_RATE_1,
+    double? transmitFreqRate1,
+    double? TRANSMIT_FREQ_RATE_2,
+    double? transmitFreqRate2,
+    double? TRANSMIT_FREQ_RATE_3,
+    double? transmitFreqRate3,
+    double? TRANSMIT_FREQ_RATE_4,
+    double? transmitFreqRate4,
+    double? TRANSMIT_FREQ_RATE_5,
+    double? transmitFreqRate5,
+    String? META_STOP,
+    String? metaStop,
+    String? DATA_START,
+    String? dataStart,
+    List<TDMObservationObjectBuilder>? OBSERVATIONS,
+    String? DATA_STOP,
+    String? dataStop,
+    List<TDMTransmitRampObjectBuilder>? TRANSMIT_RAMPS,
+    List<TDMTransmitRampObjectBuilder>? transmitRamps,
+    String? MESSAGE_ID,
+    String? messageId,
+    String? TRACK_ID,
+    String? trackId,
+    String? DATA_TYPES,
+    String? dataTypes,
+    String? PATH,
+    String? EPHEMERIS_NAME_1,
+    String? ephemerisName1,
+    String? EPHEMERIS_NAME_2,
+    String? ephemerisName2,
+    String? EPHEMERIS_NAME_3,
+    String? ephemerisName3,
+    String? EPHEMERIS_NAME_4,
+    String? ephemerisName4,
+    String? EPHEMERIS_NAME_5,
+    String? ephemerisName5,
+    String? RANGE_UNITS,
+    String? rangeUnits,
+    String? REFERENCE_FRAME,
+    String? referenceFrame,
+    String? INTERPOLATION,
+    int? INTERPOLATION_DEGREE,
+    int? interpolationDegree,
+    double? FREQ_OFFSET,
+    double? freqOffset,
+    int? TURNAROUND_NUMERATOR,
+    int? turnaroundNumerator,
+    int? TURNAROUND_DENOMINATOR,
+    int? turnaroundDenominator,
+    double? TRANSMIT_DELAY_1,
+    double? transmitDelay1,
+    double? TRANSMIT_DELAY_2,
+    double? transmitDelay2,
+    double? TRANSMIT_DELAY_3,
+    double? transmitDelay3,
+    double? TRANSMIT_DELAY_4,
+    double? transmitDelay4,
+    double? TRANSMIT_DELAY_5,
+    double? transmitDelay5,
+    double? RECEIVE_DELAY_1,
+    double? receiveDelay1,
+    double? RECEIVE_DELAY_4,
+    double? receiveDelay4,
+    double? RECEIVE_DELAY_5,
+    double? receiveDelay5,
+    double? DOPPLER_COUNT_BIAS,
+    double? dopplerCountBias,
+    int? DOPPLER_COUNT_SCALE,
+    int? dopplerCountScale,
+    bool? DOPPLER_COUNT_ROLLOVER,
+    bool? dopplerCountRollover,
+    double? CORRECTION_RANGE,
+    double? correctionRange,
+    double? CORRECTION_DOPPLER,
+    double? correctionDoppler,
+    double? CORRECTION_MAG,
+    double? correctionMag,
+    double? CORRECTION_RCS,
+    double? correctionRcs,
+    double? CORRECTION_RECEIVE,
+    double? correctionReceive,
+    double? CORRECTION_TRANSMIT,
+    double? correctionTransmit,
+    double? CORRECTION_ABERRATION_YEARLY,
+    double? correctionAberrationYearly,
+    double? CORRECTION_ABERRATION_DIURNAL,
+    double? correctionAberrationDiurnal,
+  })
+      : _COMMENT = COMMENT,
+        _META_START = metaStart ?? META_START,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _START_TIME = startTime ?? START_TIME,
+        _STOP_TIME = stopTime ?? STOP_TIME,
+        _PARTICIPANT_1 = participant1 ?? PARTICIPANT_1,
+        _PARTICIPANT_2 = participant2 ?? PARTICIPANT_2,
+        _PARTICIPANT_3 = participant3 ?? PARTICIPANT_3,
+        _PARTICIPANT_4 = participant4 ?? PARTICIPANT_4,
+        _PARTICIPANT_5 = participant5 ?? PARTICIPANT_5,
+        _MODE = MODE,
+        _PATH_1 = path1 ?? PATH_1,
+        _PATH_2 = path2 ?? PATH_2,
+        _TRANSMIT_BAND = transmitBand ?? TRANSMIT_BAND,
+        _RECEIVE_BAND = receiveBand ?? RECEIVE_BAND,
+        _INTEGRATION_INTERVAL = integrationInterval ?? INTEGRATION_INTERVAL,
+        _INTEGRATION_REF = integrationRef ?? INTEGRATION_REF,
+        _TIMETAG_REF = timetagRef ?? TIMETAG_REF,
+        _ANGLE_TYPE = angleType ?? ANGLE_TYPE,
+        _RANGE_MODE = rangeMode ?? RANGE_MODE,
+        _RANGE_MODULUS = rangeModulus ?? RANGE_MODULUS,
+        _CORRECTION_ANGLE_1 = correctionAngle1 ?? CORRECTION_ANGLE_1,
+        _CORRECTION_ANGLE_2 = correctionAngle2 ?? CORRECTION_ANGLE_2,
+        _CORRECTIONS_APPLIED = correctionsApplied ?? CORRECTIONS_APPLIED,
+        _DATA_QUALITY = dataQuality ?? DATA_QUALITY,
+        _RECEIVE_DELAY_2 = receiveDelay2 ?? RECEIVE_DELAY_2,
+        _RECEIVE_DELAY_3 = receiveDelay3 ?? RECEIVE_DELAY_3,
+        _TRANSMIT_FREQ_1 = transmitFreq1 ?? TRANSMIT_FREQ_1,
+        _TRANSMIT_FREQ_2 = transmitFreq2 ?? TRANSMIT_FREQ_2,
+        _TRANSMIT_FREQ_3 = transmitFreq3 ?? TRANSMIT_FREQ_3,
+        _TRANSMIT_FREQ_4 = transmitFreq4 ?? TRANSMIT_FREQ_4,
+        _TRANSMIT_FREQ_5 = transmitFreq5 ?? TRANSMIT_FREQ_5,
+        _TRANSMIT_FREQ_RATE_1 = transmitFreqRate1 ?? TRANSMIT_FREQ_RATE_1,
+        _TRANSMIT_FREQ_RATE_2 = transmitFreqRate2 ?? TRANSMIT_FREQ_RATE_2,
+        _TRANSMIT_FREQ_RATE_3 = transmitFreqRate3 ?? TRANSMIT_FREQ_RATE_3,
+        _TRANSMIT_FREQ_RATE_4 = transmitFreqRate4 ?? TRANSMIT_FREQ_RATE_4,
+        _TRANSMIT_FREQ_RATE_5 = transmitFreqRate5 ?? TRANSMIT_FREQ_RATE_5,
+        _META_STOP = metaStop ?? META_STOP,
+        _DATA_START = dataStart ?? DATA_START,
+        _OBSERVATIONS = OBSERVATIONS,
+        _DATA_STOP = dataStop ?? DATA_STOP,
+        _TRANSMIT_RAMPS = transmitRamps ?? TRANSMIT_RAMPS,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _TRACK_ID = trackId ?? TRACK_ID,
+        _DATA_TYPES = dataTypes ?? DATA_TYPES,
+        _PATH = PATH,
+        _EPHEMERIS_NAME_1 = ephemerisName1 ?? EPHEMERIS_NAME_1,
+        _EPHEMERIS_NAME_2 = ephemerisName2 ?? EPHEMERIS_NAME_2,
+        _EPHEMERIS_NAME_3 = ephemerisName3 ?? EPHEMERIS_NAME_3,
+        _EPHEMERIS_NAME_4 = ephemerisName4 ?? EPHEMERIS_NAME_4,
+        _EPHEMERIS_NAME_5 = ephemerisName5 ?? EPHEMERIS_NAME_5,
+        _RANGE_UNITS = rangeUnits ?? RANGE_UNITS,
+        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _INTERPOLATION = INTERPOLATION,
+        _INTERPOLATION_DEGREE = interpolationDegree ?? INTERPOLATION_DEGREE,
+        _FREQ_OFFSET = freqOffset ?? FREQ_OFFSET,
+        _TURNAROUND_NUMERATOR = turnaroundNumerator ?? TURNAROUND_NUMERATOR,
+        _TURNAROUND_DENOMINATOR = turnaroundDenominator ?? TURNAROUND_DENOMINATOR,
+        _TRANSMIT_DELAY_1 = transmitDelay1 ?? TRANSMIT_DELAY_1,
+        _TRANSMIT_DELAY_2 = transmitDelay2 ?? TRANSMIT_DELAY_2,
+        _TRANSMIT_DELAY_3 = transmitDelay3 ?? TRANSMIT_DELAY_3,
+        _TRANSMIT_DELAY_4 = transmitDelay4 ?? TRANSMIT_DELAY_4,
+        _TRANSMIT_DELAY_5 = transmitDelay5 ?? TRANSMIT_DELAY_5,
+        _RECEIVE_DELAY_1 = receiveDelay1 ?? RECEIVE_DELAY_1,
+        _RECEIVE_DELAY_4 = receiveDelay4 ?? RECEIVE_DELAY_4,
+        _RECEIVE_DELAY_5 = receiveDelay5 ?? RECEIVE_DELAY_5,
+        _DOPPLER_COUNT_BIAS = dopplerCountBias ?? DOPPLER_COUNT_BIAS,
+        _DOPPLER_COUNT_SCALE = dopplerCountScale ?? DOPPLER_COUNT_SCALE,
+        _DOPPLER_COUNT_ROLLOVER = dopplerCountRollover ?? DOPPLER_COUNT_ROLLOVER,
+        _CORRECTION_RANGE = correctionRange ?? CORRECTION_RANGE,
+        _CORRECTION_DOPPLER = correctionDoppler ?? CORRECTION_DOPPLER,
+        _CORRECTION_MAG = correctionMag ?? CORRECTION_MAG,
+        _CORRECTION_RCS = correctionRcs ?? CORRECTION_RCS,
+        _CORRECTION_RECEIVE = correctionReceive ?? CORRECTION_RECEIVE,
+        _CORRECTION_TRANSMIT = correctionTransmit ?? CORRECTION_TRANSMIT,
+        _CORRECTION_ABERRATION_YEARLY = correctionAberrationYearly ?? CORRECTION_ABERRATION_YEARLY,
+        _CORRECTION_ABERRATION_DIURNAL = correctionAberrationDiurnal ?? CORRECTION_ABERRATION_DIURNAL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? META_STARTOffset = _META_START == null ? null
+        : fbBuilder.writeString(_META_START!);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? STOP_TIMEOffset = _STOP_TIME == null ? null
+        : fbBuilder.writeString(_STOP_TIME!);
+    final int? PARTICIPANT_1Offset = _PARTICIPANT_1 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_1!);
+    final int? PARTICIPANT_2Offset = _PARTICIPANT_2 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_2!);
+    final int? PARTICIPANT_3Offset = _PARTICIPANT_3 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_3!);
+    final int? PARTICIPANT_4Offset = _PARTICIPANT_4 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_4!);
+    final int? PARTICIPANT_5Offset = _PARTICIPANT_5 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_5!);
+    final int? MODEOffset = _MODE == null ? null
+        : fbBuilder.writeString(_MODE!);
+    final int? TRANSMIT_BANDOffset = _TRANSMIT_BAND == null ? null
+        : fbBuilder.writeString(_TRANSMIT_BAND!);
+    final int? RECEIVE_BANDOffset = _RECEIVE_BAND == null ? null
+        : fbBuilder.writeString(_RECEIVE_BAND!);
+    final int? INTEGRATION_REFOffset = _INTEGRATION_REF == null ? null
+        : fbBuilder.writeString(_INTEGRATION_REF!);
+    final int? TIMETAG_REFOffset = _TIMETAG_REF == null ? null
+        : fbBuilder.writeString(_TIMETAG_REF!);
+    final int? ANGLE_TYPEOffset = _ANGLE_TYPE == null ? null
+        : fbBuilder.writeString(_ANGLE_TYPE!);
+    final int? RANGE_MODEOffset = _RANGE_MODE == null ? null
+        : fbBuilder.writeString(_RANGE_MODE!);
+    final int? CORRECTIONS_APPLIEDOffset = _CORRECTIONS_APPLIED == null ? null
+        : fbBuilder.writeString(_CORRECTIONS_APPLIED!);
+    final int? DATA_QUALITYOffset = _DATA_QUALITY == null ? null
+        : fbBuilder.writeString(_DATA_QUALITY!);
+    final int? META_STOPOffset = _META_STOP == null ? null
+        : fbBuilder.writeString(_META_STOP!);
+    final int? DATA_STARTOffset = _DATA_START == null ? null
+        : fbBuilder.writeString(_DATA_START!);
+    final int? OBSERVATIONSOffset = _OBSERVATIONS == null ? null
+        : fbBuilder.writeList(_OBSERVATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? DATA_STOPOffset = _DATA_STOP == null ? null
+        : fbBuilder.writeString(_DATA_STOP!);
+    final int? TRANSMIT_RAMPSOffset = _TRANSMIT_RAMPS == null ? null
+        : fbBuilder.writeList(_TRANSMIT_RAMPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    final int? TRACK_IDOffset = _TRACK_ID == null ? null
+        : fbBuilder.writeString(_TRACK_ID!);
+    final int? DATA_TYPESOffset = _DATA_TYPES == null ? null
+        : fbBuilder.writeString(_DATA_TYPES!);
+    final int? PATHOffset = _PATH == null ? null
+        : fbBuilder.writeString(_PATH!);
+    final int? EPHEMERIS_NAME_1Offset = _EPHEMERIS_NAME_1 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_1!);
+    final int? EPHEMERIS_NAME_2Offset = _EPHEMERIS_NAME_2 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_2!);
+    final int? EPHEMERIS_NAME_3Offset = _EPHEMERIS_NAME_3 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_3!);
+    final int? EPHEMERIS_NAME_4Offset = _EPHEMERIS_NAME_4 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_4!);
+    final int? EPHEMERIS_NAME_5Offset = _EPHEMERIS_NAME_5 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_5!);
+    final int? RANGE_UNITSOffset = _RANGE_UNITS == null ? null
+        : fbBuilder.writeString(_RANGE_UNITS!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME == null ? null
+        : fbBuilder.writeString(_REFERENCE_FRAME!);
+    final int? INTERPOLATIONOffset = _INTERPOLATION == null ? null
+        : fbBuilder.writeString(_INTERPOLATION!);
+    fbBuilder.startTable(77);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, META_STARTOffset);
+    fbBuilder.addOffset(2, TIME_SYSTEMOffset);
+    fbBuilder.addOffset(3, START_TIMEOffset);
+    fbBuilder.addOffset(4, STOP_TIMEOffset);
+    fbBuilder.addOffset(5, PARTICIPANT_1Offset);
+    fbBuilder.addOffset(6, PARTICIPANT_2Offset);
+    fbBuilder.addOffset(7, PARTICIPANT_3Offset);
+    fbBuilder.addOffset(8, PARTICIPANT_4Offset);
+    fbBuilder.addOffset(9, PARTICIPANT_5Offset);
+    fbBuilder.addOffset(10, MODEOffset);
+    fbBuilder.addUint16(11, _PATH_1);
+    fbBuilder.addUint16(12, _PATH_2);
+    fbBuilder.addOffset(13, TRANSMIT_BANDOffset);
+    fbBuilder.addOffset(14, RECEIVE_BANDOffset);
+    fbBuilder.addFloat64(15, _INTEGRATION_INTERVAL);
+    fbBuilder.addOffset(16, INTEGRATION_REFOffset);
+    fbBuilder.addOffset(17, TIMETAG_REFOffset);
+    fbBuilder.addOffset(18, ANGLE_TYPEOffset);
+    fbBuilder.addOffset(19, RANGE_MODEOffset);
+    fbBuilder.addFloat64(20, _RANGE_MODULUS);
+    fbBuilder.addFloat64(21, _CORRECTION_ANGLE_1);
+    fbBuilder.addFloat64(22, _CORRECTION_ANGLE_2);
+    fbBuilder.addOffset(23, CORRECTIONS_APPLIEDOffset);
+    fbBuilder.addOffset(24, DATA_QUALITYOffset);
+    fbBuilder.addFloat64(25, _RECEIVE_DELAY_2);
+    fbBuilder.addFloat64(26, _RECEIVE_DELAY_3);
+    fbBuilder.addFloat64(27, _TRANSMIT_FREQ_1);
+    fbBuilder.addFloat64(28, _TRANSMIT_FREQ_2);
+    fbBuilder.addFloat64(29, _TRANSMIT_FREQ_3);
+    fbBuilder.addFloat64(30, _TRANSMIT_FREQ_4);
+    fbBuilder.addFloat64(31, _TRANSMIT_FREQ_5);
+    fbBuilder.addFloat64(32, _TRANSMIT_FREQ_RATE_1);
+    fbBuilder.addFloat64(33, _TRANSMIT_FREQ_RATE_2);
+    fbBuilder.addFloat64(34, _TRANSMIT_FREQ_RATE_3);
+    fbBuilder.addFloat64(35, _TRANSMIT_FREQ_RATE_4);
+    fbBuilder.addFloat64(36, _TRANSMIT_FREQ_RATE_5);
+    fbBuilder.addOffset(37, META_STOPOffset);
+    fbBuilder.addOffset(38, DATA_STARTOffset);
+    fbBuilder.addOffset(39, OBSERVATIONSOffset);
+    fbBuilder.addOffset(40, DATA_STOPOffset);
+    fbBuilder.addOffset(41, TRANSMIT_RAMPSOffset);
+    fbBuilder.addOffset(42, MESSAGE_IDOffset);
+    fbBuilder.addOffset(43, TRACK_IDOffset);
+    fbBuilder.addOffset(44, DATA_TYPESOffset);
+    fbBuilder.addOffset(45, PATHOffset);
+    fbBuilder.addOffset(46, EPHEMERIS_NAME_1Offset);
+    fbBuilder.addOffset(47, EPHEMERIS_NAME_2Offset);
+    fbBuilder.addOffset(48, EPHEMERIS_NAME_3Offset);
+    fbBuilder.addOffset(49, EPHEMERIS_NAME_4Offset);
+    fbBuilder.addOffset(50, EPHEMERIS_NAME_5Offset);
+    fbBuilder.addOffset(51, RANGE_UNITSOffset);
+    fbBuilder.addOffset(52, REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(53, INTERPOLATIONOffset);
+    fbBuilder.addUint32(54, _INTERPOLATION_DEGREE);
+    fbBuilder.addFloat64(55, _FREQ_OFFSET);
+    fbBuilder.addInt32(56, _TURNAROUND_NUMERATOR);
+    fbBuilder.addInt32(57, _TURNAROUND_DENOMINATOR);
+    fbBuilder.addFloat64(58, _TRANSMIT_DELAY_1);
+    fbBuilder.addFloat64(59, _TRANSMIT_DELAY_2);
+    fbBuilder.addFloat64(60, _TRANSMIT_DELAY_3);
+    fbBuilder.addFloat64(61, _TRANSMIT_DELAY_4);
+    fbBuilder.addFloat64(62, _TRANSMIT_DELAY_5);
+    fbBuilder.addFloat64(63, _RECEIVE_DELAY_1);
+    fbBuilder.addFloat64(64, _RECEIVE_DELAY_4);
+    fbBuilder.addFloat64(65, _RECEIVE_DELAY_5);
+    fbBuilder.addFloat64(66, _DOPPLER_COUNT_BIAS);
+    fbBuilder.addUint32(67, _DOPPLER_COUNT_SCALE);
+    fbBuilder.addBool(68, _DOPPLER_COUNT_ROLLOVER);
+    fbBuilder.addFloat64(69, _CORRECTION_RANGE);
+    fbBuilder.addFloat64(70, _CORRECTION_DOPPLER);
+    fbBuilder.addFloat64(71, _CORRECTION_MAG);
+    fbBuilder.addFloat64(72, _CORRECTION_RCS);
+    fbBuilder.addFloat64(73, _CORRECTION_RECEIVE);
+    fbBuilder.addFloat64(74, _CORRECTION_TRANSMIT);
+    fbBuilder.addFloat64(75, _CORRECTION_ABERRATION_YEARLY);
+    fbBuilder.addFloat64(76, _CORRECTION_ABERRATION_DIURNAL);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Tracking Data Message
+class TDM {
+  TDM._(this._bc, this._bcOffset);
+  factory TDM(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TDM> reader = _TDMReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
+  String? get OBSERVER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get observerId => OBSERVER_ID;
+  ///  Cartesian X coordinate of the OBSERVER location in chosen reference frame
+  double get OBSERVER_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get observerX => OBSERVER_X;
+  ///  Cartesian Y coordinate of the OBSERVER location in chosen reference frame
+  double get OBSERVER_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get observerY => OBSERVER_Y;
+  ///  Cartesian Z coordinate of the OBSERVER location in chosen reference frame
+  double get OBSERVER_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get observerZ => OBSERVER_Z;
+  ///  Cartesian X coordinate of the OBSERVER velocity in chosen reference frame
+  double get OBSERVER_VX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get observerVx => OBSERVER_VX;
+  ///  Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
+  double get OBSERVER_VY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get observerVy => OBSERVER_VY;
+  ///  Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
+  double get OBSERVER_VZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get observerVz => OBSERVER_VZ;
+  ///  Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
+  RFM? get OBSERVER_POSITION_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  RFM? get observerPositionReferenceFrame => OBSERVER_POSITION_REFERENCE_FRAME;
+  ///  Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
+  RFM? get OBS_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  RFM? get obsReferenceFrame => OBS_REFERENCE_FRAME;
+  ///  Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Time interval between observations in seconds (required).
+  ///  Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+  double get OBSERVATION_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get observationStepSize => OBSERVATION_STEP_SIZE;
+  ///  Start time for observation time reconstruction (ISO 8601 UTC format).
+  String? get OBSERVATION_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get observationStartTime => OBSERVATION_START_TIME;
+  ///  TDM version number -  CCSDS 503.0-B-1, Page D-9
+  String? get CCSDS_TDM_VERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get ccsdsTdmVers => CCSDS_TDM_VERS;
+  ///  Comments regarding TDM -  various sections, e.g., Page D-9
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Date of TDM creation -  CCSDS 503.0-B-1, Page D-9
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get creationDate => CREATION_DATE;
+  ///  Originator of the TDM -  CCSDS 503.0-B-1, Page D-9
+  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Start of metadata section -  CCSDS 503.0-B-1, Page D-9
+  String? get META_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get metaStart => META_START;
+  ///  Time system used -  CCSDS 503.0-B-1, Page D-9
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get timeSystem => TIME_SYSTEM;
+  ///  Start time of the data -  CCSDS 503.0-B-1, Page D-9
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get startTime => START_TIME;
+  ///  Stop time of the data -  CCSDS 503.0-B-1, Page D-9
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get stopTime => STOP_TIME;
+  ///  First participant in the TDM -  CCSDS 503.0-B-1, Page D-9
+  String? get PARTICIPANT_1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get participant1 => PARTICIPANT_1;
+  ///  Second participant in the TDM -  CCSDS 503.0-B-1, Page D-9
+  String? get PARTICIPANT_2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get participant2 => PARTICIPANT_2;
+  ///  Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  String? get PARTICIPANT_3 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get participant3 => PARTICIPANT_3;
+  ///  Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  String? get PARTICIPANT_4 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get participant4 => PARTICIPANT_4;
+  ///  Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
+  String? get PARTICIPANT_5 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get participant5 => PARTICIPANT_5;
+  ///  Mode of TDM -  CCSDS 503.0-B-1, Page D-9
+  String? get MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  ///  First path in TDM -  CCSDS 503.0-B-1, Page D-9
+  int get PATH_1 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 56, 0);
+  int get path1 => PATH_1;
+  ///  Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  int get PATH_2 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 58, 0);
+  int get path2 => PATH_2;
+  ///  Transmit band -  CCSDS 503.0-B-1, Page D-9
+  String? get TRANSMIT_BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get transmitBand => TRANSMIT_BAND;
+  ///  Receive band -  CCSDS 503.0-B-1, Page D-9
+  String? get RECEIVE_BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get receiveBand => RECEIVE_BAND;
+  ///  Integration interval -  CCSDS 503.0-B-1, Page D-9
+  double get INTEGRATION_INTERVAL => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get integrationInterval => INTEGRATION_INTERVAL;
+  ///  Integration reference -  CCSDS 503.0-B-1, Page D-9
+  String? get INTEGRATION_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  String? get integrationRef => INTEGRATION_REF;
+  ///  Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
+  double get RECEIVE_DELAY_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  double get receiveDelay2 => RECEIVE_DELAY_2;
+  ///  Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
+  double get RECEIVE_DELAY_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  double get receiveDelay3 => RECEIVE_DELAY_3;
+  ///  Data quality -  CCSDS 503.0-B-1, Page D-9
+  String? get DATA_QUALITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  String? get dataQuality => DATA_QUALITY;
+  ///  End of metadata section -  CCSDS 503.0-B-1, Page D-9
+  String? get META_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  String? get metaStop => META_STOP;
+  ///  Start of data section -  CCSDS 503.0-B-1, Page D-9
+  String? get DATA_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  String? get dataStart => DATA_START;
+  ///  Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
+  double get TRANSMIT_FREQ_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
+  double get transmitFreq1 => TRANSMIT_FREQ_1;
+  ///  Receive frequency -  CCSDS 503.0-B-1, Page D-9
+  List<double>? get RECEIVE_FREQ => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 80);
+  List<double>? get receiveFreq => RECEIVE_FREQ;
+  ///  End of data section -  CCSDS 503.0-B-1, Page D-9
+  String? get DATA_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get dataStop => DATA_STOP;
+  ///  Additional properties as required by the specific application of the TDM...
+  ///  Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
+  String? get TIMETAG_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  String? get timetagRef => TIMETAG_REF;
+  ///  Type of angle data -  CCSDS 503.0-B-1, Page D-12
+  ///  Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
+  String? get ANGLE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  String? get angleType => ANGLE_TYPE;
+  ///  First angle value -  CCSDS 503.0-B-1, Page D-12
+  List<double>? get ANGLE_1 => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 88);
+  List<double>? get angle1 => ANGLE_1;
+  ///  Second angle value -  CCSDS 503.0-B-1, Page D-12
+  List<double>? get ANGLE_2 => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 90);
+  List<double>? get angle2 => ANGLE_2;
+  ///  Uncertainty of first angle -  CCSDS 503.0-B-1
+  double get ANGLE_UNCERTAINTY_1 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
+  double get angleUncertainty1 => ANGLE_UNCERTAINTY_1;
+  ///  Uncertainty of second angle -  CCSDS 503.0-B-1
+  double get ANGLE_UNCERTAINTY_2 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
+  double get angleUncertainty2 => ANGLE_UNCERTAINTY_2;
+  ///  Rate of change of range -  CCSDS 503.0-B-1
+  double get RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
+  double get rangeRate => RANGE_RATE;
+  ///  Uncertainty in range -  CCSDS 503.0-B-1
+  double get RANGE_UNCERTAINTY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
+  double get rangeUncertainty => RANGE_UNCERTAINTY;
+  ///  Mode of range data -  CCSDS 503.0-B-1, Page D-10
+  String? get RANGE_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
+  String? get rangeMode => RANGE_MODE;
+  ///  Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
+  double get RANGE_MODULUS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
+  double get rangeModulus => RANGE_MODULUS;
+  ///  First correction angle -  CCSDS 503.0-B-1, Page D-12
+  double get CORRECTION_ANGLE_1 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
+  double get correctionAngle1 => CORRECTION_ANGLE_1;
+  ///  Second correction angle -  CCSDS 503.0-B-1, Page D-12
+  double get CORRECTION_ANGLE_2 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
+  double get correctionAngle2 => CORRECTION_ANGLE_2;
+  ///  Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
+  String? get CORRECTIONS_APPLIED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 108);
+  String? get correctionsApplied => CORRECTIONS_APPLIED;
+  ///  Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
+  List<double>? get TROPO_DRY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 110);
+  List<double>? get tropoDry => TROPO_DRY;
+  ///  Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
+  List<double>? get TROPO_WET => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 112);
+  List<double>? get tropoWet => TROPO_WET;
+  ///  Slant total electron content -  CCSDS 503.0-B-1, Page D-13
+  List<double>? get STEC => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 114);
+  ///  Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
+  List<double>? get PRESSURE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 116);
+  ///  Relative humidity -  CCSDS 503.0-B-1, Page D-14
+  List<double>? get RHUMIDITY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 118);
+  ///  Ambient temperature -  CCSDS 503.0-B-1, Page D-14
+  List<double>? get TEMPERATURE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 120);
+  ///  Clock bias values -  CCSDS 503.0-B-1, Page D-15
+  List<double>? get CLOCK_BIAS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 122);
+  List<double>? get clockBias => CLOCK_BIAS;
+  ///  Clock drift values -  CCSDS 503.0-B-1, Page D-15
+  List<double>? get CLOCK_DRIFT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 124);
+  List<double>? get clockDrift => CLOCK_DRIFT;
+  ///  SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+  ///  quality metrics, one entry per observation, parallel to the other
+  ///  observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+  ///  i * OBSERVATION_STEP_SIZE grid.
+  ///
+  ///  Signal-to-noise ratio of the detection.
+  List<double>? get SIGNAL_TO_NOISE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 126);
+  List<double>? get signalToNoise => SIGNAL_TO_NOISE;
+  ///  SDS EXTENSION. Normalised spectral maximum of the detection.
+  List<double>? get SPECTRAL_MAX => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 128);
+  List<double>? get spectralMax => SPECTRAL_MAX;
+  ///  SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+  ///  measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+  ///  uncertainty, which CCSDS 503.0-B-1 has no field for.
+  List<double>? get DOPPLER_NOISE_HZ => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 130);
+  List<double>? get dopplerNoiseHz => DOPPLER_NOISE_HZ;
+  ///  SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+  ///  table covering this segment, ordered by START_TIME and non-overlapping.
+  ///  Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+  ///  cannot reconstruct the observables. Absent for unramped tracking, which
+  ///  leaves the record exactly CCSDS-conformant.
+  List<TDMTransmitRamp>? get TRANSMIT_RAMPS => const fb.ListReader<TDMTransmitRamp>(TDMTransmitRamp.reader).vTableGetNullable(_bc, _bcOffset, 132);
+  List<TDMTransmitRamp>? get transmitRamps => TRANSMIT_RAMPS;
+  ///  Data-section observations for a SINGLE-segment TDM, in file order.
+  List<TDMObservation>? get OBSERVATIONS => const fb.ListReader<TDMObservation>(TDMObservation.reader).vTableGetNullable(_bc, _bcOffset, 134);
+  ///  All metadata+data segments of a MULTI-segment TDM, in file order.
+  List<TDMSegment>? get SEGMENTS => const fb.ListReader<TDMSegment>(TDMSegment.reader).vTableGetNullable(_bc, _bcOffset, 136);
+  ///  Additional transmit frequencies by participant, Hz. TRANSMIT_FREQ_1
+  ///  already exists above; 2..5 had no carrier.
+  double get TRANSMIT_FREQ_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 138, 0.0);
+  double get transmitFreq2 => TRANSMIT_FREQ_2;
+  double get TRANSMIT_FREQ_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 140, 0.0);
+  double get transmitFreq3 => TRANSMIT_FREQ_3;
+  double get TRANSMIT_FREQ_4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 142, 0.0);
+  double get transmitFreq4 => TRANSMIT_FREQ_4;
+  double get TRANSMIT_FREQ_5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 144, 0.0);
+  double get transmitFreq5 => TRANSMIT_FREQ_5;
+  ///  Transmit frequency rates by participant, Hz/s. A constant rate here is
+  ///  the single-interval degenerate case of TRANSMIT_RAMPS.
+  double get TRANSMIT_FREQ_RATE_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 146, 0.0);
+  double get transmitFreqRate1 => TRANSMIT_FREQ_RATE_1;
+  double get TRANSMIT_FREQ_RATE_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 148, 0.0);
+  double get transmitFreqRate2 => TRANSMIT_FREQ_RATE_2;
+  double get TRANSMIT_FREQ_RATE_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 150, 0.0);
+  double get transmitFreqRate3 => TRANSMIT_FREQ_RATE_3;
+  double get TRANSMIT_FREQ_RATE_4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 152, 0.0);
+  double get transmitFreqRate4 => TRANSMIT_FREQ_RATE_4;
+  double get TRANSMIT_FREQ_RATE_5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 154, 0.0);
+  double get transmitFreqRate5 => TRANSMIT_FREQ_RATE_5;
+  ///  Unique message identifier (503.0-B-2 table 3-2).
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 156);
+  String? get messageId => MESSAGE_ID;
+  ///  Free-text tracking-pass identifier (503.0-B-2 table 3-3).
+  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 158);
+  String? get trackId => TRACK_ID;
+  ///  Comma-separated list of the data keywords present in the data section.
+  String? get DATA_TYPES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 160);
+  String? get dataTypes => DATA_TYPES;
+  ///  Signal path through the participants as an ordered comma-separated list,
+  ///  e.g. "1,2,1". Distinct from the numbered PATH_1 / PATH_2 above.
+  String? get PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 162);
+  ///  Name of the ephemeris used to generate the data, per participant.
+  String? get EPHEMERIS_NAME_1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 164);
+  String? get ephemerisName1 => EPHEMERIS_NAME_1;
+  String? get EPHEMERIS_NAME_2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 166);
+  String? get ephemerisName2 => EPHEMERIS_NAME_2;
+  String? get EPHEMERIS_NAME_3 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 168);
+  String? get ephemerisName3 => EPHEMERIS_NAME_3;
+  String? get EPHEMERIS_NAME_4 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 170);
+  String? get ephemerisName4 => EPHEMERIS_NAME_4;
+  String? get EPHEMERIS_NAME_5 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 172);
+  String? get ephemerisName5 => EPHEMERIS_NAME_5;
+  ///  Units of the RANGE observable: "km", "s" or "RU" (range units).
+  ///  RANGE is meaningless without it.
+  String? get RANGE_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 174);
+  String? get rangeUnits => RANGE_UNITS;
+  ///  Reference frame for angle and position data, as the verbatim CCSDS
+  ///  keyword value (503.0-B-2 annex B).
+  String? get REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 176);
+  String? get referenceFrame => REFERENCE_FRAME;
+  ///  Recommended interpolation method for the observations.
+  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 178);
+  ///  Recommended interpolation degree.
+  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 180, 0);
+  int get interpolationDegree => INTERPOLATION_DEGREE;
+  ///  Frequency offset applied to the observations, Hz.
+  double get FREQ_OFFSET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 182, 0.0);
+  double get freqOffset => FREQ_OFFSET;
+  ///  Transponder turnaround ratio numerator.
+  int get TURNAROUND_NUMERATOR => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 184, 0);
+  int get turnaroundNumerator => TURNAROUND_NUMERATOR;
+  ///  Transponder turnaround ratio denominator.
+  int get TURNAROUND_DENOMINATOR => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 186, 0);
+  int get turnaroundDenominator => TURNAROUND_DENOMINATOR;
+  ///  Transmit delays by participant, s.
+  double get TRANSMIT_DELAY_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 188, 0.0);
+  double get transmitDelay1 => TRANSMIT_DELAY_1;
+  double get TRANSMIT_DELAY_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 190, 0.0);
+  double get transmitDelay2 => TRANSMIT_DELAY_2;
+  double get TRANSMIT_DELAY_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 192, 0.0);
+  double get transmitDelay3 => TRANSMIT_DELAY_3;
+  double get TRANSMIT_DELAY_4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 194, 0.0);
+  double get transmitDelay4 => TRANSMIT_DELAY_4;
+  double get TRANSMIT_DELAY_5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 196, 0.0);
+  double get transmitDelay5 => TRANSMIT_DELAY_5;
+  ///  Receive delay for the first participant, s. (RECEIVE_DELAY_2 and
+  ///  RECEIVE_DELAY_3 already exist on the TDM root.)
+  double get RECEIVE_DELAY_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 198, 0.0);
+  double get receiveDelay1 => RECEIVE_DELAY_1;
+  double get RECEIVE_DELAY_4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 200, 0.0);
+  double get receiveDelay4 => RECEIVE_DELAY_4;
+  double get RECEIVE_DELAY_5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 202, 0.0);
+  double get receiveDelay5 => RECEIVE_DELAY_5;
+  ///  Doppler count bias, Hz.
+  double get DOPPLER_COUNT_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 204, 0.0);
+  double get dopplerCountBias => DOPPLER_COUNT_BIAS;
+  ///  Doppler count scale factor.
+  int get DOPPLER_COUNT_SCALE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 206, 0);
+  int get dopplerCountScale => DOPPLER_COUNT_SCALE;
+  ///  Whether the Doppler counter rolls over (CCSDS YES/NO).
+  bool get DOPPLER_COUNT_ROLLOVER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 208, false);
+  bool get dopplerCountRollover => DOPPLER_COUNT_ROLLOVER;
+  ///  Corrections that a consumer must apply, or that were applied when
+  ///  CORRECTIONS_APPLIED is "YES". Units follow the corrected observable.
+  double get CORRECTION_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 210, 0.0);
+  double get correctionRange => CORRECTION_RANGE;
+  double get CORRECTION_DOPPLER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 212, 0.0);
+  double get correctionDoppler => CORRECTION_DOPPLER;
+  double get CORRECTION_MAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 214, 0.0);
+  double get correctionMag => CORRECTION_MAG;
+  double get CORRECTION_RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 216, 0.0);
+  double get correctionRcs => CORRECTION_RCS;
+  double get CORRECTION_RECEIVE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 218, 0.0);
+  double get correctionReceive => CORRECTION_RECEIVE;
+  double get CORRECTION_TRANSMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 220, 0.0);
+  double get correctionTransmit => CORRECTION_TRANSMIT;
+  double get CORRECTION_ABERRATION_YEARLY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 222, 0.0);
+  double get correctionAberrationYearly => CORRECTION_ABERRATION_YEARLY;
+  double get CORRECTION_ABERRATION_DIURNAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 224, 0.0);
+  double get correctionAberrationDiurnal => CORRECTION_ABERRATION_DIURNAL;
+
+  @override
+  String toString() {
+    return 'TDM{observerId: ${observerId}, observerX: ${observerX}, observerY: ${observerY}, observerZ: ${observerZ}, observerVx: ${observerVx}, observerVy: ${observerVy}, observerVz: ${observerVz}, observerPositionReferenceFrame: ${observerPositionReferenceFrame}, obsReferenceFrame: ${obsReferenceFrame}, EPOCH: ${EPOCH}, observationStepSize: ${observationStepSize}, observationStartTime: ${observationStartTime}, ccsdsTdmVers: ${ccsdsTdmVers}, COMMENT: ${COMMENT}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, metaStart: ${metaStart}, timeSystem: ${timeSystem}, startTime: ${startTime}, stopTime: ${stopTime}, participant1: ${participant1}, participant2: ${participant2}, participant3: ${participant3}, participant4: ${participant4}, participant5: ${participant5}, MODE: ${MODE}, path1: ${path1}, path2: ${path2}, transmitBand: ${transmitBand}, receiveBand: ${receiveBand}, integrationInterval: ${integrationInterval}, integrationRef: ${integrationRef}, receiveDelay2: ${receiveDelay2}, receiveDelay3: ${receiveDelay3}, dataQuality: ${dataQuality}, metaStop: ${metaStop}, dataStart: ${dataStart}, transmitFreq1: ${transmitFreq1}, receiveFreq: ${receiveFreq}, dataStop: ${dataStop}, timetagRef: ${timetagRef}, angleType: ${angleType}, angle1: ${angle1}, angle2: ${angle2}, angleUncertainty1: ${angleUncertainty1}, angleUncertainty2: ${angleUncertainty2}, rangeRate: ${rangeRate}, rangeUncertainty: ${rangeUncertainty}, rangeMode: ${rangeMode}, rangeModulus: ${rangeModulus}, correctionAngle1: ${correctionAngle1}, correctionAngle2: ${correctionAngle2}, correctionsApplied: ${correctionsApplied}, tropoDry: ${tropoDry}, tropoWet: ${tropoWet}, STEC: ${STEC}, PRESSURE: ${PRESSURE}, RHUMIDITY: ${RHUMIDITY}, TEMPERATURE: ${TEMPERATURE}, clockBias: ${clockBias}, clockDrift: ${clockDrift}, signalToNoise: ${signalToNoise}, spectralMax: ${spectralMax}, dopplerNoiseHz: ${dopplerNoiseHz}, transmitRamps: ${transmitRamps}, OBSERVATIONS: ${OBSERVATIONS}, SEGMENTS: ${SEGMENTS}, transmitFreq2: ${transmitFreq2}, transmitFreq3: ${transmitFreq3}, transmitFreq4: ${transmitFreq4}, transmitFreq5: ${transmitFreq5}, transmitFreqRate1: ${transmitFreqRate1}, transmitFreqRate2: ${transmitFreqRate2}, transmitFreqRate3: ${transmitFreqRate3}, transmitFreqRate4: ${transmitFreqRate4}, transmitFreqRate5: ${transmitFreqRate5}, messageId: ${messageId}, trackId: ${trackId}, dataTypes: ${dataTypes}, PATH: ${PATH}, ephemerisName1: ${ephemerisName1}, ephemerisName2: ${ephemerisName2}, ephemerisName3: ${ephemerisName3}, ephemerisName4: ${ephemerisName4}, ephemerisName5: ${ephemerisName5}, rangeUnits: ${rangeUnits}, referenceFrame: ${referenceFrame}, INTERPOLATION: ${INTERPOLATION}, interpolationDegree: ${interpolationDegree}, freqOffset: ${freqOffset}, turnaroundNumerator: ${turnaroundNumerator}, turnaroundDenominator: ${turnaroundDenominator}, transmitDelay1: ${transmitDelay1}, transmitDelay2: ${transmitDelay2}, transmitDelay3: ${transmitDelay3}, transmitDelay4: ${transmitDelay4}, transmitDelay5: ${transmitDelay5}, receiveDelay1: ${receiveDelay1}, receiveDelay4: ${receiveDelay4}, receiveDelay5: ${receiveDelay5}, dopplerCountBias: ${dopplerCountBias}, dopplerCountScale: ${dopplerCountScale}, dopplerCountRollover: ${dopplerCountRollover}, correctionRange: ${correctionRange}, correctionDoppler: ${correctionDoppler}, correctionMag: ${correctionMag}, correctionRcs: ${correctionRcs}, correctionReceive: ${correctionReceive}, correctionTransmit: ${correctionTransmit}, correctionAberrationYearly: ${correctionAberrationYearly}, correctionAberrationDiurnal: ${correctionAberrationDiurnal}}';
+  }
+}
+
+class _TDMReader extends fb.TableReader<TDM> {
+  const _TDMReader();
+
+  @override
+  TDM createObject(fb.BufferContext bc, int offset) =>
+    TDM._(bc, offset);
+}
+
+class TDMBuilder {
+  TDMBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(111);
+  }
+
+  int addObserverIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addObserverX(double? OBSERVER_X) {
+    fbBuilder.addFloat64(1, OBSERVER_X);
+    return fbBuilder.offset;
+  }
+  int addObserverY(double? OBSERVER_Y) {
+    fbBuilder.addFloat64(2, OBSERVER_Y);
+    return fbBuilder.offset;
+  }
+  int addObserverZ(double? OBSERVER_Z) {
+    fbBuilder.addFloat64(3, OBSERVER_Z);
+    return fbBuilder.offset;
+  }
+  int addObserverVx(double? OBSERVER_VX) {
+    fbBuilder.addFloat64(4, OBSERVER_VX);
+    return fbBuilder.offset;
+  }
+  int addObserverVy(double? OBSERVER_VY) {
+    fbBuilder.addFloat64(5, OBSERVER_VY);
+    return fbBuilder.offset;
+  }
+  int addObserverVz(double? OBSERVER_VZ) {
+    fbBuilder.addFloat64(6, OBSERVER_VZ);
+    return fbBuilder.offset;
+  }
+  int addObserverPositionReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addObsReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addObservationStepSize(double? OBSERVATION_STEP_SIZE) {
+    fbBuilder.addFloat64(10, OBSERVATION_STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addObservationStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addCcsdsTdmVersOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addCreationDateOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addMetaStartOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant1Offset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant2Offset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant3Offset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant4Offset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addParticipant5Offset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addModeOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addPath1(int? PATH_1) {
+    fbBuilder.addUint16(26, PATH_1);
+    return fbBuilder.offset;
+  }
+  int addPath2(int? PATH_2) {
+    fbBuilder.addUint16(27, PATH_2);
+    return fbBuilder.offset;
+  }
+  int addTransmitBandOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiveBandOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addIntegrationInterval(double? INTEGRATION_INTERVAL) {
+    fbBuilder.addFloat32(30, INTEGRATION_INTERVAL);
+    return fbBuilder.offset;
+  }
+  int addIntegrationRefOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay2(double? RECEIVE_DELAY_2) {
+    fbBuilder.addFloat64(32, RECEIVE_DELAY_2);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay3(double? RECEIVE_DELAY_3) {
+    fbBuilder.addFloat64(33, RECEIVE_DELAY_3);
+    return fbBuilder.offset;
+  }
+  int addDataQualityOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addMetaStopOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addDataStartOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq1(double? TRANSMIT_FREQ_1) {
+    fbBuilder.addFloat64(37, TRANSMIT_FREQ_1);
+    return fbBuilder.offset;
+  }
+  int addReceiveFreqOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addDataStopOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addTimetagRefOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addAngleTypeOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addAngle1Offset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addAngle2Offset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addAngleUncertainty1(double? ANGLE_UNCERTAINTY_1) {
+    fbBuilder.addFloat32(44, ANGLE_UNCERTAINTY_1);
+    return fbBuilder.offset;
+  }
+  int addAngleUncertainty2(double? ANGLE_UNCERTAINTY_2) {
+    fbBuilder.addFloat32(45, ANGLE_UNCERTAINTY_2);
+    return fbBuilder.offset;
+  }
+  int addRangeRate(double? RANGE_RATE) {
+    fbBuilder.addFloat64(46, RANGE_RATE);
+    return fbBuilder.offset;
+  }
+  int addRangeUncertainty(double? RANGE_UNCERTAINTY) {
+    fbBuilder.addFloat64(47, RANGE_UNCERTAINTY);
+    return fbBuilder.offset;
+  }
+  int addRangeModeOffset(int? offset) {
+    fbBuilder.addOffset(48, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeModulus(double? RANGE_MODULUS) {
+    fbBuilder.addFloat64(49, RANGE_MODULUS);
+    return fbBuilder.offset;
+  }
+  int addCorrectionAngle1(double? CORRECTION_ANGLE_1) {
+    fbBuilder.addFloat32(50, CORRECTION_ANGLE_1);
+    return fbBuilder.offset;
+  }
+  int addCorrectionAngle2(double? CORRECTION_ANGLE_2) {
+    fbBuilder.addFloat32(51, CORRECTION_ANGLE_2);
+    return fbBuilder.offset;
+  }
+  int addCorrectionsAppliedOffset(int? offset) {
+    fbBuilder.addOffset(52, offset);
+    return fbBuilder.offset;
+  }
+  int addTropoDryOffset(int? offset) {
+    fbBuilder.addOffset(53, offset);
+    return fbBuilder.offset;
+  }
+  int addTropoWetOffset(int? offset) {
+    fbBuilder.addOffset(54, offset);
+    return fbBuilder.offset;
+  }
+  int addStecOffset(int? offset) {
+    fbBuilder.addOffset(55, offset);
+    return fbBuilder.offset;
+  }
+  int addPressureOffset(int? offset) {
+    fbBuilder.addOffset(56, offset);
+    return fbBuilder.offset;
+  }
+  int addRhumidityOffset(int? offset) {
+    fbBuilder.addOffset(57, offset);
+    return fbBuilder.offset;
+  }
+  int addTemperatureOffset(int? offset) {
+    fbBuilder.addOffset(58, offset);
+    return fbBuilder.offset;
+  }
+  int addClockBiasOffset(int? offset) {
+    fbBuilder.addOffset(59, offset);
+    return fbBuilder.offset;
+  }
+  int addClockDriftOffset(int? offset) {
+    fbBuilder.addOffset(60, offset);
+    return fbBuilder.offset;
+  }
+  int addSignalToNoiseOffset(int? offset) {
+    fbBuilder.addOffset(61, offset);
+    return fbBuilder.offset;
+  }
+  int addSpectralMaxOffset(int? offset) {
+    fbBuilder.addOffset(62, offset);
+    return fbBuilder.offset;
+  }
+  int addDopplerNoiseHzOffset(int? offset) {
+    fbBuilder.addOffset(63, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitRampsOffset(int? offset) {
+    fbBuilder.addOffset(64, offset);
+    return fbBuilder.offset;
+  }
+  int addObservationsOffset(int? offset) {
+    fbBuilder.addOffset(65, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentsOffset(int? offset) {
+    fbBuilder.addOffset(66, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq2(double? TRANSMIT_FREQ_2) {
+    fbBuilder.addFloat64(67, TRANSMIT_FREQ_2);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq3(double? TRANSMIT_FREQ_3) {
+    fbBuilder.addFloat64(68, TRANSMIT_FREQ_3);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq4(double? TRANSMIT_FREQ_4) {
+    fbBuilder.addFloat64(69, TRANSMIT_FREQ_4);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreq5(double? TRANSMIT_FREQ_5) {
+    fbBuilder.addFloat64(70, TRANSMIT_FREQ_5);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate1(double? TRANSMIT_FREQ_RATE_1) {
+    fbBuilder.addFloat64(71, TRANSMIT_FREQ_RATE_1);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate2(double? TRANSMIT_FREQ_RATE_2) {
+    fbBuilder.addFloat64(72, TRANSMIT_FREQ_RATE_2);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate3(double? TRANSMIT_FREQ_RATE_3) {
+    fbBuilder.addFloat64(73, TRANSMIT_FREQ_RATE_3);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate4(double? TRANSMIT_FREQ_RATE_4) {
+    fbBuilder.addFloat64(74, TRANSMIT_FREQ_RATE_4);
+    return fbBuilder.offset;
+  }
+  int addTransmitFreqRate5(double? TRANSMIT_FREQ_RATE_5) {
+    fbBuilder.addFloat64(75, TRANSMIT_FREQ_RATE_5);
+    return fbBuilder.offset;
+  }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(76, offset);
+    return fbBuilder.offset;
+  }
+  int addTrackIdOffset(int? offset) {
+    fbBuilder.addOffset(77, offset);
+    return fbBuilder.offset;
+  }
+  int addDataTypesOffset(int? offset) {
+    fbBuilder.addOffset(78, offset);
+    return fbBuilder.offset;
+  }
+  int addPathOffset(int? offset) {
+    fbBuilder.addOffset(79, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName1Offset(int? offset) {
+    fbBuilder.addOffset(80, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName2Offset(int? offset) {
+    fbBuilder.addOffset(81, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName3Offset(int? offset) {
+    fbBuilder.addOffset(82, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName4Offset(int? offset) {
+    fbBuilder.addOffset(83, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisName5Offset(int? offset) {
+    fbBuilder.addOffset(84, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeUnitsOffset(int? offset) {
+    fbBuilder.addOffset(85, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(86, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationOffset(int? offset) {
+    fbBuilder.addOffset(87, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationDegree(int? INTERPOLATION_DEGREE) {
+    fbBuilder.addUint32(88, INTERPOLATION_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addFreqOffset(double? FREQ_OFFSET) {
+    fbBuilder.addFloat64(89, FREQ_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addTurnaroundNumerator(int? TURNAROUND_NUMERATOR) {
+    fbBuilder.addInt32(90, TURNAROUND_NUMERATOR);
+    return fbBuilder.offset;
+  }
+  int addTurnaroundDenominator(int? TURNAROUND_DENOMINATOR) {
+    fbBuilder.addInt32(91, TURNAROUND_DENOMINATOR);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay1(double? TRANSMIT_DELAY_1) {
+    fbBuilder.addFloat64(92, TRANSMIT_DELAY_1);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay2(double? TRANSMIT_DELAY_2) {
+    fbBuilder.addFloat64(93, TRANSMIT_DELAY_2);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay3(double? TRANSMIT_DELAY_3) {
+    fbBuilder.addFloat64(94, TRANSMIT_DELAY_3);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay4(double? TRANSMIT_DELAY_4) {
+    fbBuilder.addFloat64(95, TRANSMIT_DELAY_4);
+    return fbBuilder.offset;
+  }
+  int addTransmitDelay5(double? TRANSMIT_DELAY_5) {
+    fbBuilder.addFloat64(96, TRANSMIT_DELAY_5);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay1(double? RECEIVE_DELAY_1) {
+    fbBuilder.addFloat64(97, RECEIVE_DELAY_1);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay4(double? RECEIVE_DELAY_4) {
+    fbBuilder.addFloat64(98, RECEIVE_DELAY_4);
+    return fbBuilder.offset;
+  }
+  int addReceiveDelay5(double? RECEIVE_DELAY_5) {
+    fbBuilder.addFloat64(99, RECEIVE_DELAY_5);
+    return fbBuilder.offset;
+  }
+  int addDopplerCountBias(double? DOPPLER_COUNT_BIAS) {
+    fbBuilder.addFloat64(100, DOPPLER_COUNT_BIAS);
+    return fbBuilder.offset;
+  }
+  int addDopplerCountScale(int? DOPPLER_COUNT_SCALE) {
+    fbBuilder.addUint32(101, DOPPLER_COUNT_SCALE);
+    return fbBuilder.offset;
+  }
+  int addDopplerCountRollover(bool? DOPPLER_COUNT_ROLLOVER) {
+    fbBuilder.addBool(102, DOPPLER_COUNT_ROLLOVER);
+    return fbBuilder.offset;
+  }
+  int addCorrectionRange(double? CORRECTION_RANGE) {
+    fbBuilder.addFloat64(103, CORRECTION_RANGE);
+    return fbBuilder.offset;
+  }
+  int addCorrectionDoppler(double? CORRECTION_DOPPLER) {
+    fbBuilder.addFloat64(104, CORRECTION_DOPPLER);
+    return fbBuilder.offset;
+  }
+  int addCorrectionMag(double? CORRECTION_MAG) {
+    fbBuilder.addFloat64(105, CORRECTION_MAG);
+    return fbBuilder.offset;
+  }
+  int addCorrectionRcs(double? CORRECTION_RCS) {
+    fbBuilder.addFloat64(106, CORRECTION_RCS);
+    return fbBuilder.offset;
+  }
+  int addCorrectionReceive(double? CORRECTION_RECEIVE) {
+    fbBuilder.addFloat64(107, CORRECTION_RECEIVE);
+    return fbBuilder.offset;
+  }
+  int addCorrectionTransmit(double? CORRECTION_TRANSMIT) {
+    fbBuilder.addFloat64(108, CORRECTION_TRANSMIT);
+    return fbBuilder.offset;
+  }
+  int addCorrectionAberrationYearly(double? CORRECTION_ABERRATION_YEARLY) {
+    fbBuilder.addFloat64(109, CORRECTION_ABERRATION_YEARLY);
+    return fbBuilder.offset;
+  }
+  int addCorrectionAberrationDiurnal(double? CORRECTION_ABERRATION_DIURNAL) {
+    fbBuilder.addFloat64(110, CORRECTION_ABERRATION_DIURNAL);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TDMObjectBuilder extends fb.ObjectBuilder {
+  final String? _OBSERVER_ID;
+  final double? _OBSERVER_X;
+  final double? _OBSERVER_Y;
+  final double? _OBSERVER_Z;
+  final double? _OBSERVER_VX;
+  final double? _OBSERVER_VY;
+  final double? _OBSERVER_VZ;
+  final RFMObjectBuilder? _OBSERVER_POSITION_REFERENCE_FRAME;
+  final RFMObjectBuilder? _OBS_REFERENCE_FRAME;
+  final String? _EPOCH;
+  final double? _OBSERVATION_STEP_SIZE;
+  final String? _OBSERVATION_START_TIME;
+  final String? _CCSDS_TDM_VERS;
+  final List<String>? _COMMENT;
+  final String? _CREATION_DATE;
+  final String? _ORIGINATOR;
+  final String? _META_START;
+  final String? _TIME_SYSTEM;
+  final String? _START_TIME;
+  final String? _STOP_TIME;
+  final String? _PARTICIPANT_1;
+  final String? _PARTICIPANT_2;
+  final String? _PARTICIPANT_3;
+  final String? _PARTICIPANT_4;
+  final String? _PARTICIPANT_5;
+  final String? _MODE;
+  final int? _PATH_1;
+  final int? _PATH_2;
+  final String? _TRANSMIT_BAND;
+  final String? _RECEIVE_BAND;
+  final double? _INTEGRATION_INTERVAL;
+  final String? _INTEGRATION_REF;
+  final double? _RECEIVE_DELAY_2;
+  final double? _RECEIVE_DELAY_3;
+  final String? _DATA_QUALITY;
+  final String? _META_STOP;
+  final String? _DATA_START;
+  final double? _TRANSMIT_FREQ_1;
+  final List<double>? _RECEIVE_FREQ;
+  final String? _DATA_STOP;
+  final String? _TIMETAG_REF;
+  final String? _ANGLE_TYPE;
+  final List<double>? _ANGLE_1;
+  final List<double>? _ANGLE_2;
+  final double? _ANGLE_UNCERTAINTY_1;
+  final double? _ANGLE_UNCERTAINTY_2;
+  final double? _RANGE_RATE;
+  final double? _RANGE_UNCERTAINTY;
+  final String? _RANGE_MODE;
+  final double? _RANGE_MODULUS;
+  final double? _CORRECTION_ANGLE_1;
+  final double? _CORRECTION_ANGLE_2;
+  final String? _CORRECTIONS_APPLIED;
+  final List<double>? _TROPO_DRY;
+  final List<double>? _TROPO_WET;
+  final List<double>? _STEC;
+  final List<double>? _PRESSURE;
+  final List<double>? _RHUMIDITY;
+  final List<double>? _TEMPERATURE;
+  final List<double>? _CLOCK_BIAS;
+  final List<double>? _CLOCK_DRIFT;
+  final List<double>? _SIGNAL_TO_NOISE;
+  final List<double>? _SPECTRAL_MAX;
+  final List<double>? _DOPPLER_NOISE_HZ;
+  final List<TDMTransmitRampObjectBuilder>? _TRANSMIT_RAMPS;
+  final List<TDMObservationObjectBuilder>? _OBSERVATIONS;
+  final List<TDMSegmentObjectBuilder>? _SEGMENTS;
+  final double? _TRANSMIT_FREQ_2;
+  final double? _TRANSMIT_FREQ_3;
+  final double? _TRANSMIT_FREQ_4;
+  final double? _TRANSMIT_FREQ_5;
+  final double? _TRANSMIT_FREQ_RATE_1;
+  final double? _TRANSMIT_FREQ_RATE_2;
+  final double? _TRANSMIT_FREQ_RATE_3;
+  final double? _TRANSMIT_FREQ_RATE_4;
+  final double? _TRANSMIT_FREQ_RATE_5;
+  final String? _MESSAGE_ID;
+  final String? _TRACK_ID;
+  final String? _DATA_TYPES;
+  final String? _PATH;
+  final String? _EPHEMERIS_NAME_1;
+  final String? _EPHEMERIS_NAME_2;
+  final String? _EPHEMERIS_NAME_3;
+  final String? _EPHEMERIS_NAME_4;
+  final String? _EPHEMERIS_NAME_5;
+  final String? _RANGE_UNITS;
+  final String? _REFERENCE_FRAME;
+  final String? _INTERPOLATION;
+  final int? _INTERPOLATION_DEGREE;
+  final double? _FREQ_OFFSET;
+  final int? _TURNAROUND_NUMERATOR;
+  final int? _TURNAROUND_DENOMINATOR;
+  final double? _TRANSMIT_DELAY_1;
+  final double? _TRANSMIT_DELAY_2;
+  final double? _TRANSMIT_DELAY_3;
+  final double? _TRANSMIT_DELAY_4;
+  final double? _TRANSMIT_DELAY_5;
+  final double? _RECEIVE_DELAY_1;
+  final double? _RECEIVE_DELAY_4;
+  final double? _RECEIVE_DELAY_5;
+  final double? _DOPPLER_COUNT_BIAS;
+  final int? _DOPPLER_COUNT_SCALE;
+  final bool? _DOPPLER_COUNT_ROLLOVER;
+  final double? _CORRECTION_RANGE;
+  final double? _CORRECTION_DOPPLER;
+  final double? _CORRECTION_MAG;
+  final double? _CORRECTION_RCS;
+  final double? _CORRECTION_RECEIVE;
+  final double? _CORRECTION_TRANSMIT;
+  final double? _CORRECTION_ABERRATION_YEARLY;
+  final double? _CORRECTION_ABERRATION_DIURNAL;
+
+  TDMObjectBuilder({
+    String? OBSERVER_ID,
+    String? observerId,
+    double? OBSERVER_X,
+    double? observerX,
+    double? OBSERVER_Y,
+    double? observerY,
+    double? OBSERVER_Z,
+    double? observerZ,
+    double? OBSERVER_VX,
+    double? observerVx,
+    double? OBSERVER_VY,
+    double? observerVy,
+    double? OBSERVER_VZ,
+    double? observerVz,
+    RFMObjectBuilder? OBSERVER_POSITION_REFERENCE_FRAME,
+    RFMObjectBuilder? observerPositionReferenceFrame,
+    RFMObjectBuilder? OBS_REFERENCE_FRAME,
+    RFMObjectBuilder? obsReferenceFrame,
+    String? EPOCH,
+    double? OBSERVATION_STEP_SIZE,
+    double? observationStepSize,
+    String? OBSERVATION_START_TIME,
+    String? observationStartTime,
+    String? CCSDS_TDM_VERS,
+    String? ccsdsTdmVers,
+    List<String>? COMMENT,
+    String? CREATION_DATE,
+    String? creationDate,
+    String? ORIGINATOR,
+    String? META_START,
+    String? metaStart,
+    String? TIME_SYSTEM,
+    String? timeSystem,
+    String? START_TIME,
+    String? startTime,
+    String? STOP_TIME,
+    String? stopTime,
+    String? PARTICIPANT_1,
+    String? participant1,
+    String? PARTICIPANT_2,
+    String? participant2,
+    String? PARTICIPANT_3,
+    String? participant3,
+    String? PARTICIPANT_4,
+    String? participant4,
+    String? PARTICIPANT_5,
+    String? participant5,
+    String? MODE,
+    int? PATH_1,
+    int? path1,
+    int? PATH_2,
+    int? path2,
+    String? TRANSMIT_BAND,
+    String? transmitBand,
+    String? RECEIVE_BAND,
+    String? receiveBand,
+    double? INTEGRATION_INTERVAL,
+    double? integrationInterval,
+    String? INTEGRATION_REF,
+    String? integrationRef,
+    double? RECEIVE_DELAY_2,
+    double? receiveDelay2,
+    double? RECEIVE_DELAY_3,
+    double? receiveDelay3,
+    String? DATA_QUALITY,
+    String? dataQuality,
+    String? META_STOP,
+    String? metaStop,
+    String? DATA_START,
+    String? dataStart,
+    double? TRANSMIT_FREQ_1,
+    double? transmitFreq1,
+    List<double>? RECEIVE_FREQ,
+    List<double>? receiveFreq,
+    String? DATA_STOP,
+    String? dataStop,
+    String? TIMETAG_REF,
+    String? timetagRef,
+    String? ANGLE_TYPE,
+    String? angleType,
+    List<double>? ANGLE_1,
+    List<double>? angle1,
+    List<double>? ANGLE_2,
+    List<double>? angle2,
+    double? ANGLE_UNCERTAINTY_1,
+    double? angleUncertainty1,
+    double? ANGLE_UNCERTAINTY_2,
+    double? angleUncertainty2,
+    double? RANGE_RATE,
+    double? rangeRate,
+    double? RANGE_UNCERTAINTY,
+    double? rangeUncertainty,
+    String? RANGE_MODE,
+    String? rangeMode,
+    double? RANGE_MODULUS,
+    double? rangeModulus,
+    double? CORRECTION_ANGLE_1,
+    double? correctionAngle1,
+    double? CORRECTION_ANGLE_2,
+    double? correctionAngle2,
+    String? CORRECTIONS_APPLIED,
+    String? correctionsApplied,
+    List<double>? TROPO_DRY,
+    List<double>? tropoDry,
+    List<double>? TROPO_WET,
+    List<double>? tropoWet,
+    List<double>? STEC,
+    List<double>? PRESSURE,
+    List<double>? RHUMIDITY,
+    List<double>? TEMPERATURE,
+    List<double>? CLOCK_BIAS,
+    List<double>? clockBias,
+    List<double>? CLOCK_DRIFT,
+    List<double>? clockDrift,
+    List<double>? SIGNAL_TO_NOISE,
+    List<double>? signalToNoise,
+    List<double>? SPECTRAL_MAX,
+    List<double>? spectralMax,
+    List<double>? DOPPLER_NOISE_HZ,
+    List<double>? dopplerNoiseHz,
+    List<TDMTransmitRampObjectBuilder>? TRANSMIT_RAMPS,
+    List<TDMTransmitRampObjectBuilder>? transmitRamps,
+    List<TDMObservationObjectBuilder>? OBSERVATIONS,
+    List<TDMSegmentObjectBuilder>? SEGMENTS,
+    double? TRANSMIT_FREQ_2,
+    double? transmitFreq2,
+    double? TRANSMIT_FREQ_3,
+    double? transmitFreq3,
+    double? TRANSMIT_FREQ_4,
+    double? transmitFreq4,
+    double? TRANSMIT_FREQ_5,
+    double? transmitFreq5,
+    double? TRANSMIT_FREQ_RATE_1,
+    double? transmitFreqRate1,
+    double? TRANSMIT_FREQ_RATE_2,
+    double? transmitFreqRate2,
+    double? TRANSMIT_FREQ_RATE_3,
+    double? transmitFreqRate3,
+    double? TRANSMIT_FREQ_RATE_4,
+    double? transmitFreqRate4,
+    double? TRANSMIT_FREQ_RATE_5,
+    double? transmitFreqRate5,
+    String? MESSAGE_ID,
+    String? messageId,
+    String? TRACK_ID,
+    String? trackId,
+    String? DATA_TYPES,
+    String? dataTypes,
+    String? PATH,
+    String? EPHEMERIS_NAME_1,
+    String? ephemerisName1,
+    String? EPHEMERIS_NAME_2,
+    String? ephemerisName2,
+    String? EPHEMERIS_NAME_3,
+    String? ephemerisName3,
+    String? EPHEMERIS_NAME_4,
+    String? ephemerisName4,
+    String? EPHEMERIS_NAME_5,
+    String? ephemerisName5,
+    String? RANGE_UNITS,
+    String? rangeUnits,
+    String? REFERENCE_FRAME,
+    String? referenceFrame,
+    String? INTERPOLATION,
+    int? INTERPOLATION_DEGREE,
+    int? interpolationDegree,
+    double? FREQ_OFFSET,
+    double? freqOffset,
+    int? TURNAROUND_NUMERATOR,
+    int? turnaroundNumerator,
+    int? TURNAROUND_DENOMINATOR,
+    int? turnaroundDenominator,
+    double? TRANSMIT_DELAY_1,
+    double? transmitDelay1,
+    double? TRANSMIT_DELAY_2,
+    double? transmitDelay2,
+    double? TRANSMIT_DELAY_3,
+    double? transmitDelay3,
+    double? TRANSMIT_DELAY_4,
+    double? transmitDelay4,
+    double? TRANSMIT_DELAY_5,
+    double? transmitDelay5,
+    double? RECEIVE_DELAY_1,
+    double? receiveDelay1,
+    double? RECEIVE_DELAY_4,
+    double? receiveDelay4,
+    double? RECEIVE_DELAY_5,
+    double? receiveDelay5,
+    double? DOPPLER_COUNT_BIAS,
+    double? dopplerCountBias,
+    int? DOPPLER_COUNT_SCALE,
+    int? dopplerCountScale,
+    bool? DOPPLER_COUNT_ROLLOVER,
+    bool? dopplerCountRollover,
+    double? CORRECTION_RANGE,
+    double? correctionRange,
+    double? CORRECTION_DOPPLER,
+    double? correctionDoppler,
+    double? CORRECTION_MAG,
+    double? correctionMag,
+    double? CORRECTION_RCS,
+    double? correctionRcs,
+    double? CORRECTION_RECEIVE,
+    double? correctionReceive,
+    double? CORRECTION_TRANSMIT,
+    double? correctionTransmit,
+    double? CORRECTION_ABERRATION_YEARLY,
+    double? correctionAberrationYearly,
+    double? CORRECTION_ABERRATION_DIURNAL,
+    double? correctionAberrationDiurnal,
+  })
+      : _OBSERVER_ID = observerId ?? OBSERVER_ID,
+        _OBSERVER_X = observerX ?? OBSERVER_X,
+        _OBSERVER_Y = observerY ?? OBSERVER_Y,
+        _OBSERVER_Z = observerZ ?? OBSERVER_Z,
+        _OBSERVER_VX = observerVx ?? OBSERVER_VX,
+        _OBSERVER_VY = observerVy ?? OBSERVER_VY,
+        _OBSERVER_VZ = observerVz ?? OBSERVER_VZ,
+        _OBSERVER_POSITION_REFERENCE_FRAME = observerPositionReferenceFrame ?? OBSERVER_POSITION_REFERENCE_FRAME,
+        _OBS_REFERENCE_FRAME = obsReferenceFrame ?? OBS_REFERENCE_FRAME,
+        _EPOCH = EPOCH,
+        _OBSERVATION_STEP_SIZE = observationStepSize ?? OBSERVATION_STEP_SIZE,
+        _OBSERVATION_START_TIME = observationStartTime ?? OBSERVATION_START_TIME,
+        _CCSDS_TDM_VERS = ccsdsTdmVers ?? CCSDS_TDM_VERS,
+        _COMMENT = COMMENT,
+        _CREATION_DATE = creationDate ?? CREATION_DATE,
+        _ORIGINATOR = ORIGINATOR,
+        _META_START = metaStart ?? META_START,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _START_TIME = startTime ?? START_TIME,
+        _STOP_TIME = stopTime ?? STOP_TIME,
+        _PARTICIPANT_1 = participant1 ?? PARTICIPANT_1,
+        _PARTICIPANT_2 = participant2 ?? PARTICIPANT_2,
+        _PARTICIPANT_3 = participant3 ?? PARTICIPANT_3,
+        _PARTICIPANT_4 = participant4 ?? PARTICIPANT_4,
+        _PARTICIPANT_5 = participant5 ?? PARTICIPANT_5,
+        _MODE = MODE,
+        _PATH_1 = path1 ?? PATH_1,
+        _PATH_2 = path2 ?? PATH_2,
+        _TRANSMIT_BAND = transmitBand ?? TRANSMIT_BAND,
+        _RECEIVE_BAND = receiveBand ?? RECEIVE_BAND,
+        _INTEGRATION_INTERVAL = integrationInterval ?? INTEGRATION_INTERVAL,
+        _INTEGRATION_REF = integrationRef ?? INTEGRATION_REF,
+        _RECEIVE_DELAY_2 = receiveDelay2 ?? RECEIVE_DELAY_2,
+        _RECEIVE_DELAY_3 = receiveDelay3 ?? RECEIVE_DELAY_3,
+        _DATA_QUALITY = dataQuality ?? DATA_QUALITY,
+        _META_STOP = metaStop ?? META_STOP,
+        _DATA_START = dataStart ?? DATA_START,
+        _TRANSMIT_FREQ_1 = transmitFreq1 ?? TRANSMIT_FREQ_1,
+        _RECEIVE_FREQ = receiveFreq ?? RECEIVE_FREQ,
+        _DATA_STOP = dataStop ?? DATA_STOP,
+        _TIMETAG_REF = timetagRef ?? TIMETAG_REF,
+        _ANGLE_TYPE = angleType ?? ANGLE_TYPE,
+        _ANGLE_1 = angle1 ?? ANGLE_1,
+        _ANGLE_2 = angle2 ?? ANGLE_2,
+        _ANGLE_UNCERTAINTY_1 = angleUncertainty1 ?? ANGLE_UNCERTAINTY_1,
+        _ANGLE_UNCERTAINTY_2 = angleUncertainty2 ?? ANGLE_UNCERTAINTY_2,
+        _RANGE_RATE = rangeRate ?? RANGE_RATE,
+        _RANGE_UNCERTAINTY = rangeUncertainty ?? RANGE_UNCERTAINTY,
+        _RANGE_MODE = rangeMode ?? RANGE_MODE,
+        _RANGE_MODULUS = rangeModulus ?? RANGE_MODULUS,
+        _CORRECTION_ANGLE_1 = correctionAngle1 ?? CORRECTION_ANGLE_1,
+        _CORRECTION_ANGLE_2 = correctionAngle2 ?? CORRECTION_ANGLE_2,
+        _CORRECTIONS_APPLIED = correctionsApplied ?? CORRECTIONS_APPLIED,
+        _TROPO_DRY = tropoDry ?? TROPO_DRY,
+        _TROPO_WET = tropoWet ?? TROPO_WET,
+        _STEC = STEC,
+        _PRESSURE = PRESSURE,
+        _RHUMIDITY = RHUMIDITY,
+        _TEMPERATURE = TEMPERATURE,
+        _CLOCK_BIAS = clockBias ?? CLOCK_BIAS,
+        _CLOCK_DRIFT = clockDrift ?? CLOCK_DRIFT,
+        _SIGNAL_TO_NOISE = signalToNoise ?? SIGNAL_TO_NOISE,
+        _SPECTRAL_MAX = spectralMax ?? SPECTRAL_MAX,
+        _DOPPLER_NOISE_HZ = dopplerNoiseHz ?? DOPPLER_NOISE_HZ,
+        _TRANSMIT_RAMPS = transmitRamps ?? TRANSMIT_RAMPS,
+        _OBSERVATIONS = OBSERVATIONS,
+        _SEGMENTS = SEGMENTS,
+        _TRANSMIT_FREQ_2 = transmitFreq2 ?? TRANSMIT_FREQ_2,
+        _TRANSMIT_FREQ_3 = transmitFreq3 ?? TRANSMIT_FREQ_3,
+        _TRANSMIT_FREQ_4 = transmitFreq4 ?? TRANSMIT_FREQ_4,
+        _TRANSMIT_FREQ_5 = transmitFreq5 ?? TRANSMIT_FREQ_5,
+        _TRANSMIT_FREQ_RATE_1 = transmitFreqRate1 ?? TRANSMIT_FREQ_RATE_1,
+        _TRANSMIT_FREQ_RATE_2 = transmitFreqRate2 ?? TRANSMIT_FREQ_RATE_2,
+        _TRANSMIT_FREQ_RATE_3 = transmitFreqRate3 ?? TRANSMIT_FREQ_RATE_3,
+        _TRANSMIT_FREQ_RATE_4 = transmitFreqRate4 ?? TRANSMIT_FREQ_RATE_4,
+        _TRANSMIT_FREQ_RATE_5 = transmitFreqRate5 ?? TRANSMIT_FREQ_RATE_5,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _TRACK_ID = trackId ?? TRACK_ID,
+        _DATA_TYPES = dataTypes ?? DATA_TYPES,
+        _PATH = PATH,
+        _EPHEMERIS_NAME_1 = ephemerisName1 ?? EPHEMERIS_NAME_1,
+        _EPHEMERIS_NAME_2 = ephemerisName2 ?? EPHEMERIS_NAME_2,
+        _EPHEMERIS_NAME_3 = ephemerisName3 ?? EPHEMERIS_NAME_3,
+        _EPHEMERIS_NAME_4 = ephemerisName4 ?? EPHEMERIS_NAME_4,
+        _EPHEMERIS_NAME_5 = ephemerisName5 ?? EPHEMERIS_NAME_5,
+        _RANGE_UNITS = rangeUnits ?? RANGE_UNITS,
+        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _INTERPOLATION = INTERPOLATION,
+        _INTERPOLATION_DEGREE = interpolationDegree ?? INTERPOLATION_DEGREE,
+        _FREQ_OFFSET = freqOffset ?? FREQ_OFFSET,
+        _TURNAROUND_NUMERATOR = turnaroundNumerator ?? TURNAROUND_NUMERATOR,
+        _TURNAROUND_DENOMINATOR = turnaroundDenominator ?? TURNAROUND_DENOMINATOR,
+        _TRANSMIT_DELAY_1 = transmitDelay1 ?? TRANSMIT_DELAY_1,
+        _TRANSMIT_DELAY_2 = transmitDelay2 ?? TRANSMIT_DELAY_2,
+        _TRANSMIT_DELAY_3 = transmitDelay3 ?? TRANSMIT_DELAY_3,
+        _TRANSMIT_DELAY_4 = transmitDelay4 ?? TRANSMIT_DELAY_4,
+        _TRANSMIT_DELAY_5 = transmitDelay5 ?? TRANSMIT_DELAY_5,
+        _RECEIVE_DELAY_1 = receiveDelay1 ?? RECEIVE_DELAY_1,
+        _RECEIVE_DELAY_4 = receiveDelay4 ?? RECEIVE_DELAY_4,
+        _RECEIVE_DELAY_5 = receiveDelay5 ?? RECEIVE_DELAY_5,
+        _DOPPLER_COUNT_BIAS = dopplerCountBias ?? DOPPLER_COUNT_BIAS,
+        _DOPPLER_COUNT_SCALE = dopplerCountScale ?? DOPPLER_COUNT_SCALE,
+        _DOPPLER_COUNT_ROLLOVER = dopplerCountRollover ?? DOPPLER_COUNT_ROLLOVER,
+        _CORRECTION_RANGE = correctionRange ?? CORRECTION_RANGE,
+        _CORRECTION_DOPPLER = correctionDoppler ?? CORRECTION_DOPPLER,
+        _CORRECTION_MAG = correctionMag ?? CORRECTION_MAG,
+        _CORRECTION_RCS = correctionRcs ?? CORRECTION_RCS,
+        _CORRECTION_RECEIVE = correctionReceive ?? CORRECTION_RECEIVE,
+        _CORRECTION_TRANSMIT = correctionTransmit ?? CORRECTION_TRANSMIT,
+        _CORRECTION_ABERRATION_YEARLY = correctionAberrationYearly ?? CORRECTION_ABERRATION_YEARLY,
+        _CORRECTION_ABERRATION_DIURNAL = correctionAberrationDiurnal ?? CORRECTION_ABERRATION_DIURNAL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OBSERVER_IDOffset = _OBSERVER_ID == null ? null
+        : fbBuilder.writeString(_OBSERVER_ID!);
+    final int? OBSERVER_POSITION_REFERENCE_FRAMEOffset = _OBSERVER_POSITION_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? OBS_REFERENCE_FRAMEOffset = _OBS_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? OBSERVATION_START_TIMEOffset = _OBSERVATION_START_TIME == null ? null
+        : fbBuilder.writeString(_OBSERVATION_START_TIME!);
+    final int? CCSDS_TDM_VERSOffset = _CCSDS_TDM_VERS == null ? null
+        : fbBuilder.writeString(_CCSDS_TDM_VERS!);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
+        : fbBuilder.writeString(_CREATION_DATE!);
+    final int? ORIGINATOROffset = _ORIGINATOR == null ? null
+        : fbBuilder.writeString(_ORIGINATOR!);
+    final int? META_STARTOffset = _META_START == null ? null
+        : fbBuilder.writeString(_META_START!);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? STOP_TIMEOffset = _STOP_TIME == null ? null
+        : fbBuilder.writeString(_STOP_TIME!);
+    final int? PARTICIPANT_1Offset = _PARTICIPANT_1 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_1!);
+    final int? PARTICIPANT_2Offset = _PARTICIPANT_2 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_2!);
+    final int? PARTICIPANT_3Offset = _PARTICIPANT_3 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_3!);
+    final int? PARTICIPANT_4Offset = _PARTICIPANT_4 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_4!);
+    final int? PARTICIPANT_5Offset = _PARTICIPANT_5 == null ? null
+        : fbBuilder.writeString(_PARTICIPANT_5!);
+    final int? MODEOffset = _MODE == null ? null
+        : fbBuilder.writeString(_MODE!);
+    final int? TRANSMIT_BANDOffset = _TRANSMIT_BAND == null ? null
+        : fbBuilder.writeString(_TRANSMIT_BAND!);
+    final int? RECEIVE_BANDOffset = _RECEIVE_BAND == null ? null
+        : fbBuilder.writeString(_RECEIVE_BAND!);
+    final int? INTEGRATION_REFOffset = _INTEGRATION_REF == null ? null
+        : fbBuilder.writeString(_INTEGRATION_REF!);
+    final int? DATA_QUALITYOffset = _DATA_QUALITY == null ? null
+        : fbBuilder.writeString(_DATA_QUALITY!);
+    final int? META_STOPOffset = _META_STOP == null ? null
+        : fbBuilder.writeString(_META_STOP!);
+    final int? DATA_STARTOffset = _DATA_START == null ? null
+        : fbBuilder.writeString(_DATA_START!);
+    final int? RECEIVE_FREQOffset = _RECEIVE_FREQ == null ? null
+        : fbBuilder.writeListFloat64(_RECEIVE_FREQ!);
+    final int? DATA_STOPOffset = _DATA_STOP == null ? null
+        : fbBuilder.writeString(_DATA_STOP!);
+    final int? TIMETAG_REFOffset = _TIMETAG_REF == null ? null
+        : fbBuilder.writeString(_TIMETAG_REF!);
+    final int? ANGLE_TYPEOffset = _ANGLE_TYPE == null ? null
+        : fbBuilder.writeString(_ANGLE_TYPE!);
+    final int? ANGLE_1Offset = _ANGLE_1 == null ? null
+        : fbBuilder.writeListFloat32(_ANGLE_1!);
+    final int? ANGLE_2Offset = _ANGLE_2 == null ? null
+        : fbBuilder.writeListFloat32(_ANGLE_2!);
+    final int? RANGE_MODEOffset = _RANGE_MODE == null ? null
+        : fbBuilder.writeString(_RANGE_MODE!);
+    final int? CORRECTIONS_APPLIEDOffset = _CORRECTIONS_APPLIED == null ? null
+        : fbBuilder.writeString(_CORRECTIONS_APPLIED!);
+    final int? TROPO_DRYOffset = _TROPO_DRY == null ? null
+        : fbBuilder.writeListFloat64(_TROPO_DRY!);
+    final int? TROPO_WETOffset = _TROPO_WET == null ? null
+        : fbBuilder.writeListFloat64(_TROPO_WET!);
+    final int? STECOffset = _STEC == null ? null
+        : fbBuilder.writeListFloat64(_STEC!);
+    final int? PRESSUREOffset = _PRESSURE == null ? null
+        : fbBuilder.writeListFloat64(_PRESSURE!);
+    final int? RHUMIDITYOffset = _RHUMIDITY == null ? null
+        : fbBuilder.writeListFloat64(_RHUMIDITY!);
+    final int? TEMPERATUREOffset = _TEMPERATURE == null ? null
+        : fbBuilder.writeListFloat64(_TEMPERATURE!);
+    final int? CLOCK_BIASOffset = _CLOCK_BIAS == null ? null
+        : fbBuilder.writeListFloat64(_CLOCK_BIAS!);
+    final int? CLOCK_DRIFTOffset = _CLOCK_DRIFT == null ? null
+        : fbBuilder.writeListFloat64(_CLOCK_DRIFT!);
+    final int? SIGNAL_TO_NOISEOffset = _SIGNAL_TO_NOISE == null ? null
+        : fbBuilder.writeListFloat64(_SIGNAL_TO_NOISE!);
+    final int? SPECTRAL_MAXOffset = _SPECTRAL_MAX == null ? null
+        : fbBuilder.writeListFloat64(_SPECTRAL_MAX!);
+    final int? DOPPLER_NOISE_HZOffset = _DOPPLER_NOISE_HZ == null ? null
+        : fbBuilder.writeListFloat64(_DOPPLER_NOISE_HZ!);
+    final int? TRANSMIT_RAMPSOffset = _TRANSMIT_RAMPS == null ? null
+        : fbBuilder.writeList(_TRANSMIT_RAMPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? OBSERVATIONSOffset = _OBSERVATIONS == null ? null
+        : fbBuilder.writeList(_OBSERVATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SEGMENTSOffset = _SEGMENTS == null ? null
+        : fbBuilder.writeList(_SEGMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    final int? TRACK_IDOffset = _TRACK_ID == null ? null
+        : fbBuilder.writeString(_TRACK_ID!);
+    final int? DATA_TYPESOffset = _DATA_TYPES == null ? null
+        : fbBuilder.writeString(_DATA_TYPES!);
+    final int? PATHOffset = _PATH == null ? null
+        : fbBuilder.writeString(_PATH!);
+    final int? EPHEMERIS_NAME_1Offset = _EPHEMERIS_NAME_1 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_1!);
+    final int? EPHEMERIS_NAME_2Offset = _EPHEMERIS_NAME_2 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_2!);
+    final int? EPHEMERIS_NAME_3Offset = _EPHEMERIS_NAME_3 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_3!);
+    final int? EPHEMERIS_NAME_4Offset = _EPHEMERIS_NAME_4 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_4!);
+    final int? EPHEMERIS_NAME_5Offset = _EPHEMERIS_NAME_5 == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME_5!);
+    final int? RANGE_UNITSOffset = _RANGE_UNITS == null ? null
+        : fbBuilder.writeString(_RANGE_UNITS!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME == null ? null
+        : fbBuilder.writeString(_REFERENCE_FRAME!);
+    final int? INTERPOLATIONOffset = _INTERPOLATION == null ? null
+        : fbBuilder.writeString(_INTERPOLATION!);
+    fbBuilder.startTable(111);
+    fbBuilder.addOffset(0, OBSERVER_IDOffset);
+    fbBuilder.addFloat64(1, _OBSERVER_X);
+    fbBuilder.addFloat64(2, _OBSERVER_Y);
+    fbBuilder.addFloat64(3, _OBSERVER_Z);
+    fbBuilder.addFloat64(4, _OBSERVER_VX);
+    fbBuilder.addFloat64(5, _OBSERVER_VY);
+    fbBuilder.addFloat64(6, _OBSERVER_VZ);
+    fbBuilder.addOffset(7, OBSERVER_POSITION_REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(8, OBS_REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(9, EPOCHOffset);
+    fbBuilder.addFloat64(10, _OBSERVATION_STEP_SIZE);
+    fbBuilder.addOffset(11, OBSERVATION_START_TIMEOffset);
+    fbBuilder.addOffset(12, CCSDS_TDM_VERSOffset);
+    fbBuilder.addOffset(13, COMMENTOffset);
+    fbBuilder.addOffset(14, CREATION_DATEOffset);
+    fbBuilder.addOffset(15, ORIGINATOROffset);
+    fbBuilder.addOffset(16, META_STARTOffset);
+    fbBuilder.addOffset(17, TIME_SYSTEMOffset);
+    fbBuilder.addOffset(18, START_TIMEOffset);
+    fbBuilder.addOffset(19, STOP_TIMEOffset);
+    fbBuilder.addOffset(20, PARTICIPANT_1Offset);
+    fbBuilder.addOffset(21, PARTICIPANT_2Offset);
+    fbBuilder.addOffset(22, PARTICIPANT_3Offset);
+    fbBuilder.addOffset(23, PARTICIPANT_4Offset);
+    fbBuilder.addOffset(24, PARTICIPANT_5Offset);
+    fbBuilder.addOffset(25, MODEOffset);
+    fbBuilder.addUint16(26, _PATH_1);
+    fbBuilder.addUint16(27, _PATH_2);
+    fbBuilder.addOffset(28, TRANSMIT_BANDOffset);
+    fbBuilder.addOffset(29, RECEIVE_BANDOffset);
+    fbBuilder.addFloat32(30, _INTEGRATION_INTERVAL);
+    fbBuilder.addOffset(31, INTEGRATION_REFOffset);
+    fbBuilder.addFloat64(32, _RECEIVE_DELAY_2);
+    fbBuilder.addFloat64(33, _RECEIVE_DELAY_3);
+    fbBuilder.addOffset(34, DATA_QUALITYOffset);
+    fbBuilder.addOffset(35, META_STOPOffset);
+    fbBuilder.addOffset(36, DATA_STARTOffset);
+    fbBuilder.addFloat64(37, _TRANSMIT_FREQ_1);
+    fbBuilder.addOffset(38, RECEIVE_FREQOffset);
+    fbBuilder.addOffset(39, DATA_STOPOffset);
+    fbBuilder.addOffset(40, TIMETAG_REFOffset);
+    fbBuilder.addOffset(41, ANGLE_TYPEOffset);
+    fbBuilder.addOffset(42, ANGLE_1Offset);
+    fbBuilder.addOffset(43, ANGLE_2Offset);
+    fbBuilder.addFloat32(44, _ANGLE_UNCERTAINTY_1);
+    fbBuilder.addFloat32(45, _ANGLE_UNCERTAINTY_2);
+    fbBuilder.addFloat64(46, _RANGE_RATE);
+    fbBuilder.addFloat64(47, _RANGE_UNCERTAINTY);
+    fbBuilder.addOffset(48, RANGE_MODEOffset);
+    fbBuilder.addFloat64(49, _RANGE_MODULUS);
+    fbBuilder.addFloat32(50, _CORRECTION_ANGLE_1);
+    fbBuilder.addFloat32(51, _CORRECTION_ANGLE_2);
+    fbBuilder.addOffset(52, CORRECTIONS_APPLIEDOffset);
+    fbBuilder.addOffset(53, TROPO_DRYOffset);
+    fbBuilder.addOffset(54, TROPO_WETOffset);
+    fbBuilder.addOffset(55, STECOffset);
+    fbBuilder.addOffset(56, PRESSUREOffset);
+    fbBuilder.addOffset(57, RHUMIDITYOffset);
+    fbBuilder.addOffset(58, TEMPERATUREOffset);
+    fbBuilder.addOffset(59, CLOCK_BIASOffset);
+    fbBuilder.addOffset(60, CLOCK_DRIFTOffset);
+    fbBuilder.addOffset(61, SIGNAL_TO_NOISEOffset);
+    fbBuilder.addOffset(62, SPECTRAL_MAXOffset);
+    fbBuilder.addOffset(63, DOPPLER_NOISE_HZOffset);
+    fbBuilder.addOffset(64, TRANSMIT_RAMPSOffset);
+    fbBuilder.addOffset(65, OBSERVATIONSOffset);
+    fbBuilder.addOffset(66, SEGMENTSOffset);
+    fbBuilder.addFloat64(67, _TRANSMIT_FREQ_2);
+    fbBuilder.addFloat64(68, _TRANSMIT_FREQ_3);
+    fbBuilder.addFloat64(69, _TRANSMIT_FREQ_4);
+    fbBuilder.addFloat64(70, _TRANSMIT_FREQ_5);
+    fbBuilder.addFloat64(71, _TRANSMIT_FREQ_RATE_1);
+    fbBuilder.addFloat64(72, _TRANSMIT_FREQ_RATE_2);
+    fbBuilder.addFloat64(73, _TRANSMIT_FREQ_RATE_3);
+    fbBuilder.addFloat64(74, _TRANSMIT_FREQ_RATE_4);
+    fbBuilder.addFloat64(75, _TRANSMIT_FREQ_RATE_5);
+    fbBuilder.addOffset(76, MESSAGE_IDOffset);
+    fbBuilder.addOffset(77, TRACK_IDOffset);
+    fbBuilder.addOffset(78, DATA_TYPESOffset);
+    fbBuilder.addOffset(79, PATHOffset);
+    fbBuilder.addOffset(80, EPHEMERIS_NAME_1Offset);
+    fbBuilder.addOffset(81, EPHEMERIS_NAME_2Offset);
+    fbBuilder.addOffset(82, EPHEMERIS_NAME_3Offset);
+    fbBuilder.addOffset(83, EPHEMERIS_NAME_4Offset);
+    fbBuilder.addOffset(84, EPHEMERIS_NAME_5Offset);
+    fbBuilder.addOffset(85, RANGE_UNITSOffset);
+    fbBuilder.addOffset(86, REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(87, INTERPOLATIONOffset);
+    fbBuilder.addUint32(88, _INTERPOLATION_DEGREE);
+    fbBuilder.addFloat64(89, _FREQ_OFFSET);
+    fbBuilder.addInt32(90, _TURNAROUND_NUMERATOR);
+    fbBuilder.addInt32(91, _TURNAROUND_DENOMINATOR);
+    fbBuilder.addFloat64(92, _TRANSMIT_DELAY_1);
+    fbBuilder.addFloat64(93, _TRANSMIT_DELAY_2);
+    fbBuilder.addFloat64(94, _TRANSMIT_DELAY_3);
+    fbBuilder.addFloat64(95, _TRANSMIT_DELAY_4);
+    fbBuilder.addFloat64(96, _TRANSMIT_DELAY_5);
+    fbBuilder.addFloat64(97, _RECEIVE_DELAY_1);
+    fbBuilder.addFloat64(98, _RECEIVE_DELAY_4);
+    fbBuilder.addFloat64(99, _RECEIVE_DELAY_5);
+    fbBuilder.addFloat64(100, _DOPPLER_COUNT_BIAS);
+    fbBuilder.addUint32(101, _DOPPLER_COUNT_SCALE);
+    fbBuilder.addBool(102, _DOPPLER_COUNT_ROLLOVER);
+    fbBuilder.addFloat64(103, _CORRECTION_RANGE);
+    fbBuilder.addFloat64(104, _CORRECTION_DOPPLER);
+    fbBuilder.addFloat64(105, _CORRECTION_MAG);
+    fbBuilder.addFloat64(106, _CORRECTION_RCS);
+    fbBuilder.addFloat64(107, _CORRECTION_RECEIVE);
+    fbBuilder.addFloat64(108, _CORRECTION_TRANSMIT);
+    fbBuilder.addFloat64(109, _CORRECTION_ABERRATION_YEARLY);
+    fbBuilder.addFloat64(110, _CORRECTION_ABERRATION_DIURNAL);
     return fbBuilder.endTable();
   }
 

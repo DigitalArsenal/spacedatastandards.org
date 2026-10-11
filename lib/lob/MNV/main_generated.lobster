@@ -91,13 +91,13 @@ class mnvOrbitalState : flatbuffers.handle
     /// Longitude drift rate (degrees/day)
     def DRIFT_RATE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
-    /// Position uncertainty U (km, 1-sigma)
+    /// Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
     def SIGMA_U() -> float:
         return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
-    /// Position uncertainty V (km, 1-sigma)
+    /// Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
     def SIGMA_V() -> float:
         return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
-    /// Position uncertainty W (km, 1-sigma)
+    /// Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
     def SIGMA_W() -> float:
         return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
 
@@ -184,6 +184,12 @@ struct mnvOrbitalStateBuilder:
         return b_.EndObject()
 
 /// Spacecraft Maneuver
+///
+/// U, V and W are the UVW axes of an orbit state: U radial, along the position
+/// vector away from the central body; W cross-track, along the orbit normal
+/// (the direction of r x v); V in-track, W x U, completing the right-handed
+/// frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+/// pre-maneuver state at EVENT_START_TIME.
 class MNV : flatbuffers.handle
     /// Unique identifier
     def ID() -> string:
@@ -227,7 +233,8 @@ class MNV : flatbuffers.handle
     /// Original sensor identifier
     def ORIG_SENSOR_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 30)
-    /// Maneuver event identifier
+    /// Maneuver event identifier. Records of one event share it: a merged event
+    /// and the source records it combines.
     def EVENT_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 32)
     /// True if object is uncorrelated
@@ -239,25 +246,25 @@ class MNV : flatbuffers.handle
     /// Total delta-V magnitude (km/s)
     def DELTA_VEL() -> float:
         return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
-    /// Delta-V along-track/U component (km/s)
+    /// Delta-V along U, radial (km/s)
     def DELTA_VEL_U() -> float:
         return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
-    /// Delta-V cross-track/V component (km/s)
+    /// Delta-V along V, in-track (km/s)
     def DELTA_VEL_V() -> float:
         return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
-    /// Delta-V radial/W component (km/s)
+    /// Delta-V along W, cross-track (km/s)
     def DELTA_VEL_W() -> float:
         return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
     /// Total delta position (km)
     def DELTA_POS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
-    /// Delta position U component (km)
+    /// Delta position along U, radial (km)
     def DELTA_POS_U() -> float:
         return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
-    /// Delta position V component (km)
+    /// Delta position along V, in-track (km)
     def DELTA_POS_V() -> float:
         return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
-    /// Delta position W component (km)
+    /// Delta position along W, cross-track (km)
     def DELTA_POS_W() -> float:
         return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
     /// Propellant mass consumed (kg)
@@ -299,7 +306,8 @@ class MNV : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 74) + i * 4)
     def MNVR_ACCEL_TIMES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 74)
-    /// Acceleration values (km/s^2, 3 components per point)
+    /// Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+    /// the state at that point's MNVR_ACCEL_TIMES entry
     def MNVR_ACCELS(i:int) -> float:
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 76) + i * 8)
     def MNVR_ACCELS_length() -> int:
@@ -323,7 +331,9 @@ class MNV : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 86) + i * 4)
     def TAGS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 86)
-    /// Sourced data references
+    /// Sourced data references: identifiers of the records this one was
+    /// determined from (CIDv1 for records of this network), such as the source
+    /// records a merged event combines
     def SOURCED_DATA(i:int) -> string:
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 88) + i * 4)
     def SOURCED_DATA_length() -> int:
@@ -334,13 +344,17 @@ class MNV : flatbuffers.handle
     /// Transaction identifier
     def TRANSACTION_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 92)
+    /// Where the maneuver's data comes from and the terms it travels under.
+    def PROVENANCE() -> PVN?:
+        let o = flatbuffers.field_table(buf_, pos_, 94)
+        return if o: PVN { buf_, o } else: nil
 
 def GetRootAsMNV(buf:string): return MNV { buf, flatbuffers.indirect(buf, 0) }
 
 struct MNVBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(45)
+        b_.StartObject(46)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -476,6 +490,9 @@ struct MNVBuilder:
         return this
     def add_TRANSACTION_ID(TRANSACTION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(44, TRANSACTION_ID)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(45, PROVENANCE)
         return this
     def end():
         return b_.EndObject()

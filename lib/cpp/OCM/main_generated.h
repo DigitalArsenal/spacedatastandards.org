@@ -16,6 +16,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Header;
 struct HeaderBuilder;
@@ -177,45 +179,6 @@ inline const char *EnumNameestimatorCategory(estimatorCategory e) {
   if (::flatbuffers::IsOutRange(e, estimatorCategory_Unknown, estimatorCategory_Smoother)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesestimatorCategory()[index];
-}
-
-/// Whether a covariance's coverage was measured against independent reference
-/// states: the share of reference errors inside its confidence regions matched
-/// what the covariance claims, for the regime and prediction age it covers.
-enum covarianceCalibration : int8_t {
-  /// Calibration not stated
-  covarianceCalibration_Unspecified = 0,
-  /// Not measured against independent reference states, or measured and failed
-  covarianceCalibration_Uncalibrated = 1,
-  /// Measured against independent reference states and passed
-  covarianceCalibration_Calibrated = 2,
-  covarianceCalibration_MIN = covarianceCalibration_Unspecified,
-  covarianceCalibration_MAX = covarianceCalibration_Calibrated
-};
-
-inline const covarianceCalibration (&EnumValuescovarianceCalibration())[3] {
-  static const covarianceCalibration values[] = {
-    covarianceCalibration_Unspecified,
-    covarianceCalibration_Uncalibrated,
-    covarianceCalibration_Calibrated
-  };
-  return values;
-}
-
-inline const char * const *EnumNamescovarianceCalibration() {
-  static const char * const names[4] = {
-    "Unspecified",
-    "Uncalibrated",
-    "Calibrated",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamecovarianceCalibration(covarianceCalibration e) {
-  if (::flatbuffers::IsOutRange(e, covarianceCalibration_Unspecified, covarianceCalibration_Calibrated)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamescovarianceCalibration()[index];
 }
 
 /// Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
@@ -4381,7 +4344,8 @@ struct OCMCovarianceBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_COV_TYPE = 26,
     VT_COV_ORDERING = 28,
     VT_COV_UNITS = 30,
-    VT_LINES = 32
+    VT_LINES = 32,
+    VT_COV_REALISM = 34
   };
   /// COMMENT lines of this block, joined by a line feed.
   const ::flatbuffers::String *COMMENT() const {
@@ -4443,6 +4407,11 @@ struct OCMCovarianceBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *LINES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_LINES);
   }
+  /// Realism of the block's covariance: one entry per line of LINES, in order,
+  /// or one entry for every line.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CVR>> *COV_REALISM() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CVR>> *>(VT_COV_REALISM);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -4473,6 +4442,9 @@ struct OCMCovarianceBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            VerifyOffset(verifier, VT_LINES) &&
            verifier.VerifyVector(LINES()) &&
            verifier.VerifyVectorOfStrings(LINES()) &&
+           VerifyOffset(verifier, VT_COV_REALISM) &&
+           verifier.VerifyVector(COV_REALISM()) &&
+           verifier.VerifyVectorOfTables(COV_REALISM()) &&
            verifier.EndTable();
   }
 };
@@ -4526,6 +4498,9 @@ struct OCMCovarianceBlockBuilder {
   void add_LINES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LINES) {
     fbb_.AddOffset(OCMCovarianceBlock::VT_LINES, LINES);
   }
+  void add_COV_REALISM(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CVR>>> COV_REALISM) {
+    fbb_.AddOffset(OCMCovarianceBlock::VT_COV_REALISM, COV_REALISM);
+  }
   explicit OCMCovarianceBlockBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -4553,11 +4528,13 @@ inline ::flatbuffers::Offset<OCMCovarianceBlock> CreateOCMCovarianceBlock(
     ::flatbuffers::Offset<::flatbuffers::String> COV_TYPE = 0,
     covarianceOrdering COV_ORDERING = covarianceOrdering_LTM,
     ::flatbuffers::Offset<::flatbuffers::String> COV_UNITS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LINES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LINES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CVR>>> COV_REALISM = 0) {
   OCMCovarianceBlockBuilder builder_(_fbb);
   builder_.add_COV_CONFIDENCE(COV_CONFIDENCE);
   builder_.add_COV_SCALE_MAX(COV_SCALE_MAX);
   builder_.add_COV_SCALE_MIN(COV_SCALE_MIN);
+  builder_.add_COV_REALISM(COV_REALISM);
   builder_.add_LINES(LINES);
   builder_.add_COV_UNITS(COV_UNITS);
   builder_.add_COV_TYPE(COV_TYPE);
@@ -4589,7 +4566,8 @@ inline ::flatbuffers::Offset<OCMCovarianceBlock> CreateOCMCovarianceBlockDirect(
     const char *COV_TYPE = nullptr,
     covarianceOrdering COV_ORDERING = covarianceOrdering_LTM,
     const char *COV_UNITS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LINES = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LINES = nullptr,
+    const std::vector<::flatbuffers::Offset<CVR>> *COV_REALISM = nullptr) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   auto COV_ID__ = COV_ID ? _fbb.CreateString(COV_ID) : 0;
   auto COV_PREV_ID__ = COV_PREV_ID ? _fbb.CreateString(COV_PREV_ID) : 0;
@@ -4601,6 +4579,7 @@ inline ::flatbuffers::Offset<OCMCovarianceBlock> CreateOCMCovarianceBlockDirect(
   auto COV_TYPE__ = COV_TYPE ? _fbb.CreateString(COV_TYPE) : 0;
   auto COV_UNITS__ = COV_UNITS ? _fbb.CreateString(COV_UNITS) : 0;
   auto LINES__ = LINES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*LINES) : 0;
+  auto COV_REALISM__ = COV_REALISM ? _fbb.CreateVector<::flatbuffers::Offset<CVR>>(*COV_REALISM) : 0;
   return CreateOCMCovarianceBlock(
       _fbb,
       COMMENT__,
@@ -4617,7 +4596,8 @@ inline ::flatbuffers::Offset<OCMCovarianceBlock> CreateOCMCovarianceBlockDirect(
       COV_TYPE__,
       COV_ORDERING,
       COV_UNITS__,
-      LINES__);
+      LINES__,
+      COV_REALISM__);
 }
 
 struct UserDefinedParameters FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -4722,7 +4702,9 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_COV_PARAMETERS = 58,
     VT_COV_UNITS = 60,
     VT_TRAJECTORY_BLOCKS = 62,
-    VT_COVARIANCE_BLOCKS = 64
+    VT_COVARIANCE_BLOCKS = 64,
+    VT_PROVENANCE = 66,
+    VT_COV_REALISM = 68
   };
   /// Header section of the OCM.
   const Header *HEADER() const {
@@ -4833,7 +4815,7 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_ORB_AVERAGING);
   }
   /// Whether COVARIANCE_DATA's coverage was measured against independent
-  /// reference states.
+  /// reference states: Calibrated only when every COV_REALISM entry is.
   covarianceCalibration COV_CALIBRATION() const {
     return static_cast<covarianceCalibration>(GetField<int8_t>(VT_COV_CALIBRATION, 0));
   }
@@ -4885,6 +4867,15 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// block when it is one line.
   const ::flatbuffers::Vector<::flatbuffers::Offset<OCMCovarianceBlock>> *COVARIANCE_BLOCKS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OCMCovarianceBlock>> *>(VT_COVARIANCE_BLOCKS);
+  }
+  /// Where the message's data comes from and the terms it travels under.
+  const PVN *PROVENANCE() const {
+    return GetPointer<const PVN *>(VT_PROVENANCE);
+  }
+  /// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+  /// STATE_DATA epochs, or one entry for every epoch.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CVR>> *COV_REALISM() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CVR>> *>(VT_COV_REALISM);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -4953,6 +4944,11 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_COVARIANCE_BLOCKS) &&
            verifier.VerifyVector(COVARIANCE_BLOCKS()) &&
            verifier.VerifyVectorOfTables(COVARIANCE_BLOCKS()) &&
+           VerifyOffset(verifier, VT_PROVENANCE) &&
+           verifier.VerifyTable(PROVENANCE()) &&
+           VerifyOffset(verifier, VT_COV_REALISM) &&
+           verifier.VerifyVector(COV_REALISM()) &&
+           verifier.VerifyVectorOfTables(COV_REALISM()) &&
            verifier.EndTable();
   }
 };
@@ -5054,6 +5050,12 @@ struct OCMBuilder {
   void add_COVARIANCE_BLOCKS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCMCovarianceBlock>>> COVARIANCE_BLOCKS) {
     fbb_.AddOffset(OCM::VT_COVARIANCE_BLOCKS, COVARIANCE_BLOCKS);
   }
+  void add_PROVENANCE(::flatbuffers::Offset<PVN> PROVENANCE) {
+    fbb_.AddOffset(OCM::VT_PROVENANCE, PROVENANCE);
+  }
+  void add_COV_REALISM(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CVR>>> COV_REALISM) {
+    fbb_.AddOffset(OCM::VT_COV_REALISM, COV_REALISM);
+  }
   explicit OCMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -5097,9 +5099,13 @@ inline ::flatbuffers::Offset<OCM> CreateOCM(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV_PARAMETERS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV_UNITS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCMTrajectoryBlock>>> TRAJECTORY_BLOCKS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCMCovarianceBlock>>> COVARIANCE_BLOCKS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCMCovarianceBlock>>> COVARIANCE_BLOCKS = 0,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CVR>>> COV_REALISM = 0) {
   OCMBuilder builder_(_fbb);
   builder_.add_STATE_STEP_SIZE(STATE_STEP_SIZE);
+  builder_.add_COV_REALISM(COV_REALISM);
+  builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_COVARIANCE_BLOCKS(COVARIANCE_BLOCKS);
   builder_.add_TRAJECTORY_BLOCKS(TRAJECTORY_BLOCKS);
   builder_.add_COV_UNITS(COV_UNITS);
@@ -5165,7 +5171,9 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COV_PARAMETERS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COV_UNITS = nullptr,
     const std::vector<::flatbuffers::Offset<OCMTrajectoryBlock>> *TRAJECTORY_BLOCKS = nullptr,
-    const std::vector<::flatbuffers::Offset<OCMCovarianceBlock>> *COVARIANCE_BLOCKS = nullptr) {
+    const std::vector<::flatbuffers::Offset<OCMCovarianceBlock>> *COVARIANCE_BLOCKS = nullptr,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0,
+    const std::vector<::flatbuffers::Offset<CVR>> *COV_REALISM = nullptr) {
   auto TRAJ_TYPE_DESCRIPTION__ = TRAJ_TYPE_DESCRIPTION ? _fbb.CreateString(TRAJ_TYPE_DESCRIPTION) : 0;
   auto STATE_DATA__ = STATE_DATA ? _fbb.CreateVector<double>(*STATE_DATA) : 0;
   auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
@@ -5183,6 +5191,7 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
   auto COV_UNITS__ = COV_UNITS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COV_UNITS) : 0;
   auto TRAJECTORY_BLOCKS__ = TRAJECTORY_BLOCKS ? _fbb.CreateVector<::flatbuffers::Offset<OCMTrajectoryBlock>>(*TRAJECTORY_BLOCKS) : 0;
   auto COVARIANCE_BLOCKS__ = COVARIANCE_BLOCKS ? _fbb.CreateVector<::flatbuffers::Offset<OCMCovarianceBlock>>(*COVARIANCE_BLOCKS) : 0;
+  auto COV_REALISM__ = COV_REALISM ? _fbb.CreateVector<::flatbuffers::Offset<CVR>>(*COV_REALISM) : 0;
   return CreateOCM(
       _fbb,
       HEADER,
@@ -5215,7 +5224,9 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
       COV_PARAMETERS__,
       COV_UNITS__,
       TRAJECTORY_BLOCKS__,
-      COVARIANCE_BLOCKS__);
+      COVARIANCE_BLOCKS__,
+      PROVENANCE,
+      COV_REALISM__);
 }
 
 inline const OCM *GetOCM(const void *buf) {

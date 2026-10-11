@@ -219,6 +219,23 @@ class OCMCovarianceBlock : Table() {
         get() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Realism of the block's covariance: one entry per line of LINES, in order,
+     * or one entry for every line.
+     */
+    fun covRealism(j: Int) : CVR? = covRealism(CVR(), j)
+    fun covRealism(obj: CVR, j: Int) : CVR? {
+        val o = __offset(34)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val covRealismLength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCMCovarianceBlock(_bb: ByteBuffer): OCMCovarianceBlock = getRootAsOCMCovarianceBlock(_bb, OCMCovarianceBlock())
@@ -226,11 +243,12 @@ class OCMCovarianceBlock : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOCMCovarianceBlock(builder: FlatBufferBuilder, commentOffset: Int, covIdOffset: Int, covPrevIdOffset: Int, covNextIdOffset: Int, covBasisOffset: Int, covBasisIdOffset: Int, covRefFrameOffset: Int, covFrameEpochOffset: Int, covScaleMin: Double, covScaleMax: Double, covConfidence: Double, covTypeOffset: Int, covOrdering: Byte, covUnitsOffset: Int, linesOffset: Int) : Int {
-            builder.startTable(15)
+        fun createOCMCovarianceBlock(builder: FlatBufferBuilder, commentOffset: Int, covIdOffset: Int, covPrevIdOffset: Int, covNextIdOffset: Int, covBasisOffset: Int, covBasisIdOffset: Int, covRefFrameOffset: Int, covFrameEpochOffset: Int, covScaleMin: Double, covScaleMax: Double, covConfidence: Double, covTypeOffset: Int, covOrdering: Byte, covUnitsOffset: Int, linesOffset: Int, covRealismOffset: Int) : Int {
+            builder.startTable(16)
             addCOVCONFIDENCE(builder, covConfidence)
             addCOVSCALEMAX(builder, covScaleMax)
             addCOVSCALEMIN(builder, covScaleMin)
+            addCOVREALISM(builder, covRealismOffset)
             addLINES(builder, linesOffset)
             addCOVUNITS(builder, covUnitsOffset)
             addCOVTYPE(builder, covTypeOffset)
@@ -245,7 +263,7 @@ class OCMCovarianceBlock : Table() {
             addCOVORDERING(builder, covOrdering)
             return endOCMCovarianceBlock(builder)
         }
-        fun startOCMCovarianceBlock(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startOCMCovarianceBlock(builder: FlatBufferBuilder) = builder.startTable(16)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun addCOVID(builder: FlatBufferBuilder, covId: Int) = builder.addOffset(1, covId, 0)
         fun addCOVPREVID(builder: FlatBufferBuilder, covPrevId: Int) = builder.addOffset(2, covPrevId, 0)
@@ -269,6 +287,15 @@ class OCMCovarianceBlock : Table() {
             return builder.endVector()
         }
         fun startLinesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCOVREALISM(builder: FlatBufferBuilder, covRealism: Int) = builder.addOffset(15, covRealism, 0)
+        fun createCovRealismVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovRealismVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOCMCovarianceBlock(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

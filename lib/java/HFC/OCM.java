@@ -179,7 +179,7 @@ public final class OCM extends com.google.flatbuffers.Table {
   public ByteBuffer ORB_AVERAGINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
   /**
    * Whether COVARIANCE_DATA's coverage was measured against independent
-   * reference states.
+   * reference states: Calibrated only when every COV_REALISM entry is.
    */
   public byte COV_CALIBRATION() { int o = __offset(46); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
@@ -252,6 +252,20 @@ public final class OCM extends com.google.flatbuffers.Table {
   public int COVARIANCE_BLOCKSLength() { int o = __offset(64); return o != 0 ? __vector_len(o) : 0; }
   public OCMCovarianceBlock.Vector covarianceBlocksVector() { return covarianceBlocksVector(new OCMCovarianceBlock.Vector()); }
   public OCMCovarianceBlock.Vector covarianceBlocksVector(OCMCovarianceBlock.Vector obj) { int o = __offset(64); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Where the message's data comes from and the terms it travels under.
+   */
+  public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
+  public PVN PROVENANCE(PVN obj) { int o = __offset(66); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+   * STATE_DATA epochs, or one entry for every epoch.
+   */
+  public CVR COV_REALISM(int j) { return COV_REALISM(new CVR(), j); }
+  public CVR COV_REALISM(CVR obj, int j) { int o = __offset(68); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int COV_REALISMLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
+  public CVR.Vector covRealismVector() { return covRealismVector(new CVR.Vector()); }
+  public CVR.Vector covRealismVector(CVR.Vector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
@@ -284,9 +298,13 @@ public final class OCM extends com.google.flatbuffers.Table {
       int COV_PARAMETERSOffset,
       int COV_UNITSOffset,
       int TRAJECTORY_BLOCKSOffset,
-      int COVARIANCE_BLOCKSOffset) {
-    builder.startTable(31);
+      int COVARIANCE_BLOCKSOffset,
+      int PROVENANCEOffset,
+      int COV_REALISMOffset) {
+    builder.startTable(33);
     OCM.addStateStepSize(builder, STATE_STEP_SIZE);
+    OCM.addCovRealism(builder, COV_REALISMOffset);
+    OCM.addProvenance(builder, PROVENANCEOffset);
     OCM.addCovarianceBlocks(builder, COVARIANCE_BLOCKSOffset);
     OCM.addTrajectoryBlocks(builder, TRAJECTORY_BLOCKSOffset);
     OCM.addCovUnits(builder, COV_UNITSOffset);
@@ -320,7 +338,7 @@ public final class OCM extends com.google.flatbuffers.Table {
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(31); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(33); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, byte TRAJ_TYPE) { builder.addByte(2, TRAJ_TYPE, 0); }
@@ -374,6 +392,10 @@ public final class OCM extends com.google.flatbuffers.Table {
   public static void addCovarianceBlocks(FlatBufferBuilder builder, int COVARIANCE_BLOCKSOffset) { builder.addOffset(30, COVARIANCE_BLOCKSOffset, 0); }
   public static int createCovarianceBlocksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCovarianceBlocksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(31, PROVENANCEOffset, 0); }
+  public static void addCovRealism(FlatBufferBuilder builder, int COV_REALISMOffset) { builder.addOffset(32, COV_REALISMOffset, 0); }
+  public static int createCovRealismVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCovRealismVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

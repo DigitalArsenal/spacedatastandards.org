@@ -5,634 +5,623 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  https://www.sanaregistry.org/r/celestial_body_reference_frames/
-///  Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
-enum CelestialFrame {
-  GCRF(0),
-  ICRF(1),
-  J2000(2),
-  J2000A(3),
-  EME2000(4),
-  TEMEOFDATE(5),
-  GTOD(6),
-  CIRS(7),
-  MOD_EARTH(8),
-  MOD_CB(9),
-  MOD_MOON(10),
-  TOD_EARTH(11),
-  TOD_CB(12),
-  TOD_MOON(13),
-  TOE_EARTH(14),
-  TOE_CB(15),
-  TOE_MOON(16),
-  ITRF2000(17),
-  ITRF93(18),
-  ITRF97(19),
-  EFG(20),
-  FIXED_CB(21),
-  FIXED_EARTH(22),
-  WGS84(23),
-  DTRFYYYY(24),
-  ALIGN_EARTH(25),
-  ALIGN_CB(26),
-  B1950(27);
+///  Operations this record can request. Values 1-4 are the original
+///  position-only planet-centred-inertial / planet-centred-fixed / geodetic
+///  conversions and are FROZEN. Append new values only; never reorder.
+enum frmOperationCode {
+  UNKNOWN(0),
+  PCI_TO_PCPF(1),
+  PCPF_TO_PCI(2),
+  LLA_TO_PCPF(3),
+  PCPF_TO_LLA(4),
+  STATE_TRANSFORM(5),
+  FRAME_ROTATION(6),
+  STATE_REPRESENTATION_CONVERT(7);
 
   final int value;
-  const CelestialFrame(this.value);
+  const frmOperationCode(this.value);
 
-  factory CelestialFrame.fromValue(int value) {
+  factory frmOperationCode.fromValue(int value) {
     switch (value) {
-      case 0: return CelestialFrame.GCRF;
-      case 1: return CelestialFrame.ICRF;
-      case 2: return CelestialFrame.J2000;
-      case 3: return CelestialFrame.J2000A;
-      case 4: return CelestialFrame.EME2000;
-      case 5: return CelestialFrame.TEMEOFDATE;
-      case 6: return CelestialFrame.GTOD;
-      case 7: return CelestialFrame.CIRS;
-      case 8: return CelestialFrame.MOD_EARTH;
-      case 9: return CelestialFrame.MOD_CB;
-      case 10: return CelestialFrame.MOD_MOON;
-      case 11: return CelestialFrame.TOD_EARTH;
-      case 12: return CelestialFrame.TOD_CB;
-      case 13: return CelestialFrame.TOD_MOON;
-      case 14: return CelestialFrame.TOE_EARTH;
-      case 15: return CelestialFrame.TOE_CB;
-      case 16: return CelestialFrame.TOE_MOON;
-      case 17: return CelestialFrame.ITRF2000;
-      case 18: return CelestialFrame.ITRF93;
-      case 19: return CelestialFrame.ITRF97;
-      case 20: return CelestialFrame.EFG;
-      case 21: return CelestialFrame.FIXED_CB;
-      case 22: return CelestialFrame.FIXED_EARTH;
-      case 23: return CelestialFrame.WGS84;
-      case 24: return CelestialFrame.DTRFYYYY;
-      case 25: return CelestialFrame.ALIGN_EARTH;
-      case 26: return CelestialFrame.ALIGN_CB;
-      case 27: return CelestialFrame.B1950;
+      case 0: return frmOperationCode.UNKNOWN;
+      case 1: return frmOperationCode.PCI_TO_PCPF;
+      case 2: return frmOperationCode.PCPF_TO_PCI;
+      case 3: return frmOperationCode.LLA_TO_PCPF;
+      case 4: return frmOperationCode.PCPF_TO_LLA;
+      case 5: return frmOperationCode.STATE_TRANSFORM;
+      case 6: return frmOperationCode.FRAME_ROTATION;
+      case 7: return frmOperationCode.STATE_REPRESENTATION_CONVERT;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static CelestialFrame? _createOrNull(int? value) =>
-      value == null ? null : CelestialFrame.fromValue(value);
+  static frmOperationCode? _createOrNull(int? value) =>
+      value == null ? null : frmOperationCode.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 27;
-  static const fb.Reader<CelestialFrame> reader = _CelestialFrameReader();
+  static const int maxValue = 7;
+  static const fb.Reader<frmOperationCode> reader = _frmOperationCodeReader();
 }
 
-class _CelestialFrameReader extends fb.Reader<CelestialFrame> {
-  const _CelestialFrameReader();
+class _frmOperationCodeReader extends fb.Reader<frmOperationCode> {
+  const _frmOperationCodeReader();
 
   @override
   int get size => 1;
 
   @override
-  CelestialFrame read(fb.BufferContext bc, int offset) =>
-      CelestialFrame.fromValue(const fb.Int8Reader().read(bc, offset));
+  frmOperationCode read(fb.BufferContext bc, int offset) =>
+      frmOperationCode.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  https://sanaregistry.org/r/spacecraft_body_reference_frames/
-///  Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
-enum SpacecraftFrame {
-  ACC_i(0),
-  ACTUATOR_i(1),
-  AST_i(2),
-  CSS_i(3),
-  DSS_i(4),
-  ESA_i(5),
-  GYRO_FRAME_i(6),
-  IMU_FRAME_i(7),
-  INSTRUMENT_i(8),
-  MTA_i(9),
-  RW_i(10),
-  SA_i(11),
-  SC_BODY_i(12),
-  SENSOR_i(13),
-  STARTRACKER_i(14),
-  TAM_i(15);
+///  Append new values only; never reorder or reuse existing values.
+enum frmResultStatus {
+  OK(0),
+  INVALID_INPUT(1),
+  UNSUPPORTED_OPERATION(2),
+  UNSUPPORTED_AXIS_TYPE(3),
+  UNSUPPORTED_STATE_REPRESENTATION(4),
+  MISSING_EOP_DATA(5),
+  SINGULAR_ELEMENT_SET(6);
 
   final int value;
-  const SpacecraftFrame(this.value);
+  const frmResultStatus(this.value);
 
-  factory SpacecraftFrame.fromValue(int value) {
+  factory frmResultStatus.fromValue(int value) {
     switch (value) {
-      case 0: return SpacecraftFrame.ACC_i;
-      case 1: return SpacecraftFrame.ACTUATOR_i;
-      case 2: return SpacecraftFrame.AST_i;
-      case 3: return SpacecraftFrame.CSS_i;
-      case 4: return SpacecraftFrame.DSS_i;
-      case 5: return SpacecraftFrame.ESA_i;
-      case 6: return SpacecraftFrame.GYRO_FRAME_i;
-      case 7: return SpacecraftFrame.IMU_FRAME_i;
-      case 8: return SpacecraftFrame.INSTRUMENT_i;
-      case 9: return SpacecraftFrame.MTA_i;
-      case 10: return SpacecraftFrame.RW_i;
-      case 11: return SpacecraftFrame.SA_i;
-      case 12: return SpacecraftFrame.SC_BODY_i;
-      case 13: return SpacecraftFrame.SENSOR_i;
-      case 14: return SpacecraftFrame.STARTRACKER_i;
-      case 15: return SpacecraftFrame.TAM_i;
+      case 0: return frmResultStatus.OK;
+      case 1: return frmResultStatus.INVALID_INPUT;
+      case 2: return frmResultStatus.UNSUPPORTED_OPERATION;
+      case 3: return frmResultStatus.UNSUPPORTED_AXIS_TYPE;
+      case 4: return frmResultStatus.UNSUPPORTED_STATE_REPRESENTATION;
+      case 5: return frmResultStatus.MISSING_EOP_DATA;
+      case 6: return frmResultStatus.SINGULAR_ELEMENT_SET;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static SpacecraftFrame? _createOrNull(int? value) =>
-      value == null ? null : SpacecraftFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 15;
-  static const fb.Reader<SpacecraftFrame> reader = _SpacecraftFrameReader();
-}
-
-class _SpacecraftFrameReader extends fb.Reader<SpacecraftFrame> {
-  const _SpacecraftFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  SpacecraftFrame read(fb.BufferContext bc, int offset) =>
-      SpacecraftFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  https://sanaregistry.org/r/orbit_relative_reference_frames/
-///  Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
-enum OrbitFrame {
-  EQW_INERTIAL(0),
-  LVLH_INERTIAL(1),
-  LVLH_ROTATING(2),
-  NSW_INERTIAL(3),
-  NSW_ROTATING(4),
-  NTW_INERTIAL(5),
-  NTW_ROTATING(6),
-  PQW_INERTIAL(7),
-  RSW_INERTIAL(8),
-  RSW_ROTATING(9),
-  SEZ_INERTIAL(10),
-  SEZ_ROTATING(11),
-  TNW_INERTIAL(12),
-  TNW_ROTATING(13),
-  VNC_INERTIAL(14),
-  VNC_ROTATING(15);
-
-  final int value;
-  const OrbitFrame(this.value);
-
-  factory OrbitFrame.fromValue(int value) {
-    switch (value) {
-      case 0: return OrbitFrame.EQW_INERTIAL;
-      case 1: return OrbitFrame.LVLH_INERTIAL;
-      case 2: return OrbitFrame.LVLH_ROTATING;
-      case 3: return OrbitFrame.NSW_INERTIAL;
-      case 4: return OrbitFrame.NSW_ROTATING;
-      case 5: return OrbitFrame.NTW_INERTIAL;
-      case 6: return OrbitFrame.NTW_ROTATING;
-      case 7: return OrbitFrame.PQW_INERTIAL;
-      case 8: return OrbitFrame.RSW_INERTIAL;
-      case 9: return OrbitFrame.RSW_ROTATING;
-      case 10: return OrbitFrame.SEZ_INERTIAL;
-      case 11: return OrbitFrame.SEZ_ROTATING;
-      case 12: return OrbitFrame.TNW_INERTIAL;
-      case 13: return OrbitFrame.TNW_ROTATING;
-      case 14: return OrbitFrame.VNC_INERTIAL;
-      case 15: return OrbitFrame.VNC_ROTATING;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static OrbitFrame? _createOrNull(int? value) =>
-      value == null ? null : OrbitFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 15;
-  static const fb.Reader<OrbitFrame> reader = _OrbitFrameReader();
-}
-
-class _OrbitFrameReader extends fb.Reader<OrbitFrame> {
-  const _OrbitFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  OrbitFrame read(fb.BufferContext bc, int offset) =>
-      OrbitFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Non-registered or local use frames
-enum CustomFrame {
-  ECEF(0),
-  TEME(1),
-  TEMEOFEPOCH(2),
-  ENU(3),
-  NED(4),
-  NEU(5),
-  RIC(6),
-  RTN(7),
-  TVN(8),
-  VVLH(9),
-  QSW(10),
-  LTP(11),
-  LVLH(12),
-  PNE(13),
-  BRF(14),
-  RSW(15),
-  TNW(16),
-  UVW(17);
-
-  final int value;
-  const CustomFrame(this.value);
-
-  factory CustomFrame.fromValue(int value) {
-    switch (value) {
-      case 0: return CustomFrame.ECEF;
-      case 1: return CustomFrame.TEME;
-      case 2: return CustomFrame.TEMEOFEPOCH;
-      case 3: return CustomFrame.ENU;
-      case 4: return CustomFrame.NED;
-      case 5: return CustomFrame.NEU;
-      case 6: return CustomFrame.RIC;
-      case 7: return CustomFrame.RTN;
-      case 8: return CustomFrame.TVN;
-      case 9: return CustomFrame.VVLH;
-      case 10: return CustomFrame.QSW;
-      case 11: return CustomFrame.LTP;
-      case 12: return CustomFrame.LVLH;
-      case 13: return CustomFrame.PNE;
-      case 14: return CustomFrame.BRF;
-      case 15: return CustomFrame.RSW;
-      case 16: return CustomFrame.TNW;
-      case 17: return CustomFrame.UVW;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static CustomFrame? _createOrNull(int? value) =>
-      value == null ? null : CustomFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 17;
-  static const fb.Reader<CustomFrame> reader = _CustomFrameReader();
-}
-
-class _CustomFrameReader extends fb.Reader<CustomFrame> {
-  const _CustomFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  CustomFrame read(fb.BufferContext bc, int offset) =>
-      CustomFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Axis-set capability classes for a fully specified coordinate system.
-///  These name the ORIENTATION rule only; the ORIGIN is carried separately in
-///  RFMOrigin, so any axis set below combines with any origin. Append new
-///  values only; never reorder or reuse existing values.
-enum rfmAxisType {
-  UNSPECIFIED(0),
-  MEAN_EQUATOR_EQUINOX_J2000(1),
-  MEAN_ECLIPTIC_EQUINOX_J2000(2),
-  ICRF(3),
-  TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE(4),
-  MEAN_OF_DATE_EQUATOR(5),
-  MEAN_OF_DATE_ECLIPTIC(6),
-  TRUE_OF_DATE_EQUATOR(7),
-  TRUE_OF_DATE_ECLIPTIC(8),
-  MEAN_OF_EPOCH_EQUATOR(9),
-  MEAN_OF_EPOCH_ECLIPTIC(10),
-  TRUE_OF_EPOCH_EQUATOR(11),
-  TRUE_OF_EPOCH_ECLIPTIC(12),
-  BODY_FIXED(13),
-  BODY_INERTIAL(14),
-  OBJECT_REFERENCED(15),
-  LOCAL_ALIGNED_CONSTRAINED(16),
-  BODY_EQUATOR(17),
-  SOLAR_ECLIPTIC_MAGNETOSPHERIC(18),
-  SOLAR_MAGNETOSPHERIC(19),
-  TOPOCENTRIC(20),
-  BODY_SPIN_SUN(21),
-  EPHEMERIS_KERNEL_DEFINED(22),
-  MEAN_OF_DATE_EQUATOR_FK5(23),
-  TRUE_OF_DATE_EQUATOR_FK5(24),
-  TRUE_OF_DATE_EQUATOR_IERS1996(25),
-  TRUE_OF_DATE_EQUATOR_IERS2003(26),
-  TOPOCENTRIC_EAST_NORTH_UP(27),
-  TOPOCENTRIC_NORTH_EAST_DOWN(28),
-  TOPOCENTRIC_SOUTH_EAST_ZENITH(29),
-  ORBITAL_VELOCITY_NORMAL_CONORMAL(30),
-  ORBITAL_RADIAL_TRANSVERSE_NORMAL(31),
-  ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL(32);
-
-  final int value;
-  const rfmAxisType(this.value);
-
-  factory rfmAxisType.fromValue(int value) {
-    switch (value) {
-      case 0: return rfmAxisType.UNSPECIFIED;
-      case 1: return rfmAxisType.MEAN_EQUATOR_EQUINOX_J2000;
-      case 2: return rfmAxisType.MEAN_ECLIPTIC_EQUINOX_J2000;
-      case 3: return rfmAxisType.ICRF;
-      case 4: return rfmAxisType.TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE;
-      case 5: return rfmAxisType.MEAN_OF_DATE_EQUATOR;
-      case 6: return rfmAxisType.MEAN_OF_DATE_ECLIPTIC;
-      case 7: return rfmAxisType.TRUE_OF_DATE_EQUATOR;
-      case 8: return rfmAxisType.TRUE_OF_DATE_ECLIPTIC;
-      case 9: return rfmAxisType.MEAN_OF_EPOCH_EQUATOR;
-      case 10: return rfmAxisType.MEAN_OF_EPOCH_ECLIPTIC;
-      case 11: return rfmAxisType.TRUE_OF_EPOCH_EQUATOR;
-      case 12: return rfmAxisType.TRUE_OF_EPOCH_ECLIPTIC;
-      case 13: return rfmAxisType.BODY_FIXED;
-      case 14: return rfmAxisType.BODY_INERTIAL;
-      case 15: return rfmAxisType.OBJECT_REFERENCED;
-      case 16: return rfmAxisType.LOCAL_ALIGNED_CONSTRAINED;
-      case 17: return rfmAxisType.BODY_EQUATOR;
-      case 18: return rfmAxisType.SOLAR_ECLIPTIC_MAGNETOSPHERIC;
-      case 19: return rfmAxisType.SOLAR_MAGNETOSPHERIC;
-      case 20: return rfmAxisType.TOPOCENTRIC;
-      case 21: return rfmAxisType.BODY_SPIN_SUN;
-      case 22: return rfmAxisType.EPHEMERIS_KERNEL_DEFINED;
-      case 23: return rfmAxisType.MEAN_OF_DATE_EQUATOR_FK5;
-      case 24: return rfmAxisType.TRUE_OF_DATE_EQUATOR_FK5;
-      case 25: return rfmAxisType.TRUE_OF_DATE_EQUATOR_IERS1996;
-      case 26: return rfmAxisType.TRUE_OF_DATE_EQUATOR_IERS2003;
-      case 27: return rfmAxisType.TOPOCENTRIC_EAST_NORTH_UP;
-      case 28: return rfmAxisType.TOPOCENTRIC_NORTH_EAST_DOWN;
-      case 29: return rfmAxisType.TOPOCENTRIC_SOUTH_EAST_ZENITH;
-      case 30: return rfmAxisType.ORBITAL_VELOCITY_NORMAL_CONORMAL;
-      case 31: return rfmAxisType.ORBITAL_RADIAL_TRANSVERSE_NORMAL;
-      case 32: return rfmAxisType.ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static rfmAxisType? _createOrNull(int? value) =>
-      value == null ? null : rfmAxisType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 32;
-  static const fb.Reader<rfmAxisType> reader = _rfmAxisTypeReader();
-}
-
-class _rfmAxisTypeReader extends fb.Reader<rfmAxisType> {
-  const _rfmAxisTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  rfmAxisType read(fb.BufferContext bc, int offset) =>
-      rfmAxisType.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  What kind of point a coordinate system is centred on. Append new values
-///  only; never reorder or reuse existing values.
-enum rfmOriginKind {
-  UNSPECIFIED(0),
-  CELESTIAL_BODY(1),
-  BARYCENTRE(2),
-  LIBRATION_POINT(3),
-  SPACE_OBJECT(4),
-  GROUND_SITE(5);
-
-  final int value;
-  const rfmOriginKind(this.value);
-
-  factory rfmOriginKind.fromValue(int value) {
-    switch (value) {
-      case 0: return rfmOriginKind.UNSPECIFIED;
-      case 1: return rfmOriginKind.CELESTIAL_BODY;
-      case 2: return rfmOriginKind.BARYCENTRE;
-      case 3: return rfmOriginKind.LIBRATION_POINT;
-      case 4: return rfmOriginKind.SPACE_OBJECT;
-      case 5: return rfmOriginKind.GROUND_SITE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static rfmOriginKind? _createOrNull(int? value) =>
-      value == null ? null : rfmOriginKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<rfmOriginKind> reader = _rfmOriginKindReader();
-}
-
-class _rfmOriginKindReader extends fb.Reader<rfmOriginKind> {
-  const _rfmOriginKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  rfmOriginKind read(fb.BufferContext bc, int offset) =>
-      rfmOriginKind.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Libration point of the primary/secondary pair named on RFMOrigin. Append
-///  new values only; never reorder or reuse existing values.
-enum rfmLibrationPoint {
-  UNSPECIFIED(0),
-  L1(1),
-  L2(2),
-  L3(3),
-  L4(4),
-  L5(5);
-
-  final int value;
-  const rfmLibrationPoint(this.value);
-
-  factory rfmLibrationPoint.fromValue(int value) {
-    switch (value) {
-      case 0: return rfmLibrationPoint.UNSPECIFIED;
-      case 1: return rfmLibrationPoint.L1;
-      case 2: return rfmLibrationPoint.L2;
-      case 3: return rfmLibrationPoint.L3;
-      case 4: return rfmLibrationPoint.L4;
-      case 5: return rfmLibrationPoint.L5;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static rfmLibrationPoint? _createOrNull(int? value) =>
-      value == null ? null : rfmLibrationPoint.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<rfmLibrationPoint> reader = _rfmLibrationPointReader();
-}
-
-class _rfmLibrationPointReader extends fb.Reader<rfmLibrationPoint> {
-  const _rfmLibrationPointReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  rfmLibrationPoint read(fb.BufferContext bc, int offset) =>
-      rfmLibrationPoint.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Axis direction choices for OBJECT_REFERENCED axes. Append new values only.
-enum rfmVectorSpecification {
-  UNSPECIFIED(0),
-  RADIAL(1),
-  ANTI_RADIAL(2),
-  VELOCITY(3),
-  ANTI_VELOCITY(4),
-  ORBIT_NORMAL(5),
-  ANTI_ORBIT_NORMAL(6);
-
-  final int value;
-  const rfmVectorSpecification(this.value);
-
-  factory rfmVectorSpecification.fromValue(int value) {
-    switch (value) {
-      case 0: return rfmVectorSpecification.UNSPECIFIED;
-      case 1: return rfmVectorSpecification.RADIAL;
-      case 2: return rfmVectorSpecification.ANTI_RADIAL;
-      case 3: return rfmVectorSpecification.VELOCITY;
-      case 4: return rfmVectorSpecification.ANTI_VELOCITY;
-      case 5: return rfmVectorSpecification.ORBIT_NORMAL;
-      case 6: return rfmVectorSpecification.ANTI_ORBIT_NORMAL;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static rfmVectorSpecification? _createOrNull(int? value) =>
-      value == null ? null : rfmVectorSpecification.fromValue(value);
+  static frmResultStatus? _createOrNull(int? value) =>
+      value == null ? null : frmResultStatus.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 6;
-  static const fb.Reader<rfmVectorSpecification> reader = _rfmVectorSpecificationReader();
+  static const fb.Reader<frmResultStatus> reader = _frmResultStatusReader();
 }
 
-class _rfmVectorSpecificationReader extends fb.Reader<rfmVectorSpecification> {
-  const _rfmVectorSpecificationReader();
+class _frmResultStatusReader extends fb.Reader<frmResultStatus> {
+  const _frmResultStatusReader();
 
   @override
   int get size => 1;
 
   @override
-  rfmVectorSpecification read(fb.BufferContext bc, int offset) =>
-      rfmVectorSpecification.fromValue(const fb.Uint8Reader().read(bc, offset));
+  frmResultStatus read(fb.BufferContext bc, int offset) =>
+      frmResultStatus.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Union ordinals are WIRE. Append new members LAST; never reorder.
-enum RFMUnionTypeId {
-  NONE(0),
-  CelestialFrameWrapper(1),
-  SpacecraftFrameWrapper(2),
-  OrbitFrameWrapper(3),
-  CustomFrameWrapper(4),
-  RFMCoordinateSystemWrapper(5);
+///  Orbit state element sets. Append new values only; never reorder or reuse
+///  existing values.
+enum frmStateRepresentation {
+  UNSPECIFIED(0),
+  CARTESIAN(1),
+  KEPLERIAN(2),
+  MODIFIED_KEPLERIAN(3),
+  SPHERICAL_AZFPA(4),
+  SPHERICAL_RADEC(5),
+  EQUINOCTIAL(6),
+  MODIFIED_EQUINOCTIAL(7),
+  ALTERNATE_EQUINOCTIAL(8),
+  DELAUNAY(9),
+  PLANETODETIC(10),
+  INCOMING_ASYMPTOTE(11),
+  OUTGOING_ASYMPTOTE(12),
+  BROUWER_MEAN_SHORT(13),
+  BROUWER_MEAN_LONG(14);
 
   final int value;
-  const RFMUnionTypeId(this.value);
+  const frmStateRepresentation(this.value);
 
-  factory RFMUnionTypeId.fromValue(int value) {
+  factory frmStateRepresentation.fromValue(int value) {
     switch (value) {
-      case 0: return RFMUnionTypeId.NONE;
-      case 1: return RFMUnionTypeId.CelestialFrameWrapper;
-      case 2: return RFMUnionTypeId.SpacecraftFrameWrapper;
-      case 3: return RFMUnionTypeId.OrbitFrameWrapper;
-      case 4: return RFMUnionTypeId.CustomFrameWrapper;
-      case 5: return RFMUnionTypeId.RFMCoordinateSystemWrapper;
+      case 0: return frmStateRepresentation.UNSPECIFIED;
+      case 1: return frmStateRepresentation.CARTESIAN;
+      case 2: return frmStateRepresentation.KEPLERIAN;
+      case 3: return frmStateRepresentation.MODIFIED_KEPLERIAN;
+      case 4: return frmStateRepresentation.SPHERICAL_AZFPA;
+      case 5: return frmStateRepresentation.SPHERICAL_RADEC;
+      case 6: return frmStateRepresentation.EQUINOCTIAL;
+      case 7: return frmStateRepresentation.MODIFIED_EQUINOCTIAL;
+      case 8: return frmStateRepresentation.ALTERNATE_EQUINOCTIAL;
+      case 9: return frmStateRepresentation.DELAUNAY;
+      case 10: return frmStateRepresentation.PLANETODETIC;
+      case 11: return frmStateRepresentation.INCOMING_ASYMPTOTE;
+      case 12: return frmStateRepresentation.OUTGOING_ASYMPTOTE;
+      case 13: return frmStateRepresentation.BROUWER_MEAN_SHORT;
+      case 14: return frmStateRepresentation.BROUWER_MEAN_LONG;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static RFMUnionTypeId? _createOrNull(int? value) =>
-      value == null ? null : RFMUnionTypeId.fromValue(value);
+  static frmStateRepresentation? _createOrNull(int? value) =>
+      value == null ? null : frmStateRepresentation.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<RFMUnionTypeId> reader = _RFMUnionTypeIdReader();
+  static const int maxValue = 14;
+  static const fb.Reader<frmStateRepresentation> reader = _frmStateRepresentationReader();
 }
 
-class _RFMUnionTypeIdReader extends fb.Reader<RFMUnionTypeId> {
-  const _RFMUnionTypeIdReader();
+class _frmStateRepresentationReader extends fb.Reader<frmStateRepresentation> {
+  const _frmStateRepresentationReader();
 
   @override
   int get size => 1;
 
   @override
-  RFMUnionTypeId read(fb.BufferContext bc, int offset) =>
-      RFMUnionTypeId.fromValue(const fb.Uint8Reader().read(bc, offset));
+  frmStateRepresentation read(fb.BufferContext bc, int offset) =>
+      frmStateRepresentation.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  The point a coordinate system is centred on. Body and barycentre
-///  identifiers are integer ephemeris body codes; text NAME is descriptive
-///  only and is never the machine key.
-class RFMOrigin {
-  RFMOrigin._(this._bc, this._bcOffset);
-  factory RFMOrigin(List<int> bytes) {
+class FRMVector3 {
+  FRMVector3._(this._bc, this._bcOffset);
+  factory FRMVector3(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<RFMOrigin> reader = _RFMOriginReader();
+  static const fb.Reader<FRMVector3> reader = _FRMVector3Reader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  rfmOriginKind get KIND => rfmOriginKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Ephemeris body code when KIND is CELESTIAL_BODY.
-  int get CELESTIAL_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get celestialBodyId => CELESTIAL_BODY_ID;
-  ///  Ephemeris body code of the barycentre when KIND is BARYCENTRE.
-  int get BARYCENTRE_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get barycentreId => BARYCENTRE_ID;
-  ///  Which libration point, when KIND is LIBRATION_POINT.
-  rfmLibrationPoint get LIBRATION_POINT => rfmLibrationPoint.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  rfmLibrationPoint get librationPoint => LIBRATION_POINT;
-  ///  Ephemeris body code of the libration system primary.
-  int get LIBRATION_PRIMARY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get librationPrimaryId => LIBRATION_PRIMARY_ID;
-  ///  Ephemeris body code of the libration system secondary.
-  int get LIBRATION_SECONDARY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get librationSecondaryId => LIBRATION_SECONDARY_ID;
-  ///  Identifier of the space object when KIND is SPACE_OBJECT.
-  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get objectId => OBJECT_ID;
-  ///  Identifier of the surface site when KIND is GROUND_SITE.
-  String? get SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get siteId => SITE_ID;
-  ///  Ephemeris body code of the body the site sits on.
-  int get SITE_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get siteBodyId => SITE_BODY_ID;
-  ///  Geodetic latitude of the site, degrees, positive north.
-  double get SITE_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get siteLatitude => SITE_LATITUDE;
-  ///  Geodetic longitude of the site, degrees, positive east.
-  double get SITE_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get siteLongitude => SITE_LONGITUDE;
-  ///  Height of the site above the reference ellipsoid, metres.
-  double get SITE_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get siteAltitude => SITE_ALTITUDE;
-  ///  Human-readable label. Descriptive only.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
 
   @override
   String toString() {
-    return 'RFMOrigin{KIND: ${KIND}, celestialBodyId: ${celestialBodyId}, barycentreId: ${barycentreId}, librationPoint: ${librationPoint}, librationPrimaryId: ${librationPrimaryId}, librationSecondaryId: ${librationSecondaryId}, objectId: ${objectId}, siteId: ${siteId}, siteBodyId: ${siteBodyId}, siteLatitude: ${siteLatitude}, siteLongitude: ${siteLongitude}, siteAltitude: ${siteAltitude}, NAME: ${NAME}}';
+    return 'FRMVector3{X: ${X}, Y: ${Y}, Z: ${Z}}';
   }
 }
 
-class _RFMOriginReader extends fb.TableReader<RFMOrigin> {
-  const _RFMOriginReader();
+class _FRMVector3Reader extends fb.TableReader<FRMVector3> {
+  const _FRMVector3Reader();
 
   @override
-  RFMOrigin createObject(fb.BufferContext bc, int offset) =>
-    RFMOrigin._(bc, offset);
+  FRMVector3 createObject(fb.BufferContext bc, int offset) =>
+    FRMVector3._(bc, offset);
 }
 
-class RFMOriginBuilder {
-  RFMOriginBuilder(this.fbBuilder);
+class FRMVector3Builder {
+  FRMVector3Builder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addX(double? X) {
+    fbBuilder.addFloat64(0, X);
+    return fbBuilder.offset;
+  }
+  int addY(double? Y) {
+    fbBuilder.addFloat64(1, Y);
+    return fbBuilder.offset;
+  }
+  int addZ(double? Z) {
+    fbBuilder.addFloat64(2, Z);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class FRMVector3ObjectBuilder extends fb.ObjectBuilder {
+  final double? _X;
+  final double? _Y;
+  final double? _Z;
+
+  FRMVector3ObjectBuilder({
+    double? X,
+    double? Y,
+    double? Z,
+  })
+      : _X = X,
+        _Y = Y,
+        _Z = Z;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addFloat64(0, _X);
+    fbBuilder.addFloat64(1, _Y);
+    fbBuilder.addFloat64(2, _Z);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class FRMMatrix3 {
+  FRMMatrix3._(this._bc, this._bcOffset);
+  factory FRMMatrix3(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<FRMMatrix3> reader = _FRMMatrix3Reader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get M11 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get M12 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get M13 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get M21 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get M22 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get M23 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get M31 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get M32 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get M33 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+
+  @override
+  String toString() {
+    return 'FRMMatrix3{M11: ${M11}, M12: ${M12}, M13: ${M13}, M21: ${M21}, M22: ${M22}, M23: ${M23}, M31: ${M31}, M32: ${M32}, M33: ${M33}}';
+  }
+}
+
+class _FRMMatrix3Reader extends fb.TableReader<FRMMatrix3> {
+  const _FRMMatrix3Reader();
+
+  @override
+  FRMMatrix3 createObject(fb.BufferContext bc, int offset) =>
+    FRMMatrix3._(bc, offset);
+}
+
+class FRMMatrix3Builder {
+  FRMMatrix3Builder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addM11(double? M11) {
+    fbBuilder.addFloat64(0, M11);
+    return fbBuilder.offset;
+  }
+  int addM12(double? M12) {
+    fbBuilder.addFloat64(1, M12);
+    return fbBuilder.offset;
+  }
+  int addM13(double? M13) {
+    fbBuilder.addFloat64(2, M13);
+    return fbBuilder.offset;
+  }
+  int addM21(double? M21) {
+    fbBuilder.addFloat64(3, M21);
+    return fbBuilder.offset;
+  }
+  int addM22(double? M22) {
+    fbBuilder.addFloat64(4, M22);
+    return fbBuilder.offset;
+  }
+  int addM23(double? M23) {
+    fbBuilder.addFloat64(5, M23);
+    return fbBuilder.offset;
+  }
+  int addM31(double? M31) {
+    fbBuilder.addFloat64(6, M31);
+    return fbBuilder.offset;
+  }
+  int addM32(double? M32) {
+    fbBuilder.addFloat64(7, M32);
+    return fbBuilder.offset;
+  }
+  int addM33(double? M33) {
+    fbBuilder.addFloat64(8, M33);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class FRMMatrix3ObjectBuilder extends fb.ObjectBuilder {
+  final double? _M11;
+  final double? _M12;
+  final double? _M13;
+  final double? _M21;
+  final double? _M22;
+  final double? _M23;
+  final double? _M31;
+  final double? _M32;
+  final double? _M33;
+
+  FRMMatrix3ObjectBuilder({
+    double? M11,
+    double? M12,
+    double? M13,
+    double? M21,
+    double? M22,
+    double? M23,
+    double? M31,
+    double? M32,
+    double? M33,
+  })
+      : _M11 = M11,
+        _M12 = M12,
+        _M13 = M13,
+        _M21 = M21,
+        _M22 = M22,
+        _M23 = M23,
+        _M31 = M31,
+        _M32 = M32,
+        _M33 = M33;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(9);
+    fbBuilder.addFloat64(0, _M11);
+    fbBuilder.addFloat64(1, _M12);
+    fbBuilder.addFloat64(2, _M13);
+    fbBuilder.addFloat64(3, _M21);
+    fbBuilder.addFloat64(4, _M22);
+    fbBuilder.addFloat64(5, _M23);
+    fbBuilder.addFloat64(6, _M31);
+    fbBuilder.addFloat64(7, _M32);
+    fbBuilder.addFloat64(8, _M33);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A state in a named element set at a named epoch. ELEMENTS is the element
+///  set's own 6 values in the order documented on frmStateRepresentation.
+///  POSITION and VELOCITY are the Cartesian projection of the same state and
+///  are populated when REPRESENTATION is CARTESIAN or when the provider can
+///  supply them; a consumer MUST NOT infer velocity from POSITION alone.
+class FRMStateVector {
+  FRMStateVector._(this._bc, this._bcOffset);
+  factory FRMStateVector(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<FRMStateVector> reader = _FRMStateVectorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  frmStateRepresentation get REPRESENTATION => frmStateRepresentation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  The 6 element values of REPRESENTATION, SI units and radians.
+  List<double>? get ELEMENTS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Cartesian position, metres.
+  FRMVector3? get POSITION => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Cartesian velocity, metres per second.
+  FRMVector3? get VELOCITY => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Name of the coordinate system these elements are expressed in; resolves
+  ///  against RFMCoordinateSystem.NAME.
+  String? get COORDINATE_SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get coordinateSystemName => COORDINATE_SYSTEM_NAME;
+  ///  Epoch of this state, ISO 8601.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
+  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
+  ///  Gravitational parameter, m^3/s^2, of the origin body when the element
+  ///  set requires one. Absent means the provider's default for the origin.
+  double get GRAVITATIONAL_PARAMETER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get gravitationalParameter => GRAVITATIONAL_PARAMETER;
+
+  @override
+  String toString() {
+    return 'FRMStateVector{REPRESENTATION: ${REPRESENTATION}, ELEMENTS: ${ELEMENTS}, POSITION: ${POSITION}, VELOCITY: ${VELOCITY}, coordinateSystemName: ${coordinateSystemName}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, gravitationalParameter: ${gravitationalParameter}}';
+  }
+}
+
+class _FRMStateVectorReader extends fb.TableReader<FRMStateVector> {
+  const _FRMStateVectorReader();
+
+  @override
+  FRMStateVector createObject(fb.BufferContext bc, int offset) =>
+    FRMStateVector._(bc, offset);
+}
+
+class FRMStateVectorBuilder {
+  FRMStateVectorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addRepresentation(frmStateRepresentation? REPRESENTATION) {
+    fbBuilder.addUint8(0, REPRESENTATION?.value);
+    return fbBuilder.offset;
+  }
+  int addElementsOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addVelocityOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCoordinateSystemNameOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addGravitationalParameter(double? GRAVITATIONAL_PARAMETER) {
+    fbBuilder.addFloat64(7, GRAVITATIONAL_PARAMETER);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class FRMStateVectorObjectBuilder extends fb.ObjectBuilder {
+  final frmStateRepresentation? _REPRESENTATION;
+  final List<double>? _ELEMENTS;
+  final FRMVector3ObjectBuilder? _POSITION;
+  final FRMVector3ObjectBuilder? _VELOCITY;
+  final String? _COORDINATE_SYSTEM_NAME;
+  final String? _EPOCH;
+  final String? _EPOCH_TIME_SYSTEM;
+  final double? _GRAVITATIONAL_PARAMETER;
+
+  FRMStateVectorObjectBuilder({
+    frmStateRepresentation? REPRESENTATION,
+    List<double>? ELEMENTS,
+    FRMVector3ObjectBuilder? POSITION,
+    FRMVector3ObjectBuilder? VELOCITY,
+    String? COORDINATE_SYSTEM_NAME,
+    String? coordinateSystemName,
+    String? EPOCH,
+    String? EPOCH_TIME_SYSTEM,
+    String? epochTimeSystem,
+    double? GRAVITATIONAL_PARAMETER,
+    double? gravitationalParameter,
+  })
+      : _REPRESENTATION = REPRESENTATION,
+        _ELEMENTS = ELEMENTS,
+        _POSITION = POSITION,
+        _VELOCITY = VELOCITY,
+        _COORDINATE_SYSTEM_NAME = coordinateSystemName ?? COORDINATE_SYSTEM_NAME,
+        _EPOCH = EPOCH,
+        _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
+        _GRAVITATIONAL_PARAMETER = gravitationalParameter ?? GRAVITATIONAL_PARAMETER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ELEMENTSOffset = _ELEMENTS == null ? null
+        : fbBuilder.writeListFloat64(_ELEMENTS!);
+    final int? POSITIONOffset = _POSITION?.getOrCreateOffset(fbBuilder);
+    final int? VELOCITYOffset = _VELOCITY?.getOrCreateOffset(fbBuilder);
+    final int? COORDINATE_SYSTEM_NAMEOffset = _COORDINATE_SYSTEM_NAME == null ? null
+        : fbBuilder.writeString(_COORDINATE_SYSTEM_NAME!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
+    fbBuilder.startTable(8);
+    fbBuilder.addUint8(0, _REPRESENTATION?.value);
+    fbBuilder.addOffset(1, ELEMENTSOffset);
+    fbBuilder.addOffset(2, POSITIONOffset);
+    fbBuilder.addOffset(3, VELOCITYOffset);
+    fbBuilder.addOffset(4, COORDINATE_SYSTEM_NAMEOffset);
+    fbBuilder.addOffset(5, EPOCHOffset);
+    fbBuilder.addOffset(6, EPOCH_TIME_SYSTEMOffset);
+    fbBuilder.addFloat64(7, _GRAVITATIONAL_PARAMETER);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class FRMFrameTransformRequest {
+  FRMFrameTransformRequest._(this._bc, this._bcOffset);
+  factory FRMFrameTransformRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<FRMFrameTransformRequest> reader = _FRMFrameTransformRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  frmOperationCode get OPERATION => frmOperationCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  FRMVector3? get POSITION => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  FRMMatrix3? get TRANSFORM_DCM => FRMMatrix3.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  FRMMatrix3? get transformDcm => TRANSFORM_DCM;
+  double get EQUATORIAL_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get equatorialRadiusM => EQUATORIAL_RADIUS_M;
+  double get POLAR_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get polarRadiusM => POLAR_RADIUS_M;
+  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get traceId => TRACE_ID;
+  ///  Coordinate system the request's state is expressed in.
+  RFMCoordinateSystem? get SOURCE_COORDINATE_SYSTEM => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  RFMCoordinateSystem? get sourceCoordinateSystem => SOURCE_COORDINATE_SYSTEM;
+  ///  Coordinate system the result is required in.
+  RFMCoordinateSystem? get TARGET_COORDINATE_SYSTEM => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  RFMCoordinateSystem? get targetCoordinateSystem => TARGET_COORDINATE_SYSTEM;
+  ///  The full input state, carrying velocity as well as position. POSITION
+  ///  above is position-only and remains the input for operations 1-4.
+  FRMStateVector? get SOURCE_STATE => FRMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  FRMStateVector? get sourceState => SOURCE_STATE;
+  ///  Element set the result must be expressed in.
+  frmStateRepresentation get TARGET_REPRESENTATION => frmStateRepresentation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  frmStateRepresentation get targetRepresentation => TARGET_REPRESENTATION;
+  ///  Epoch the transform is evaluated at, ISO 8601. Required for every
+  ///  time-dependent axis chain.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
+  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
+  ///  Content identifier of the Earth-orientation data set the caller requires
+  ///  the provider to use. A provider that cannot honour it returns
+  ///  MISSING_EOP_DATA rather than substituting another table.
+  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get eopDataSetCid => EOP_DATA_SET_CID;
+
+  @override
+  String toString() {
+    return 'FRMFrameTransformRequest{OPERATION: ${OPERATION}, POSITION: ${POSITION}, transformDcm: ${transformDcm}, equatorialRadiusM: ${equatorialRadiusM}, polarRadiusM: ${polarRadiusM}, traceId: ${traceId}, sourceCoordinateSystem: ${sourceCoordinateSystem}, targetCoordinateSystem: ${targetCoordinateSystem}, sourceState: ${sourceState}, targetRepresentation: ${targetRepresentation}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, eopDataSetCid: ${eopDataSetCid}}';
+  }
+}
+
+class _FRMFrameTransformRequestReader extends fb.TableReader<FRMFrameTransformRequest> {
+  const _FRMFrameTransformRequestReader();
+
+  @override
+  FRMFrameTransformRequest createObject(fb.BufferContext bc, int offset) =>
+    FRMFrameTransformRequest._(bc, offset);
+}
+
+class FRMFrameTransformRequestBuilder {
+  FRMFrameTransformRequestBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -640,55 +629,55 @@ class RFMOriginBuilder {
     fbBuilder.startTable(13);
   }
 
-  int addKind(rfmOriginKind? KIND) {
-    fbBuilder.addUint8(0, KIND?.value);
+  int addOperation(frmOperationCode? OPERATION) {
+    fbBuilder.addInt8(0, OPERATION?.value);
     return fbBuilder.offset;
   }
-  int addCelestialBodyId(int? CELESTIAL_BODY_ID) {
-    fbBuilder.addInt32(1, CELESTIAL_BODY_ID);
+  int addPositionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addBarycentreId(int? BARYCENTRE_ID) {
-    fbBuilder.addInt32(2, BARYCENTRE_ID);
+  int addTransformDcmOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addLibrationPoint(rfmLibrationPoint? LIBRATION_POINT) {
-    fbBuilder.addUint8(3, LIBRATION_POINT?.value);
+  int addEquatorialRadiusM(double? EQUATORIAL_RADIUS_M) {
+    fbBuilder.addFloat64(3, EQUATORIAL_RADIUS_M);
     return fbBuilder.offset;
   }
-  int addLibrationPrimaryId(int? LIBRATION_PRIMARY_ID) {
-    fbBuilder.addInt32(4, LIBRATION_PRIMARY_ID);
+  int addPolarRadiusM(double? POLAR_RADIUS_M) {
+    fbBuilder.addFloat64(4, POLAR_RADIUS_M);
     return fbBuilder.offset;
   }
-  int addLibrationSecondaryId(int? LIBRATION_SECONDARY_ID) {
-    fbBuilder.addInt32(5, LIBRATION_SECONDARY_ID);
+  int addTraceIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addObjectIdOffset(int? offset) {
+  int addSourceCoordinateSystemOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addSiteIdOffset(int? offset) {
+  int addTargetCoordinateSystemOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addSiteBodyId(int? SITE_BODY_ID) {
-    fbBuilder.addInt32(8, SITE_BODY_ID);
+  int addSourceStateOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addSiteLatitude(double? SITE_LATITUDE) {
-    fbBuilder.addFloat64(9, SITE_LATITUDE);
+  int addTargetRepresentation(frmStateRepresentation? TARGET_REPRESENTATION) {
+    fbBuilder.addUint8(9, TARGET_REPRESENTATION?.value);
     return fbBuilder.offset;
   }
-  int addSiteLongitude(double? SITE_LONGITUDE) {
-    fbBuilder.addFloat64(10, SITE_LONGITUDE);
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addSiteAltitude(double? SITE_ALTITUDE) {
-    fbBuilder.addFloat64(11, SITE_ALTITUDE);
+  int addEpochTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addEopDataSetCidOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
@@ -698,560 +687,90 @@ class RFMOriginBuilder {
   }
 }
 
-class RFMOriginObjectBuilder extends fb.ObjectBuilder {
-  final rfmOriginKind? _KIND;
-  final int? _CELESTIAL_BODY_ID;
-  final int? _BARYCENTRE_ID;
-  final rfmLibrationPoint? _LIBRATION_POINT;
-  final int? _LIBRATION_PRIMARY_ID;
-  final int? _LIBRATION_SECONDARY_ID;
-  final String? _OBJECT_ID;
-  final String? _SITE_ID;
-  final int? _SITE_BODY_ID;
-  final double? _SITE_LATITUDE;
-  final double? _SITE_LONGITUDE;
-  final double? _SITE_ALTITUDE;
-  final String? _NAME;
-
-  RFMOriginObjectBuilder({
-    rfmOriginKind? KIND,
-    int? CELESTIAL_BODY_ID,
-    int? celestialBodyId,
-    int? BARYCENTRE_ID,
-    int? barycentreId,
-    rfmLibrationPoint? LIBRATION_POINT,
-    rfmLibrationPoint? librationPoint,
-    int? LIBRATION_PRIMARY_ID,
-    int? librationPrimaryId,
-    int? LIBRATION_SECONDARY_ID,
-    int? librationSecondaryId,
-    String? OBJECT_ID,
-    String? objectId,
-    String? SITE_ID,
-    String? siteId,
-    int? SITE_BODY_ID,
-    int? siteBodyId,
-    double? SITE_LATITUDE,
-    double? siteLatitude,
-    double? SITE_LONGITUDE,
-    double? siteLongitude,
-    double? SITE_ALTITUDE,
-    double? siteAltitude,
-    String? NAME,
-  })
-      : _KIND = KIND,
-        _CELESTIAL_BODY_ID = celestialBodyId ?? CELESTIAL_BODY_ID,
-        _BARYCENTRE_ID = barycentreId ?? BARYCENTRE_ID,
-        _LIBRATION_POINT = librationPoint ?? LIBRATION_POINT,
-        _LIBRATION_PRIMARY_ID = librationPrimaryId ?? LIBRATION_PRIMARY_ID,
-        _LIBRATION_SECONDARY_ID = librationSecondaryId ?? LIBRATION_SECONDARY_ID,
-        _OBJECT_ID = objectId ?? OBJECT_ID,
-        _SITE_ID = siteId ?? SITE_ID,
-        _SITE_BODY_ID = siteBodyId ?? SITE_BODY_ID,
-        _SITE_LATITUDE = siteLatitude ?? SITE_LATITUDE,
-        _SITE_LONGITUDE = siteLongitude ?? SITE_LONGITUDE,
-        _SITE_ALTITUDE = siteAltitude ?? SITE_ALTITUDE,
-        _NAME = NAME;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
-        : fbBuilder.writeString(_OBJECT_ID!);
-    final int? SITE_IDOffset = _SITE_ID == null ? null
-        : fbBuilder.writeString(_SITE_ID!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    fbBuilder.startTable(13);
-    fbBuilder.addUint8(0, _KIND?.value);
-    fbBuilder.addInt32(1, _CELESTIAL_BODY_ID);
-    fbBuilder.addInt32(2, _BARYCENTRE_ID);
-    fbBuilder.addUint8(3, _LIBRATION_POINT?.value);
-    fbBuilder.addInt32(4, _LIBRATION_PRIMARY_ID);
-    fbBuilder.addInt32(5, _LIBRATION_SECONDARY_ID);
-    fbBuilder.addOffset(6, OBJECT_IDOffset);
-    fbBuilder.addOffset(7, SITE_IDOffset);
-    fbBuilder.addInt32(8, _SITE_BODY_ID);
-    fbBuilder.addFloat64(9, _SITE_LATITUDE);
-    fbBuilder.addFloat64(10, _SITE_LONGITUDE);
-    fbBuilder.addFloat64(11, _SITE_ALTITUDE);
-    fbBuilder.addOffset(12, NAMEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Axes built from the relative geometry of two objects. Exactly two of the
-///  three axis assignments are independent; the third completes the triad.
-class RFMObjectReferencedAxes {
-  RFMObjectReferencedAxes._(this._bc, this._bcOffset);
-  factory RFMObjectReferencedAxes(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFMObjectReferencedAxes> reader = _RFMObjectReferencedAxesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get PRIMARY_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get primaryObjectId => PRIMARY_OBJECT_ID;
-  String? get SECONDARY_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get secondaryObjectId => SECONDARY_OBJECT_ID;
-  rfmVectorSpecification get X_AXIS => rfmVectorSpecification.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  rfmVectorSpecification get xAxis => X_AXIS;
-  rfmVectorSpecification get Y_AXIS => rfmVectorSpecification.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  rfmVectorSpecification get yAxis => Y_AXIS;
-  rfmVectorSpecification get Z_AXIS => rfmVectorSpecification.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  rfmVectorSpecification get zAxis => Z_AXIS;
-
-  @override
-  String toString() {
-    return 'RFMObjectReferencedAxes{primaryObjectId: ${primaryObjectId}, secondaryObjectId: ${secondaryObjectId}, xAxis: ${xAxis}, yAxis: ${yAxis}, zAxis: ${zAxis}}';
-  }
-}
-
-class _RFMObjectReferencedAxesReader extends fb.TableReader<RFMObjectReferencedAxes> {
-  const _RFMObjectReferencedAxesReader();
-
-  @override
-  RFMObjectReferencedAxes createObject(fb.BufferContext bc, int offset) =>
-    RFMObjectReferencedAxes._(bc, offset);
-}
-
-class RFMObjectReferencedAxesBuilder {
-  RFMObjectReferencedAxesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addPrimaryObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addSecondaryObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addXAxis(rfmVectorSpecification? X_AXIS) {
-    fbBuilder.addUint8(2, X_AXIS?.value);
-    return fbBuilder.offset;
-  }
-  int addYAxis(rfmVectorSpecification? Y_AXIS) {
-    fbBuilder.addUint8(3, Y_AXIS?.value);
-    return fbBuilder.offset;
-  }
-  int addZAxis(rfmVectorSpecification? Z_AXIS) {
-    fbBuilder.addUint8(4, Z_AXIS?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RFMObjectReferencedAxesObjectBuilder extends fb.ObjectBuilder {
-  final String? _PRIMARY_OBJECT_ID;
-  final String? _SECONDARY_OBJECT_ID;
-  final rfmVectorSpecification? _X_AXIS;
-  final rfmVectorSpecification? _Y_AXIS;
-  final rfmVectorSpecification? _Z_AXIS;
-
-  RFMObjectReferencedAxesObjectBuilder({
-    String? PRIMARY_OBJECT_ID,
-    String? primaryObjectId,
-    String? SECONDARY_OBJECT_ID,
-    String? secondaryObjectId,
-    rfmVectorSpecification? X_AXIS,
-    rfmVectorSpecification? xAxis,
-    rfmVectorSpecification? Y_AXIS,
-    rfmVectorSpecification? yAxis,
-    rfmVectorSpecification? Z_AXIS,
-    rfmVectorSpecification? zAxis,
-  })
-      : _PRIMARY_OBJECT_ID = primaryObjectId ?? PRIMARY_OBJECT_ID,
-        _SECONDARY_OBJECT_ID = secondaryObjectId ?? SECONDARY_OBJECT_ID,
-        _X_AXIS = xAxis ?? X_AXIS,
-        _Y_AXIS = yAxis ?? Y_AXIS,
-        _Z_AXIS = zAxis ?? Z_AXIS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PRIMARY_OBJECT_IDOffset = _PRIMARY_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_PRIMARY_OBJECT_ID!);
-    final int? SECONDARY_OBJECT_IDOffset = _SECONDARY_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_SECONDARY_OBJECT_ID!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, PRIMARY_OBJECT_IDOffset);
-    fbBuilder.addOffset(1, SECONDARY_OBJECT_IDOffset);
-    fbBuilder.addUint8(2, _X_AXIS?.value);
-    fbBuilder.addUint8(3, _Y_AXIS?.value);
-    fbBuilder.addUint8(4, _Z_AXIS?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Axes built by aligning one vector with a reference direction and using a
-///  second vector as a constraint. Vectors are 3-element, expressed in the
-///  coordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.
-class RFMLocalAlignedConstrainedAxes {
-  RFMLocalAlignedConstrainedAxes._(this._bc, this._bcOffset);
-  factory RFMLocalAlignedConstrainedAxes(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFMLocalAlignedConstrainedAxes> reader = _RFMLocalAlignedConstrainedAxesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get REFERENCE_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get referenceObjectId => REFERENCE_OBJECT_ID;
-  String? get REFERENCE_COORDINATE_SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get referenceCoordinateSystemName => REFERENCE_COORDINATE_SYSTEM_NAME;
-  List<double>? get ALIGNMENT_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
-  List<double>? get alignmentVector => ALIGNMENT_VECTOR;
-  List<double>? get ALIGNMENT_REFERENCE_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
-  List<double>? get alignmentReferenceVector => ALIGNMENT_REFERENCE_VECTOR;
-  List<double>? get CONSTRAINT_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
-  List<double>? get constraintVector => CONSTRAINT_VECTOR;
-  List<double>? get CONSTRAINT_REFERENCE_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
-  List<double>? get constraintReferenceVector => CONSTRAINT_REFERENCE_VECTOR;
-
-  @override
-  String toString() {
-    return 'RFMLocalAlignedConstrainedAxes{referenceObjectId: ${referenceObjectId}, referenceCoordinateSystemName: ${referenceCoordinateSystemName}, alignmentVector: ${alignmentVector}, alignmentReferenceVector: ${alignmentReferenceVector}, constraintVector: ${constraintVector}, constraintReferenceVector: ${constraintReferenceVector}}';
-  }
-}
-
-class _RFMLocalAlignedConstrainedAxesReader extends fb.TableReader<RFMLocalAlignedConstrainedAxes> {
-  const _RFMLocalAlignedConstrainedAxesReader();
-
-  @override
-  RFMLocalAlignedConstrainedAxes createObject(fb.BufferContext bc, int offset) =>
-    RFMLocalAlignedConstrainedAxes._(bc, offset);
-}
-
-class RFMLocalAlignedConstrainedAxesBuilder {
-  RFMLocalAlignedConstrainedAxesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addReferenceObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addReferenceCoordinateSystemNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addAlignmentVectorOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addAlignmentReferenceVectorOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addConstraintVectorOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addConstraintReferenceVectorOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RFMLocalAlignedConstrainedAxesObjectBuilder extends fb.ObjectBuilder {
-  final String? _REFERENCE_OBJECT_ID;
-  final String? _REFERENCE_COORDINATE_SYSTEM_NAME;
-  final List<double>? _ALIGNMENT_VECTOR;
-  final List<double>? _ALIGNMENT_REFERENCE_VECTOR;
-  final List<double>? _CONSTRAINT_VECTOR;
-  final List<double>? _CONSTRAINT_REFERENCE_VECTOR;
-
-  RFMLocalAlignedConstrainedAxesObjectBuilder({
-    String? REFERENCE_OBJECT_ID,
-    String? referenceObjectId,
-    String? REFERENCE_COORDINATE_SYSTEM_NAME,
-    String? referenceCoordinateSystemName,
-    List<double>? ALIGNMENT_VECTOR,
-    List<double>? alignmentVector,
-    List<double>? ALIGNMENT_REFERENCE_VECTOR,
-    List<double>? alignmentReferenceVector,
-    List<double>? CONSTRAINT_VECTOR,
-    List<double>? constraintVector,
-    List<double>? CONSTRAINT_REFERENCE_VECTOR,
-    List<double>? constraintReferenceVector,
-  })
-      : _REFERENCE_OBJECT_ID = referenceObjectId ?? REFERENCE_OBJECT_ID,
-        _REFERENCE_COORDINATE_SYSTEM_NAME = referenceCoordinateSystemName ?? REFERENCE_COORDINATE_SYSTEM_NAME,
-        _ALIGNMENT_VECTOR = alignmentVector ?? ALIGNMENT_VECTOR,
-        _ALIGNMENT_REFERENCE_VECTOR = alignmentReferenceVector ?? ALIGNMENT_REFERENCE_VECTOR,
-        _CONSTRAINT_VECTOR = constraintVector ?? CONSTRAINT_VECTOR,
-        _CONSTRAINT_REFERENCE_VECTOR = constraintReferenceVector ?? CONSTRAINT_REFERENCE_VECTOR;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? REFERENCE_OBJECT_IDOffset = _REFERENCE_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_REFERENCE_OBJECT_ID!);
-    final int? REFERENCE_COORDINATE_SYSTEM_NAMEOffset = _REFERENCE_COORDINATE_SYSTEM_NAME == null ? null
-        : fbBuilder.writeString(_REFERENCE_COORDINATE_SYSTEM_NAME!);
-    final int? ALIGNMENT_VECTOROffset = _ALIGNMENT_VECTOR == null ? null
-        : fbBuilder.writeListFloat64(_ALIGNMENT_VECTOR!);
-    final int? ALIGNMENT_REFERENCE_VECTOROffset = _ALIGNMENT_REFERENCE_VECTOR == null ? null
-        : fbBuilder.writeListFloat64(_ALIGNMENT_REFERENCE_VECTOR!);
-    final int? CONSTRAINT_VECTOROffset = _CONSTRAINT_VECTOR == null ? null
-        : fbBuilder.writeListFloat64(_CONSTRAINT_VECTOR!);
-    final int? CONSTRAINT_REFERENCE_VECTOROffset = _CONSTRAINT_REFERENCE_VECTOR == null ? null
-        : fbBuilder.writeListFloat64(_CONSTRAINT_REFERENCE_VECTOR!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, REFERENCE_OBJECT_IDOffset);
-    fbBuilder.addOffset(1, REFERENCE_COORDINATE_SYSTEM_NAMEOffset);
-    fbBuilder.addOffset(2, ALIGNMENT_VECTOROffset);
-    fbBuilder.addOffset(3, ALIGNMENT_REFERENCE_VECTOROffset);
-    fbBuilder.addOffset(4, CONSTRAINT_VECTOROffset);
-    fbBuilder.addOffset(5, CONSTRAINT_REFERENCE_VECTOROffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  A fully specified coordinate system: an axis set, an origin, and the epoch
-///  and time system the axis set is evaluated at. This is the unit a frames
-///  consumer needs; the pre-existing RFMUnion members name an axis convention
-///  alone and cannot express an origin.
-class RFMCoordinateSystem {
-  RFMCoordinateSystem._(this._bc, this._bcOffset);
-  factory RFMCoordinateSystem(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFMCoordinateSystem> reader = _RFMCoordinateSystemReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stable name for this coordinate system within the producing data set.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Orientation rule.
-  rfmAxisType get AXIS_TYPE => rfmAxisType.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  rfmAxisType get axisType => AXIS_TYPE;
-  ///  Centre of the system.
-  RFMOrigin? get ORIGIN => RFMOrigin.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Ephemeris body code whose equator/rotation defines the axes, for the
-  ///  body-referenced axis types. Independent of ORIGIN.
-  int get AXIS_REFERENCE_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get axisReferenceBodyId => AXIS_REFERENCE_BODY_ID;
-  ///  Reference epoch the axis set is evaluated at, ISO 8601. Required for the
-  ///  of-date and of-epoch axis types; ignored by the inertial ones.
-  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Time system the EPOCH is expressed in, named by the $TIM timingStandard
-  ///  member name (for example "UTC", "TAI", "TT", "TDB", "A1").
-  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
-  ///  Extra parameters for OBJECT_REFERENCED axes.
-  RFMObjectReferencedAxes? get OBJECT_REFERENCED_AXES => RFMObjectReferencedAxes.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  RFMObjectReferencedAxes? get objectReferencedAxes => OBJECT_REFERENCED_AXES;
-  ///  Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.
-  RFMLocalAlignedConstrainedAxes? get LOCAL_ALIGNED_CONSTRAINED_AXES => RFMLocalAlignedConstrainedAxes.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  RFMLocalAlignedConstrainedAxes? get localAlignedConstrainedAxes => LOCAL_ALIGNED_CONSTRAINED_AXES;
-  ///  Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.
-  String? get KERNEL_FRAME_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get kernelFrameName => KERNEL_FRAME_NAME;
-  ///  Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.
-  int get KERNEL_FRAME_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get kernelFrameId => KERNEL_FRAME_ID;
-  ///  Content identifier of the Earth-orientation data set used to realise
-  ///  this system, when the axis chain requires one. Recorded so that two
-  ///  consumers can prove they used the same table rather than assume it.
-  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get eopDataSetCid => EOP_DATA_SET_CID;
-
-  @override
-  String toString() {
-    return 'RFMCoordinateSystem{NAME: ${NAME}, axisType: ${axisType}, ORIGIN: ${ORIGIN}, axisReferenceBodyId: ${axisReferenceBodyId}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, objectReferencedAxes: ${objectReferencedAxes}, localAlignedConstrainedAxes: ${localAlignedConstrainedAxes}, kernelFrameName: ${kernelFrameName}, kernelFrameId: ${kernelFrameId}, eopDataSetCid: ${eopDataSetCid}}';
-  }
-}
-
-class _RFMCoordinateSystemReader extends fb.TableReader<RFMCoordinateSystem> {
-  const _RFMCoordinateSystemReader();
-
-  @override
-  RFMCoordinateSystem createObject(fb.BufferContext bc, int offset) =>
-    RFMCoordinateSystem._(bc, offset);
-}
-
-class RFMCoordinateSystemBuilder {
-  RFMCoordinateSystemBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(11);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addAxisType(rfmAxisType? AXIS_TYPE) {
-    fbBuilder.addUint8(1, AXIS_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addOriginOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addAxisReferenceBodyId(int? AXIS_REFERENCE_BODY_ID) {
-    fbBuilder.addInt32(3, AXIS_REFERENCE_BODY_ID);
-    return fbBuilder.offset;
-  }
-  int addEpochOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addEpochTimeSystemOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addObjectReferencedAxesOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addLocalAlignedConstrainedAxesOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addKernelFrameNameOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addKernelFrameId(int? KERNEL_FRAME_ID) {
-    fbBuilder.addInt32(9, KERNEL_FRAME_ID);
-    return fbBuilder.offset;
-  }
-  int addEopDataSetCidOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RFMCoordinateSystemObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final rfmAxisType? _AXIS_TYPE;
-  final RFMOriginObjectBuilder? _ORIGIN;
-  final int? _AXIS_REFERENCE_BODY_ID;
+class FRMFrameTransformRequestObjectBuilder extends fb.ObjectBuilder {
+  final frmOperationCode? _OPERATION;
+  final FRMVector3ObjectBuilder? _POSITION;
+  final FRMMatrix3ObjectBuilder? _TRANSFORM_DCM;
+  final double? _EQUATORIAL_RADIUS_M;
+  final double? _POLAR_RADIUS_M;
+  final String? _TRACE_ID;
+  final RFMCoordinateSystemObjectBuilder? _SOURCE_COORDINATE_SYSTEM;
+  final RFMCoordinateSystemObjectBuilder? _TARGET_COORDINATE_SYSTEM;
+  final FRMStateVectorObjectBuilder? _SOURCE_STATE;
+  final frmStateRepresentation? _TARGET_REPRESENTATION;
   final String? _EPOCH;
   final String? _EPOCH_TIME_SYSTEM;
-  final RFMObjectReferencedAxesObjectBuilder? _OBJECT_REFERENCED_AXES;
-  final RFMLocalAlignedConstrainedAxesObjectBuilder? _LOCAL_ALIGNED_CONSTRAINED_AXES;
-  final String? _KERNEL_FRAME_NAME;
-  final int? _KERNEL_FRAME_ID;
   final String? _EOP_DATA_SET_CID;
 
-  RFMCoordinateSystemObjectBuilder({
-    String? NAME,
-    rfmAxisType? AXIS_TYPE,
-    rfmAxisType? axisType,
-    RFMOriginObjectBuilder? ORIGIN,
-    int? AXIS_REFERENCE_BODY_ID,
-    int? axisReferenceBodyId,
+  FRMFrameTransformRequestObjectBuilder({
+    frmOperationCode? OPERATION,
+    FRMVector3ObjectBuilder? POSITION,
+    FRMMatrix3ObjectBuilder? TRANSFORM_DCM,
+    FRMMatrix3ObjectBuilder? transformDcm,
+    double? EQUATORIAL_RADIUS_M,
+    double? equatorialRadiusM,
+    double? POLAR_RADIUS_M,
+    double? polarRadiusM,
+    String? TRACE_ID,
+    String? traceId,
+    RFMCoordinateSystemObjectBuilder? SOURCE_COORDINATE_SYSTEM,
+    RFMCoordinateSystemObjectBuilder? sourceCoordinateSystem,
+    RFMCoordinateSystemObjectBuilder? TARGET_COORDINATE_SYSTEM,
+    RFMCoordinateSystemObjectBuilder? targetCoordinateSystem,
+    FRMStateVectorObjectBuilder? SOURCE_STATE,
+    FRMStateVectorObjectBuilder? sourceState,
+    frmStateRepresentation? TARGET_REPRESENTATION,
+    frmStateRepresentation? targetRepresentation,
     String? EPOCH,
     String? EPOCH_TIME_SYSTEM,
     String? epochTimeSystem,
-    RFMObjectReferencedAxesObjectBuilder? OBJECT_REFERENCED_AXES,
-    RFMObjectReferencedAxesObjectBuilder? objectReferencedAxes,
-    RFMLocalAlignedConstrainedAxesObjectBuilder? LOCAL_ALIGNED_CONSTRAINED_AXES,
-    RFMLocalAlignedConstrainedAxesObjectBuilder? localAlignedConstrainedAxes,
-    String? KERNEL_FRAME_NAME,
-    String? kernelFrameName,
-    int? KERNEL_FRAME_ID,
-    int? kernelFrameId,
     String? EOP_DATA_SET_CID,
     String? eopDataSetCid,
   })
-      : _NAME = NAME,
-        _AXIS_TYPE = axisType ?? AXIS_TYPE,
-        _ORIGIN = ORIGIN,
-        _AXIS_REFERENCE_BODY_ID = axisReferenceBodyId ?? AXIS_REFERENCE_BODY_ID,
+      : _OPERATION = OPERATION,
+        _POSITION = POSITION,
+        _TRANSFORM_DCM = transformDcm ?? TRANSFORM_DCM,
+        _EQUATORIAL_RADIUS_M = equatorialRadiusM ?? EQUATORIAL_RADIUS_M,
+        _POLAR_RADIUS_M = polarRadiusM ?? POLAR_RADIUS_M,
+        _TRACE_ID = traceId ?? TRACE_ID,
+        _SOURCE_COORDINATE_SYSTEM = sourceCoordinateSystem ?? SOURCE_COORDINATE_SYSTEM,
+        _TARGET_COORDINATE_SYSTEM = targetCoordinateSystem ?? TARGET_COORDINATE_SYSTEM,
+        _SOURCE_STATE = sourceState ?? SOURCE_STATE,
+        _TARGET_REPRESENTATION = targetRepresentation ?? TARGET_REPRESENTATION,
         _EPOCH = EPOCH,
         _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
-        _OBJECT_REFERENCED_AXES = objectReferencedAxes ?? OBJECT_REFERENCED_AXES,
-        _LOCAL_ALIGNED_CONSTRAINED_AXES = localAlignedConstrainedAxes ?? LOCAL_ALIGNED_CONSTRAINED_AXES,
-        _KERNEL_FRAME_NAME = kernelFrameName ?? KERNEL_FRAME_NAME,
-        _KERNEL_FRAME_ID = kernelFrameId ?? KERNEL_FRAME_ID,
         _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? ORIGINOffset = _ORIGIN?.getOrCreateOffset(fbBuilder);
+    final int? POSITIONOffset = _POSITION?.getOrCreateOffset(fbBuilder);
+    final int? TRANSFORM_DCMOffset = _TRANSFORM_DCM?.getOrCreateOffset(fbBuilder);
+    final int? TRACE_IDOffset = _TRACE_ID == null ? null
+        : fbBuilder.writeString(_TRACE_ID!);
+    final int? SOURCE_COORDINATE_SYSTEMOffset = _SOURCE_COORDINATE_SYSTEM?.getOrCreateOffset(fbBuilder);
+    final int? TARGET_COORDINATE_SYSTEMOffset = _TARGET_COORDINATE_SYSTEM?.getOrCreateOffset(fbBuilder);
+    final int? SOURCE_STATEOffset = _SOURCE_STATE?.getOrCreateOffset(fbBuilder);
     final int? EPOCHOffset = _EPOCH == null ? null
         : fbBuilder.writeString(_EPOCH!);
     final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
         : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
-    final int? OBJECT_REFERENCED_AXESOffset = _OBJECT_REFERENCED_AXES?.getOrCreateOffset(fbBuilder);
-    final int? LOCAL_ALIGNED_CONSTRAINED_AXESOffset = _LOCAL_ALIGNED_CONSTRAINED_AXES?.getOrCreateOffset(fbBuilder);
-    final int? KERNEL_FRAME_NAMEOffset = _KERNEL_FRAME_NAME == null ? null
-        : fbBuilder.writeString(_KERNEL_FRAME_NAME!);
     final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
         : fbBuilder.writeString(_EOP_DATA_SET_CID!);
-    fbBuilder.startTable(11);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addUint8(1, _AXIS_TYPE?.value);
-    fbBuilder.addOffset(2, ORIGINOffset);
-    fbBuilder.addInt32(3, _AXIS_REFERENCE_BODY_ID);
-    fbBuilder.addOffset(4, EPOCHOffset);
-    fbBuilder.addOffset(5, EPOCH_TIME_SYSTEMOffset);
-    fbBuilder.addOffset(6, OBJECT_REFERENCED_AXESOffset);
-    fbBuilder.addOffset(7, LOCAL_ALIGNED_CONSTRAINED_AXESOffset);
-    fbBuilder.addOffset(8, KERNEL_FRAME_NAMEOffset);
-    fbBuilder.addInt32(9, _KERNEL_FRAME_ID);
-    fbBuilder.addOffset(10, EOP_DATA_SET_CIDOffset);
+    fbBuilder.startTable(13);
+    fbBuilder.addInt8(0, _OPERATION?.value);
+    fbBuilder.addOffset(1, POSITIONOffset);
+    fbBuilder.addOffset(2, TRANSFORM_DCMOffset);
+    fbBuilder.addFloat64(3, _EQUATORIAL_RADIUS_M);
+    fbBuilder.addFloat64(4, _POLAR_RADIUS_M);
+    fbBuilder.addOffset(5, TRACE_IDOffset);
+    fbBuilder.addOffset(6, SOURCE_COORDINATE_SYSTEMOffset);
+    fbBuilder.addOffset(7, TARGET_COORDINATE_SYSTEMOffset);
+    fbBuilder.addOffset(8, SOURCE_STATEOffset);
+    fbBuilder.addUint8(9, _TARGET_REPRESENTATION?.value);
+    fbBuilder.addOffset(10, EPOCHOffset);
+    fbBuilder.addOffset(11, EPOCH_TIME_SYSTEMOffset);
+    fbBuilder.addOffset(12, EOP_DATA_SET_CIDOffset);
     return fbBuilder.endTable();
   }
 
@@ -1263,431 +782,107 @@ class RFMCoordinateSystemObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-class CelestialFrameWrapper {
-  CelestialFrameWrapper._(this._bc, this._bcOffset);
-  factory CelestialFrameWrapper(List<int> bytes) {
+class FRMFrameTransformResult {
+  FRMFrameTransformResult._(this._bc, this._bcOffset);
+  factory FRMFrameTransformResult(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CelestialFrameWrapper> reader = _CelestialFrameWrapperReader();
+  static const fb.Reader<FRMFrameTransformResult> reader = _FRMFrameTransformResultReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  CelestialFrame get frame => CelestialFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  frmResultStatus get STATUS => frmResultStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get errorMessage => ERROR_MESSAGE;
+  FRMVector3? get POSITION => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get traceId => TRACE_ID;
+  ///  The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
+  ///  TARGET_REPRESENTATION.
+  FRMStateVector? get TARGET_STATE => FRMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  FRMStateVector? get targetState => TARGET_STATE;
+  ///  Rotation from the source axes to the target axes at EPOCH.
+  FRMMatrix3? get ROTATION_DCM => FRMMatrix3.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  FRMMatrix3? get rotationDcm => ROTATION_DCM;
+  ///  Time derivative of ROTATION_DCM, per second. Required for a velocity
+  ///  transform between relatively rotating axis sets.
+  FRMMatrix3? get ROTATION_DCM_RATE => FRMMatrix3.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  FRMMatrix3? get rotationDcmRate => ROTATION_DCM_RATE;
+  ///  Angular velocity of the target axes with respect to the source axes,
+  ///  radians per second, expressed in the source axes.
+  FRMVector3? get ANGULAR_VELOCITY_RAD_S => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  FRMVector3? get angularVelocityRadS => ANGULAR_VELOCITY_RAD_S;
+  ///  Epoch of the Earth-orientation data set actually used, ISO 8601.
+  String? get EOP_DATA_SET_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get eopDataSetEpoch => EOP_DATA_SET_EPOCH;
+  ///  Content identifier of the Earth-orientation data set actually used.
+  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get eopDataSetCid => EOP_DATA_SET_CID;
 
   @override
   String toString() {
-    return 'CelestialFrameWrapper{frame: ${frame}}';
+    return 'FRMFrameTransformResult{STATUS: ${STATUS}, errorMessage: ${errorMessage}, POSITION: ${POSITION}, traceId: ${traceId}, targetState: ${targetState}, rotationDcm: ${rotationDcm}, rotationDcmRate: ${rotationDcmRate}, angularVelocityRadS: ${angularVelocityRadS}, eopDataSetEpoch: ${eopDataSetEpoch}, eopDataSetCid: ${eopDataSetCid}}';
   }
 }
 
-class _CelestialFrameWrapperReader extends fb.TableReader<CelestialFrameWrapper> {
-  const _CelestialFrameWrapperReader();
+class _FRMFrameTransformResultReader extends fb.TableReader<FRMFrameTransformResult> {
+  const _FRMFrameTransformResultReader();
 
   @override
-  CelestialFrameWrapper createObject(fb.BufferContext bc, int offset) =>
-    CelestialFrameWrapper._(bc, offset);
+  FRMFrameTransformResult createObject(fb.BufferContext bc, int offset) =>
+    FRMFrameTransformResult._(bc, offset);
 }
 
-class CelestialFrameWrapperBuilder {
-  CelestialFrameWrapperBuilder(this.fbBuilder);
+class FRMFrameTransformResultBuilder {
+  FRMFrameTransformResultBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(10);
   }
 
-  int addFrame(CelestialFrame? frame) {
-    fbBuilder.addInt8(0, frame?.value);
+  int addStatus(frmResultStatus? STATUS) {
+    fbBuilder.addInt8(0, STATUS?.value);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CelestialFrameWrapperObjectBuilder extends fb.ObjectBuilder {
-  final CelestialFrame? _frame;
-
-  CelestialFrameWrapperObjectBuilder({
-    CelestialFrame? frame,
-  })
-      : _frame = frame;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _frame?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class SpacecraftFrameWrapper {
-  SpacecraftFrameWrapper._(this._bc, this._bcOffset);
-  factory SpacecraftFrameWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SpacecraftFrameWrapper> reader = _SpacecraftFrameWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  SpacecraftFrame get frame => SpacecraftFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-
-  @override
-  String toString() {
-    return 'SpacecraftFrameWrapper{frame: ${frame}}';
-  }
-}
-
-class _SpacecraftFrameWrapperReader extends fb.TableReader<SpacecraftFrameWrapper> {
-  const _SpacecraftFrameWrapperReader();
-
-  @override
-  SpacecraftFrameWrapper createObject(fb.BufferContext bc, int offset) =>
-    SpacecraftFrameWrapper._(bc, offset);
-}
-
-class SpacecraftFrameWrapperBuilder {
-  SpacecraftFrameWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addFrame(SpacecraftFrame? frame) {
-    fbBuilder.addInt8(0, frame?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SpacecraftFrameWrapperObjectBuilder extends fb.ObjectBuilder {
-  final SpacecraftFrame? _frame;
-
-  SpacecraftFrameWrapperObjectBuilder({
-    SpacecraftFrame? frame,
-  })
-      : _frame = frame;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _frame?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class OrbitFrameWrapper {
-  OrbitFrameWrapper._(this._bc, this._bcOffset);
-  factory OrbitFrameWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<OrbitFrameWrapper> reader = _OrbitFrameWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  OrbitFrame get frame => OrbitFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-
-  @override
-  String toString() {
-    return 'OrbitFrameWrapper{frame: ${frame}}';
-  }
-}
-
-class _OrbitFrameWrapperReader extends fb.TableReader<OrbitFrameWrapper> {
-  const _OrbitFrameWrapperReader();
-
-  @override
-  OrbitFrameWrapper createObject(fb.BufferContext bc, int offset) =>
-    OrbitFrameWrapper._(bc, offset);
-}
-
-class OrbitFrameWrapperBuilder {
-  OrbitFrameWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addFrame(OrbitFrame? frame) {
-    fbBuilder.addInt8(0, frame?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class OrbitFrameWrapperObjectBuilder extends fb.ObjectBuilder {
-  final OrbitFrame? _frame;
-
-  OrbitFrameWrapperObjectBuilder({
-    OrbitFrame? frame,
-  })
-      : _frame = frame;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _frame?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class CustomFrameWrapper {
-  CustomFrameWrapper._(this._bc, this._bcOffset);
-  factory CustomFrameWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CustomFrameWrapper> reader = _CustomFrameWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  CustomFrame get frame => CustomFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-
-  @override
-  String toString() {
-    return 'CustomFrameWrapper{frame: ${frame}}';
-  }
-}
-
-class _CustomFrameWrapperReader extends fb.TableReader<CustomFrameWrapper> {
-  const _CustomFrameWrapperReader();
-
-  @override
-  CustomFrameWrapper createObject(fb.BufferContext bc, int offset) =>
-    CustomFrameWrapper._(bc, offset);
-}
-
-class CustomFrameWrapperBuilder {
-  CustomFrameWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addFrame(CustomFrame? frame) {
-    fbBuilder.addInt8(0, frame?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CustomFrameWrapperObjectBuilder extends fb.ObjectBuilder {
-  final CustomFrame? _frame;
-
-  CustomFrameWrapperObjectBuilder({
-    CustomFrame? frame,
-  })
-      : _frame = frame;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _frame?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class RFMCoordinateSystemWrapper {
-  RFMCoordinateSystemWrapper._(this._bc, this._bcOffset);
-  factory RFMCoordinateSystemWrapper(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFMCoordinateSystemWrapper> reader = _RFMCoordinateSystemWrapperReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  RFMCoordinateSystem? get COORDINATE_SYSTEM => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  RFMCoordinateSystem? get coordinateSystem => COORDINATE_SYSTEM;
-
-  @override
-  String toString() {
-    return 'RFMCoordinateSystemWrapper{coordinateSystem: ${coordinateSystem}}';
-  }
-}
-
-class _RFMCoordinateSystemWrapperReader extends fb.TableReader<RFMCoordinateSystemWrapper> {
-  const _RFMCoordinateSystemWrapperReader();
-
-  @override
-  RFMCoordinateSystemWrapper createObject(fb.BufferContext bc, int offset) =>
-    RFMCoordinateSystemWrapper._(bc, offset);
-}
-
-class RFMCoordinateSystemWrapperBuilder {
-  RFMCoordinateSystemWrapperBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addCoordinateSystemOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RFMCoordinateSystemWrapperObjectBuilder extends fb.ObjectBuilder {
-  final RFMCoordinateSystemObjectBuilder? _COORDINATE_SYSTEM;
-
-  RFMCoordinateSystemWrapperObjectBuilder({
-    RFMCoordinateSystemObjectBuilder? COORDINATE_SYSTEM,
-    RFMCoordinateSystemObjectBuilder? coordinateSystem,
-  })
-      : _COORDINATE_SYSTEM = coordinateSystem ?? COORDINATE_SYSTEM;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? COORDINATE_SYSTEMOffset = _COORDINATE_SYSTEM?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, COORDINATE_SYSTEMOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Reference Frame Message
-class RFM {
-  RFM._(this._bc, this._bcOffset);
-  factory RFM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RFM> reader = _RFMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  RFMUnionTypeId? get REFERENCE_FRAME_type => RFMUnionTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 4));
-  RFMUnionTypeId? get referenceFrameType => REFERENCE_FRAME_type;
-  RFMUnionTypeId? get REFERENCE_FRAMEType => REFERENCE_FRAME_type;
-  dynamic get REFERENCE_FRAME {
-    switch (REFERENCE_FRAMEType?.value) {
-      case 1: return CelestialFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 2: return SpacecraftFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 3: return OrbitFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 4: return CustomFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 5: return RFMCoordinateSystemWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      default: return null;
-    }
-  }
-  dynamic get referenceFrame => REFERENCE_FRAME;
-  int get INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'RFM{referenceFrameType: ${referenceFrameType}, referenceFrame: ${referenceFrame}, INDEX: ${INDEX}, NAME: ${NAME}}';
-  }
-}
-
-class _RFMReader extends fb.TableReader<RFM> {
-  const _RFMReader();
-
-  @override
-  RFM createObject(fb.BufferContext bc, int offset) =>
-    RFM._(bc, offset);
-}
-
-class RFMBuilder {
-  RFMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addReferenceFrameType(RFMUnionTypeId? REFERENCE_FRAME_type) {
-    fbBuilder.addUint8(0, REFERENCE_FRAME_type?.value);
-    return fbBuilder.offset;
-  }
-  int addReferenceFrameOffset(int? offset) {
+  int addErrorMessageOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addIndex(int? INDEX) {
-    fbBuilder.addInt32(2, INDEX);
+  int addPositionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addTraceIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetStateOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRotationDcmOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addRotationDcmRateOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addAngularVelocityRadSOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addEopDataSetEpochOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addEopDataSetCidOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
 
@@ -1696,36 +891,162 @@ class RFMBuilder {
   }
 }
 
-class RFMObjectBuilder extends fb.ObjectBuilder {
-  final RFMUnionTypeId? _REFERENCE_FRAME_type;
-  final dynamic _REFERENCE_FRAME;
-  final int? _INDEX;
-  final String? _NAME;
+class FRMFrameTransformResultObjectBuilder extends fb.ObjectBuilder {
+  final frmResultStatus? _STATUS;
+  final String? _ERROR_MESSAGE;
+  final FRMVector3ObjectBuilder? _POSITION;
+  final String? _TRACE_ID;
+  final FRMStateVectorObjectBuilder? _TARGET_STATE;
+  final FRMMatrix3ObjectBuilder? _ROTATION_DCM;
+  final FRMMatrix3ObjectBuilder? _ROTATION_DCM_RATE;
+  final FRMVector3ObjectBuilder? _ANGULAR_VELOCITY_RAD_S;
+  final String? _EOP_DATA_SET_EPOCH;
+  final String? _EOP_DATA_SET_CID;
 
-  RFMObjectBuilder({
-    RFMUnionTypeId? REFERENCE_FRAME_type,
-    RFMUnionTypeId? referenceFrameType,
-    dynamic REFERENCE_FRAME,
-    dynamic? referenceFrame,
-    int? INDEX,
-    String? NAME,
+  FRMFrameTransformResultObjectBuilder({
+    frmResultStatus? STATUS,
+    String? ERROR_MESSAGE,
+    String? errorMessage,
+    FRMVector3ObjectBuilder? POSITION,
+    String? TRACE_ID,
+    String? traceId,
+    FRMStateVectorObjectBuilder? TARGET_STATE,
+    FRMStateVectorObjectBuilder? targetState,
+    FRMMatrix3ObjectBuilder? ROTATION_DCM,
+    FRMMatrix3ObjectBuilder? rotationDcm,
+    FRMMatrix3ObjectBuilder? ROTATION_DCM_RATE,
+    FRMMatrix3ObjectBuilder? rotationDcmRate,
+    FRMVector3ObjectBuilder? ANGULAR_VELOCITY_RAD_S,
+    FRMVector3ObjectBuilder? angularVelocityRadS,
+    String? EOP_DATA_SET_EPOCH,
+    String? eopDataSetEpoch,
+    String? EOP_DATA_SET_CID,
+    String? eopDataSetCid,
   })
-      : _REFERENCE_FRAME_type = referenceFrameType ?? REFERENCE_FRAME_type,
-        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
-        _INDEX = INDEX,
-        _NAME = NAME;
+      : _STATUS = STATUS,
+        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
+        _POSITION = POSITION,
+        _TRACE_ID = traceId ?? TRACE_ID,
+        _TARGET_STATE = targetState ?? TARGET_STATE,
+        _ROTATION_DCM = rotationDcm ?? ROTATION_DCM,
+        _ROTATION_DCM_RATE = rotationDcmRate ?? ROTATION_DCM_RATE,
+        _ANGULAR_VELOCITY_RAD_S = angularVelocityRadS ?? ANGULAR_VELOCITY_RAD_S,
+        _EOP_DATA_SET_EPOCH = eopDataSetEpoch ?? EOP_DATA_SET_EPOCH,
+        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    fbBuilder.startTable(4);
-    fbBuilder.addUint8(0, _REFERENCE_FRAME_type?.value);
-    fbBuilder.addOffset(1, REFERENCE_FRAMEOffset);
-    fbBuilder.addInt32(2, _INDEX);
-    fbBuilder.addOffset(3, NAMEOffset);
+    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
+        : fbBuilder.writeString(_ERROR_MESSAGE!);
+    final int? POSITIONOffset = _POSITION?.getOrCreateOffset(fbBuilder);
+    final int? TRACE_IDOffset = _TRACE_ID == null ? null
+        : fbBuilder.writeString(_TRACE_ID!);
+    final int? TARGET_STATEOffset = _TARGET_STATE?.getOrCreateOffset(fbBuilder);
+    final int? ROTATION_DCMOffset = _ROTATION_DCM?.getOrCreateOffset(fbBuilder);
+    final int? ROTATION_DCM_RATEOffset = _ROTATION_DCM_RATE?.getOrCreateOffset(fbBuilder);
+    final int? ANGULAR_VELOCITY_RAD_SOffset = _ANGULAR_VELOCITY_RAD_S?.getOrCreateOffset(fbBuilder);
+    final int? EOP_DATA_SET_EPOCHOffset = _EOP_DATA_SET_EPOCH == null ? null
+        : fbBuilder.writeString(_EOP_DATA_SET_EPOCH!);
+    final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
+        : fbBuilder.writeString(_EOP_DATA_SET_CID!);
+    fbBuilder.startTable(10);
+    fbBuilder.addInt8(0, _STATUS?.value);
+    fbBuilder.addOffset(1, ERROR_MESSAGEOffset);
+    fbBuilder.addOffset(2, POSITIONOffset);
+    fbBuilder.addOffset(3, TRACE_IDOffset);
+    fbBuilder.addOffset(4, TARGET_STATEOffset);
+    fbBuilder.addOffset(5, ROTATION_DCMOffset);
+    fbBuilder.addOffset(6, ROTATION_DCM_RATEOffset);
+    fbBuilder.addOffset(7, ANGULAR_VELOCITY_RAD_SOffset);
+    fbBuilder.addOffset(8, EOP_DATA_SET_EPOCHOffset);
+    fbBuilder.addOffset(9, EOP_DATA_SET_CIDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class FRM {
+  FRM._(this._bc, this._bcOffset);
+  factory FRM(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<FRM> reader = _FRMReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  FRMFrameTransformRequest? get FRAME_TRANSFORM_REQUEST => FRMFrameTransformRequest.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  FRMFrameTransformRequest? get frameTransformRequest => FRAME_TRANSFORM_REQUEST;
+  FRMFrameTransformResult? get FRAME_TRANSFORM_RESULT => FRMFrameTransformResult.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  FRMFrameTransformResult? get frameTransformResult => FRAME_TRANSFORM_RESULT;
+
+  @override
+  String toString() {
+    return 'FRM{frameTransformRequest: ${frameTransformRequest}, frameTransformResult: ${frameTransformResult}}';
+  }
+}
+
+class _FRMReader extends fb.TableReader<FRM> {
+  const _FRMReader();
+
+  @override
+  FRM createObject(fb.BufferContext bc, int offset) =>
+    FRM._(bc, offset);
+}
+
+class FRMBuilder {
+  FRMBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addFrameTransformRequestOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFrameTransformResultOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class FRMObjectBuilder extends fb.ObjectBuilder {
+  final FRMFrameTransformRequestObjectBuilder? _FRAME_TRANSFORM_REQUEST;
+  final FRMFrameTransformResultObjectBuilder? _FRAME_TRANSFORM_RESULT;
+
+  FRMObjectBuilder({
+    FRMFrameTransformRequestObjectBuilder? FRAME_TRANSFORM_REQUEST,
+    FRMFrameTransformRequestObjectBuilder? frameTransformRequest,
+    FRMFrameTransformResultObjectBuilder? FRAME_TRANSFORM_RESULT,
+    FRMFrameTransformResultObjectBuilder? frameTransformResult,
+  })
+      : _FRAME_TRANSFORM_REQUEST = frameTransformRequest ?? FRAME_TRANSFORM_REQUEST,
+        _FRAME_TRANSFORM_RESULT = frameTransformResult ?? FRAME_TRANSFORM_RESULT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FRAME_TRANSFORM_REQUESTOffset = _FRAME_TRANSFORM_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? FRAME_TRANSFORM_RESULTOffset = _FRAME_TRANSFORM_RESULT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, FRAME_TRANSFORM_REQUESTOffset);
+    fbBuilder.addOffset(1, FRAME_TRANSFORM_RESULTOffset);
     return fbBuilder.endTable();
   }
 

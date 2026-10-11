@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CVR, CVRT } from './CVR.js';
 import { covarianceOrdering } from './covarianceOrdering.js';
 
 
@@ -178,8 +179,22 @@ linesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Realism of the block's covariance: one entry per line of LINES, in order,
+ * or one entry for every line.
+ */
+COV_REALISM(index: number, obj?:CVR):CVR|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new CVR()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+covRealismLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOCMCovarianceBlock(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(16);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -254,12 +269,28 @@ static startLinesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addCovRealism(builder:flatbuffers.Builder, COV_REALISMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, COV_REALISMOffset, 0);
+}
+
+static createCovRealismVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovRealismVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOCMCovarianceBlock(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createOCMCovarianceBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, COV_IDOffset:flatbuffers.Offset, COV_PREV_IDOffset:flatbuffers.Offset, COV_NEXT_IDOffset:flatbuffers.Offset, COV_BASISOffset:flatbuffers.Offset, COV_BASIS_IDOffset:flatbuffers.Offset, COV_REF_FRAMEOffset:flatbuffers.Offset, COV_FRAME_EPOCHOffset:flatbuffers.Offset, COV_SCALE_MIN:number, COV_SCALE_MAX:number, COV_CONFIDENCE:number, COV_TYPEOffset:flatbuffers.Offset, COV_ORDERING:covarianceOrdering, COV_UNITSOffset:flatbuffers.Offset, LINESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOCMCovarianceBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, COV_IDOffset:flatbuffers.Offset, COV_PREV_IDOffset:flatbuffers.Offset, COV_NEXT_IDOffset:flatbuffers.Offset, COV_BASISOffset:flatbuffers.Offset, COV_BASIS_IDOffset:flatbuffers.Offset, COV_REF_FRAMEOffset:flatbuffers.Offset, COV_FRAME_EPOCHOffset:flatbuffers.Offset, COV_SCALE_MIN:number, COV_SCALE_MAX:number, COV_CONFIDENCE:number, COV_TYPEOffset:flatbuffers.Offset, COV_ORDERING:covarianceOrdering, COV_UNITSOffset:flatbuffers.Offset, LINESOffset:flatbuffers.Offset, COV_REALISMOffset:flatbuffers.Offset):flatbuffers.Offset {
   OCMCovarianceBlock.startOCMCovarianceBlock(builder);
   OCMCovarianceBlock.addComment(builder, COMMENTOffset);
   OCMCovarianceBlock.addCovId(builder, COV_IDOffset);
@@ -276,6 +307,7 @@ static createOCMCovarianceBlock(builder:flatbuffers.Builder, COMMENTOffset:flatb
   OCMCovarianceBlock.addCovOrdering(builder, COV_ORDERING);
   OCMCovarianceBlock.addCovUnits(builder, COV_UNITSOffset);
   OCMCovarianceBlock.addLines(builder, LINESOffset);
+  OCMCovarianceBlock.addCovRealism(builder, COV_REALISMOffset);
   return OCMCovarianceBlock.endOCMCovarianceBlock(builder);
 }
 
@@ -295,7 +327,8 @@ unpack(): OCMCovarianceBlockT {
     this.COV_TYPE(),
     this.COV_ORDERING(),
     this.COV_UNITS(),
-    this.bb!.createScalarList<string>(this.LINES.bind(this), this.linesLength())
+    this.bb!.createScalarList<string>(this.LINES.bind(this), this.linesLength()),
+    this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength())
   );
 }
 
@@ -316,6 +349,7 @@ unpackTo(_o: OCMCovarianceBlockT): void {
   _o.COV_ORDERING = this.COV_ORDERING();
   _o.COV_UNITS = this.COV_UNITS();
   _o.LINES = this.bb!.createScalarList<string>(this.LINES.bind(this), this.linesLength());
+  _o.COV_REALISM = this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength());
 }
 }
 
@@ -335,7 +369,8 @@ constructor(
   public COV_TYPE: string|Uint8Array|null = null,
   public COV_ORDERING: covarianceOrdering = covarianceOrdering.LTM,
   public COV_UNITS: string|Uint8Array|null = null,
-  public LINES: (string)[] = []
+  public LINES: (string)[] = [],
+  public COV_REALISM: (CVRT)[] = []
 ){}
 
 
@@ -351,6 +386,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COV_TYPE = (this.COV_TYPE !== null ? builder.createString(this.COV_TYPE!) : 0);
   const COV_UNITS = (this.COV_UNITS !== null ? builder.createString(this.COV_UNITS!) : 0);
   const LINES = OCMCovarianceBlock.createLinesVector(builder, builder.createObjectOffsetList(this.LINES));
+  const COV_REALISM = OCMCovarianceBlock.createCovRealismVector(builder, builder.createObjectOffsetList(this.COV_REALISM));
 
   return OCMCovarianceBlock.createOCMCovarianceBlock(builder,
     COMMENT,
@@ -367,7 +403,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     COV_TYPE,
     this.COV_ORDERING,
     COV_UNITS,
-    LINES
+    LINES,
+    COV_REALISM
   );
 }
 }

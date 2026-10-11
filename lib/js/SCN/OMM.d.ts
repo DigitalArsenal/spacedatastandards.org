@@ -1,5 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
+import { CVR, CVRT } from './CVR.js';
 import { OMMUserDefinedParameter, OMMUserDefinedParameterT } from './OMMUserDefinedParameter.js';
+import { PVN, PVNT } from './PVN.js';
 import { RFM, RFMT } from './RFM.js';
 import { ephemerisFormat } from './ephemerisFormat.js';
 import { meanElementSource } from './meanElementSource.js';
@@ -218,6 +220,14 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      */
     USER_DEFINED_PARAMETERS(index: number, obj?: OMMUserDefinedParameter): OMMUserDefinedParameter | null;
     userDefinedParametersLength(): number;
+    /**
+     * Where the element set comes from and the terms it travels under.
+     */
+    PROVENANCE(obj?: PVN): PVN | null;
+    /**
+     * Realism of COVARIANCE.
+     */
+    COV_REALISM(obj?: CVR): CVR | null;
     static startOMM(builder: flatbuffers.Builder): void;
     static addCcsdsOmmVers(builder: flatbuffers.Builder, CCSDS_OMM_VERS: number): void;
     static addCreationDate(builder: flatbuffers.Builder, CREATION_DATEOffset: flatbuffers.Offset): void;
@@ -270,6 +280,8 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     static addUserDefinedParameters(builder: flatbuffers.Builder, USER_DEFINED_PARAMETERSOffset: flatbuffers.Offset): void;
     static createUserDefinedParametersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startUserDefinedParametersVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
+    static addCovRealism(builder: flatbuffers.Builder, COV_REALISMOffset: flatbuffers.Offset): void;
     static endOMM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOMMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOMMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -320,7 +332,9 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     CLASSIFICATION: string | Uint8Array | null;
     MESSAGE_ID: string | Uint8Array | null;
     USER_DEFINED_PARAMETERS: (OMMUserDefinedParameterT)[];
-    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timingStandard, MEAN_ELEMENT_THEORY?: meanElementSource, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisFormat, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: RFMT | null, COVARIANCE?: (number)[], USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number, CLASSIFICATION?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, USER_DEFINED_PARAMETERS?: (OMMUserDefinedParameterT)[]);
+    PROVENANCE: PVNT | null;
+    COV_REALISM: CVRT | null;
+    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timingStandard, MEAN_ELEMENT_THEORY?: meanElementSource, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisFormat, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: RFMT | null, COVARIANCE?: (number)[], USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number, CLASSIFICATION?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, USER_DEFINED_PARAMETERS?: (OMMUserDefinedParameterT)[], PROVENANCE?: PVNT | null, COV_REALISM?: CVRT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OMM.d.ts.map

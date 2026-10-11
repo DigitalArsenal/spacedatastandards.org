@@ -8,411 +8,297 @@ import Common
 
 import FlatBuffers
 
-///  Capability class of a distributable software unit (module, application, or
-///  composed flow).
-///
-///  This enum IS the ratified category vocabulary. A storefront, library, module
-///  manifest and search surface all classify against these members and nothing
-///  else; a category that is not a member here does not exist. Members name
-///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
-///  site, organization, product, protocol brand or algorithm implementation;
-///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
-///  the taxonomy.
-///
-///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
-///  reuse an ordinal. A reorder silently re-labels every published listing.
-///
-///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
-///  default-constructed classification can never decode as a real category. The
-///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
-///  ordinal 0 is a real family — and had to append an `Unspecified` member at
-///  the tail to recover. This enum does not repeat that.
-///
-///  Each member's canonical display name is stated in its doc comment and is
-///  part of the ratified contract: a consumer rendering a category label uses
-///  that string verbatim, so every surface spells a category identically. The
-///  canonical route slug is the member identifier lowercased with `_` replaced
-///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
-///  "rf-and-communications").
-public enum capabilityClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  No capability class stated. The publisher did not classify the unit.
-  ///  A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT
-  ///  infer a class from the unit's name, description or tags.
-  ///  Display name: "Unspecified".
-  case unspecified = 0
-  ///  Advancing an object's state forward or backward in time under a force
-  ///  model, and interpolating between computed states.
-  ///  Display name: "Propagation".
-  case propagation = 1
-  ///  Estimating an object's state or model parameters by fitting to
-  ///  observations or ephemerides.
-  ///  Display name: "Orbit Determination".
-  case orbitDetermination = 2
-  ///  Planning, targeting and optimizing trajectory changes, including
-  ///  station-keeping, transfers and collision-avoidance maneuvers.
-  ///  Display name: "Maneuver Planning".
-  case maneuverPlanning = 3
-  ///  Screening for close approaches between objects and quantifying collision
-  ///  probability and miss distance.
-  ///  Display name: "Conjunction Assessment".
-  case conjunctionAssessment = 4
-  ///  Atmospheric reentry, decay prediction, fragmentation and debris-cloud
-  ///  evolution.
-  ///  Display name: "Reentry & Breakup".
-  case reentryAndBreakup = 5
-  ///  Attitude determination and control, body orientation, and pointing or
-  ///  slew planning.
-  ///  Display name: "Attitude & Pointing".
-  case attitudeAndPointing = 6
-  ///  Coordinate frame realization and transformation, time scale conversion,
-  ///  and earth-orientation parameter handling.
-  ///  Display name: "Reference Frames & Time".
-  case referenceFramesAndTime = 7
-  ///  Sensor modelling and tasking, field-of-regard and access computation, and
-  ///  area or target coverage figures of merit.
-  ///  Display name: "Sensors & Coverage".
-  case sensorsAndCoverage = 8
-  ///  Producing, correlating or associating observations of tracked objects,
-  ///  and maintaining tracks from them.
-  ///  Display name: "Tracking & Observation".
-  case trackingAndObservation = 9
-  ///  Radio-frequency link modelling, emitter and band characterization, signal
-  ///  capture handling, and communications planning.
-  ///  Display name: "RF & Communications".
-  case rfAndCommunications = 10
-  ///  Interference, jamming, spoofing and countermeasure modelling.
-  ///  Display name: "Electronic Warfare".
-  case electronicWarfare = 11
-  ///  Atmospheric density, gravity field, magnetic field, radiation, solar and
-  ///  geomagnetic activity, and ionospheric modelling.
-  ///  Display name: "Space Environment".
-  case spaceEnvironment = 12
-  ///  Acquiring bytes from upstream providers and parsing or exporting them
-  ///  across canonical record formats.
-  ///  Display name: "Data Sources & Ingest".
-  case dataSourcesAndIngest = 13
-  ///  Validating records for integrity, physical plausibility, continuity and
-  ///  schema conformance, and scoring data quality.
-  ///  Display name: "Data Validation & Quality".
-  case dataValidationAndQuality = 14
-  ///  Object catalogue curation, cross-identifier resolution, bus and physical
-  ///  property association, and entity identity.
-  ///  Display name: "Catalog & Identity".
-  case catalogAndIdentity = 15
-  ///  Rendering, scene composition, shading and interactive display of space
-  ///  data.
-  ///  Display name: "Visualization & Rendering".
-  case visualizationAndRendering = 16
-  ///  Ground station operation and control of physical equipment, including
-  ///  antenna rotators, radios and other hardware interfaces.
-  ///  Display name: "Ground Segment & Hardware".
-  case groundSegmentAndHardware = 17
-  ///  Mission and constellation design, trade studies, performance analysis and
-  ///  report generation.
-  ///  Display name: "Mission Design & Analysis".
-  case missionDesignAndAnalysis = 18
-  ///  Composition of other units into a graph. The unit of distribution is a
-  ///  flow of modules, not a leaf algorithm.
-  ///  Display name: "Flows & Composition".
-  case flowAndComposition = 19
-  ///  Persisting, indexing and querying records; storage engines and query
-  ///  surfaces.
-  ///  Display name: "Data Storage & Query".
-  case dataStorageAndQuery = 20
-  ///  Key custody, signing and verification, authentication, authorization and
-  ///  access control.
-  ///  Display name: "Security & Identity".
-  case securityAndIdentity = 21
-  ///  Listing, purchase, subscription, entitlement and license enforcement for
-  ///  distributed units.
-  ///  Display name: "Commerce & Licensing".
-  case commerceAndLicensing = 22
-  ///  Node runtime, artifact delivery, registry, publication and peer transport
-  ///  plumbing.
-  ///  Display name: "Node Infrastructure".
-  case nodeInfrastructure = 23
-  ///  Foundational mathematics and general-purpose utility libraries consumed by
-  ///  other units rather than run on their own.
-  ///  Display name: "Foundation & Math".
-  case foundationAndMath = 24
+///  Purchase lifecycle status tracked by the provider.
+public enum purchaseLifecycleStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case pending = 0
+  case paymentdetected = 1
+  case paymentconfirmed = 2
+  case completed = 3
+  case failed = 4
+  case cancelled = 5
+  case refundrequested = 6
+  case refunded = 7
+  case expired = 8
 
-  public static var max: capabilityClass { return .foundationAndMath }
-  public static var min: capabilityClass { return .unspecified }
+  public static var max: purchaseLifecycleStatus { return .expired }
+  public static var min: purchaseLifecycleStatus { return .pending }
 }
 
 
-///  One ratified category in the taxonomy.
-///
-///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
-///  without the label a surface will render, the sentence a browse row will
-///  show, and the route a link will target. This is what stops each consumer
-///  from inventing its own wording for the same code.
-public struct CCTCategory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Purchase Request - Request to purchase data from a storefront listing
+public struct PUR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategory.id, addPrefix: prefix) }
+  public static var id: String { "$PUR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PUR.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE: VOffset = 4
-    static let DISPLAY_NAME: VOffset = 6
-    static let SUMMARY: VOffset = 8
-    static let SLUG: VOffset = 10
-    static let DESCRIPTION: VOffset = 12
-    static let PARENT: VOffset = 14
-    static let SORT_ORDER: VOffset = 16
-    static let KEYWORDS: VOffset = 18
-    static let ICON_KEY: VOffset = 20
+    static let REQUEST_ID: VOffset = 4
+    static let LISTING_ID: VOffset = 6
+    static let TIER_NAME: VOffset = 8
+    static let BUYER_PEER_ID: VOffset = 10
+    static let BUYER_ENCRYPTION_PUBKEY: VOffset = 12
+    static let PAYMENT_METHOD: VOffset = 14
+    static let PAYMENT_AMOUNT: VOffset = 16
+    static let PAYMENT_CURRENCY: VOffset = 18
+    static let PAYMENT_TX_HASH: VOffset = 20
+    static let PAYMENT_CHAIN: VOffset = 22
+    static let PAYMENT_REFERENCE: VOffset = 24
+    static let BUYER_SIGNATURE: VOffset = 26
+    static let TIMESTAMP: VOffset = 28
+    static let KEY_ALGORITHM: VOffset = 30
+    static let BUYER_EMAIL: VOffset = 32
+    static let SENDER_ADDRESS: VOffset = 34
+    static let CONFIRMATION_BLOCK: VOffset = 36
+    static let PAYMENT_INTENT_ID: VOffset = 38
+    static let CREDITS_TRANSACTION_ID: VOffset = 40
+    static let STATUS: VOffset = 42
+    static let STATUS_MESSAGE: VOffset = 44
+    static let CREATED_AT: VOffset = 46
+    static let UPDATED_AT: VOffset = 48
+    static let PAYMENT_DEADLINE: VOffset = 50
+    static let PAYMENT_CONFIRMED_AT: VOffset = 52
+    static let GRANT_ISSUED_AT: VOffset = 54
+    static let GRANT_ID: VOffset = 56
+    static let PROVIDER_PEER_ID: VOffset = 58
+    static let PROVIDER_ACKNOWLEDGED_AT: VOffset = 60
+    static let PREFERRED_DELIVERY_METHOD: VOffset = 62
+    static let WEBHOOK_URL: VOffset = 64
+    static let PROVIDER_SIGNATURE: VOffset = 66
   }
 
-  ///  The ratified category code. This is the join key every consumer uses.
-  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
-  ///  name stated in the CODE member's doc comment.
-  public var DISPLAY_NAME: String! { let o = _accessor.offset(VT.DISPLAY_NAME); return _accessor.string(at: o) }
-  public var DISPLAY_NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DISPLAY_NAME) }
-  ///  One-sentence description shown on browse rows and category headers.
-  public var SUMMARY: String! { let o = _accessor.offset(VT.SUMMARY); return _accessor.string(at: o) }
-  public var SUMMARYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SUMMARY) }
-  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
-  ///  `-`. Published explicitly rather than derived so every surface routes
-  ///  identically.
-  public var SLUG: String! { let o = _accessor.offset(VT.SLUG); return _accessor.string(at: o) }
-  public var SLUGSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SLUG) }
-  ///  Longer editorial description for a category landing page.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
-  ///  top-level category. A category MUST NOT name itself as its parent.
-  public var PARENT: capabilityClass { let o = _accessor.offset(VT.PARENT); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Presentation order within its parent, ascending. Ties break on
-  ///  DISPLAY_NAME.
-  public var SORT_ORDER: UInt16 { let o = _accessor.offset(VT.SORT_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Search synonyms and alternate phrasings that resolve to this category.
-  ///  Feeds type-ahead; never rendered as the category label.
-  public var KEYWORDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.KEYWORDS, byteSize: 4) }
-  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
-  ///  URL: consuming node surfaces load zero external-origin bytes, so the
-  ///  consumer resolves this against its own local asset set.
-  public var ICON_KEY: String? { let o = _accessor.offset(VT.ICON_KEY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICON_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_KEY) }
-  public static func startCCTCategory(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
-  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
-  public static func add(SUMMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUMMARY, at: VT.SUMMARY) }
-  public static func add(SLUG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLUG, at: VT.SLUG) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(PARENT: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARENT.rawValue, def: 0, at: VT.PARENT) }
-  public static func add(SORT_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SORT_ORDER, def: 0, at: VT.SORT_ORDER) }
-  public static func addVectorOf(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VT.KEYWORDS) }
-  public static func add(ICON_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_KEY, at: VT.ICON_KEY) }
-  public static func endCCTCategory(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10]); return end }
-  public static func createCCTCategory(
+  ///  Unique identifier for this purchase request
+  public var REQUEST_ID: String! { let o = _accessor.offset(VT.REQUEST_ID); return _accessor.string(at: o) }
+  public var REQUEST_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REQUEST_ID) }
+  ///  ID of the listing being purchased
+  public var LISTING_ID: String! { let o = _accessor.offset(VT.LISTING_ID); return _accessor.string(at: o) }
+  public var LISTING_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.LISTING_ID) }
+  ///  Name of the pricing tier selected
+  public var TIER_NAME: String! { let o = _accessor.offset(VT.TIER_NAME); return _accessor.string(at: o) }
+  public var TIER_NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TIER_NAME) }
+  ///  Peer ID of the buyer
+  public var BUYER_PEER_ID: String! { let o = _accessor.offset(VT.BUYER_PEER_ID); return _accessor.string(at: o) }
+  public var BUYER_PEER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.BUYER_PEER_ID) }
+  ///  Buyer's encryption public key for encrypted delivery
+  public var BUYER_ENCRYPTION_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.BUYER_ENCRYPTION_PUBKEY, byteSize: 1) }
+  public func withUnsafePointerToBuyerEncryptionPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BUYER_ENCRYPTION_PUBKEY, body: body) }
+  ///  Payment method used
+  public var PAYMENT_METHOD: paymentMethod { let o = _accessor.offset(VT.PAYMENT_METHOD); return o == 0 ? .cryptoEth : paymentMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .cryptoEth }
+  ///  Payment amount in smallest unit
+  public var PAYMENT_AMOUNT: UInt64 { let o = _accessor.offset(VT.PAYMENT_AMOUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Currency of payment
+  public var PAYMENT_CURRENCY: String? { let o = _accessor.offset(VT.PAYMENT_CURRENCY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PAYMENT_CURRENCYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAYMENT_CURRENCY) }
+  ///  Transaction hash for cryptocurrency payments
+  public var PAYMENT_TX_HASH: String? { let o = _accessor.offset(VT.PAYMENT_TX_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PAYMENT_TX_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAYMENT_TX_HASH) }
+  ///  Blockchain network: "ethereum", "solana", "bitcoin"
+  public var PAYMENT_CHAIN: String? { let o = _accessor.offset(VT.PAYMENT_CHAIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PAYMENT_CHAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAYMENT_CHAIN) }
+  ///  Reference ID for credit/fiat payments
+  public var PAYMENT_REFERENCE: String? { let o = _accessor.offset(VT.PAYMENT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PAYMENT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAYMENT_REFERENCE) }
+  ///  Ed25519 signature from buyer
+  public var BUYER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.BUYER_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToBuyerSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BUYER_SIGNATURE, body: body) }
+  ///  Unix timestamp of the request
+  public var TIMESTAMP: UInt64 { let o = _accessor.offset(VT.TIMESTAMP); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Key algorithm for buyer encryption public key
+  public var KEY_ALGORITHM: String? { let o = _accessor.offset(VT.KEY_ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_ALGORITHM) }
+  ///  Buyer contact email
+  public var BUYER_EMAIL: String? { let o = _accessor.offset(VT.BUYER_EMAIL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BUYER_EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUYER_EMAIL) }
+  ///  On-chain sender address or fiat payment source reference
+  public var SENDER_ADDRESS: String? { let o = _accessor.offset(VT.SENDER_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENDER_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SENDER_ADDRESS) }
+  ///  Confirmation block for on-chain payments
+  public var CONFIRMATION_BLOCK: UInt64 { let o = _accessor.offset(VT.CONFIRMATION_BLOCK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Fiat processor payment intent identifier
+  public var PAYMENT_INTENT_ID: String? { let o = _accessor.offset(VT.PAYMENT_INTENT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PAYMENT_INTENT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAYMENT_INTENT_ID) }
+  ///  SDN credits transaction identifier
+  public var CREDITS_TRANSACTION_ID: String? { let o = _accessor.offset(VT.CREDITS_TRANSACTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREDITS_TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREDITS_TRANSACTION_ID) }
+  ///  Provider-side purchase status
+  public var STATUS: purchaseLifecycleStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .pending : purchaseLifecycleStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pending }
+  ///  Human-readable status message
+  public var STATUS_MESSAGE: String? { let o = _accessor.offset(VT.STATUS_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATUS_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATUS_MESSAGE) }
+  ///  Unix timestamp when the purchase record was created
+  public var CREATED_AT: UInt64 { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix timestamp when the purchase record was updated
+  public var UPDATED_AT: UInt64 { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix timestamp when payment must be received
+  public var PAYMENT_DEADLINE: UInt64 { let o = _accessor.offset(VT.PAYMENT_DEADLINE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix timestamp when payment was confirmed
+  public var PAYMENT_CONFIRMED_AT: UInt64 { let o = _accessor.offset(VT.PAYMENT_CONFIRMED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix timestamp when the grant was issued
+  public var GRANT_ISSUED_AT: UInt64 { let o = _accessor.offset(VT.GRANT_ISSUED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Issued grant identifier
+  public var GRANT_ID: String? { let o = _accessor.offset(VT.GRANT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRANT_ID) }
+  ///  Provider peer ID
+  public var PROVIDER_PEER_ID: String? { let o = _accessor.offset(VT.PROVIDER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_PEER_ID) }
+  ///  Unix timestamp when provider acknowledged the request
+  public var PROVIDER_ACKNOWLEDGED_AT: UInt64 { let o = _accessor.offset(VT.PROVIDER_ACKNOWLEDGED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Preferred delivery method
+  public var PREFERRED_DELIVERY_METHOD: String? { let o = _accessor.offset(VT.PREFERRED_DELIVERY_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PREFERRED_DELIVERY_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREFERRED_DELIVERY_METHOD) }
+  ///  Buyer webhook URL for delivery callbacks
+  public var WEBHOOK_URL: String? { let o = _accessor.offset(VT.WEBHOOK_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WEBHOOK_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WEBHOOK_URL) }
+  ///  Ed25519 signature from provider
+  public var PROVIDER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PROVIDER_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToProviderSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PROVIDER_SIGNATURE, body: body) }
+  public static func startPUR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 32) }
+  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VT.REQUEST_ID) }
+  public static func add(LISTING_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LISTING_ID, at: VT.LISTING_ID) }
+  public static func add(TIER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIER_NAME, at: VT.TIER_NAME) }
+  public static func add(BUYER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUYER_PEER_ID, at: VT.BUYER_PEER_ID) }
+  public static func addVectorOf(BUYER_ENCRYPTION_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUYER_ENCRYPTION_PUBKEY, at: VT.BUYER_ENCRYPTION_PUBKEY) }
+  public static func add(PAYMENT_METHOD: paymentMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYMENT_METHOD.rawValue, def: 0, at: VT.PAYMENT_METHOD) }
+  public static func add(PAYMENT_AMOUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYMENT_AMOUNT, def: 0, at: VT.PAYMENT_AMOUNT) }
+  public static func add(PAYMENT_CURRENCY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYMENT_CURRENCY, at: VT.PAYMENT_CURRENCY) }
+  public static func add(PAYMENT_TX_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYMENT_TX_HASH, at: VT.PAYMENT_TX_HASH) }
+  public static func add(PAYMENT_CHAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYMENT_CHAIN, at: VT.PAYMENT_CHAIN) }
+  public static func add(PAYMENT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYMENT_REFERENCE, at: VT.PAYMENT_REFERENCE) }
+  public static func addVectorOf(BUYER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUYER_SIGNATURE, at: VT.BUYER_SIGNATURE) }
+  public static func add(TIMESTAMP: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP, def: 0, at: VT.TIMESTAMP) }
+  public static func add(KEY_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ALGORITHM, at: VT.KEY_ALGORITHM) }
+  public static func add(BUYER_EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUYER_EMAIL, at: VT.BUYER_EMAIL) }
+  public static func add(SENDER_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENDER_ADDRESS, at: VT.SENDER_ADDRESS) }
+  public static func add(CONFIRMATION_BLOCK: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONFIRMATION_BLOCK, def: 0, at: VT.CONFIRMATION_BLOCK) }
+  public static func add(PAYMENT_INTENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYMENT_INTENT_ID, at: VT.PAYMENT_INTENT_ID) }
+  public static func add(CREDITS_TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREDITS_TRANSACTION_ID, at: VT.CREDITS_TRANSACTION_ID) }
+  public static func add(STATUS: purchaseLifecycleStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func add(STATUS_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS_MESSAGE, at: VT.STATUS_MESSAGE) }
+  public static func add(CREATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREATED_AT, def: 0, at: VT.CREATED_AT) }
+  public static func add(UPDATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT, def: 0, at: VT.UPDATED_AT) }
+  public static func add(PAYMENT_DEADLINE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYMENT_DEADLINE, def: 0, at: VT.PAYMENT_DEADLINE) }
+  public static func add(PAYMENT_CONFIRMED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYMENT_CONFIRMED_AT, def: 0, at: VT.PAYMENT_CONFIRMED_AT) }
+  public static func add(GRANT_ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANT_ISSUED_AT, def: 0, at: VT.GRANT_ISSUED_AT) }
+  public static func add(GRANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRANT_ID, at: VT.GRANT_ID) }
+  public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
+  public static func add(PROVIDER_ACKNOWLEDGED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROVIDER_ACKNOWLEDGED_AT, def: 0, at: VT.PROVIDER_ACKNOWLEDGED_AT) }
+  public static func add(PREFERRED_DELIVERY_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREFERRED_DELIVERY_METHOD, at: VT.PREFERRED_DELIVERY_METHOD) }
+  public static func add(WEBHOOK_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEBHOOK_URL, at: VT.WEBHOOK_URL) }
+  public static func addVectorOf(PROVIDER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_SIGNATURE, at: VT.PROVIDER_SIGNATURE) }
+  public static func endPUR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8, 10]); return end }
+  public static func createPUR(
     _ fbb: inout FlatBufferBuilder,
-    CODE: capabilityClass = .unspecified,
-    DISPLAY_NAMEOffset DISPLAY_NAME: Offset,
-    SUMMARYOffset SUMMARY: Offset,
-    SLUGOffset SLUG: Offset,
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    PARENT: capabilityClass = .unspecified,
-    SORT_ORDER: UInt16 = 0,
-    KEYWORDSVectorOffset KEYWORDS: Offset = Offset(),
-    ICON_KEYOffset ICON_KEY: Offset = Offset()
+    REQUEST_IDOffset REQUEST_ID: Offset,
+    LISTING_IDOffset LISTING_ID: Offset,
+    TIER_NAMEOffset TIER_NAME: Offset,
+    BUYER_PEER_IDOffset BUYER_PEER_ID: Offset,
+    BUYER_ENCRYPTION_PUBKEYVectorOffset BUYER_ENCRYPTION_PUBKEY: Offset = Offset(),
+    PAYMENT_METHOD: paymentMethod = .cryptoEth,
+    PAYMENT_AMOUNT: UInt64 = 0,
+    PAYMENT_CURRENCYOffset PAYMENT_CURRENCY: Offset = Offset(),
+    PAYMENT_TX_HASHOffset PAYMENT_TX_HASH: Offset = Offset(),
+    PAYMENT_CHAINOffset PAYMENT_CHAIN: Offset = Offset(),
+    PAYMENT_REFERENCEOffset PAYMENT_REFERENCE: Offset = Offset(),
+    BUYER_SIGNATUREVectorOffset BUYER_SIGNATURE: Offset = Offset(),
+    TIMESTAMP: UInt64 = 0,
+    KEY_ALGORITHMOffset KEY_ALGORITHM: Offset = Offset(),
+    BUYER_EMAILOffset BUYER_EMAIL: Offset = Offset(),
+    SENDER_ADDRESSOffset SENDER_ADDRESS: Offset = Offset(),
+    CONFIRMATION_BLOCK: UInt64 = 0,
+    PAYMENT_INTENT_IDOffset PAYMENT_INTENT_ID: Offset = Offset(),
+    CREDITS_TRANSACTION_IDOffset CREDITS_TRANSACTION_ID: Offset = Offset(),
+    STATUS: purchaseLifecycleStatus = .pending,
+    STATUS_MESSAGEOffset STATUS_MESSAGE: Offset = Offset(),
+    CREATED_AT: UInt64 = 0,
+    UPDATED_AT: UInt64 = 0,
+    PAYMENT_DEADLINE: UInt64 = 0,
+    PAYMENT_CONFIRMED_AT: UInt64 = 0,
+    GRANT_ISSUED_AT: UInt64 = 0,
+    GRANT_IDOffset GRANT_ID: Offset = Offset(),
+    PROVIDER_PEER_IDOffset PROVIDER_PEER_ID: Offset = Offset(),
+    PROVIDER_ACKNOWLEDGED_AT: UInt64 = 0,
+    PREFERRED_DELIVERY_METHODOffset PREFERRED_DELIVERY_METHOD: Offset = Offset(),
+    WEBHOOK_URLOffset WEBHOOK_URL: Offset = Offset(),
+    PROVIDER_SIGNATUREVectorOffset PROVIDER_SIGNATURE: Offset = Offset()
   ) -> Offset {
-    let __start = CCTCategory.startCCTCategory(&fbb)
-    CCTCategory.add(CODE: CODE, &fbb)
-    CCTCategory.add(DISPLAY_NAME: DISPLAY_NAME, &fbb)
-    CCTCategory.add(SUMMARY: SUMMARY, &fbb)
-    CCTCategory.add(SLUG: SLUG, &fbb)
-    CCTCategory.add(DESCRIPTION: DESCRIPTION, &fbb)
-    CCTCategory.add(PARENT: PARENT, &fbb)
-    CCTCategory.add(SORT_ORDER: SORT_ORDER, &fbb)
-    CCTCategory.addVectorOf(KEYWORDS: KEYWORDS, &fbb)
-    CCTCategory.add(ICON_KEY: ICON_KEY, &fbb)
-    return CCTCategory.endCCTCategory(&fbb, start: __start)
+    let __start = PUR.startPUR(&fbb)
+    PUR.add(REQUEST_ID: REQUEST_ID, &fbb)
+    PUR.add(LISTING_ID: LISTING_ID, &fbb)
+    PUR.add(TIER_NAME: TIER_NAME, &fbb)
+    PUR.add(BUYER_PEER_ID: BUYER_PEER_ID, &fbb)
+    PUR.addVectorOf(BUYER_ENCRYPTION_PUBKEY: BUYER_ENCRYPTION_PUBKEY, &fbb)
+    PUR.add(PAYMENT_METHOD: PAYMENT_METHOD, &fbb)
+    PUR.add(PAYMENT_AMOUNT: PAYMENT_AMOUNT, &fbb)
+    PUR.add(PAYMENT_CURRENCY: PAYMENT_CURRENCY, &fbb)
+    PUR.add(PAYMENT_TX_HASH: PAYMENT_TX_HASH, &fbb)
+    PUR.add(PAYMENT_CHAIN: PAYMENT_CHAIN, &fbb)
+    PUR.add(PAYMENT_REFERENCE: PAYMENT_REFERENCE, &fbb)
+    PUR.addVectorOf(BUYER_SIGNATURE: BUYER_SIGNATURE, &fbb)
+    PUR.add(TIMESTAMP: TIMESTAMP, &fbb)
+    PUR.add(KEY_ALGORITHM: KEY_ALGORITHM, &fbb)
+    PUR.add(BUYER_EMAIL: BUYER_EMAIL, &fbb)
+    PUR.add(SENDER_ADDRESS: SENDER_ADDRESS, &fbb)
+    PUR.add(CONFIRMATION_BLOCK: CONFIRMATION_BLOCK, &fbb)
+    PUR.add(PAYMENT_INTENT_ID: PAYMENT_INTENT_ID, &fbb)
+    PUR.add(CREDITS_TRANSACTION_ID: CREDITS_TRANSACTION_ID, &fbb)
+    PUR.add(STATUS: STATUS, &fbb)
+    PUR.add(STATUS_MESSAGE: STATUS_MESSAGE, &fbb)
+    PUR.add(CREATED_AT: CREATED_AT, &fbb)
+    PUR.add(UPDATED_AT: UPDATED_AT, &fbb)
+    PUR.add(PAYMENT_DEADLINE: PAYMENT_DEADLINE, &fbb)
+    PUR.add(PAYMENT_CONFIRMED_AT: PAYMENT_CONFIRMED_AT, &fbb)
+    PUR.add(GRANT_ISSUED_AT: GRANT_ISSUED_AT, &fbb)
+    PUR.add(GRANT_ID: GRANT_ID, &fbb)
+    PUR.add(PROVIDER_PEER_ID: PROVIDER_PEER_ID, &fbb)
+    PUR.add(PROVIDER_ACKNOWLEDGED_AT: PROVIDER_ACKNOWLEDGED_AT, &fbb)
+    PUR.add(PREFERRED_DELIVERY_METHOD: PREFERRED_DELIVERY_METHOD, &fbb)
+    PUR.add(WEBHOOK_URL: WEBHOOK_URL, &fbb)
+    PUR.addVectorOf(PROVIDER_SIGNATURE: PROVIDER_SIGNATURE, &fbb)
+    return PUR.endPUR(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUMMARY, fieldName: "SUMMARY", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SLUG, fieldName: "SLUG", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PARENT, fieldName: "PARENT", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.SORT_ORDER, fieldName: "SORT_ORDER", required: false, type: UInt16.self)
-    try _v.visit(field: VT.KEYWORDS, fieldName: "KEYWORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.ICON_KEY, fieldName: "ICON_KEY", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  An observed count of catalogue items in one category.
-///
-///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
-///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
-///  count can never omit when it was taken or what it was taken over. A consumer
-///  that needs a live number computes it from the items; a consumer rendering a
-///  published rollup MUST show it as of COUNTED_AT.
-public struct CCTCategoryRollup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategoryRollup.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let CODE: VOffset = 4
-    static let ITEM_COUNT: VOffset = 6
-    static let SOURCE_CATALOG_ID: VOffset = 8
-    static let COUNTED_AT: VOffset = 10
-  }
-
-  ///  Category being counted.
-  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
-  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
-  public var ITEM_COUNT: UInt32 { let o = _accessor.offset(VT.ITEM_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Identifier of the catalogue the count was taken over.
-  public var SOURCE_CATALOG_ID: String! { let o = _accessor.offset(VT.SOURCE_CATALOG_ID); return _accessor.string(at: o) }
-  public var SOURCE_CATALOG_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE_CATALOG_ID) }
-  ///  Unix seconds when the count was taken.
-  public var COUNTED_AT: UInt64 { let o = _accessor.offset(VT.COUNTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startCCTCategoryRollup(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
-  public static func add(ITEM_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITEM_COUNT, def: 0, at: VT.ITEM_COUNT) }
-  public static func add(SOURCE_CATALOG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CATALOG_ID, at: VT.SOURCE_CATALOG_ID) }
-  public static func add(COUNTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNTED_AT, def: 0, at: VT.COUNTED_AT) }
-  public static func endCCTCategoryRollup(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8]); return end }
-  public static func createCCTCategoryRollup(
-    _ fbb: inout FlatBufferBuilder,
-    CODE: capabilityClass = .unspecified,
-    ITEM_COUNT: UInt32 = 0,
-    SOURCE_CATALOG_IDOffset SOURCE_CATALOG_ID: Offset,
-    COUNTED_AT: UInt64 = 0
-  ) -> Offset {
-    let __start = CCTCategoryRollup.startCCTCategoryRollup(&fbb)
-    CCTCategoryRollup.add(CODE: CODE, &fbb)
-    CCTCategoryRollup.add(ITEM_COUNT: ITEM_COUNT, &fbb)
-    CCTCategoryRollup.add(SOURCE_CATALOG_ID: SOURCE_CATALOG_ID, &fbb)
-    CCTCategoryRollup.add(COUNTED_AT: COUNTED_AT, &fbb)
-    return CCTCategoryRollup.endCCTCategoryRollup(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.ITEM_COUNT, fieldName: "ITEM_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.SOURCE_CATALOG_ID, fieldName: "SOURCE_CATALOG_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.COUNTED_AT, fieldName: "COUNTED_AT", required: false, type: UInt64.self)
-    _v.finish()
-  }
-}
-
-///  $CCT — Capability Category Taxonomy.
-///
-///  The ratified set of capability classes that distributable units (modules,
-///  applications, composed flows) are classified under, together with the labels
-///  and routes every consuming surface renders. One published $CCT is the single
-///  source of truth shared by a storefront, a library, a search index and the
-///  unit manifests themselves.
-///
-///  Division of labour: `$CCT` = the category vocabulary and its presentation;
-///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
-///  application's manifest, which cites categories by code; `$PMM` = which
-///  modules a provider serves; `$STO`/`$STF` = commerce.
-public struct CCT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCT.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let TAXONOMY_ID: VOffset = 4
-    static let VERSION: VOffset = 6
-    static let ISSUED_AT: VOffset = 8
-    static let TITLE: VOffset = 10
-    static let CATEGORIES: VOffset = 12
-    static let ROLLUPS: VOffset = 14
-    static let SIGNATURE: VOffset = 16
-  }
-
-  ///  Stable identifier of this taxonomy publication.
-  public var TAXONOMY_ID: String! { let o = _accessor.offset(VT.TAXONOMY_ID); return _accessor.string(at: o) }
-  public var TAXONOMY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TAXONOMY_ID) }
-  ///  SemVer 2.0.0 version of the taxonomy content.
-  public var VERSION: String! { let o = _accessor.offset(VT.VERSION); return _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERSION) }
-  ///  Unix seconds when this taxonomy revision was issued.
-  public var ISSUED_AT: UInt64 { let o = _accessor.offset(VT.ISSUED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Human-readable title of the taxonomy.
-  public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
-  ///  The ratified categories. Every capabilityClass member a consumer may
-  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
-  public var CATEGORIES: FlatbufferVector<CCTCategory> { return _accessor.vector(at: VT.CATEGORIES, byteSize: 4) }
-  ///  Optional per-category item counts as observed over a named catalogue.
-  ///  Absent means counts are computed by the consumer.
-  public var ROLLUPS: FlatbufferVector<CCTCategoryRollup> { return _accessor.vector(at: VT.ROLLUPS, byteSize: 4) }
-  ///  Signature from the publishing node key over the canonical taxonomy bytes.
-  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
-  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
-  public static func startCCT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(TAXONOMY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAXONOMY_ID, at: VT.TAXONOMY_ID) }
-  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
-  public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VT.ISSUED_AT) }
-  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
-  public static func addVectorOf(CATEGORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORIES, at: VT.CATEGORIES) }
-  public static func addVectorOf(ROLLUPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLLUPS, at: VT.ROLLUPS) }
-  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
-  public static func endCCT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 12]); return end }
-  public static func createCCT(
-    _ fbb: inout FlatBufferBuilder,
-    TAXONOMY_IDOffset TAXONOMY_ID: Offset,
-    VERSIONOffset VERSION: Offset,
-    ISSUED_AT: UInt64 = 0,
-    TITLEOffset TITLE: Offset = Offset(),
-    CATEGORIESVectorOffset CATEGORIES: Offset,
-    ROLLUPSVectorOffset ROLLUPS: Offset = Offset(),
-    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
-  ) -> Offset {
-    let __start = CCT.startCCT(&fbb)
-    CCT.add(TAXONOMY_ID: TAXONOMY_ID, &fbb)
-    CCT.add(VERSION: VERSION, &fbb)
-    CCT.add(ISSUED_AT: ISSUED_AT, &fbb)
-    CCT.add(TITLE: TITLE, &fbb)
-    CCT.addVectorOf(CATEGORIES: CATEGORIES, &fbb)
-    CCT.addVectorOf(ROLLUPS: ROLLUPS, &fbb)
-    CCT.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
-    return CCT.endCCT(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TAXONOMY_ID, fieldName: "TAXONOMY_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ISSUED_AT, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CATEGORIES, fieldName: "CATEGORIES", required: true, type: ForwardOffset<Vector<ForwardOffset<CCTCategory>, CCTCategory>>.self)
-    try _v.visit(field: VT.ROLLUPS, fieldName: "ROLLUPS", required: false, type: ForwardOffset<Vector<ForwardOffset<CCTCategoryRollup>, CCTCategoryRollup>>.self)
-    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.REQUEST_ID, fieldName: "REQUEST_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LISTING_ID, fieldName: "LISTING_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIER_NAME, fieldName: "TIER_NAME", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUYER_PEER_ID, fieldName: "BUYER_PEER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUYER_ENCRYPTION_PUBKEY, fieldName: "BUYER_ENCRYPTION_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.PAYMENT_METHOD, fieldName: "PAYMENT_METHOD", required: false, type: paymentMethod.self)
+    try _v.visit(field: VT.PAYMENT_AMOUNT, fieldName: "PAYMENT_AMOUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PAYMENT_CURRENCY, fieldName: "PAYMENT_CURRENCY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAYMENT_TX_HASH, fieldName: "PAYMENT_TX_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAYMENT_CHAIN, fieldName: "PAYMENT_CHAIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAYMENT_REFERENCE, fieldName: "PAYMENT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUYER_SIGNATURE, fieldName: "BUYER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TIMESTAMP, fieldName: "TIMESTAMP", required: false, type: UInt64.self)
+    try _v.visit(field: VT.KEY_ALGORITHM, fieldName: "KEY_ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUYER_EMAIL, fieldName: "BUYER_EMAIL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SENDER_ADDRESS, fieldName: "SENDER_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONFIRMATION_BLOCK, fieldName: "CONFIRMATION_BLOCK", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PAYMENT_INTENT_ID, fieldName: "PAYMENT_INTENT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREDITS_TRANSACTION_ID, fieldName: "CREDITS_TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: purchaseLifecycleStatus.self)
+    try _v.visit(field: VT.STATUS_MESSAGE, fieldName: "STATUS_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PAYMENT_DEADLINE, fieldName: "PAYMENT_DEADLINE", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PAYMENT_CONFIRMED_AT, fieldName: "PAYMENT_CONFIRMED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.GRANT_ISSUED_AT, fieldName: "GRANT_ISSUED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.GRANT_ID, fieldName: "GRANT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_PEER_ID, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_ACKNOWLEDGED_AT, fieldName: "PROVIDER_ACKNOWLEDGED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PREFERRED_DELIVERY_METHOD, fieldName: "PREFERRED_DELIVERY_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WEBHOOK_URL, fieldName: "WEBHOOK_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_SIGNATURE, fieldName: "PROVIDER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

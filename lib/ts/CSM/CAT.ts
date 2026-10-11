@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CATProduct, CATProductT } from './CATProduct.js';
 import { PLD, PLDT } from './PLD.js';
 import { dataAvailability } from './dataAvailability.js';
 import { legacyCountryCode } from './legacyCountryCode.js';
@@ -87,7 +88,7 @@ OPS_STATUS_CODE():operationalState {
  */
 OWNER():legacyCountryCode {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : legacyCountryCode.AB;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : legacyCountryCode.AB;
 }
 
 /**
@@ -284,8 +285,34 @@ CATALOG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * The products an integrating catalog selected for the object as of
+ * PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+ * the same source and epoch where there is one. The object's maneuvers are
+ * its $MNV stream, not references here.
+ */
+PRODUCTS(index: number, obj?:CATProduct):CATProduct|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? (obj || new CATProduct()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+productsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * ISO 8601 UTC instant the selection in PRODUCTS holds at.
+ */
+PRODUCTS_AS_OF():string|null
+PRODUCTS_AS_OF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PRODUCTS_AS_OF(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startCAT(builder:flatbuffers.Builder) {
-  builder.startObject(26);
+  builder.startObject(28);
 }
 
 static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
@@ -404,6 +431,26 @@ static addCatalogObjectId(builder:flatbuffers.Builder, CATALOG_OBJECT_IDOffset:f
   builder.addFieldOffset(25, CATALOG_OBJECT_IDOffset, 0);
 }
 
+static addProducts(builder:flatbuffers.Builder, PRODUCTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, PRODUCTSOffset, 0);
+}
+
+static createProductsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startProductsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addProductsAsOf(builder:flatbuffers.Builder, PRODUCTS_AS_OFOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, PRODUCTS_AS_OFOffset, 0);
+}
+
 static endCAT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -417,7 +464,7 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset, CATALOG_URIOffset:flatbuffers.Offset, CATALOG_OBJECT_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset, CATALOG_URIOffset:flatbuffers.Offset, CATALOG_OBJECT_IDOffset:flatbuffers.Offset, PRODUCTSOffset:flatbuffers.Offset, PRODUCTS_AS_OFOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
@@ -445,6 +492,8 @@ static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offs
   CAT.addBusId(builder, BUS_IDOffset);
   CAT.addCatalogUri(builder, CATALOG_URIOffset);
   CAT.addCatalogObjectId(builder, CATALOG_OBJECT_IDOffset);
+  CAT.addProducts(builder, PRODUCTSOffset);
+  CAT.addProductsAsOf(builder, PRODUCTS_AS_OFOffset);
   return CAT.endCAT(builder);
 }
 
@@ -475,7 +524,9 @@ unpack(): CATT {
     this.bb!.createObjList<PLD, PLDT>(this.PAYLOADS.bind(this), this.payloadsLength()),
     this.BUS_ID(),
     this.CATALOG_URI(),
-    this.CATALOG_OBJECT_ID()
+    this.CATALOG_OBJECT_ID(),
+    this.bb!.createObjList<CATProduct, CATProductT>(this.PRODUCTS.bind(this), this.productsLength()),
+    this.PRODUCTS_AS_OF()
   );
 }
 
@@ -507,6 +558,8 @@ unpackTo(_o: CATT): void {
   _o.BUS_ID = this.BUS_ID();
   _o.CATALOG_URI = this.CATALOG_URI();
   _o.CATALOG_OBJECT_ID = this.CATALOG_OBJECT_ID();
+  _o.PRODUCTS = this.bb!.createObjList<CATProduct, CATProductT>(this.PRODUCTS.bind(this), this.productsLength());
+  _o.PRODUCTS_AS_OF = this.PRODUCTS_AS_OF();
 }
 }
 
@@ -537,7 +590,9 @@ constructor(
   public PAYLOADS: (PLDT)[] = [],
   public BUS_ID: string|Uint8Array|null = null,
   public CATALOG_URI: string|Uint8Array|null = null,
-  public CATALOG_OBJECT_ID: string|Uint8Array|null = null
+  public CATALOG_OBJECT_ID: string|Uint8Array|null = null,
+  public PRODUCTS: (CATProductT)[] = [],
+  public PRODUCTS_AS_OF: string|Uint8Array|null = null
 ){}
 
 
@@ -553,6 +608,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const BUS_ID = (this.BUS_ID !== null ? builder.createString(this.BUS_ID!) : 0);
   const CATALOG_URI = (this.CATALOG_URI !== null ? builder.createString(this.CATALOG_URI!) : 0);
   const CATALOG_OBJECT_ID = (this.CATALOG_OBJECT_ID !== null ? builder.createString(this.CATALOG_OBJECT_ID!) : 0);
+  const PRODUCTS = CAT.createProductsVector(builder, builder.createObjectOffsetList(this.PRODUCTS));
+  const PRODUCTS_AS_OF = (this.PRODUCTS_AS_OF !== null ? builder.createString(this.PRODUCTS_AS_OF!) : 0);
 
   return CAT.createCAT(builder,
     OBJECT_NAME,
@@ -580,7 +637,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     PAYLOADS,
     BUS_ID,
     CATALOG_URI,
-    CATALOG_OBJECT_ID
+    CATALOG_OBJECT_ID,
+    PRODUCTS,
+    PRODUCTS_AS_OF
   );
 }
 }

@@ -5,507 +5,299 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Capability class of a distributable software unit (module, application, or
-///  composed flow).
-///
-///  This enum IS the ratified category vocabulary. A storefront, library, module
-///  manifest and search surface all classify against these members and nothing
-///  else; a category that is not a member here does not exist. Members name
-///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
-///  site, organization, product, protocol brand or algorithm implementation;
-///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
-///  the taxonomy.
-///
-///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
-///  reuse an ordinal. A reorder silently re-labels every published listing.
-///
-///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
-///  default-constructed classification can never decode as a real category. The
-///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
-///  ordinal 0 is a real family — and had to append an `Unspecified` member at
-///  the tail to recover. This enum does not repeat that.
-///
-///  Each member's canonical display name is stated in its doc comment and is
-///  part of the ratified contract: a consumer rendering a category label uses
-///  that string verbatim, so every surface spells a category identically. The
-///  canonical route slug is the member identifier lowercased with `_` replaced
-///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
-///  "rf-and-communications").
-enum capabilityClass {
-  UNSPECIFIED(0),
-  PROPAGATION(1),
-  ORBIT_DETERMINATION(2),
-  MANEUVER_PLANNING(3),
-  CONJUNCTION_ASSESSMENT(4),
-  REENTRY_AND_BREAKUP(5),
-  ATTITUDE_AND_POINTING(6),
-  REFERENCE_FRAMES_AND_TIME(7),
-  SENSORS_AND_COVERAGE(8),
-  TRACKING_AND_OBSERVATION(9),
-  RF_AND_COMMUNICATIONS(10),
-  ELECTRONIC_WARFARE(11),
-  SPACE_ENVIRONMENT(12),
-  DATA_SOURCES_AND_INGEST(13),
-  DATA_VALIDATION_AND_QUALITY(14),
-  CATALOG_AND_IDENTITY(15),
-  VISUALIZATION_AND_RENDERING(16),
-  GROUND_SEGMENT_AND_HARDWARE(17),
-  MISSION_DESIGN_AND_ANALYSIS(18),
-  FLOW_AND_COMPOSITION(19),
-  DATA_STORAGE_AND_QUERY(20),
-  SECURITY_AND_IDENTITY(21),
-  COMMERCE_AND_LICENSING(22),
-  NODE_INFRASTRUCTURE(23),
-  FOUNDATION_AND_MATH(24);
+///  Grant lifecycle status tracked by the provider.
+enum grantLifecycleStatus {
+  Active(0),
+  Revoked(1),
+  Expired(2),
+  Suspended(3),
+  Pending(4);
 
   final int value;
-  const capabilityClass(this.value);
+  const grantLifecycleStatus(this.value);
 
-  factory capabilityClass.fromValue(int value) {
+  factory grantLifecycleStatus.fromValue(int value) {
     switch (value) {
-      case 0: return capabilityClass.UNSPECIFIED;
-      case 1: return capabilityClass.PROPAGATION;
-      case 2: return capabilityClass.ORBIT_DETERMINATION;
-      case 3: return capabilityClass.MANEUVER_PLANNING;
-      case 4: return capabilityClass.CONJUNCTION_ASSESSMENT;
-      case 5: return capabilityClass.REENTRY_AND_BREAKUP;
-      case 6: return capabilityClass.ATTITUDE_AND_POINTING;
-      case 7: return capabilityClass.REFERENCE_FRAMES_AND_TIME;
-      case 8: return capabilityClass.SENSORS_AND_COVERAGE;
-      case 9: return capabilityClass.TRACKING_AND_OBSERVATION;
-      case 10: return capabilityClass.RF_AND_COMMUNICATIONS;
-      case 11: return capabilityClass.ELECTRONIC_WARFARE;
-      case 12: return capabilityClass.SPACE_ENVIRONMENT;
-      case 13: return capabilityClass.DATA_SOURCES_AND_INGEST;
-      case 14: return capabilityClass.DATA_VALIDATION_AND_QUALITY;
-      case 15: return capabilityClass.CATALOG_AND_IDENTITY;
-      case 16: return capabilityClass.VISUALIZATION_AND_RENDERING;
-      case 17: return capabilityClass.GROUND_SEGMENT_AND_HARDWARE;
-      case 18: return capabilityClass.MISSION_DESIGN_AND_ANALYSIS;
-      case 19: return capabilityClass.FLOW_AND_COMPOSITION;
-      case 20: return capabilityClass.DATA_STORAGE_AND_QUERY;
-      case 21: return capabilityClass.SECURITY_AND_IDENTITY;
-      case 22: return capabilityClass.COMMERCE_AND_LICENSING;
-      case 23: return capabilityClass.NODE_INFRASTRUCTURE;
-      case 24: return capabilityClass.FOUNDATION_AND_MATH;
+      case 0: return grantLifecycleStatus.Active;
+      case 1: return grantLifecycleStatus.Revoked;
+      case 2: return grantLifecycleStatus.Expired;
+      case 3: return grantLifecycleStatus.Suspended;
+      case 4: return grantLifecycleStatus.Pending;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static capabilityClass? _createOrNull(int? value) =>
-      value == null ? null : capabilityClass.fromValue(value);
+  static grantLifecycleStatus? _createOrNull(int? value) =>
+      value == null ? null : grantLifecycleStatus.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 24;
-  static const fb.Reader<capabilityClass> reader = _capabilityClassReader();
+  static const int maxValue = 4;
+  static const fb.Reader<grantLifecycleStatus> reader = _grantLifecycleStatusReader();
 }
 
-class _capabilityClassReader extends fb.Reader<capabilityClass> {
-  const _capabilityClassReader();
+class _grantLifecycleStatusReader extends fb.Reader<grantLifecycleStatus> {
+  const _grantLifecycleStatusReader();
 
   @override
   int get size => 1;
 
   @override
-  capabilityClass read(fb.BufferContext bc, int offset) =>
-      capabilityClass.fromValue(const fb.Uint8Reader().read(bc, offset));
+  grantLifecycleStatus read(fb.BufferContext bc, int offset) =>
+      grantLifecycleStatus.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  One ratified category in the taxonomy.
-///
-///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
-///  without the label a surface will render, the sentence a browse row will
-///  show, and the route a link will target. This is what stops each consumer
-///  from inventing its own wording for the same code.
-class CCTCategory {
-  CCTCategory._(this._bc, this._bcOffset);
-  factory CCTCategory(List<int> bytes) {
+///  Access Control Grant - Permission to access purchased data
+class ACL {
+  ACL._(this._bc, this._bcOffset);
+  factory ACL(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CCTCategory> reader = _CCTCategoryReader();
+  static const fb.Reader<ACL> reader = _ACLReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  The ratified category code. This is the join key every consumer uses.
-  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
-  ///  name stated in the CODE member's doc comment.
-  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get displayName => DISPLAY_NAME;
-  ///  One-sentence description shown on browse rows and category headers.
-  String? get SUMMARY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
-  ///  `-`. Published explicitly rather than derived so every surface routes
-  ///  identically.
-  String? get SLUG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Longer editorial description for a category landing page.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
-  ///  top-level category. A category MUST NOT name itself as its parent.
-  capabilityClass get PARENT => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ///  Presentation order within its parent, ascending. Ties break on
-  ///  DISPLAY_NAME.
-  int get SORT_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get sortOrder => SORT_ORDER;
-  ///  Search synonyms and alternate phrasings that resolve to this category.
-  ///  Feeds type-ahead; never rendered as the category label.
-  List<String>? get KEYWORDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
-  ///  URL: consuming node surfaces load zero external-origin bytes, so the
-  ///  consumer resolves this against its own local asset set.
-  String? get ICON_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get iconKey => ICON_KEY;
+  ///  Unique identifier for this grant
+  String? get GRANT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get grantId => GRANT_ID;
+  ///  ID of the listing this grant applies to
+  String? get LISTING_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get listingId => LISTING_ID;
+  ///  Peer ID of the buyer/grantee
+  String? get BUYER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get buyerPeerId => BUYER_PEER_ID;
+  ///  Buyer's encryption public key for encrypted delivery
+  List<int>? get BUYER_ENCRYPTION_PUBKEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
+  List<int>? get buyerEncryptionPubkey => BUYER_ENCRYPTION_PUBKEY;
+  ///  Type of access granted
+  accessCategory get ACCESS_TYPE => accessCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  accessCategory get accessType => ACCESS_TYPE;
+  ///  Name of the pricing tier purchased
+  String? get TIER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get tierName => TIER_NAME;
+  ///  Unix timestamp when access was granted
+  int get GRANTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get grantedAt => GRANTED_AT;
+  ///  Unix timestamp when access expires (0 = never expires)
+  int get EXPIRES_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get expiresAt => EXPIRES_AT;
+  ///  Transaction hash or reference proving payment
+  String? get PAYMENT_TX_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get paymentTxHash => PAYMENT_TX_HASH;
+  ///  Payment method used
+  paymentMethod get PAYMENT_METHOD => paymentMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  paymentMethod get paymentMethod => PAYMENT_METHOD;
+  ///  Ed25519 signature from provider
+  List<int>? get PROVIDER_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
+  List<int>? get providerSignature => PROVIDER_SIGNATURE;
+  ///  Key algorithm for buyer encryption public key
+  String? get KEY_ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get keyAlgorithm => KEY_ALGORITHM;
+  ///  Request rate limit
+  int get RATE_LIMIT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get rateLimit => RATE_LIMIT;
+  ///  Maximum records returned per request
+  int get MAX_RECORDS_PER_REQUEST => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  int get maxRecordsPerRequest => MAX_RECORDS_PER_REQUEST;
+  ///  Provider-side grant status
+  grantLifecycleStatus get STATUS => grantLifecycleStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0));
+  ///  Payment amount in smallest unit
+  int get PAYMENT_AMOUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 34, 0);
+  int get paymentAmount => PAYMENT_AMOUNT;
+  ///  Payment currency
+  String? get PAYMENT_CURRENCY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get paymentCurrency => PAYMENT_CURRENCY;
+  ///  Payment chain or processor
+  String? get PAYMENT_CHAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get paymentChain => PAYMENT_CHAIN;
+  ///  Unix timestamp of next renewal
+  int get NEXT_RENEWAL => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 40, 0);
+  int get nextRenewal => NEXT_RENEWAL;
+  ///  Whether renewal is automatic
+  bool get AUTO_RENEW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
+  bool get autoRenew => AUTO_RENEW;
+  ///  Renewal count
+  int get RENEWAL_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 44, 0);
+  int get renewalCount => RENEWAL_COUNT;
+  ///  Total requests made under this grant
+  int get TOTAL_REQUESTS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 46, 0);
+  int get totalRequests => TOTAL_REQUESTS;
+  ///  Total records delivered under this grant
+  int get TOTAL_RECORDS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 48, 0);
+  int get totalRecords => TOTAL_RECORDS;
+  ///  Unix timestamp of last access
+  int get LAST_ACCESS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get lastAccess => LAST_ACCESS;
+  ///  PubSub or direct delivery topic
+  String? get DELIVERY_TOPIC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get deliveryTopic => DELIVERY_TOPIC;
+  ///  Unix timestamp when the grant record was created
+  int get CREATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 54, 0);
+  int get createdAt => CREATED_AT;
+  ///  Unix timestamp when the grant record was updated
+  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 56, 0);
+  int get updatedAt => UPDATED_AT;
+  ///  Provider notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Provider peer ID
+  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get providerPeerId => PROVIDER_PEER_ID;
+  ///  Base64-encoded signed grant response bytes
+  String? get GRANT_RESPONSE_BASE64 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get grantResponseBase64 => GRANT_RESPONSE_BASE64;
+  ///  Field-level stream policy bound to this grant
+  GrantFieldStreamPolicy? get FIELD_STREAM_POLICY => GrantFieldStreamPolicy.reader.vTableGetNullable(_bc, _bcOffset, 64);
+  GrantFieldStreamPolicy? get fieldStreamPolicy => FIELD_STREAM_POLICY;
 
   @override
   String toString() {
-    return 'CCTCategory{CODE: ${CODE}, displayName: ${displayName}, SUMMARY: ${SUMMARY}, SLUG: ${SLUG}, DESCRIPTION: ${DESCRIPTION}, PARENT: ${PARENT}, sortOrder: ${sortOrder}, KEYWORDS: ${KEYWORDS}, iconKey: ${iconKey}}';
+    return 'ACL{grantId: ${grantId}, listingId: ${listingId}, buyerPeerId: ${buyerPeerId}, buyerEncryptionPubkey: ${buyerEncryptionPubkey}, accessType: ${accessType}, tierName: ${tierName}, grantedAt: ${grantedAt}, expiresAt: ${expiresAt}, paymentTxHash: ${paymentTxHash}, paymentMethod: ${paymentMethod}, providerSignature: ${providerSignature}, keyAlgorithm: ${keyAlgorithm}, rateLimit: ${rateLimit}, maxRecordsPerRequest: ${maxRecordsPerRequest}, STATUS: ${STATUS}, paymentAmount: ${paymentAmount}, paymentCurrency: ${paymentCurrency}, paymentChain: ${paymentChain}, nextRenewal: ${nextRenewal}, autoRenew: ${autoRenew}, renewalCount: ${renewalCount}, totalRequests: ${totalRequests}, totalRecords: ${totalRecords}, lastAccess: ${lastAccess}, deliveryTopic: ${deliveryTopic}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, NOTES: ${NOTES}, providerPeerId: ${providerPeerId}, grantResponseBase64: ${grantResponseBase64}, fieldStreamPolicy: ${fieldStreamPolicy}}';
   }
 }
 
-class _CCTCategoryReader extends fb.TableReader<CCTCategory> {
-  const _CCTCategoryReader();
+class _ACLReader extends fb.TableReader<ACL> {
+  const _ACLReader();
 
   @override
-  CCTCategory createObject(fb.BufferContext bc, int offset) =>
-    CCTCategory._(bc, offset);
+  ACL createObject(fb.BufferContext bc, int offset) =>
+    ACL._(bc, offset);
 }
 
-class CCTCategoryBuilder {
-  CCTCategoryBuilder(this.fbBuilder);
+class ACLBuilder {
+  ACLBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(31);
   }
 
-  int addCode(capabilityClass? CODE) {
-    fbBuilder.addUint8(0, CODE?.value);
-    return fbBuilder.offset;
-  }
-  int addDisplayNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addSummaryOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addSlugOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addParent(capabilityClass? PARENT) {
-    fbBuilder.addUint8(5, PARENT?.value);
-    return fbBuilder.offset;
-  }
-  int addSortOrder(int? SORT_ORDER) {
-    fbBuilder.addUint16(6, SORT_ORDER);
-    return fbBuilder.offset;
-  }
-  int addKeywordsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addIconKeyOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CCTCategoryObjectBuilder extends fb.ObjectBuilder {
-  final capabilityClass? _CODE;
-  final String? _DISPLAY_NAME;
-  final String? _SUMMARY;
-  final String? _SLUG;
-  final String? _DESCRIPTION;
-  final capabilityClass? _PARENT;
-  final int? _SORT_ORDER;
-  final List<String>? _KEYWORDS;
-  final String? _ICON_KEY;
-
-  CCTCategoryObjectBuilder({
-    capabilityClass? CODE,
-    String? DISPLAY_NAME,
-    String? displayName,
-    String? SUMMARY,
-    String? SLUG,
-    String? DESCRIPTION,
-    capabilityClass? PARENT,
-    int? SORT_ORDER,
-    int? sortOrder,
-    List<String>? KEYWORDS,
-    String? ICON_KEY,
-    String? iconKey,
-  })
-      : _CODE = CODE,
-        _DISPLAY_NAME = displayName ?? DISPLAY_NAME,
-        _SUMMARY = SUMMARY,
-        _SLUG = SLUG,
-        _DESCRIPTION = DESCRIPTION,
-        _PARENT = PARENT,
-        _SORT_ORDER = sortOrder ?? SORT_ORDER,
-        _KEYWORDS = KEYWORDS,
-        _ICON_KEY = iconKey ?? ICON_KEY;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
-        : fbBuilder.writeString(_DISPLAY_NAME!);
-    final int? SUMMARYOffset = _SUMMARY == null ? null
-        : fbBuilder.writeString(_SUMMARY!);
-    final int? SLUGOffset = _SLUG == null ? null
-        : fbBuilder.writeString(_SLUG!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? KEYWORDSOffset = _KEYWORDS == null ? null
-        : fbBuilder.writeList(_KEYWORDS!.map(fbBuilder.writeString).toList());
-    final int? ICON_KEYOffset = _ICON_KEY == null ? null
-        : fbBuilder.writeString(_ICON_KEY!);
-    fbBuilder.startTable(9);
-    fbBuilder.addUint8(0, _CODE?.value);
-    fbBuilder.addOffset(1, DISPLAY_NAMEOffset);
-    fbBuilder.addOffset(2, SUMMARYOffset);
-    fbBuilder.addOffset(3, SLUGOffset);
-    fbBuilder.addOffset(4, DESCRIPTIONOffset);
-    fbBuilder.addUint8(5, _PARENT?.value);
-    fbBuilder.addUint16(6, _SORT_ORDER);
-    fbBuilder.addOffset(7, KEYWORDSOffset);
-    fbBuilder.addOffset(8, ICON_KEYOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  An observed count of catalogue items in one category.
-///
-///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
-///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
-///  count can never omit when it was taken or what it was taken over. A consumer
-///  that needs a live number computes it from the items; a consumer rendering a
-///  published rollup MUST show it as of COUNTED_AT.
-class CCTCategoryRollup {
-  CCTCategoryRollup._(this._bc, this._bcOffset);
-  factory CCTCategoryRollup(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CCTCategoryRollup> reader = _CCTCategoryRollupReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Category being counted.
-  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
-  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
-  int get ITEM_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get itemCount => ITEM_COUNT;
-  ///  Identifier of the catalogue the count was taken over.
-  String? get SOURCE_CATALOG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get sourceCatalogId => SOURCE_CATALOG_ID;
-  ///  Unix seconds when the count was taken.
-  int get COUNTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get countedAt => COUNTED_AT;
-
-  @override
-  String toString() {
-    return 'CCTCategoryRollup{CODE: ${CODE}, itemCount: ${itemCount}, sourceCatalogId: ${sourceCatalogId}, countedAt: ${countedAt}}';
-  }
-}
-
-class _CCTCategoryRollupReader extends fb.TableReader<CCTCategoryRollup> {
-  const _CCTCategoryRollupReader();
-
-  @override
-  CCTCategoryRollup createObject(fb.BufferContext bc, int offset) =>
-    CCTCategoryRollup._(bc, offset);
-}
-
-class CCTCategoryRollupBuilder {
-  CCTCategoryRollupBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCode(capabilityClass? CODE) {
-    fbBuilder.addUint8(0, CODE?.value);
-    return fbBuilder.offset;
-  }
-  int addItemCount(int? ITEM_COUNT) {
-    fbBuilder.addUint32(1, ITEM_COUNT);
-    return fbBuilder.offset;
-  }
-  int addSourceCatalogIdOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addCountedAt(int? COUNTED_AT) {
-    fbBuilder.addUint64(3, COUNTED_AT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CCTCategoryRollupObjectBuilder extends fb.ObjectBuilder {
-  final capabilityClass? _CODE;
-  final int? _ITEM_COUNT;
-  final String? _SOURCE_CATALOG_ID;
-  final int? _COUNTED_AT;
-
-  CCTCategoryRollupObjectBuilder({
-    capabilityClass? CODE,
-    int? ITEM_COUNT,
-    int? itemCount,
-    String? SOURCE_CATALOG_ID,
-    String? sourceCatalogId,
-    int? COUNTED_AT,
-    int? countedAt,
-  })
-      : _CODE = CODE,
-        _ITEM_COUNT = itemCount ?? ITEM_COUNT,
-        _SOURCE_CATALOG_ID = sourceCatalogId ?? SOURCE_CATALOG_ID,
-        _COUNTED_AT = countedAt ?? COUNTED_AT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCE_CATALOG_IDOffset = _SOURCE_CATALOG_ID == null ? null
-        : fbBuilder.writeString(_SOURCE_CATALOG_ID!);
-    fbBuilder.startTable(4);
-    fbBuilder.addUint8(0, _CODE?.value);
-    fbBuilder.addUint32(1, _ITEM_COUNT);
-    fbBuilder.addOffset(2, SOURCE_CATALOG_IDOffset);
-    fbBuilder.addUint64(3, _COUNTED_AT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  $CCT — Capability Category Taxonomy.
-///
-///  The ratified set of capability classes that distributable units (modules,
-///  applications, composed flows) are classified under, together with the labels
-///  and routes every consuming surface renders. One published $CCT is the single
-///  source of truth shared by a storefront, a library, a search index and the
-///  unit manifests themselves.
-///
-///  Division of labour: `$CCT` = the category vocabulary and its presentation;
-///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
-///  application's manifest, which cites categories by code; `$PMM` = which
-///  modules a provider serves; `$STO`/`$STF` = commerce.
-class CCT {
-  CCT._(this._bc, this._bcOffset);
-  factory CCT(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CCT> reader = _CCTReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stable identifier of this taxonomy publication.
-  String? get TAXONOMY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get taxonomyId => TAXONOMY_ID;
-  ///  SemVer 2.0.0 version of the taxonomy content.
-  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Unix seconds when this taxonomy revision was issued.
-  int get ISSUED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get issuedAt => ISSUED_AT;
-  ///  Human-readable title of the taxonomy.
-  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  The ratified categories. Every capabilityClass member a consumer may
-  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
-  List<CCTCategory>? get CATEGORIES => const fb.ListReader<CCTCategory>(CCTCategory.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Optional per-category item counts as observed over a named catalogue.
-  ///  Absent means counts are computed by the consumer.
-  List<CCTCategoryRollup>? get ROLLUPS => const fb.ListReader<CCTCategoryRollup>(CCTCategoryRollup.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Signature from the publishing node key over the canonical taxonomy bytes.
-  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
-
-  @override
-  String toString() {
-    return 'CCT{taxonomyId: ${taxonomyId}, VERSION: ${VERSION}, issuedAt: ${issuedAt}, TITLE: ${TITLE}, CATEGORIES: ${CATEGORIES}, ROLLUPS: ${ROLLUPS}, SIGNATURE: ${SIGNATURE}}';
-  }
-}
-
-class _CCTReader extends fb.TableReader<CCT> {
-  const _CCTReader();
-
-  @override
-  CCT createObject(fb.BufferContext bc, int offset) =>
-    CCT._(bc, offset);
-}
-
-class CCTBuilder {
-  CCTBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addTaxonomyIdOffset(int? offset) {
+  int addGrantIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addVersionOffset(int? offset) {
+  int addListingIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addIssuedAt(int? ISSUED_AT) {
-    fbBuilder.addUint64(2, ISSUED_AT);
+  int addBuyerPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addTitleOffset(int? offset) {
+  int addBuyerEncryptionPubkeyOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addCategoriesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addAccessType(accessCategory? ACCESS_TYPE) {
+    fbBuilder.addInt8(4, ACCESS_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addRollupsOffset(int? offset) {
+  int addTierNameOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addSignatureOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addGrantedAt(int? GRANTED_AT) {
+    fbBuilder.addUint64(6, GRANTED_AT);
+    return fbBuilder.offset;
+  }
+  int addExpiresAt(int? EXPIRES_AT) {
+    fbBuilder.addUint64(7, EXPIRES_AT);
+    return fbBuilder.offset;
+  }
+  int addPaymentTxHashOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addPaymentMethod(paymentMethod? PAYMENT_METHOD) {
+    fbBuilder.addInt8(9, PAYMENT_METHOD?.value);
+    return fbBuilder.offset;
+  }
+  int addProviderSignatureOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addKeyAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addRateLimit(int? RATE_LIMIT) {
+    fbBuilder.addUint32(12, RATE_LIMIT);
+    return fbBuilder.offset;
+  }
+  int addMaxRecordsPerRequest(int? MAX_RECORDS_PER_REQUEST) {
+    fbBuilder.addUint32(13, MAX_RECORDS_PER_REQUEST);
+    return fbBuilder.offset;
+  }
+  int addStatus(grantLifecycleStatus? STATUS) {
+    fbBuilder.addInt8(14, STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addPaymentAmount(int? PAYMENT_AMOUNT) {
+    fbBuilder.addUint64(15, PAYMENT_AMOUNT);
+    return fbBuilder.offset;
+  }
+  int addPaymentCurrencyOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addPaymentChainOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addNextRenewal(int? NEXT_RENEWAL) {
+    fbBuilder.addUint64(18, NEXT_RENEWAL);
+    return fbBuilder.offset;
+  }
+  int addAutoRenew(bool? AUTO_RENEW) {
+    fbBuilder.addBool(19, AUTO_RENEW);
+    return fbBuilder.offset;
+  }
+  int addRenewalCount(int? RENEWAL_COUNT) {
+    fbBuilder.addUint32(20, RENEWAL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTotalRequests(int? TOTAL_REQUESTS) {
+    fbBuilder.addUint64(21, TOTAL_REQUESTS);
+    return fbBuilder.offset;
+  }
+  int addTotalRecords(int? TOTAL_RECORDS) {
+    fbBuilder.addUint64(22, TOTAL_RECORDS);
+    return fbBuilder.offset;
+  }
+  int addLastAccess(int? LAST_ACCESS) {
+    fbBuilder.addUint64(23, LAST_ACCESS);
+    return fbBuilder.offset;
+  }
+  int addDeliveryTopicOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addCreatedAt(int? CREATED_AT) {
+    fbBuilder.addUint64(25, CREATED_AT);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAt(int? UPDATED_AT) {
+    fbBuilder.addUint64(26, UPDATED_AT);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addGrantResponseBase64Offset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addFieldStreamPolicyOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
     return fbBuilder.offset;
   }
 
@@ -514,57 +306,197 @@ class CCTBuilder {
   }
 }
 
-class CCTObjectBuilder extends fb.ObjectBuilder {
-  final String? _TAXONOMY_ID;
-  final String? _VERSION;
-  final int? _ISSUED_AT;
-  final String? _TITLE;
-  final List<CCTCategoryObjectBuilder>? _CATEGORIES;
-  final List<CCTCategoryRollupObjectBuilder>? _ROLLUPS;
-  final List<int>? _SIGNATURE;
+class ACLObjectBuilder extends fb.ObjectBuilder {
+  final String? _GRANT_ID;
+  final String? _LISTING_ID;
+  final String? _BUYER_PEER_ID;
+  final List<int>? _BUYER_ENCRYPTION_PUBKEY;
+  final accessCategory? _ACCESS_TYPE;
+  final String? _TIER_NAME;
+  final int? _GRANTED_AT;
+  final int? _EXPIRES_AT;
+  final String? _PAYMENT_TX_HASH;
+  final paymentMethod? _PAYMENT_METHOD;
+  final List<int>? _PROVIDER_SIGNATURE;
+  final String? _KEY_ALGORITHM;
+  final int? _RATE_LIMIT;
+  final int? _MAX_RECORDS_PER_REQUEST;
+  final grantLifecycleStatus? _STATUS;
+  final int? _PAYMENT_AMOUNT;
+  final String? _PAYMENT_CURRENCY;
+  final String? _PAYMENT_CHAIN;
+  final int? _NEXT_RENEWAL;
+  final bool? _AUTO_RENEW;
+  final int? _RENEWAL_COUNT;
+  final int? _TOTAL_REQUESTS;
+  final int? _TOTAL_RECORDS;
+  final int? _LAST_ACCESS;
+  final String? _DELIVERY_TOPIC;
+  final int? _CREATED_AT;
+  final int? _UPDATED_AT;
+  final String? _NOTES;
+  final String? _PROVIDER_PEER_ID;
+  final String? _GRANT_RESPONSE_BASE64;
+  final GrantFieldStreamPolicyObjectBuilder? _FIELD_STREAM_POLICY;
 
-  CCTObjectBuilder({
-    String? TAXONOMY_ID,
-    String? taxonomyId,
-    String? VERSION,
-    int? ISSUED_AT,
-    int? issuedAt,
-    String? TITLE,
-    List<CCTCategoryObjectBuilder>? CATEGORIES,
-    List<CCTCategoryRollupObjectBuilder>? ROLLUPS,
-    List<int>? SIGNATURE,
+  ACLObjectBuilder({
+    String? GRANT_ID,
+    String? grantId,
+    String? LISTING_ID,
+    String? listingId,
+    String? BUYER_PEER_ID,
+    String? buyerPeerId,
+    List<int>? BUYER_ENCRYPTION_PUBKEY,
+    List<int>? buyerEncryptionPubkey,
+    accessCategory? ACCESS_TYPE,
+    accessCategory? accessType,
+    String? TIER_NAME,
+    String? tierName,
+    int? GRANTED_AT,
+    int? grantedAt,
+    int? EXPIRES_AT,
+    int? expiresAt,
+    String? PAYMENT_TX_HASH,
+    String? paymentTxHash,
+    paymentMethod? PAYMENT_METHOD,
+    paymentMethod? paymentMethod,
+    List<int>? PROVIDER_SIGNATURE,
+    List<int>? providerSignature,
+    String? KEY_ALGORITHM,
+    String? keyAlgorithm,
+    int? RATE_LIMIT,
+    int? rateLimit,
+    int? MAX_RECORDS_PER_REQUEST,
+    int? maxRecordsPerRequest,
+    grantLifecycleStatus? STATUS,
+    int? PAYMENT_AMOUNT,
+    int? paymentAmount,
+    String? PAYMENT_CURRENCY,
+    String? paymentCurrency,
+    String? PAYMENT_CHAIN,
+    String? paymentChain,
+    int? NEXT_RENEWAL,
+    int? nextRenewal,
+    bool? AUTO_RENEW,
+    bool? autoRenew,
+    int? RENEWAL_COUNT,
+    int? renewalCount,
+    int? TOTAL_REQUESTS,
+    int? totalRequests,
+    int? TOTAL_RECORDS,
+    int? totalRecords,
+    int? LAST_ACCESS,
+    int? lastAccess,
+    String? DELIVERY_TOPIC,
+    String? deliveryTopic,
+    int? CREATED_AT,
+    int? createdAt,
+    int? UPDATED_AT,
+    int? updatedAt,
+    String? NOTES,
+    String? PROVIDER_PEER_ID,
+    String? providerPeerId,
+    String? GRANT_RESPONSE_BASE64,
+    String? grantResponseBase64,
+    GrantFieldStreamPolicyObjectBuilder? FIELD_STREAM_POLICY,
+    GrantFieldStreamPolicyObjectBuilder? fieldStreamPolicy,
   })
-      : _TAXONOMY_ID = taxonomyId ?? TAXONOMY_ID,
-        _VERSION = VERSION,
-        _ISSUED_AT = issuedAt ?? ISSUED_AT,
-        _TITLE = TITLE,
-        _CATEGORIES = CATEGORIES,
-        _ROLLUPS = ROLLUPS,
-        _SIGNATURE = SIGNATURE;
+      : _GRANT_ID = grantId ?? GRANT_ID,
+        _LISTING_ID = listingId ?? LISTING_ID,
+        _BUYER_PEER_ID = buyerPeerId ?? BUYER_PEER_ID,
+        _BUYER_ENCRYPTION_PUBKEY = buyerEncryptionPubkey ?? BUYER_ENCRYPTION_PUBKEY,
+        _ACCESS_TYPE = accessType ?? ACCESS_TYPE,
+        _TIER_NAME = tierName ?? TIER_NAME,
+        _GRANTED_AT = grantedAt ?? GRANTED_AT,
+        _EXPIRES_AT = expiresAt ?? EXPIRES_AT,
+        _PAYMENT_TX_HASH = paymentTxHash ?? PAYMENT_TX_HASH,
+        _PAYMENT_METHOD = paymentMethod ?? PAYMENT_METHOD,
+        _PROVIDER_SIGNATURE = providerSignature ?? PROVIDER_SIGNATURE,
+        _KEY_ALGORITHM = keyAlgorithm ?? KEY_ALGORITHM,
+        _RATE_LIMIT = rateLimit ?? RATE_LIMIT,
+        _MAX_RECORDS_PER_REQUEST = maxRecordsPerRequest ?? MAX_RECORDS_PER_REQUEST,
+        _STATUS = STATUS,
+        _PAYMENT_AMOUNT = paymentAmount ?? PAYMENT_AMOUNT,
+        _PAYMENT_CURRENCY = paymentCurrency ?? PAYMENT_CURRENCY,
+        _PAYMENT_CHAIN = paymentChain ?? PAYMENT_CHAIN,
+        _NEXT_RENEWAL = nextRenewal ?? NEXT_RENEWAL,
+        _AUTO_RENEW = autoRenew ?? AUTO_RENEW,
+        _RENEWAL_COUNT = renewalCount ?? RENEWAL_COUNT,
+        _TOTAL_REQUESTS = totalRequests ?? TOTAL_REQUESTS,
+        _TOTAL_RECORDS = totalRecords ?? TOTAL_RECORDS,
+        _LAST_ACCESS = lastAccess ?? LAST_ACCESS,
+        _DELIVERY_TOPIC = deliveryTopic ?? DELIVERY_TOPIC,
+        _CREATED_AT = createdAt ?? CREATED_AT,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+        _NOTES = NOTES,
+        _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
+        _GRANT_RESPONSE_BASE64 = grantResponseBase64 ?? GRANT_RESPONSE_BASE64,
+        _FIELD_STREAM_POLICY = fieldStreamPolicy ?? FIELD_STREAM_POLICY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? TAXONOMY_IDOffset = _TAXONOMY_ID == null ? null
-        : fbBuilder.writeString(_TAXONOMY_ID!);
-    final int? VERSIONOffset = _VERSION == null ? null
-        : fbBuilder.writeString(_VERSION!);
-    final int? TITLEOffset = _TITLE == null ? null
-        : fbBuilder.writeString(_TITLE!);
-    final int? CATEGORIESOffset = _CATEGORIES == null ? null
-        : fbBuilder.writeList(_CATEGORIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ROLLUPSOffset = _ROLLUPS == null ? null
-        : fbBuilder.writeList(_ROLLUPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? SIGNATUREOffset = _SIGNATURE == null ? null
-        : fbBuilder.writeListUint8(_SIGNATURE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, TAXONOMY_IDOffset);
-    fbBuilder.addOffset(1, VERSIONOffset);
-    fbBuilder.addUint64(2, _ISSUED_AT);
-    fbBuilder.addOffset(3, TITLEOffset);
-    fbBuilder.addOffset(4, CATEGORIESOffset);
-    fbBuilder.addOffset(5, ROLLUPSOffset);
-    fbBuilder.addOffset(6, SIGNATUREOffset);
+    final int? GRANT_IDOffset = _GRANT_ID == null ? null
+        : fbBuilder.writeString(_GRANT_ID!);
+    final int? LISTING_IDOffset = _LISTING_ID == null ? null
+        : fbBuilder.writeString(_LISTING_ID!);
+    final int? BUYER_PEER_IDOffset = _BUYER_PEER_ID == null ? null
+        : fbBuilder.writeString(_BUYER_PEER_ID!);
+    final int? BUYER_ENCRYPTION_PUBKEYOffset = _BUYER_ENCRYPTION_PUBKEY == null ? null
+        : fbBuilder.writeListUint8(_BUYER_ENCRYPTION_PUBKEY!);
+    final int? TIER_NAMEOffset = _TIER_NAME == null ? null
+        : fbBuilder.writeString(_TIER_NAME!);
+    final int? PAYMENT_TX_HASHOffset = _PAYMENT_TX_HASH == null ? null
+        : fbBuilder.writeString(_PAYMENT_TX_HASH!);
+    final int? PROVIDER_SIGNATUREOffset = _PROVIDER_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_PROVIDER_SIGNATURE!);
+    final int? KEY_ALGORITHMOffset = _KEY_ALGORITHM == null ? null
+        : fbBuilder.writeString(_KEY_ALGORITHM!);
+    final int? PAYMENT_CURRENCYOffset = _PAYMENT_CURRENCY == null ? null
+        : fbBuilder.writeString(_PAYMENT_CURRENCY!);
+    final int? PAYMENT_CHAINOffset = _PAYMENT_CHAIN == null ? null
+        : fbBuilder.writeString(_PAYMENT_CHAIN!);
+    final int? DELIVERY_TOPICOffset = _DELIVERY_TOPIC == null ? null
+        : fbBuilder.writeString(_DELIVERY_TOPIC!);
+    final int? NOTESOffset = _NOTES == null ? null
+        : fbBuilder.writeString(_NOTES!);
+    final int? PROVIDER_PEER_IDOffset = _PROVIDER_PEER_ID == null ? null
+        : fbBuilder.writeString(_PROVIDER_PEER_ID!);
+    final int? GRANT_RESPONSE_BASE64Offset = _GRANT_RESPONSE_BASE64 == null ? null
+        : fbBuilder.writeString(_GRANT_RESPONSE_BASE64!);
+    final int? FIELD_STREAM_POLICYOffset = _FIELD_STREAM_POLICY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(31);
+    fbBuilder.addOffset(0, GRANT_IDOffset);
+    fbBuilder.addOffset(1, LISTING_IDOffset);
+    fbBuilder.addOffset(2, BUYER_PEER_IDOffset);
+    fbBuilder.addOffset(3, BUYER_ENCRYPTION_PUBKEYOffset);
+    fbBuilder.addInt8(4, _ACCESS_TYPE?.value);
+    fbBuilder.addOffset(5, TIER_NAMEOffset);
+    fbBuilder.addUint64(6, _GRANTED_AT);
+    fbBuilder.addUint64(7, _EXPIRES_AT);
+    fbBuilder.addOffset(8, PAYMENT_TX_HASHOffset);
+    fbBuilder.addInt8(9, _PAYMENT_METHOD?.value);
+    fbBuilder.addOffset(10, PROVIDER_SIGNATUREOffset);
+    fbBuilder.addOffset(11, KEY_ALGORITHMOffset);
+    fbBuilder.addUint32(12, _RATE_LIMIT);
+    fbBuilder.addUint32(13, _MAX_RECORDS_PER_REQUEST);
+    fbBuilder.addInt8(14, _STATUS?.value);
+    fbBuilder.addUint64(15, _PAYMENT_AMOUNT);
+    fbBuilder.addOffset(16, PAYMENT_CURRENCYOffset);
+    fbBuilder.addOffset(17, PAYMENT_CHAINOffset);
+    fbBuilder.addUint64(18, _NEXT_RENEWAL);
+    fbBuilder.addBool(19, _AUTO_RENEW);
+    fbBuilder.addUint32(20, _RENEWAL_COUNT);
+    fbBuilder.addUint64(21, _TOTAL_REQUESTS);
+    fbBuilder.addUint64(22, _TOTAL_RECORDS);
+    fbBuilder.addUint64(23, _LAST_ACCESS);
+    fbBuilder.addOffset(24, DELIVERY_TOPICOffset);
+    fbBuilder.addUint64(25, _CREATED_AT);
+    fbBuilder.addUint64(26, _UPDATED_AT);
+    fbBuilder.addOffset(27, NOTESOffset);
+    fbBuilder.addOffset(28, PROVIDER_PEER_IDOffset);
+    fbBuilder.addOffset(29, GRANT_RESPONSE_BASE64Offset);
+    fbBuilder.addOffset(30, FIELD_STREAM_POLICYOffset);
     return fbBuilder.endTable();
   }
 

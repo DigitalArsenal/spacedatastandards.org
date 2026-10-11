@@ -5,315 +5,973 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum FluxQualifier {
-  OBSERVED(0),
-  BURST_ADJUSTED(1),
-  INTERPOLATED_EXTRAPOLATED(2),
-  NO_OBSERVATION(3),
-  PROVIDER_INTERPOLATED(4);
+///  Propagator Runtime Wire — arena-addressed init / batch request / batch
+///  response envelopes for orbital propagators that produce state vectors
+///  into a shared memory arena.
+///
+///  Data interchange for the underlying content (state vectors, covariance,
+///  maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,
+///  Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +
+///  `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those
+///  across a JS ↔ WASM boundary, not a substitute for any of them.
+///  Runtime state-flag bitfield (sized to match a single uint).
+///  Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
+///  HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining
+///  flags live here because they describe runtime propagation health, not
+///  a persisted record.
+enum propagatorStateFlags {
+  VALID(1),
+  IN_ECLIPSE(2),
+  DECAYED(4),
+  EXTRAPOLATED(8),
+  RESERVED_4(16),
+  RESERVED_5(32),
+  RESERVED_6(64),
+  RESERVED_7(128),
+  _default(0);
 
   final int value;
-  const FluxQualifier(this.value);
+  const propagatorStateFlags(this.value);
 
-  factory FluxQualifier.fromValue(int value) {
+  factory propagatorStateFlags.fromValue(int value) {
     switch (value) {
-      case 0: return FluxQualifier.OBSERVED;
-      case 1: return FluxQualifier.BURST_ADJUSTED;
-      case 2: return FluxQualifier.INTERPOLATED_EXTRAPOLATED;
-      case 3: return FluxQualifier.NO_OBSERVATION;
-      case 4: return FluxQualifier.PROVIDER_INTERPOLATED;
+      case 1: return propagatorStateFlags.VALID;
+      case 2: return propagatorStateFlags.IN_ECLIPSE;
+      case 4: return propagatorStateFlags.DECAYED;
+      case 8: return propagatorStateFlags.EXTRAPOLATED;
+      case 16: return propagatorStateFlags.RESERVED_4;
+      case 32: return propagatorStateFlags.RESERVED_5;
+      case 64: return propagatorStateFlags.RESERVED_6;
+      case 128: return propagatorStateFlags.RESERVED_7;
+      case 0: return propagatorStateFlags._default;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static FluxQualifier? _createOrNull(int? value) =>
-      value == null ? null : FluxQualifier.fromValue(value);
+  static propagatorStateFlags? _createOrNull(int? value) =>
+      value == null ? null : propagatorStateFlags.fromValue(value);
 
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<FluxQualifier> reader = _FluxQualifierReader();
+  static const fb.Reader<propagatorStateFlags> reader = _propagatorStateFlagsReader();
 }
 
-class _FluxQualifierReader extends fb.Reader<FluxQualifier> {
-  const _FluxQualifierReader();
+class _propagatorStateFlagsReader extends fb.Reader<propagatorStateFlags> {
+  const _propagatorStateFlagsReader();
+
+  @override
+  int get size => 4;
+
+  @override
+  propagatorStateFlags read(fb.BufferContext bc, int offset) =>
+      propagatorStateFlags.fromValue(const fb.Uint32Reader().read(bc, offset));
+}
+
+///  Error codes surfaced by runtime propagation calls.
+enum propagatorErrorCode {
+  OK(0),
+  UNKNOWN(1),
+  UNKNOWN_ENTITY(2),
+  INVALID_EPOCH(3),
+  OUTPUT_BUFFER_OVERFLOW(4),
+  NOT_INITIALIZED(5);
+
+  final int value;
+  const propagatorErrorCode(this.value);
+
+  factory propagatorErrorCode.fromValue(int value) {
+    switch (value) {
+      case 0: return propagatorErrorCode.OK;
+      case 1: return propagatorErrorCode.UNKNOWN;
+      case 2: return propagatorErrorCode.UNKNOWN_ENTITY;
+      case 3: return propagatorErrorCode.INVALID_EPOCH;
+      case 4: return propagatorErrorCode.OUTPUT_BUFFER_OVERFLOW;
+      case 5: return propagatorErrorCode.NOT_INITIALIZED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static propagatorErrorCode? _createOrNull(int? value) =>
+      value == null ? null : propagatorErrorCode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<propagatorErrorCode> reader = _propagatorErrorCodeReader();
+}
+
+class _propagatorErrorCodeReader extends fb.Reader<propagatorErrorCode> {
+  const _propagatorErrorCodeReader();
+
+  @override
+  int get size => 4;
+
+  @override
+  propagatorErrorCode read(fb.BufferContext bc, int offset) =>
+      propagatorErrorCode.fromValue(const fb.Int32Reader().read(bc, offset));
+}
+
+enum prwSourceKind {
+  OMM(0),
+  TLE(1),
+  OCM(2),
+  OEM(3),
+  PPE(4),
+  KEPLERIAN(5);
+
+  final int value;
+  const prwSourceKind(this.value);
+
+  factory prwSourceKind.fromValue(int value) {
+    switch (value) {
+      case 0: return prwSourceKind.OMM;
+      case 1: return prwSourceKind.TLE;
+      case 2: return prwSourceKind.OCM;
+      case 3: return prwSourceKind.OEM;
+      case 4: return prwSourceKind.PPE;
+      case 5: return prwSourceKind.KEPLERIAN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwSourceKind? _createOrNull(int? value) =>
+      value == null ? null : prwSourceKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<prwSourceKind> reader = _prwSourceKindReader();
+}
+
+class _prwSourceKindReader extends fb.Reader<prwSourceKind> {
+  const _prwSourceKindReader();
 
   @override
   int get size => 1;
 
   @override
-  FluxQualifier read(fb.BufferContext bc, int offset) =>
-      FluxQualifier.fromValue(const fb.Int8Reader().read(bc, offset));
+  prwSourceKind read(fb.BufferContext bc, int offset) =>
+      prwSourceKind.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-enum F107DataType {
-  OBS(0),
-  INT(1),
-  PRD(2),
-  PRM(3);
+///  Propagator Runtime Wire — envelope that carries either an init request,
+///  a batch request, or a batch response across a runtime boundary.
+///  New numeric choices are append-only and are not legacy C++ enum ordinals.
+enum prwSolverAlgorithm {
+  UNSPECIFIED(0),
+  RK4(1),
+  RKF45(2),
+  RKF78(3),
+  RK78(4),
+  RKDP87(5),
+  ABM(6),
+  BS(7),
+  COWELL(8),
+  ENCKE(9),
+  EQUINOCTIAL_VOP(10);
 
   final int value;
-  const F107DataType(this.value);
+  const prwSolverAlgorithm(this.value);
 
-  factory F107DataType.fromValue(int value) {
+  factory prwSolverAlgorithm.fromValue(int value) {
     switch (value) {
-      case 0: return F107DataType.OBS;
-      case 1: return F107DataType.INT;
-      case 2: return F107DataType.PRD;
-      case 3: return F107DataType.PRM;
+      case 0: return prwSolverAlgorithm.UNSPECIFIED;
+      case 1: return prwSolverAlgorithm.RK4;
+      case 2: return prwSolverAlgorithm.RKF45;
+      case 3: return prwSolverAlgorithm.RKF78;
+      case 4: return prwSolverAlgorithm.RK78;
+      case 5: return prwSolverAlgorithm.RKDP87;
+      case 6: return prwSolverAlgorithm.ABM;
+      case 7: return prwSolverAlgorithm.BS;
+      case 8: return prwSolverAlgorithm.COWELL;
+      case 9: return prwSolverAlgorithm.ENCKE;
+      case 10: return prwSolverAlgorithm.EQUINOCTIAL_VOP;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static F107DataType? _createOrNull(int? value) =>
-      value == null ? null : F107DataType.fromValue(value);
+  static prwSolverAlgorithm? _createOrNull(int? value) =>
+      value == null ? null : prwSolverAlgorithm.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 10;
+  static const fb.Reader<prwSolverAlgorithm> reader = _prwSolverAlgorithmReader();
+}
+
+class _prwSolverAlgorithmReader extends fb.Reader<prwSolverAlgorithm> {
+  const _prwSolverAlgorithmReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwSolverAlgorithm read(fb.BufferContext bc, int offset) =>
+      prwSolverAlgorithm.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum prwGravitySelection {
+  INFER_FLAGS(0),
+  POINT_MASS(1),
+  J2_ONLY(2),
+  J2_TO_J4(3),
+  SPHERICAL_HARMONICS(4),
+  EGM2008(5),
+  EGM96(6);
+
+  final int value;
+  const prwGravitySelection(this.value);
+
+  factory prwGravitySelection.fromValue(int value) {
+    switch (value) {
+      case 0: return prwGravitySelection.INFER_FLAGS;
+      case 1: return prwGravitySelection.POINT_MASS;
+      case 2: return prwGravitySelection.J2_ONLY;
+      case 3: return prwGravitySelection.J2_TO_J4;
+      case 4: return prwGravitySelection.SPHERICAL_HARMONICS;
+      case 5: return prwGravitySelection.EGM2008;
+      case 6: return prwGravitySelection.EGM96;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwGravitySelection? _createOrNull(int? value) =>
+      value == null ? null : prwGravitySelection.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static const fb.Reader<prwGravitySelection> reader = _prwGravitySelectionReader();
+}
+
+class _prwGravitySelectionReader extends fb.Reader<prwGravitySelection> {
+  const _prwGravitySelectionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwGravitySelection read(fb.BufferContext bc, int offset) =>
+      prwGravitySelection.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum prwAtmosphereFamily {
+  UNSPECIFIED(0),
+  NRLMSISE00(1),
+  EXPONENTIAL(2),
+  USSA1976(3),
+  HARRIS_PRIESTER(4),
+  JACCHIA_ROBERTS(5),
+  JB2008(6);
+
+  final int value;
+  const prwAtmosphereFamily(this.value);
+
+  factory prwAtmosphereFamily.fromValue(int value) {
+    switch (value) {
+      case 0: return prwAtmosphereFamily.UNSPECIFIED;
+      case 1: return prwAtmosphereFamily.NRLMSISE00;
+      case 2: return prwAtmosphereFamily.EXPONENTIAL;
+      case 3: return prwAtmosphereFamily.USSA1976;
+      case 4: return prwAtmosphereFamily.HARRIS_PRIESTER;
+      case 5: return prwAtmosphereFamily.JACCHIA_ROBERTS;
+      case 6: return prwAtmosphereFamily.JB2008;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwAtmosphereFamily? _createOrNull(int? value) =>
+      value == null ? null : prwAtmosphereFamily.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static const fb.Reader<prwAtmosphereFamily> reader = _prwAtmosphereFamilyReader();
+}
+
+class _prwAtmosphereFamilyReader extends fb.Reader<prwAtmosphereFamily> {
+  const _prwAtmosphereFamilyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwAtmosphereFamily read(fb.BufferContext bc, int offset) =>
+      prwAtmosphereFamily.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum prwDerivativeTechnique {
+  UNSPECIFIED(0),
+  ANALYTIC(1),
+  FINITE_DIFFERENCE(2);
+
+  final int value;
+  const prwDerivativeTechnique(this.value);
+
+  factory prwDerivativeTechnique.fromValue(int value) {
+    switch (value) {
+      case 0: return prwDerivativeTechnique.UNSPECIFIED;
+      case 1: return prwDerivativeTechnique.ANALYTIC;
+      case 2: return prwDerivativeTechnique.FINITE_DIFFERENCE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwDerivativeTechnique? _createOrNull(int? value) =>
+      value == null ? null : prwDerivativeTechnique.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<prwDerivativeTechnique> reader = _prwDerivativeTechniqueReader();
+}
+
+class _prwDerivativeTechniqueReader extends fb.Reader<prwDerivativeTechnique> {
+  const _prwDerivativeTechniqueReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwDerivativeTechnique read(fb.BufferContext bc, int offset) =>
+      prwDerivativeTechnique.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum prwDensityTreatment {
+  UNSPECIFIED(0),
+  NEGLECTED(1),
+  FINITE_DIFFERENCE(2);
+
+  final int value;
+  const prwDensityTreatment(this.value);
+
+  factory prwDensityTreatment.fromValue(int value) {
+    switch (value) {
+      case 0: return prwDensityTreatment.UNSPECIFIED;
+      case 1: return prwDensityTreatment.NEGLECTED;
+      case 2: return prwDensityTreatment.FINITE_DIFFERENCE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwDensityTreatment? _createOrNull(int? value) =>
+      value == null ? null : prwDensityTreatment.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<prwDensityTreatment> reader = _prwDensityTreatmentReader();
+}
+
+class _prwDensityTreatmentReader extends fb.Reader<prwDensityTreatment> {
+  const _prwDensityTreatmentReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwDensityTreatment read(fb.BufferContext bc, int offset) =>
+      prwDensityTreatment.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum prwSteeringBasis {
+  UNSPECIFIED(0),
+  INTEGRATION_FRAME(1),
+  RTN_AXES(2),
+  VNC_AXES(3),
+  ALONG_VELOCITY(4),
+  OPPOSITE_VELOCITY(5);
+
+  final int value;
+  const prwSteeringBasis(this.value);
+
+  factory prwSteeringBasis.fromValue(int value) {
+    switch (value) {
+      case 0: return prwSteeringBasis.UNSPECIFIED;
+      case 1: return prwSteeringBasis.INTEGRATION_FRAME;
+      case 2: return prwSteeringBasis.RTN_AXES;
+      case 3: return prwSteeringBasis.VNC_AXES;
+      case 4: return prwSteeringBasis.ALONG_VELOCITY;
+      case 5: return prwSteeringBasis.OPPOSITE_VELOCITY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwSteeringBasis? _createOrNull(int? value) =>
+      value == null ? null : prwSteeringBasis.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<prwSteeringBasis> reader = _prwSteeringBasisReader();
+}
+
+class _prwSteeringBasisReader extends fb.Reader<prwSteeringBasis> {
+  const _prwSteeringBasisReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwSteeringBasis read(fb.BufferContext bc, int offset) =>
+      prwSteeringBasis.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum prwThrustPrescription {
+  UNSPECIFIED(0),
+  FORCE(1),
+  ACCELERATION(2);
+
+  final int value;
+  const prwThrustPrescription(this.value);
+
+  factory prwThrustPrescription.fromValue(int value) {
+    switch (value) {
+      case 0: return prwThrustPrescription.UNSPECIFIED;
+      case 1: return prwThrustPrescription.FORCE;
+      case 2: return prwThrustPrescription.ACCELERATION;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwThrustPrescription? _createOrNull(int? value) =>
+      value == null ? null : prwThrustPrescription.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<prwThrustPrescription> reader = _prwThrustPrescriptionReader();
+}
+
+class _prwThrustPrescriptionReader extends fb.Reader<prwThrustPrescription> {
+  const _prwThrustPrescriptionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwThrustPrescription read(fb.BufferContext bc, int offset) =>
+      prwThrustPrescription.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum prwQualityEvidence {
+  UNMEASURED(0),
+  SAMPLED_RESIDUAL(1),
+  PROVEN_BOUND(2);
+
+  final int value;
+  const prwQualityEvidence(this.value);
+
+  factory prwQualityEvidence.fromValue(int value) {
+    switch (value) {
+      case 0: return prwQualityEvidence.UNMEASURED;
+      case 1: return prwQualityEvidence.SAMPLED_RESIDUAL;
+      case 2: return prwQualityEvidence.PROVEN_BOUND;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwQualityEvidence? _createOrNull(int? value) =>
+      value == null ? null : prwQualityEvidence.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<prwQualityEvidence> reader = _prwQualityEvidenceReader();
+}
+
+class _prwQualityEvidenceReader extends fb.Reader<prwQualityEvidence> {
+  const _prwQualityEvidenceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwQualityEvidence read(fb.BufferContext bc, int offset) =>
+      prwQualityEvidence.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Process noise added to a propagated covariance. WHITE_ACCELERATION is
+///  zero-mean white acceleration noise (state noise compensation): over each
+///  discretization interval h it adds, per axis with spectral density q,
+///  q * [[h^3/3, h^2/2], [h^2/2, h]] to the position-velocity block, which the
+///  linearized dynamics then carry forward with the covariance.
+enum prwProcessNoiseModel {
+  UNSPECIFIED(0),
+  NONE(1),
+  WHITE_ACCELERATION(2);
+
+  final int value;
+  const prwProcessNoiseModel(this.value);
+
+  factory prwProcessNoiseModel.fromValue(int value) {
+    switch (value) {
+      case 0: return prwProcessNoiseModel.UNSPECIFIED;
+      case 1: return prwProcessNoiseModel.NONE;
+      case 2: return prwProcessNoiseModel.WHITE_ACCELERATION;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwProcessNoiseModel? _createOrNull(int? value) =>
+      value == null ? null : prwProcessNoiseModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<prwProcessNoiseModel> reader = _prwProcessNoiseModelReader();
+}
+
+class _prwProcessNoiseModelReader extends fb.Reader<prwProcessNoiseModel> {
+  const _prwProcessNoiseModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwProcessNoiseModel read(fb.BufferContext bc, int offset) =>
+      prwProcessNoiseModel.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Axes of the process noise spectral densities.
+enum prwProcessNoiseAxes {
+  UNSPECIFIED(0),
+  INERTIAL(1),
+  RADIAL_TRANSVERSE_NORMAL(2);
+
+  final int value;
+  const prwProcessNoiseAxes(this.value);
+
+  factory prwProcessNoiseAxes.fromValue(int value) {
+    switch (value) {
+      case 0: return prwProcessNoiseAxes.UNSPECIFIED;
+      case 1: return prwProcessNoiseAxes.INERTIAL;
+      case 2: return prwProcessNoiseAxes.RADIAL_TRANSVERSE_NORMAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwProcessNoiseAxes? _createOrNull(int? value) =>
+      value == null ? null : prwProcessNoiseAxes.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<prwProcessNoiseAxes> reader = _prwProcessNoiseAxesReader();
+}
+
+class _prwProcessNoiseAxesReader extends fb.Reader<prwProcessNoiseAxes> {
+  const _prwProcessNoiseAxesReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwProcessNoiseAxes read(fb.BufferContext bc, int offset) =>
+      prwProcessNoiseAxes.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum prwDensitySpecies {
+  UNSPECIFIED(0),
+  HELIUM(1),
+  ATOMIC_OXYGEN(2),
+  MOLECULAR_NITROGEN(3),
+  MOLECULAR_OXYGEN(4),
+  ARGON(5),
+  HYDROGEN(6),
+  ATOMIC_NITROGEN(7),
+  ANOMALOUS_OXYGEN(8);
+
+  final int value;
+  const prwDensitySpecies(this.value);
+
+  factory prwDensitySpecies.fromValue(int value) {
+    switch (value) {
+      case 0: return prwDensitySpecies.UNSPECIFIED;
+      case 1: return prwDensitySpecies.HELIUM;
+      case 2: return prwDensitySpecies.ATOMIC_OXYGEN;
+      case 3: return prwDensitySpecies.MOLECULAR_NITROGEN;
+      case 4: return prwDensitySpecies.MOLECULAR_OXYGEN;
+      case 5: return prwDensitySpecies.ARGON;
+      case 6: return prwDensitySpecies.HYDROGEN;
+      case 7: return prwDensitySpecies.ATOMIC_NITROGEN;
+      case 8: return prwDensitySpecies.ANOMALOUS_OXYGEN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwDensitySpecies? _createOrNull(int? value) =>
+      value == null ? null : prwDensitySpecies.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 8;
+  static const fb.Reader<prwDensitySpecies> reader = _prwDensitySpeciesReader();
+}
+
+class _prwDensitySpeciesReader extends fb.Reader<prwDensitySpecies> {
+  const _prwDensitySpeciesReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwDensitySpecies read(fb.BufferContext bc, int offset) =>
+      prwDensitySpecies.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Solid Earth tide model for the central body's field. NONE leaves the
+///  tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
+///  and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
+///  numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
+///  frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
+///  the permanent tide handled for the field's own tide system. Pole tide is
+///  not included.
+enum prwSolidTideModel {
+  NONE(0),
+  IERS_2010(1);
+
+  final int value;
+  const prwSolidTideModel(this.value);
+
+  factory prwSolidTideModel.fromValue(int value) {
+    switch (value) {
+      case 0: return prwSolidTideModel.NONE;
+      case 1: return prwSolidTideModel.IERS_2010;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwSolidTideModel? _createOrNull(int? value) =>
+      value == null ? null : prwSolidTideModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<prwSolidTideModel> reader = _prwSolidTideModelReader();
+}
+
+class _prwSolidTideModelReader extends fb.Reader<prwSolidTideModel> {
+  const _prwSolidTideModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwSolidTideModel read(fb.BufferContext bc, int offset) =>
+      prwSolidTideModel.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Post-Newtonian corrections to the central body's acceleration (IERS
+///  Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
+///  point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
+///  (geodesic) precession.
+enum prwRelativityTerms {
+  NONE(0),
+  SCHWARZSCHILD(1),
+  IERS_2010(2);
+
+  final int value;
+  const prwRelativityTerms(this.value);
+
+  factory prwRelativityTerms.fromValue(int value) {
+    switch (value) {
+      case 0: return prwRelativityTerms.NONE;
+      case 1: return prwRelativityTerms.SCHWARZSCHILD;
+      case 2: return prwRelativityTerms.IERS_2010;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwRelativityTerms? _createOrNull(int? value) =>
+      value == null ? null : prwRelativityTerms.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<prwRelativityTerms> reader = _prwRelativityTermsReader();
+}
+
+class _prwRelativityTermsReader extends fb.Reader<prwRelativityTerms> {
+  const _prwRelativityTermsReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwRelativityTerms read(fb.BufferContext bc, int offset) =>
+      prwRelativityTerms.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Dynamical model parameters a covariance and STM may carry after the state
+///  (a VCM's B, BDOT, AGOM and T). Values are the request's FORCES, in SI:
+///  DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /
+///  INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
+///  DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
+///  REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
+///  IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+enum prwDynamicParameter {
+  UNSPECIFIED(0),
+  DRAG_AREA_OVER_MASS(1),
+  DRAG_AREA_OVER_MASS_RATE(2),
+  SRP_AREA_OVER_MASS(3),
+  IN_TRACK_ACCELERATION(4),
+  ECOM2_D0(5),
+  ECOM2_Y0(6),
+  ECOM2_B0(7),
+  ECOM2_D2_COS(8),
+  ECOM2_D2_SIN(9),
+  ECOM2_D4_COS(10),
+  ECOM2_D4_SIN(11),
+  ECOM2_B1_COS(12),
+  ECOM2_B1_SIN(13),
+  ECOM2_B3_COS(14),
+  ECOM2_B3_SIN(15);
+
+  final int value;
+  const prwDynamicParameter(this.value);
+
+  factory prwDynamicParameter.fromValue(int value) {
+    switch (value) {
+      case 0: return prwDynamicParameter.UNSPECIFIED;
+      case 1: return prwDynamicParameter.DRAG_AREA_OVER_MASS;
+      case 2: return prwDynamicParameter.DRAG_AREA_OVER_MASS_RATE;
+      case 3: return prwDynamicParameter.SRP_AREA_OVER_MASS;
+      case 4: return prwDynamicParameter.IN_TRACK_ACCELERATION;
+      case 5: return prwDynamicParameter.ECOM2_D0;
+      case 6: return prwDynamicParameter.ECOM2_Y0;
+      case 7: return prwDynamicParameter.ECOM2_B0;
+      case 8: return prwDynamicParameter.ECOM2_D2_COS;
+      case 9: return prwDynamicParameter.ECOM2_D2_SIN;
+      case 10: return prwDynamicParameter.ECOM2_D4_COS;
+      case 11: return prwDynamicParameter.ECOM2_D4_SIN;
+      case 12: return prwDynamicParameter.ECOM2_B1_COS;
+      case 13: return prwDynamicParameter.ECOM2_B1_SIN;
+      case 14: return prwDynamicParameter.ECOM2_B3_COS;
+      case 15: return prwDynamicParameter.ECOM2_B3_SIN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwDynamicParameter? _createOrNull(int? value) =>
+      value == null ? null : prwDynamicParameter.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 15;
+  static const fb.Reader<prwDynamicParameter> reader = _prwDynamicParameterReader();
+}
+
+class _prwDynamicParameterReader extends fb.Reader<prwDynamicParameter> {
+  const _prwDynamicParameterReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwDynamicParameter read(fb.BufferContext bc, int offset) =>
+      prwDynamicParameter.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Solar radiation pressure model family. CANNONBALL uses the
+///  radiation-pressure coefficient and area-to-mass ratio of the force
+///  configuration; GNSS_BOX_WING is the a priori box-wing model of the
+///  spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
+///  Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
+///  under nominal yaw steering, with the mass INITIAL_MASS_KG.
+enum prwRadiationPressureFamily {
+  CANNONBALL(0),
+  GNSS_BOX_WING(1),
+  NONE(2);
+
+  final int value;
+  const prwRadiationPressureFamily(this.value);
+
+  factory prwRadiationPressureFamily.fromValue(int value) {
+    switch (value) {
+      case 0: return prwRadiationPressureFamily.CANNONBALL;
+      case 1: return prwRadiationPressureFamily.GNSS_BOX_WING;
+      case 2: return prwRadiationPressureFamily.NONE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwRadiationPressureFamily? _createOrNull(int? value) =>
+      value == null ? null : prwRadiationPressureFamily.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<prwRadiationPressureFamily> reader = _prwRadiationPressureFamilyReader();
+}
+
+class _prwRadiationPressureFamilyReader extends fb.Reader<prwRadiationPressureFamily> {
+  const _prwRadiationPressureFamilyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwRadiationPressureFamily read(fb.BufferContext bc, int offset) =>
+      prwRadiationPressureFamily.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
+///  infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
+///  is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
+///  emissivity zonal to the second Legendre degree with the annual term of
+///  the first, from the elements of the Earth's surface the spacecraft sees
+///  (as Orekit's KnockeRediffusedForceModel evaluates it).
+enum prwEarthRadiationModel {
+  NONE(0),
+  KNOCKE(1);
+
+  final int value;
+  const prwEarthRadiationModel(this.value);
+
+  factory prwEarthRadiationModel.fromValue(int value) {
+    switch (value) {
+      case 0: return prwEarthRadiationModel.NONE;
+      case 1: return prwEarthRadiationModel.KNOCKE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwEarthRadiationModel? _createOrNull(int? value) =>
+      value == null ? null : prwEarthRadiationModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<prwEarthRadiationModel> reader = _prwEarthRadiationModelReader();
+}
+
+class _prwEarthRadiationModelReader extends fb.Reader<prwEarthRadiationModel> {
+  const _prwEarthRadiationModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwEarthRadiationModel read(fb.BufferContext bc, int offset) =>
+      prwEarthRadiationModel.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Ocean tide model for the central body's field. FES2004 is IERS
+///  Conventions (2010) section 6.3: the variations of the normalized Stokes
+///  coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
+///  eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
+///  The ocean pole tide is not included.
+enum prwOceanTideModel {
+  NONE(0),
+  FES2004(1);
+
+  final int value;
+  const prwOceanTideModel(this.value);
+
+  factory prwOceanTideModel.fromValue(int value) {
+    switch (value) {
+      case 0: return prwOceanTideModel.NONE;
+      case 1: return prwOceanTideModel.FES2004;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwOceanTideModel? _createOrNull(int? value) =>
+      value == null ? null : prwOceanTideModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<prwOceanTideModel> reader = _prwOceanTideModelReader();
+}
+
+class _prwOceanTideModelReader extends fb.Reader<prwOceanTideModel> {
+  const _prwOceanTideModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  prwOceanTideModel read(fb.BufferContext bc, int offset) =>
+      prwOceanTideModel.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  GNSS spacecraft block, selecting the box-wing surfaces.
+enum prwGnssSpacecraftBlock {
+  UNSPECIFIED(0),
+  GPS_IIR(1),
+  GPS_IIR_M(2),
+  GPS_IIF(3);
+
+  final int value;
+  const prwGnssSpacecraftBlock(this.value);
+
+  factory prwGnssSpacecraftBlock.fromValue(int value) {
+    switch (value) {
+      case 0: return prwGnssSpacecraftBlock.UNSPECIFIED;
+      case 1: return prwGnssSpacecraftBlock.GPS_IIR;
+      case 2: return prwGnssSpacecraftBlock.GPS_IIR_M;
+      case 3: return prwGnssSpacecraftBlock.GPS_IIF;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static prwGnssSpacecraftBlock? _createOrNull(int? value) =>
+      value == null ? null : prwGnssSpacecraftBlock.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<F107DataType> reader = _F107DataTypeReader();
+  static const fb.Reader<prwGnssSpacecraftBlock> reader = _prwGnssSpacecraftBlockReader();
 }
 
-class _F107DataTypeReader extends fb.Reader<F107DataType> {
-  const _F107DataTypeReader();
+class _prwGnssSpacecraftBlockReader extends fb.Reader<prwGnssSpacecraftBlock> {
+  const _prwGnssSpacecraftBlockReader();
 
   @override
   int get size => 1;
 
   @override
-  F107DataType read(fb.BufferContext bc, int offset) =>
-      F107DataType.fromValue(const fb.Int8Reader().read(bc, offset));
+  prwGnssSpacecraftBlock read(fb.BufferContext bc, int offset) =>
+      prwGnssSpacecraftBlock.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Space Weather Data Record
-class SPW {
-  SPW._(this._bc, this._bcOffset);
-  factory SPW(List<int> bytes) {
+///  Propagator initialization request — assigns TLE / OMM / Keplerian /
+///  polynomial inputs to entity handles.
+///
+///  The actual per-entity source record is carried inline as raw bytes
+///  tagged with SOURCE_KIND and, where useful, a SDS file_identifier.
+///  Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
+///  bytes verbatim; the propagator uses SOURCE_KIND to decide how to
+///  consume them.
+class PRWInit {
+  PRWInit._(this._bc, this._bcOffset);
+  factory PRWInit(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<SPW> reader = _SPWReader();
+  static const fb.Reader<PRWInit> reader = _PRWInitReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Date in ISO 8601 format
-  String? get DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Bartels Solar Rotation Number
-  int get BSRN => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  ///  Day within Bartels cycle (1-27)
-  int get ND => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  ///  Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10
-  int get KP1 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  ///  Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10
-  int get KP2 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  ///  Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10
-  int get KP3 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  ///  Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10
-  int get KP4 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  ///  Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10
-  int get KP5 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  ///  Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10
-  int get KP6 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  ///  Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10
-  int get KP7 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  ///  Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10
-  int get KP8 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  ///  Sum of the 8 Kp indices for the day
-  int get KP_SUM => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 26, 0);
-  int get kpSum => KP_SUM;
-  ///  Planetary Equivalent Amplitude (Ap) for 0000-0300 UT
-  int get AP1 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 28, 0);
-  ///  Planetary Equivalent Amplitude (Ap) for 0300-0600 UT
-  int get AP2 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 30, 0);
-  ///  Planetary Equivalent Amplitude (Ap) for 0600-0900 UT
-  int get AP3 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 32, 0);
-  ///  Planetary Equivalent Amplitude (Ap) for 0900-1200 UT
-  int get AP4 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 34, 0);
-  ///  Planetary Equivalent Amplitude (Ap) for 1200-1500 UT
-  int get AP5 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 36, 0);
-  ///  Planetary Equivalent Amplitude (Ap) for 1500-1800 UT
-  int get AP6 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 38, 0);
-  ///  Planetary Equivalent Amplitude (Ap) for 1800-2100 UT
-  int get AP7 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 40, 0);
-  ///  Planetary Equivalent Amplitude (Ap) for 2100-0000 UT
-  int get AP8 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 42, 0);
-  ///  Arithmetic average of the 8 Ap indices for the day
-  int get AP_AVG => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 44, 0);
-  int get apAvg => AP_AVG;
-  ///  Planetary Daily Character Figure (0.0 to 2.5)
-  double get CP => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  ///  C9 index (0-9)
-  int get C9 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 48, 0);
-  ///  International Sunspot Number
-  int get ISN => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 50, 0);
-  ///  Observed 10.7cm Solar Radio Flux
-  double get F107_OBS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  double get f107Obs => F107_OBS;
-  ///  Adjusted 10.7cm Solar Radio Flux (to 1 AU)
-  double get F107_ADJ => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  double get f107Adj => F107_ADJ;
-  ///  F10.7 Data Type
-  F107DataType get F107_DATA_TYPE => F107DataType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 56, 0));
-  F107DataType get f107DataType => F107_DATA_TYPE;
-  ///  81-day centered average of observed F10.7
-  double get F107_OBS_CENTER81 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  double get f107ObsCenter81 => F107_OBS_CENTER81;
-  ///  81-day trailing average of observed F10.7
-  double get F107_OBS_LAST81 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  double get f107ObsLast81 => F107_OBS_LAST81;
-  ///  81-day centered average of adjusted F10.7
-  double get F107_ADJ_CENTER81 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  double get f107AdjCenter81 => F107_ADJ_CENTER81;
-  ///  81-day trailing average of adjusted F10.7
-  double get F107_ADJ_LAST81 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  double get f107AdjLast81 => F107_ADJ_LAST81;
+  ///  Entity handles to assign results to (same order as SOURCES[]).
+  List<int>? get ENTITY_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 4);
+  List<int>? get entityHandles => ENTITY_HANDLES;
+  ///  Per-entity source records, encoded as SDS FlatBuffers.
+  List<PRWInitSource>? get SOURCES => const fb.ListReader<PRWInitSource>(PRWInitSource.reader).vTableGetNullable(_bc, _bcOffset, 6);
 
   @override
   String toString() {
-    return 'SPW{DATE: ${DATE}, BSRN: ${BSRN}, ND: ${ND}, KP1: ${KP1}, KP2: ${KP2}, KP3: ${KP3}, KP4: ${KP4}, KP5: ${KP5}, KP6: ${KP6}, KP7: ${KP7}, KP8: ${KP8}, kpSum: ${kpSum}, AP1: ${AP1}, AP2: ${AP2}, AP3: ${AP3}, AP4: ${AP4}, AP5: ${AP5}, AP6: ${AP6}, AP7: ${AP7}, AP8: ${AP8}, apAvg: ${apAvg}, CP: ${CP}, C9: ${C9}, ISN: ${ISN}, f107Obs: ${f107Obs}, f107Adj: ${f107Adj}, f107DataType: ${f107DataType}, f107ObsCenter81: ${f107ObsCenter81}, f107ObsLast81: ${f107ObsLast81}, f107AdjCenter81: ${f107AdjCenter81}, f107AdjLast81: ${f107AdjLast81}}';
+    return 'PRWInit{entityHandles: ${entityHandles}, SOURCES: ${SOURCES}}';
   }
 }
 
-class _SPWReader extends fb.TableReader<SPW> {
-  const _SPWReader();
+class _PRWInitReader extends fb.TableReader<PRWInit> {
+  const _PRWInitReader();
 
   @override
-  SPW createObject(fb.BufferContext bc, int offset) =>
-    SPW._(bc, offset);
+  PRWInit createObject(fb.BufferContext bc, int offset) =>
+    PRWInit._(bc, offset);
 }
 
-class SPWBuilder {
-  SPWBuilder(this.fbBuilder);
+class PRWInitBuilder {
+  PRWInitBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(31);
+    fbBuilder.startTable(2);
   }
 
-  int addDateOffset(int? offset) {
+  int addEntityHandlesOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addBsrn(int? BSRN) {
-    fbBuilder.addInt32(1, BSRN);
-    return fbBuilder.offset;
-  }
-  int addNd(int? ND) {
-    fbBuilder.addInt32(2, ND);
-    return fbBuilder.offset;
-  }
-  int addKp1(int? KP1) {
-    fbBuilder.addInt32(3, KP1);
-    return fbBuilder.offset;
-  }
-  int addKp2(int? KP2) {
-    fbBuilder.addInt32(4, KP2);
-    return fbBuilder.offset;
-  }
-  int addKp3(int? KP3) {
-    fbBuilder.addInt32(5, KP3);
-    return fbBuilder.offset;
-  }
-  int addKp4(int? KP4) {
-    fbBuilder.addInt32(6, KP4);
-    return fbBuilder.offset;
-  }
-  int addKp5(int? KP5) {
-    fbBuilder.addInt32(7, KP5);
-    return fbBuilder.offset;
-  }
-  int addKp6(int? KP6) {
-    fbBuilder.addInt32(8, KP6);
-    return fbBuilder.offset;
-  }
-  int addKp7(int? KP7) {
-    fbBuilder.addInt32(9, KP7);
-    return fbBuilder.offset;
-  }
-  int addKp8(int? KP8) {
-    fbBuilder.addInt32(10, KP8);
-    return fbBuilder.offset;
-  }
-  int addKpSum(int? KP_SUM) {
-    fbBuilder.addInt32(11, KP_SUM);
-    return fbBuilder.offset;
-  }
-  int addAp1(int? AP1) {
-    fbBuilder.addInt32(12, AP1);
-    return fbBuilder.offset;
-  }
-  int addAp2(int? AP2) {
-    fbBuilder.addInt32(13, AP2);
-    return fbBuilder.offset;
-  }
-  int addAp3(int? AP3) {
-    fbBuilder.addInt32(14, AP3);
-    return fbBuilder.offset;
-  }
-  int addAp4(int? AP4) {
-    fbBuilder.addInt32(15, AP4);
-    return fbBuilder.offset;
-  }
-  int addAp5(int? AP5) {
-    fbBuilder.addInt32(16, AP5);
-    return fbBuilder.offset;
-  }
-  int addAp6(int? AP6) {
-    fbBuilder.addInt32(17, AP6);
-    return fbBuilder.offset;
-  }
-  int addAp7(int? AP7) {
-    fbBuilder.addInt32(18, AP7);
-    return fbBuilder.offset;
-  }
-  int addAp8(int? AP8) {
-    fbBuilder.addInt32(19, AP8);
-    return fbBuilder.offset;
-  }
-  int addApAvg(int? AP_AVG) {
-    fbBuilder.addInt32(20, AP_AVG);
-    return fbBuilder.offset;
-  }
-  int addCp(double? CP) {
-    fbBuilder.addFloat32(21, CP);
-    return fbBuilder.offset;
-  }
-  int addC9(int? C9) {
-    fbBuilder.addInt32(22, C9);
-    return fbBuilder.offset;
-  }
-  int addIsn(int? ISN) {
-    fbBuilder.addInt32(23, ISN);
-    return fbBuilder.offset;
-  }
-  int addF107Obs(double? F107_OBS) {
-    fbBuilder.addFloat32(24, F107_OBS);
-    return fbBuilder.offset;
-  }
-  int addF107Adj(double? F107_ADJ) {
-    fbBuilder.addFloat32(25, F107_ADJ);
-    return fbBuilder.offset;
-  }
-  int addF107DataType(F107DataType? F107_DATA_TYPE) {
-    fbBuilder.addInt8(26, F107_DATA_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addF107ObsCenter81(double? F107_OBS_CENTER81) {
-    fbBuilder.addFloat32(27, F107_OBS_CENTER81);
-    return fbBuilder.offset;
-  }
-  int addF107ObsLast81(double? F107_OBS_LAST81) {
-    fbBuilder.addFloat32(28, F107_OBS_LAST81);
-    return fbBuilder.offset;
-  }
-  int addF107AdjCenter81(double? F107_ADJ_CENTER81) {
-    fbBuilder.addFloat32(29, F107_ADJ_CENTER81);
-    return fbBuilder.offset;
-  }
-  int addF107AdjLast81(double? F107_ADJ_LAST81) {
-    fbBuilder.addFloat32(30, F107_ADJ_LAST81);
+  int addSourcesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
 
@@ -322,150 +980,28 @@ class SPWBuilder {
   }
 }
 
-class SPWObjectBuilder extends fb.ObjectBuilder {
-  final String? _DATE;
-  final int? _BSRN;
-  final int? _ND;
-  final int? _KP1;
-  final int? _KP2;
-  final int? _KP3;
-  final int? _KP4;
-  final int? _KP5;
-  final int? _KP6;
-  final int? _KP7;
-  final int? _KP8;
-  final int? _KP_SUM;
-  final int? _AP1;
-  final int? _AP2;
-  final int? _AP3;
-  final int? _AP4;
-  final int? _AP5;
-  final int? _AP6;
-  final int? _AP7;
-  final int? _AP8;
-  final int? _AP_AVG;
-  final double? _CP;
-  final int? _C9;
-  final int? _ISN;
-  final double? _F107_OBS;
-  final double? _F107_ADJ;
-  final F107DataType? _F107_DATA_TYPE;
-  final double? _F107_OBS_CENTER81;
-  final double? _F107_OBS_LAST81;
-  final double? _F107_ADJ_CENTER81;
-  final double? _F107_ADJ_LAST81;
+class PRWInitObjectBuilder extends fb.ObjectBuilder {
+  final List<int>? _ENTITY_HANDLES;
+  final List<PRWInitSourceObjectBuilder>? _SOURCES;
 
-  SPWObjectBuilder({
-    String? DATE,
-    int? BSRN,
-    int? ND,
-    int? KP1,
-    int? KP2,
-    int? KP3,
-    int? KP4,
-    int? KP5,
-    int? KP6,
-    int? KP7,
-    int? KP8,
-    int? KP_SUM,
-    int? kpSum,
-    int? AP1,
-    int? AP2,
-    int? AP3,
-    int? AP4,
-    int? AP5,
-    int? AP6,
-    int? AP7,
-    int? AP8,
-    int? AP_AVG,
-    int? apAvg,
-    double? CP,
-    int? C9,
-    int? ISN,
-    double? F107_OBS,
-    double? f107Obs,
-    double? F107_ADJ,
-    double? f107Adj,
-    F107DataType? F107_DATA_TYPE,
-    F107DataType? f107DataType,
-    double? F107_OBS_CENTER81,
-    double? f107ObsCenter81,
-    double? F107_OBS_LAST81,
-    double? f107ObsLast81,
-    double? F107_ADJ_CENTER81,
-    double? f107AdjCenter81,
-    double? F107_ADJ_LAST81,
-    double? f107AdjLast81,
+  PRWInitObjectBuilder({
+    List<int>? ENTITY_HANDLES,
+    List<int>? entityHandles,
+    List<PRWInitSourceObjectBuilder>? SOURCES,
   })
-      : _DATE = DATE,
-        _BSRN = BSRN,
-        _ND = ND,
-        _KP1 = KP1,
-        _KP2 = KP2,
-        _KP3 = KP3,
-        _KP4 = KP4,
-        _KP5 = KP5,
-        _KP6 = KP6,
-        _KP7 = KP7,
-        _KP8 = KP8,
-        _KP_SUM = kpSum ?? KP_SUM,
-        _AP1 = AP1,
-        _AP2 = AP2,
-        _AP3 = AP3,
-        _AP4 = AP4,
-        _AP5 = AP5,
-        _AP6 = AP6,
-        _AP7 = AP7,
-        _AP8 = AP8,
-        _AP_AVG = apAvg ?? AP_AVG,
-        _CP = CP,
-        _C9 = C9,
-        _ISN = ISN,
-        _F107_OBS = f107Obs ?? F107_OBS,
-        _F107_ADJ = f107Adj ?? F107_ADJ,
-        _F107_DATA_TYPE = f107DataType ?? F107_DATA_TYPE,
-        _F107_OBS_CENTER81 = f107ObsCenter81 ?? F107_OBS_CENTER81,
-        _F107_OBS_LAST81 = f107ObsLast81 ?? F107_OBS_LAST81,
-        _F107_ADJ_CENTER81 = f107AdjCenter81 ?? F107_ADJ_CENTER81,
-        _F107_ADJ_LAST81 = f107AdjLast81 ?? F107_ADJ_LAST81;
+      : _ENTITY_HANDLES = entityHandles ?? ENTITY_HANDLES,
+        _SOURCES = SOURCES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? DATEOffset = _DATE == null ? null
-        : fbBuilder.writeString(_DATE!);
-    fbBuilder.startTable(31);
-    fbBuilder.addOffset(0, DATEOffset);
-    fbBuilder.addInt32(1, _BSRN);
-    fbBuilder.addInt32(2, _ND);
-    fbBuilder.addInt32(3, _KP1);
-    fbBuilder.addInt32(4, _KP2);
-    fbBuilder.addInt32(5, _KP3);
-    fbBuilder.addInt32(6, _KP4);
-    fbBuilder.addInt32(7, _KP5);
-    fbBuilder.addInt32(8, _KP6);
-    fbBuilder.addInt32(9, _KP7);
-    fbBuilder.addInt32(10, _KP8);
-    fbBuilder.addInt32(11, _KP_SUM);
-    fbBuilder.addInt32(12, _AP1);
-    fbBuilder.addInt32(13, _AP2);
-    fbBuilder.addInt32(14, _AP3);
-    fbBuilder.addInt32(15, _AP4);
-    fbBuilder.addInt32(16, _AP5);
-    fbBuilder.addInt32(17, _AP6);
-    fbBuilder.addInt32(18, _AP7);
-    fbBuilder.addInt32(19, _AP8);
-    fbBuilder.addInt32(20, _AP_AVG);
-    fbBuilder.addFloat32(21, _CP);
-    fbBuilder.addInt32(22, _C9);
-    fbBuilder.addInt32(23, _ISN);
-    fbBuilder.addFloat32(24, _F107_OBS);
-    fbBuilder.addFloat32(25, _F107_ADJ);
-    fbBuilder.addInt8(26, _F107_DATA_TYPE?.value);
-    fbBuilder.addFloat32(27, _F107_OBS_CENTER81);
-    fbBuilder.addFloat32(28, _F107_OBS_LAST81);
-    fbBuilder.addFloat32(29, _F107_ADJ_CENTER81);
-    fbBuilder.addFloat32(30, _F107_ADJ_LAST81);
+    final int? ENTITY_HANDLESOffset = _ENTITY_HANDLES == null ? null
+        : fbBuilder.writeListUint32(_ENTITY_HANDLES!);
+    final int? SOURCESOffset = _SOURCES == null ? null
+        : fbBuilder.writeList(_SOURCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, ENTITY_HANDLESOffset);
+    fbBuilder.addOffset(1, SOURCESOffset);
     return fbBuilder.endTable();
   }
 
@@ -477,36 +1013,4391 @@ class SPWObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-class SPWCOLLECTION {
-  SPWCOLLECTION._(this._bc, this._bcOffset);
-  factory SPWCOLLECTION(List<int> bytes) {
+class PRWKeplerianElements {
+  PRWKeplerianElements._(this._bc, this._bcOffset);
+  factory PRWKeplerianElements(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<SPWCOLLECTION> reader = _SPWCOLLECTIONReader();
+  static const fb.Reader<PRWKeplerianElements> reader = _PRWKeplerianElementsReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  List<SPW>? get RECORDS => const fb.ListReader<SPW>(SPW.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Gravitational parameter of the central body (km^3 / s^2).
+  double get MU => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Semi-major axis (km).
+  double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get semiMajorAxis => SEMI_MAJOR_AXIS;
+  ///  Eccentricity (0 = circular, <1 = ellipse).
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Inclination (radians).
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Right ascension of the ascending node (radians).
+  double get RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Argument of periapsis (radians).
+  double get ARG_PERIAPSIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get argPeriapsis => ARG_PERIAPSIS;
+  ///  True anomaly (radians).
+  double get TRUE_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get trueAnomaly => TRUE_ANOMALY;
+  ///  Epoch as Julian date.
+  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
 
   @override
   String toString() {
-    return 'SPWCOLLECTION{RECORDS: ${RECORDS}}';
+    return 'PRWKeplerianElements{MU: ${MU}, semiMajorAxis: ${semiMajorAxis}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RAAN: ${RAAN}, argPeriapsis: ${argPeriapsis}, trueAnomaly: ${trueAnomaly}, EPOCH: ${EPOCH}}';
   }
 }
 
-class _SPWCOLLECTIONReader extends fb.TableReader<SPWCOLLECTION> {
-  const _SPWCOLLECTIONReader();
+class _PRWKeplerianElementsReader extends fb.TableReader<PRWKeplerianElements> {
+  const _PRWKeplerianElementsReader();
 
   @override
-  SPWCOLLECTION createObject(fb.BufferContext bc, int offset) =>
-    SPWCOLLECTION._(bc, offset);
+  PRWKeplerianElements createObject(fb.BufferContext bc, int offset) =>
+    PRWKeplerianElements._(bc, offset);
 }
 
-class SPWCOLLECTIONBuilder {
-  SPWCOLLECTIONBuilder(this.fbBuilder);
+class PRWKeplerianElementsBuilder {
+  PRWKeplerianElementsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addMu(double? MU) {
+    fbBuilder.addFloat64(0, MU);
+    return fbBuilder.offset;
+  }
+  int addSemiMajorAxis(double? SEMI_MAJOR_AXIS) {
+    fbBuilder.addFloat64(1, SEMI_MAJOR_AXIS);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(2, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(3, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addRaan(double? RAAN) {
+    fbBuilder.addFloat64(4, RAAN);
+    return fbBuilder.offset;
+  }
+  int addArgPeriapsis(double? ARG_PERIAPSIS) {
+    fbBuilder.addFloat64(5, ARG_PERIAPSIS);
+    return fbBuilder.offset;
+  }
+  int addTrueAnomaly(double? TRUE_ANOMALY) {
+    fbBuilder.addFloat64(6, TRUE_ANOMALY);
+    return fbBuilder.offset;
+  }
+  int addEpoch(double? EPOCH) {
+    fbBuilder.addFloat64(7, EPOCH);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWKeplerianElementsObjectBuilder extends fb.ObjectBuilder {
+  final double? _MU;
+  final double? _SEMI_MAJOR_AXIS;
+  final double? _ECCENTRICITY;
+  final double? _INCLINATION;
+  final double? _RAAN;
+  final double? _ARG_PERIAPSIS;
+  final double? _TRUE_ANOMALY;
+  final double? _EPOCH;
+
+  PRWKeplerianElementsObjectBuilder({
+    double? MU,
+    double? SEMI_MAJOR_AXIS,
+    double? semiMajorAxis,
+    double? ECCENTRICITY,
+    double? INCLINATION,
+    double? RAAN,
+    double? ARG_PERIAPSIS,
+    double? argPeriapsis,
+    double? TRUE_ANOMALY,
+    double? trueAnomaly,
+    double? EPOCH,
+  })
+      : _MU = MU,
+        _SEMI_MAJOR_AXIS = semiMajorAxis ?? SEMI_MAJOR_AXIS,
+        _ECCENTRICITY = ECCENTRICITY,
+        _INCLINATION = INCLINATION,
+        _RAAN = RAAN,
+        _ARG_PERIAPSIS = argPeriapsis ?? ARG_PERIAPSIS,
+        _TRUE_ANOMALY = trueAnomaly ?? TRUE_ANOMALY,
+        _EPOCH = EPOCH;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(8);
+    fbBuilder.addFloat64(0, _MU);
+    fbBuilder.addFloat64(1, _SEMI_MAJOR_AXIS);
+    fbBuilder.addFloat64(2, _ECCENTRICITY);
+    fbBuilder.addFloat64(3, _INCLINATION);
+    fbBuilder.addFloat64(4, _RAAN);
+    fbBuilder.addFloat64(5, _ARG_PERIAPSIS);
+    fbBuilder.addFloat64(6, _TRUE_ANOMALY);
+    fbBuilder.addFloat64(7, _EPOCH);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWTleLines {
+  PRWTleLines._(this._bc, this._bcOffset);
+  factory PRWTleLines(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWTleLines> reader = _PRWTleLinesReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  TLE line 1 (69 characters).
+  String? get LINE1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  TLE line 2 (69 characters).
+  String? get LINE2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Satellite name (optional, line 0 of 3LE).
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  NORAD catalog number parsed from the TLE.
+  int get NORAD_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get noradId => NORAD_ID;
+
+  @override
+  String toString() {
+    return 'PRWTleLines{LINE1: ${LINE1}, LINE2: ${LINE2}, NAME: ${NAME}, noradId: ${noradId}}';
+  }
+}
+
+class _PRWTleLinesReader extends fb.TableReader<PRWTleLines> {
+  const _PRWTleLinesReader();
+
+  @override
+  PRWTleLines createObject(fb.BufferContext bc, int offset) =>
+    PRWTleLines._(bc, offset);
+}
+
+class PRWTleLinesBuilder {
+  PRWTleLinesBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addLine1Offset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addLine2Offset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradId(int? NORAD_ID) {
+    fbBuilder.addUint32(3, NORAD_ID);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWTleLinesObjectBuilder extends fb.ObjectBuilder {
+  final String? _LINE1;
+  final String? _LINE2;
+  final String? _NAME;
+  final int? _NORAD_ID;
+
+  PRWTleLinesObjectBuilder({
+    String? LINE1,
+    String? LINE2,
+    String? NAME,
+    int? NORAD_ID,
+    int? noradId,
+  })
+      : _LINE1 = LINE1,
+        _LINE2 = LINE2,
+        _NAME = NAME,
+        _NORAD_ID = noradId ?? NORAD_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LINE1Offset = _LINE1 == null ? null
+        : fbBuilder.writeString(_LINE1!);
+    final int? LINE2Offset = _LINE2 == null ? null
+        : fbBuilder.writeString(_LINE2!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, LINE1Offset);
+    fbBuilder.addOffset(1, LINE2Offset);
+    fbBuilder.addOffset(2, NAMEOffset);
+    fbBuilder.addUint32(3, _NORAD_ID);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWInitSource {
+  PRWInitSource._(this._bc, this._bcOffset);
+  factory PRWInitSource(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWInitSource> reader = _PRWInitSourceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Wire kind identifier for BYTES.
+  prwSourceKind get KIND => prwSourceKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).
+  String? get FILE_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get fileIdentifier => FILE_IDENTIFIER;
+  ///  Encoded source record as a FlatBuffer (consumed per KIND).
+  List<int>? get BYTES => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Convenience inline form when KIND == KEPLERIAN.
+  PRWKeplerianElements? get KEPLERIAN => PRWKeplerianElements.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Convenience inline form when KIND == TLE.
+  PRWTleLines? get TLE => PRWTleLines.reader.vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'PRWInitSource{KIND: ${KIND}, fileIdentifier: ${fileIdentifier}, BYTES: ${BYTES}, KEPLERIAN: ${KEPLERIAN}, TLE: ${TLE}}';
+  }
+}
+
+class _PRWInitSourceReader extends fb.TableReader<PRWInitSource> {
+  const _PRWInitSourceReader();
+
+  @override
+  PRWInitSource createObject(fb.BufferContext bc, int offset) =>
+    PRWInitSource._(bc, offset);
+}
+
+class PRWInitSourceBuilder {
+  PRWInitSourceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addKind(prwSourceKind? KIND) {
+    fbBuilder.addUint8(0, KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addFileIdentifierOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addBytesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addKeplerianOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTleOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWInitSourceObjectBuilder extends fb.ObjectBuilder {
+  final prwSourceKind? _KIND;
+  final String? _FILE_IDENTIFIER;
+  final List<int>? _BYTES;
+  final PRWKeplerianElementsObjectBuilder? _KEPLERIAN;
+  final PRWTleLinesObjectBuilder? _TLE;
+
+  PRWInitSourceObjectBuilder({
+    prwSourceKind? KIND,
+    String? FILE_IDENTIFIER,
+    String? fileIdentifier,
+    List<int>? BYTES,
+    PRWKeplerianElementsObjectBuilder? KEPLERIAN,
+    PRWTleLinesObjectBuilder? TLE,
+  })
+      : _KIND = KIND,
+        _FILE_IDENTIFIER = fileIdentifier ?? FILE_IDENTIFIER,
+        _BYTES = BYTES,
+        _KEPLERIAN = KEPLERIAN,
+        _TLE = TLE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FILE_IDENTIFIEROffset = _FILE_IDENTIFIER == null ? null
+        : fbBuilder.writeString(_FILE_IDENTIFIER!);
+    final int? BYTESOffset = _BYTES == null ? null
+        : fbBuilder.writeListUint8(_BYTES!);
+    final int? KEPLERIANOffset = _KEPLERIAN?.getOrCreateOffset(fbBuilder);
+    final int? TLEOffset = _TLE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addUint8(0, _KIND?.value);
+    fbBuilder.addOffset(1, FILE_IDENTIFIEROffset);
+    fbBuilder.addOffset(2, BYTESOffset);
+    fbBuilder.addOffset(3, KEPLERIANOffset);
+    fbBuilder.addOffset(4, TLEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Batch propagation request — propagate every entity in ENTITY_HANDLES[] to
+///  EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the
+///  shared arena.
+class PRWBatchRequest {
+  PRWBatchRequest._(this._bc, this._bcOffset);
+  factory PRWBatchRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWBatchRequest> reader = _PRWBatchRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Target epoch as a Julian date (TIME_SYSTEM is configured on the host).
+  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Entity handles to propagate (empty = all initialized entities).
+  List<int>? get ENTITY_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  List<int>? get entityHandles => ENTITY_HANDLES;
+  ///  Output buffer offset in the arena where the StateVector stream begins.
+  int get OUTPUT_OFFSET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get outputOffset => OUTPUT_OFFSET;
+  ///  Maximum entities to process in this call (0 = unbounded).
+  int get MAX_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get maxCount => MAX_COUNT;
+  ///  Target reference frame for the output state stream. Matches enum
+  ///  values in SDS `RFM`. If zero, the propagator chooses its native frame.
+  String? get TARGET_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get targetFrame => TARGET_FRAME;
+
+  @override
+  String toString() {
+    return 'PRWBatchRequest{EPOCH: ${EPOCH}, entityHandles: ${entityHandles}, outputOffset: ${outputOffset}, maxCount: ${maxCount}, targetFrame: ${targetFrame}}';
+  }
+}
+
+class _PRWBatchRequestReader extends fb.TableReader<PRWBatchRequest> {
+  const _PRWBatchRequestReader();
+
+  @override
+  PRWBatchRequest createObject(fb.BufferContext bc, int offset) =>
+    PRWBatchRequest._(bc, offset);
+}
+
+class PRWBatchRequestBuilder {
+  PRWBatchRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addEpoch(double? EPOCH) {
+    fbBuilder.addFloat64(0, EPOCH);
+    return fbBuilder.offset;
+  }
+  int addEntityHandlesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addOutputOffset(int? OUTPUT_OFFSET) {
+    fbBuilder.addUint32(2, OUTPUT_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addMaxCount(int? MAX_COUNT) {
+    fbBuilder.addUint32(3, MAX_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTargetFrameOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWBatchRequestObjectBuilder extends fb.ObjectBuilder {
+  final double? _EPOCH;
+  final List<int>? _ENTITY_HANDLES;
+  final int? _OUTPUT_OFFSET;
+  final int? _MAX_COUNT;
+  final String? _TARGET_FRAME;
+
+  PRWBatchRequestObjectBuilder({
+    double? EPOCH,
+    List<int>? ENTITY_HANDLES,
+    List<int>? entityHandles,
+    int? OUTPUT_OFFSET,
+    int? outputOffset,
+    int? MAX_COUNT,
+    int? maxCount,
+    String? TARGET_FRAME,
+    String? targetFrame,
+  })
+      : _EPOCH = EPOCH,
+        _ENTITY_HANDLES = entityHandles ?? ENTITY_HANDLES,
+        _OUTPUT_OFFSET = outputOffset ?? OUTPUT_OFFSET,
+        _MAX_COUNT = maxCount ?? MAX_COUNT,
+        _TARGET_FRAME = targetFrame ?? TARGET_FRAME;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ENTITY_HANDLESOffset = _ENTITY_HANDLES == null ? null
+        : fbBuilder.writeListUint32(_ENTITY_HANDLES!);
+    final int? TARGET_FRAMEOffset = _TARGET_FRAME == null ? null
+        : fbBuilder.writeString(_TARGET_FRAME!);
+    fbBuilder.startTable(5);
+    fbBuilder.addFloat64(0, _EPOCH);
+    fbBuilder.addOffset(1, ENTITY_HANDLESOffset);
+    fbBuilder.addUint32(2, _OUTPUT_OFFSET);
+    fbBuilder.addUint32(3, _MAX_COUNT);
+    fbBuilder.addOffset(4, TARGET_FRAMEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Batch propagation response header — describes the stream written to
+///  OUTPUT_OFFSET and reports errors. The stream itself is
+///  `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.
+class PRWBatchResponse {
+  PRWBatchResponse._(this._bc, this._bcOffset);
+  factory PRWBatchResponse(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWBatchResponse> reader = _PRWBatchResponseReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Number of state vectors written.
+  int get COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  ///  Offset in the arena where the state-vector stream begins.
+  int get OUTPUT_OFFSET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get outputOffset => OUTPUT_OFFSET;
+  ///  Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.
+  int get STATE_VECTOR_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get stateVectorSize => STATE_VECTOR_SIZE;
+  ///  Reference frame for the stream (SDS `RFM`-compatible string tag).
+  String? get REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get referenceFrame => REFERENCE_FRAME;
+  ///  Per-entity status flags (same cardinality as COUNT).
+  List<propagatorStateFlags>? get FLAGS => const fb.ListReader<propagatorStateFlags>(propagatorStateFlags.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Error code (0 == OK).
+  propagatorErrorCode get ERROR_CODE => propagatorErrorCode.fromValue(const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  propagatorErrorCode get errorCode => ERROR_CODE;
+  ///  Optional error message when ERROR_CODE != OK.
+  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get errorMessage => ERROR_MESSAGE;
+
+  @override
+  String toString() {
+    return 'PRWBatchResponse{COUNT: ${COUNT}, outputOffset: ${outputOffset}, stateVectorSize: ${stateVectorSize}, referenceFrame: ${referenceFrame}, FLAGS: ${FLAGS}, errorCode: ${errorCode}, errorMessage: ${errorMessage}}';
+  }
+}
+
+class _PRWBatchResponseReader extends fb.TableReader<PRWBatchResponse> {
+  const _PRWBatchResponseReader();
+
+  @override
+  PRWBatchResponse createObject(fb.BufferContext bc, int offset) =>
+    PRWBatchResponse._(bc, offset);
+}
+
+class PRWBatchResponseBuilder {
+  PRWBatchResponseBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addCount(int? COUNT) {
+    fbBuilder.addUint32(0, COUNT);
+    return fbBuilder.offset;
+  }
+  int addOutputOffset(int? OUTPUT_OFFSET) {
+    fbBuilder.addUint32(1, OUTPUT_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addStateVectorSize(int? STATE_VECTOR_SIZE) {
+    fbBuilder.addUint8(2, STATE_VECTOR_SIZE);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addFlagsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addErrorCode(propagatorErrorCode? ERROR_CODE) {
+    fbBuilder.addInt32(5, ERROR_CODE?.value);
+    return fbBuilder.offset;
+  }
+  int addErrorMessageOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWBatchResponseObjectBuilder extends fb.ObjectBuilder {
+  final int? _COUNT;
+  final int? _OUTPUT_OFFSET;
+  final int? _STATE_VECTOR_SIZE;
+  final String? _REFERENCE_FRAME;
+  final List<propagatorStateFlags>? _FLAGS;
+  final propagatorErrorCode? _ERROR_CODE;
+  final String? _ERROR_MESSAGE;
+
+  PRWBatchResponseObjectBuilder({
+    int? COUNT,
+    int? OUTPUT_OFFSET,
+    int? outputOffset,
+    int? STATE_VECTOR_SIZE,
+    int? stateVectorSize,
+    String? REFERENCE_FRAME,
+    String? referenceFrame,
+    List<propagatorStateFlags>? FLAGS,
+    propagatorErrorCode? ERROR_CODE,
+    propagatorErrorCode? errorCode,
+    String? ERROR_MESSAGE,
+    String? errorMessage,
+  })
+      : _COUNT = COUNT,
+        _OUTPUT_OFFSET = outputOffset ?? OUTPUT_OFFSET,
+        _STATE_VECTOR_SIZE = stateVectorSize ?? STATE_VECTOR_SIZE,
+        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _FLAGS = FLAGS,
+        _ERROR_CODE = errorCode ?? ERROR_CODE,
+        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME == null ? null
+        : fbBuilder.writeString(_REFERENCE_FRAME!);
+    final int? FLAGSOffset = _FLAGS == null ? null
+        : fbBuilder.writeListUint32(_FLAGS!.map((f) => f.value).toList());
+    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
+        : fbBuilder.writeString(_ERROR_MESSAGE!);
+    fbBuilder.startTable(7);
+    fbBuilder.addUint32(0, _COUNT);
+    fbBuilder.addUint32(1, _OUTPUT_OFFSET);
+    fbBuilder.addUint8(2, _STATE_VECTOR_SIZE);
+    fbBuilder.addOffset(3, REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(4, FLAGSOffset);
+    fbBuilder.addInt32(5, _ERROR_CODE?.value);
+    fbBuilder.addOffset(6, ERROR_MESSAGEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
+///  doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
+///  added to the a priori model and scaled by the visible Sun fraction.
+class PRWEcom2 {
+  PRWEcom2._(this._bc, this._bcOffset);
+  factory PRWEcom2(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWEcom2> reader = _PRWEcom2Reader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get D0_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get d0MS2 => D0_M_S2;
+  double get Y0_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get y0MS2 => Y0_M_S2;
+  double get B0_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get b0MS2 => B0_M_S2;
+  double get D2_COS_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get d2CosMS2 => D2_COS_M_S2;
+  double get D2_SIN_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get d2SinMS2 => D2_SIN_M_S2;
+  double get D4_COS_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get d4CosMS2 => D4_COS_M_S2;
+  double get D4_SIN_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get d4SinMS2 => D4_SIN_M_S2;
+  double get B1_COS_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get b1CosMS2 => B1_COS_M_S2;
+  double get B1_SIN_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get b1SinMS2 => B1_SIN_M_S2;
+  double get B3_COS_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get b3CosMS2 => B3_COS_M_S2;
+  double get B3_SIN_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get b3SinMS2 => B3_SIN_M_S2;
+
+  @override
+  String toString() {
+    return 'PRWEcom2{d0MS2: ${d0MS2}, y0MS2: ${y0MS2}, b0MS2: ${b0MS2}, d2CosMS2: ${d2CosMS2}, d2SinMS2: ${d2SinMS2}, d4CosMS2: ${d4CosMS2}, d4SinMS2: ${d4SinMS2}, b1CosMS2: ${b1CosMS2}, b1SinMS2: ${b1SinMS2}, b3CosMS2: ${b3CosMS2}, b3SinMS2: ${b3SinMS2}}';
+  }
+}
+
+class _PRWEcom2Reader extends fb.TableReader<PRWEcom2> {
+  const _PRWEcom2Reader();
+
+  @override
+  PRWEcom2 createObject(fb.BufferContext bc, int offset) =>
+    PRWEcom2._(bc, offset);
+}
+
+class PRWEcom2Builder {
+  PRWEcom2Builder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addD0MS2(double? D0_M_S2) {
+    fbBuilder.addFloat64(0, D0_M_S2);
+    return fbBuilder.offset;
+  }
+  int addY0MS2(double? Y0_M_S2) {
+    fbBuilder.addFloat64(1, Y0_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB0MS2(double? B0_M_S2) {
+    fbBuilder.addFloat64(2, B0_M_S2);
+    return fbBuilder.offset;
+  }
+  int addD2CosMS2(double? D2_COS_M_S2) {
+    fbBuilder.addFloat64(3, D2_COS_M_S2);
+    return fbBuilder.offset;
+  }
+  int addD2SinMS2(double? D2_SIN_M_S2) {
+    fbBuilder.addFloat64(4, D2_SIN_M_S2);
+    return fbBuilder.offset;
+  }
+  int addD4CosMS2(double? D4_COS_M_S2) {
+    fbBuilder.addFloat64(5, D4_COS_M_S2);
+    return fbBuilder.offset;
+  }
+  int addD4SinMS2(double? D4_SIN_M_S2) {
+    fbBuilder.addFloat64(6, D4_SIN_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB1CosMS2(double? B1_COS_M_S2) {
+    fbBuilder.addFloat64(7, B1_COS_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB1SinMS2(double? B1_SIN_M_S2) {
+    fbBuilder.addFloat64(8, B1_SIN_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB3CosMS2(double? B3_COS_M_S2) {
+    fbBuilder.addFloat64(9, B3_COS_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB3SinMS2(double? B3_SIN_M_S2) {
+    fbBuilder.addFloat64(10, B3_SIN_M_S2);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWEcom2ObjectBuilder extends fb.ObjectBuilder {
+  final double? _D0_M_S2;
+  final double? _Y0_M_S2;
+  final double? _B0_M_S2;
+  final double? _D2_COS_M_S2;
+  final double? _D2_SIN_M_S2;
+  final double? _D4_COS_M_S2;
+  final double? _D4_SIN_M_S2;
+  final double? _B1_COS_M_S2;
+  final double? _B1_SIN_M_S2;
+  final double? _B3_COS_M_S2;
+  final double? _B3_SIN_M_S2;
+
+  PRWEcom2ObjectBuilder({
+    double? D0_M_S2,
+    double? d0MS2,
+    double? Y0_M_S2,
+    double? y0MS2,
+    double? B0_M_S2,
+    double? b0MS2,
+    double? D2_COS_M_S2,
+    double? d2CosMS2,
+    double? D2_SIN_M_S2,
+    double? d2SinMS2,
+    double? D4_COS_M_S2,
+    double? d4CosMS2,
+    double? D4_SIN_M_S2,
+    double? d4SinMS2,
+    double? B1_COS_M_S2,
+    double? b1CosMS2,
+    double? B1_SIN_M_S2,
+    double? b1SinMS2,
+    double? B3_COS_M_S2,
+    double? b3CosMS2,
+    double? B3_SIN_M_S2,
+    double? b3SinMS2,
+  })
+      : _D0_M_S2 = d0MS2 ?? D0_M_S2,
+        _Y0_M_S2 = y0MS2 ?? Y0_M_S2,
+        _B0_M_S2 = b0MS2 ?? B0_M_S2,
+        _D2_COS_M_S2 = d2CosMS2 ?? D2_COS_M_S2,
+        _D2_SIN_M_S2 = d2SinMS2 ?? D2_SIN_M_S2,
+        _D4_COS_M_S2 = d4CosMS2 ?? D4_COS_M_S2,
+        _D4_SIN_M_S2 = d4SinMS2 ?? D4_SIN_M_S2,
+        _B1_COS_M_S2 = b1CosMS2 ?? B1_COS_M_S2,
+        _B1_SIN_M_S2 = b1SinMS2 ?? B1_SIN_M_S2,
+        _B3_COS_M_S2 = b3CosMS2 ?? B3_COS_M_S2,
+        _B3_SIN_M_S2 = b3SinMS2 ?? B3_SIN_M_S2;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(11);
+    fbBuilder.addFloat64(0, _D0_M_S2);
+    fbBuilder.addFloat64(1, _Y0_M_S2);
+    fbBuilder.addFloat64(2, _B0_M_S2);
+    fbBuilder.addFloat64(3, _D2_COS_M_S2);
+    fbBuilder.addFloat64(4, _D2_SIN_M_S2);
+    fbBuilder.addFloat64(5, _D4_COS_M_S2);
+    fbBuilder.addFloat64(6, _D4_SIN_M_S2);
+    fbBuilder.addFloat64(7, _B1_COS_M_S2);
+    fbBuilder.addFloat64(8, _B1_SIN_M_S2);
+    fbBuilder.addFloat64(9, _B3_COS_M_S2);
+    fbBuilder.addFloat64(10, _B3_SIN_M_S2);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Instance identity is host-provided, opaque, and not a physical quantity.
+class PRWInstance {
+  PRWInstance._(this._bc, this._bcOffset);
+  factory PRWInstance(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWInstance> reader = _PRWInstanceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get moduleId => MODULE_ID;
+  String? get INSTANCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get instanceId => INSTANCE_ID;
+  ///  Incremented on reinitialization or configuration invalidation.
+  int get GENERATION => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+
+  @override
+  String toString() {
+    return 'PRWInstance{moduleId: ${moduleId}, instanceId: ${instanceId}, GENERATION: ${GENERATION}}';
+  }
+}
+
+class _PRWInstanceReader extends fb.TableReader<PRWInstance> {
+  const _PRWInstanceReader();
+
+  @override
+  PRWInstance createObject(fb.BufferContext bc, int offset) =>
+    PRWInstance._(bc, offset);
+}
+
+class PRWInstanceBuilder {
+  PRWInstanceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addInstanceIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addGeneration(int? GENERATION) {
+    fbBuilder.addUint64(2, GENERATION);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWInstanceObjectBuilder extends fb.ObjectBuilder {
+  final String? _MODULE_ID;
+  final String? _INSTANCE_ID;
+  final int? _GENERATION;
+
+  PRWInstanceObjectBuilder({
+    String? MODULE_ID,
+    String? moduleId,
+    String? INSTANCE_ID,
+    String? instanceId,
+    int? GENERATION,
+  })
+      : _MODULE_ID = moduleId ?? MODULE_ID,
+        _INSTANCE_ID = instanceId ?? INSTANCE_ID,
+        _GENERATION = GENERATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? INSTANCE_IDOffset = _INSTANCE_ID == null ? null
+        : fbBuilder.writeString(_INSTANCE_ID!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, MODULE_IDOffset);
+    fbBuilder.addOffset(1, INSTANCE_IDOffset);
+    fbBuilder.addUint64(2, _GENERATION);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Units are SI. A scalar legacy tolerance must be expanded by the adapter.
+class PRWIntegratorSettings {
+  PRWIntegratorSettings._(this._bc, this._bcOffset);
+  factory PRWIntegratorSettings(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWIntegratorSettings> reader = _PRWIntegratorSettingsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  prwSolverAlgorithm get ALGORITHM => prwSolverAlgorithm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  double get INITIAL_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 60.0);
+  double get initialStepSeconds => INITIAL_STEP_SECONDS;
+  double get MINIMUM_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 1.0);
+  double get minimumStepSeconds => MINIMUM_STEP_SECONDS;
+  double get MAXIMUM_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 3600.0);
+  double get maximumStepSeconds => MAXIMUM_STEP_SECONDS;
+  ///  Six or seven positive tolerances, respectively m, m/s and optional kg.
+  List<double>? get ABSOLUTE_TOLERANCES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<double>? get absoluteTolerances => ABSOLUTE_TOLERANCES;
+  double get RELATIVE_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 1e-12);
+  double get relativeTolerance => RELATIVE_TOLERANCE;
+  int get MAXIMUM_STEPS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 100000);
+  int get maximumSteps => MAXIMUM_STEPS;
+
+  @override
+  String toString() {
+    return 'PRWIntegratorSettings{ALGORITHM: ${ALGORITHM}, initialStepSeconds: ${initialStepSeconds}, minimumStepSeconds: ${minimumStepSeconds}, maximumStepSeconds: ${maximumStepSeconds}, absoluteTolerances: ${absoluteTolerances}, relativeTolerance: ${relativeTolerance}, maximumSteps: ${maximumSteps}}';
+  }
+}
+
+class _PRWIntegratorSettingsReader extends fb.TableReader<PRWIntegratorSettings> {
+  const _PRWIntegratorSettingsReader();
+
+  @override
+  PRWIntegratorSettings createObject(fb.BufferContext bc, int offset) =>
+    PRWIntegratorSettings._(bc, offset);
+}
+
+class PRWIntegratorSettingsBuilder {
+  PRWIntegratorSettingsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addAlgorithm(prwSolverAlgorithm? ALGORITHM) {
+    fbBuilder.addUint8(0, ALGORITHM?.value);
+    return fbBuilder.offset;
+  }
+  int addInitialStepSeconds(double? INITIAL_STEP_SECONDS) {
+    fbBuilder.addFloat64(1, INITIAL_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addMinimumStepSeconds(double? MINIMUM_STEP_SECONDS) {
+    fbBuilder.addFloat64(2, MINIMUM_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addMaximumStepSeconds(double? MAXIMUM_STEP_SECONDS) {
+    fbBuilder.addFloat64(3, MAXIMUM_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addAbsoluteTolerancesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRelativeTolerance(double? RELATIVE_TOLERANCE) {
+    fbBuilder.addFloat64(5, RELATIVE_TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addMaximumSteps(int? MAXIMUM_STEPS) {
+    fbBuilder.addUint32(6, MAXIMUM_STEPS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWIntegratorSettingsObjectBuilder extends fb.ObjectBuilder {
+  final prwSolverAlgorithm? _ALGORITHM;
+  final double? _INITIAL_STEP_SECONDS;
+  final double? _MINIMUM_STEP_SECONDS;
+  final double? _MAXIMUM_STEP_SECONDS;
+  final List<double>? _ABSOLUTE_TOLERANCES;
+  final double? _RELATIVE_TOLERANCE;
+  final int? _MAXIMUM_STEPS;
+
+  PRWIntegratorSettingsObjectBuilder({
+    prwSolverAlgorithm? ALGORITHM,
+    double? INITIAL_STEP_SECONDS,
+    double? initialStepSeconds,
+    double? MINIMUM_STEP_SECONDS,
+    double? minimumStepSeconds,
+    double? MAXIMUM_STEP_SECONDS,
+    double? maximumStepSeconds,
+    List<double>? ABSOLUTE_TOLERANCES,
+    List<double>? absoluteTolerances,
+    double? RELATIVE_TOLERANCE,
+    double? relativeTolerance,
+    int? MAXIMUM_STEPS,
+    int? maximumSteps,
+  })
+      : _ALGORITHM = ALGORITHM,
+        _INITIAL_STEP_SECONDS = initialStepSeconds ?? INITIAL_STEP_SECONDS,
+        _MINIMUM_STEP_SECONDS = minimumStepSeconds ?? MINIMUM_STEP_SECONDS,
+        _MAXIMUM_STEP_SECONDS = maximumStepSeconds ?? MAXIMUM_STEP_SECONDS,
+        _ABSOLUTE_TOLERANCES = absoluteTolerances ?? ABSOLUTE_TOLERANCES,
+        _RELATIVE_TOLERANCE = relativeTolerance ?? RELATIVE_TOLERANCE,
+        _MAXIMUM_STEPS = maximumSteps ?? MAXIMUM_STEPS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ABSOLUTE_TOLERANCESOffset = _ABSOLUTE_TOLERANCES == null ? null
+        : fbBuilder.writeListFloat64(_ABSOLUTE_TOLERANCES!);
+    fbBuilder.startTable(7);
+    fbBuilder.addUint8(0, _ALGORITHM?.value);
+    fbBuilder.addFloat64(1, _INITIAL_STEP_SECONDS);
+    fbBuilder.addFloat64(2, _MINIMUM_STEP_SECONDS);
+    fbBuilder.addFloat64(3, _MAXIMUM_STEP_SECONDS);
+    fbBuilder.addOffset(4, ABSOLUTE_TOLERANCESOffset);
+    fbBuilder.addFloat64(5, _RELATIVE_TOLERANCE);
+    fbBuilder.addUint32(6, _MAXIMUM_STEPS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
+class PRWSpaceWeather {
+  PRWSpaceWeather._(this._bc, this._bcOffset);
+  factory PRWSpaceWeather(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWSpaceWeather> reader = _PRWSpaceWeatherReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  TIMInstant? get EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  double get F107 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 150.0);
+  double get F107_AVERAGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 150.0);
+  double get f107Average => F107_AVERAGE;
+  ///  Conventional daily Ap and three-hour Kp index values; not accelerations.
+  double get AP_INDEX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 15.0);
+  double get apIndex => AP_INDEX;
+  double get KP_INDEX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 3.0);
+  double get kpIndex => KP_INDEX;
+
+  @override
+  String toString() {
+    return 'PRWSpaceWeather{EPOCH: ${EPOCH}, F107: ${F107}, f107Average: ${f107Average}, apIndex: ${apIndex}, kpIndex: ${kpIndex}}';
+  }
+}
+
+class _PRWSpaceWeatherReader extends fb.TableReader<PRWSpaceWeather> {
+  const _PRWSpaceWeatherReader();
+
+  @override
+  PRWSpaceWeather createObject(fb.BufferContext bc, int offset) =>
+    PRWSpaceWeather._(bc, offset);
+}
+
+class PRWSpaceWeatherBuilder {
+  PRWSpaceWeatherBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addF107(double? F107) {
+    fbBuilder.addFloat64(1, F107);
+    return fbBuilder.offset;
+  }
+  int addF107Average(double? F107_AVERAGE) {
+    fbBuilder.addFloat64(2, F107_AVERAGE);
+    return fbBuilder.offset;
+  }
+  int addApIndex(double? AP_INDEX) {
+    fbBuilder.addFloat64(3, AP_INDEX);
+    return fbBuilder.offset;
+  }
+  int addKpIndex(double? KP_INDEX) {
+    fbBuilder.addFloat64(4, KP_INDEX);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWSpaceWeatherObjectBuilder extends fb.ObjectBuilder {
+  final TIMInstantObjectBuilder? _EPOCH;
+  final double? _F107;
+  final double? _F107_AVERAGE;
+  final double? _AP_INDEX;
+  final double? _KP_INDEX;
+
+  PRWSpaceWeatherObjectBuilder({
+    TIMInstantObjectBuilder? EPOCH,
+    double? F107,
+    double? F107_AVERAGE,
+    double? f107Average,
+    double? AP_INDEX,
+    double? apIndex,
+    double? KP_INDEX,
+    double? kpIndex,
+  })
+      : _EPOCH = EPOCH,
+        _F107 = F107,
+        _F107_AVERAGE = f107Average ?? F107_AVERAGE,
+        _AP_INDEX = apIndex ?? AP_INDEX,
+        _KP_INDEX = kpIndex ?? KP_INDEX;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _F107);
+    fbBuilder.addFloat64(2, _F107_AVERAGE);
+    fbBuilder.addFloat64(3, _AP_INDEX);
+    fbBuilder.addFloat64(4, _KP_INDEX);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Executable subset currently reachable through HPOP invoke. No implied
+///  support for coefficients, drag models or bodies the provider cannot supply.
+class PRWForceConfiguration {
+  PRWForceConfiguration._(this._bc, this._bcOffset);
+  factory PRWForceConfiguration(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWForceConfiguration> reader = _PRWForceConfigurationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  prwGravitySelection get GRAVITY_CHOICE => prwGravitySelection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  prwGravitySelection get gravityChoice => GRAVITY_CHOICE;
+  bool get ENABLE_POINT_MASS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, true);
+  bool get enablePointMass => ENABLE_POINT_MASS;
+  ///  m3/s2; required positive when a central gravity term is enabled.
+  double get GRAVITATIONAL_PARAMETER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get gravitationalParameter => GRAVITATIONAL_PARAMETER;
+  bool get ENABLE_J2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, true);
+  bool get enableJ2 => ENABLE_J2;
+  bool get ENABLE_J3 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get enableJ3 => ENABLE_J3;
+  bool get ENABLE_J4 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get enableJ4 => ENABLE_J4;
+  bool get ENABLE_HIGHER_ZONALS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get enableHigherZonals => ENABLE_HIGHER_ZONALS;
+  ///  Optional truncations; absent selects the explicitly reported model default.
+  int get MAXIMUM_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get maximumDegree => MAXIMUM_DEGREE;
+  ///  True when MAXIMUM_DEGREE carries a value; false means absent.
+  bool get HAS_MAXIMUM_DEGREE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasMaximumDegree => HAS_MAXIMUM_DEGREE;
+  int get MAXIMUM_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get maximumOrder => MAXIMUM_ORDER;
+  ///  True when MAXIMUM_ORDER carries a value; false means absent.
+  bool get HAS_MAXIMUM_ORDER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasMaximumOrder => HAS_MAXIMUM_ORDER;
+  bool get ENABLE_THIRD_BODY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get enableThirdBody => ENABLE_THIRD_BODY;
+  ///  NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.
+  List<int>? get THIRD_BODY_IDS => const fb.ListReader<int>(fb.Int32Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+  List<int>? get thirdBodyIds => THIRD_BODY_IDS;
+  bool get ENABLE_SRP => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get enableSrp => ENABLE_SRP;
+  bool get ENABLE_DRAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  bool get enableDrag => ENABLE_DRAG;
+  double get INITIAL_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 1000.0);
+  double get initialMassKg => INITIAL_MASS_KG;
+  double get AREA_M2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 10.0);
+  double get areaM2 => AREA_M2;
+  double get REFLECTIVITY_COEFFICIENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 1.5);
+  double get reflectivityCoefficient => REFLECTIVITY_COEFFICIENT;
+  double get DRAG_COEFFICIENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 2.2);
+  double get dragCoefficient => DRAG_COEFFICIENT;
+  prwAtmosphereFamily get ATMOSPHERE_MODEL => prwAtmosphereFamily.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 42, 1));
+  prwAtmosphereFamily get atmosphereModel => ATMOSPHERE_MODEL;
+  PRWSpaceWeather? get WEATHER => PRWSpaceWeather.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
+  String? get EPHEMERIS_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get ephemerisSource => EPHEMERIS_SOURCE;
+  ///  Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+  ///  orientation (PRW.EARTH_ORIENTATION) to apply them.
+  prwSolidTideModel get SOLID_TIDES => prwSolidTideModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 48, 0));
+  prwSolidTideModel get solidTides => SOLID_TIDES;
+  prwRelativityTerms get RELATIVITY => prwRelativityTerms.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 50, 0));
+  ///  Constant acceleration along the in-track axis, m/s2: T of RTN,
+  ///  N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+  double get IN_TRACK_ACCELERATION_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get inTrackAccelerationMS2 => IN_TRACK_ACCELERATION_M_S2;
+  ///  True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  bool get HAS_IN_TRACK_ACCELERATION_M_S2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 54, false);
+  bool get hasInTrackAccelerationMS2 => HAS_IN_TRACK_ACCELERATION_M_S2;
+  ///  Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+  ///  BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+  double get DRAG_AREA_OVER_MASS_RATE_M2_KG_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  double get dragAreaOverMassRateM2KgS => DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  ///  True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  bool get HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S => const fb.BoolReader().vTableGet(_bc, _bcOffset, 58, false);
+  bool get hasDragAreaOverMassRateM2KgS => HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  ///  Highest degree of the tesseral and sectorial terms (order >= 1); the
+  ///  zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+  ///  MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+  int get MAXIMUM_TESSERAL_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 60, 0);
+  int get maximumTesseralDegree => MAXIMUM_TESSERAL_DEGREE;
+  ///  True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+  bool get HAS_MAXIMUM_TESSERAL_DEGREE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 62, false);
+  bool get hasMaximumTesseralDegree => HAS_MAXIMUM_TESSERAL_DEGREE;
+  ///  Solar radiation pressure model family (default: the cannonball).
+  prwRadiationPressureFamily get RADIATION_PRESSURE_MODEL => prwRadiationPressureFamily.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 64, 0));
+  prwRadiationPressureFamily get radiationPressureModel => RADIATION_PRESSURE_MODEL;
+  ///  Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+  prwGnssSpacecraftBlock get GNSS_BLOCK => prwGnssSpacecraftBlock.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 66, 0));
+  prwGnssSpacecraftBlock get gnssBlock => GNSS_BLOCK;
+  ///  ECOM2 coefficients; absent means no ECOM2 term.
+  PRWEcom2? get ECOM2 => PRWEcom2.reader.vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Earth radiation pressure (albedo and infrared). It reads the Sun's
+  ///  position from the request's ephemeris source.
+  prwEarthRadiationModel get EARTH_RADIATION => prwEarthRadiationModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 70, 0));
+  prwEarthRadiationModel get earthRadiation => EARTH_RADIATION;
+  ///  Angular size of the Earth surface elements it sums, degrees.
+  double get EARTH_RADIATION_RESOLUTION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 15.0);
+  double get earthRadiationResolutionDeg => EARTH_RADIATION_RESOLUTION_DEG;
+  ///  Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+  ///  cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+  ///  fitting SRP_AREA_OVER_MASS scales both.
+  double get EARTH_RADIATION_AREA_OVER_MASS_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
+  double get earthRadiationAreaOverMassM2Kg => EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+  ///  True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  bool get HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 76, false);
+  bool get hasEarthRadiationAreaOverMassM2Kg => HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+  ///  Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+  ///  orientation (PRW.EARTH_ORIENTATION) to apply them.
+  prwOceanTideModel get OCEAN_TIDES => prwOceanTideModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 78, 0));
+  prwOceanTideModel get oceanTides => OCEAN_TIDES;
+  ///  Truncation of the ocean tide field.
+  int get OCEAN_TIDE_MAXIMUM_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 80, 30);
+  int get oceanTideMaximumDegree => OCEAN_TIDE_MAXIMUM_DEGREE;
+  int get OCEAN_TIDE_MAXIMUM_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 82, 30);
+  int get oceanTideMaximumOrder => OCEAN_TIDE_MAXIMUM_ORDER;
+
+  @override
+  String toString() {
+    return 'PRWForceConfiguration{gravityChoice: ${gravityChoice}, enablePointMass: ${enablePointMass}, gravitationalParameter: ${gravitationalParameter}, enableJ2: ${enableJ2}, enableJ3: ${enableJ3}, enableJ4: ${enableJ4}, enableHigherZonals: ${enableHigherZonals}, maximumDegree: ${maximumDegree}, hasMaximumDegree: ${hasMaximumDegree}, maximumOrder: ${maximumOrder}, hasMaximumOrder: ${hasMaximumOrder}, enableThirdBody: ${enableThirdBody}, thirdBodyIds: ${thirdBodyIds}, enableSrp: ${enableSrp}, enableDrag: ${enableDrag}, initialMassKg: ${initialMassKg}, areaM2: ${areaM2}, reflectivityCoefficient: ${reflectivityCoefficient}, dragCoefficient: ${dragCoefficient}, atmosphereModel: ${atmosphereModel}, WEATHER: ${WEATHER}, ephemerisSource: ${ephemerisSource}, solidTides: ${solidTides}, RELATIVITY: ${RELATIVITY}, inTrackAccelerationMS2: ${inTrackAccelerationMS2}, hasInTrackAccelerationMS2: ${hasInTrackAccelerationMS2}, dragAreaOverMassRateM2KgS: ${dragAreaOverMassRateM2KgS}, hasDragAreaOverMassRateM2KgS: ${hasDragAreaOverMassRateM2KgS}, maximumTesseralDegree: ${maximumTesseralDegree}, hasMaximumTesseralDegree: ${hasMaximumTesseralDegree}, radiationPressureModel: ${radiationPressureModel}, gnssBlock: ${gnssBlock}, ECOM2: ${ECOM2}, earthRadiation: ${earthRadiation}, earthRadiationResolutionDeg: ${earthRadiationResolutionDeg}, earthRadiationAreaOverMassM2Kg: ${earthRadiationAreaOverMassM2Kg}, hasEarthRadiationAreaOverMassM2Kg: ${hasEarthRadiationAreaOverMassM2Kg}, oceanTides: ${oceanTides}, oceanTideMaximumDegree: ${oceanTideMaximumDegree}, oceanTideMaximumOrder: ${oceanTideMaximumOrder}}';
+  }
+}
+
+class _PRWForceConfigurationReader extends fb.TableReader<PRWForceConfiguration> {
+  const _PRWForceConfigurationReader();
+
+  @override
+  PRWForceConfiguration createObject(fb.BufferContext bc, int offset) =>
+    PRWForceConfiguration._(bc, offset);
+}
+
+class PRWForceConfigurationBuilder {
+  PRWForceConfigurationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(40);
+  }
+
+  int addGravityChoice(prwGravitySelection? GRAVITY_CHOICE) {
+    fbBuilder.addUint8(0, GRAVITY_CHOICE?.value);
+    return fbBuilder.offset;
+  }
+  int addEnablePointMass(bool? ENABLE_POINT_MASS) {
+    fbBuilder.addBool(1, ENABLE_POINT_MASS);
+    return fbBuilder.offset;
+  }
+  int addGravitationalParameter(double? GRAVITATIONAL_PARAMETER) {
+    fbBuilder.addFloat64(2, GRAVITATIONAL_PARAMETER);
+    return fbBuilder.offset;
+  }
+  int addEnableJ2(bool? ENABLE_J2) {
+    fbBuilder.addBool(3, ENABLE_J2);
+    return fbBuilder.offset;
+  }
+  int addEnableJ3(bool? ENABLE_J3) {
+    fbBuilder.addBool(4, ENABLE_J3);
+    return fbBuilder.offset;
+  }
+  int addEnableJ4(bool? ENABLE_J4) {
+    fbBuilder.addBool(5, ENABLE_J4);
+    return fbBuilder.offset;
+  }
+  int addEnableHigherZonals(bool? ENABLE_HIGHER_ZONALS) {
+    fbBuilder.addBool(6, ENABLE_HIGHER_ZONALS);
+    return fbBuilder.offset;
+  }
+  int addMaximumDegree(int? MAXIMUM_DEGREE) {
+    fbBuilder.addUint16(7, MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumDegree(bool? HAS_MAXIMUM_DEGREE) {
+    fbBuilder.addBool(8, HAS_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addMaximumOrder(int? MAXIMUM_ORDER) {
+    fbBuilder.addUint16(9, MAXIMUM_ORDER);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumOrder(bool? HAS_MAXIMUM_ORDER) {
+    fbBuilder.addBool(10, HAS_MAXIMUM_ORDER);
+    return fbBuilder.offset;
+  }
+  int addEnableThirdBody(bool? ENABLE_THIRD_BODY) {
+    fbBuilder.addBool(11, ENABLE_THIRD_BODY);
+    return fbBuilder.offset;
+  }
+  int addThirdBodyIdsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addEnableSrp(bool? ENABLE_SRP) {
+    fbBuilder.addBool(13, ENABLE_SRP);
+    return fbBuilder.offset;
+  }
+  int addEnableDrag(bool? ENABLE_DRAG) {
+    fbBuilder.addBool(14, ENABLE_DRAG);
+    return fbBuilder.offset;
+  }
+  int addInitialMassKg(double? INITIAL_MASS_KG) {
+    fbBuilder.addFloat64(15, INITIAL_MASS_KG);
+    return fbBuilder.offset;
+  }
+  int addAreaM2(double? AREA_M2) {
+    fbBuilder.addFloat64(16, AREA_M2);
+    return fbBuilder.offset;
+  }
+  int addReflectivityCoefficient(double? REFLECTIVITY_COEFFICIENT) {
+    fbBuilder.addFloat64(17, REFLECTIVITY_COEFFICIENT);
+    return fbBuilder.offset;
+  }
+  int addDragCoefficient(double? DRAG_COEFFICIENT) {
+    fbBuilder.addFloat64(18, DRAG_COEFFICIENT);
+    return fbBuilder.offset;
+  }
+  int addAtmosphereModel(prwAtmosphereFamily? ATMOSPHERE_MODEL) {
+    fbBuilder.addUint8(19, ATMOSPHERE_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addWeatherOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisSourceOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addSolidTides(prwSolidTideModel? SOLID_TIDES) {
+    fbBuilder.addUint8(22, SOLID_TIDES?.value);
+    return fbBuilder.offset;
+  }
+  int addRelativity(prwRelativityTerms? RELATIVITY) {
+    fbBuilder.addUint8(23, RELATIVITY?.value);
+    return fbBuilder.offset;
+  }
+  int addInTrackAccelerationMS2(double? IN_TRACK_ACCELERATION_M_S2) {
+    fbBuilder.addFloat64(24, IN_TRACK_ACCELERATION_M_S2);
+    return fbBuilder.offset;
+  }
+  int addHasInTrackAccelerationMS2(bool? HAS_IN_TRACK_ACCELERATION_M_S2) {
+    fbBuilder.addBool(25, HAS_IN_TRACK_ACCELERATION_M_S2);
+    return fbBuilder.offset;
+  }
+  int addDragAreaOverMassRateM2KgS(double? DRAG_AREA_OVER_MASS_RATE_M2_KG_S) {
+    fbBuilder.addFloat64(26, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    return fbBuilder.offset;
+  }
+  int addHasDragAreaOverMassRateM2KgS(bool? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) {
+    fbBuilder.addBool(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    return fbBuilder.offset;
+  }
+  int addMaximumTesseralDegree(int? MAXIMUM_TESSERAL_DEGREE) {
+    fbBuilder.addUint16(28, MAXIMUM_TESSERAL_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumTesseralDegree(bool? HAS_MAXIMUM_TESSERAL_DEGREE) {
+    fbBuilder.addBool(29, HAS_MAXIMUM_TESSERAL_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addRadiationPressureModel(prwRadiationPressureFamily? RADIATION_PRESSURE_MODEL) {
+    fbBuilder.addUint8(30, RADIATION_PRESSURE_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addGnssBlock(prwGnssSpacecraftBlock? GNSS_BLOCK) {
+    fbBuilder.addUint8(31, GNSS_BLOCK?.value);
+    return fbBuilder.offset;
+  }
+  int addEcom2Offset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addEarthRadiation(prwEarthRadiationModel? EARTH_RADIATION) {
+    fbBuilder.addUint8(33, EARTH_RADIATION?.value);
+    return fbBuilder.offset;
+  }
+  int addEarthRadiationResolutionDeg(double? EARTH_RADIATION_RESOLUTION_DEG) {
+    fbBuilder.addFloat64(34, EARTH_RADIATION_RESOLUTION_DEG);
+    return fbBuilder.offset;
+  }
+  int addEarthRadiationAreaOverMassM2Kg(double? EARTH_RADIATION_AREA_OVER_MASS_M2_KG) {
+    fbBuilder.addFloat64(35, EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addHasEarthRadiationAreaOverMassM2Kg(bool? HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG) {
+    fbBuilder.addBool(36, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addOceanTides(prwOceanTideModel? OCEAN_TIDES) {
+    fbBuilder.addUint8(37, OCEAN_TIDES?.value);
+    return fbBuilder.offset;
+  }
+  int addOceanTideMaximumDegree(int? OCEAN_TIDE_MAXIMUM_DEGREE) {
+    fbBuilder.addUint16(38, OCEAN_TIDE_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addOceanTideMaximumOrder(int? OCEAN_TIDE_MAXIMUM_ORDER) {
+    fbBuilder.addUint16(39, OCEAN_TIDE_MAXIMUM_ORDER);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWForceConfigurationObjectBuilder extends fb.ObjectBuilder {
+  final prwGravitySelection? _GRAVITY_CHOICE;
+  final bool? _ENABLE_POINT_MASS;
+  final double? _GRAVITATIONAL_PARAMETER;
+  final bool? _ENABLE_J2;
+  final bool? _ENABLE_J3;
+  final bool? _ENABLE_J4;
+  final bool? _ENABLE_HIGHER_ZONALS;
+  final int? _MAXIMUM_DEGREE;
+  final bool? _HAS_MAXIMUM_DEGREE;
+  final int? _MAXIMUM_ORDER;
+  final bool? _HAS_MAXIMUM_ORDER;
+  final bool? _ENABLE_THIRD_BODY;
+  final List<int>? _THIRD_BODY_IDS;
+  final bool? _ENABLE_SRP;
+  final bool? _ENABLE_DRAG;
+  final double? _INITIAL_MASS_KG;
+  final double? _AREA_M2;
+  final double? _REFLECTIVITY_COEFFICIENT;
+  final double? _DRAG_COEFFICIENT;
+  final prwAtmosphereFamily? _ATMOSPHERE_MODEL;
+  final PRWSpaceWeatherObjectBuilder? _WEATHER;
+  final String? _EPHEMERIS_SOURCE;
+  final prwSolidTideModel? _SOLID_TIDES;
+  final prwRelativityTerms? _RELATIVITY;
+  final double? _IN_TRACK_ACCELERATION_M_S2;
+  final bool? _HAS_IN_TRACK_ACCELERATION_M_S2;
+  final double? _DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  final bool? _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  final int? _MAXIMUM_TESSERAL_DEGREE;
+  final bool? _HAS_MAXIMUM_TESSERAL_DEGREE;
+  final prwRadiationPressureFamily? _RADIATION_PRESSURE_MODEL;
+  final prwGnssSpacecraftBlock? _GNSS_BLOCK;
+  final PRWEcom2ObjectBuilder? _ECOM2;
+  final prwEarthRadiationModel? _EARTH_RADIATION;
+  final double? _EARTH_RADIATION_RESOLUTION_DEG;
+  final double? _EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+  final bool? _HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+  final prwOceanTideModel? _OCEAN_TIDES;
+  final int? _OCEAN_TIDE_MAXIMUM_DEGREE;
+  final int? _OCEAN_TIDE_MAXIMUM_ORDER;
+
+  PRWForceConfigurationObjectBuilder({
+    prwGravitySelection? GRAVITY_CHOICE,
+    prwGravitySelection? gravityChoice,
+    bool? ENABLE_POINT_MASS,
+    bool? enablePointMass,
+    double? GRAVITATIONAL_PARAMETER,
+    double? gravitationalParameter,
+    bool? ENABLE_J2,
+    bool? enableJ2,
+    bool? ENABLE_J3,
+    bool? enableJ3,
+    bool? ENABLE_J4,
+    bool? enableJ4,
+    bool? ENABLE_HIGHER_ZONALS,
+    bool? enableHigherZonals,
+    int? MAXIMUM_DEGREE,
+    int? maximumDegree,
+    bool? HAS_MAXIMUM_DEGREE,
+    bool? hasMaximumDegree,
+    int? MAXIMUM_ORDER,
+    int? maximumOrder,
+    bool? HAS_MAXIMUM_ORDER,
+    bool? hasMaximumOrder,
+    bool? ENABLE_THIRD_BODY,
+    bool? enableThirdBody,
+    List<int>? THIRD_BODY_IDS,
+    List<int>? thirdBodyIds,
+    bool? ENABLE_SRP,
+    bool? enableSrp,
+    bool? ENABLE_DRAG,
+    bool? enableDrag,
+    double? INITIAL_MASS_KG,
+    double? initialMassKg,
+    double? AREA_M2,
+    double? areaM2,
+    double? REFLECTIVITY_COEFFICIENT,
+    double? reflectivityCoefficient,
+    double? DRAG_COEFFICIENT,
+    double? dragCoefficient,
+    prwAtmosphereFamily? ATMOSPHERE_MODEL,
+    prwAtmosphereFamily? atmosphereModel,
+    PRWSpaceWeatherObjectBuilder? WEATHER,
+    String? EPHEMERIS_SOURCE,
+    String? ephemerisSource,
+    prwSolidTideModel? SOLID_TIDES,
+    prwSolidTideModel? solidTides,
+    prwRelativityTerms? RELATIVITY,
+    double? IN_TRACK_ACCELERATION_M_S2,
+    double? inTrackAccelerationMS2,
+    bool? HAS_IN_TRACK_ACCELERATION_M_S2,
+    bool? hasInTrackAccelerationMS2,
+    double? DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+    double? dragAreaOverMassRateM2KgS,
+    bool? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+    bool? hasDragAreaOverMassRateM2KgS,
+    int? MAXIMUM_TESSERAL_DEGREE,
+    int? maximumTesseralDegree,
+    bool? HAS_MAXIMUM_TESSERAL_DEGREE,
+    bool? hasMaximumTesseralDegree,
+    prwRadiationPressureFamily? RADIATION_PRESSURE_MODEL,
+    prwRadiationPressureFamily? radiationPressureModel,
+    prwGnssSpacecraftBlock? GNSS_BLOCK,
+    prwGnssSpacecraftBlock? gnssBlock,
+    PRWEcom2ObjectBuilder? ECOM2,
+    prwEarthRadiationModel? EARTH_RADIATION,
+    prwEarthRadiationModel? earthRadiation,
+    double? EARTH_RADIATION_RESOLUTION_DEG,
+    double? earthRadiationResolutionDeg,
+    double? EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+    double? earthRadiationAreaOverMassM2Kg,
+    bool? HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+    bool? hasEarthRadiationAreaOverMassM2Kg,
+    prwOceanTideModel? OCEAN_TIDES,
+    prwOceanTideModel? oceanTides,
+    int? OCEAN_TIDE_MAXIMUM_DEGREE,
+    int? oceanTideMaximumDegree,
+    int? OCEAN_TIDE_MAXIMUM_ORDER,
+    int? oceanTideMaximumOrder,
+  })
+      : _GRAVITY_CHOICE = gravityChoice ?? GRAVITY_CHOICE,
+        _ENABLE_POINT_MASS = enablePointMass ?? ENABLE_POINT_MASS,
+        _GRAVITATIONAL_PARAMETER = gravitationalParameter ?? GRAVITATIONAL_PARAMETER,
+        _ENABLE_J2 = enableJ2 ?? ENABLE_J2,
+        _ENABLE_J3 = enableJ3 ?? ENABLE_J3,
+        _ENABLE_J4 = enableJ4 ?? ENABLE_J4,
+        _ENABLE_HIGHER_ZONALS = enableHigherZonals ?? ENABLE_HIGHER_ZONALS,
+        _MAXIMUM_DEGREE = maximumDegree ?? MAXIMUM_DEGREE,
+        _HAS_MAXIMUM_DEGREE = hasMaximumDegree ?? HAS_MAXIMUM_DEGREE,
+        _MAXIMUM_ORDER = maximumOrder ?? MAXIMUM_ORDER,
+        _HAS_MAXIMUM_ORDER = hasMaximumOrder ?? HAS_MAXIMUM_ORDER,
+        _ENABLE_THIRD_BODY = enableThirdBody ?? ENABLE_THIRD_BODY,
+        _THIRD_BODY_IDS = thirdBodyIds ?? THIRD_BODY_IDS,
+        _ENABLE_SRP = enableSrp ?? ENABLE_SRP,
+        _ENABLE_DRAG = enableDrag ?? ENABLE_DRAG,
+        _INITIAL_MASS_KG = initialMassKg ?? INITIAL_MASS_KG,
+        _AREA_M2 = areaM2 ?? AREA_M2,
+        _REFLECTIVITY_COEFFICIENT = reflectivityCoefficient ?? REFLECTIVITY_COEFFICIENT,
+        _DRAG_COEFFICIENT = dragCoefficient ?? DRAG_COEFFICIENT,
+        _ATMOSPHERE_MODEL = atmosphereModel ?? ATMOSPHERE_MODEL,
+        _WEATHER = WEATHER,
+        _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE,
+        _SOLID_TIDES = solidTides ?? SOLID_TIDES,
+        _RELATIVITY = RELATIVITY,
+        _IN_TRACK_ACCELERATION_M_S2 = inTrackAccelerationMS2 ?? IN_TRACK_ACCELERATION_M_S2,
+        _HAS_IN_TRACK_ACCELERATION_M_S2 = hasInTrackAccelerationMS2 ?? HAS_IN_TRACK_ACCELERATION_M_S2,
+        _DRAG_AREA_OVER_MASS_RATE_M2_KG_S = dragAreaOverMassRateM2KgS ?? DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+        _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = hasDragAreaOverMassRateM2KgS ?? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+        _MAXIMUM_TESSERAL_DEGREE = maximumTesseralDegree ?? MAXIMUM_TESSERAL_DEGREE,
+        _HAS_MAXIMUM_TESSERAL_DEGREE = hasMaximumTesseralDegree ?? HAS_MAXIMUM_TESSERAL_DEGREE,
+        _RADIATION_PRESSURE_MODEL = radiationPressureModel ?? RADIATION_PRESSURE_MODEL,
+        _GNSS_BLOCK = gnssBlock ?? GNSS_BLOCK,
+        _ECOM2 = ECOM2,
+        _EARTH_RADIATION = earthRadiation ?? EARTH_RADIATION,
+        _EARTH_RADIATION_RESOLUTION_DEG = earthRadiationResolutionDeg ?? EARTH_RADIATION_RESOLUTION_DEG,
+        _EARTH_RADIATION_AREA_OVER_MASS_M2_KG = earthRadiationAreaOverMassM2Kg ?? EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+        _HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = hasEarthRadiationAreaOverMassM2Kg ?? HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+        _OCEAN_TIDES = oceanTides ?? OCEAN_TIDES,
+        _OCEAN_TIDE_MAXIMUM_DEGREE = oceanTideMaximumDegree ?? OCEAN_TIDE_MAXIMUM_DEGREE,
+        _OCEAN_TIDE_MAXIMUM_ORDER = oceanTideMaximumOrder ?? OCEAN_TIDE_MAXIMUM_ORDER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? THIRD_BODY_IDSOffset = _THIRD_BODY_IDS == null ? null
+        : fbBuilder.writeListInt32(_THIRD_BODY_IDS!);
+    final int? WEATHEROffset = _WEATHER?.getOrCreateOffset(fbBuilder);
+    final int? EPHEMERIS_SOURCEOffset = _EPHEMERIS_SOURCE == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
+    final int? ECOM2Offset = _ECOM2?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(40);
+    fbBuilder.addUint8(0, _GRAVITY_CHOICE?.value);
+    fbBuilder.addBool(1, _ENABLE_POINT_MASS);
+    fbBuilder.addFloat64(2, _GRAVITATIONAL_PARAMETER);
+    fbBuilder.addBool(3, _ENABLE_J2);
+    fbBuilder.addBool(4, _ENABLE_J3);
+    fbBuilder.addBool(5, _ENABLE_J4);
+    fbBuilder.addBool(6, _ENABLE_HIGHER_ZONALS);
+    fbBuilder.addUint16(7, _MAXIMUM_DEGREE);
+    fbBuilder.addBool(8, _HAS_MAXIMUM_DEGREE);
+    fbBuilder.addUint16(9, _MAXIMUM_ORDER);
+    fbBuilder.addBool(10, _HAS_MAXIMUM_ORDER);
+    fbBuilder.addBool(11, _ENABLE_THIRD_BODY);
+    fbBuilder.addOffset(12, THIRD_BODY_IDSOffset);
+    fbBuilder.addBool(13, _ENABLE_SRP);
+    fbBuilder.addBool(14, _ENABLE_DRAG);
+    fbBuilder.addFloat64(15, _INITIAL_MASS_KG);
+    fbBuilder.addFloat64(16, _AREA_M2);
+    fbBuilder.addFloat64(17, _REFLECTIVITY_COEFFICIENT);
+    fbBuilder.addFloat64(18, _DRAG_COEFFICIENT);
+    fbBuilder.addUint8(19, _ATMOSPHERE_MODEL?.value);
+    fbBuilder.addOffset(20, WEATHEROffset);
+    fbBuilder.addOffset(21, EPHEMERIS_SOURCEOffset);
+    fbBuilder.addUint8(22, _SOLID_TIDES?.value);
+    fbBuilder.addUint8(23, _RELATIVITY?.value);
+    fbBuilder.addFloat64(24, _IN_TRACK_ACCELERATION_M_S2);
+    fbBuilder.addBool(25, _HAS_IN_TRACK_ACCELERATION_M_S2);
+    fbBuilder.addFloat64(26, _DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    fbBuilder.addBool(27, _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    fbBuilder.addUint16(28, _MAXIMUM_TESSERAL_DEGREE);
+    fbBuilder.addBool(29, _HAS_MAXIMUM_TESSERAL_DEGREE);
+    fbBuilder.addUint8(30, _RADIATION_PRESSURE_MODEL?.value);
+    fbBuilder.addUint8(31, _GNSS_BLOCK?.value);
+    fbBuilder.addOffset(32, ECOM2Offset);
+    fbBuilder.addUint8(33, _EARTH_RADIATION?.value);
+    fbBuilder.addFloat64(34, _EARTH_RADIATION_RESOLUTION_DEG);
+    fbBuilder.addFloat64(35, _EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    fbBuilder.addBool(36, _HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    fbBuilder.addUint8(37, _OCEAN_TIDES?.value);
+    fbBuilder.addUint16(38, _OCEAN_TIDE_MAXIMUM_DEGREE);
+    fbBuilder.addUint16(39, _OCEAN_TIDE_MAXIMUM_ORDER);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
+///  request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+///  Covariance entries have row*column units; STM entries row/column units;
+///  an STM's parameter rows are the identity (parameters are constant).
+class PRWStateMatrix {
+  PRWStateMatrix._(this._bc, this._bcOffset);
+  factory PRWStateMatrix(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWStateMatrix> reader = _PRWStateMatrixReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get DIMENSION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  List<double>? get VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'PRWStateMatrix{DIMENSION: ${DIMENSION}, VALUES: ${VALUES}}';
+  }
+}
+
+class _PRWStateMatrixReader extends fb.TableReader<PRWStateMatrix> {
+  const _PRWStateMatrixReader();
+
+  @override
+  PRWStateMatrix createObject(fb.BufferContext bc, int offset) =>
+    PRWStateMatrix._(bc, offset);
+}
+
+class PRWStateMatrixBuilder {
+  PRWStateMatrixBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addDimension(int? DIMENSION) {
+    fbBuilder.addUint8(0, DIMENSION);
+    return fbBuilder.offset;
+  }
+  int addValuesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWStateMatrixObjectBuilder extends fb.ObjectBuilder {
+  final int? _DIMENSION;
+  final List<double>? _VALUES;
+
+  PRWStateMatrixObjectBuilder({
+    int? DIMENSION,
+    List<double>? VALUES,
+  })
+      : _DIMENSION = DIMENSION,
+        _VALUES = VALUES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? VALUESOffset = _VALUES == null ? null
+        : fbBuilder.writeListFloat64(_VALUES!);
+    fbBuilder.startTable(2);
+    fbBuilder.addUint8(0, _DIMENSION);
+    fbBuilder.addOffset(1, VALUESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.
+class PRWProcessNoise {
+  PRWProcessNoise._(this._bc, this._bcOffset);
+  factory PRWProcessNoise(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWProcessNoise> reader = _PRWProcessNoiseReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  prwProcessNoiseModel get MODEL => prwProcessNoiseModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  prwProcessNoiseAxes get AXES => prwProcessNoiseAxes.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Acceleration power spectral density per axis (x, y, z or R, T, N), m^2/s^3.
+  List<double>? get SPECTRAL_DENSITY_M2_S3 => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<double>? get spectralDensityM2S3 => SPECTRAL_DENSITY_M2_S3;
+  ///  Interval over which each noise increment enters, seconds.
+  double get DISCRETIZATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get discretizationSeconds => DISCRETIZATION_SECONDS;
+
+  @override
+  String toString() {
+    return 'PRWProcessNoise{MODEL: ${MODEL}, AXES: ${AXES}, spectralDensityM2S3: ${spectralDensityM2S3}, discretizationSeconds: ${discretizationSeconds}}';
+  }
+}
+
+class _PRWProcessNoiseReader extends fb.TableReader<PRWProcessNoise> {
+  const _PRWProcessNoiseReader();
+
+  @override
+  PRWProcessNoise createObject(fb.BufferContext bc, int offset) =>
+    PRWProcessNoise._(bc, offset);
+}
+
+class PRWProcessNoiseBuilder {
+  PRWProcessNoiseBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addModel(prwProcessNoiseModel? MODEL) {
+    fbBuilder.addUint8(0, MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addAxes(prwProcessNoiseAxes? AXES) {
+    fbBuilder.addUint8(1, AXES?.value);
+    return fbBuilder.offset;
+  }
+  int addSpectralDensityM2S3Offset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDiscretizationSeconds(double? DISCRETIZATION_SECONDS) {
+    fbBuilder.addFloat64(3, DISCRETIZATION_SECONDS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWProcessNoiseObjectBuilder extends fb.ObjectBuilder {
+  final prwProcessNoiseModel? _MODEL;
+  final prwProcessNoiseAxes? _AXES;
+  final List<double>? _SPECTRAL_DENSITY_M2_S3;
+  final double? _DISCRETIZATION_SECONDS;
+
+  PRWProcessNoiseObjectBuilder({
+    prwProcessNoiseModel? MODEL,
+    prwProcessNoiseAxes? AXES,
+    List<double>? SPECTRAL_DENSITY_M2_S3,
+    List<double>? spectralDensityM2S3,
+    double? DISCRETIZATION_SECONDS,
+    double? discretizationSeconds,
+  })
+      : _MODEL = MODEL,
+        _AXES = AXES,
+        _SPECTRAL_DENSITY_M2_S3 = spectralDensityM2S3 ?? SPECTRAL_DENSITY_M2_S3,
+        _DISCRETIZATION_SECONDS = discretizationSeconds ?? DISCRETIZATION_SECONDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SPECTRAL_DENSITY_M2_S3Offset = _SPECTRAL_DENSITY_M2_S3 == null ? null
+        : fbBuilder.writeListFloat64(_SPECTRAL_DENSITY_M2_S3!);
+    fbBuilder.startTable(4);
+    fbBuilder.addUint8(0, _MODEL?.value);
+    fbBuilder.addUint8(1, _AXES?.value);
+    fbBuilder.addOffset(2, SPECTRAL_DENSITY_M2_S3Offset);
+    fbBuilder.addFloat64(3, _DISCRETIZATION_SECONDS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.
+class PRWResidentState {
+  PRWResidentState._(this._bc, this._bcOffset);
+  factory PRWResidentState(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWResidentState> reader = _PRWResidentStateReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get ENTITY_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get entityHandle => ENTITY_HANDLE;
+  int get CATALOG_NUMBER => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get catalogNumber => CATALOG_NUMBER;
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get objectId => OBJECT_ID;
+  FRMStateVector? get STATE => FRMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  RFMCoordinateSystem? get COORDINATE_SYSTEM => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  RFMCoordinateSystem? get coordinateSystem => COORDINATE_SYSTEM;
+  PRWStateMatrix? get COVARIANCE => PRWStateMatrix.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Optional initial dynamical mass in kg; distinct from a missing mass.
+  double get MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get massKg => MASS_KG;
+  ///  True when MASS_KG carries a value; false means absent.
+  bool get HAS_MASS_KG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasMassKg => HAS_MASS_KG;
+  ///  Explicit SI concepts Cd*A/m and Cr*A/m. Do not infer these from legacy
+  ///  ignored/underspecified coefficients; require a caller-provided mapping.
+  double get DRAG_AREA_OVER_MASS_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get dragAreaOverMassM2Kg => DRAG_AREA_OVER_MASS_M2_KG;
+  ///  True when DRAG_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  bool get HAS_DRAG_AREA_OVER_MASS_M2_KG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasDragAreaOverMassM2Kg => HAS_DRAG_AREA_OVER_MASS_M2_KG;
+  double get SRP_AREA_OVER_MASS_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get srpAreaOverMassM2Kg => SRP_AREA_OVER_MASS_M2_KG;
+  ///  True when SRP_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  bool get HAS_SRP_AREA_OVER_MASS_M2_KG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  bool get hasSrpAreaOverMassM2Kg => HAS_SRP_AREA_OVER_MASS_M2_KG;
+  bool get VALID => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, true);
+  ///  Process noise for COVARIANCE: on input, what propagation adds; on
+  ///  output, what the propagated COVARIANCE includes. Absent means none.
+  PRWProcessNoise? get PROCESS_NOISE => PRWProcessNoise.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  PRWProcessNoise? get processNoise => PROCESS_NOISE;
+  ///  Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+  ///  (the BDOT of a VCM).
+  double get DRAG_AREA_OVER_MASS_RATE_M2_KG_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get dragAreaOverMassRateM2KgS => DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  ///  True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  bool get HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
+  bool get hasDragAreaOverMassRateM2KgS => HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  ///  Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+  double get IN_TRACK_ACCELERATION_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get inTrackAccelerationMS2 => IN_TRACK_ACCELERATION_M_S2;
+  ///  True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  bool get HAS_IN_TRACK_ACCELERATION_M_S2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
+  bool get hasInTrackAccelerationMS2 => HAS_IN_TRACK_ACCELERATION_M_S2;
+
+  @override
+  String toString() {
+    return 'PRWResidentState{INSTANCE: ${INSTANCE}, entityHandle: ${entityHandle}, catalogNumber: ${catalogNumber}, objectId: ${objectId}, STATE: ${STATE}, coordinateSystem: ${coordinateSystem}, COVARIANCE: ${COVARIANCE}, massKg: ${massKg}, hasMassKg: ${hasMassKg}, dragAreaOverMassM2Kg: ${dragAreaOverMassM2Kg}, hasDragAreaOverMassM2Kg: ${hasDragAreaOverMassM2Kg}, srpAreaOverMassM2Kg: ${srpAreaOverMassM2Kg}, hasSrpAreaOverMassM2Kg: ${hasSrpAreaOverMassM2Kg}, VALID: ${VALID}, processNoise: ${processNoise}, dragAreaOverMassRateM2KgS: ${dragAreaOverMassRateM2KgS}, hasDragAreaOverMassRateM2KgS: ${hasDragAreaOverMassRateM2KgS}, inTrackAccelerationMS2: ${inTrackAccelerationMS2}, hasInTrackAccelerationMS2: ${hasInTrackAccelerationMS2}}';
+  }
+}
+
+class _PRWResidentStateReader extends fb.TableReader<PRWResidentState> {
+  const _PRWResidentStateReader();
+
+  @override
+  PRWResidentState createObject(fb.BufferContext bc, int offset) =>
+    PRWResidentState._(bc, offset);
+}
+
+class PRWResidentStateBuilder {
+  PRWResidentStateBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(19);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEntityHandle(int? ENTITY_HANDLE) {
+    fbBuilder.addUint32(1, ENTITY_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addCatalogNumber(int? CATALOG_NUMBER) {
+    fbBuilder.addUint32(2, CATALOG_NUMBER);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addStateOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCoordinateSystemOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addMassKg(double? MASS_KG) {
+    fbBuilder.addFloat64(7, MASS_KG);
+    return fbBuilder.offset;
+  }
+  int addHasMassKg(bool? HAS_MASS_KG) {
+    fbBuilder.addBool(8, HAS_MASS_KG);
+    return fbBuilder.offset;
+  }
+  int addDragAreaOverMassM2Kg(double? DRAG_AREA_OVER_MASS_M2_KG) {
+    fbBuilder.addFloat64(9, DRAG_AREA_OVER_MASS_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addHasDragAreaOverMassM2Kg(bool? HAS_DRAG_AREA_OVER_MASS_M2_KG) {
+    fbBuilder.addBool(10, HAS_DRAG_AREA_OVER_MASS_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addSrpAreaOverMassM2Kg(double? SRP_AREA_OVER_MASS_M2_KG) {
+    fbBuilder.addFloat64(11, SRP_AREA_OVER_MASS_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addHasSrpAreaOverMassM2Kg(bool? HAS_SRP_AREA_OVER_MASS_M2_KG) {
+    fbBuilder.addBool(12, HAS_SRP_AREA_OVER_MASS_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addValid(bool? VALID) {
+    fbBuilder.addBool(13, VALID);
+    return fbBuilder.offset;
+  }
+  int addProcessNoiseOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addDragAreaOverMassRateM2KgS(double? DRAG_AREA_OVER_MASS_RATE_M2_KG_S) {
+    fbBuilder.addFloat64(15, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    return fbBuilder.offset;
+  }
+  int addHasDragAreaOverMassRateM2KgS(bool? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) {
+    fbBuilder.addBool(16, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    return fbBuilder.offset;
+  }
+  int addInTrackAccelerationMS2(double? IN_TRACK_ACCELERATION_M_S2) {
+    fbBuilder.addFloat64(17, IN_TRACK_ACCELERATION_M_S2);
+    return fbBuilder.offset;
+  }
+  int addHasInTrackAccelerationMS2(bool? HAS_IN_TRACK_ACCELERATION_M_S2) {
+    fbBuilder.addBool(18, HAS_IN_TRACK_ACCELERATION_M_S2);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWResidentStateObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _ENTITY_HANDLE;
+  final int? _CATALOG_NUMBER;
+  final String? _OBJECT_ID;
+  final FRMStateVectorObjectBuilder? _STATE;
+  final RFMCoordinateSystemObjectBuilder? _COORDINATE_SYSTEM;
+  final PRWStateMatrixObjectBuilder? _COVARIANCE;
+  final double? _MASS_KG;
+  final bool? _HAS_MASS_KG;
+  final double? _DRAG_AREA_OVER_MASS_M2_KG;
+  final bool? _HAS_DRAG_AREA_OVER_MASS_M2_KG;
+  final double? _SRP_AREA_OVER_MASS_M2_KG;
+  final bool? _HAS_SRP_AREA_OVER_MASS_M2_KG;
+  final bool? _VALID;
+  final PRWProcessNoiseObjectBuilder? _PROCESS_NOISE;
+  final double? _DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  final bool? _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  final double? _IN_TRACK_ACCELERATION_M_S2;
+  final bool? _HAS_IN_TRACK_ACCELERATION_M_S2;
+
+  PRWResidentStateObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? ENTITY_HANDLE,
+    int? entityHandle,
+    int? CATALOG_NUMBER,
+    int? catalogNumber,
+    String? OBJECT_ID,
+    String? objectId,
+    FRMStateVectorObjectBuilder? STATE,
+    RFMCoordinateSystemObjectBuilder? COORDINATE_SYSTEM,
+    RFMCoordinateSystemObjectBuilder? coordinateSystem,
+    PRWStateMatrixObjectBuilder? COVARIANCE,
+    double? MASS_KG,
+    double? massKg,
+    bool? HAS_MASS_KG,
+    bool? hasMassKg,
+    double? DRAG_AREA_OVER_MASS_M2_KG,
+    double? dragAreaOverMassM2Kg,
+    bool? HAS_DRAG_AREA_OVER_MASS_M2_KG,
+    bool? hasDragAreaOverMassM2Kg,
+    double? SRP_AREA_OVER_MASS_M2_KG,
+    double? srpAreaOverMassM2Kg,
+    bool? HAS_SRP_AREA_OVER_MASS_M2_KG,
+    bool? hasSrpAreaOverMassM2Kg,
+    bool? VALID,
+    PRWProcessNoiseObjectBuilder? PROCESS_NOISE,
+    PRWProcessNoiseObjectBuilder? processNoise,
+    double? DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+    double? dragAreaOverMassRateM2KgS,
+    bool? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+    bool? hasDragAreaOverMassRateM2KgS,
+    double? IN_TRACK_ACCELERATION_M_S2,
+    double? inTrackAccelerationMS2,
+    bool? HAS_IN_TRACK_ACCELERATION_M_S2,
+    bool? hasInTrackAccelerationMS2,
+  })
+      : _INSTANCE = INSTANCE,
+        _ENTITY_HANDLE = entityHandle ?? ENTITY_HANDLE,
+        _CATALOG_NUMBER = catalogNumber ?? CATALOG_NUMBER,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _STATE = STATE,
+        _COORDINATE_SYSTEM = coordinateSystem ?? COORDINATE_SYSTEM,
+        _COVARIANCE = COVARIANCE,
+        _MASS_KG = massKg ?? MASS_KG,
+        _HAS_MASS_KG = hasMassKg ?? HAS_MASS_KG,
+        _DRAG_AREA_OVER_MASS_M2_KG = dragAreaOverMassM2Kg ?? DRAG_AREA_OVER_MASS_M2_KG,
+        _HAS_DRAG_AREA_OVER_MASS_M2_KG = hasDragAreaOverMassM2Kg ?? HAS_DRAG_AREA_OVER_MASS_M2_KG,
+        _SRP_AREA_OVER_MASS_M2_KG = srpAreaOverMassM2Kg ?? SRP_AREA_OVER_MASS_M2_KG,
+        _HAS_SRP_AREA_OVER_MASS_M2_KG = hasSrpAreaOverMassM2Kg ?? HAS_SRP_AREA_OVER_MASS_M2_KG,
+        _VALID = VALID,
+        _PROCESS_NOISE = processNoise ?? PROCESS_NOISE,
+        _DRAG_AREA_OVER_MASS_RATE_M2_KG_S = dragAreaOverMassRateM2KgS ?? DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+        _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = hasDragAreaOverMassRateM2KgS ?? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+        _IN_TRACK_ACCELERATION_M_S2 = inTrackAccelerationMS2 ?? IN_TRACK_ACCELERATION_M_S2,
+        _HAS_IN_TRACK_ACCELERATION_M_S2 = hasInTrackAccelerationMS2 ?? HAS_IN_TRACK_ACCELERATION_M_S2;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? STATEOffset = _STATE?.getOrCreateOffset(fbBuilder);
+    final int? COORDINATE_SYSTEMOffset = _COORDINATE_SYSTEM?.getOrCreateOffset(fbBuilder);
+    final int? COVARIANCEOffset = _COVARIANCE?.getOrCreateOffset(fbBuilder);
+    final int? PROCESS_NOISEOffset = _PROCESS_NOISE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(19);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _ENTITY_HANDLE);
+    fbBuilder.addUint32(2, _CATALOG_NUMBER);
+    fbBuilder.addOffset(3, OBJECT_IDOffset);
+    fbBuilder.addOffset(4, STATEOffset);
+    fbBuilder.addOffset(5, COORDINATE_SYSTEMOffset);
+    fbBuilder.addOffset(6, COVARIANCEOffset);
+    fbBuilder.addFloat64(7, _MASS_KG);
+    fbBuilder.addBool(8, _HAS_MASS_KG);
+    fbBuilder.addFloat64(9, _DRAG_AREA_OVER_MASS_M2_KG);
+    fbBuilder.addBool(10, _HAS_DRAG_AREA_OVER_MASS_M2_KG);
+    fbBuilder.addFloat64(11, _SRP_AREA_OVER_MASS_M2_KG);
+    fbBuilder.addBool(12, _HAS_SRP_AREA_OVER_MASS_M2_KG);
+    fbBuilder.addBool(13, _VALID);
+    fbBuilder.addOffset(14, PROCESS_NOISEOffset);
+    fbBuilder.addFloat64(15, _DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    fbBuilder.addBool(16, _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    fbBuilder.addFloat64(17, _IN_TRACK_ACCELERATION_M_S2);
+    fbBuilder.addBool(18, _HAS_IN_TRACK_ACCELERATION_M_S2);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Impulsive change at TDB epoch; delta velocity is m/s in the named basis.
+class PRWImpulse {
+  PRWImpulse._(this._bc, this._bcOffset);
+  factory PRWImpulse(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWImpulse> reader = _PRWImpulseReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  TIMInstant? get EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  FRMVector3? get DELTA_V => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  FRMVector3? get deltaV => DELTA_V;
+  prwSteeringBasis get VECTOR_BASIS => prwSteeringBasis.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  prwSteeringBasis get vectorBasis => VECTOR_BASIS;
+
+  @override
+  String toString() {
+    return 'PRWImpulse{EPOCH: ${EPOCH}, deltaV: ${deltaV}, vectorBasis: ${vectorBasis}}';
+  }
+}
+
+class _PRWImpulseReader extends fb.TableReader<PRWImpulse> {
+  const _PRWImpulseReader();
+
+  @override
+  PRWImpulse createObject(fb.BufferContext bc, int offset) =>
+    PRWImpulse._(bc, offset);
+}
+
+class PRWImpulseBuilder {
+  PRWImpulseBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDeltaVOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addVectorBasis(prwSteeringBasis? VECTOR_BASIS) {
+    fbBuilder.addUint8(2, VECTOR_BASIS?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWImpulseObjectBuilder extends fb.ObjectBuilder {
+  final TIMInstantObjectBuilder? _EPOCH;
+  final FRMVector3ObjectBuilder? _DELTA_V;
+  final prwSteeringBasis? _VECTOR_BASIS;
+
+  PRWImpulseObjectBuilder({
+    TIMInstantObjectBuilder? EPOCH,
+    FRMVector3ObjectBuilder? DELTA_V,
+    FRMVector3ObjectBuilder? deltaV,
+    prwSteeringBasis? VECTOR_BASIS,
+    prwSteeringBasis? vectorBasis,
+  })
+      : _EPOCH = EPOCH,
+        _DELTA_V = deltaV ?? DELTA_V,
+        _VECTOR_BASIS = vectorBasis ?? VECTOR_BASIS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH?.getOrCreateOffset(fbBuilder);
+    final int? DELTA_VOffset = _DELTA_V?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addOffset(1, DELTA_VOffset);
+    fbBuilder.addUint8(2, _VECTOR_BASIS?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Piecewise-linear throttle. Clock is seconds from initial propagation epoch.
+class PRWThrottlePoint {
+  PRWThrottlePoint._(this._bc, this._bcOffset);
+  factory PRWThrottlePoint(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWThrottlePoint> reader = _PRWThrottlePointReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get ELAPSED_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get elapsedSeconds => ELAPSED_SECONDS;
+  double get FRACTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+
+  @override
+  String toString() {
+    return 'PRWThrottlePoint{elapsedSeconds: ${elapsedSeconds}, FRACTION: ${FRACTION}}';
+  }
+}
+
+class _PRWThrottlePointReader extends fb.TableReader<PRWThrottlePoint> {
+  const _PRWThrottlePointReader();
+
+  @override
+  PRWThrottlePoint createObject(fb.BufferContext bc, int offset) =>
+    PRWThrottlePoint._(bc, offset);
+}
+
+class PRWThrottlePointBuilder {
+  PRWThrottlePointBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addElapsedSeconds(double? ELAPSED_SECONDS) {
+    fbBuilder.addFloat64(0, ELAPSED_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addFraction(double? FRACTION) {
+    fbBuilder.addFloat64(1, FRACTION);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWThrottlePointObjectBuilder extends fb.ObjectBuilder {
+  final double? _ELAPSED_SECONDS;
+  final double? _FRACTION;
+
+  PRWThrottlePointObjectBuilder({
+    double? ELAPSED_SECONDS,
+    double? elapsedSeconds,
+    double? FRACTION,
+  })
+      : _ELAPSED_SECONDS = elapsedSeconds ?? ELAPSED_SECONDS,
+        _FRACTION = FRACTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addFloat64(0, _ELAPSED_SECONDS);
+    fbBuilder.addFloat64(1, _FRACTION);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Scheduled time gates an optional condition. At least one must be present.
+class PRWBurnBoundary {
+  PRWBurnBoundary._(this._bc, this._bcOffset);
+  factory PRWBurnBoundary(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWBurnBoundary> reader = _PRWBurnBoundaryReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get ELAPSED_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get elapsedSeconds => ELAPSED_SECONDS;
+  ///  True when ELAPSED_SECONDS carries a value; false means absent.
+  bool get HAS_ELAPSED_SECONDS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  bool get hasElapsedSeconds => HAS_ELAPSED_SECONDS;
+  ///  SI PCE predicate; direction and goal tolerance explicitly populated.
+  PCEParameterCondition? get CONDITION => PCEParameterCondition.reader.vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'PRWBurnBoundary{elapsedSeconds: ${elapsedSeconds}, hasElapsedSeconds: ${hasElapsedSeconds}, CONDITION: ${CONDITION}}';
+  }
+}
+
+class _PRWBurnBoundaryReader extends fb.TableReader<PRWBurnBoundary> {
+  const _PRWBurnBoundaryReader();
+
+  @override
+  PRWBurnBoundary createObject(fb.BufferContext bc, int offset) =>
+    PRWBurnBoundary._(bc, offset);
+}
+
+class PRWBurnBoundaryBuilder {
+  PRWBurnBoundaryBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addElapsedSeconds(double? ELAPSED_SECONDS) {
+    fbBuilder.addFloat64(0, ELAPSED_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHasElapsedSeconds(bool? HAS_ELAPSED_SECONDS) {
+    fbBuilder.addBool(1, HAS_ELAPSED_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addConditionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWBurnBoundaryObjectBuilder extends fb.ObjectBuilder {
+  final double? _ELAPSED_SECONDS;
+  final bool? _HAS_ELAPSED_SECONDS;
+  final PCEParameterConditionObjectBuilder? _CONDITION;
+
+  PRWBurnBoundaryObjectBuilder({
+    double? ELAPSED_SECONDS,
+    double? elapsedSeconds,
+    bool? HAS_ELAPSED_SECONDS,
+    bool? hasElapsedSeconds,
+    PCEParameterConditionObjectBuilder? CONDITION,
+  })
+      : _ELAPSED_SECONDS = elapsedSeconds ?? ELAPSED_SECONDS,
+        _HAS_ELAPSED_SECONDS = hasElapsedSeconds ?? HAS_ELAPSED_SECONDS,
+        _CONDITION = CONDITION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CONDITIONOffset = _CONDITION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
+    fbBuilder.addFloat64(0, _ELAPSED_SECONDS);
+    fbBuilder.addBool(1, _HAS_ELAPSED_SECONDS);
+    fbBuilder.addOffset(2, CONDITIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).
+///  VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).
+class PRWFiniteBurn {
+  PRWFiniteBurn._(this._bc, this._bcOffset);
+  factory PRWFiniteBurn(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWFiniteBurn> reader = _PRWFiniteBurnReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWBurnBoundary? get START => PRWBurnBoundary.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  PRWBurnBoundary? get STOP => PRWBurnBoundary.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  prwThrustPrescription get THRUST_LAW => prwThrustPrescription.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  prwThrustPrescription get thrustLaw => THRUST_LAW;
+  double get FORCE_NEWTONS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get forceNewtons => FORCE_NEWTONS;
+  ///  True when FORCE_NEWTONS carries a value; false means absent.
+  bool get HAS_FORCE_NEWTONS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get hasForceNewtons => HAS_FORCE_NEWTONS;
+  double get ACCELERATION_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get accelerationMS2 => ACCELERATION_M_S2;
+  ///  True when ACCELERATION_M_S2 carries a value; false means absent.
+  bool get HAS_ACCELERATION_M_S2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get hasAccelerationMS2 => HAS_ACCELERATION_M_S2;
+  double get SPECIFIC_IMPULSE_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get specificImpulseSeconds => SPECIFIC_IMPULSE_SECONDS;
+  prwSteeringBasis get VECTOR_BASIS => prwSteeringBasis.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  prwSteeringBasis get vectorBasis => VECTOR_BASIS;
+  ///  Dimensionless components; normalized after adding elapsed*time rate.
+  FRMVector3? get DIRECTION => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Direction-component change per second, not radians/second.
+  FRMVector3? get DIRECTION_RATE => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  FRMVector3? get directionRate => DIRECTION_RATE;
+  List<PRWThrottlePoint>? get THROTTLE => const fb.ListReader<PRWThrottlePoint>(PRWThrottlePoint.reader).vTableGetNullable(_bc, _bcOffset, 26);
+
+  @override
+  String toString() {
+    return 'PRWFiniteBurn{START: ${START}, STOP: ${STOP}, thrustLaw: ${thrustLaw}, forceNewtons: ${forceNewtons}, hasForceNewtons: ${hasForceNewtons}, accelerationMS2: ${accelerationMS2}, hasAccelerationMS2: ${hasAccelerationMS2}, specificImpulseSeconds: ${specificImpulseSeconds}, vectorBasis: ${vectorBasis}, DIRECTION: ${DIRECTION}, directionRate: ${directionRate}, THROTTLE: ${THROTTLE}}';
+  }
+}
+
+class _PRWFiniteBurnReader extends fb.TableReader<PRWFiniteBurn> {
+  const _PRWFiniteBurnReader();
+
+  @override
+  PRWFiniteBurn createObject(fb.BufferContext bc, int offset) =>
+    PRWFiniteBurn._(bc, offset);
+}
+
+class PRWFiniteBurnBuilder {
+  PRWFiniteBurnBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addStartOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addStopOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addThrustLaw(prwThrustPrescription? THRUST_LAW) {
+    fbBuilder.addUint8(2, THRUST_LAW?.value);
+    return fbBuilder.offset;
+  }
+  int addForceNewtons(double? FORCE_NEWTONS) {
+    fbBuilder.addFloat64(3, FORCE_NEWTONS);
+    return fbBuilder.offset;
+  }
+  int addHasForceNewtons(bool? HAS_FORCE_NEWTONS) {
+    fbBuilder.addBool(4, HAS_FORCE_NEWTONS);
+    return fbBuilder.offset;
+  }
+  int addAccelerationMS2(double? ACCELERATION_M_S2) {
+    fbBuilder.addFloat64(5, ACCELERATION_M_S2);
+    return fbBuilder.offset;
+  }
+  int addHasAccelerationMS2(bool? HAS_ACCELERATION_M_S2) {
+    fbBuilder.addBool(6, HAS_ACCELERATION_M_S2);
+    return fbBuilder.offset;
+  }
+  int addSpecificImpulseSeconds(double? SPECIFIC_IMPULSE_SECONDS) {
+    fbBuilder.addFloat64(7, SPECIFIC_IMPULSE_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addVectorBasis(prwSteeringBasis? VECTOR_BASIS) {
+    fbBuilder.addUint8(8, VECTOR_BASIS?.value);
+    return fbBuilder.offset;
+  }
+  int addDirectionOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addDirectionRateOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addThrottleOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWFiniteBurnObjectBuilder extends fb.ObjectBuilder {
+  final PRWBurnBoundaryObjectBuilder? _START;
+  final PRWBurnBoundaryObjectBuilder? _STOP;
+  final prwThrustPrescription? _THRUST_LAW;
+  final double? _FORCE_NEWTONS;
+  final bool? _HAS_FORCE_NEWTONS;
+  final double? _ACCELERATION_M_S2;
+  final bool? _HAS_ACCELERATION_M_S2;
+  final double? _SPECIFIC_IMPULSE_SECONDS;
+  final prwSteeringBasis? _VECTOR_BASIS;
+  final FRMVector3ObjectBuilder? _DIRECTION;
+  final FRMVector3ObjectBuilder? _DIRECTION_RATE;
+  final List<PRWThrottlePointObjectBuilder>? _THROTTLE;
+
+  PRWFiniteBurnObjectBuilder({
+    PRWBurnBoundaryObjectBuilder? START,
+    PRWBurnBoundaryObjectBuilder? STOP,
+    prwThrustPrescription? THRUST_LAW,
+    prwThrustPrescription? thrustLaw,
+    double? FORCE_NEWTONS,
+    double? forceNewtons,
+    bool? HAS_FORCE_NEWTONS,
+    bool? hasForceNewtons,
+    double? ACCELERATION_M_S2,
+    double? accelerationMS2,
+    bool? HAS_ACCELERATION_M_S2,
+    bool? hasAccelerationMS2,
+    double? SPECIFIC_IMPULSE_SECONDS,
+    double? specificImpulseSeconds,
+    prwSteeringBasis? VECTOR_BASIS,
+    prwSteeringBasis? vectorBasis,
+    FRMVector3ObjectBuilder? DIRECTION,
+    FRMVector3ObjectBuilder? DIRECTION_RATE,
+    FRMVector3ObjectBuilder? directionRate,
+    List<PRWThrottlePointObjectBuilder>? THROTTLE,
+  })
+      : _START = START,
+        _STOP = STOP,
+        _THRUST_LAW = thrustLaw ?? THRUST_LAW,
+        _FORCE_NEWTONS = forceNewtons ?? FORCE_NEWTONS,
+        _HAS_FORCE_NEWTONS = hasForceNewtons ?? HAS_FORCE_NEWTONS,
+        _ACCELERATION_M_S2 = accelerationMS2 ?? ACCELERATION_M_S2,
+        _HAS_ACCELERATION_M_S2 = hasAccelerationMS2 ?? HAS_ACCELERATION_M_S2,
+        _SPECIFIC_IMPULSE_SECONDS = specificImpulseSeconds ?? SPECIFIC_IMPULSE_SECONDS,
+        _VECTOR_BASIS = vectorBasis ?? VECTOR_BASIS,
+        _DIRECTION = DIRECTION,
+        _DIRECTION_RATE = directionRate ?? DIRECTION_RATE,
+        _THROTTLE = THROTTLE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? STARTOffset = _START?.getOrCreateOffset(fbBuilder);
+    final int? STOPOffset = _STOP?.getOrCreateOffset(fbBuilder);
+    final int? DIRECTIONOffset = _DIRECTION?.getOrCreateOffset(fbBuilder);
+    final int? DIRECTION_RATEOffset = _DIRECTION_RATE?.getOrCreateOffset(fbBuilder);
+    final int? THROTTLEOffset = _THROTTLE == null ? null
+        : fbBuilder.writeList(_THROTTLE!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, STARTOffset);
+    fbBuilder.addOffset(1, STOPOffset);
+    fbBuilder.addUint8(2, _THRUST_LAW?.value);
+    fbBuilder.addFloat64(3, _FORCE_NEWTONS);
+    fbBuilder.addBool(4, _HAS_FORCE_NEWTONS);
+    fbBuilder.addFloat64(5, _ACCELERATION_M_S2);
+    fbBuilder.addBool(6, _HAS_ACCELERATION_M_S2);
+    fbBuilder.addFloat64(7, _SPECIFIC_IMPULSE_SECONDS);
+    fbBuilder.addUint8(8, _VECTOR_BASIS?.value);
+    fbBuilder.addOffset(9, DIRECTIONOffset);
+    fbBuilder.addOffset(10, DIRECTION_RATEOffset);
+    fbBuilder.addOffset(11, THROTTLEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Fixed endpoint propagation. Provider selected by the host's connected port.
+class PRWExecutionRequest {
+  PRWExecutionRequest._(this._bc, this._bcOffset);
+  factory PRWExecutionRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWExecutionRequest> reader = _PRWExecutionRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWResidentState? get INITIAL => PRWResidentState.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  TIMInstant? get TARGET_EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  TIMInstant? get targetEpoch => TARGET_EPOCH;
+  PRWIntegratorSettings? get INTEGRATOR => PRWIntegratorSettings.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  PRWForceConfiguration? get FORCES => PRWForceConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  bool get INCLUDE_STM => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get includeStm => INCLUDE_STM;
+  prwDerivativeTechnique get STM_TECHNIQUE => prwDerivativeTechnique.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 1));
+  prwDerivativeTechnique get stmTechnique => STM_TECHNIQUE;
+  prwDensityTreatment get DENSITY_TREATMENT => prwDensityTreatment.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 1));
+  prwDensityTreatment get densityTreatment => DENSITY_TREATMENT;
+  PRWStateMatrix? get INITIAL_COVARIANCE => PRWStateMatrix.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  PRWStateMatrix? get initialCovariance => INITIAL_COVARIANCE;
+  PRWStateMatrix? get INITIAL_MASS_COVARIANCE => PRWStateMatrix.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  PRWStateMatrix? get initialMassCovariance => INITIAL_MASS_COVARIANCE;
+  List<TIMInstant>? get SAMPLE_EPOCHS => const fb.ListReader<TIMInstant>(TIMInstant.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  List<TIMInstant>? get sampleEpochs => SAMPLE_EPOCHS;
+  List<PRWImpulse>? get IMPULSES => const fb.ListReader<PRWImpulse>(PRWImpulse.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Explicitly selects 7-state integration even if FINITE_BURNS is empty.
+  bool get INCLUDE_MASS_DYNAMICS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get includeMassDynamics => INCLUDE_MASS_DYNAMICS;
+  List<PRWFiniteBurn>? get FINITE_BURNS => const fb.ListReader<PRWFiniteBurn>(PRWFiniteBurn.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  List<PRWFiniteBurn>? get finiteBurns => FINITE_BURNS;
+  ///  Process noise added to the propagated covariance. Absent means none.
+  PRWProcessNoise? get PROCESS_NOISE => PRWProcessNoise.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  PRWProcessNoise? get processNoise => PROCESS_NOISE;
+  ///  Model parameters appended, in this order and without repeats, to
+  ///  INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+  ///  covariance carries their uncertainty and correlation (a VCM's 7x7 to
+  ///  10x10). Each must be active in FORCES. Empty means the state alone.
+  List<prwDynamicParameter>? get DYNAMIC_PARAMETERS => const fb.ListReader<prwDynamicParameter>(prwDynamicParameter.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  List<prwDynamicParameter>? get dynamicParameters => DYNAMIC_PARAMETERS;
+
+  @override
+  String toString() {
+    return 'PRWExecutionRequest{INITIAL: ${INITIAL}, targetEpoch: ${targetEpoch}, INTEGRATOR: ${INTEGRATOR}, FORCES: ${FORCES}, includeStm: ${includeStm}, stmTechnique: ${stmTechnique}, densityTreatment: ${densityTreatment}, initialCovariance: ${initialCovariance}, initialMassCovariance: ${initialMassCovariance}, sampleEpochs: ${sampleEpochs}, IMPULSES: ${IMPULSES}, includeMassDynamics: ${includeMassDynamics}, finiteBurns: ${finiteBurns}, processNoise: ${processNoise}, dynamicParameters: ${dynamicParameters}}';
+  }
+}
+
+class _PRWExecutionRequestReader extends fb.TableReader<PRWExecutionRequest> {
+  const _PRWExecutionRequestReader();
+
+  @override
+  PRWExecutionRequest createObject(fb.BufferContext bc, int offset) =>
+    PRWExecutionRequest._(bc, offset);
+}
+
+class PRWExecutionRequestBuilder {
+  PRWExecutionRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(15);
+  }
+
+  int addInitialOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetEpochOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIntegratorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addForcesOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addIncludeStm(bool? INCLUDE_STM) {
+    fbBuilder.addBool(4, INCLUDE_STM);
+    return fbBuilder.offset;
+  }
+  int addStmTechnique(prwDerivativeTechnique? STM_TECHNIQUE) {
+    fbBuilder.addUint8(5, STM_TECHNIQUE?.value);
+    return fbBuilder.offset;
+  }
+  int addDensityTreatment(prwDensityTreatment? DENSITY_TREATMENT) {
+    fbBuilder.addUint8(6, DENSITY_TREATMENT?.value);
+    return fbBuilder.offset;
+  }
+  int addInitialCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addInitialMassCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addSampleEpochsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addImpulsesOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addIncludeMassDynamics(bool? INCLUDE_MASS_DYNAMICS) {
+    fbBuilder.addBool(11, INCLUDE_MASS_DYNAMICS);
+    return fbBuilder.offset;
+  }
+  int addFiniteBurnsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addProcessNoiseOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addDynamicParametersOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWExecutionRequestObjectBuilder extends fb.ObjectBuilder {
+  final PRWResidentStateObjectBuilder? _INITIAL;
+  final TIMInstantObjectBuilder? _TARGET_EPOCH;
+  final PRWIntegratorSettingsObjectBuilder? _INTEGRATOR;
+  final PRWForceConfigurationObjectBuilder? _FORCES;
+  final bool? _INCLUDE_STM;
+  final prwDerivativeTechnique? _STM_TECHNIQUE;
+  final prwDensityTreatment? _DENSITY_TREATMENT;
+  final PRWStateMatrixObjectBuilder? _INITIAL_COVARIANCE;
+  final PRWStateMatrixObjectBuilder? _INITIAL_MASS_COVARIANCE;
+  final List<TIMInstantObjectBuilder>? _SAMPLE_EPOCHS;
+  final List<PRWImpulseObjectBuilder>? _IMPULSES;
+  final bool? _INCLUDE_MASS_DYNAMICS;
+  final List<PRWFiniteBurnObjectBuilder>? _FINITE_BURNS;
+  final PRWProcessNoiseObjectBuilder? _PROCESS_NOISE;
+  final List<prwDynamicParameter>? _DYNAMIC_PARAMETERS;
+
+  PRWExecutionRequestObjectBuilder({
+    PRWResidentStateObjectBuilder? INITIAL,
+    TIMInstantObjectBuilder? TARGET_EPOCH,
+    TIMInstantObjectBuilder? targetEpoch,
+    PRWIntegratorSettingsObjectBuilder? INTEGRATOR,
+    PRWForceConfigurationObjectBuilder? FORCES,
+    bool? INCLUDE_STM,
+    bool? includeStm,
+    prwDerivativeTechnique? STM_TECHNIQUE,
+    prwDerivativeTechnique? stmTechnique,
+    prwDensityTreatment? DENSITY_TREATMENT,
+    prwDensityTreatment? densityTreatment,
+    PRWStateMatrixObjectBuilder? INITIAL_COVARIANCE,
+    PRWStateMatrixObjectBuilder? initialCovariance,
+    PRWStateMatrixObjectBuilder? INITIAL_MASS_COVARIANCE,
+    PRWStateMatrixObjectBuilder? initialMassCovariance,
+    List<TIMInstantObjectBuilder>? SAMPLE_EPOCHS,
+    List<TIMInstantObjectBuilder>? sampleEpochs,
+    List<PRWImpulseObjectBuilder>? IMPULSES,
+    bool? INCLUDE_MASS_DYNAMICS,
+    bool? includeMassDynamics,
+    List<PRWFiniteBurnObjectBuilder>? FINITE_BURNS,
+    List<PRWFiniteBurnObjectBuilder>? finiteBurns,
+    PRWProcessNoiseObjectBuilder? PROCESS_NOISE,
+    PRWProcessNoiseObjectBuilder? processNoise,
+    List<prwDynamicParameter>? DYNAMIC_PARAMETERS,
+    List<prwDynamicParameter>? dynamicParameters,
+  })
+      : _INITIAL = INITIAL,
+        _TARGET_EPOCH = targetEpoch ?? TARGET_EPOCH,
+        _INTEGRATOR = INTEGRATOR,
+        _FORCES = FORCES,
+        _INCLUDE_STM = includeStm ?? INCLUDE_STM,
+        _STM_TECHNIQUE = stmTechnique ?? STM_TECHNIQUE,
+        _DENSITY_TREATMENT = densityTreatment ?? DENSITY_TREATMENT,
+        _INITIAL_COVARIANCE = initialCovariance ?? INITIAL_COVARIANCE,
+        _INITIAL_MASS_COVARIANCE = initialMassCovariance ?? INITIAL_MASS_COVARIANCE,
+        _SAMPLE_EPOCHS = sampleEpochs ?? SAMPLE_EPOCHS,
+        _IMPULSES = IMPULSES,
+        _INCLUDE_MASS_DYNAMICS = includeMassDynamics ?? INCLUDE_MASS_DYNAMICS,
+        _FINITE_BURNS = finiteBurns ?? FINITE_BURNS,
+        _PROCESS_NOISE = processNoise ?? PROCESS_NOISE,
+        _DYNAMIC_PARAMETERS = dynamicParameters ?? DYNAMIC_PARAMETERS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INITIALOffset = _INITIAL?.getOrCreateOffset(fbBuilder);
+    final int? TARGET_EPOCHOffset = _TARGET_EPOCH?.getOrCreateOffset(fbBuilder);
+    final int? INTEGRATOROffset = _INTEGRATOR?.getOrCreateOffset(fbBuilder);
+    final int? FORCESOffset = _FORCES?.getOrCreateOffset(fbBuilder);
+    final int? INITIAL_COVARIANCEOffset = _INITIAL_COVARIANCE?.getOrCreateOffset(fbBuilder);
+    final int? INITIAL_MASS_COVARIANCEOffset = _INITIAL_MASS_COVARIANCE?.getOrCreateOffset(fbBuilder);
+    final int? SAMPLE_EPOCHSOffset = _SAMPLE_EPOCHS == null ? null
+        : fbBuilder.writeList(_SAMPLE_EPOCHS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? IMPULSESOffset = _IMPULSES == null ? null
+        : fbBuilder.writeList(_IMPULSES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? FINITE_BURNSOffset = _FINITE_BURNS == null ? null
+        : fbBuilder.writeList(_FINITE_BURNS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROCESS_NOISEOffset = _PROCESS_NOISE?.getOrCreateOffset(fbBuilder);
+    final int? DYNAMIC_PARAMETERSOffset = _DYNAMIC_PARAMETERS == null ? null
+        : fbBuilder.writeListUint8(_DYNAMIC_PARAMETERS!.map((f) => f.value).toList());
+    fbBuilder.startTable(15);
+    fbBuilder.addOffset(0, INITIALOffset);
+    fbBuilder.addOffset(1, TARGET_EPOCHOffset);
+    fbBuilder.addOffset(2, INTEGRATOROffset);
+    fbBuilder.addOffset(3, FORCESOffset);
+    fbBuilder.addBool(4, _INCLUDE_STM);
+    fbBuilder.addUint8(5, _STM_TECHNIQUE?.value);
+    fbBuilder.addUint8(6, _DENSITY_TREATMENT?.value);
+    fbBuilder.addOffset(7, INITIAL_COVARIANCEOffset);
+    fbBuilder.addOffset(8, INITIAL_MASS_COVARIANCEOffset);
+    fbBuilder.addOffset(9, SAMPLE_EPOCHSOffset);
+    fbBuilder.addOffset(10, IMPULSESOffset);
+    fbBuilder.addBool(11, _INCLUDE_MASS_DYNAMICS);
+    fbBuilder.addOffset(12, FINITE_BURNSOffset);
+    fbBuilder.addOffset(13, PROCESS_NOISEOffset);
+    fbBuilder.addOffset(14, DYNAMIC_PARAMETERSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Burn times absent until reached; zero means an actual edge at initial epoch.
+class PRWBurnReport {
+  PRWBurnReport._(this._bc, this._bcOffset);
+  factory PRWBurnReport(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWBurnReport> reader = _PRWBurnReportReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get BURN_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get burnIndex => BURN_INDEX;
+  bool get STARTED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  bool get STOPPED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get START_BY_EVENT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get startByEvent => START_BY_EVENT;
+  bool get STOP_BY_EVENT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get stopByEvent => STOP_BY_EVENT;
+  double get START_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get startSeconds => START_SECONDS;
+  ///  True when START_SECONDS carries a value; false means absent.
+  bool get HAS_START_SECONDS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get hasStartSeconds => HAS_START_SECONDS;
+  double get STOP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get stopSeconds => STOP_SECONDS;
+  ///  True when STOP_SECONDS carries a value; false means absent.
+  bool get HAS_STOP_SECONDS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasStopSeconds => HAS_STOP_SECONDS;
+  TIMInstant? get START_EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  TIMInstant? get startEpoch => START_EPOCH;
+  TIMInstant? get STOP_EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  TIMInstant? get stopEpoch => STOP_EPOCH;
+  ///  Integral of thrust acceleration magnitude, m/s; not vector net delta-v.
+  double get DELTA_V_M_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get deltaVMS => DELTA_V_M_S;
+  double get PROPELLANT_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get propellantKg => PROPELLANT_KG;
+
+  @override
+  String toString() {
+    return 'PRWBurnReport{burnIndex: ${burnIndex}, STARTED: ${STARTED}, STOPPED: ${STOPPED}, startByEvent: ${startByEvent}, stopByEvent: ${stopByEvent}, startSeconds: ${startSeconds}, hasStartSeconds: ${hasStartSeconds}, stopSeconds: ${stopSeconds}, hasStopSeconds: ${hasStopSeconds}, startEpoch: ${startEpoch}, stopEpoch: ${stopEpoch}, deltaVMS: ${deltaVMS}, propellantKg: ${propellantKg}}';
+  }
+}
+
+class _PRWBurnReportReader extends fb.TableReader<PRWBurnReport> {
+  const _PRWBurnReportReader();
+
+  @override
+  PRWBurnReport createObject(fb.BufferContext bc, int offset) =>
+    PRWBurnReport._(bc, offset);
+}
+
+class PRWBurnReportBuilder {
+  PRWBurnReportBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addBurnIndex(int? BURN_INDEX) {
+    fbBuilder.addUint32(0, BURN_INDEX);
+    return fbBuilder.offset;
+  }
+  int addStarted(bool? STARTED) {
+    fbBuilder.addBool(1, STARTED);
+    return fbBuilder.offset;
+  }
+  int addStopped(bool? STOPPED) {
+    fbBuilder.addBool(2, STOPPED);
+    return fbBuilder.offset;
+  }
+  int addStartByEvent(bool? START_BY_EVENT) {
+    fbBuilder.addBool(3, START_BY_EVENT);
+    return fbBuilder.offset;
+  }
+  int addStopByEvent(bool? STOP_BY_EVENT) {
+    fbBuilder.addBool(4, STOP_BY_EVENT);
+    return fbBuilder.offset;
+  }
+  int addStartSeconds(double? START_SECONDS) {
+    fbBuilder.addFloat64(5, START_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHasStartSeconds(bool? HAS_START_SECONDS) {
+    fbBuilder.addBool(6, HAS_START_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addStopSeconds(double? STOP_SECONDS) {
+    fbBuilder.addFloat64(7, STOP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHasStopSeconds(bool? HAS_STOP_SECONDS) {
+    fbBuilder.addBool(8, HAS_STOP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addStartEpochOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addStopEpochOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addDeltaVMS(double? DELTA_V_M_S) {
+    fbBuilder.addFloat64(11, DELTA_V_M_S);
+    return fbBuilder.offset;
+  }
+  int addPropellantKg(double? PROPELLANT_KG) {
+    fbBuilder.addFloat64(12, PROPELLANT_KG);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWBurnReportObjectBuilder extends fb.ObjectBuilder {
+  final int? _BURN_INDEX;
+  final bool? _STARTED;
+  final bool? _STOPPED;
+  final bool? _START_BY_EVENT;
+  final bool? _STOP_BY_EVENT;
+  final double? _START_SECONDS;
+  final bool? _HAS_START_SECONDS;
+  final double? _STOP_SECONDS;
+  final bool? _HAS_STOP_SECONDS;
+  final TIMInstantObjectBuilder? _START_EPOCH;
+  final TIMInstantObjectBuilder? _STOP_EPOCH;
+  final double? _DELTA_V_M_S;
+  final double? _PROPELLANT_KG;
+
+  PRWBurnReportObjectBuilder({
+    int? BURN_INDEX,
+    int? burnIndex,
+    bool? STARTED,
+    bool? STOPPED,
+    bool? START_BY_EVENT,
+    bool? startByEvent,
+    bool? STOP_BY_EVENT,
+    bool? stopByEvent,
+    double? START_SECONDS,
+    double? startSeconds,
+    bool? HAS_START_SECONDS,
+    bool? hasStartSeconds,
+    double? STOP_SECONDS,
+    double? stopSeconds,
+    bool? HAS_STOP_SECONDS,
+    bool? hasStopSeconds,
+    TIMInstantObjectBuilder? START_EPOCH,
+    TIMInstantObjectBuilder? startEpoch,
+    TIMInstantObjectBuilder? STOP_EPOCH,
+    TIMInstantObjectBuilder? stopEpoch,
+    double? DELTA_V_M_S,
+    double? deltaVMS,
+    double? PROPELLANT_KG,
+    double? propellantKg,
+  })
+      : _BURN_INDEX = burnIndex ?? BURN_INDEX,
+        _STARTED = STARTED,
+        _STOPPED = STOPPED,
+        _START_BY_EVENT = startByEvent ?? START_BY_EVENT,
+        _STOP_BY_EVENT = stopByEvent ?? STOP_BY_EVENT,
+        _START_SECONDS = startSeconds ?? START_SECONDS,
+        _HAS_START_SECONDS = hasStartSeconds ?? HAS_START_SECONDS,
+        _STOP_SECONDS = stopSeconds ?? STOP_SECONDS,
+        _HAS_STOP_SECONDS = hasStopSeconds ?? HAS_STOP_SECONDS,
+        _START_EPOCH = startEpoch ?? START_EPOCH,
+        _STOP_EPOCH = stopEpoch ?? STOP_EPOCH,
+        _DELTA_V_M_S = deltaVMS ?? DELTA_V_M_S,
+        _PROPELLANT_KG = propellantKg ?? PROPELLANT_KG;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? START_EPOCHOffset = _START_EPOCH?.getOrCreateOffset(fbBuilder);
+    final int? STOP_EPOCHOffset = _STOP_EPOCH?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(13);
+    fbBuilder.addUint32(0, _BURN_INDEX);
+    fbBuilder.addBool(1, _STARTED);
+    fbBuilder.addBool(2, _STOPPED);
+    fbBuilder.addBool(3, _START_BY_EVENT);
+    fbBuilder.addBool(4, _STOP_BY_EVENT);
+    fbBuilder.addFloat64(5, _START_SECONDS);
+    fbBuilder.addBool(6, _HAS_START_SECONDS);
+    fbBuilder.addFloat64(7, _STOP_SECONDS);
+    fbBuilder.addBool(8, _HAS_STOP_SECONDS);
+    fbBuilder.addOffset(9, START_EPOCHOffset);
+    fbBuilder.addOffset(10, STOP_EPOCHOffset);
+    fbBuilder.addFloat64(11, _DELTA_V_M_S);
+    fbBuilder.addFloat64(12, _PROPELLANT_KG);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWPropagationSample {
+  PRWPropagationSample._(this._bc, this._bcOffset);
+  factory PRWPropagationSample(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWPropagationSample> reader = _PRWPropagationSampleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWResidentState? get STATE => PRWResidentState.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Both STMs cumulative from request initial epoch; SI state units.
+  PRWStateMatrix? get STM => PRWStateMatrix.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  PRWStateMatrix? get MASS_STM => PRWStateMatrix.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  PRWStateMatrix? get massStm => MASS_STM;
+  PRWStateMatrix? get COVARIANCE => PRWStateMatrix.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  PRWStateMatrix? get MASS_COVARIANCE => PRWStateMatrix.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  PRWStateMatrix? get massCovariance => MASS_COVARIANCE;
+  int get ACCEPTED_STEPS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get acceptedSteps => ACCEPTED_STEPS;
+  int get REJECTED_STEPS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get rejectedSteps => REJECTED_STEPS;
+  List<PRWBurnReport>? get BURNS => const fb.ListReader<PRWBurnReport>(PRWBurnReport.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  The process noise COVARIANCE includes. Absent means none.
+  PRWProcessNoise? get PROCESS_NOISE => PRWProcessNoise.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  PRWProcessNoise? get processNoise => PROCESS_NOISE;
+
+  @override
+  String toString() {
+    return 'PRWPropagationSample{STATE: ${STATE}, STM: ${STM}, massStm: ${massStm}, COVARIANCE: ${COVARIANCE}, massCovariance: ${massCovariance}, acceptedSteps: ${acceptedSteps}, rejectedSteps: ${rejectedSteps}, BURNS: ${BURNS}, processNoise: ${processNoise}}';
+  }
+}
+
+class _PRWPropagationSampleReader extends fb.TableReader<PRWPropagationSample> {
+  const _PRWPropagationSampleReader();
+
+  @override
+  PRWPropagationSample createObject(fb.BufferContext bc, int offset) =>
+    PRWPropagationSample._(bc, offset);
+}
+
+class PRWPropagationSampleBuilder {
+  PRWPropagationSampleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addStateOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addStmOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addMassStmOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addMassCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAcceptedSteps(int? ACCEPTED_STEPS) {
+    fbBuilder.addUint64(5, ACCEPTED_STEPS);
+    return fbBuilder.offset;
+  }
+  int addRejectedSteps(int? REJECTED_STEPS) {
+    fbBuilder.addUint64(6, REJECTED_STEPS);
+    return fbBuilder.offset;
+  }
+  int addBurnsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addProcessNoiseOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWPropagationSampleObjectBuilder extends fb.ObjectBuilder {
+  final PRWResidentStateObjectBuilder? _STATE;
+  final PRWStateMatrixObjectBuilder? _STM;
+  final PRWStateMatrixObjectBuilder? _MASS_STM;
+  final PRWStateMatrixObjectBuilder? _COVARIANCE;
+  final PRWStateMatrixObjectBuilder? _MASS_COVARIANCE;
+  final int? _ACCEPTED_STEPS;
+  final int? _REJECTED_STEPS;
+  final List<PRWBurnReportObjectBuilder>? _BURNS;
+  final PRWProcessNoiseObjectBuilder? _PROCESS_NOISE;
+
+  PRWPropagationSampleObjectBuilder({
+    PRWResidentStateObjectBuilder? STATE,
+    PRWStateMatrixObjectBuilder? STM,
+    PRWStateMatrixObjectBuilder? MASS_STM,
+    PRWStateMatrixObjectBuilder? massStm,
+    PRWStateMatrixObjectBuilder? COVARIANCE,
+    PRWStateMatrixObjectBuilder? MASS_COVARIANCE,
+    PRWStateMatrixObjectBuilder? massCovariance,
+    int? ACCEPTED_STEPS,
+    int? acceptedSteps,
+    int? REJECTED_STEPS,
+    int? rejectedSteps,
+    List<PRWBurnReportObjectBuilder>? BURNS,
+    PRWProcessNoiseObjectBuilder? PROCESS_NOISE,
+    PRWProcessNoiseObjectBuilder? processNoise,
+  })
+      : _STATE = STATE,
+        _STM = STM,
+        _MASS_STM = massStm ?? MASS_STM,
+        _COVARIANCE = COVARIANCE,
+        _MASS_COVARIANCE = massCovariance ?? MASS_COVARIANCE,
+        _ACCEPTED_STEPS = acceptedSteps ?? ACCEPTED_STEPS,
+        _REJECTED_STEPS = rejectedSteps ?? REJECTED_STEPS,
+        _BURNS = BURNS,
+        _PROCESS_NOISE = processNoise ?? PROCESS_NOISE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? STATEOffset = _STATE?.getOrCreateOffset(fbBuilder);
+    final int? STMOffset = _STM?.getOrCreateOffset(fbBuilder);
+    final int? MASS_STMOffset = _MASS_STM?.getOrCreateOffset(fbBuilder);
+    final int? COVARIANCEOffset = _COVARIANCE?.getOrCreateOffset(fbBuilder);
+    final int? MASS_COVARIANCEOffset = _MASS_COVARIANCE?.getOrCreateOffset(fbBuilder);
+    final int? BURNSOffset = _BURNS == null ? null
+        : fbBuilder.writeList(_BURNS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROCESS_NOISEOffset = _PROCESS_NOISE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, STATEOffset);
+    fbBuilder.addOffset(1, STMOffset);
+    fbBuilder.addOffset(2, MASS_STMOffset);
+    fbBuilder.addOffset(3, COVARIANCEOffset);
+    fbBuilder.addOffset(4, MASS_COVARIANCEOffset);
+    fbBuilder.addUint64(5, _ACCEPTED_STEPS);
+    fbBuilder.addUint64(6, _REJECTED_STEPS);
+    fbBuilder.addOffset(7, BURNSOffset);
+    fbBuilder.addOffset(8, PROCESS_NOISEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWExecutionResult {
+  PRWExecutionResult._(this._bc, this._bcOffset);
+  factory PRWExecutionResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWExecutionResult> reader = _PRWExecutionResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWPropagationSample? get FINAL_SAMPLE => PRWPropagationSample.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  PRWPropagationSample? get finalSample => FINAL_SAMPLE;
+  List<PRWPropagationSample>? get SAMPLES => const fb.ListReader<PRWPropagationSample>(PRWPropagationSample.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  double get ELAPSED_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get elapsedSeconds => ELAPSED_SECONDS;
+  String? get EPHEMERIS_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get ephemerisSource => EPHEMERIS_SOURCE;
+  prwDerivativeTechnique get STM_TECHNIQUE => prwDerivativeTechnique.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  prwDerivativeTechnique get stmTechnique => STM_TECHNIQUE;
+  prwDensityTreatment get DENSITY_TREATMENT => prwDensityTreatment.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  prwDensityTreatment get densityTreatment => DENSITY_TREATMENT;
+  ///  The parameters the samples' STM and COVARIANCE carry after the state.
+  List<prwDynamicParameter>? get DYNAMIC_PARAMETERS => const fb.ListReader<prwDynamicParameter>(prwDynamicParameter.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  List<prwDynamicParameter>? get dynamicParameters => DYNAMIC_PARAMETERS;
+
+  @override
+  String toString() {
+    return 'PRWExecutionResult{finalSample: ${finalSample}, SAMPLES: ${SAMPLES}, elapsedSeconds: ${elapsedSeconds}, ephemerisSource: ${ephemerisSource}, stmTechnique: ${stmTechnique}, densityTreatment: ${densityTreatment}, dynamicParameters: ${dynamicParameters}}';
+  }
+}
+
+class _PRWExecutionResultReader extends fb.TableReader<PRWExecutionResult> {
+  const _PRWExecutionResultReader();
+
+  @override
+  PRWExecutionResult createObject(fb.BufferContext bc, int offset) =>
+    PRWExecutionResult._(bc, offset);
+}
+
+class PRWExecutionResultBuilder {
+  PRWExecutionResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addFinalSampleOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSamplesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addElapsedSeconds(double? ELAPSED_SECONDS) {
+    fbBuilder.addFloat64(2, ELAPSED_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addEphemerisSourceOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addStmTechnique(prwDerivativeTechnique? STM_TECHNIQUE) {
+    fbBuilder.addUint8(4, STM_TECHNIQUE?.value);
+    return fbBuilder.offset;
+  }
+  int addDensityTreatment(prwDensityTreatment? DENSITY_TREATMENT) {
+    fbBuilder.addUint8(5, DENSITY_TREATMENT?.value);
+    return fbBuilder.offset;
+  }
+  int addDynamicParametersOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWExecutionResultObjectBuilder extends fb.ObjectBuilder {
+  final PRWPropagationSampleObjectBuilder? _FINAL_SAMPLE;
+  final List<PRWPropagationSampleObjectBuilder>? _SAMPLES;
+  final double? _ELAPSED_SECONDS;
+  final String? _EPHEMERIS_SOURCE;
+  final prwDerivativeTechnique? _STM_TECHNIQUE;
+  final prwDensityTreatment? _DENSITY_TREATMENT;
+  final List<prwDynamicParameter>? _DYNAMIC_PARAMETERS;
+
+  PRWExecutionResultObjectBuilder({
+    PRWPropagationSampleObjectBuilder? FINAL_SAMPLE,
+    PRWPropagationSampleObjectBuilder? finalSample,
+    List<PRWPropagationSampleObjectBuilder>? SAMPLES,
+    double? ELAPSED_SECONDS,
+    double? elapsedSeconds,
+    String? EPHEMERIS_SOURCE,
+    String? ephemerisSource,
+    prwDerivativeTechnique? STM_TECHNIQUE,
+    prwDerivativeTechnique? stmTechnique,
+    prwDensityTreatment? DENSITY_TREATMENT,
+    prwDensityTreatment? densityTreatment,
+    List<prwDynamicParameter>? DYNAMIC_PARAMETERS,
+    List<prwDynamicParameter>? dynamicParameters,
+  })
+      : _FINAL_SAMPLE = finalSample ?? FINAL_SAMPLE,
+        _SAMPLES = SAMPLES,
+        _ELAPSED_SECONDS = elapsedSeconds ?? ELAPSED_SECONDS,
+        _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE,
+        _STM_TECHNIQUE = stmTechnique ?? STM_TECHNIQUE,
+        _DENSITY_TREATMENT = densityTreatment ?? DENSITY_TREATMENT,
+        _DYNAMIC_PARAMETERS = dynamicParameters ?? DYNAMIC_PARAMETERS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FINAL_SAMPLEOffset = _FINAL_SAMPLE?.getOrCreateOffset(fbBuilder);
+    final int? SAMPLESOffset = _SAMPLES == null ? null
+        : fbBuilder.writeList(_SAMPLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? EPHEMERIS_SOURCEOffset = _EPHEMERIS_SOURCE == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
+    final int? DYNAMIC_PARAMETERSOffset = _DYNAMIC_PARAMETERS == null ? null
+        : fbBuilder.writeListUint8(_DYNAMIC_PARAMETERS!.map((f) => f.value).toList());
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, FINAL_SAMPLEOffset);
+    fbBuilder.addOffset(1, SAMPLESOffset);
+    fbBuilder.addFloat64(2, _ELAPSED_SECONDS);
+    fbBuilder.addOffset(3, EPHEMERIS_SOURCEOffset);
+    fbBuilder.addUint8(4, _STM_TECHNIQUE?.value);
+    fbBuilder.addUint8(5, _DENSITY_TREATMENT?.value);
+    fbBuilder.addOffset(6, DYNAMIC_PARAMETERSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Portable batch request: no output pointer; state records returned via TAB.
+class PRWResidentRequest {
+  PRWResidentRequest._(this._bc, this._bcOffset);
+  factory PRWResidentRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWResidentRequest> reader = _PRWResidentRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  TIMInstant? get TARGET_EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  TIMInstant? get targetEpoch => TARGET_EPOCH;
+  List<int>? get ENTITY_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<int>? get entityHandles => ENTITY_HANDLES;
+  int get MAXIMUM_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get maximumCount => MAXIMUM_COUNT;
+  RFMCoordinateSystem? get TARGET_COORDINATE_SYSTEM => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  RFMCoordinateSystem? get targetCoordinateSystem => TARGET_COORDINATE_SYSTEM;
+
+  @override
+  String toString() {
+    return 'PRWResidentRequest{INSTANCE: ${INSTANCE}, targetEpoch: ${targetEpoch}, entityHandles: ${entityHandles}, maximumCount: ${maximumCount}, targetCoordinateSystem: ${targetCoordinateSystem}}';
+  }
+}
+
+class _PRWResidentRequestReader extends fb.TableReader<PRWResidentRequest> {
+  const _PRWResidentRequestReader();
+
+  @override
+  PRWResidentRequest createObject(fb.BufferContext bc, int offset) =>
+    PRWResidentRequest._(bc, offset);
+}
+
+class PRWResidentRequestBuilder {
+  PRWResidentRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetEpochOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addEntityHandlesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMaximumCount(int? MAXIMUM_COUNT) {
+    fbBuilder.addUint32(3, MAXIMUM_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTargetCoordinateSystemOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWResidentRequestObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final TIMInstantObjectBuilder? _TARGET_EPOCH;
+  final List<int>? _ENTITY_HANDLES;
+  final int? _MAXIMUM_COUNT;
+  final RFMCoordinateSystemObjectBuilder? _TARGET_COORDINATE_SYSTEM;
+
+  PRWResidentRequestObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    TIMInstantObjectBuilder? TARGET_EPOCH,
+    TIMInstantObjectBuilder? targetEpoch,
+    List<int>? ENTITY_HANDLES,
+    List<int>? entityHandles,
+    int? MAXIMUM_COUNT,
+    int? maximumCount,
+    RFMCoordinateSystemObjectBuilder? TARGET_COORDINATE_SYSTEM,
+    RFMCoordinateSystemObjectBuilder? targetCoordinateSystem,
+  })
+      : _INSTANCE = INSTANCE,
+        _TARGET_EPOCH = targetEpoch ?? TARGET_EPOCH,
+        _ENTITY_HANDLES = entityHandles ?? ENTITY_HANDLES,
+        _MAXIMUM_COUNT = maximumCount ?? MAXIMUM_COUNT,
+        _TARGET_COORDINATE_SYSTEM = targetCoordinateSystem ?? TARGET_COORDINATE_SYSTEM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? TARGET_EPOCHOffset = _TARGET_EPOCH?.getOrCreateOffset(fbBuilder);
+    final int? ENTITY_HANDLESOffset = _ENTITY_HANDLES == null ? null
+        : fbBuilder.writeListUint32(_ENTITY_HANDLES!);
+    final int? TARGET_COORDINATE_SYSTEMOffset = _TARGET_COORDINATE_SYSTEM?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addOffset(1, TARGET_EPOCHOffset);
+    fbBuilder.addOffset(2, ENTITY_HANDLESOffset);
+    fbBuilder.addUint32(3, _MAXIMUM_COUNT);
+    fbBuilder.addOffset(4, TARGET_COORDINATE_SYSTEMOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  All epochs explicit; duration seconds >=0; empty handles means all resident.
+class PRWPrepareRequest {
+  PRWPrepareRequest._(this._bc, this._bcOffset);
+  factory PRWPrepareRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWPrepareRequest> reader = _PRWPrepareRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get CATALOG_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get catalogHandle => CATALOG_HANDLE;
+  List<int>? get SOURCE_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<int>? get sourceHandles => SOURCE_HANDLES;
+  TIMInstant? get START_EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  TIMInstant? get startEpoch => START_EPOCH;
+  double get DURATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get durationSeconds => DURATION_SECONDS;
+  ///  Provider-advertised profile name; unrecognized nonempty values fail.
+  String? get PROFILE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'PRWPrepareRequest{INSTANCE: ${INSTANCE}, catalogHandle: ${catalogHandle}, sourceHandles: ${sourceHandles}, startEpoch: ${startEpoch}, durationSeconds: ${durationSeconds}, PROFILE: ${PROFILE}}';
+  }
+}
+
+class _PRWPrepareRequestReader extends fb.TableReader<PRWPrepareRequest> {
+  const _PRWPrepareRequestReader();
+
+  @override
+  PRWPrepareRequest createObject(fb.BufferContext bc, int offset) =>
+    PRWPrepareRequest._(bc, offset);
+}
+
+class PRWPrepareRequestBuilder {
+  PRWPrepareRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogHandle(int? CATALOG_HANDLE) {
+    fbBuilder.addUint32(1, CATALOG_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addSourceHandlesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addStartEpochOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDurationSeconds(double? DURATION_SECONDS) {
+    fbBuilder.addFloat64(4, DURATION_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addProfileOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWPrepareRequestObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _CATALOG_HANDLE;
+  final List<int>? _SOURCE_HANDLES;
+  final TIMInstantObjectBuilder? _START_EPOCH;
+  final double? _DURATION_SECONDS;
+  final String? _PROFILE;
+
+  PRWPrepareRequestObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? CATALOG_HANDLE,
+    int? catalogHandle,
+    List<int>? SOURCE_HANDLES,
+    List<int>? sourceHandles,
+    TIMInstantObjectBuilder? START_EPOCH,
+    TIMInstantObjectBuilder? startEpoch,
+    double? DURATION_SECONDS,
+    double? durationSeconds,
+    String? PROFILE,
+  })
+      : _INSTANCE = INSTANCE,
+        _CATALOG_HANDLE = catalogHandle ?? CATALOG_HANDLE,
+        _SOURCE_HANDLES = sourceHandles ?? SOURCE_HANDLES,
+        _START_EPOCH = startEpoch ?? START_EPOCH,
+        _DURATION_SECONDS = durationSeconds ?? DURATION_SECONDS,
+        _PROFILE = PROFILE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? SOURCE_HANDLESOffset = _SOURCE_HANDLES == null ? null
+        : fbBuilder.writeListUint32(_SOURCE_HANDLES!);
+    final int? START_EPOCHOffset = _START_EPOCH?.getOrCreateOffset(fbBuilder);
+    final int? PROFILEOffset = _PROFILE == null ? null
+        : fbBuilder.writeString(_PROFILE!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _CATALOG_HANDLE);
+    fbBuilder.addOffset(2, SOURCE_HANDLESOffset);
+    fbBuilder.addOffset(3, START_EPOCHOffset);
+    fbBuilder.addFloat64(4, _DURATION_SECONDS);
+    fbBuilder.addOffset(5, PROFILEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWFitQuality {
+  PRWFitQuality._(this._bc, this._bcOffset);
+  factory PRWFitQuality(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWFitQuality> reader = _PRWFitQualityReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  prwQualityEvidence get EVIDENCE_KIND => prwQualityEvidence.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  prwQualityEvidence get evidenceKind => EVIDENCE_KIND;
+  ///  SI metres and metres/second; absent when UNMEASURED.
+  double get MAXIMUM_POSITION_ERROR_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get maximumPositionErrorM => MAXIMUM_POSITION_ERROR_M;
+  ///  True when MAXIMUM_POSITION_ERROR_M carries a value; false means absent.
+  bool get HAS_MAXIMUM_POSITION_ERROR_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get hasMaximumPositionErrorM => HAS_MAXIMUM_POSITION_ERROR_M;
+  double get MAXIMUM_VELOCITY_ERROR_M_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get maximumVelocityErrorMS => MAXIMUM_VELOCITY_ERROR_M_S;
+  ///  True when MAXIMUM_VELOCITY_ERROR_M_S carries a value; false means absent.
+  bool get HAS_MAXIMUM_VELOCITY_ERROR_M_S => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get hasMaximumVelocityErrorMS => HAS_MAXIMUM_VELOCITY_ERROR_M_S;
+  String? get METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get REFERENCE_CONTENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get referenceContentId => REFERENCE_CONTENT_ID;
+
+  @override
+  String toString() {
+    return 'PRWFitQuality{evidenceKind: ${evidenceKind}, maximumPositionErrorM: ${maximumPositionErrorM}, hasMaximumPositionErrorM: ${hasMaximumPositionErrorM}, maximumVelocityErrorMS: ${maximumVelocityErrorMS}, hasMaximumVelocityErrorMS: ${hasMaximumVelocityErrorMS}, METHOD: ${METHOD}, referenceContentId: ${referenceContentId}}';
+  }
+}
+
+class _PRWFitQualityReader extends fb.TableReader<PRWFitQuality> {
+  const _PRWFitQualityReader();
+
+  @override
+  PRWFitQuality createObject(fb.BufferContext bc, int offset) =>
+    PRWFitQuality._(bc, offset);
+}
+
+class PRWFitQualityBuilder {
+  PRWFitQualityBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addEvidenceKind(prwQualityEvidence? EVIDENCE_KIND) {
+    fbBuilder.addUint8(0, EVIDENCE_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addMaximumPositionErrorM(double? MAXIMUM_POSITION_ERROR_M) {
+    fbBuilder.addFloat64(1, MAXIMUM_POSITION_ERROR_M);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumPositionErrorM(bool? HAS_MAXIMUM_POSITION_ERROR_M) {
+    fbBuilder.addBool(2, HAS_MAXIMUM_POSITION_ERROR_M);
+    return fbBuilder.offset;
+  }
+  int addMaximumVelocityErrorMS(double? MAXIMUM_VELOCITY_ERROR_M_S) {
+    fbBuilder.addFloat64(3, MAXIMUM_VELOCITY_ERROR_M_S);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumVelocityErrorMS(bool? HAS_MAXIMUM_VELOCITY_ERROR_M_S) {
+    fbBuilder.addBool(4, HAS_MAXIMUM_VELOCITY_ERROR_M_S);
+    return fbBuilder.offset;
+  }
+  int addMethodOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceContentIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWFitQualityObjectBuilder extends fb.ObjectBuilder {
+  final prwQualityEvidence? _EVIDENCE_KIND;
+  final double? _MAXIMUM_POSITION_ERROR_M;
+  final bool? _HAS_MAXIMUM_POSITION_ERROR_M;
+  final double? _MAXIMUM_VELOCITY_ERROR_M_S;
+  final bool? _HAS_MAXIMUM_VELOCITY_ERROR_M_S;
+  final String? _METHOD;
+  final String? _REFERENCE_CONTENT_ID;
+
+  PRWFitQualityObjectBuilder({
+    prwQualityEvidence? EVIDENCE_KIND,
+    prwQualityEvidence? evidenceKind,
+    double? MAXIMUM_POSITION_ERROR_M,
+    double? maximumPositionErrorM,
+    bool? HAS_MAXIMUM_POSITION_ERROR_M,
+    bool? hasMaximumPositionErrorM,
+    double? MAXIMUM_VELOCITY_ERROR_M_S,
+    double? maximumVelocityErrorMS,
+    bool? HAS_MAXIMUM_VELOCITY_ERROR_M_S,
+    bool? hasMaximumVelocityErrorMS,
+    String? METHOD,
+    String? REFERENCE_CONTENT_ID,
+    String? referenceContentId,
+  })
+      : _EVIDENCE_KIND = evidenceKind ?? EVIDENCE_KIND,
+        _MAXIMUM_POSITION_ERROR_M = maximumPositionErrorM ?? MAXIMUM_POSITION_ERROR_M,
+        _HAS_MAXIMUM_POSITION_ERROR_M = hasMaximumPositionErrorM ?? HAS_MAXIMUM_POSITION_ERROR_M,
+        _MAXIMUM_VELOCITY_ERROR_M_S = maximumVelocityErrorMS ?? MAXIMUM_VELOCITY_ERROR_M_S,
+        _HAS_MAXIMUM_VELOCITY_ERROR_M_S = hasMaximumVelocityErrorMS ?? HAS_MAXIMUM_VELOCITY_ERROR_M_S,
+        _METHOD = METHOD,
+        _REFERENCE_CONTENT_ID = referenceContentId ?? REFERENCE_CONTENT_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? METHODOffset = _METHOD == null ? null
+        : fbBuilder.writeString(_METHOD!);
+    final int? REFERENCE_CONTENT_IDOffset = _REFERENCE_CONTENT_ID == null ? null
+        : fbBuilder.writeString(_REFERENCE_CONTENT_ID!);
+    fbBuilder.startTable(7);
+    fbBuilder.addUint8(0, _EVIDENCE_KIND?.value);
+    fbBuilder.addFloat64(1, _MAXIMUM_POSITION_ERROR_M);
+    fbBuilder.addBool(2, _HAS_MAXIMUM_POSITION_ERROR_M);
+    fbBuilder.addFloat64(3, _MAXIMUM_VELOCITY_ERROR_M_S);
+    fbBuilder.addBool(4, _HAS_MAXIMUM_VELOCITY_ERROR_M_S);
+    fbBuilder.addOffset(5, METHODOffset);
+    fbBuilder.addOffset(6, REFERENCE_CONTENT_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWPrepareResult {
+  PRWPrepareResult._(this._bc, this._bcOffset);
+  factory PRWPrepareResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWPrepareResult> reader = _PRWPrepareResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get SEGMENT_SET_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get segmentSetHandle => SEGMENT_SET_HANDLE;
+  bool get COVERAGE_COMPLETE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get coverageComplete => COVERAGE_COMPLETE;
+  PRWFitQuality? get QUALITY => PRWFitQuality.reader.vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'PRWPrepareResult{INSTANCE: ${INSTANCE}, segmentSetHandle: ${segmentSetHandle}, coverageComplete: ${coverageComplete}, QUALITY: ${QUALITY}}';
+  }
+}
+
+class _PRWPrepareResultReader extends fb.TableReader<PRWPrepareResult> {
+  const _PRWPrepareResultReader();
+
+  @override
+  PRWPrepareResult createObject(fb.BufferContext bc, int offset) =>
+    PRWPrepareResult._(bc, offset);
+}
+
+class PRWPrepareResultBuilder {
+  PRWPrepareResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentSetHandle(int? SEGMENT_SET_HANDLE) {
+    fbBuilder.addUint32(1, SEGMENT_SET_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addCoverageComplete(bool? COVERAGE_COMPLETE) {
+    fbBuilder.addBool(2, COVERAGE_COMPLETE);
+    return fbBuilder.offset;
+  }
+  int addQualityOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWPrepareResultObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _SEGMENT_SET_HANDLE;
+  final bool? _COVERAGE_COMPLETE;
+  final PRWFitQualityObjectBuilder? _QUALITY;
+
+  PRWPrepareResultObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? SEGMENT_SET_HANDLE,
+    int? segmentSetHandle,
+    bool? COVERAGE_COMPLETE,
+    bool? coverageComplete,
+    PRWFitQualityObjectBuilder? QUALITY,
+  })
+      : _INSTANCE = INSTANCE,
+        _SEGMENT_SET_HANDLE = segmentSetHandle ?? SEGMENT_SET_HANDLE,
+        _COVERAGE_COMPLETE = coverageComplete ?? COVERAGE_COMPLETE,
+        _QUALITY = QUALITY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? QUALITYOffset = _QUALITY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _SEGMENT_SET_HANDLE);
+    fbBuilder.addBool(2, _COVERAGE_COMPLETE);
+    fbBuilder.addOffset(3, QUALITYOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWDescribeRequest {
+  PRWDescribeRequest._(this._bc, this._bcOffset);
+  factory PRWDescribeRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWDescribeRequest> reader = _PRWDescribeRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get SEGMENT_SET_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get segmentSetHandle => SEGMENT_SET_HANDLE;
+  List<int>? get SOURCE_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<int>? get sourceHandles => SOURCE_HANDLES;
+
+  @override
+  String toString() {
+    return 'PRWDescribeRequest{INSTANCE: ${INSTANCE}, segmentSetHandle: ${segmentSetHandle}, sourceHandles: ${sourceHandles}}';
+  }
+}
+
+class _PRWDescribeRequestReader extends fb.TableReader<PRWDescribeRequest> {
+  const _PRWDescribeRequestReader();
+
+  @override
+  PRWDescribeRequest createObject(fb.BufferContext bc, int offset) =>
+    PRWDescribeRequest._(bc, offset);
+}
+
+class PRWDescribeRequestBuilder {
+  PRWDescribeRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentSetHandle(int? SEGMENT_SET_HANDLE) {
+    fbBuilder.addUint32(1, SEGMENT_SET_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addSourceHandlesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWDescribeRequestObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _SEGMENT_SET_HANDLE;
+  final List<int>? _SOURCE_HANDLES;
+
+  PRWDescribeRequestObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? SEGMENT_SET_HANDLE,
+    int? segmentSetHandle,
+    List<int>? SOURCE_HANDLES,
+    List<int>? sourceHandles,
+  })
+      : _INSTANCE = INSTANCE,
+        _SEGMENT_SET_HANDLE = segmentSetHandle ?? SEGMENT_SET_HANDLE,
+        _SOURCE_HANDLES = sourceHandles ?? SOURCE_HANDLES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? SOURCE_HANDLESOffset = _SOURCE_HANDLES == null ? null
+        : fbBuilder.writeListUint32(_SOURCE_HANDLES!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _SEGMENT_SET_HANDLE);
+    fbBuilder.addOffset(2, SOURCE_HANDLESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.
+class PRWTrajectorySource {
+  PRWTrajectorySource._(this._bc, this._bcOffset);
+  factory PRWTrajectorySource(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWTrajectorySource> reader = _PRWTrajectorySourceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get SOURCE_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get sourceHandle => SOURCE_HANDLE;
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get objectId => OBJECT_ID;
+  PPE? get EPHEMERIS => PPE.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  One quality record per PPE.POSITION_RECORDS entry, same order.
+  List<PRWFitQuality>? get SEGMENT_QUALITY => const fb.ListReader<PRWFitQuality>(PRWFitQuality.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  List<PRWFitQuality>? get segmentQuality => SEGMENT_QUALITY;
+
+  @override
+  String toString() {
+    return 'PRWTrajectorySource{sourceHandle: ${sourceHandle}, objectId: ${objectId}, EPHEMERIS: ${EPHEMERIS}, segmentQuality: ${segmentQuality}}';
+  }
+}
+
+class _PRWTrajectorySourceReader extends fb.TableReader<PRWTrajectorySource> {
+  const _PRWTrajectorySourceReader();
+
+  @override
+  PRWTrajectorySource createObject(fb.BufferContext bc, int offset) =>
+    PRWTrajectorySource._(bc, offset);
+}
+
+class PRWTrajectorySourceBuilder {
+  PRWTrajectorySourceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addSourceHandle(int? SOURCE_HANDLE) {
+    fbBuilder.addUint32(0, SOURCE_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentQualityOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWTrajectorySourceObjectBuilder extends fb.ObjectBuilder {
+  final int? _SOURCE_HANDLE;
+  final String? _OBJECT_ID;
+  final PPEObjectBuilder? _EPHEMERIS;
+  final List<PRWFitQualityObjectBuilder>? _SEGMENT_QUALITY;
+
+  PRWTrajectorySourceObjectBuilder({
+    int? SOURCE_HANDLE,
+    int? sourceHandle,
+    String? OBJECT_ID,
+    String? objectId,
+    PPEObjectBuilder? EPHEMERIS,
+    List<PRWFitQualityObjectBuilder>? SEGMENT_QUALITY,
+    List<PRWFitQualityObjectBuilder>? segmentQuality,
+  })
+      : _SOURCE_HANDLE = sourceHandle ?? SOURCE_HANDLE,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _EPHEMERIS = EPHEMERIS,
+        _SEGMENT_QUALITY = segmentQuality ?? SEGMENT_QUALITY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? EPHEMERISOffset = _EPHEMERIS?.getOrCreateOffset(fbBuilder);
+    final int? SEGMENT_QUALITYOffset = _SEGMENT_QUALITY == null ? null
+        : fbBuilder.writeList(_SEGMENT_QUALITY!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(4);
+    fbBuilder.addUint32(0, _SOURCE_HANDLE);
+    fbBuilder.addOffset(1, OBJECT_IDOffset);
+    fbBuilder.addOffset(2, EPHEMERISOffset);
+    fbBuilder.addOffset(3, SEGMENT_QUALITYOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWDescribeResult {
+  PRWDescribeResult._(this._bc, this._bcOffset);
+  factory PRWDescribeResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWDescribeResult> reader = _PRWDescribeResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get SEGMENT_SET_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get segmentSetHandle => SEGMENT_SET_HANDLE;
+  List<PRWTrajectorySource>? get SOURCES => const fb.ListReader<PRWTrajectorySource>(PRWTrajectorySource.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Chunking indexes SOURCES; no partial polynomial coefficient vector.
+  int get SOURCE_OFFSET => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get sourceOffset => SOURCE_OFFSET;
+  bool get FINAL_CHUNK => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, true);
+  bool get finalChunk => FINAL_CHUNK;
+
+  @override
+  String toString() {
+    return 'PRWDescribeResult{INSTANCE: ${INSTANCE}, segmentSetHandle: ${segmentSetHandle}, SOURCES: ${SOURCES}, sourceOffset: ${sourceOffset}, finalChunk: ${finalChunk}}';
+  }
+}
+
+class _PRWDescribeResultReader extends fb.TableReader<PRWDescribeResult> {
+  const _PRWDescribeResultReader();
+
+  @override
+  PRWDescribeResult createObject(fb.BufferContext bc, int offset) =>
+    PRWDescribeResult._(bc, offset);
+}
+
+class PRWDescribeResultBuilder {
+  PRWDescribeResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentSetHandle(int? SEGMENT_SET_HANDLE) {
+    fbBuilder.addUint32(1, SEGMENT_SET_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addSourcesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceOffset(int? SOURCE_OFFSET) {
+    fbBuilder.addUint64(3, SOURCE_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addFinalChunk(bool? FINAL_CHUNK) {
+    fbBuilder.addBool(4, FINAL_CHUNK);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWDescribeResultObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _SEGMENT_SET_HANDLE;
+  final List<PRWTrajectorySourceObjectBuilder>? _SOURCES;
+  final int? _SOURCE_OFFSET;
+  final bool? _FINAL_CHUNK;
+
+  PRWDescribeResultObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? SEGMENT_SET_HANDLE,
+    int? segmentSetHandle,
+    List<PRWTrajectorySourceObjectBuilder>? SOURCES,
+    int? SOURCE_OFFSET,
+    int? sourceOffset,
+    bool? FINAL_CHUNK,
+    bool? finalChunk,
+  })
+      : _INSTANCE = INSTANCE,
+        _SEGMENT_SET_HANDLE = segmentSetHandle ?? SEGMENT_SET_HANDLE,
+        _SOURCES = SOURCES,
+        _SOURCE_OFFSET = sourceOffset ?? SOURCE_OFFSET,
+        _FINAL_CHUNK = finalChunk ?? FINAL_CHUNK;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? SOURCESOffset = _SOURCES == null ? null
+        : fbBuilder.writeList(_SOURCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _SEGMENT_SET_HANDLE);
+    fbBuilder.addOffset(2, SOURCESOffset);
+    fbBuilder.addUint64(3, _SOURCE_OFFSET);
+    fbBuilder.addBool(4, _FINAL_CHUNK);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Native container bytes wholly inside the FlatBuffer; not an NCD trailer.
+class PRWNativeInput {
+  PRWNativeInput._(this._bc, this._bcOffset);
+  factory PRWNativeInput(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWNativeInput> reader = _PRWNativeInputReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  NCD? get DESCRIPTOR => NCD.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Exactly DESCRIPTOR.SOURCE_BYTE_LENGTH bytes; verify declared hash.
+  List<int>? get CONTENT => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'PRWNativeInput{DESCRIPTOR: ${DESCRIPTOR}, CONTENT: ${CONTENT}}';
+  }
+}
+
+class _PRWNativeInputReader extends fb.TableReader<PRWNativeInput> {
+  const _PRWNativeInputReader();
+
+  @override
+  PRWNativeInput createObject(fb.BufferContext bc, int offset) =>
+    PRWNativeInput._(bc, offset);
+}
+
+class PRWNativeInputBuilder {
+  PRWNativeInputBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addDescriptorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addContentOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWNativeInputObjectBuilder extends fb.ObjectBuilder {
+  final NCDObjectBuilder? _DESCRIPTOR;
+  final List<int>? _CONTENT;
+
+  PRWNativeInputObjectBuilder({
+    NCDObjectBuilder? DESCRIPTOR,
+    List<int>? CONTENT,
+  })
+      : _DESCRIPTOR = DESCRIPTOR,
+        _CONTENT = CONTENT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DESCRIPTOROffset = _DESCRIPTOR?.getOrCreateOffset(fbBuilder);
+    final int? CONTENTOffset = _CONTENT == null ? null
+        : fbBuilder.writeListUint8(_CONTENT!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, DESCRIPTOROffset);
+    fbBuilder.addOffset(1, CONTENTOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Earth orientation for a propagation: one instantaneous row, or daily rows
+///  of one series (same SERIES, IAU_CONVENTION and data-set provenance) with
+///  strictly increasing MJD that cover the arc. A provider interpolates as
+///  published by the series and does not extrapolate.
+class PRWEarthOrientation {
+  PRWEarthOrientation._(this._bc, this._bcOffset);
+  factory PRWEarthOrientation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWEarthOrientation> reader = _PRWEarthOrientationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<EOP>? get ROWS => const fb.ListReader<EOP>(EOP.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'PRWEarthOrientation{ROWS: ${ROWS}}';
+  }
+}
+
+class _PRWEarthOrientationReader extends fb.TableReader<PRWEarthOrientation> {
+  const _PRWEarthOrientationReader();
+
+  @override
+  PRWEarthOrientation createObject(fb.BufferContext bc, int offset) =>
+    PRWEarthOrientation._(bc, offset);
+}
+
+class PRWEarthOrientationBuilder {
+  PRWEarthOrientationBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -514,7 +5405,7 @@ class SPWCOLLECTIONBuilder {
     fbBuilder.startTable(1);
   }
 
-  int addRecordsOffset(int? offset) {
+  int addRowsOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
@@ -524,21 +5415,1417 @@ class SPWCOLLECTIONBuilder {
   }
 }
 
-class SPWCOLLECTIONObjectBuilder extends fb.ObjectBuilder {
-  final List<SPWObjectBuilder>? _RECORDS;
+class PRWEarthOrientationObjectBuilder extends fb.ObjectBuilder {
+  final List<EOPObjectBuilder>? _ROWS;
 
-  SPWCOLLECTIONObjectBuilder({
-    List<SPWObjectBuilder>? RECORDS,
+  PRWEarthOrientationObjectBuilder({
+    List<EOPObjectBuilder>? ROWS,
   })
-      : _RECORDS = RECORDS;
+      : _ROWS = ROWS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? RECORDSOffset = _RECORDS == null ? null
-        : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ROWSOffset = _ROWS == null ? null
+        : fbBuilder.writeList(_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, RECORDSOffset);
+    fbBuilder.addOffset(0, ROWSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Daily space weather for a propagation, as published (`SPW`), with strictly
+///  increasing DATE covering the arc plus what the atmosphere model reads
+///  before it (NRLMSISE-00 reads the previous day's F10.7). A provider derives
+///  its model inputs from these rows and reports which ones it reads.
+class PRWSpaceWeatherTable {
+  PRWSpaceWeatherTable._(this._bc, this._bcOffset);
+  factory PRWSpaceWeatherTable(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWSpaceWeatherTable> reader = _PRWSpaceWeatherTableReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<SPW>? get ROWS => const fb.ListReader<SPW>(SPW.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'PRWSpaceWeatherTable{ROWS: ${ROWS}}';
+  }
+}
+
+class _PRWSpaceWeatherTableReader extends fb.TableReader<PRWSpaceWeatherTable> {
+  const _PRWSpaceWeatherTableReader();
+
+  @override
+  PRWSpaceWeatherTable createObject(fb.BufferContext bc, int offset) =>
+    PRWSpaceWeatherTable._(bc, offset);
+}
+
+class PRWSpaceWeatherTableBuilder {
+  PRWSpaceWeatherTableBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addRowsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWSpaceWeatherTableObjectBuilder extends fb.ObjectBuilder {
+  final List<SPWObjectBuilder>? _ROWS;
+
+  PRWSpaceWeatherTableObjectBuilder({
+    List<SPWObjectBuilder>? ROWS,
+  })
+      : _ROWS = ROWS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ROWSOffset = _ROWS == null ? null
+        : fbBuilder.writeList(_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, ROWSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One UTC day of JB2008 drivers, as Space Environment Technologies publishes
+///  them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their
+///  81-day centred averages, reported at 12 UT of DATE, and the hourly
+///  Dst-derived exospheric temperature change. A provider applies the model's
+///  own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier
+///  rows, and states how it interpolates between them.
+class PRWJB2008Indices {
+  PRWJB2008Indices._(this._bc, this._bcOffset);
+  factory PRWJB2008Indices(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWJB2008Indices> reader = _PRWJB2008IndicesReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  ISO 8601 calendar date (UTC) the row's values apply to.
+  String? get DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  double get F10 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get F10_CENTRED_81 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get f10Centred81 => F10_CENTRED_81;
+  double get S10 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get S10_CENTRED_81 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get s10Centred81 => S10_CENTRED_81;
+  double get M10 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get M10_CENTRED_81 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get m10Centred81 => M10_CENTRED_81;
+  double get Y10 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get Y10_CENTRED_81 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get y10Centred81 => Y10_CENTRED_81;
+  ///  Exospheric temperature change from Dst (K), hours 00 through 23 UTC.
+  List<double>? get DTC_HOURLY_K => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<double>? get dtcHourlyK => DTC_HOURLY_K;
+  ///  Source flags as published (SOLFSMY Ssrc), e.g. "4B".
+  String? get SOURCE_FLAGS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get sourceFlags => SOURCE_FLAGS;
+
+  @override
+  String toString() {
+    return 'PRWJB2008Indices{DATE: ${DATE}, F10: ${F10}, f10Centred81: ${f10Centred81}, S10: ${S10}, s10Centred81: ${s10Centred81}, M10: ${M10}, m10Centred81: ${m10Centred81}, Y10: ${Y10}, y10Centred81: ${y10Centred81}, dtcHourlyK: ${dtcHourlyK}, sourceFlags: ${sourceFlags}}';
+  }
+}
+
+class _PRWJB2008IndicesReader extends fb.TableReader<PRWJB2008Indices> {
+  const _PRWJB2008IndicesReader();
+
+  @override
+  PRWJB2008Indices createObject(fb.BufferContext bc, int offset) =>
+    PRWJB2008Indices._(bc, offset);
+}
+
+class PRWJB2008IndicesBuilder {
+  PRWJB2008IndicesBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addDateOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addF10(double? F10) {
+    fbBuilder.addFloat64(1, F10);
+    return fbBuilder.offset;
+  }
+  int addF10Centred81(double? F10_CENTRED_81) {
+    fbBuilder.addFloat64(2, F10_CENTRED_81);
+    return fbBuilder.offset;
+  }
+  int addS10(double? S10) {
+    fbBuilder.addFloat64(3, S10);
+    return fbBuilder.offset;
+  }
+  int addS10Centred81(double? S10_CENTRED_81) {
+    fbBuilder.addFloat64(4, S10_CENTRED_81);
+    return fbBuilder.offset;
+  }
+  int addM10(double? M10) {
+    fbBuilder.addFloat64(5, M10);
+    return fbBuilder.offset;
+  }
+  int addM10Centred81(double? M10_CENTRED_81) {
+    fbBuilder.addFloat64(6, M10_CENTRED_81);
+    return fbBuilder.offset;
+  }
+  int addY10(double? Y10) {
+    fbBuilder.addFloat64(7, Y10);
+    return fbBuilder.offset;
+  }
+  int addY10Centred81(double? Y10_CENTRED_81) {
+    fbBuilder.addFloat64(8, Y10_CENTRED_81);
+    return fbBuilder.offset;
+  }
+  int addDtcHourlyKOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceFlagsOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWJB2008IndicesObjectBuilder extends fb.ObjectBuilder {
+  final String? _DATE;
+  final double? _F10;
+  final double? _F10_CENTRED_81;
+  final double? _S10;
+  final double? _S10_CENTRED_81;
+  final double? _M10;
+  final double? _M10_CENTRED_81;
+  final double? _Y10;
+  final double? _Y10_CENTRED_81;
+  final List<double>? _DTC_HOURLY_K;
+  final String? _SOURCE_FLAGS;
+
+  PRWJB2008IndicesObjectBuilder({
+    String? DATE,
+    double? F10,
+    double? F10_CENTRED_81,
+    double? f10Centred81,
+    double? S10,
+    double? S10_CENTRED_81,
+    double? s10Centred81,
+    double? M10,
+    double? M10_CENTRED_81,
+    double? m10Centred81,
+    double? Y10,
+    double? Y10_CENTRED_81,
+    double? y10Centred81,
+    List<double>? DTC_HOURLY_K,
+    List<double>? dtcHourlyK,
+    String? SOURCE_FLAGS,
+    String? sourceFlags,
+  })
+      : _DATE = DATE,
+        _F10 = F10,
+        _F10_CENTRED_81 = f10Centred81 ?? F10_CENTRED_81,
+        _S10 = S10,
+        _S10_CENTRED_81 = s10Centred81 ?? S10_CENTRED_81,
+        _M10 = M10,
+        _M10_CENTRED_81 = m10Centred81 ?? M10_CENTRED_81,
+        _Y10 = Y10,
+        _Y10_CENTRED_81 = y10Centred81 ?? Y10_CENTRED_81,
+        _DTC_HOURLY_K = dtcHourlyK ?? DTC_HOURLY_K,
+        _SOURCE_FLAGS = sourceFlags ?? SOURCE_FLAGS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DATEOffset = _DATE == null ? null
+        : fbBuilder.writeString(_DATE!);
+    final int? DTC_HOURLY_KOffset = _DTC_HOURLY_K == null ? null
+        : fbBuilder.writeListFloat64(_DTC_HOURLY_K!);
+    final int? SOURCE_FLAGSOffset = _SOURCE_FLAGS == null ? null
+        : fbBuilder.writeString(_SOURCE_FLAGS!);
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, DATEOffset);
+    fbBuilder.addFloat64(1, _F10);
+    fbBuilder.addFloat64(2, _F10_CENTRED_81);
+    fbBuilder.addFloat64(3, _S10);
+    fbBuilder.addFloat64(4, _S10_CENTRED_81);
+    fbBuilder.addFloat64(5, _M10);
+    fbBuilder.addFloat64(6, _M10_CENTRED_81);
+    fbBuilder.addFloat64(7, _Y10);
+    fbBuilder.addFloat64(8, _Y10_CENTRED_81);
+    fbBuilder.addOffset(9, DTC_HOURLY_KOffset);
+    fbBuilder.addOffset(10, SOURCE_FLAGSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  JB2008 drivers for a propagation: daily rows with strictly increasing
+///  DATE covering the arc plus the days the model's lags read before it.
+class PRWJB2008IndicesTable {
+  PRWJB2008IndicesTable._(this._bc, this._bcOffset);
+  factory PRWJB2008IndicesTable(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWJB2008IndicesTable> reader = _PRWJB2008IndicesTableReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<PRWJB2008Indices>? get ROWS => const fb.ListReader<PRWJB2008Indices>(PRWJB2008Indices.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'PRWJB2008IndicesTable{ROWS: ${ROWS}}';
+  }
+}
+
+class _PRWJB2008IndicesTableReader extends fb.TableReader<PRWJB2008IndicesTable> {
+  const _PRWJB2008IndicesTableReader();
+
+  @override
+  PRWJB2008IndicesTable createObject(fb.BufferContext bc, int offset) =>
+    PRWJB2008IndicesTable._(bc, offset);
+}
+
+class PRWJB2008IndicesTableBuilder {
+  PRWJB2008IndicesTableBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addRowsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWJB2008IndicesTableObjectBuilder extends fb.ObjectBuilder {
+  final List<PRWJB2008IndicesObjectBuilder>? _ROWS;
+
+  PRWJB2008IndicesTableObjectBuilder({
+    List<PRWJB2008IndicesObjectBuilder>? ROWS,
+  })
+      : _ROWS = ROWS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ROWSOffset = _ROWS == null ? null
+        : fbBuilder.writeList(_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, ROWSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.
+class PRWEphemerisRequest {
+  PRWEphemerisRequest._(this._bc, this._bcOffset);
+  factory PRWEphemerisRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWEphemerisRequest> reader = _PRWEphemerisRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  TIMInstant? get EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get TARGET_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get targetNaifId => TARGET_NAIF_ID;
+  int get CENTER_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 399);
+  int get centerNaifId => CENTER_NAIF_ID;
+
+  @override
+  String toString() {
+    return 'PRWEphemerisRequest{EPOCH: ${EPOCH}, targetNaifId: ${targetNaifId}, centerNaifId: ${centerNaifId}}';
+  }
+}
+
+class _PRWEphemerisRequestReader extends fb.TableReader<PRWEphemerisRequest> {
+  const _PRWEphemerisRequestReader();
+
+  @override
+  PRWEphemerisRequest createObject(fb.BufferContext bc, int offset) =>
+    PRWEphemerisRequest._(bc, offset);
+}
+
+class PRWEphemerisRequestBuilder {
+  PRWEphemerisRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetNaifId(int? TARGET_NAIF_ID) {
+    fbBuilder.addInt32(1, TARGET_NAIF_ID);
+    return fbBuilder.offset;
+  }
+  int addCenterNaifId(int? CENTER_NAIF_ID) {
+    fbBuilder.addInt32(2, CENTER_NAIF_ID);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWEphemerisRequestObjectBuilder extends fb.ObjectBuilder {
+  final TIMInstantObjectBuilder? _EPOCH;
+  final int? _TARGET_NAIF_ID;
+  final int? _CENTER_NAIF_ID;
+
+  PRWEphemerisRequestObjectBuilder({
+    TIMInstantObjectBuilder? EPOCH,
+    int? TARGET_NAIF_ID,
+    int? targetNaifId,
+    int? CENTER_NAIF_ID,
+    int? centerNaifId,
+  })
+      : _EPOCH = EPOCH,
+        _TARGET_NAIF_ID = targetNaifId ?? TARGET_NAIF_ID,
+        _CENTER_NAIF_ID = centerNaifId ?? CENTER_NAIF_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addInt32(1, _TARGET_NAIF_ID);
+    fbBuilder.addInt32(2, _CENTER_NAIF_ID);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWEphemerisResult {
+  PRWEphemerisResult._(this._bc, this._bcOffset);
+  factory PRWEphemerisResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWEphemerisResult> reader = _PRWEphemerisResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get TARGET_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get targetNaifId => TARGET_NAIF_ID;
+  int get CENTER_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get centerNaifId => CENTER_NAIF_ID;
+  ///  Explicit ICRF axes and named NAIF origin; FRM state in SI m/m/s.
+  PRWResidentState? get STATE => PRWResidentState.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  String? get EPHEMERIS_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get ephemerisSource => EPHEMERIS_SOURCE;
+
+  @override
+  String toString() {
+    return 'PRWEphemerisResult{targetNaifId: ${targetNaifId}, centerNaifId: ${centerNaifId}, STATE: ${STATE}, ephemerisSource: ${ephemerisSource}}';
+  }
+}
+
+class _PRWEphemerisResultReader extends fb.TableReader<PRWEphemerisResult> {
+  const _PRWEphemerisResultReader();
+
+  @override
+  PRWEphemerisResult createObject(fb.BufferContext bc, int offset) =>
+    PRWEphemerisResult._(bc, offset);
+}
+
+class PRWEphemerisResultBuilder {
+  PRWEphemerisResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addTargetNaifId(int? TARGET_NAIF_ID) {
+    fbBuilder.addInt32(0, TARGET_NAIF_ID);
+    return fbBuilder.offset;
+  }
+  int addCenterNaifId(int? CENTER_NAIF_ID) {
+    fbBuilder.addInt32(1, CENTER_NAIF_ID);
+    return fbBuilder.offset;
+  }
+  int addStateOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisSourceOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWEphemerisResultObjectBuilder extends fb.ObjectBuilder {
+  final int? _TARGET_NAIF_ID;
+  final int? _CENTER_NAIF_ID;
+  final PRWResidentStateObjectBuilder? _STATE;
+  final String? _EPHEMERIS_SOURCE;
+
+  PRWEphemerisResultObjectBuilder({
+    int? TARGET_NAIF_ID,
+    int? targetNaifId,
+    int? CENTER_NAIF_ID,
+    int? centerNaifId,
+    PRWResidentStateObjectBuilder? STATE,
+    String? EPHEMERIS_SOURCE,
+    String? ephemerisSource,
+  })
+      : _TARGET_NAIF_ID = targetNaifId ?? TARGET_NAIF_ID,
+        _CENTER_NAIF_ID = centerNaifId ?? CENTER_NAIF_ID,
+        _STATE = STATE,
+        _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? STATEOffset = _STATE?.getOrCreateOffset(fbBuilder);
+    final int? EPHEMERIS_SOURCEOffset = _EPHEMERIS_SOURCE == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
+    fbBuilder.startTable(4);
+    fbBuilder.addInt32(0, _TARGET_NAIF_ID);
+    fbBuilder.addInt32(1, _CENTER_NAIF_ID);
+    fbBuilder.addOffset(2, STATEOffset);
+    fbBuilder.addOffset(3, EPHEMERIS_SOURCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
+class PRWAtmosphereRequest {
+  PRWAtmosphereRequest._(this._bc, this._bcOffset);
+  factory PRWAtmosphereRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWAtmosphereRequest> reader = _PRWAtmosphereRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  prwAtmosphereFamily get ATMOSPHERE_MODEL => prwAtmosphereFamily.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 1));
+  prwAtmosphereFamily get atmosphereModel => ATMOSPHERE_MODEL;
+  TIMInstant? get EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get altitudeM => ALTITUDE_M;
+  double get LATITUDE_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get latitudeRad => LATITUDE_RAD;
+  double get LONGITUDE_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get longitudeRad => LONGITUDE_RAD;
+  ///  Optional local solar time; hours [0,24); absent derives from UTC/longitude.
+  double get LOCAL_SOLAR_TIME_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get localSolarTimeHours => LOCAL_SOLAR_TIME_HOURS;
+  ///  True when LOCAL_SOLAR_TIME_HOURS carries a value; false means absent.
+  bool get HAS_LOCAL_SOLAR_TIME_HOURS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get hasLocalSolarTimeHours => HAS_LOCAL_SOLAR_TIME_HOURS;
+  double get F107 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 150.0);
+  double get F107_AVERAGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 150.0);
+  double get f107Average => F107_AVERAGE;
+  double get AP_INDEX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 4.0);
+  double get apIndex => AP_INDEX;
+  bool get INCLUDE_ANOMALOUS_OXYGEN => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get includeAnomalousOxygen => INCLUDE_ANOMALOUS_OXYGEN;
+
+  @override
+  String toString() {
+    return 'PRWAtmosphereRequest{atmosphereModel: ${atmosphereModel}, EPOCH: ${EPOCH}, altitudeM: ${altitudeM}, latitudeRad: ${latitudeRad}, longitudeRad: ${longitudeRad}, localSolarTimeHours: ${localSolarTimeHours}, hasLocalSolarTimeHours: ${hasLocalSolarTimeHours}, F107: ${F107}, f107Average: ${f107Average}, apIndex: ${apIndex}, includeAnomalousOxygen: ${includeAnomalousOxygen}}';
+  }
+}
+
+class _PRWAtmosphereRequestReader extends fb.TableReader<PRWAtmosphereRequest> {
+  const _PRWAtmosphereRequestReader();
+
+  @override
+  PRWAtmosphereRequest createObject(fb.BufferContext bc, int offset) =>
+    PRWAtmosphereRequest._(bc, offset);
+}
+
+class PRWAtmosphereRequestBuilder {
+  PRWAtmosphereRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addAtmosphereModel(prwAtmosphereFamily? ATMOSPHERE_MODEL) {
+    fbBuilder.addUint8(0, ATMOSPHERE_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addAltitudeM(double? ALTITUDE_M) {
+    fbBuilder.addFloat64(2, ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addLatitudeRad(double? LATITUDE_RAD) {
+    fbBuilder.addFloat64(3, LATITUDE_RAD);
+    return fbBuilder.offset;
+  }
+  int addLongitudeRad(double? LONGITUDE_RAD) {
+    fbBuilder.addFloat64(4, LONGITUDE_RAD);
+    return fbBuilder.offset;
+  }
+  int addLocalSolarTimeHours(double? LOCAL_SOLAR_TIME_HOURS) {
+    fbBuilder.addFloat64(5, LOCAL_SOLAR_TIME_HOURS);
+    return fbBuilder.offset;
+  }
+  int addHasLocalSolarTimeHours(bool? HAS_LOCAL_SOLAR_TIME_HOURS) {
+    fbBuilder.addBool(6, HAS_LOCAL_SOLAR_TIME_HOURS);
+    return fbBuilder.offset;
+  }
+  int addF107(double? F107) {
+    fbBuilder.addFloat64(7, F107);
+    return fbBuilder.offset;
+  }
+  int addF107Average(double? F107_AVERAGE) {
+    fbBuilder.addFloat64(8, F107_AVERAGE);
+    return fbBuilder.offset;
+  }
+  int addApIndex(double? AP_INDEX) {
+    fbBuilder.addFloat64(9, AP_INDEX);
+    return fbBuilder.offset;
+  }
+  int addIncludeAnomalousOxygen(bool? INCLUDE_ANOMALOUS_OXYGEN) {
+    fbBuilder.addBool(10, INCLUDE_ANOMALOUS_OXYGEN);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWAtmosphereRequestObjectBuilder extends fb.ObjectBuilder {
+  final prwAtmosphereFamily? _ATMOSPHERE_MODEL;
+  final TIMInstantObjectBuilder? _EPOCH;
+  final double? _ALTITUDE_M;
+  final double? _LATITUDE_RAD;
+  final double? _LONGITUDE_RAD;
+  final double? _LOCAL_SOLAR_TIME_HOURS;
+  final bool? _HAS_LOCAL_SOLAR_TIME_HOURS;
+  final double? _F107;
+  final double? _F107_AVERAGE;
+  final double? _AP_INDEX;
+  final bool? _INCLUDE_ANOMALOUS_OXYGEN;
+
+  PRWAtmosphereRequestObjectBuilder({
+    prwAtmosphereFamily? ATMOSPHERE_MODEL,
+    prwAtmosphereFamily? atmosphereModel,
+    TIMInstantObjectBuilder? EPOCH,
+    double? ALTITUDE_M,
+    double? altitudeM,
+    double? LATITUDE_RAD,
+    double? latitudeRad,
+    double? LONGITUDE_RAD,
+    double? longitudeRad,
+    double? LOCAL_SOLAR_TIME_HOURS,
+    double? localSolarTimeHours,
+    bool? HAS_LOCAL_SOLAR_TIME_HOURS,
+    bool? hasLocalSolarTimeHours,
+    double? F107,
+    double? F107_AVERAGE,
+    double? f107Average,
+    double? AP_INDEX,
+    double? apIndex,
+    bool? INCLUDE_ANOMALOUS_OXYGEN,
+    bool? includeAnomalousOxygen,
+  })
+      : _ATMOSPHERE_MODEL = atmosphereModel ?? ATMOSPHERE_MODEL,
+        _EPOCH = EPOCH,
+        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _LATITUDE_RAD = latitudeRad ?? LATITUDE_RAD,
+        _LONGITUDE_RAD = longitudeRad ?? LONGITUDE_RAD,
+        _LOCAL_SOLAR_TIME_HOURS = localSolarTimeHours ?? LOCAL_SOLAR_TIME_HOURS,
+        _HAS_LOCAL_SOLAR_TIME_HOURS = hasLocalSolarTimeHours ?? HAS_LOCAL_SOLAR_TIME_HOURS,
+        _F107 = F107,
+        _F107_AVERAGE = f107Average ?? F107_AVERAGE,
+        _AP_INDEX = apIndex ?? AP_INDEX,
+        _INCLUDE_ANOMALOUS_OXYGEN = includeAnomalousOxygen ?? INCLUDE_ANOMALOUS_OXYGEN;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(11);
+    fbBuilder.addUint8(0, _ATMOSPHERE_MODEL?.value);
+    fbBuilder.addOffset(1, EPOCHOffset);
+    fbBuilder.addFloat64(2, _ALTITUDE_M);
+    fbBuilder.addFloat64(3, _LATITUDE_RAD);
+    fbBuilder.addFloat64(4, _LONGITUDE_RAD);
+    fbBuilder.addFloat64(5, _LOCAL_SOLAR_TIME_HOURS);
+    fbBuilder.addBool(6, _HAS_LOCAL_SOLAR_TIME_HOURS);
+    fbBuilder.addFloat64(7, _F107);
+    fbBuilder.addFloat64(8, _F107_AVERAGE);
+    fbBuilder.addFloat64(9, _AP_INDEX);
+    fbBuilder.addBool(10, _INCLUDE_ANOMALOUS_OXYGEN);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWSpeciesDensity {
+  PRWSpeciesDensity._(this._bc, this._bcOffset);
+  factory PRWSpeciesDensity(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWSpeciesDensity> reader = _PRWSpeciesDensityReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  prwDensitySpecies get CONSTITUENT => prwDensitySpecies.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  double get NUMBER_PER_M3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get numberPerM3 => NUMBER_PER_M3;
+
+  @override
+  String toString() {
+    return 'PRWSpeciesDensity{CONSTITUENT: ${CONSTITUENT}, numberPerM3: ${numberPerM3}}';
+  }
+}
+
+class _PRWSpeciesDensityReader extends fb.TableReader<PRWSpeciesDensity> {
+  const _PRWSpeciesDensityReader();
+
+  @override
+  PRWSpeciesDensity createObject(fb.BufferContext bc, int offset) =>
+    PRWSpeciesDensity._(bc, offset);
+}
+
+class PRWSpeciesDensityBuilder {
+  PRWSpeciesDensityBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addConstituent(prwDensitySpecies? CONSTITUENT) {
+    fbBuilder.addUint8(0, CONSTITUENT?.value);
+    return fbBuilder.offset;
+  }
+  int addNumberPerM3(double? NUMBER_PER_M3) {
+    fbBuilder.addFloat64(1, NUMBER_PER_M3);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWSpeciesDensityObjectBuilder extends fb.ObjectBuilder {
+  final prwDensitySpecies? _CONSTITUENT;
+  final double? _NUMBER_PER_M3;
+
+  PRWSpeciesDensityObjectBuilder({
+    prwDensitySpecies? CONSTITUENT,
+    double? NUMBER_PER_M3,
+    double? numberPerM3,
+  })
+      : _CONSTITUENT = CONSTITUENT,
+        _NUMBER_PER_M3 = numberPerM3 ?? NUMBER_PER_M3;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addUint8(0, _CONSTITUENT?.value);
+    fbBuilder.addFloat64(1, _NUMBER_PER_M3);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PRWAtmosphereResult {
+  PRWAtmosphereResult._(this._bc, this._bcOffset);
+  factory PRWAtmosphereResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWAtmosphereResult> reader = _PRWAtmosphereResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  prwAtmosphereFamily get ATMOSPHERE_MODEL => prwAtmosphereFamily.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  prwAtmosphereFamily get atmosphereModel => ATMOSPHERE_MODEL;
+  String? get VARIANT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get altitudeM => ALTITUDE_M;
+  double get DENSITY_KG_M3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get densityKgM3 => DENSITY_KG_M3;
+  double get TEMPERATURE_K => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get temperatureK => TEMPERATURE_K;
+  ///  True when TEMPERATURE_K carries a value; false means absent.
+  bool get HAS_TEMPERATURE_K => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get hasTemperatureK => HAS_TEMPERATURE_K;
+  double get EXOSPHERIC_TEMPERATURE_K => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get exosphericTemperatureK => EXOSPHERIC_TEMPERATURE_K;
+  ///  True when EXOSPHERIC_TEMPERATURE_K carries a value; false means absent.
+  bool get HAS_EXOSPHERIC_TEMPERATURE_K => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get hasExosphericTemperatureK => HAS_EXOSPHERIC_TEMPERATURE_K;
+  double get SCALE_HEIGHT_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get scaleHeightM => SCALE_HEIGHT_M;
+  ///  True when SCALE_HEIGHT_M carries a value; false means absent.
+  bool get HAS_SCALE_HEIGHT_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get hasScaleHeightM => HAS_SCALE_HEIGHT_M;
+  List<PRWSpeciesDensity>? get NUMBER_DENSITIES => const fb.ListReader<PRWSpeciesDensity>(PRWSpeciesDensity.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  List<PRWSpeciesDensity>? get numberDensities => NUMBER_DENSITIES;
+
+  @override
+  String toString() {
+    return 'PRWAtmosphereResult{atmosphereModel: ${atmosphereModel}, VARIANT: ${VARIANT}, altitudeM: ${altitudeM}, densityKgM3: ${densityKgM3}, temperatureK: ${temperatureK}, hasTemperatureK: ${hasTemperatureK}, exosphericTemperatureK: ${exosphericTemperatureK}, hasExosphericTemperatureK: ${hasExosphericTemperatureK}, scaleHeightM: ${scaleHeightM}, hasScaleHeightM: ${hasScaleHeightM}, numberDensities: ${numberDensities}}';
+  }
+}
+
+class _PRWAtmosphereResultReader extends fb.TableReader<PRWAtmosphereResult> {
+  const _PRWAtmosphereResultReader();
+
+  @override
+  PRWAtmosphereResult createObject(fb.BufferContext bc, int offset) =>
+    PRWAtmosphereResult._(bc, offset);
+}
+
+class PRWAtmosphereResultBuilder {
+  PRWAtmosphereResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addAtmosphereModel(prwAtmosphereFamily? ATMOSPHERE_MODEL) {
+    fbBuilder.addUint8(0, ATMOSPHERE_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addVariantOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addAltitudeM(double? ALTITUDE_M) {
+    fbBuilder.addFloat64(2, ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addDensityKgM3(double? DENSITY_KG_M3) {
+    fbBuilder.addFloat64(3, DENSITY_KG_M3);
+    return fbBuilder.offset;
+  }
+  int addTemperatureK(double? TEMPERATURE_K) {
+    fbBuilder.addFloat64(4, TEMPERATURE_K);
+    return fbBuilder.offset;
+  }
+  int addHasTemperatureK(bool? HAS_TEMPERATURE_K) {
+    fbBuilder.addBool(5, HAS_TEMPERATURE_K);
+    return fbBuilder.offset;
+  }
+  int addExosphericTemperatureK(double? EXOSPHERIC_TEMPERATURE_K) {
+    fbBuilder.addFloat64(6, EXOSPHERIC_TEMPERATURE_K);
+    return fbBuilder.offset;
+  }
+  int addHasExosphericTemperatureK(bool? HAS_EXOSPHERIC_TEMPERATURE_K) {
+    fbBuilder.addBool(7, HAS_EXOSPHERIC_TEMPERATURE_K);
+    return fbBuilder.offset;
+  }
+  int addScaleHeightM(double? SCALE_HEIGHT_M) {
+    fbBuilder.addFloat64(8, SCALE_HEIGHT_M);
+    return fbBuilder.offset;
+  }
+  int addHasScaleHeightM(bool? HAS_SCALE_HEIGHT_M) {
+    fbBuilder.addBool(9, HAS_SCALE_HEIGHT_M);
+    return fbBuilder.offset;
+  }
+  int addNumberDensitiesOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWAtmosphereResultObjectBuilder extends fb.ObjectBuilder {
+  final prwAtmosphereFamily? _ATMOSPHERE_MODEL;
+  final String? _VARIANT;
+  final double? _ALTITUDE_M;
+  final double? _DENSITY_KG_M3;
+  final double? _TEMPERATURE_K;
+  final bool? _HAS_TEMPERATURE_K;
+  final double? _EXOSPHERIC_TEMPERATURE_K;
+  final bool? _HAS_EXOSPHERIC_TEMPERATURE_K;
+  final double? _SCALE_HEIGHT_M;
+  final bool? _HAS_SCALE_HEIGHT_M;
+  final List<PRWSpeciesDensityObjectBuilder>? _NUMBER_DENSITIES;
+
+  PRWAtmosphereResultObjectBuilder({
+    prwAtmosphereFamily? ATMOSPHERE_MODEL,
+    prwAtmosphereFamily? atmosphereModel,
+    String? VARIANT,
+    double? ALTITUDE_M,
+    double? altitudeM,
+    double? DENSITY_KG_M3,
+    double? densityKgM3,
+    double? TEMPERATURE_K,
+    double? temperatureK,
+    bool? HAS_TEMPERATURE_K,
+    bool? hasTemperatureK,
+    double? EXOSPHERIC_TEMPERATURE_K,
+    double? exosphericTemperatureK,
+    bool? HAS_EXOSPHERIC_TEMPERATURE_K,
+    bool? hasExosphericTemperatureK,
+    double? SCALE_HEIGHT_M,
+    double? scaleHeightM,
+    bool? HAS_SCALE_HEIGHT_M,
+    bool? hasScaleHeightM,
+    List<PRWSpeciesDensityObjectBuilder>? NUMBER_DENSITIES,
+    List<PRWSpeciesDensityObjectBuilder>? numberDensities,
+  })
+      : _ATMOSPHERE_MODEL = atmosphereModel ?? ATMOSPHERE_MODEL,
+        _VARIANT = VARIANT,
+        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _DENSITY_KG_M3 = densityKgM3 ?? DENSITY_KG_M3,
+        _TEMPERATURE_K = temperatureK ?? TEMPERATURE_K,
+        _HAS_TEMPERATURE_K = hasTemperatureK ?? HAS_TEMPERATURE_K,
+        _EXOSPHERIC_TEMPERATURE_K = exosphericTemperatureK ?? EXOSPHERIC_TEMPERATURE_K,
+        _HAS_EXOSPHERIC_TEMPERATURE_K = hasExosphericTemperatureK ?? HAS_EXOSPHERIC_TEMPERATURE_K,
+        _SCALE_HEIGHT_M = scaleHeightM ?? SCALE_HEIGHT_M,
+        _HAS_SCALE_HEIGHT_M = hasScaleHeightM ?? HAS_SCALE_HEIGHT_M,
+        _NUMBER_DENSITIES = numberDensities ?? NUMBER_DENSITIES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? VARIANTOffset = _VARIANT == null ? null
+        : fbBuilder.writeString(_VARIANT!);
+    final int? NUMBER_DENSITIESOffset = _NUMBER_DENSITIES == null ? null
+        : fbBuilder.writeList(_NUMBER_DENSITIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(11);
+    fbBuilder.addUint8(0, _ATMOSPHERE_MODEL?.value);
+    fbBuilder.addOffset(1, VARIANTOffset);
+    fbBuilder.addFloat64(2, _ALTITUDE_M);
+    fbBuilder.addFloat64(3, _DENSITY_KG_M3);
+    fbBuilder.addFloat64(4, _TEMPERATURE_K);
+    fbBuilder.addBool(5, _HAS_TEMPERATURE_K);
+    fbBuilder.addFloat64(6, _EXOSPHERIC_TEMPERATURE_K);
+    fbBuilder.addBool(7, _HAS_EXOSPHERIC_TEMPERATURE_K);
+    fbBuilder.addFloat64(8, _SCALE_HEIGHT_M);
+    fbBuilder.addBool(9, _HAS_SCALE_HEIGHT_M);
+    fbBuilder.addOffset(10, NUMBER_DENSITIESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Runtime diagnostic version; PLG remains the authoritative manifest identity.
+class PRWVersionResult {
+  PRWVersionResult._(this._bc, this._bcOffset);
+  factory PRWVersionResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWVersionResult> reader = _PRWVersionResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get moduleId => MODULE_ID;
+
+  @override
+  String toString() {
+    return 'PRWVersionResult{VERSION: ${VERSION}, moduleId: ${moduleId}}';
+  }
+}
+
+class _PRWVersionResultReader extends fb.TableReader<PRWVersionResult> {
+  const _PRWVersionResultReader();
+
+  @override
+  PRWVersionResult createObject(fb.BufferContext bc, int offset) =>
+    PRWVersionResult._(bc, offset);
+}
+
+class PRWVersionResultBuilder {
+  PRWVersionResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addVersionOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWVersionResultObjectBuilder extends fb.ObjectBuilder {
+  final String? _VERSION;
+  final String? _MODULE_ID;
+
+  PRWVersionResultObjectBuilder({
+    String? VERSION,
+    String? MODULE_ID,
+    String? moduleId,
+  })
+      : _VERSION = VERSION,
+        _MODULE_ID = moduleId ?? MODULE_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? VERSIONOffset = _VERSION == null ? null
+        : fbBuilder.writeString(_VERSION!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, VERSIONOffset);
+    fbBuilder.addOffset(1, MODULE_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Exactly one arm per envelope. Existing three arms keep their ordinals.
+class PRW {
+  PRW._(this._bc, this._bcOffset);
+  factory PRW(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRW> reader = _PRWReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInit? get INIT => PRWInit.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  PRWBatchRequest? get BATCH_REQUEST => PRWBatchRequest.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  PRWBatchRequest? get batchRequest => BATCH_REQUEST;
+  PRWBatchResponse? get BATCH_RESPONSE => PRWBatchResponse.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  PRWBatchResponse? get batchResponse => BATCH_RESPONSE;
+  ///  Appended portable arms; each method names its permitted arm.
+  PRWExecutionRequest? get EXECUTION_REQUEST => PRWExecutionRequest.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  PRWExecutionRequest? get executionRequest => EXECUTION_REQUEST;
+  PRWExecutionResult? get EXECUTION_RESULT => PRWExecutionResult.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  PRWExecutionResult? get executionResult => EXECUTION_RESULT;
+  PRWResidentState? get RESIDENT_STATE => PRWResidentState.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  PRWResidentState? get residentState => RESIDENT_STATE;
+  PRWResidentRequest? get RESIDENT_REQUEST => PRWResidentRequest.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  PRWResidentRequest? get residentRequest => RESIDENT_REQUEST;
+  PRWPrepareRequest? get PREPARE_REQUEST => PRWPrepareRequest.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  PRWPrepareRequest? get prepareRequest => PREPARE_REQUEST;
+  PRWPrepareResult? get PREPARE_RESULT => PRWPrepareResult.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  PRWPrepareResult? get prepareResult => PREPARE_RESULT;
+  PRWDescribeRequest? get DESCRIBE_REQUEST => PRWDescribeRequest.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  PRWDescribeRequest? get describeRequest => DESCRIBE_REQUEST;
+  PRWDescribeResult? get DESCRIBE_RESULT => PRWDescribeResult.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  PRWDescribeResult? get describeResult => DESCRIBE_RESULT;
+  PRWNativeInput? get NATIVE_INPUT => PRWNativeInput.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  PRWNativeInput? get nativeInput => NATIVE_INPUT;
+  PRWEphemerisRequest? get EPHEMERIS_REQUEST => PRWEphemerisRequest.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  PRWEphemerisRequest? get ephemerisRequest => EPHEMERIS_REQUEST;
+  PRWEphemerisResult? get EPHEMERIS_RESULT => PRWEphemerisResult.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  PRWEphemerisResult? get ephemerisResult => EPHEMERIS_RESULT;
+  PRWAtmosphereRequest? get ATMOSPHERE_REQUEST => PRWAtmosphereRequest.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  PRWAtmosphereRequest? get atmosphereRequest => ATMOSPHERE_REQUEST;
+  PRWAtmosphereResult? get ATMOSPHERE_RESULT => PRWAtmosphereResult.reader.vTableGetNullable(_bc, _bcOffset, 34);
+  PRWAtmosphereResult? get atmosphereResult => ATMOSPHERE_RESULT;
+  bool get VERSION_QUERY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
+  bool get versionQuery => VERSION_QUERY;
+  PRWVersionResult? get VERSION_RESULT => PRWVersionResult.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  PRWVersionResult? get versionResult => VERSION_RESULT;
+  PRWEarthOrientation? get EARTH_ORIENTATION => PRWEarthOrientation.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  PRWEarthOrientation? get earthOrientation => EARTH_ORIENTATION;
+  PRWSpaceWeatherTable? get SPACE_WEATHER => PRWSpaceWeatherTable.reader.vTableGetNullable(_bc, _bcOffset, 42);
+  PRWSpaceWeatherTable? get spaceWeather => SPACE_WEATHER;
+  PRWJB2008IndicesTable? get JB2008_INDICES => PRWJB2008IndicesTable.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  PRWJB2008IndicesTable? get jb2008Indices => JB2008_INDICES;
+
+  @override
+  String toString() {
+    return 'PRW{INIT: ${INIT}, batchRequest: ${batchRequest}, batchResponse: ${batchResponse}, executionRequest: ${executionRequest}, executionResult: ${executionResult}, residentState: ${residentState}, residentRequest: ${residentRequest}, prepareRequest: ${prepareRequest}, prepareResult: ${prepareResult}, describeRequest: ${describeRequest}, describeResult: ${describeResult}, nativeInput: ${nativeInput}, ephemerisRequest: ${ephemerisRequest}, ephemerisResult: ${ephemerisResult}, atmosphereRequest: ${atmosphereRequest}, atmosphereResult: ${atmosphereResult}, versionQuery: ${versionQuery}, versionResult: ${versionResult}, earthOrientation: ${earthOrientation}, spaceWeather: ${spaceWeather}, jb2008Indices: ${jb2008Indices}}';
+  }
+}
+
+class _PRWReader extends fb.TableReader<PRW> {
+  const _PRWReader();
+
+  @override
+  PRW createObject(fb.BufferContext bc, int offset) =>
+    PRW._(bc, offset);
+}
+
+class PRWBuilder {
+  PRWBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(21);
+  }
+
+  int addInitOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addBatchRequestOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addBatchResponseOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addExecutionRequestOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addExecutionResultOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addResidentStateOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addResidentRequestOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addPrepareRequestOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addPrepareResultOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addDescribeRequestOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addDescribeResultOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addNativeInputOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisRequestOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisResultOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addAtmosphereRequestOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addAtmosphereResultOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addVersionQuery(bool? VERSION_QUERY) {
+    fbBuilder.addBool(16, VERSION_QUERY);
+    return fbBuilder.offset;
+  }
+  int addVersionResultOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addEarthOrientationOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addSpaceWeatherOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addJb2008IndicesOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWObjectBuilder extends fb.ObjectBuilder {
+  final PRWInitObjectBuilder? _INIT;
+  final PRWBatchRequestObjectBuilder? _BATCH_REQUEST;
+  final PRWBatchResponseObjectBuilder? _BATCH_RESPONSE;
+  final PRWExecutionRequestObjectBuilder? _EXECUTION_REQUEST;
+  final PRWExecutionResultObjectBuilder? _EXECUTION_RESULT;
+  final PRWResidentStateObjectBuilder? _RESIDENT_STATE;
+  final PRWResidentRequestObjectBuilder? _RESIDENT_REQUEST;
+  final PRWPrepareRequestObjectBuilder? _PREPARE_REQUEST;
+  final PRWPrepareResultObjectBuilder? _PREPARE_RESULT;
+  final PRWDescribeRequestObjectBuilder? _DESCRIBE_REQUEST;
+  final PRWDescribeResultObjectBuilder? _DESCRIBE_RESULT;
+  final PRWNativeInputObjectBuilder? _NATIVE_INPUT;
+  final PRWEphemerisRequestObjectBuilder? _EPHEMERIS_REQUEST;
+  final PRWEphemerisResultObjectBuilder? _EPHEMERIS_RESULT;
+  final PRWAtmosphereRequestObjectBuilder? _ATMOSPHERE_REQUEST;
+  final PRWAtmosphereResultObjectBuilder? _ATMOSPHERE_RESULT;
+  final bool? _VERSION_QUERY;
+  final PRWVersionResultObjectBuilder? _VERSION_RESULT;
+  final PRWEarthOrientationObjectBuilder? _EARTH_ORIENTATION;
+  final PRWSpaceWeatherTableObjectBuilder? _SPACE_WEATHER;
+  final PRWJB2008IndicesTableObjectBuilder? _JB2008_INDICES;
+
+  PRWObjectBuilder({
+    PRWInitObjectBuilder? INIT,
+    PRWBatchRequestObjectBuilder? BATCH_REQUEST,
+    PRWBatchRequestObjectBuilder? batchRequest,
+    PRWBatchResponseObjectBuilder? BATCH_RESPONSE,
+    PRWBatchResponseObjectBuilder? batchResponse,
+    PRWExecutionRequestObjectBuilder? EXECUTION_REQUEST,
+    PRWExecutionRequestObjectBuilder? executionRequest,
+    PRWExecutionResultObjectBuilder? EXECUTION_RESULT,
+    PRWExecutionResultObjectBuilder? executionResult,
+    PRWResidentStateObjectBuilder? RESIDENT_STATE,
+    PRWResidentStateObjectBuilder? residentState,
+    PRWResidentRequestObjectBuilder? RESIDENT_REQUEST,
+    PRWResidentRequestObjectBuilder? residentRequest,
+    PRWPrepareRequestObjectBuilder? PREPARE_REQUEST,
+    PRWPrepareRequestObjectBuilder? prepareRequest,
+    PRWPrepareResultObjectBuilder? PREPARE_RESULT,
+    PRWPrepareResultObjectBuilder? prepareResult,
+    PRWDescribeRequestObjectBuilder? DESCRIBE_REQUEST,
+    PRWDescribeRequestObjectBuilder? describeRequest,
+    PRWDescribeResultObjectBuilder? DESCRIBE_RESULT,
+    PRWDescribeResultObjectBuilder? describeResult,
+    PRWNativeInputObjectBuilder? NATIVE_INPUT,
+    PRWNativeInputObjectBuilder? nativeInput,
+    PRWEphemerisRequestObjectBuilder? EPHEMERIS_REQUEST,
+    PRWEphemerisRequestObjectBuilder? ephemerisRequest,
+    PRWEphemerisResultObjectBuilder? EPHEMERIS_RESULT,
+    PRWEphemerisResultObjectBuilder? ephemerisResult,
+    PRWAtmosphereRequestObjectBuilder? ATMOSPHERE_REQUEST,
+    PRWAtmosphereRequestObjectBuilder? atmosphereRequest,
+    PRWAtmosphereResultObjectBuilder? ATMOSPHERE_RESULT,
+    PRWAtmosphereResultObjectBuilder? atmosphereResult,
+    bool? VERSION_QUERY,
+    bool? versionQuery,
+    PRWVersionResultObjectBuilder? VERSION_RESULT,
+    PRWVersionResultObjectBuilder? versionResult,
+    PRWEarthOrientationObjectBuilder? EARTH_ORIENTATION,
+    PRWEarthOrientationObjectBuilder? earthOrientation,
+    PRWSpaceWeatherTableObjectBuilder? SPACE_WEATHER,
+    PRWSpaceWeatherTableObjectBuilder? spaceWeather,
+    PRWJB2008IndicesTableObjectBuilder? JB2008_INDICES,
+    PRWJB2008IndicesTableObjectBuilder? jb2008Indices,
+  })
+      : _INIT = INIT,
+        _BATCH_REQUEST = batchRequest ?? BATCH_REQUEST,
+        _BATCH_RESPONSE = batchResponse ?? BATCH_RESPONSE,
+        _EXECUTION_REQUEST = executionRequest ?? EXECUTION_REQUEST,
+        _EXECUTION_RESULT = executionResult ?? EXECUTION_RESULT,
+        _RESIDENT_STATE = residentState ?? RESIDENT_STATE,
+        _RESIDENT_REQUEST = residentRequest ?? RESIDENT_REQUEST,
+        _PREPARE_REQUEST = prepareRequest ?? PREPARE_REQUEST,
+        _PREPARE_RESULT = prepareResult ?? PREPARE_RESULT,
+        _DESCRIBE_REQUEST = describeRequest ?? DESCRIBE_REQUEST,
+        _DESCRIBE_RESULT = describeResult ?? DESCRIBE_RESULT,
+        _NATIVE_INPUT = nativeInput ?? NATIVE_INPUT,
+        _EPHEMERIS_REQUEST = ephemerisRequest ?? EPHEMERIS_REQUEST,
+        _EPHEMERIS_RESULT = ephemerisResult ?? EPHEMERIS_RESULT,
+        _ATMOSPHERE_REQUEST = atmosphereRequest ?? ATMOSPHERE_REQUEST,
+        _ATMOSPHERE_RESULT = atmosphereResult ?? ATMOSPHERE_RESULT,
+        _VERSION_QUERY = versionQuery ?? VERSION_QUERY,
+        _VERSION_RESULT = versionResult ?? VERSION_RESULT,
+        _EARTH_ORIENTATION = earthOrientation ?? EARTH_ORIENTATION,
+        _SPACE_WEATHER = spaceWeather ?? SPACE_WEATHER,
+        _JB2008_INDICES = jb2008Indices ?? JB2008_INDICES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INITOffset = _INIT?.getOrCreateOffset(fbBuilder);
+    final int? BATCH_REQUESTOffset = _BATCH_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? BATCH_RESPONSEOffset = _BATCH_RESPONSE?.getOrCreateOffset(fbBuilder);
+    final int? EXECUTION_REQUESTOffset = _EXECUTION_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? EXECUTION_RESULTOffset = _EXECUTION_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? RESIDENT_STATEOffset = _RESIDENT_STATE?.getOrCreateOffset(fbBuilder);
+    final int? RESIDENT_REQUESTOffset = _RESIDENT_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? PREPARE_REQUESTOffset = _PREPARE_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? PREPARE_RESULTOffset = _PREPARE_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? DESCRIBE_REQUESTOffset = _DESCRIBE_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? DESCRIBE_RESULTOffset = _DESCRIBE_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? NATIVE_INPUTOffset = _NATIVE_INPUT?.getOrCreateOffset(fbBuilder);
+    final int? EPHEMERIS_REQUESTOffset = _EPHEMERIS_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? EPHEMERIS_RESULTOffset = _EPHEMERIS_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? ATMOSPHERE_REQUESTOffset = _ATMOSPHERE_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? ATMOSPHERE_RESULTOffset = _ATMOSPHERE_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? VERSION_RESULTOffset = _VERSION_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? EARTH_ORIENTATIONOffset = _EARTH_ORIENTATION?.getOrCreateOffset(fbBuilder);
+    final int? SPACE_WEATHEROffset = _SPACE_WEATHER?.getOrCreateOffset(fbBuilder);
+    final int? JB2008_INDICESOffset = _JB2008_INDICES?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(21);
+    fbBuilder.addOffset(0, INITOffset);
+    fbBuilder.addOffset(1, BATCH_REQUESTOffset);
+    fbBuilder.addOffset(2, BATCH_RESPONSEOffset);
+    fbBuilder.addOffset(3, EXECUTION_REQUESTOffset);
+    fbBuilder.addOffset(4, EXECUTION_RESULTOffset);
+    fbBuilder.addOffset(5, RESIDENT_STATEOffset);
+    fbBuilder.addOffset(6, RESIDENT_REQUESTOffset);
+    fbBuilder.addOffset(7, PREPARE_REQUESTOffset);
+    fbBuilder.addOffset(8, PREPARE_RESULTOffset);
+    fbBuilder.addOffset(9, DESCRIBE_REQUESTOffset);
+    fbBuilder.addOffset(10, DESCRIBE_RESULTOffset);
+    fbBuilder.addOffset(11, NATIVE_INPUTOffset);
+    fbBuilder.addOffset(12, EPHEMERIS_REQUESTOffset);
+    fbBuilder.addOffset(13, EPHEMERIS_RESULTOffset);
+    fbBuilder.addOffset(14, ATMOSPHERE_REQUESTOffset);
+    fbBuilder.addOffset(15, ATMOSPHERE_RESULTOffset);
+    fbBuilder.addBool(16, _VERSION_QUERY);
+    fbBuilder.addOffset(17, VERSION_RESULTOffset);
+    fbBuilder.addOffset(18, EARTH_ORIENTATIONOffset);
+    fbBuilder.addOffset(19, SPACE_WEATHEROffset);
+    fbBuilder.addOffset(20, JB2008_INDICESOffset);
     return fbBuilder.endTable();
   }
 

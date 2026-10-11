@@ -84,10 +84,10 @@ class CAT : Table() {
     /**
      * Ownership, typically country or company
      */
-    val owner : Byte
+    val owner : UByte
         get() {
             val o = __offset(14)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
      * Launch Date [year-month-day] (ISO 8601)
@@ -318,6 +318,39 @@ class CAT : Table() {
         }
     val catalogObjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
     fun catalogObjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
+    /**
+     * The products an integrating catalog selected for the object as of
+     * PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+     * the same source and epoch where there is one. The object's maneuvers are
+     * its $MNV stream, not references here.
+     */
+    fun products(j: Int) : CATProduct? = products(CATProduct(), j)
+    fun products(obj: CATProduct, j: Int) : CATProduct? {
+        val o = __offset(56)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val productsLength : Int
+        get() {
+            val o = __offset(56); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * ISO 8601 UTC instant the selection in PRODUCTS holds at.
+     */
+    val productsAsOf : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val productsAsOfAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun productsAsOfInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCAT(_bb: ByteBuffer): CAT = getRootAsCAT(_bb, CAT())
@@ -326,8 +359,8 @@ class CAT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CATBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CAT")
-        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: Byte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int, catalogUriOffset: Int, catalogObjectIdOffset: Int) : Int {
-            builder.startTable(26)
+        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: UByte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int, catalogUriOffset: Int, catalogObjectIdOffset: Int, productsOffset: Int, productsAsOfOffset: Int) : Int {
+            builder.startTable(28)
             addMASS(builder, mass)
             addSIZE(builder, size)
             addRCS(builder, rcs)
@@ -335,6 +368,8 @@ class CAT : Table() {
             addAPOGEE(builder, apogee)
             addINCLINATION(builder, inclination)
             addPERIOD(builder, period)
+            addPRODUCTSASOF(builder, productsAsOfOffset)
+            addPRODUCTS(builder, productsOffset)
             addCATALOGOBJECTID(builder, catalogObjectIdOffset)
             addCATALOGURI(builder, catalogUriOffset)
             addBUSID(builder, busIdOffset)
@@ -356,13 +391,13 @@ class CAT : Table() {
             addOBJECTTYPE(builder, objectType)
             return endCAT(builder)
         }
-        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(26)
+        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(28)
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(0, objectName, 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(2, noradCatId.toInt(), 0)
         fun addOBJECTTYPE(builder: FlatBufferBuilder, objectType: Byte) = builder.addByte(3, objectType, 3)
         fun addOPSSTATUSCODE(builder: FlatBufferBuilder, opsStatusCode: Byte) = builder.addByte(4, opsStatusCode, 7)
-        fun addOWNER(builder: FlatBufferBuilder, owner: Byte) = builder.addByte(5, owner, 0)
+        fun addOWNER(builder: FlatBufferBuilder, owner: UByte) = builder.addByte(5, owner.toByte(), 0)
         fun addLAUNCHDATE(builder: FlatBufferBuilder, launchDate: Int) = builder.addOffset(6, launchDate, 0)
         fun addLAUNCHSITE(builder: FlatBufferBuilder, launchSite: Int) = builder.addOffset(7, launchSite, 0)
         fun addDECAYDATE(builder: FlatBufferBuilder, decayDate: Int) = builder.addOffset(8, decayDate, 0)
@@ -391,6 +426,16 @@ class CAT : Table() {
         fun addBUSID(builder: FlatBufferBuilder, busId: Int) = builder.addOffset(23, busId, 0)
         fun addCATALOGURI(builder: FlatBufferBuilder, catalogUri: Int) = builder.addOffset(24, catalogUri, 0)
         fun addCATALOGOBJECTID(builder: FlatBufferBuilder, catalogObjectId: Int) = builder.addOffset(25, catalogObjectId, 0)
+        fun addPRODUCTS(builder: FlatBufferBuilder, products: Int) = builder.addOffset(26, products, 0)
+        fun createProductsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startProductsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPRODUCTSASOF(builder: FlatBufferBuilder, productsAsOf: Int) = builder.addOffset(27, productsAsOf, 0)
         fun endCAT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

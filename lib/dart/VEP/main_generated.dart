@@ -5,519 +5,232 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum TrkTrackStatus {
-  ACTIVE(0),
-  DROPPED(1),
-  TENTATIVE(2),
-  CONFIRMED(3),
-  COASTED(4),
-  DEAD(5);
+///  The kind of energy store the profile models.
+enum vepEnergyType {
+  UNSPECIFIED(0),
+  LIQUID_FUEL(1),
+  ELECTRIC(2),
+  HYBRID(3),
+  NUCLEAR(4),
+  SOLAR(5),
+  WIND(6);
 
   final int value;
-  const TrkTrackStatus(this.value);
+  const vepEnergyType(this.value);
 
-  factory TrkTrackStatus.fromValue(int value) {
+  factory vepEnergyType.fromValue(int value) {
     switch (value) {
-      case 0: return TrkTrackStatus.ACTIVE;
-      case 1: return TrkTrackStatus.DROPPED;
-      case 2: return TrkTrackStatus.TENTATIVE;
-      case 3: return TrkTrackStatus.CONFIRMED;
-      case 4: return TrkTrackStatus.COASTED;
-      case 5: return TrkTrackStatus.DEAD;
+      case 0: return vepEnergyType.UNSPECIFIED;
+      case 1: return vepEnergyType.LIQUID_FUEL;
+      case 2: return vepEnergyType.ELECTRIC;
+      case 3: return vepEnergyType.HYBRID;
+      case 4: return vepEnergyType.NUCLEAR;
+      case 5: return vepEnergyType.SOLAR;
+      case 6: return vepEnergyType.WIND;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static TrkTrackStatus? _createOrNull(int? value) =>
-      value == null ? null : TrkTrackStatus.fromValue(value);
+  static vepEnergyType? _createOrNull(int? value) =>
+      value == null ? null : vepEnergyType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<TrkTrackStatus> reader = _TrkTrackStatusReader();
+  static const int maxValue = 6;
+  static const fb.Reader<vepEnergyType> reader = _vepEnergyTypeReader();
 }
 
-class _TrkTrackStatusReader extends fb.Reader<TrkTrackStatus> {
-  const _TrkTrackStatusReader();
+class _vepEnergyTypeReader extends fb.Reader<vepEnergyType> {
+  const _vepEnergyTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  TrkTrackStatus read(fb.BufferContext bc, int offset) =>
-      TrkTrackStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+  vepEnergyType read(fb.BufferContext bc, int offset) =>
+      vepEnergyType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum trackEnvironment {
-  SPACE(0),
-  AIR(1),
-  SURFACE(2),
-  SUBSURFACE(3),
-  LAND(4),
-  UNKNOWN(5);
+///  Operating regime a performance point is stated for. Ordinals are wire
+///  values: append only.
+enum vepRegime {
+  UNSPECIFIED(0),
+  TAKEOFF(1),
+  CLIMB(2),
+  CRUISE(3),
+  LOITER(4),
+  DESCENT(5),
+  TAXI(6),
+  TRANSIT(7),
+  MANEUVER(8);
 
   final int value;
-  const trackEnvironment(this.value);
+  const vepRegime(this.value);
 
-  factory trackEnvironment.fromValue(int value) {
+  factory vepRegime.fromValue(int value) {
     switch (value) {
-      case 0: return trackEnvironment.SPACE;
-      case 1: return trackEnvironment.AIR;
-      case 2: return trackEnvironment.SURFACE;
-      case 3: return trackEnvironment.SUBSURFACE;
-      case 4: return trackEnvironment.LAND;
-      case 5: return trackEnvironment.UNKNOWN;
+      case 0: return vepRegime.UNSPECIFIED;
+      case 1: return vepRegime.TAKEOFF;
+      case 2: return vepRegime.CLIMB;
+      case 3: return vepRegime.CRUISE;
+      case 4: return vepRegime.LOITER;
+      case 5: return vepRegime.DESCENT;
+      case 6: return vepRegime.TAXI;
+      case 7: return vepRegime.TRANSIT;
+      case 8: return vepRegime.MANEUVER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static trackEnvironment? _createOrNull(int? value) =>
-      value == null ? null : trackEnvironment.fromValue(value);
+  static vepRegime? _createOrNull(int? value) =>
+      value == null ? null : vepRegime.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<trackEnvironment> reader = _trackEnvironmentReader();
+  static const int maxValue = 8;
+  static const fb.Reader<vepRegime> reader = _vepRegimeReader();
 }
 
-class _trackEnvironmentReader extends fb.Reader<trackEnvironment> {
-  const _trackEnvironmentReader();
+class _vepRegimeReader extends fb.Reader<vepRegime> {
+  const _vepRegimeReader();
 
   @override
   int get size => 1;
 
   @override
-  trackEnvironment read(fb.BufferContext bc, int offset) =>
-      trackEnvironment.fromValue(const fb.Int8Reader().read(bc, offset));
+  vepRegime read(fb.BufferContext bc, int offset) =>
+      vepRegime.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Track
-class TRK {
-  TRK._(this._bc, this._bcOffset);
-  factory TRK(List<int> bytes) {
+///  How a consumer interpolates between performance points.
+enum vepInterpolation {
+  UNSPECIFIED(0),
+  NEAREST(1),
+  LINEAR(2),
+  BILINEAR(3),
+  TABLE_LOOKUP(4);
+
+  final int value;
+  const vepInterpolation(this.value);
+
+  factory vepInterpolation.fromValue(int value) {
+    switch (value) {
+      case 0: return vepInterpolation.UNSPECIFIED;
+      case 1: return vepInterpolation.NEAREST;
+      case 2: return vepInterpolation.LINEAR;
+      case 3: return vepInterpolation.BILINEAR;
+      case 4: return vepInterpolation.TABLE_LOOKUP;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static vepInterpolation? _createOrNull(int? value) =>
+      value == null ? null : vepInterpolation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<vepInterpolation> reader = _vepInterpolationReader();
+}
+
+class _vepInterpolationReader extends fb.Reader<vepInterpolation> {
+  const _vepInterpolationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  vepInterpolation read(fb.BufferContext bc, int offset) =>
+      vepInterpolation.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  One point of the burn-rate table: consumption at a stated regime,
+///  altitude, and speed.
+class VEPPerformancePoint {
+  VEPPerformancePoint._(this._bc, this._bcOffset);
+  factory VEPPerformancePoint(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TRK> reader = _TRKReader();
+  static const fb.Reader<VEPPerformancePoint> reader = _VEPPerformancePointReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Unique identifier
-  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Contact reference
-  String? get CNTCT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Message timestamp (ISO 8601)
-  String? get MSG_TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get msgTs => MSG_TS;
-  ///  Mission identifier
-  String? get MSN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get msnId => MSN_ID;
-  ///  Asset nationality
-  String? get ASSET_NAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get assetNat => ASSET_NAT;
-  ///  Asset identifier
-  String? get ASSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Sensor identifier
-  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get sensorId => SENSOR_ID;
-  ///  Sensor quality assessment
-  String? get SEN_QUAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get senQual => SEN_QUAL;
-  ///  Track identifier
-  String? get TRK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get trkId => TRK_ID;
-  ///  Track number
-  String? get TRK_NUM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get trkNum => TRK_NUM;
-  ///  Track status
-  TrkTrackStatus get TRK_STAT => TrkTrackStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
-  TrkTrackStatus get trkStat => TRK_STAT;
-  ///  Object nationality
-  String? get OBJ_NAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get objNat => OBJ_NAT;
-  ///  Object identifier
-  String? get OBJ_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get objId => OBJ_ID;
-  ///  Object type classification
-  String? get OBJ_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get objType => OBJ_TYPE;
-  ///  Object specific type
-  String? get OBJ_SPEC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  String? get objSpec => OBJ_SPEC;
-  ///  Object platform type
-  String? get OBJ_PLAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  String? get objPlat => OBJ_PLAT;
-  ///  Object activity
-  String? get OBJ_ACT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  String? get objAct => OBJ_ACT;
-  ///  Mode type
-  String? get MOD_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
-  String? get modType => MOD_TYPE;
-  ///  Track item identifier
-  String? get TRK_ITM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
-  String? get trkItmId => TRK_ITM_ID;
-  ///  Track point timestamp (ISO 8601)
-  String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
-  ///  Track quality (0-15)
-  int get TRK_QUAL => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 44, 0);
-  int get trkQual => TRK_QUAL;
-  ///  Track point type
-  String? get TRK_PT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
-  String? get trkPtType => TRK_PT_TYPE;
-  ///  Object identity assessment
-  String? get OBJ_IDENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
-  String? get objIdent => OBJ_IDENT;
-  ///  Identity credibility (1-6)
-  int get IDENT_CRED => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 50, 0);
-  int get identCred => IDENT_CRED;
-  ///  Identity reliability (A-F)
-  int get IDENT_REL => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 52, 0);
-  int get identRel => IDENT_REL;
-  ///  Identity amplification
-  String? get IDENT_AMP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
-  String? get identAmp => IDENT_AMP;
-  ///  Track environment
-  trackEnvironment get ENVIRONMENT => trackEnvironment.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 56, 0));
-  ///  Environment confidence (0-1)
-  double get ENVIRONMENT_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  double get environmentConf => ENVIRONMENT_CONF;
-  ///  Track confidence (0-1)
-  double get TRK_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  double get trkConf => TRK_CONF;
-  ///  Latitude (degrees)
-  double get LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  ///  Longitude (degrees)
-  double get LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  ///  Altitude (km)
-  double get ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
-  ///  Speed (km/s)
-  double get SPD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  ///  Heading (degrees from north)
-  double get HDNG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  ///  Course (degrees from north)
-  double get COURSE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
-  ///  Source types
-  List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 74);
-  List<String>? get srcTyps => SRC_TYPS;
-  ///  Source identifiers
-  List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 76);
-  List<String>? get srcIds => SRC_IDS;
-  ///  Call sign
-  String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
-  String? get callSign => CALL_SIGN;
-  ///  True if fused from multiple sources
-  bool get MULTI_SOURCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 80, false);
-  bool get multiSource => MULTI_SOURCE;
-  ///  J-series message type
-  String? get J_SERIES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
-  String? get jSeries => J_SERIES;
-  ///  Force strength indicator
-  int get STRENGTH => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 84, 0);
-  ///  Mode 1 code
-  int get M1 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 86, 0);
-  ///  Mode 1 validity
-  int get M1V => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 88, 0);
-  ///  Mode 2 code
-  int get M2 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 90, 0);
-  ///  Mode 2 validity
-  int get M2V => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 92, 0);
-  ///  Mode 3A code
-  int get M3A => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 94, 0);
-  ///  Mode 3A validity
-  int get M3AV => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 96, 0);
-  ///  Associated tags
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 98);
-  ///  Start time for track data (ISO 8601)
-  String? get TRACK_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
-  String? get trackStartTime => TRACK_START_TIME;
-  ///  Time interval between track points (seconds)
-  double get TRACK_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
-  double get trackStepSize => TRACK_STEP_SIZE;
-  ///  Number of components per point (default 3 for X, Y, Z)
-  int get TRACK_COMPONENTS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 104, 3);
-  int get trackComponents => TRACK_COMPONENTS;
-  ///  ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
-  List<double>? get ECEF_POS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 106);
-  List<double>? get ecefPos => ECEF_POS;
-  ///  ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
-  List<double>? get ECEF_VEL => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 108);
-  List<double>? get ecefVel => ECEF_VEL;
-  ///  ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
-  List<double>? get ECEF_ACC => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 110);
-  List<double>? get ecefAcc => ECEF_ACC;
-  ///  Local coordinate position as flat array
-  List<double>? get LC_POS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 112);
-  List<double>? get lcPos => LC_POS;
-  ///  Local coordinate velocity as flat array
-  List<double>? get LC_VEL => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 114);
-  List<double>? get lcVel => LC_VEL;
-  ///  Local coordinate acceleration as flat array
-  List<double>? get LC_ACC => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 116);
-  List<double>? get lcAcc => LC_ACC;
-  ///  Covariance data (21 elements per point for 6x6 lower triangular)
-  List<double>? get COV => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 118);
-  ///  Error ellipse data (6 elements per point)
-  List<double>? get ERR_ELLP => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 120);
-  List<double>? get errEllp => ERR_ELLP;
+  ///  Altitude the point is stated at, metres above mean sea level. NaN for
+  ///  surface and subsurface regimes where altitude does not apply.
+  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get altitudeM => ALTITUDE_M;
+  ///  Speed the point is stated at, metres per second.
+  double get SPEED_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get speedMps => SPEED_MPS;
+  ///  Operating regime.
+  vepRegime get REGIME => vepRegime.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Consumption rate at this point, in BURN_RATE_UNITS per second unless
+  ///  the unit token itself states another time base.
+  double get BURN_RATE_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get burnRateValue => BURN_RATE_VALUE;
+  ///  Units of BURN_RATE_VALUE, verbatim. Required: a rate with no unit is
+  ///  not publishable.
+  String? get BURN_RATE_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get burnRateUnits => BURN_RATE_UNITS;
+  ///  Distance travelled per unit of energy at this point, metres per
+  ///  CAPACITY_UNITS unit.
+  double get SPECIFIC_RANGE_M_PER_UNIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get specificRangeMPerUnit => SPECIFIC_RANGE_M_PER_UNIT;
+  ///  Gross mass the point is stated at, kilograms.
+  double get GROSS_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get grossMassKg => GROSS_MASS_KG;
 
   @override
   String toString() {
-    return 'TRK{ID: ${ID}, CNTCT: ${CNTCT}, msgTs: ${msgTs}, msnId: ${msnId}, assetNat: ${assetNat}, ASSET: ${ASSET}, sensorId: ${sensorId}, senQual: ${senQual}, trkId: ${trkId}, trkNum: ${trkNum}, trkStat: ${trkStat}, objNat: ${objNat}, objId: ${objId}, objType: ${objType}, objSpec: ${objSpec}, objPlat: ${objPlat}, objAct: ${objAct}, modType: ${modType}, trkItmId: ${trkItmId}, TS: ${TS}, trkQual: ${trkQual}, trkPtType: ${trkPtType}, objIdent: ${objIdent}, identCred: ${identCred}, identRel: ${identRel}, identAmp: ${identAmp}, ENVIRONMENT: ${ENVIRONMENT}, environmentConf: ${environmentConf}, trkConf: ${trkConf}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, SPD: ${SPD}, HDNG: ${HDNG}, COURSE: ${COURSE}, srcTyps: ${srcTyps}, srcIds: ${srcIds}, callSign: ${callSign}, multiSource: ${multiSource}, jSeries: ${jSeries}, STRENGTH: ${STRENGTH}, M1: ${M1}, M1V: ${M1V}, M2: ${M2}, M2V: ${M2V}, M3A: ${M3A}, M3AV: ${M3AV}, TAGS: ${TAGS}, trackStartTime: ${trackStartTime}, trackStepSize: ${trackStepSize}, trackComponents: ${trackComponents}, ecefPos: ${ecefPos}, ecefVel: ${ecefVel}, ecefAcc: ${ecefAcc}, lcPos: ${lcPos}, lcVel: ${lcVel}, lcAcc: ${lcAcc}, COV: ${COV}, errEllp: ${errEllp}}';
+    return 'VEPPerformancePoint{altitudeM: ${altitudeM}, speedMps: ${speedMps}, REGIME: ${REGIME}, burnRateValue: ${burnRateValue}, burnRateUnits: ${burnRateUnits}, specificRangeMPerUnit: ${specificRangeMPerUnit}, grossMassKg: ${grossMassKg}}';
   }
 }
 
-class _TRKReader extends fb.TableReader<TRK> {
-  const _TRKReader();
+class _VEPPerformancePointReader extends fb.TableReader<VEPPerformancePoint> {
+  const _VEPPerformancePointReader();
 
   @override
-  TRK createObject(fb.BufferContext bc, int offset) =>
-    TRK._(bc, offset);
+  VEPPerformancePoint createObject(fb.BufferContext bc, int offset) =>
+    VEPPerformancePoint._(bc, offset);
 }
 
-class TRKBuilder {
-  TRKBuilder(this.fbBuilder);
+class VEPPerformancePointBuilder {
+  VEPPerformancePointBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(59);
+    fbBuilder.startTable(7);
   }
 
-  int addIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addAltitudeM(double? ALTITUDE_M) {
+    fbBuilder.addFloat64(0, ALTITUDE_M);
     return fbBuilder.offset;
   }
-  int addCntctOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addSpeedMps(double? SPEED_MPS) {
+    fbBuilder.addFloat64(1, SPEED_MPS);
     return fbBuilder.offset;
   }
-  int addMsgTsOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addRegime(vepRegime? REGIME) {
+    fbBuilder.addInt8(2, REGIME?.value);
     return fbBuilder.offset;
   }
-  int addMsnIdOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addBurnRateValue(double? BURN_RATE_VALUE) {
+    fbBuilder.addFloat64(3, BURN_RATE_VALUE);
     return fbBuilder.offset;
   }
-  int addAssetNatOffset(int? offset) {
+  int addBurnRateUnitsOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addAssetOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addSpecificRangeMPerUnit(double? SPECIFIC_RANGE_M_PER_UNIT) {
+    fbBuilder.addFloat64(5, SPECIFIC_RANGE_M_PER_UNIT);
     return fbBuilder.offset;
   }
-  int addSensorIdOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addSenQualOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addTrkIdOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addTrkNumOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addTrkStat(TrkTrackStatus? TRK_STAT) {
-    fbBuilder.addInt8(10, TRK_STAT?.value);
-    return fbBuilder.offset;
-  }
-  int addObjNatOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addObjIdOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addObjTypeOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addObjSpecOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addObjPlatOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addObjActOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
-    return fbBuilder.offset;
-  }
-  int addModTypeOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
-    return fbBuilder.offset;
-  }
-  int addTrkItmIdOffset(int? offset) {
-    fbBuilder.addOffset(18, offset);
-    return fbBuilder.offset;
-  }
-  int addTsOffset(int? offset) {
-    fbBuilder.addOffset(19, offset);
-    return fbBuilder.offset;
-  }
-  int addTrkQual(int? TRK_QUAL) {
-    fbBuilder.addUint8(20, TRK_QUAL);
-    return fbBuilder.offset;
-  }
-  int addTrkPtTypeOffset(int? offset) {
-    fbBuilder.addOffset(21, offset);
-    return fbBuilder.offset;
-  }
-  int addObjIdentOffset(int? offset) {
-    fbBuilder.addOffset(22, offset);
-    return fbBuilder.offset;
-  }
-  int addIdentCred(int? IDENT_CRED) {
-    fbBuilder.addUint8(23, IDENT_CRED);
-    return fbBuilder.offset;
-  }
-  int addIdentRel(int? IDENT_REL) {
-    fbBuilder.addUint8(24, IDENT_REL);
-    return fbBuilder.offset;
-  }
-  int addIdentAmpOffset(int? offset) {
-    fbBuilder.addOffset(25, offset);
-    return fbBuilder.offset;
-  }
-  int addEnvironment(trackEnvironment? ENVIRONMENT) {
-    fbBuilder.addInt8(26, ENVIRONMENT?.value);
-    return fbBuilder.offset;
-  }
-  int addEnvironmentConf(double? ENVIRONMENT_CONF) {
-    fbBuilder.addFloat64(27, ENVIRONMENT_CONF);
-    return fbBuilder.offset;
-  }
-  int addTrkConf(double? TRK_CONF) {
-    fbBuilder.addFloat64(28, TRK_CONF);
-    return fbBuilder.offset;
-  }
-  int addLat(double? LAT) {
-    fbBuilder.addFloat64(29, LAT);
-    return fbBuilder.offset;
-  }
-  int addLon(double? LON) {
-    fbBuilder.addFloat64(30, LON);
-    return fbBuilder.offset;
-  }
-  int addAlt(double? ALT) {
-    fbBuilder.addFloat64(31, ALT);
-    return fbBuilder.offset;
-  }
-  int addSpd(double? SPD) {
-    fbBuilder.addFloat64(32, SPD);
-    return fbBuilder.offset;
-  }
-  int addHdng(double? HDNG) {
-    fbBuilder.addFloat64(33, HDNG);
-    return fbBuilder.offset;
-  }
-  int addCourse(double? COURSE) {
-    fbBuilder.addFloat64(34, COURSE);
-    return fbBuilder.offset;
-  }
-  int addSrcTypsOffset(int? offset) {
-    fbBuilder.addOffset(35, offset);
-    return fbBuilder.offset;
-  }
-  int addSrcIdsOffset(int? offset) {
-    fbBuilder.addOffset(36, offset);
-    return fbBuilder.offset;
-  }
-  int addCallSignOffset(int? offset) {
-    fbBuilder.addOffset(37, offset);
-    return fbBuilder.offset;
-  }
-  int addMultiSource(bool? MULTI_SOURCE) {
-    fbBuilder.addBool(38, MULTI_SOURCE);
-    return fbBuilder.offset;
-  }
-  int addJSeriesOffset(int? offset) {
-    fbBuilder.addOffset(39, offset);
-    return fbBuilder.offset;
-  }
-  int addStrength(int? STRENGTH) {
-    fbBuilder.addUint16(40, STRENGTH);
-    return fbBuilder.offset;
-  }
-  int addM1(int? M1) {
-    fbBuilder.addUint16(41, M1);
-    return fbBuilder.offset;
-  }
-  int addM1V(int? M1V) {
-    fbBuilder.addUint8(42, M1V);
-    return fbBuilder.offset;
-  }
-  int addM2(int? M2) {
-    fbBuilder.addUint16(43, M2);
-    return fbBuilder.offset;
-  }
-  int addM2V(int? M2V) {
-    fbBuilder.addUint8(44, M2V);
-    return fbBuilder.offset;
-  }
-  int addM3A(int? M3A) {
-    fbBuilder.addUint16(45, M3A);
-    return fbBuilder.offset;
-  }
-  int addM3Av(int? M3AV) {
-    fbBuilder.addUint8(46, M3AV);
-    return fbBuilder.offset;
-  }
-  int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(47, offset);
-    return fbBuilder.offset;
-  }
-  int addTrackStartTimeOffset(int? offset) {
-    fbBuilder.addOffset(48, offset);
-    return fbBuilder.offset;
-  }
-  int addTrackStepSize(double? TRACK_STEP_SIZE) {
-    fbBuilder.addFloat64(49, TRACK_STEP_SIZE);
-    return fbBuilder.offset;
-  }
-  int addTrackComponents(int? TRACK_COMPONENTS) {
-    fbBuilder.addUint8(50, TRACK_COMPONENTS);
-    return fbBuilder.offset;
-  }
-  int addEcefPosOffset(int? offset) {
-    fbBuilder.addOffset(51, offset);
-    return fbBuilder.offset;
-  }
-  int addEcefVelOffset(int? offset) {
-    fbBuilder.addOffset(52, offset);
-    return fbBuilder.offset;
-  }
-  int addEcefAccOffset(int? offset) {
-    fbBuilder.addOffset(53, offset);
-    return fbBuilder.offset;
-  }
-  int addLcPosOffset(int? offset) {
-    fbBuilder.addOffset(54, offset);
-    return fbBuilder.offset;
-  }
-  int addLcVelOffset(int? offset) {
-    fbBuilder.addOffset(55, offset);
-    return fbBuilder.offset;
-  }
-  int addLcAccOffset(int? offset) {
-    fbBuilder.addOffset(56, offset);
-    return fbBuilder.offset;
-  }
-  int addCovOffset(int? offset) {
-    fbBuilder.addOffset(57, offset);
-    return fbBuilder.offset;
-  }
-  int addErrEllpOffset(int? offset) {
-    fbBuilder.addOffset(58, offset);
+  int addGrossMassKg(double? GROSS_MASS_KG) {
+    fbBuilder.addFloat64(6, GROSS_MASS_KG);
     return fbBuilder.offset;
   }
 
@@ -526,362 +239,733 @@ class TRKBuilder {
   }
 }
 
-class TRKObjectBuilder extends fb.ObjectBuilder {
-  final String? _ID;
-  final String? _CNTCT;
-  final String? _MSG_TS;
-  final String? _MSN_ID;
-  final String? _ASSET_NAT;
-  final String? _ASSET;
-  final String? _SENSOR_ID;
-  final String? _SEN_QUAL;
-  final String? _TRK_ID;
-  final String? _TRK_NUM;
-  final TrkTrackStatus? _TRK_STAT;
-  final String? _OBJ_NAT;
-  final String? _OBJ_ID;
-  final String? _OBJ_TYPE;
-  final String? _OBJ_SPEC;
-  final String? _OBJ_PLAT;
-  final String? _OBJ_ACT;
-  final String? _MOD_TYPE;
-  final String? _TRK_ITM_ID;
-  final String? _TS;
-  final int? _TRK_QUAL;
-  final String? _TRK_PT_TYPE;
-  final String? _OBJ_IDENT;
-  final int? _IDENT_CRED;
-  final int? _IDENT_REL;
-  final String? _IDENT_AMP;
-  final trackEnvironment? _ENVIRONMENT;
-  final double? _ENVIRONMENT_CONF;
-  final double? _TRK_CONF;
-  final double? _LAT;
-  final double? _LON;
-  final double? _ALT;
-  final double? _SPD;
-  final double? _HDNG;
-  final double? _COURSE;
-  final List<String>? _SRC_TYPS;
-  final List<String>? _SRC_IDS;
-  final String? _CALL_SIGN;
-  final bool? _MULTI_SOURCE;
-  final String? _J_SERIES;
-  final int? _STRENGTH;
-  final int? _M1;
-  final int? _M1V;
-  final int? _M2;
-  final int? _M2V;
-  final int? _M3A;
-  final int? _M3AV;
-  final List<String>? _TAGS;
-  final String? _TRACK_START_TIME;
-  final double? _TRACK_STEP_SIZE;
-  final int? _TRACK_COMPONENTS;
-  final List<double>? _ECEF_POS;
-  final List<double>? _ECEF_VEL;
-  final List<double>? _ECEF_ACC;
-  final List<double>? _LC_POS;
-  final List<double>? _LC_VEL;
-  final List<double>? _LC_ACC;
-  final List<double>? _COV;
-  final List<double>? _ERR_ELLP;
+class VEPPerformancePointObjectBuilder extends fb.ObjectBuilder {
+  final double? _ALTITUDE_M;
+  final double? _SPEED_MPS;
+  final vepRegime? _REGIME;
+  final double? _BURN_RATE_VALUE;
+  final String? _BURN_RATE_UNITS;
+  final double? _SPECIFIC_RANGE_M_PER_UNIT;
+  final double? _GROSS_MASS_KG;
 
-  TRKObjectBuilder({
+  VEPPerformancePointObjectBuilder({
+    double? ALTITUDE_M,
+    double? altitudeM,
+    double? SPEED_MPS,
+    double? speedMps,
+    vepRegime? REGIME,
+    double? BURN_RATE_VALUE,
+    double? burnRateValue,
+    String? BURN_RATE_UNITS,
+    String? burnRateUnits,
+    double? SPECIFIC_RANGE_M_PER_UNIT,
+    double? specificRangeMPerUnit,
+    double? GROSS_MASS_KG,
+    double? grossMassKg,
+  })
+      : _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _SPEED_MPS = speedMps ?? SPEED_MPS,
+        _REGIME = REGIME,
+        _BURN_RATE_VALUE = burnRateValue ?? BURN_RATE_VALUE,
+        _BURN_RATE_UNITS = burnRateUnits ?? BURN_RATE_UNITS,
+        _SPECIFIC_RANGE_M_PER_UNIT = specificRangeMPerUnit ?? SPECIFIC_RANGE_M_PER_UNIT,
+        _GROSS_MASS_KG = grossMassKg ?? GROSS_MASS_KG;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? BURN_RATE_UNITSOffset = _BURN_RATE_UNITS == null ? null
+        : fbBuilder.writeString(_BURN_RATE_UNITS!);
+    fbBuilder.startTable(7);
+    fbBuilder.addFloat64(0, _ALTITUDE_M);
+    fbBuilder.addFloat64(1, _SPEED_MPS);
+    fbBuilder.addInt8(2, _REGIME?.value);
+    fbBuilder.addFloat64(3, _BURN_RATE_VALUE);
+    fbBuilder.addOffset(4, BURN_RATE_UNITSOffset);
+    fbBuilder.addFloat64(5, _SPECIFIC_RANGE_M_PER_UNIT);
+    fbBuilder.addFloat64(6, _GROSS_MASS_KG);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One replenishment option: how the energy store is reset.
+class VEPReplenishment {
+  VEPReplenishment._(this._bc, this._bcOffset);
+  factory VEPReplenishment(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VEPReplenishment> reader = _VEPReplenishmentReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  `$TFN.ID` of a facility where this replenishment is available. Absent
+  ///  for a replenishment that is not facility-bound.
+  String? get FACILITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get facilityId => FACILITY_ID;
+  ///  Typical duration of the replenishment, seconds.
+  double get DURATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get durationS => DURATION_S;
+  ///  Transfer rate, in TRANSFER_RATE_UNITS.
+  double get TRANSFER_RATE_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get transferRateValue => TRANSFER_RATE_VALUE;
+  ///  Units of TRANSFER_RATE_VALUE, verbatim.
+  String? get TRANSFER_RATE_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get transferRateUnits => TRANSFER_RATE_UNITS;
+  ///  Replenishment happens while the vehicle is underway (aerial
+  ///  refuelling, underway replenishment).
+  bool get IN_MOTION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get inMotion => IN_MOTION;
+
+  @override
+  String toString() {
+    return 'VEPReplenishment{facilityId: ${facilityId}, durationS: ${durationS}, transferRateValue: ${transferRateValue}, transferRateUnits: ${transferRateUnits}, inMotion: ${inMotion}}';
+  }
+}
+
+class _VEPReplenishmentReader extends fb.TableReader<VEPReplenishment> {
+  const _VEPReplenishmentReader();
+
+  @override
+  VEPReplenishment createObject(fb.BufferContext bc, int offset) =>
+    VEPReplenishment._(bc, offset);
+}
+
+class VEPReplenishmentBuilder {
+  VEPReplenishmentBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addFacilityIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDurationS(double? DURATION_S) {
+    fbBuilder.addFloat64(1, DURATION_S);
+    return fbBuilder.offset;
+  }
+  int addTransferRateValue(double? TRANSFER_RATE_VALUE) {
+    fbBuilder.addFloat64(2, TRANSFER_RATE_VALUE);
+    return fbBuilder.offset;
+  }
+  int addTransferRateUnitsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addInMotion(bool? IN_MOTION) {
+    fbBuilder.addBool(4, IN_MOTION);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VEPReplenishmentObjectBuilder extends fb.ObjectBuilder {
+  final String? _FACILITY_ID;
+  final double? _DURATION_S;
+  final double? _TRANSFER_RATE_VALUE;
+  final String? _TRANSFER_RATE_UNITS;
+  final bool? _IN_MOTION;
+
+  VEPReplenishmentObjectBuilder({
+    String? FACILITY_ID,
+    String? facilityId,
+    double? DURATION_S,
+    double? durationS,
+    double? TRANSFER_RATE_VALUE,
+    double? transferRateValue,
+    String? TRANSFER_RATE_UNITS,
+    String? transferRateUnits,
+    bool? IN_MOTION,
+    bool? inMotion,
+  })
+      : _FACILITY_ID = facilityId ?? FACILITY_ID,
+        _DURATION_S = durationS ?? DURATION_S,
+        _TRANSFER_RATE_VALUE = transferRateValue ?? TRANSFER_RATE_VALUE,
+        _TRANSFER_RATE_UNITS = transferRateUnits ?? TRANSFER_RATE_UNITS,
+        _IN_MOTION = inMotion ?? IN_MOTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FACILITY_IDOffset = _FACILITY_ID == null ? null
+        : fbBuilder.writeString(_FACILITY_ID!);
+    final int? TRANSFER_RATE_UNITSOffset = _TRANSFER_RATE_UNITS == null ? null
+        : fbBuilder.writeString(_TRANSFER_RATE_UNITS!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, FACILITY_IDOffset);
+    fbBuilder.addFloat64(1, _DURATION_S);
+    fbBuilder.addFloat64(2, _TRANSFER_RATE_VALUE);
+    fbBuilder.addOffset(3, TRANSFER_RATE_UNITSOffset);
+    fbBuilder.addBool(4, _IN_MOTION);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Dataset lineage and redistribution terms for one endurance profile.
+///
+///  Required on every record: a profile whose data source, epoch, and
+///  licence are unstated is not publishable. The standard names no dataset,
+///  provider, or site.
+class VEPProvenance {
+  VEPProvenance._(this._bc, this._bcOffset);
+  factory VEPProvenance(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VEPProvenance> reader = _VEPProvenanceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Publisher-stable, lowercase identifier for the dataset or study this
+  ///  profile was derived from.
+  String? get DATASET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get datasetId => DATASET_ID;
+  ///  The dataset's own name, verbatim as its publisher states it.
+  String? get DATASET_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get datasetName => DATASET_NAME;
+  ///  Replayable URL of the dataset as published.
+  String? get DATASET_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get datasetUrl => DATASET_URL;
+  ///  RFC 3339 UTC fixed-millisecond epoch of the dataset edition this
+  ///  profile was derived from.
+  String? get DATASET_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get datasetEpoch => DATASET_EPOCH;
+  ///  Content identifier of the exact dataset artifact, when one exists.
+  String? get DATASET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get datasetCid => DATASET_CID;
+  ///  Replayable URL identifying the source material within the dataset.
+  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get sourceUrl => SOURCE_URL;
+  ///  The exact query, filter, or file selection used.
+  String? get SOURCE_QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get sourceQuery => SOURCE_QUERY;
+  ///  RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get retrievedAt => RETRIEVED_AT;
+  ///  Redistribution terms verbatim. Unknown terms are never public domain
+  ///  and never an implied grant.
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  URL of the full licence text as the dataset publishes it.
+  String? get LICENSE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get licenseUrl => LICENSE_URL;
+  ///  Attribution text the licence requires a redistributor to display.
+  String? get ATTRIBUTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  The licence forbids commercial use.
+  bool get NON_COMMERCIAL_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get nonCommercialOnly => NON_COMMERCIAL_ONLY;
+  ///  The licence obliges derived works to carry the same terms.
+  bool get SHARE_ALIKE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  bool get shareAlike => SHARE_ALIKE;
+  ///  The source's own identifier for the vehicle class or type this
+  ///  profile describes, verbatim.
+  String? get NATIVE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get nativeId => NATIVE_ID;
+  ///  RFC 3339 UTC instant the source last modified this data, as it
+  ///  states.
+  String? get NATIVE_MODIFIED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get nativeModified => NATIVE_MODIFIED;
+
+  @override
+  String toString() {
+    return 'VEPProvenance{datasetId: ${datasetId}, datasetName: ${datasetName}, datasetUrl: ${datasetUrl}, datasetEpoch: ${datasetEpoch}, datasetCid: ${datasetCid}, sourceUrl: ${sourceUrl}, sourceQuery: ${sourceQuery}, retrievedAt: ${retrievedAt}, LICENSE: ${LICENSE}, licenseUrl: ${licenseUrl}, ATTRIBUTION: ${ATTRIBUTION}, nonCommercialOnly: ${nonCommercialOnly}, shareAlike: ${shareAlike}, nativeId: ${nativeId}, nativeModified: ${nativeModified}}';
+  }
+}
+
+class _VEPProvenanceReader extends fb.TableReader<VEPProvenance> {
+  const _VEPProvenanceReader();
+
+  @override
+  VEPProvenance createObject(fb.BufferContext bc, int offset) =>
+    VEPProvenance._(bc, offset);
+}
+
+class VEPProvenanceBuilder {
+  VEPProvenanceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(15);
+  }
+
+  int addDatasetIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDatasetNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDatasetUrlOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDatasetEpochOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDatasetCidOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceUrlOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceQueryOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAtOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseUrlOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addAttributionOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addNonCommercialOnly(bool? NON_COMMERCIAL_ONLY) {
+    fbBuilder.addBool(11, NON_COMMERCIAL_ONLY);
+    return fbBuilder.offset;
+  }
+  int addShareAlike(bool? SHARE_ALIKE) {
+    fbBuilder.addBool(12, SHARE_ALIKE);
+    return fbBuilder.offset;
+  }
+  int addNativeIdOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addNativeModifiedOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VEPProvenanceObjectBuilder extends fb.ObjectBuilder {
+  final String? _DATASET_ID;
+  final String? _DATASET_NAME;
+  final String? _DATASET_URL;
+  final String? _DATASET_EPOCH;
+  final String? _DATASET_CID;
+  final String? _SOURCE_URL;
+  final String? _SOURCE_QUERY;
+  final String? _RETRIEVED_AT;
+  final String? _LICENSE;
+  final String? _LICENSE_URL;
+  final String? _ATTRIBUTION;
+  final bool? _NON_COMMERCIAL_ONLY;
+  final bool? _SHARE_ALIKE;
+  final String? _NATIVE_ID;
+  final String? _NATIVE_MODIFIED;
+
+  VEPProvenanceObjectBuilder({
+    String? DATASET_ID,
+    String? datasetId,
+    String? DATASET_NAME,
+    String? datasetName,
+    String? DATASET_URL,
+    String? datasetUrl,
+    String? DATASET_EPOCH,
+    String? datasetEpoch,
+    String? DATASET_CID,
+    String? datasetCid,
+    String? SOURCE_URL,
+    String? sourceUrl,
+    String? SOURCE_QUERY,
+    String? sourceQuery,
+    String? RETRIEVED_AT,
+    String? retrievedAt,
+    String? LICENSE,
+    String? LICENSE_URL,
+    String? licenseUrl,
+    String? ATTRIBUTION,
+    bool? NON_COMMERCIAL_ONLY,
+    bool? nonCommercialOnly,
+    bool? SHARE_ALIKE,
+    bool? shareAlike,
+    String? NATIVE_ID,
+    String? nativeId,
+    String? NATIVE_MODIFIED,
+    String? nativeModified,
+  })
+      : _DATASET_ID = datasetId ?? DATASET_ID,
+        _DATASET_NAME = datasetName ?? DATASET_NAME,
+        _DATASET_URL = datasetUrl ?? DATASET_URL,
+        _DATASET_EPOCH = datasetEpoch ?? DATASET_EPOCH,
+        _DATASET_CID = datasetCid ?? DATASET_CID,
+        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
+        _SOURCE_QUERY = sourceQuery ?? SOURCE_QUERY,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
+        _LICENSE = LICENSE,
+        _LICENSE_URL = licenseUrl ?? LICENSE_URL,
+        _ATTRIBUTION = ATTRIBUTION,
+        _NON_COMMERCIAL_ONLY = nonCommercialOnly ?? NON_COMMERCIAL_ONLY,
+        _SHARE_ALIKE = shareAlike ?? SHARE_ALIKE,
+        _NATIVE_ID = nativeId ?? NATIVE_ID,
+        _NATIVE_MODIFIED = nativeModified ?? NATIVE_MODIFIED;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DATASET_IDOffset = _DATASET_ID == null ? null
+        : fbBuilder.writeString(_DATASET_ID!);
+    final int? DATASET_NAMEOffset = _DATASET_NAME == null ? null
+        : fbBuilder.writeString(_DATASET_NAME!);
+    final int? DATASET_URLOffset = _DATASET_URL == null ? null
+        : fbBuilder.writeString(_DATASET_URL!);
+    final int? DATASET_EPOCHOffset = _DATASET_EPOCH == null ? null
+        : fbBuilder.writeString(_DATASET_EPOCH!);
+    final int? DATASET_CIDOffset = _DATASET_CID == null ? null
+        : fbBuilder.writeString(_DATASET_CID!);
+    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
+        : fbBuilder.writeString(_SOURCE_URL!);
+    final int? SOURCE_QUERYOffset = _SOURCE_QUERY == null ? null
+        : fbBuilder.writeString(_SOURCE_QUERY!);
+    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
+        : fbBuilder.writeString(_RETRIEVED_AT!);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? LICENSE_URLOffset = _LICENSE_URL == null ? null
+        : fbBuilder.writeString(_LICENSE_URL!);
+    final int? ATTRIBUTIONOffset = _ATTRIBUTION == null ? null
+        : fbBuilder.writeString(_ATTRIBUTION!);
+    final int? NATIVE_IDOffset = _NATIVE_ID == null ? null
+        : fbBuilder.writeString(_NATIVE_ID!);
+    final int? NATIVE_MODIFIEDOffset = _NATIVE_MODIFIED == null ? null
+        : fbBuilder.writeString(_NATIVE_MODIFIED!);
+    fbBuilder.startTable(15);
+    fbBuilder.addOffset(0, DATASET_IDOffset);
+    fbBuilder.addOffset(1, DATASET_NAMEOffset);
+    fbBuilder.addOffset(2, DATASET_URLOffset);
+    fbBuilder.addOffset(3, DATASET_EPOCHOffset);
+    fbBuilder.addOffset(4, DATASET_CIDOffset);
+    fbBuilder.addOffset(5, SOURCE_URLOffset);
+    fbBuilder.addOffset(6, SOURCE_QUERYOffset);
+    fbBuilder.addOffset(7, RETRIEVED_ATOffset);
+    fbBuilder.addOffset(8, LICENSEOffset);
+    fbBuilder.addOffset(9, LICENSE_URLOffset);
+    fbBuilder.addOffset(10, ATTRIBUTIONOffset);
+    fbBuilder.addBool(11, _NON_COMMERCIAL_ONLY);
+    fbBuilder.addBool(12, _SHARE_ALIKE);
+    fbBuilder.addOffset(13, NATIVE_IDOffset);
+    fbBuilder.addOffset(14, NATIVE_MODIFIEDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Vehicle Endurance Profile
+class VEP {
+  VEP._(this._bc, this._bcOffset);
+  factory VEP(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VEP> reader = _VEPReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Publisher-stable identifier for this profile record.
+  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Publisher-stable identifier of the vehicle CLASS this profile models.
+  ///  Required: every profile is at least class-level.
+  String? get VEHICLE_CLASS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get vehicleClassId => VEHICLE_CLASS_ID;
+  ///  Verbatim vehicle type token refining the class, when this profile is
+  ///  a per-type refinement.
+  String? get VEHICLE_TYPE_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get vehicleTypeDesignator => VEHICLE_TYPE_DESIGNATOR;
+  ///  Domain the vehicle operates in. The `$TRK` enum reused verbatim;
+  ///  ordinal 0 is SPACE, so it is defaulted to UNKNOWN explicitly.
+  trackEnvironment get ENVIRONMENT => trackEnvironment.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 5));
+  ///  Kind of energy store.
+  vepEnergyType get ENERGY_TYPE => vepEnergyType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  vepEnergyType get energyType => ENERGY_TYPE;
+  ///  Usable energy store capacity, in CAPACITY_UNITS.
+  double get CAPACITY_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get capacityValue => CAPACITY_VALUE;
+  ///  Units of CAPACITY_VALUE, verbatim. The same unit keys
+  ///  SPECIFIC_RANGE_M_PER_UNIT and the replenishment transfer rates.
+  String? get CAPACITY_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get capacityUnits => CAPACITY_UNITS;
+  ///  Fraction of capacity [0-1] held as reserve; endurance computations
+  ///  spend down to the reserve, never through it.
+  double get RESERVE_FRACTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get reserveFraction => RESERVE_FRACTION;
+  ///  The burn-rate table, keyed regime x altitude x speed. Required, and
+  ///  never a single collapsed scalar.
+  List<VEPPerformancePoint>? get PERFORMANCE_POINTS => const fb.ListReader<VEPPerformancePoint>(VEPPerformancePoint.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  List<VEPPerformancePoint>? get performancePoints => PERFORMANCE_POINTS;
+  ///  How a consumer interpolates between the points.
+  vepInterpolation get INTERPOLATION => vepInterpolation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Maximum endurance, seconds, as the source publishes it.
+  double get MAXIMUM_ENDURANCE_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get maximumEnduranceS => MAXIMUM_ENDURANCE_S;
+  ///  Maximum range, metres, as the source publishes it.
+  double get MAXIMUM_RANGE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get maximumRangeM => MAXIMUM_RANGE_M;
+  ///  Best-loiter speed, metres per second.
+  double get LOITER_SPEED_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get loiterSpeedMps => LOITER_SPEED_MPS;
+  ///  Service ceiling, metres above mean sea level.
+  double get SERVICE_CEILING_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get serviceCeilingM => SERVICE_CEILING_M;
+  ///  Replenishment options available to this class or type.
+  List<VEPReplenishment>? get REPLENISHMENT => const fb.ListReader<VEPReplenishment>(VEPReplenishment.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  ///  `$VEP.ID` of the parent profile this one refines — the class-to-type
+  ///  specialization chain. Absent for a class-level root profile.
+  String? get REFINES_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get refinesId => REFINES_ID;
+  ///  Dataset lineage and licence. Required.
+  VEPProvenance? get SOURCE => VEPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 36);
+
+  @override
+  String toString() {
+    return 'VEP{ID: ${ID}, vehicleClassId: ${vehicleClassId}, vehicleTypeDesignator: ${vehicleTypeDesignator}, ENVIRONMENT: ${ENVIRONMENT}, energyType: ${energyType}, capacityValue: ${capacityValue}, capacityUnits: ${capacityUnits}, reserveFraction: ${reserveFraction}, performancePoints: ${performancePoints}, INTERPOLATION: ${INTERPOLATION}, maximumEnduranceS: ${maximumEnduranceS}, maximumRangeM: ${maximumRangeM}, loiterSpeedMps: ${loiterSpeedMps}, serviceCeilingM: ${serviceCeilingM}, REPLENISHMENT: ${REPLENISHMENT}, refinesId: ${refinesId}, SOURCE: ${SOURCE}}';
+  }
+}
+
+class _VEPReader extends fb.TableReader<VEP> {
+  const _VEPReader();
+
+  @override
+  VEP createObject(fb.BufferContext bc, int offset) =>
+    VEP._(bc, offset);
+}
+
+class VEPBuilder {
+  VEPBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(17);
+  }
+
+  int addIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addVehicleClassIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addVehicleTypeDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEnvironment(trackEnvironment? ENVIRONMENT) {
+    fbBuilder.addInt8(3, ENVIRONMENT?.value);
+    return fbBuilder.offset;
+  }
+  int addEnergyType(vepEnergyType? ENERGY_TYPE) {
+    fbBuilder.addInt8(4, ENERGY_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addCapacityValue(double? CAPACITY_VALUE) {
+    fbBuilder.addFloat64(5, CAPACITY_VALUE);
+    return fbBuilder.offset;
+  }
+  int addCapacityUnitsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addReserveFraction(double? RESERVE_FRACTION) {
+    fbBuilder.addFloat64(7, RESERVE_FRACTION);
+    return fbBuilder.offset;
+  }
+  int addPerformancePointsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolation(vepInterpolation? INTERPOLATION) {
+    fbBuilder.addInt8(9, INTERPOLATION?.value);
+    return fbBuilder.offset;
+  }
+  int addMaximumEnduranceS(double? MAXIMUM_ENDURANCE_S) {
+    fbBuilder.addFloat64(10, MAXIMUM_ENDURANCE_S);
+    return fbBuilder.offset;
+  }
+  int addMaximumRangeM(double? MAXIMUM_RANGE_M) {
+    fbBuilder.addFloat64(11, MAXIMUM_RANGE_M);
+    return fbBuilder.offset;
+  }
+  int addLoiterSpeedMps(double? LOITER_SPEED_MPS) {
+    fbBuilder.addFloat64(12, LOITER_SPEED_MPS);
+    return fbBuilder.offset;
+  }
+  int addServiceCeilingM(double? SERVICE_CEILING_M) {
+    fbBuilder.addFloat64(13, SERVICE_CEILING_M);
+    return fbBuilder.offset;
+  }
+  int addReplenishmentOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addRefinesIdOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VEPObjectBuilder extends fb.ObjectBuilder {
+  final String? _ID;
+  final String? _VEHICLE_CLASS_ID;
+  final String? _VEHICLE_TYPE_DESIGNATOR;
+  final trackEnvironment? _ENVIRONMENT;
+  final vepEnergyType? _ENERGY_TYPE;
+  final double? _CAPACITY_VALUE;
+  final String? _CAPACITY_UNITS;
+  final double? _RESERVE_FRACTION;
+  final List<VEPPerformancePointObjectBuilder>? _PERFORMANCE_POINTS;
+  final vepInterpolation? _INTERPOLATION;
+  final double? _MAXIMUM_ENDURANCE_S;
+  final double? _MAXIMUM_RANGE_M;
+  final double? _LOITER_SPEED_MPS;
+  final double? _SERVICE_CEILING_M;
+  final List<VEPReplenishmentObjectBuilder>? _REPLENISHMENT;
+  final String? _REFINES_ID;
+  final VEPProvenanceObjectBuilder? _SOURCE;
+
+  VEPObjectBuilder({
     String? ID,
-    String? CNTCT,
-    String? MSG_TS,
-    String? msgTs,
-    String? MSN_ID,
-    String? msnId,
-    String? ASSET_NAT,
-    String? assetNat,
-    String? ASSET,
-    String? SENSOR_ID,
-    String? sensorId,
-    String? SEN_QUAL,
-    String? senQual,
-    String? TRK_ID,
-    String? trkId,
-    String? TRK_NUM,
-    String? trkNum,
-    TrkTrackStatus? TRK_STAT,
-    TrkTrackStatus? trkStat,
-    String? OBJ_NAT,
-    String? objNat,
-    String? OBJ_ID,
-    String? objId,
-    String? OBJ_TYPE,
-    String? objType,
-    String? OBJ_SPEC,
-    String? objSpec,
-    String? OBJ_PLAT,
-    String? objPlat,
-    String? OBJ_ACT,
-    String? objAct,
-    String? MOD_TYPE,
-    String? modType,
-    String? TRK_ITM_ID,
-    String? trkItmId,
-    String? TS,
-    int? TRK_QUAL,
-    int? trkQual,
-    String? TRK_PT_TYPE,
-    String? trkPtType,
-    String? OBJ_IDENT,
-    String? objIdent,
-    int? IDENT_CRED,
-    int? identCred,
-    int? IDENT_REL,
-    int? identRel,
-    String? IDENT_AMP,
-    String? identAmp,
+    String? VEHICLE_CLASS_ID,
+    String? vehicleClassId,
+    String? VEHICLE_TYPE_DESIGNATOR,
+    String? vehicleTypeDesignator,
     trackEnvironment? ENVIRONMENT,
-    double? ENVIRONMENT_CONF,
-    double? environmentConf,
-    double? TRK_CONF,
-    double? trkConf,
-    double? LAT,
-    double? LON,
-    double? ALT,
-    double? SPD,
-    double? HDNG,
-    double? COURSE,
-    List<String>? SRC_TYPS,
-    List<String>? srcTyps,
-    List<String>? SRC_IDS,
-    List<String>? srcIds,
-    String? CALL_SIGN,
-    String? callSign,
-    bool? MULTI_SOURCE,
-    bool? multiSource,
-    String? J_SERIES,
-    String? jSeries,
-    int? STRENGTH,
-    int? M1,
-    int? M1V,
-    int? M2,
-    int? M2V,
-    int? M3A,
-    int? M3AV,
-    List<String>? TAGS,
-    String? TRACK_START_TIME,
-    String? trackStartTime,
-    double? TRACK_STEP_SIZE,
-    double? trackStepSize,
-    int? TRACK_COMPONENTS,
-    int? trackComponents,
-    List<double>? ECEF_POS,
-    List<double>? ecefPos,
-    List<double>? ECEF_VEL,
-    List<double>? ecefVel,
-    List<double>? ECEF_ACC,
-    List<double>? ecefAcc,
-    List<double>? LC_POS,
-    List<double>? lcPos,
-    List<double>? LC_VEL,
-    List<double>? lcVel,
-    List<double>? LC_ACC,
-    List<double>? lcAcc,
-    List<double>? COV,
-    List<double>? ERR_ELLP,
-    List<double>? errEllp,
+    vepEnergyType? ENERGY_TYPE,
+    vepEnergyType? energyType,
+    double? CAPACITY_VALUE,
+    double? capacityValue,
+    String? CAPACITY_UNITS,
+    String? capacityUnits,
+    double? RESERVE_FRACTION,
+    double? reserveFraction,
+    List<VEPPerformancePointObjectBuilder>? PERFORMANCE_POINTS,
+    List<VEPPerformancePointObjectBuilder>? performancePoints,
+    vepInterpolation? INTERPOLATION,
+    double? MAXIMUM_ENDURANCE_S,
+    double? maximumEnduranceS,
+    double? MAXIMUM_RANGE_M,
+    double? maximumRangeM,
+    double? LOITER_SPEED_MPS,
+    double? loiterSpeedMps,
+    double? SERVICE_CEILING_M,
+    double? serviceCeilingM,
+    List<VEPReplenishmentObjectBuilder>? REPLENISHMENT,
+    String? REFINES_ID,
+    String? refinesId,
+    VEPProvenanceObjectBuilder? SOURCE,
   })
       : _ID = ID,
-        _CNTCT = CNTCT,
-        _MSG_TS = msgTs ?? MSG_TS,
-        _MSN_ID = msnId ?? MSN_ID,
-        _ASSET_NAT = assetNat ?? ASSET_NAT,
-        _ASSET = ASSET,
-        _SENSOR_ID = sensorId ?? SENSOR_ID,
-        _SEN_QUAL = senQual ?? SEN_QUAL,
-        _TRK_ID = trkId ?? TRK_ID,
-        _TRK_NUM = trkNum ?? TRK_NUM,
-        _TRK_STAT = trkStat ?? TRK_STAT,
-        _OBJ_NAT = objNat ?? OBJ_NAT,
-        _OBJ_ID = objId ?? OBJ_ID,
-        _OBJ_TYPE = objType ?? OBJ_TYPE,
-        _OBJ_SPEC = objSpec ?? OBJ_SPEC,
-        _OBJ_PLAT = objPlat ?? OBJ_PLAT,
-        _OBJ_ACT = objAct ?? OBJ_ACT,
-        _MOD_TYPE = modType ?? MOD_TYPE,
-        _TRK_ITM_ID = trkItmId ?? TRK_ITM_ID,
-        _TS = TS,
-        _TRK_QUAL = trkQual ?? TRK_QUAL,
-        _TRK_PT_TYPE = trkPtType ?? TRK_PT_TYPE,
-        _OBJ_IDENT = objIdent ?? OBJ_IDENT,
-        _IDENT_CRED = identCred ?? IDENT_CRED,
-        _IDENT_REL = identRel ?? IDENT_REL,
-        _IDENT_AMP = identAmp ?? IDENT_AMP,
+        _VEHICLE_CLASS_ID = vehicleClassId ?? VEHICLE_CLASS_ID,
+        _VEHICLE_TYPE_DESIGNATOR = vehicleTypeDesignator ?? VEHICLE_TYPE_DESIGNATOR,
         _ENVIRONMENT = ENVIRONMENT,
-        _ENVIRONMENT_CONF = environmentConf ?? ENVIRONMENT_CONF,
-        _TRK_CONF = trkConf ?? TRK_CONF,
-        _LAT = LAT,
-        _LON = LON,
-        _ALT = ALT,
-        _SPD = SPD,
-        _HDNG = HDNG,
-        _COURSE = COURSE,
-        _SRC_TYPS = srcTyps ?? SRC_TYPS,
-        _SRC_IDS = srcIds ?? SRC_IDS,
-        _CALL_SIGN = callSign ?? CALL_SIGN,
-        _MULTI_SOURCE = multiSource ?? MULTI_SOURCE,
-        _J_SERIES = jSeries ?? J_SERIES,
-        _STRENGTH = STRENGTH,
-        _M1 = M1,
-        _M1V = M1V,
-        _M2 = M2,
-        _M2V = M2V,
-        _M3A = M3A,
-        _M3AV = M3AV,
-        _TAGS = TAGS,
-        _TRACK_START_TIME = trackStartTime ?? TRACK_START_TIME,
-        _TRACK_STEP_SIZE = trackStepSize ?? TRACK_STEP_SIZE,
-        _TRACK_COMPONENTS = trackComponents ?? TRACK_COMPONENTS,
-        _ECEF_POS = ecefPos ?? ECEF_POS,
-        _ECEF_VEL = ecefVel ?? ECEF_VEL,
-        _ECEF_ACC = ecefAcc ?? ECEF_ACC,
-        _LC_POS = lcPos ?? LC_POS,
-        _LC_VEL = lcVel ?? LC_VEL,
-        _LC_ACC = lcAcc ?? LC_ACC,
-        _COV = COV,
-        _ERR_ELLP = errEllp ?? ERR_ELLP;
+        _ENERGY_TYPE = energyType ?? ENERGY_TYPE,
+        _CAPACITY_VALUE = capacityValue ?? CAPACITY_VALUE,
+        _CAPACITY_UNITS = capacityUnits ?? CAPACITY_UNITS,
+        _RESERVE_FRACTION = reserveFraction ?? RESERVE_FRACTION,
+        _PERFORMANCE_POINTS = performancePoints ?? PERFORMANCE_POINTS,
+        _INTERPOLATION = INTERPOLATION,
+        _MAXIMUM_ENDURANCE_S = maximumEnduranceS ?? MAXIMUM_ENDURANCE_S,
+        _MAXIMUM_RANGE_M = maximumRangeM ?? MAXIMUM_RANGE_M,
+        _LOITER_SPEED_MPS = loiterSpeedMps ?? LOITER_SPEED_MPS,
+        _SERVICE_CEILING_M = serviceCeilingM ?? SERVICE_CEILING_M,
+        _REPLENISHMENT = REPLENISHMENT,
+        _REFINES_ID = refinesId ?? REFINES_ID,
+        _SOURCE = SOURCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
-    final int? CNTCTOffset = _CNTCT == null ? null
-        : fbBuilder.writeString(_CNTCT!);
-    final int? MSG_TSOffset = _MSG_TS == null ? null
-        : fbBuilder.writeString(_MSG_TS!);
-    final int? MSN_IDOffset = _MSN_ID == null ? null
-        : fbBuilder.writeString(_MSN_ID!);
-    final int? ASSET_NATOffset = _ASSET_NAT == null ? null
-        : fbBuilder.writeString(_ASSET_NAT!);
-    final int? ASSETOffset = _ASSET == null ? null
-        : fbBuilder.writeString(_ASSET!);
-    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
-        : fbBuilder.writeString(_SENSOR_ID!);
-    final int? SEN_QUALOffset = _SEN_QUAL == null ? null
-        : fbBuilder.writeString(_SEN_QUAL!);
-    final int? TRK_IDOffset = _TRK_ID == null ? null
-        : fbBuilder.writeString(_TRK_ID!);
-    final int? TRK_NUMOffset = _TRK_NUM == null ? null
-        : fbBuilder.writeString(_TRK_NUM!);
-    final int? OBJ_NATOffset = _OBJ_NAT == null ? null
-        : fbBuilder.writeString(_OBJ_NAT!);
-    final int? OBJ_IDOffset = _OBJ_ID == null ? null
-        : fbBuilder.writeString(_OBJ_ID!);
-    final int? OBJ_TYPEOffset = _OBJ_TYPE == null ? null
-        : fbBuilder.writeString(_OBJ_TYPE!);
-    final int? OBJ_SPECOffset = _OBJ_SPEC == null ? null
-        : fbBuilder.writeString(_OBJ_SPEC!);
-    final int? OBJ_PLATOffset = _OBJ_PLAT == null ? null
-        : fbBuilder.writeString(_OBJ_PLAT!);
-    final int? OBJ_ACTOffset = _OBJ_ACT == null ? null
-        : fbBuilder.writeString(_OBJ_ACT!);
-    final int? MOD_TYPEOffset = _MOD_TYPE == null ? null
-        : fbBuilder.writeString(_MOD_TYPE!);
-    final int? TRK_ITM_IDOffset = _TRK_ITM_ID == null ? null
-        : fbBuilder.writeString(_TRK_ITM_ID!);
-    final int? TSOffset = _TS == null ? null
-        : fbBuilder.writeString(_TS!);
-    final int? TRK_PT_TYPEOffset = _TRK_PT_TYPE == null ? null
-        : fbBuilder.writeString(_TRK_PT_TYPE!);
-    final int? OBJ_IDENTOffset = _OBJ_IDENT == null ? null
-        : fbBuilder.writeString(_OBJ_IDENT!);
-    final int? IDENT_AMPOffset = _IDENT_AMP == null ? null
-        : fbBuilder.writeString(_IDENT_AMP!);
-    final int? SRC_TYPSOffset = _SRC_TYPS == null ? null
-        : fbBuilder.writeList(_SRC_TYPS!.map(fbBuilder.writeString).toList());
-    final int? SRC_IDSOffset = _SRC_IDS == null ? null
-        : fbBuilder.writeList(_SRC_IDS!.map(fbBuilder.writeString).toList());
-    final int? CALL_SIGNOffset = _CALL_SIGN == null ? null
-        : fbBuilder.writeString(_CALL_SIGN!);
-    final int? J_SERIESOffset = _J_SERIES == null ? null
-        : fbBuilder.writeString(_J_SERIES!);
-    final int? TAGSOffset = _TAGS == null ? null
-        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
-    final int? TRACK_START_TIMEOffset = _TRACK_START_TIME == null ? null
-        : fbBuilder.writeString(_TRACK_START_TIME!);
-    final int? ECEF_POSOffset = _ECEF_POS == null ? null
-        : fbBuilder.writeListFloat64(_ECEF_POS!);
-    final int? ECEF_VELOffset = _ECEF_VEL == null ? null
-        : fbBuilder.writeListFloat64(_ECEF_VEL!);
-    final int? ECEF_ACCOffset = _ECEF_ACC == null ? null
-        : fbBuilder.writeListFloat64(_ECEF_ACC!);
-    final int? LC_POSOffset = _LC_POS == null ? null
-        : fbBuilder.writeListFloat64(_LC_POS!);
-    final int? LC_VELOffset = _LC_VEL == null ? null
-        : fbBuilder.writeListFloat64(_LC_VEL!);
-    final int? LC_ACCOffset = _LC_ACC == null ? null
-        : fbBuilder.writeListFloat64(_LC_ACC!);
-    final int? COVOffset = _COV == null ? null
-        : fbBuilder.writeListFloat64(_COV!);
-    final int? ERR_ELLPOffset = _ERR_ELLP == null ? null
-        : fbBuilder.writeListFloat64(_ERR_ELLP!);
-    fbBuilder.startTable(59);
+    final int? VEHICLE_CLASS_IDOffset = _VEHICLE_CLASS_ID == null ? null
+        : fbBuilder.writeString(_VEHICLE_CLASS_ID!);
+    final int? VEHICLE_TYPE_DESIGNATOROffset = _VEHICLE_TYPE_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_VEHICLE_TYPE_DESIGNATOR!);
+    final int? CAPACITY_UNITSOffset = _CAPACITY_UNITS == null ? null
+        : fbBuilder.writeString(_CAPACITY_UNITS!);
+    final int? PERFORMANCE_POINTSOffset = _PERFORMANCE_POINTS == null ? null
+        : fbBuilder.writeList(_PERFORMANCE_POINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? REPLENISHMENTOffset = _REPLENISHMENT == null ? null
+        : fbBuilder.writeList(_REPLENISHMENT!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? REFINES_IDOffset = _REFINES_ID == null ? null
+        : fbBuilder.writeString(_REFINES_ID!);
+    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(17);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, CNTCTOffset);
-    fbBuilder.addOffset(2, MSG_TSOffset);
-    fbBuilder.addOffset(3, MSN_IDOffset);
-    fbBuilder.addOffset(4, ASSET_NATOffset);
-    fbBuilder.addOffset(5, ASSETOffset);
-    fbBuilder.addOffset(6, SENSOR_IDOffset);
-    fbBuilder.addOffset(7, SEN_QUALOffset);
-    fbBuilder.addOffset(8, TRK_IDOffset);
-    fbBuilder.addOffset(9, TRK_NUMOffset);
-    fbBuilder.addInt8(10, _TRK_STAT?.value);
-    fbBuilder.addOffset(11, OBJ_NATOffset);
-    fbBuilder.addOffset(12, OBJ_IDOffset);
-    fbBuilder.addOffset(13, OBJ_TYPEOffset);
-    fbBuilder.addOffset(14, OBJ_SPECOffset);
-    fbBuilder.addOffset(15, OBJ_PLATOffset);
-    fbBuilder.addOffset(16, OBJ_ACTOffset);
-    fbBuilder.addOffset(17, MOD_TYPEOffset);
-    fbBuilder.addOffset(18, TRK_ITM_IDOffset);
-    fbBuilder.addOffset(19, TSOffset);
-    fbBuilder.addUint8(20, _TRK_QUAL);
-    fbBuilder.addOffset(21, TRK_PT_TYPEOffset);
-    fbBuilder.addOffset(22, OBJ_IDENTOffset);
-    fbBuilder.addUint8(23, _IDENT_CRED);
-    fbBuilder.addUint8(24, _IDENT_REL);
-    fbBuilder.addOffset(25, IDENT_AMPOffset);
-    fbBuilder.addInt8(26, _ENVIRONMENT?.value);
-    fbBuilder.addFloat64(27, _ENVIRONMENT_CONF);
-    fbBuilder.addFloat64(28, _TRK_CONF);
-    fbBuilder.addFloat64(29, _LAT);
-    fbBuilder.addFloat64(30, _LON);
-    fbBuilder.addFloat64(31, _ALT);
-    fbBuilder.addFloat64(32, _SPD);
-    fbBuilder.addFloat64(33, _HDNG);
-    fbBuilder.addFloat64(34, _COURSE);
-    fbBuilder.addOffset(35, SRC_TYPSOffset);
-    fbBuilder.addOffset(36, SRC_IDSOffset);
-    fbBuilder.addOffset(37, CALL_SIGNOffset);
-    fbBuilder.addBool(38, _MULTI_SOURCE);
-    fbBuilder.addOffset(39, J_SERIESOffset);
-    fbBuilder.addUint16(40, _STRENGTH);
-    fbBuilder.addUint16(41, _M1);
-    fbBuilder.addUint8(42, _M1V);
-    fbBuilder.addUint16(43, _M2);
-    fbBuilder.addUint8(44, _M2V);
-    fbBuilder.addUint16(45, _M3A);
-    fbBuilder.addUint8(46, _M3AV);
-    fbBuilder.addOffset(47, TAGSOffset);
-    fbBuilder.addOffset(48, TRACK_START_TIMEOffset);
-    fbBuilder.addFloat64(49, _TRACK_STEP_SIZE);
-    fbBuilder.addUint8(50, _TRACK_COMPONENTS);
-    fbBuilder.addOffset(51, ECEF_POSOffset);
-    fbBuilder.addOffset(52, ECEF_VELOffset);
-    fbBuilder.addOffset(53, ECEF_ACCOffset);
-    fbBuilder.addOffset(54, LC_POSOffset);
-    fbBuilder.addOffset(55, LC_VELOffset);
-    fbBuilder.addOffset(56, LC_ACCOffset);
-    fbBuilder.addOffset(57, COVOffset);
-    fbBuilder.addOffset(58, ERR_ELLPOffset);
+    fbBuilder.addOffset(1, VEHICLE_CLASS_IDOffset);
+    fbBuilder.addOffset(2, VEHICLE_TYPE_DESIGNATOROffset);
+    fbBuilder.addInt8(3, _ENVIRONMENT?.value);
+    fbBuilder.addInt8(4, _ENERGY_TYPE?.value);
+    fbBuilder.addFloat64(5, _CAPACITY_VALUE);
+    fbBuilder.addOffset(6, CAPACITY_UNITSOffset);
+    fbBuilder.addFloat64(7, _RESERVE_FRACTION);
+    fbBuilder.addOffset(8, PERFORMANCE_POINTSOffset);
+    fbBuilder.addInt8(9, _INTERPOLATION?.value);
+    fbBuilder.addFloat64(10, _MAXIMUM_ENDURANCE_S);
+    fbBuilder.addFloat64(11, _MAXIMUM_RANGE_M);
+    fbBuilder.addFloat64(12, _LOITER_SPEED_MPS);
+    fbBuilder.addFloat64(13, _SERVICE_CEILING_M);
+    fbBuilder.addOffset(14, REPLENISHMENTOffset);
+    fbBuilder.addOffset(15, REFINES_IDOffset);
+    fbBuilder.addOffset(16, SOURCEOffset);
     return fbBuilder.endTable();
   }
 

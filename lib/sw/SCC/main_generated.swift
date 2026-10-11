@@ -8,376 +8,348 @@ import Common
 
 import FlatBuffers
 
-///  Viewer map style for scenario display.
-public enum viewerMapMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Scenario controls message discriminator.
+public enum controlMessageKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case unknown = 0
-  case geographicalDayNight = 1
-  case geographicalConstant = 2
-  case political = 3
+  case ready = 1
+  case scenarioSetup = 2
+  case requestState = 3
+  case stateResponse = 4
+  case openAssetPicker = 5
+  case openAssetPickerAck = 6
+  case assetsChanged = 7
 
-  public static var max: viewerMapMode { return .political }
-  public static var min: viewerMapMode { return .unknown }
+  public static var max: controlMessageKind { return .assetsChanged }
+  public static var min: controlMessageKind { return .unknown }
 }
 
 
-///  Camera frame mode relative to a focused satellite or default scene frame.
-public enum viewerCameraFrameMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case default_ = 0
-  case radialIntrack = 1
-  case crosstrackIntrack = 2
-  case radialCrosstrack = 3
-
-  public static var max: viewerCameraFrameMode { return .radialCrosstrack }
-  public static var min: viewerCameraFrameMode { return .default_ }
-}
-
-
-///  Satellite body alignment used by a 3D viewer when focused on a satellite.
-public enum viewerSatelliteAlignmentMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  State request kind for a control-message request/response pair.
+public enum stateRequestKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case unknown = 0
-  case orbital = 1
-  case nadir = 2
+  case scenario = 1
+  case references = 2
 
-  public static var max: viewerSatelliteAlignmentMode { return .nadir }
-  public static var min: viewerSatelliteAlignmentMode { return .unknown }
+  public static var max: stateRequestKind { return .references }
+  public static var min: stateRequestKind { return .unknown }
 }
 
 
-///  Camera rotation offset. Quaternions are preferred when present; Euler
-///  angles are retained for import of older scenario JSON.
-public struct VSTCameraRotation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Asset catalog tab requested by a host or embedded scenario controls surface.
+public enum assetCatalogTab: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unknown = 0
+  case satellites = 1
+  case sensors = 2
+
+  public static var max: assetCatalogTab { return .sensors }
+  public static var min: assetCatalogTab { return .unknown }
+}
+
+
+///  Request current state from a scenario controls host.
+public struct SCCRequestState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$VST" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VSTCameraRotation.id, addPrefix: prefix) }
+  public static var id: String { "$SCC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCCRequestState.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let YAW: VOffset = 4
-    static let PITCH: VOffset = 6
-    static let ROLL: VOffset = 8
-    static let QUATERNION_X: VOffset = 10
-    static let QUATERNION_Y: VOffset = 12
-    static let QUATERNION_Z: VOffset = 14
-    static let QUATERNION_W: VOffset = 16
-    static let USES_QUATERNION: VOffset = 18
+    static let REQUEST_ID: VOffset = 4
+    static let REQUEST_KIND: VOffset = 6
   }
 
-  ///  Yaw angle in degrees for Euler-angle camera imports.
-  public var YAW: Double { let o = _accessor.offset(VT.YAW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Pitch angle in degrees for Euler-angle camera imports.
-  public var PITCH: Double { let o = _accessor.offset(VT.PITCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Roll angle in degrees for Euler-angle camera imports.
-  public var ROLL: Double { let o = _accessor.offset(VT.ROLL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Quaternion x component for camera orientation.
-  public var QUATERNION_X: Double { let o = _accessor.offset(VT.QUATERNION_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Quaternion y component for camera orientation.
-  public var QUATERNION_Y: Double { let o = _accessor.offset(VT.QUATERNION_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Quaternion z component for camera orientation.
-  public var QUATERNION_Z: Double { let o = _accessor.offset(VT.QUATERNION_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Quaternion w component for camera orientation.
-  public var QUATERNION_W: Double { let o = _accessor.offset(VT.QUATERNION_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  True when quaternion fields define the authoritative rotation.
-  public var USES_QUATERNION: Bool { let o = _accessor.offset(VT.USES_QUATERNION); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startVSTCameraRotation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(YAW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: YAW, def: 0.0, at: VT.YAW) }
-  public static func add(PITCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PITCH, def: 0.0, at: VT.PITCH) }
-  public static func add(ROLL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLL, def: 0.0, at: VT.ROLL) }
-  public static func add(QUATERNION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUATERNION_X, def: 0.0, at: VT.QUATERNION_X) }
-  public static func add(QUATERNION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUATERNION_Y, def: 0.0, at: VT.QUATERNION_Y) }
-  public static func add(QUATERNION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUATERNION_Z, def: 0.0, at: VT.QUATERNION_Z) }
-  public static func add(QUATERNION_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUATERNION_W, def: 0.0, at: VT.QUATERNION_W) }
-  public static func add(USES_QUATERNION: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USES_QUATERNION, def: true,
-   at: VT.USES_QUATERNION) }
-  public static func endVSTCameraRotation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createVSTCameraRotation(
+  ///  Request correlation id echoed by the matching state response.
+  public var REQUEST_ID: String? { let o = _accessor.offset(VT.REQUEST_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUEST_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUEST_ID) }
+  ///  State payload requested by the caller.
+  public var REQUEST_KIND: stateRequestKind { let o = _accessor.offset(VT.REQUEST_KIND); return o == 0 ? .unknown : stateRequestKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  public static func startSCCRequestState(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VT.REQUEST_ID) }
+  public static func add(REQUEST_KIND: stateRequestKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUEST_KIND.rawValue, def: 0, at: VT.REQUEST_KIND) }
+  public static func endSCCRequestState(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCCRequestState(
     _ fbb: inout FlatBufferBuilder,
-    YAW: Double = 0.0,
-    PITCH: Double = 0.0,
-    ROLL: Double = 0.0,
-    QUATERNION_X: Double = 0.0,
-    QUATERNION_Y: Double = 0.0,
-    QUATERNION_Z: Double = 0.0,
-    QUATERNION_W: Double = 0.0,
-    USES_QUATERNION: Bool = true
+    REQUEST_IDOffset REQUEST_ID: Offset = Offset(),
+    REQUEST_KIND: stateRequestKind = .unknown
   ) -> Offset {
-    let __start = VSTCameraRotation.startVSTCameraRotation(&fbb)
-    VSTCameraRotation.add(YAW: YAW, &fbb)
-    VSTCameraRotation.add(PITCH: PITCH, &fbb)
-    VSTCameraRotation.add(ROLL: ROLL, &fbb)
-    VSTCameraRotation.add(QUATERNION_X: QUATERNION_X, &fbb)
-    VSTCameraRotation.add(QUATERNION_Y: QUATERNION_Y, &fbb)
-    VSTCameraRotation.add(QUATERNION_Z: QUATERNION_Z, &fbb)
-    VSTCameraRotation.add(QUATERNION_W: QUATERNION_W, &fbb)
-    VSTCameraRotation.add(USES_QUATERNION: USES_QUATERNION, &fbb)
-    return VSTCameraRotation.endVSTCameraRotation(&fbb, start: __start)
+    let __start = SCCRequestState.startSCCRequestState(&fbb)
+    SCCRequestState.add(REQUEST_ID: REQUEST_ID, &fbb)
+    SCCRequestState.add(REQUEST_KIND: REQUEST_KIND, &fbb)
+    return SCCRequestState.endSCCRequestState(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.YAW, fieldName: "YAW", required: false, type: Double.self)
-    try _v.visit(field: VT.PITCH, fieldName: "PITCH", required: false, type: Double.self)
-    try _v.visit(field: VT.ROLL, fieldName: "ROLL", required: false, type: Double.self)
-    try _v.visit(field: VT.QUATERNION_X, fieldName: "QUATERNION_X", required: false, type: Double.self)
-    try _v.visit(field: VT.QUATERNION_Y, fieldName: "QUATERNION_Y", required: false, type: Double.self)
-    try _v.visit(field: VT.QUATERNION_Z, fieldName: "QUATERNION_Z", required: false, type: Double.self)
-    try _v.visit(field: VT.QUATERNION_W, fieldName: "QUATERNION_W", required: false, type: Double.self)
-    try _v.visit(field: VT.USES_QUATERNION, fieldName: "USES_QUATERNION", required: false, type: Bool.self)
+    try _v.visit(field: VT.REQUEST_ID, fieldName: "REQUEST_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUEST_KIND, fieldName: "REQUEST_KIND", required: false, type: stateRequestKind.self)
     _v.finish()
   }
 }
 
-///  App display toggles for a scenario viewer.
-public struct VSTDisplaySettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  State response. SCENARIO carries full scenario state; REFERENCES can carry
+///  the lighter reference-list response for reference-only requests.
+public struct SCCStateResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$VST" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VSTDisplaySettings.id, addPrefix: prefix) }
+  public static var id: String { "$SCC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCCStateResponse.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let MAP_MODE: VOffset = 4
-    static let SHOW_GEO_BELT_MARKERS: VOffset = 6
-    static let SHOW_CIS_LUNAR: VOffset = 8
-    static let SHOW_EQUATOR: VOffset = 10
-    static let SHOW_LATITUDE: VOffset = 12
-    static let SHOW_LONGITUDE: VOffset = 14
-    static let SHOW_SHADOW_CONES: VOffset = 16
-    static let SHOW_GIF_CONTROLS: VOffset = 18
-    static let SHOW_ATMOSPHERE: VOffset = 20
-    static let SHOW_SUN_DIRECTION_INDICATOR: VOffset = 22
-    static let USE_STARFIELD: VOffset = 24
-    static let USE_STITCHED_ORBIT: VOffset = 26
+    static let REQUEST_ID: VOffset = 4
+    static let REQUEST_KIND: VOffset = 6
+    static let SCENARIO: VOffset = 8
+    static let REFERENCES: VOffset = 10
+    static let FOCUSED_REFERENCE_INDEX: VOffset = 12
+    static let ERROR_MESSAGE: VOffset = 14
   }
 
-  ///  Active map rendering mode for the scenario viewer.
-  public var MAP_MODE: viewerMapMode { let o = _accessor.offset(VT.MAP_MODE); return o == 0 ? .unknown : viewerMapMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
-  ///  Show geosynchronous belt reference markers.
-  public var SHOW_GEO_BELT_MARKERS: Bool { let o = _accessor.offset(VT.SHOW_GEO_BELT_MARKERS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Show cislunar reference content.
-  public var SHOW_CIS_LUNAR: Bool { let o = _accessor.offset(VT.SHOW_CIS_LUNAR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Show the equator overlay.
-  public var SHOW_EQUATOR: Bool { let o = _accessor.offset(VT.SHOW_EQUATOR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Show latitude grid lines.
-  public var SHOW_LATITUDE: Bool { let o = _accessor.offset(VT.SHOW_LATITUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Show longitude grid lines.
-  public var SHOW_LONGITUDE: Bool { let o = _accessor.offset(VT.SHOW_LONGITUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Show body shadow-cone overlays.
-  public var SHOW_SHADOW_CONES: Bool { let o = _accessor.offset(VT.SHOW_SHADOW_CONES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Show animated capture or GIF export controls.
-  public var SHOW_GIF_CONTROLS: Bool { let o = _accessor.offset(VT.SHOW_GIF_CONTROLS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Render the atmospheric shell around the central body.
-  public var SHOW_ATMOSPHERE: Bool { let o = _accessor.offset(VT.SHOW_ATMOSPHERE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Show the sun-direction indicator overlay.
-  public var SHOW_SUN_DIRECTION_INDICATOR: Bool { let o = _accessor.offset(VT.SHOW_SUN_DIRECTION_INDICATOR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Render the starfield background.
-  public var USE_STARFIELD: Bool { let o = _accessor.offset(VT.USE_STARFIELD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Render orbits as stitched continuous paths.
-  public var USE_STITCHED_ORBIT: Bool { let o = _accessor.offset(VT.USE_STITCHED_ORBIT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startVSTDisplaySettings(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(MAP_MODE: viewerMapMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAP_MODE.rawValue, def: 0, at: VT.MAP_MODE) }
-  public static func add(SHOW_GEO_BELT_MARKERS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_GEO_BELT_MARKERS, def: false,
-   at: VT.SHOW_GEO_BELT_MARKERS) }
-  public static func add(SHOW_CIS_LUNAR: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_CIS_LUNAR, def: false,
-   at: VT.SHOW_CIS_LUNAR) }
-  public static func add(SHOW_EQUATOR: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_EQUATOR, def: false,
-   at: VT.SHOW_EQUATOR) }
-  public static func add(SHOW_LATITUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_LATITUDE, def: false,
-   at: VT.SHOW_LATITUDE) }
-  public static func add(SHOW_LONGITUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_LONGITUDE, def: false,
-   at: VT.SHOW_LONGITUDE) }
-  public static func add(SHOW_SHADOW_CONES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_SHADOW_CONES, def: false,
-   at: VT.SHOW_SHADOW_CONES) }
-  public static func add(SHOW_GIF_CONTROLS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_GIF_CONTROLS, def: false,
-   at: VT.SHOW_GIF_CONTROLS) }
-  public static func add(SHOW_ATMOSPHERE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_ATMOSPHERE, def: false,
-   at: VT.SHOW_ATMOSPHERE) }
-  public static func add(SHOW_SUN_DIRECTION_INDICATOR: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_SUN_DIRECTION_INDICATOR, def: false,
-   at: VT.SHOW_SUN_DIRECTION_INDICATOR) }
-  public static func add(USE_STARFIELD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USE_STARFIELD, def: false,
-   at: VT.USE_STARFIELD) }
-  public static func add(USE_STITCHED_ORBIT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USE_STITCHED_ORBIT, def: false,
-   at: VT.USE_STITCHED_ORBIT) }
-  public static func endVSTDisplaySettings(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createVSTDisplaySettings(
-    _ fbb: inout FlatBufferBuilder,
-    MAP_MODE: viewerMapMode = .unknown,
-    SHOW_GEO_BELT_MARKERS: Bool = false,
-    SHOW_CIS_LUNAR: Bool = false,
-    SHOW_EQUATOR: Bool = false,
-    SHOW_LATITUDE: Bool = false,
-    SHOW_LONGITUDE: Bool = false,
-    SHOW_SHADOW_CONES: Bool = false,
-    SHOW_GIF_CONTROLS: Bool = false,
-    SHOW_ATMOSPHERE: Bool = false,
-    SHOW_SUN_DIRECTION_INDICATOR: Bool = false,
-    USE_STARFIELD: Bool = false,
-    USE_STITCHED_ORBIT: Bool = false
-  ) -> Offset {
-    let __start = VSTDisplaySettings.startVSTDisplaySettings(&fbb)
-    VSTDisplaySettings.add(MAP_MODE: MAP_MODE, &fbb)
-    VSTDisplaySettings.add(SHOW_GEO_BELT_MARKERS: SHOW_GEO_BELT_MARKERS, &fbb)
-    VSTDisplaySettings.add(SHOW_CIS_LUNAR: SHOW_CIS_LUNAR, &fbb)
-    VSTDisplaySettings.add(SHOW_EQUATOR: SHOW_EQUATOR, &fbb)
-    VSTDisplaySettings.add(SHOW_LATITUDE: SHOW_LATITUDE, &fbb)
-    VSTDisplaySettings.add(SHOW_LONGITUDE: SHOW_LONGITUDE, &fbb)
-    VSTDisplaySettings.add(SHOW_SHADOW_CONES: SHOW_SHADOW_CONES, &fbb)
-    VSTDisplaySettings.add(SHOW_GIF_CONTROLS: SHOW_GIF_CONTROLS, &fbb)
-    VSTDisplaySettings.add(SHOW_ATMOSPHERE: SHOW_ATMOSPHERE, &fbb)
-    VSTDisplaySettings.add(SHOW_SUN_DIRECTION_INDICATOR: SHOW_SUN_DIRECTION_INDICATOR, &fbb)
-    VSTDisplaySettings.add(USE_STARFIELD: USE_STARFIELD, &fbb)
-    VSTDisplaySettings.add(USE_STITCHED_ORBIT: USE_STITCHED_ORBIT, &fbb)
-    return VSTDisplaySettings.endVSTDisplaySettings(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.MAP_MODE, fieldName: "MAP_MODE", required: false, type: viewerMapMode.self)
-    try _v.visit(field: VT.SHOW_GEO_BELT_MARKERS, fieldName: "SHOW_GEO_BELT_MARKERS", required: false, type: Bool.self)
-    try _v.visit(field: VT.SHOW_CIS_LUNAR, fieldName: "SHOW_CIS_LUNAR", required: false, type: Bool.self)
-    try _v.visit(field: VT.SHOW_EQUATOR, fieldName: "SHOW_EQUATOR", required: false, type: Bool.self)
-    try _v.visit(field: VT.SHOW_LATITUDE, fieldName: "SHOW_LATITUDE", required: false, type: Bool.self)
-    try _v.visit(field: VT.SHOW_LONGITUDE, fieldName: "SHOW_LONGITUDE", required: false, type: Bool.self)
-    try _v.visit(field: VT.SHOW_SHADOW_CONES, fieldName: "SHOW_SHADOW_CONES", required: false, type: Bool.self)
-    try _v.visit(field: VT.SHOW_GIF_CONTROLS, fieldName: "SHOW_GIF_CONTROLS", required: false, type: Bool.self)
-    try _v.visit(field: VT.SHOW_ATMOSPHERE, fieldName: "SHOW_ATMOSPHERE", required: false, type: Bool.self)
-    try _v.visit(field: VT.SHOW_SUN_DIRECTION_INDICATOR, fieldName: "SHOW_SUN_DIRECTION_INDICATOR", required: false, type: Bool.self)
-    try _v.visit(field: VT.USE_STARFIELD, fieldName: "USE_STARFIELD", required: false, type: Bool.self)
-    try _v.visit(field: VT.USE_STITCHED_ORBIT, fieldName: "USE_STITCHED_ORBIT", required: false, type: Bool.self)
-    _v.finish()
-  }
-}
-
-///  Camera options for a space-domain scenario viewer.
-public struct VSTCameraOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$VST" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VSTCameraOptions.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let CAMERA_FRAME_MODE: VOffset = 4
-    static let SATELLITE_ALIGNMENT: VOffset = 6
-    static let DISTANCE_FROM_TARGET: VOffset = 8
-    static let ROTATION: VOffset = 10
-  }
-
-  ///  Camera frame relative to the focused target or default scene.
-  public var CAMERA_FRAME_MODE: viewerCameraFrameMode { let o = _accessor.offset(VT.CAMERA_FRAME_MODE); return o == 0 ? .default_ : viewerCameraFrameMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .default_ }
-  ///  Satellite body alignment mode when focused on a satellite.
-  public var SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode { let o = _accessor.offset(VT.SATELLITE_ALIGNMENT); return o == 0 ? .unknown : viewerSatelliteAlignmentMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
-  ///  Camera distance from the current target in kilometers.
-  public var DISTANCE_FROM_TARGET: Double { let o = _accessor.offset(VT.DISTANCE_FROM_TARGET); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Camera orientation offset.
-  public var ROTATION: VSTCameraRotation? { let o = _accessor.offset(VT.ROTATION); return o == 0 ? nil : VSTCameraRotation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startVSTCameraOptions(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CAMERA_FRAME_MODE: viewerCameraFrameMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CAMERA_FRAME_MODE.rawValue, def: 0, at: VT.CAMERA_FRAME_MODE) }
-  public static func add(SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SATELLITE_ALIGNMENT.rawValue, def: 0, at: VT.SATELLITE_ALIGNMENT) }
-  public static func add(DISTANCE_FROM_TARGET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_FROM_TARGET, def: 0.0, at: VT.DISTANCE_FROM_TARGET) }
-  public static func add(ROTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROTATION, at: VT.ROTATION) }
-  public static func endVSTCameraOptions(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createVSTCameraOptions(
-    _ fbb: inout FlatBufferBuilder,
-    CAMERA_FRAME_MODE: viewerCameraFrameMode = .default_,
-    SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode = .unknown,
-    DISTANCE_FROM_TARGET: Double = 0.0,
-    ROTATIONOffset ROTATION: Offset = Offset()
-  ) -> Offset {
-    let __start = VSTCameraOptions.startVSTCameraOptions(&fbb)
-    VSTCameraOptions.add(CAMERA_FRAME_MODE: CAMERA_FRAME_MODE, &fbb)
-    VSTCameraOptions.add(SATELLITE_ALIGNMENT: SATELLITE_ALIGNMENT, &fbb)
-    VSTCameraOptions.add(DISTANCE_FROM_TARGET: DISTANCE_FROM_TARGET, &fbb)
-    VSTCameraOptions.add(ROTATION: ROTATION, &fbb)
-    return VSTCameraOptions.endVSTCameraOptions(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CAMERA_FRAME_MODE, fieldName: "CAMERA_FRAME_MODE", required: false, type: viewerCameraFrameMode.self)
-    try _v.visit(field: VT.SATELLITE_ALIGNMENT, fieldName: "SATELLITE_ALIGNMENT", required: false, type: viewerSatelliteAlignmentMode.self)
-    try _v.visit(field: VT.DISTANCE_FROM_TARGET, fieldName: "DISTANCE_FROM_TARGET", required: false, type: Double.self)
-    try _v.visit(field: VT.ROTATION, fieldName: "ROTATION", required: false, type: ForwardOffset<VSTCameraRotation>.self)
-    _v.finish()
-  }
-}
-
-///  Viewer State - display and camera state associated with a scenario.
-public struct VST: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$VST" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VST.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let CAMERA: VOffset = 4
-    static let DISPLAY_SETTINGS: VOffset = 6
-    static let FOCUSED_REFERENCE_ID: VOffset = 8
-    static let FOCUSED_REFERENCE_INDEX: VOffset = 10
-  }
-
-  ///  Camera settings for the current viewer state.
-  public var CAMERA: VSTCameraOptions? { let o = _accessor.offset(VT.CAMERA); return o == 0 ? nil : VSTCameraOptions(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Display toggles and map style for the current viewer state.
-  public var DISPLAY_SETTINGS: VSTDisplaySettings? { let o = _accessor.offset(VT.DISPLAY_SETTINGS); return o == 0 ? nil : VSTDisplaySettings(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Reference id of the currently focused scenario object.
-  public var FOCUSED_REFERENCE_ID: String? { let o = _accessor.offset(VT.FOCUSED_REFERENCE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FOCUSED_REFERENCE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FOCUSED_REFERENCE_ID) }
+  ///  Request correlation id from the matching state request.
+  public var REQUEST_ID: String? { let o = _accessor.offset(VT.REQUEST_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUEST_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUEST_ID) }
+  ///  State payload represented by this response.
+  public var REQUEST_KIND: stateRequestKind { let o = _accessor.offset(VT.REQUEST_KIND); return o == 0 ? .unknown : stateRequestKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Full scenario state for scenario-state responses.
+  public var SCENARIO: SCN? { let o = _accessor.offset(VT.SCENARIO); return o == 0 ? nil : SCN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Reference-list payload for reference-only responses.
+  public var REFERENCES: FlatbufferVector<SCNReference> { return _accessor.vector(at: VT.REFERENCES, byteSize: 4) }
   ///  Zero-based focused reference index, or -1 when no index is focused.
   public var FOCUSED_REFERENCE_INDEX: Int32 { let o = _accessor.offset(VT.FOCUSED_REFERENCE_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public static func startVST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VT.CAMERA) }
-  public static func add(DISPLAY_SETTINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_SETTINGS, at: VT.DISPLAY_SETTINGS) }
-  public static func add(FOCUSED_REFERENCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FOCUSED_REFERENCE_ID, at: VT.FOCUSED_REFERENCE_ID) }
+  ///  Human-readable error message when state cannot be returned.
+  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
+  public static func startSCCStateResponse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VT.REQUEST_ID) }
+  public static func add(REQUEST_KIND: stateRequestKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUEST_KIND.rawValue, def: 0, at: VT.REQUEST_KIND) }
+  public static func add(SCENARIO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO, at: VT.SCENARIO) }
+  public static func addVectorOf(REFERENCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCES, at: VT.REFERENCES) }
   public static func add(FOCUSED_REFERENCE_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOCUSED_REFERENCE_INDEX, def: -1, at: VT.FOCUSED_REFERENCE_INDEX) }
-  public static func endVST(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createVST(
+  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
+  public static func endSCCStateResponse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCCStateResponse(
     _ fbb: inout FlatBufferBuilder,
-    CAMERAOffset CAMERA: Offset = Offset(),
-    DISPLAY_SETTINGSOffset DISPLAY_SETTINGS: Offset = Offset(),
-    FOCUSED_REFERENCE_IDOffset FOCUSED_REFERENCE_ID: Offset = Offset(),
-    FOCUSED_REFERENCE_INDEX: Int32 = -1
+    REQUEST_IDOffset REQUEST_ID: Offset = Offset(),
+    REQUEST_KIND: stateRequestKind = .unknown,
+    SCENARIOOffset SCENARIO: Offset = Offset(),
+    REFERENCESVectorOffset REFERENCES: Offset = Offset(),
+    FOCUSED_REFERENCE_INDEX: Int32 = -1,
+    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset()
   ) -> Offset {
-    let __start = VST.startVST(&fbb)
-    VST.add(CAMERA: CAMERA, &fbb)
-    VST.add(DISPLAY_SETTINGS: DISPLAY_SETTINGS, &fbb)
-    VST.add(FOCUSED_REFERENCE_ID: FOCUSED_REFERENCE_ID, &fbb)
-    VST.add(FOCUSED_REFERENCE_INDEX: FOCUSED_REFERENCE_INDEX, &fbb)
-    return VST.endVST(&fbb, start: __start)
+    let __start = SCCStateResponse.startSCCStateResponse(&fbb)
+    SCCStateResponse.add(REQUEST_ID: REQUEST_ID, &fbb)
+    SCCStateResponse.add(REQUEST_KIND: REQUEST_KIND, &fbb)
+    SCCStateResponse.add(SCENARIO: SCENARIO, &fbb)
+    SCCStateResponse.addVectorOf(REFERENCES: REFERENCES, &fbb)
+    SCCStateResponse.add(FOCUSED_REFERENCE_INDEX: FOCUSED_REFERENCE_INDEX, &fbb)
+    SCCStateResponse.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
+    return SCCStateResponse.endSCCStateResponse(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CAMERA, fieldName: "CAMERA", required: false, type: ForwardOffset<VSTCameraOptions>.self)
-    try _v.visit(field: VT.DISPLAY_SETTINGS, fieldName: "DISPLAY_SETTINGS", required: false, type: ForwardOffset<VSTDisplaySettings>.self)
-    try _v.visit(field: VT.FOCUSED_REFERENCE_ID, fieldName: "FOCUSED_REFERENCE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUEST_ID, fieldName: "REQUEST_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUEST_KIND, fieldName: "REQUEST_KIND", required: false, type: stateRequestKind.self)
+    try _v.visit(field: VT.SCENARIO, fieldName: "SCENARIO", required: false, type: ForwardOffset<SCN>.self)
+    try _v.visit(field: VT.REFERENCES, fieldName: "REFERENCES", required: false, type: ForwardOffset<Vector<ForwardOffset<SCNReference>, SCNReference>>.self)
     try _v.visit(field: VT.FOCUSED_REFERENCE_INDEX, fieldName: "FOCUSED_REFERENCE_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Asset-picker request or acknowledgement.
+public struct SCCAssetPicker: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCCAssetPicker.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let REQUEST_ID: VOffset = 4
+    static let CATALOG_TAB: VOffset = 6
+    static let ACKNOWLEDGED: VOffset = 8
+  }
+
+  ///  Request correlation id for the asset-picker exchange.
+  public var REQUEST_ID: String? { let o = _accessor.offset(VT.REQUEST_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUEST_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUEST_ID) }
+  ///  Initial catalog tab to display in the asset picker.
+  public var CATALOG_TAB: assetCatalogTab { let o = _accessor.offset(VT.CATALOG_TAB); return o == 0 ? .unknown : assetCatalogTab(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  True when the receiver accepted or completed the picker request.
+  public var ACKNOWLEDGED: Bool { let o = _accessor.offset(VT.ACKNOWLEDGED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startSCCAssetPicker(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VT.REQUEST_ID) }
+  public static func add(CATALOG_TAB: assetCatalogTab, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CATALOG_TAB.rawValue, def: 0, at: VT.CATALOG_TAB) }
+  public static func add(ACKNOWLEDGED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACKNOWLEDGED, def: false,
+   at: VT.ACKNOWLEDGED) }
+  public static func endSCCAssetPicker(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCCAssetPicker(
+    _ fbb: inout FlatBufferBuilder,
+    REQUEST_IDOffset REQUEST_ID: Offset = Offset(),
+    CATALOG_TAB: assetCatalogTab = .unknown,
+    ACKNOWLEDGED: Bool = false
+  ) -> Offset {
+    let __start = SCCAssetPicker.startSCCAssetPicker(&fbb)
+    SCCAssetPicker.add(REQUEST_ID: REQUEST_ID, &fbb)
+    SCCAssetPicker.add(CATALOG_TAB: CATALOG_TAB, &fbb)
+    SCCAssetPicker.add(ACKNOWLEDGED: ACKNOWLEDGED, &fbb)
+    return SCCAssetPicker.endSCCAssetPicker(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.REQUEST_ID, fieldName: "REQUEST_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATALOG_TAB, fieldName: "CATALOG_TAB", required: false, type: assetCatalogTab.self)
+    try _v.visit(field: VT.ACKNOWLEDGED, fieldName: "ACKNOWLEDGED", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Startup readiness message.
+public struct SCCReady: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCCReady.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let READY: VOffset = 4
+  }
+
+  ///  True when the scenario controls surface is ready for messages.
+  public var READY: Bool { let o = _accessor.offset(VT.READY); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startSCCReady(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(READY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: READY, def: true,
+   at: VT.READY) }
+  public static func endSCCReady(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCCReady(
+    _ fbb: inout FlatBufferBuilder,
+    READY: Bool = true
+  ) -> Offset {
+    let __start = SCCReady.startSCCReady(&fbb)
+    SCCReady.add(READY: READY, &fbb)
+    return SCCReady.endSCCReady(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.READY, fieldName: "READY", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Scenario Controls - message-bus envelope for scenario setup, state
+///  requests/responses, startup readiness, and asset-picker delegation.
+public struct SCC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCC.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MESSAGE_KIND: VOffset = 4
+    static let TRACE_ID: VOffset = 6
+    static let SCENARIOS: VOffset = 8
+    static let SCENARIO: VOffset = 10
+    static let REQUEST_STATE: VOffset = 12
+    static let STATE_RESPONSE: VOffset = 14
+    static let ASSET_PICKER: VOffset = 16
+    static let READY: VOffset = 18
+  }
+
+  ///  Payload discriminator for the message carried by this envelope.
+  public var MESSAGE_KIND: controlMessageKind { let o = _accessor.offset(VT.MESSAGE_KIND); return o == 0 ? .unknown : controlMessageKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Optional trace id for correlating messages across systems.
+  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
+  ///  Scenario list carried by setup or selection messages.
+  public var SCENARIOS: FlatbufferVector<SCN> { return _accessor.vector(at: VT.SCENARIOS, byteSize: 4) }
+  ///  Single scenario payload carried by setup or state messages.
+  public var SCENARIO: SCN? { let o = _accessor.offset(VT.SCENARIO); return o == 0 ? nil : SCN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Request-current-state payload.
+  public var REQUEST_STATE: SCCRequestState? { let o = _accessor.offset(VT.REQUEST_STATE); return o == 0 ? nil : SCCRequestState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Current-state response payload.
+  public var STATE_RESPONSE: SCCStateResponse? { let o = _accessor.offset(VT.STATE_RESPONSE); return o == 0 ? nil : SCCStateResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Asset-picker request or acknowledgement payload.
+  public var ASSET_PICKER: SCCAssetPicker? { let o = _accessor.offset(VT.ASSET_PICKER); return o == 0 ? nil : SCCAssetPicker(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Startup readiness payload.
+  public var READY: SCCReady? { let o = _accessor.offset(VT.READY); return o == 0 ? nil : SCCReady(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSCC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(MESSAGE_KIND: controlMessageKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGE_KIND.rawValue, def: 0, at: VT.MESSAGE_KIND) }
+  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
+  public static func addVectorOf(SCENARIOS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIOS, at: VT.SCENARIOS) }
+  public static func add(SCENARIO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO, at: VT.SCENARIO) }
+  public static func add(REQUEST_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_STATE, at: VT.REQUEST_STATE) }
+  public static func add(STATE_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_RESPONSE, at: VT.STATE_RESPONSE) }
+  public static func add(ASSET_PICKER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSET_PICKER, at: VT.ASSET_PICKER) }
+  public static func add(READY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: READY, at: VT.READY) }
+  public static func endSCC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCC(
+    _ fbb: inout FlatBufferBuilder,
+    MESSAGE_KIND: controlMessageKind = .unknown,
+    TRACE_IDOffset TRACE_ID: Offset = Offset(),
+    SCENARIOSVectorOffset SCENARIOS: Offset = Offset(),
+    SCENARIOOffset SCENARIO: Offset = Offset(),
+    REQUEST_STATEOffset REQUEST_STATE: Offset = Offset(),
+    STATE_RESPONSEOffset STATE_RESPONSE: Offset = Offset(),
+    ASSET_PICKEROffset ASSET_PICKER: Offset = Offset(),
+    READYOffset READY: Offset = Offset()
+  ) -> Offset {
+    let __start = SCC.startSCC(&fbb)
+    SCC.add(MESSAGE_KIND: MESSAGE_KIND, &fbb)
+    SCC.add(TRACE_ID: TRACE_ID, &fbb)
+    SCC.addVectorOf(SCENARIOS: SCENARIOS, &fbb)
+    SCC.add(SCENARIO: SCENARIO, &fbb)
+    SCC.add(REQUEST_STATE: REQUEST_STATE, &fbb)
+    SCC.add(STATE_RESPONSE: STATE_RESPONSE, &fbb)
+    SCC.add(ASSET_PICKER: ASSET_PICKER, &fbb)
+    SCC.add(READY: READY, &fbb)
+    return SCC.endSCC(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MESSAGE_KIND, fieldName: "MESSAGE_KIND", required: false, type: controlMessageKind.self)
+    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCENARIOS, fieldName: "SCENARIOS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCN>, SCN>>.self)
+    try _v.visit(field: VT.SCENARIO, fieldName: "SCENARIO", required: false, type: ForwardOffset<SCN>.self)
+    try _v.visit(field: VT.REQUEST_STATE, fieldName: "REQUEST_STATE", required: false, type: ForwardOffset<SCCRequestState>.self)
+    try _v.visit(field: VT.STATE_RESPONSE, fieldName: "STATE_RESPONSE", required: false, type: ForwardOffset<SCCStateResponse>.self)
+    try _v.visit(field: VT.ASSET_PICKER, fieldName: "ASSET_PICKER", required: false, type: ForwardOffset<SCCAssetPicker>.self)
+    try _v.visit(field: VT.READY, fieldName: "READY", required: false, type: ForwardOffset<SCCReady>.self)
     _v.finish()
   }
 }

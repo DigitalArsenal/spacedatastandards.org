@@ -7,6 +7,12 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Spacecraft Maneuver
+///
+/// U, V and W are the UVW axes of an orbit state: U radial, along the position
+/// vector away from the central body; W cross-track, along the orbit normal
+/// (the direction of r x v); V in-track, W x U, completing the right-handed
+/// frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+/// pre-maneuver state at EVENT_START_TIME.
 class MNV extends Table
 {
     /**
@@ -154,7 +160,8 @@ class MNV extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Maneuver event identifier
+    /// Maneuver event identifier. Records of one event share it: a merged event
+    /// and the source records it combines.
     public function getEVENT_ID()
     {
         $o = $this->__offset(32);
@@ -191,7 +198,7 @@ class MNV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Delta-V along-track/U component (km/s)
+    /// Delta-V along U, radial (km/s)
     /**
      * @return double
      */
@@ -201,7 +208,7 @@ class MNV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Delta-V cross-track/V component (km/s)
+    /// Delta-V along V, in-track (km/s)
     /**
      * @return double
      */
@@ -211,7 +218,7 @@ class MNV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Delta-V radial/W component (km/s)
+    /// Delta-V along W, cross-track (km/s)
     /**
      * @return double
      */
@@ -231,7 +238,7 @@ class MNV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Delta position U component (km)
+    /// Delta position along U, radial (km)
     /**
      * @return double
      */
@@ -241,7 +248,7 @@ class MNV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Delta position V component (km)
+    /// Delta position along V, in-track (km)
     /**
      * @return double
      */
@@ -251,7 +258,7 @@ class MNV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Delta position W component (km)
+    /// Delta position along W, cross-track (km)
     /**
      * @return double
      */
@@ -384,7 +391,8 @@ class MNV extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Acceleration values (km/s^2, 3 components per point)
+    /// Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+    /// the state at that point's MNVR_ACCEL_TIMES entry
     /**
      * @param int offset
      * @return double
@@ -465,7 +473,9 @@ class MNV extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Sourced data references
+    /// Sourced data references: identifiers of the records this one was
+    /// determined from (CIDv1 for records of this network), such as the source
+    /// records a merged event combines
     /**
      * @param int offset
      * @return string
@@ -499,22 +509,30 @@ class MNV extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Where the maneuver's data comes from and the terms it travels under.
+    public function getPROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(94);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startMNV(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(45);
+        $builder->StartObject(46);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MNV
      */
-    public static function createMNV(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $STATUS, $CHARACTERIZATION, $CHARACTERIZATION_UNC, $REPORT_TIME, $EVENT_START_TIME, $EVENT_END_TIME, $TOTAL_BURN_TIME, $OD_FIT_END_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $EVENT_ID, $UCT, $MANEUVER_UNC, $DELTA_VEL, $DELTA_VEL_U, $DELTA_VEL_V, $DELTA_VEL_W, $DELTA_POS, $DELTA_POS_U, $DELTA_POS_V, $DELTA_POS_W, $DELTA_MASS, $PRE_EVENT, $POST_EVENT, $POST_MASS, $POST_AREA, $COV, $NUM_OBS, $STATE_MODEL, $STATE_MODEL_VERSION, $NUM_ACCEL_POINTS, $MNVR_ACCEL_TIMES, $MNVR_ACCELS, $MNVR_ACCEL_UNCS, $DESCRIPTION, $DESCRIPTOR, $ALGORITHM, $TAGS, $SOURCED_DATA, $SOURCED_DATA_TYPES, $TRANSACTION_ID)
+    public static function createMNV(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $STATUS, $CHARACTERIZATION, $CHARACTERIZATION_UNC, $REPORT_TIME, $EVENT_START_TIME, $EVENT_END_TIME, $TOTAL_BURN_TIME, $OD_FIT_END_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $EVENT_ID, $UCT, $MANEUVER_UNC, $DELTA_VEL, $DELTA_VEL_U, $DELTA_VEL_V, $DELTA_VEL_W, $DELTA_POS, $DELTA_POS_U, $DELTA_POS_V, $DELTA_POS_W, $DELTA_MASS, $PRE_EVENT, $POST_EVENT, $POST_MASS, $POST_AREA, $COV, $NUM_OBS, $STATE_MODEL, $STATE_MODEL_VERSION, $NUM_ACCEL_POINTS, $MNVR_ACCEL_TIMES, $MNVR_ACCELS, $MNVR_ACCEL_UNCS, $DESCRIPTION, $DESCRIPTOR, $ALGORITHM, $TAGS, $SOURCED_DATA, $SOURCED_DATA_TYPES, $TRANSACTION_ID, $PROVENANCE)
     {
-        $builder->startObject(45);
+        $builder->startObject(46);
         self::addID($builder, $ID);
         self::addSAT_NO($builder, $SAT_NO);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
@@ -560,6 +578,7 @@ class MNV extends Table
         self::addSOURCED_DATA($builder, $SOURCED_DATA);
         self::addSOURCED_DATA_TYPES($builder, $SOURCED_DATA_TYPES);
         self::addTRANSACTION_ID($builder, $TRANSACTION_ID);
+        self::addPROVENANCE($builder, $PROVENANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -1156,6 +1175,16 @@ class MNV extends Table
     public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
     {
         $builder->addOffsetX(44, $TRANSACTION_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(45, $PROVENANCE, 0);
     }
 
     /**

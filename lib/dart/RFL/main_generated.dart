@@ -5,896 +5,1809 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum timingStandard {
-  GMST(0),
-  GPS(1),
-  MET(2),
-  MRT(3),
-  SCLK(4),
-  TAI(5),
-  TCB(6),
-  TDB(7),
-  TCG(8),
-  TT(9),
-  UT1(10),
-  UTC(11),
-  GLONASS(12),
-  GST(13),
-  QZSS(14),
-  BDT(15),
-  NAVIC(16),
-  SBAS(17),
-  A1(18);
+///  Whether the link existed at a sample epoch, and how far the evaluation got.
+///
+///  `NOT_EVALUATED` holds ordinal 0 so an unset field can never decode as a
+///  claim that the link was up or down.
+enum rflAccessState {
+  NOT_EVALUATED(0),
+  NO_ACCESS(1),
+  GEOMETRIC_ACCESS(2),
+  BELOW_THRESHOLD(3),
+  THRESHOLD_SATISFIED(4),
+  OUTAGE(5),
+  SUPPRESSED(6);
 
   final int value;
-  const timingStandard(this.value);
+  const rflAccessState(this.value);
 
-  factory timingStandard.fromValue(int value) {
+  factory rflAccessState.fromValue(int value) {
     switch (value) {
-      case 0: return timingStandard.GMST;
-      case 1: return timingStandard.GPS;
-      case 2: return timingStandard.MET;
-      case 3: return timingStandard.MRT;
-      case 4: return timingStandard.SCLK;
-      case 5: return timingStandard.TAI;
-      case 6: return timingStandard.TCB;
-      case 7: return timingStandard.TDB;
-      case 8: return timingStandard.TCG;
-      case 9: return timingStandard.TT;
-      case 10: return timingStandard.UT1;
-      case 11: return timingStandard.UTC;
-      case 12: return timingStandard.GLONASS;
-      case 13: return timingStandard.GST;
-      case 14: return timingStandard.QZSS;
-      case 15: return timingStandard.BDT;
-      case 16: return timingStandard.NAVIC;
-      case 17: return timingStandard.SBAS;
-      case 18: return timingStandard.A1;
+      case 0: return rflAccessState.NOT_EVALUATED;
+      case 1: return rflAccessState.NO_ACCESS;
+      case 2: return rflAccessState.GEOMETRIC_ACCESS;
+      case 3: return rflAccessState.BELOW_THRESHOLD;
+      case 4: return rflAccessState.THRESHOLD_SATISFIED;
+      case 5: return rflAccessState.OUTAGE;
+      case 6: return rflAccessState.SUPPRESSED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timingStandard? _createOrNull(int? value) =>
-      value == null ? null : timingStandard.fromValue(value);
+  static rflAccessState? _createOrNull(int? value) =>
+      value == null ? null : rflAccessState.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 18;
-  static const fb.Reader<timingStandard> reader = _timingStandardReader();
+  static const int maxValue = 6;
+  static const fb.Reader<rflAccessState> reader = _rflAccessStateReader();
 }
 
-class _timingStandardReader extends fb.Reader<timingStandard> {
-  const _timingStandardReader();
+class _rflAccessStateReader extends fb.Reader<rflAccessState> {
+  const _rflAccessStateReader();
 
   @override
   int get size => 1;
 
   @override
-  timingStandard read(fb.BufferContext bc, int offset) =>
-      timingStandard.fromValue(const fb.Int8Reader().read(bc, offset));
+  rflAccessState read(fb.BufferContext bc, int offset) =>
+      rflAccessState.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timEpochRepresentation {
-  JULIAN_DATE(0),
-  MODIFIED_JULIAN_DATE(1),
-  UNIX_SECONDS(2),
-  ISO8601(3),
-  GPS_SECONDS(4),
-  GNSS_WEEK_SECONDS(5),
-  CCSDS_TIME_CODE(6),
-  MISSION_ELAPSED_SECONDS(7);
+///  A named term of the link budget. Used to declare which quantity a
+///  threshold, a contour or a best-server selection is stated against, so a
+///  consumer never has to infer it from a units string.
+///
+///  ORDINALS ARE WIRE VALUES. New terms are APPENDED ONLY.
+enum rflBudgetTerm {
+  UNSPECIFIED(0),
+  RANGE(1),
+  RANGE_RATE(2),
+  AZIMUTH(3),
+  ELEVATION(4),
+  DOPPLER_SHIFT(5),
+  EIRP(6),
+  TRANSMIT_ANTENNA_GAIN(7),
+  RECEIVE_ANTENNA_GAIN(8),
+  FREE_SPACE_PATH_LOSS(9),
+  GASEOUS_ABSORPTION_LOSS(10),
+  RAIN_LOSS(11),
+  CLOUD_FOG_LOSS(12),
+  SCINTILLATION_LOSS(13),
+  TERRAIN_DIFFRACTION_LOSS(14),
+  OBSTRUCTION_LOSS(15),
+  POLARIZATION_LOSS(16),
+  POINTING_LOSS(17),
+  IMPLEMENTATION_LOSS(18),
+  RECEIVED_POWER(19),
+  SYSTEM_NOISE_TEMPERATURE(20),
+  GAIN_TO_NOISE_TEMPERATURE(21),
+  CARRIER_TO_NOISE_DENSITY(22),
+  CARRIER_TO_NOISE(23),
+  ENERGY_PER_BIT_TO_NOISE_DENSITY(24),
+  BIT_ERROR_RATE(25),
+  LINK_MARGIN(26),
+  CHANNEL_CAPACITY(27),
+  INTERFERENCE_POWER(28),
+  CARRIER_TO_NOISE_PLUS_INTERFERENCE(29),
+  SIGNAL_TO_INTERFERENCE_PLUS_NOISE(30),
+  SYMBOL_ENERGY_TO_NOISE_DENSITY(31),
+  BLOCK_ERROR_RATE(32),
+  SPECTRAL_EFFICIENCY(33),
+  ACHIEVED_DATA_RATE(34),
+  ACM_MARGIN(35);
 
   final int value;
-  const timEpochRepresentation(this.value);
+  const rflBudgetTerm(this.value);
 
-  factory timEpochRepresentation.fromValue(int value) {
+  factory rflBudgetTerm.fromValue(int value) {
     switch (value) {
-      case 0: return timEpochRepresentation.JULIAN_DATE;
-      case 1: return timEpochRepresentation.MODIFIED_JULIAN_DATE;
-      case 2: return timEpochRepresentation.UNIX_SECONDS;
-      case 3: return timEpochRepresentation.ISO8601;
-      case 4: return timEpochRepresentation.GPS_SECONDS;
-      case 5: return timEpochRepresentation.GNSS_WEEK_SECONDS;
-      case 6: return timEpochRepresentation.CCSDS_TIME_CODE;
-      case 7: return timEpochRepresentation.MISSION_ELAPSED_SECONDS;
+      case 0: return rflBudgetTerm.UNSPECIFIED;
+      case 1: return rflBudgetTerm.RANGE;
+      case 2: return rflBudgetTerm.RANGE_RATE;
+      case 3: return rflBudgetTerm.AZIMUTH;
+      case 4: return rflBudgetTerm.ELEVATION;
+      case 5: return rflBudgetTerm.DOPPLER_SHIFT;
+      case 6: return rflBudgetTerm.EIRP;
+      case 7: return rflBudgetTerm.TRANSMIT_ANTENNA_GAIN;
+      case 8: return rflBudgetTerm.RECEIVE_ANTENNA_GAIN;
+      case 9: return rflBudgetTerm.FREE_SPACE_PATH_LOSS;
+      case 10: return rflBudgetTerm.GASEOUS_ABSORPTION_LOSS;
+      case 11: return rflBudgetTerm.RAIN_LOSS;
+      case 12: return rflBudgetTerm.CLOUD_FOG_LOSS;
+      case 13: return rflBudgetTerm.SCINTILLATION_LOSS;
+      case 14: return rflBudgetTerm.TERRAIN_DIFFRACTION_LOSS;
+      case 15: return rflBudgetTerm.OBSTRUCTION_LOSS;
+      case 16: return rflBudgetTerm.POLARIZATION_LOSS;
+      case 17: return rflBudgetTerm.POINTING_LOSS;
+      case 18: return rflBudgetTerm.IMPLEMENTATION_LOSS;
+      case 19: return rflBudgetTerm.RECEIVED_POWER;
+      case 20: return rflBudgetTerm.SYSTEM_NOISE_TEMPERATURE;
+      case 21: return rflBudgetTerm.GAIN_TO_NOISE_TEMPERATURE;
+      case 22: return rflBudgetTerm.CARRIER_TO_NOISE_DENSITY;
+      case 23: return rflBudgetTerm.CARRIER_TO_NOISE;
+      case 24: return rflBudgetTerm.ENERGY_PER_BIT_TO_NOISE_DENSITY;
+      case 25: return rflBudgetTerm.BIT_ERROR_RATE;
+      case 26: return rflBudgetTerm.LINK_MARGIN;
+      case 27: return rflBudgetTerm.CHANNEL_CAPACITY;
+      case 28: return rflBudgetTerm.INTERFERENCE_POWER;
+      case 29: return rflBudgetTerm.CARRIER_TO_NOISE_PLUS_INTERFERENCE;
+      case 30: return rflBudgetTerm.SIGNAL_TO_INTERFERENCE_PLUS_NOISE;
+      case 31: return rflBudgetTerm.SYMBOL_ENERGY_TO_NOISE_DENSITY;
+      case 32: return rflBudgetTerm.BLOCK_ERROR_RATE;
+      case 33: return rflBudgetTerm.SPECTRAL_EFFICIENCY;
+      case 34: return rflBudgetTerm.ACHIEVED_DATA_RATE;
+      case 35: return rflBudgetTerm.ACM_MARGIN;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timEpochRepresentation? _createOrNull(int? value) =>
-      value == null ? null : timEpochRepresentation.fromValue(value);
+  static rflBudgetTerm? _createOrNull(int? value) =>
+      value == null ? null : rflBudgetTerm.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
-  static const fb.Reader<timEpochRepresentation> reader = _timEpochRepresentationReader();
+  static const int maxValue = 35;
+  static const fb.Reader<rflBudgetTerm> reader = _rflBudgetTermReader();
 }
 
-class _timEpochRepresentationReader extends fb.Reader<timEpochRepresentation> {
-  const _timEpochRepresentationReader();
+class _rflBudgetTermReader extends fb.Reader<rflBudgetTerm> {
+  const _rflBudgetTermReader();
 
   @override
   int get size => 1;
 
   @override
-  timEpochRepresentation read(fb.BufferContext bc, int offset) =>
-      timEpochRepresentation.fromValue(const fb.Int8Reader().read(bc, offset));
+  rflBudgetTerm read(fb.BufferContext bc, int offset) =>
+      rflBudgetTerm.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timCcsdsTimeCodeKind {
-  NONE(0),
-  UNSEGMENTED(1),
-  DAY_SEGMENTED(2),
-  CALENDAR_SEGMENTED(3);
+///  The single condition that bound the link at a sample epoch — the answer to
+///  "why is this link not better than it is". Shared by `$ACI` intervals and
+///  `$CVP` contours so one vocabulary explains a sample, a pass and a footprint.
+///
+///  ORDINALS ARE WIRE VALUES. New constraints are APPENDED ONLY.
+enum rflConstraint {
+  UNSPECIFIED(0),
+  ELEVATION_MASK(1),
+  TERRAIN_BLOCKAGE(2),
+  OBSTACLE_BLOCKAGE(3),
+  MATERIAL_PENETRATION(4),
+  RANGE_LIMIT(5),
+  BEAM_EDGE(6),
+  SLEW_RATE(7),
+  ANTENNA_KEYHOLE(8),
+  TRANSMIT_POWER_LIMIT(9),
+  REGULATORY_POWER_LIMIT(10),
+  GASEOUS_ABSORPTION(11),
+  RAIN_ATTENUATION(12),
+  CLOUD_FOG_ATTENUATION(13),
+  SCINTILLATION(14),
+  POLARIZATION_MISMATCH(15),
+  POINTING_ERROR(16),
+  RECEIVER_SENSITIVITY(17),
+  NOISE_TEMPERATURE(18),
+  INTERFERENCE(19),
+  SUN_OUTAGE(20),
+  BANDWIDTH_LIMIT(21),
+  MODULATION_THRESHOLD(22),
+  CODING_THRESHOLD(23),
+  SCHEDULE_CONFLICT(24),
+  CHANNEL_CAPACITY_LIMIT(25),
+  EMITTER_UNAVAILABLE(26),
+  OTHER(27);
 
   final int value;
-  const timCcsdsTimeCodeKind(this.value);
+  const rflConstraint(this.value);
 
-  factory timCcsdsTimeCodeKind.fromValue(int value) {
+  factory rflConstraint.fromValue(int value) {
     switch (value) {
-      case 0: return timCcsdsTimeCodeKind.NONE;
-      case 1: return timCcsdsTimeCodeKind.UNSEGMENTED;
-      case 2: return timCcsdsTimeCodeKind.DAY_SEGMENTED;
-      case 3: return timCcsdsTimeCodeKind.CALENDAR_SEGMENTED;
+      case 0: return rflConstraint.UNSPECIFIED;
+      case 1: return rflConstraint.ELEVATION_MASK;
+      case 2: return rflConstraint.TERRAIN_BLOCKAGE;
+      case 3: return rflConstraint.OBSTACLE_BLOCKAGE;
+      case 4: return rflConstraint.MATERIAL_PENETRATION;
+      case 5: return rflConstraint.RANGE_LIMIT;
+      case 6: return rflConstraint.BEAM_EDGE;
+      case 7: return rflConstraint.SLEW_RATE;
+      case 8: return rflConstraint.ANTENNA_KEYHOLE;
+      case 9: return rflConstraint.TRANSMIT_POWER_LIMIT;
+      case 10: return rflConstraint.REGULATORY_POWER_LIMIT;
+      case 11: return rflConstraint.GASEOUS_ABSORPTION;
+      case 12: return rflConstraint.RAIN_ATTENUATION;
+      case 13: return rflConstraint.CLOUD_FOG_ATTENUATION;
+      case 14: return rflConstraint.SCINTILLATION;
+      case 15: return rflConstraint.POLARIZATION_MISMATCH;
+      case 16: return rflConstraint.POINTING_ERROR;
+      case 17: return rflConstraint.RECEIVER_SENSITIVITY;
+      case 18: return rflConstraint.NOISE_TEMPERATURE;
+      case 19: return rflConstraint.INTERFERENCE;
+      case 20: return rflConstraint.SUN_OUTAGE;
+      case 21: return rflConstraint.BANDWIDTH_LIMIT;
+      case 22: return rflConstraint.MODULATION_THRESHOLD;
+      case 23: return rflConstraint.CODING_THRESHOLD;
+      case 24: return rflConstraint.SCHEDULE_CONFLICT;
+      case 25: return rflConstraint.CHANNEL_CAPACITY_LIMIT;
+      case 26: return rflConstraint.EMITTER_UNAVAILABLE;
+      case 27: return rflConstraint.OTHER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timCcsdsTimeCodeKind? _createOrNull(int? value) =>
-      value == null ? null : timCcsdsTimeCodeKind.fromValue(value);
+  static rflConstraint? _createOrNull(int? value) =>
+      value == null ? null : rflConstraint.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 27;
+  static const fb.Reader<rflConstraint> reader = _rflConstraintReader();
+}
+
+class _rflConstraintReader extends fb.Reader<rflConstraint> {
+  const _rflConstraintReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  rflConstraint read(fb.BufferContext bc, int offset) =>
+      rflConstraint.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  How a stated threshold is compared against the metric it is stated for.
+///
+///  `UNSPECIFIED` holds ordinal 0: a threshold whose sense is unstated is
+///  unusable, and MUST NOT be silently read as "greater than or equal".
+enum rflComparison {
+  UNSPECIFIED(0),
+  GREATER_THAN_OR_EQUAL(1),
+  GREATER_THAN(2),
+  LESS_THAN_OR_EQUAL(3),
+  LESS_THAN(4);
+
+  final int value;
+  const rflComparison(this.value);
+
+  factory rflComparison.fromValue(int value) {
+    switch (value) {
+      case 0: return rflComparison.UNSPECIFIED;
+      case 1: return rflComparison.GREATER_THAN_OR_EQUAL;
+      case 2: return rflComparison.GREATER_THAN;
+      case 3: return rflComparison.LESS_THAN_OR_EQUAL;
+      case 4: return rflComparison.LESS_THAN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static rflComparison? _createOrNull(int? value) =>
+      value == null ? null : rflComparison.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<rflComparison> reader = _rflComparisonReader();
+}
+
+class _rflComparisonReader extends fb.Reader<rflComparison> {
+  const _rflComparisonReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  rflComparison read(fb.BufferContext bc, int offset) =>
+      rflComparison.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  What kind of thing an endpoint is, which selects the standard it joins to.
+enum rflEndpointKind {
+  UNSPECIFIED(0),
+  SPACECRAFT(1),
+  GEODETIC_TRACKING_STATION(2),
+  SATELLITE_GROUND_STATION(3),
+  TERRESTRIAL_SITE(4),
+  USER_TERMINAL(5),
+  AIRBORNE(6),
+  MARITIME(7),
+  RELAY_PAYLOAD(8);
+
+  final int value;
+  const rflEndpointKind(this.value);
+
+  factory rflEndpointKind.fromValue(int value) {
+    switch (value) {
+      case 0: return rflEndpointKind.UNSPECIFIED;
+      case 1: return rflEndpointKind.SPACECRAFT;
+      case 2: return rflEndpointKind.GEODETIC_TRACKING_STATION;
+      case 3: return rflEndpointKind.SATELLITE_GROUND_STATION;
+      case 4: return rflEndpointKind.TERRESTRIAL_SITE;
+      case 5: return rflEndpointKind.USER_TERMINAL;
+      case 6: return rflEndpointKind.AIRBORNE;
+      case 7: return rflEndpointKind.MARITIME;
+      case 8: return rflEndpointKind.RELAY_PAYLOAD;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static rflEndpointKind? _createOrNull(int? value) =>
+      value == null ? null : rflEndpointKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 8;
+  static const fb.Reader<rflEndpointKind> reader = _rflEndpointKindReader();
+}
+
+class _rflEndpointKindReader extends fb.Reader<rflEndpointKind> {
+  const _rflEndpointKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  rflEndpointKind read(fb.BufferContext bc, int offset) =>
+      rflEndpointKind.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Direction of a link relative to its endpoints.
+///
+///  This enum deliberately mirrors `$LKS.linkCategory` member-for-member with
+///  an added `UNSPECIFIED` at ordinal 0. `linkCategory` places `UPLINK` at
+///  ordinal 0, so an unset field there silently decodes as a real direction;
+///  a durable analytical record may not carry that hazard.
+enum rflLinkKind {
+  UNSPECIFIED(0),
+  UPLINK(1),
+  DOWNLINK(2),
+  CROSSLINK(3),
+  INTER_SATELLITE(4),
+  GROUND_TO_GROUND(5),
+  RELAY(6),
+  USER_BEAM(7),
+  FEEDER(8);
+
+  final int value;
+  const rflLinkKind(this.value);
+
+  factory rflLinkKind.fromValue(int value) {
+    switch (value) {
+      case 0: return rflLinkKind.UNSPECIFIED;
+      case 1: return rflLinkKind.UPLINK;
+      case 2: return rflLinkKind.DOWNLINK;
+      case 3: return rflLinkKind.CROSSLINK;
+      case 4: return rflLinkKind.INTER_SATELLITE;
+      case 5: return rflLinkKind.GROUND_TO_GROUND;
+      case 6: return rflLinkKind.RELAY;
+      case 7: return rflLinkKind.USER_BEAM;
+      case 8: return rflLinkKind.FEEDER;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static rflLinkKind? _createOrNull(int? value) =>
+      value == null ? null : rflLinkKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 8;
+  static const fb.Reader<rflLinkKind> reader = _rflLinkKindReader();
+}
+
+class _rflLinkKindReader extends fb.Reader<rflLinkKind> {
+  const _rflLinkKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  rflLinkKind read(fb.BufferContext bc, int offset) =>
+      rflLinkKind.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  How the values in this record came to exist.
+///
+///  `MODELED` exists so a modelled number can be REFUSED where a measurement
+///  is required.
+enum rflMethod {
+  UNSPECIFIED(0),
+  MEASURED(1),
+  MODELED(2),
+  HYBRID(3);
+
+  final int value;
+  const rflMethod(this.value);
+
+  factory rflMethod.fromValue(int value) {
+    switch (value) {
+      case 0: return rflMethod.UNSPECIFIED;
+      case 1: return rflMethod.MEASURED;
+      case 2: return rflMethod.MODELED;
+      case 3: return rflMethod.HYBRID;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static rflMethod? _createOrNull(int? value) =>
+      value == null ? null : rflMethod.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<timCcsdsTimeCodeKind> reader = _timCcsdsTimeCodeKindReader();
+  static const fb.Reader<rflMethod> reader = _rflMethodReader();
 }
 
-class _timCcsdsTimeCodeKindReader extends fb.Reader<timCcsdsTimeCodeKind> {
-  const _timCcsdsTimeCodeKindReader();
+class _rflMethodReader extends fb.Reader<rflMethod> {
+  const _rflMethodReader();
 
   @override
   int get size => 1;
 
   @override
-  timCcsdsTimeCodeKind read(fb.BufferContext bc, int offset) =>
-      timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().read(bc, offset));
+  rflMethod read(fb.BufferContext bc, int offset) =>
+      rflMethod.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timConversionStatus {
-  OK(0),
-  INVALID_INPUT(1),
-  UNSUPPORTED_TIME_SYSTEM(2),
-  LEAP_SECOND_DATA_REQUIRED(3),
-  EOP_DATA_REQUIRED(4),
-  OUT_OF_RANGE(5);
+///  How the path interacted with an obstacle. A solver that only ever reports
+///  blockage cannot express a reflected multipath component or a wall the
+///  signal went through, so the interaction is named per contribution.
+enum rflObstacleInteraction {
+  UNSPECIFIED(0),
+  LINE_OF_SIGHT_BLOCKAGE(1),
+  TRANSMISSION(2),
+  REFLECTION(3),
+  DIFFRACTION(4),
+  SCATTERING(5),
+  FRESNEL_INTRUSION(6);
 
   final int value;
-  const timConversionStatus(this.value);
+  const rflObstacleInteraction(this.value);
 
-  factory timConversionStatus.fromValue(int value) {
+  factory rflObstacleInteraction.fromValue(int value) {
     switch (value) {
-      case 0: return timConversionStatus.OK;
-      case 1: return timConversionStatus.INVALID_INPUT;
-      case 2: return timConversionStatus.UNSUPPORTED_TIME_SYSTEM;
-      case 3: return timConversionStatus.LEAP_SECOND_DATA_REQUIRED;
-      case 4: return timConversionStatus.EOP_DATA_REQUIRED;
-      case 5: return timConversionStatus.OUT_OF_RANGE;
+      case 0: return rflObstacleInteraction.UNSPECIFIED;
+      case 1: return rflObstacleInteraction.LINE_OF_SIGHT_BLOCKAGE;
+      case 2: return rflObstacleInteraction.TRANSMISSION;
+      case 3: return rflObstacleInteraction.REFLECTION;
+      case 4: return rflObstacleInteraction.DIFFRACTION;
+      case 5: return rflObstacleInteraction.SCATTERING;
+      case 6: return rflObstacleInteraction.FRESNEL_INTRUSION;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timConversionStatus? _createOrNull(int? value) =>
-      value == null ? null : timConversionStatus.fromValue(value);
+  static rflObstacleInteraction? _createOrNull(int? value) =>
+      value == null ? null : rflObstacleInteraction.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<timConversionStatus> reader = _timConversionStatusReader();
+  static const int maxValue = 6;
+  static const fb.Reader<rflObstacleInteraction> reader = _rflObstacleInteractionReader();
 }
 
-class _timConversionStatusReader extends fb.Reader<timConversionStatus> {
-  const _timConversionStatusReader();
+class _rflObstacleInteractionReader extends fb.Reader<rflObstacleInteraction> {
+  const _rflObstacleInteractionReader();
 
   @override
   int get size => 1;
 
   @override
-  timConversionStatus read(fb.BufferContext bc, int offset) =>
-      timConversionStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+  rflObstacleInteraction read(fb.BufferContext bc, int offset) =>
+      rflObstacleInteraction.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  CCSDS time-code payload and preamble metadata.
-class TIMCcsdsTimeCode {
-  TIMCcsdsTimeCode._(this._bc, this._bcOffset);
-  factory TIMCcsdsTimeCode(List<int> bytes) {
+///  One obstacle interaction on one sample's path. SPARSE: entries exist only
+///  where an interaction was computed, so a clear path is never encoded as a
+///  row of zeroes.
+///
+///  This is the join that makes an arbitrary 3D object a first-class part of
+///  the link budget: MATERIAL_ID names the `$RFS` record whose permittivity,
+///  conductivity, penetration loss and roughness produced LOSS_DB, and
+///  GEOMETRY_REF_ID names the exact mesh, face set, panel or analytic shape
+///  inside it that was hit.
+class RFLObstruction {
+  RFLObstruction._(this._bc, this._bcOffset);
+  factory RFLObstruction(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMCcsdsTimeCode> reader = _TIMCcsdsTimeCodeReader();
+  static const fb.Reader<RFLObstruction> reader = _RFLObstructionReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  CCSDS time-code family.
-  timCcsdsTimeCodeKind get CODE_KIND => timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timCcsdsTimeCodeKind get codeKind => CODE_KIND;
-  ///  First CCSDS preamble field octet.
-  int get PREAMBLE_FIELD1 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get preambleField1 => PREAMBLE_FIELD1;
-  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
-  int get PREAMBLE_FIELD2 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get preambleField2 => PREAMBLE_FIELD2;
-  ///  Raw CCSDS time field octets.
-  List<int>? get TIME_FIELD => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
-  List<int>? get timeField => TIME_FIELD;
-  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
-  String? get AGENCY_DEFINED_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get agencyDefinedEpochIso8601 => AGENCY_DEFINED_EPOCH_ISO8601;
-  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
-  String? get CCSDS_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get ccsdsEpochIso8601 => CCSDS_EPOCH_ISO8601;
+  ///  Index into the sample arrays this interaction applies to.
+  int get SAMPLE_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get sampleIndex => SAMPLE_INDEX;
+  ///  Producer's identifier for the obstacle instance.
+  String? get OBSTACLE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get obstacleId => OBSTACLE_ID;
+  ///  `$RFS.MATERIAL_ID` of the surface that was hit. An obstruction loss with
+  ///  no material is an unattributed number: a metal panel and a plasterboard
+  ///  wall of the same size do entirely different things to a link.
+  String? get MATERIAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get materialId => MATERIAL_ID;
+  ///  `$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry hit.
+  String? get GEOMETRY_REF_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get geometryRefId => GEOMETRY_REF_ID;
+  ///  `$VAM` asset identity of the obstacle mesh, when the obstacle is a
+  ///  reviewed 3D asset.
+  String? get VAM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get vamId => VAM_ID;
+  String? get VARIANT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get variantId => VARIANT_ID;
+  ///  `$CAT.NORAD_CAT_ID` when the obstacle is a catalogued object (an
+  ///  occulting spacecraft, a structure on another vehicle). 0 when unbound.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  rflObstacleInteraction get INTERACTION => rflObstacleInteraction.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  ///  Angle between the incident ray and the surface normal, degrees [0-90).
+  double get INCIDENCE_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get incidenceAngleDeg => INCIDENCE_ANGLE_DEG;
+  ///  Path length travelled INSIDE the material, metres. With
+  ///  `$RFS.ATTENUATION_DB_PER_M` this is what makes penetration loss
+  ///  reproducible instead of a stated constant.
+  double get PATH_LENGTH_IN_MATERIAL_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get pathLengthInMaterialM => PATH_LENGTH_IN_MATERIAL_M;
+  ///  Loss this interaction contributed, dB (positive).
+  double get LOSS_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get lossDb => LOSS_DB;
+  ///  Extra propagation delay of a reflected or scattered component, seconds.
+  double get EXCESS_DELAY_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get excessDelayS => EXCESS_DELAY_S;
+  ///  Fraction of the first Fresnel zone still clear [0-1]. 1 means the zone is
+  ///  untouched.
+  double get FRESNEL_CLEARANCE_FRACTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get fresnelClearanceFraction => FRESNEL_CLEARANCE_FRACTION;
+  ///  Distance from the transmitter to the interaction point, metres.
+  double get DISTANCE_FROM_TRANSMITTER_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get distanceFromTransmitterM => DISTANCE_FROM_TRANSMITTER_M;
 
   @override
   String toString() {
-    return 'TIMCcsdsTimeCode{codeKind: ${codeKind}, preambleField1: ${preambleField1}, preambleField2: ${preambleField2}, timeField: ${timeField}, agencyDefinedEpochIso8601: ${agencyDefinedEpochIso8601}, ccsdsEpochIso8601: ${ccsdsEpochIso8601}}';
+    return 'RFLObstruction{sampleIndex: ${sampleIndex}, obstacleId: ${obstacleId}, materialId: ${materialId}, geometryRefId: ${geometryRefId}, vamId: ${vamId}, variantId: ${variantId}, noradCatId: ${noradCatId}, INTERACTION: ${INTERACTION}, incidenceAngleDeg: ${incidenceAngleDeg}, pathLengthInMaterialM: ${pathLengthInMaterialM}, lossDb: ${lossDb}, excessDelayS: ${excessDelayS}, fresnelClearanceFraction: ${fresnelClearanceFraction}, distanceFromTransmitterM: ${distanceFromTransmitterM}}';
   }
 }
 
-class _TIMCcsdsTimeCodeReader extends fb.TableReader<TIMCcsdsTimeCode> {
-  const _TIMCcsdsTimeCodeReader();
+class _RFLObstructionReader extends fb.TableReader<RFLObstruction> {
+  const _RFLObstructionReader();
 
   @override
-  TIMCcsdsTimeCode createObject(fb.BufferContext bc, int offset) =>
-    TIMCcsdsTimeCode._(bc, offset);
+  RFLObstruction createObject(fb.BufferContext bc, int offset) =>
+    RFLObstruction._(bc, offset);
 }
 
-class TIMCcsdsTimeCodeBuilder {
-  TIMCcsdsTimeCodeBuilder(this.fbBuilder);
+class RFLObstructionBuilder {
+  RFLObstructionBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(14);
   }
 
-  int addCodeKind(timCcsdsTimeCodeKind? CODE_KIND) {
-    fbBuilder.addInt8(0, CODE_KIND?.value);
+  int addSampleIndex(int? SAMPLE_INDEX) {
+    fbBuilder.addUint32(0, SAMPLE_INDEX);
     return fbBuilder.offset;
   }
-  int addPreambleField1(int? PREAMBLE_FIELD1) {
-    fbBuilder.addUint8(1, PREAMBLE_FIELD1);
-    return fbBuilder.offset;
-  }
-  int addPreambleField2(int? PREAMBLE_FIELD2) {
-    fbBuilder.addUint8(2, PREAMBLE_FIELD2);
-    return fbBuilder.offset;
-  }
-  int addTimeFieldOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addAgencyDefinedEpochIso8601Offset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addCcsdsEpochIso8601Offset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMCcsdsTimeCodeObjectBuilder extends fb.ObjectBuilder {
-  final timCcsdsTimeCodeKind? _CODE_KIND;
-  final int? _PREAMBLE_FIELD1;
-  final int? _PREAMBLE_FIELD2;
-  final List<int>? _TIME_FIELD;
-  final String? _AGENCY_DEFINED_EPOCH_ISO8601;
-  final String? _CCSDS_EPOCH_ISO8601;
-
-  TIMCcsdsTimeCodeObjectBuilder({
-    timCcsdsTimeCodeKind? CODE_KIND,
-    timCcsdsTimeCodeKind? codeKind,
-    int? PREAMBLE_FIELD1,
-    int? preambleField1,
-    int? PREAMBLE_FIELD2,
-    int? preambleField2,
-    List<int>? TIME_FIELD,
-    List<int>? timeField,
-    String? AGENCY_DEFINED_EPOCH_ISO8601,
-    String? agencyDefinedEpochIso8601,
-    String? CCSDS_EPOCH_ISO8601,
-    String? ccsdsEpochIso8601,
-  })
-      : _CODE_KIND = codeKind ?? CODE_KIND,
-        _PREAMBLE_FIELD1 = preambleField1 ?? PREAMBLE_FIELD1,
-        _PREAMBLE_FIELD2 = preambleField2 ?? PREAMBLE_FIELD2,
-        _TIME_FIELD = timeField ?? TIME_FIELD,
-        _AGENCY_DEFINED_EPOCH_ISO8601 = agencyDefinedEpochIso8601 ?? AGENCY_DEFINED_EPOCH_ISO8601,
-        _CCSDS_EPOCH_ISO8601 = ccsdsEpochIso8601 ?? CCSDS_EPOCH_ISO8601;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? TIME_FIELDOffset = _TIME_FIELD == null ? null
-        : fbBuilder.writeListUint8(_TIME_FIELD!);
-    final int? AGENCY_DEFINED_EPOCH_ISO8601Offset = _AGENCY_DEFINED_EPOCH_ISO8601 == null ? null
-        : fbBuilder.writeString(_AGENCY_DEFINED_EPOCH_ISO8601!);
-    final int? CCSDS_EPOCH_ISO8601Offset = _CCSDS_EPOCH_ISO8601 == null ? null
-        : fbBuilder.writeString(_CCSDS_EPOCH_ISO8601!);
-    fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _CODE_KIND?.value);
-    fbBuilder.addUint8(1, _PREAMBLE_FIELD1);
-    fbBuilder.addUint8(2, _PREAMBLE_FIELD2);
-    fbBuilder.addOffset(3, TIME_FIELDOffset);
-    fbBuilder.addOffset(4, AGENCY_DEFINED_EPOCH_ISO8601Offset);
-    fbBuilder.addOffset(5, CCSDS_EPOCH_ISO8601Offset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Numeric or textual instant tagged with its time system and representation.
-class TIMInstant {
-  TIMInstant._(this._bc, this._bcOffset);
-  factory TIMInstant(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIMInstant> reader = _TIMInstantReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Time system for this instant.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timingStandard get timeSystem => TIME_SYSTEM;
-  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
-  timEpochRepresentation get EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  timEpochRepresentation get epochFormat => EPOCH_FORMAT;
-  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
-  double get JULIAN_DATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get julianDate => JULIAN_DATE;
-  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
-  double get SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
-  String? get ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Additional nanoseconds beyond the fractional scalar/text value.
-  int get SUBSECOND_NANOS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get subsecondNanos => SUBSECOND_NANOS;
-  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
-  String? get EPOCH_LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get epochLabel => EPOCH_LABEL;
-  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
-  int get GNSS_WEEK => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get gnssWeek => GNSS_WEEK;
-  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
-  bool get HAS_GNSS_ROLLOVER_REFERENCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
-  bool get hasGnssRolloverReference => HAS_GNSS_ROLLOVER_REFERENCE;
-  ///  Optional Orekit-style GNSS week rollover reference timestamp.
-  String? get GNSS_ROLLOVER_REFERENCE_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get gnssRolloverReferenceIso8601 => GNSS_ROLLOVER_REFERENCE_ISO8601;
-  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
-  TIMCcsdsTimeCode? get CCSDS_TIME_CODE => TIMCcsdsTimeCode.reader.vTableGetNullable(_bc, _bcOffset, 24);
-  TIMCcsdsTimeCode? get ccsdsTimeCode => CCSDS_TIME_CODE;
-
-  @override
-  String toString() {
-    return 'TIMInstant{timeSystem: ${timeSystem}, epochFormat: ${epochFormat}, julianDate: ${julianDate}, SECONDS: ${SECONDS}, ISO8601: ${ISO8601}, subsecondNanos: ${subsecondNanos}, epochLabel: ${epochLabel}, gnssWeek: ${gnssWeek}, hasGnssRolloverReference: ${hasGnssRolloverReference}, gnssRolloverReferenceIso8601: ${gnssRolloverReferenceIso8601}, ccsdsTimeCode: ${ccsdsTimeCode}}';
-  }
-}
-
-class _TIMInstantReader extends fb.TableReader<TIMInstant> {
-  const _TIMInstantReader();
-
-  @override
-  TIMInstant createObject(fb.BufferContext bc, int offset) =>
-    TIMInstant._(bc, offset);
-}
-
-class TIMInstantBuilder {
-  TIMInstantBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(11);
-  }
-
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addEpochFormat(timEpochRepresentation? EPOCH_FORMAT) {
-    fbBuilder.addInt8(1, EPOCH_FORMAT?.value);
-    return fbBuilder.offset;
-  }
-  int addJulianDate(double? JULIAN_DATE) {
-    fbBuilder.addFloat64(2, JULIAN_DATE);
-    return fbBuilder.offset;
-  }
-  int addSeconds(double? SECONDS) {
-    fbBuilder.addFloat64(3, SECONDS);
-    return fbBuilder.offset;
-  }
-  int addIso8601Offset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addSubsecondNanos(int? SUBSECOND_NANOS) {
-    fbBuilder.addInt32(5, SUBSECOND_NANOS);
-    return fbBuilder.offset;
-  }
-  int addEpochLabelOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addGnssWeek(int? GNSS_WEEK) {
-    fbBuilder.addInt32(7, GNSS_WEEK);
-    return fbBuilder.offset;
-  }
-  int addHasGnssRolloverReference(bool? HAS_GNSS_ROLLOVER_REFERENCE) {
-    fbBuilder.addBool(8, HAS_GNSS_ROLLOVER_REFERENCE);
-    return fbBuilder.offset;
-  }
-  int addGnssRolloverReferenceIso8601Offset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addCcsdsTimeCodeOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMInstantObjectBuilder extends fb.ObjectBuilder {
-  final timingStandard? _TIME_SYSTEM;
-  final timEpochRepresentation? _EPOCH_FORMAT;
-  final double? _JULIAN_DATE;
-  final double? _SECONDS;
-  final String? _ISO8601;
-  final int? _SUBSECOND_NANOS;
-  final String? _EPOCH_LABEL;
-  final int? _GNSS_WEEK;
-  final bool? _HAS_GNSS_ROLLOVER_REFERENCE;
-  final String? _GNSS_ROLLOVER_REFERENCE_ISO8601;
-  final TIMCcsdsTimeCodeObjectBuilder? _CCSDS_TIME_CODE;
-
-  TIMInstantObjectBuilder({
-    timingStandard? TIME_SYSTEM,
-    timingStandard? timeSystem,
-    timEpochRepresentation? EPOCH_FORMAT,
-    timEpochRepresentation? epochFormat,
-    double? JULIAN_DATE,
-    double? julianDate,
-    double? SECONDS,
-    String? ISO8601,
-    int? SUBSECOND_NANOS,
-    int? subsecondNanos,
-    String? EPOCH_LABEL,
-    String? epochLabel,
-    int? GNSS_WEEK,
-    int? gnssWeek,
-    bool? HAS_GNSS_ROLLOVER_REFERENCE,
-    bool? hasGnssRolloverReference,
-    String? GNSS_ROLLOVER_REFERENCE_ISO8601,
-    String? gnssRolloverReferenceIso8601,
-    TIMCcsdsTimeCodeObjectBuilder? CCSDS_TIME_CODE,
-    TIMCcsdsTimeCodeObjectBuilder? ccsdsTimeCode,
-  })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
-        _EPOCH_FORMAT = epochFormat ?? EPOCH_FORMAT,
-        _JULIAN_DATE = julianDate ?? JULIAN_DATE,
-        _SECONDS = SECONDS,
-        _ISO8601 = ISO8601,
-        _SUBSECOND_NANOS = subsecondNanos ?? SUBSECOND_NANOS,
-        _EPOCH_LABEL = epochLabel ?? EPOCH_LABEL,
-        _GNSS_WEEK = gnssWeek ?? GNSS_WEEK,
-        _HAS_GNSS_ROLLOVER_REFERENCE = hasGnssRolloverReference ?? HAS_GNSS_ROLLOVER_REFERENCE,
-        _GNSS_ROLLOVER_REFERENCE_ISO8601 = gnssRolloverReferenceIso8601 ?? GNSS_ROLLOVER_REFERENCE_ISO8601,
-        _CCSDS_TIME_CODE = ccsdsTimeCode ?? CCSDS_TIME_CODE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ISO8601Offset = _ISO8601 == null ? null
-        : fbBuilder.writeString(_ISO8601!);
-    final int? EPOCH_LABELOffset = _EPOCH_LABEL == null ? null
-        : fbBuilder.writeString(_EPOCH_LABEL!);
-    final int? GNSS_ROLLOVER_REFERENCE_ISO8601Offset = _GNSS_ROLLOVER_REFERENCE_ISO8601 == null ? null
-        : fbBuilder.writeString(_GNSS_ROLLOVER_REFERENCE_ISO8601!);
-    final int? CCSDS_TIME_CODEOffset = _CCSDS_TIME_CODE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(11);
-    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
-    fbBuilder.addInt8(1, _EPOCH_FORMAT?.value);
-    fbBuilder.addFloat64(2, _JULIAN_DATE);
-    fbBuilder.addFloat64(3, _SECONDS);
-    fbBuilder.addOffset(4, ISO8601Offset);
-    fbBuilder.addInt32(5, _SUBSECOND_NANOS);
-    fbBuilder.addOffset(6, EPOCH_LABELOffset);
-    fbBuilder.addInt32(7, _GNSS_WEEK);
-    fbBuilder.addBool(8, _HAS_GNSS_ROLLOVER_REFERENCE);
-    fbBuilder.addOffset(9, GNSS_ROLLOVER_REFERENCE_ISO8601Offset);
-    fbBuilder.addOffset(10, CCSDS_TIME_CODEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Request to convert one instant into another time system/representation.
-class TIMConversionRequest {
-  TIMConversionRequest._(this._bc, this._bcOffset);
-  factory TIMConversionRequest(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIMConversionRequest> reader = _TIMConversionRequestReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Source instant to convert.
-  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Target time system.
-  timingStandard get TARGET_TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  timingStandard get targetTimeSystem => TARGET_TIME_SYSTEM;
-  ///  Preferred target representation.
-  timEpochRepresentation get TARGET_EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  timEpochRepresentation get targetEpochFormat => TARGET_EPOCH_FORMAT;
-  ///  Optional TAI-UTC override in seconds for the source instant.
-  double get TAI_MINUS_UTC_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get taiMinusUtcSeconds => TAI_MINUS_UTC_SECONDS;
-  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
-  bool get HAS_TAI_MINUS_UTC => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
-  bool get hasTaiMinusUtc => HAS_TAI_MINUS_UTC;
-  ///  Optional UT1-UTC override in seconds for UT1 conversions.
-  double get DUT1_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get dut1Seconds => DUT1_SECONDS;
-  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
-  bool get HAS_DUT1 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  bool get hasDut1 => HAS_DUT1;
-  ///  Optional caller trace/correlation identifier.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get traceId => TRACE_ID;
-
-  @override
-  String toString() {
-    return 'TIMConversionRequest{SOURCE: ${SOURCE}, targetTimeSystem: ${targetTimeSystem}, targetEpochFormat: ${targetEpochFormat}, taiMinusUtcSeconds: ${taiMinusUtcSeconds}, hasTaiMinusUtc: ${hasTaiMinusUtc}, dut1Seconds: ${dut1Seconds}, hasDut1: ${hasDut1}, traceId: ${traceId}}';
-  }
-}
-
-class _TIMConversionRequestReader extends fb.TableReader<TIMConversionRequest> {
-  const _TIMConversionRequestReader();
-
-  @override
-  TIMConversionRequest createObject(fb.BufferContext bc, int offset) =>
-    TIMConversionRequest._(bc, offset);
-}
-
-class TIMConversionRequestBuilder {
-  TIMConversionRequestBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addSourceOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addTargetTimeSystem(timingStandard? TARGET_TIME_SYSTEM) {
-    fbBuilder.addInt8(1, TARGET_TIME_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addTargetEpochFormat(timEpochRepresentation? TARGET_EPOCH_FORMAT) {
-    fbBuilder.addInt8(2, TARGET_EPOCH_FORMAT?.value);
-    return fbBuilder.offset;
-  }
-  int addTaiMinusUtcSeconds(double? TAI_MINUS_UTC_SECONDS) {
-    fbBuilder.addFloat64(3, TAI_MINUS_UTC_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addHasTaiMinusUtc(bool? HAS_TAI_MINUS_UTC) {
-    fbBuilder.addBool(4, HAS_TAI_MINUS_UTC);
-    return fbBuilder.offset;
-  }
-  int addDut1Seconds(double? DUT1_SECONDS) {
-    fbBuilder.addFloat64(5, DUT1_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addHasDut1(bool? HAS_DUT1) {
-    fbBuilder.addBool(6, HAS_DUT1);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMConversionRequestObjectBuilder extends fb.ObjectBuilder {
-  final TIMInstantObjectBuilder? _SOURCE;
-  final timingStandard? _TARGET_TIME_SYSTEM;
-  final timEpochRepresentation? _TARGET_EPOCH_FORMAT;
-  final double? _TAI_MINUS_UTC_SECONDS;
-  final bool? _HAS_TAI_MINUS_UTC;
-  final double? _DUT1_SECONDS;
-  final bool? _HAS_DUT1;
-  final String? _TRACE_ID;
-
-  TIMConversionRequestObjectBuilder({
-    TIMInstantObjectBuilder? SOURCE,
-    timingStandard? TARGET_TIME_SYSTEM,
-    timingStandard? targetTimeSystem,
-    timEpochRepresentation? TARGET_EPOCH_FORMAT,
-    timEpochRepresentation? targetEpochFormat,
-    double? TAI_MINUS_UTC_SECONDS,
-    double? taiMinusUtcSeconds,
-    bool? HAS_TAI_MINUS_UTC,
-    bool? hasTaiMinusUtc,
-    double? DUT1_SECONDS,
-    double? dut1Seconds,
-    bool? HAS_DUT1,
-    bool? hasDut1,
-    String? TRACE_ID,
-    String? traceId,
-  })
-      : _SOURCE = SOURCE,
-        _TARGET_TIME_SYSTEM = targetTimeSystem ?? TARGET_TIME_SYSTEM,
-        _TARGET_EPOCH_FORMAT = targetEpochFormat ?? TARGET_EPOCH_FORMAT,
-        _TAI_MINUS_UTC_SECONDS = taiMinusUtcSeconds ?? TAI_MINUS_UTC_SECONDS,
-        _HAS_TAI_MINUS_UTC = hasTaiMinusUtc ?? HAS_TAI_MINUS_UTC,
-        _DUT1_SECONDS = dut1Seconds ?? DUT1_SECONDS,
-        _HAS_DUT1 = hasDut1 ?? HAS_DUT1,
-        _TRACE_ID = traceId ?? TRACE_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, SOURCEOffset);
-    fbBuilder.addInt8(1, _TARGET_TIME_SYSTEM?.value);
-    fbBuilder.addInt8(2, _TARGET_EPOCH_FORMAT?.value);
-    fbBuilder.addFloat64(3, _TAI_MINUS_UTC_SECONDS);
-    fbBuilder.addBool(4, _HAS_TAI_MINUS_UTC);
-    fbBuilder.addFloat64(5, _DUT1_SECONDS);
-    fbBuilder.addBool(6, _HAS_DUT1);
-    fbBuilder.addOffset(7, TRACE_IDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Result of a time conversion request.
-class TIMConversionResult {
-  TIMConversionResult._(this._bc, this._bcOffset);
-  factory TIMConversionResult(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIMConversionResult> reader = _TIMConversionResultReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Original source instant.
-  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Converted target instant.
-  TIMInstant? get TARGET => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Target minus source offset in SI seconds for the requested conversion.
-  double get DELTA_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get deltaSeconds => DELTA_SECONDS;
-  ///  Conversion status.
-  timConversionStatus get STATUS => timConversionStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  ///  Optional error detail when STATUS is not OK.
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get errorMessage => ERROR_MESSAGE;
-  ///  Caller trace/correlation identifier copied from the request when present.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get traceId => TRACE_ID;
-
-  @override
-  String toString() {
-    return 'TIMConversionResult{SOURCE: ${SOURCE}, TARGET: ${TARGET}, deltaSeconds: ${deltaSeconds}, STATUS: ${STATUS}, errorMessage: ${errorMessage}, traceId: ${traceId}}';
-  }
-}
-
-class _TIMConversionResultReader extends fb.TableReader<TIMConversionResult> {
-  const _TIMConversionResultReader();
-
-  @override
-  TIMConversionResult createObject(fb.BufferContext bc, int offset) =>
-    TIMConversionResult._(bc, offset);
-}
-
-class TIMConversionResultBuilder {
-  TIMConversionResultBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addSourceOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addTargetOffset(int? offset) {
+  int addObstacleIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDeltaSeconds(double? DELTA_SECONDS) {
-    fbBuilder.addFloat64(2, DELTA_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addStatus(timConversionStatus? STATUS) {
-    fbBuilder.addInt8(3, STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addErrorMessageOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMConversionResultObjectBuilder extends fb.ObjectBuilder {
-  final TIMInstantObjectBuilder? _SOURCE;
-  final TIMInstantObjectBuilder? _TARGET;
-  final double? _DELTA_SECONDS;
-  final timConversionStatus? _STATUS;
-  final String? _ERROR_MESSAGE;
-  final String? _TRACE_ID;
-
-  TIMConversionResultObjectBuilder({
-    TIMInstantObjectBuilder? SOURCE,
-    TIMInstantObjectBuilder? TARGET,
-    double? DELTA_SECONDS,
-    double? deltaSeconds,
-    timConversionStatus? STATUS,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
-    String? TRACE_ID,
-    String? traceId,
-  })
-      : _SOURCE = SOURCE,
-        _TARGET = TARGET,
-        _DELTA_SECONDS = deltaSeconds ?? DELTA_SECONDS,
-        _STATUS = STATUS,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
-        _TRACE_ID = traceId ?? TRACE_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
-    final int? TARGETOffset = _TARGET?.getOrCreateOffset(fbBuilder);
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, SOURCEOffset);
-    fbBuilder.addOffset(1, TARGETOffset);
-    fbBuilder.addFloat64(2, _DELTA_SECONDS);
-    fbBuilder.addInt8(3, _STATUS?.value);
-    fbBuilder.addOffset(4, ERROR_MESSAGEOffset);
-    fbBuilder.addOffset(5, TRACE_IDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Time System and time-conversion envelope.
-class TIM {
-  TIM._(this._bc, this._bcOffset);
-  factory TIM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIM> reader = _TIMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Legacy time-system selector retained for existing TIM consumers.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timingStandard get timeSystem => TIME_SYSTEM;
-  ///  A single tagged instant.
-  TIMInstant? get INSTANT => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Time conversion request.
-  TIMConversionRequest? get CONVERSION_REQUEST => TIMConversionRequest.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  TIMConversionRequest? get conversionRequest => CONVERSION_REQUEST;
-  ///  Time conversion result.
-  TIMConversionResult? get CONVERSION_RESULT => TIMConversionResult.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  TIMConversionResult? get conversionResult => CONVERSION_RESULT;
-
-  @override
-  String toString() {
-    return 'TIM{timeSystem: ${timeSystem}, INSTANT: ${INSTANT}, conversionRequest: ${conversionRequest}, conversionResult: ${conversionResult}}';
-  }
-}
-
-class _TIMReader extends fb.TableReader<TIM> {
-  const _TIMReader();
-
-  @override
-  TIM createObject(fb.BufferContext bc, int offset) =>
-    TIM._(bc, offset);
-}
-
-class TIMBuilder {
-  TIMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addInstantOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addConversionRequestOffset(int? offset) {
+  int addMaterialIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addConversionResultOffset(int? offset) {
+  int addGeometryRefIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addVamIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addVariantIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(6, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addInteraction(rflObstacleInteraction? INTERACTION) {
+    fbBuilder.addInt8(7, INTERACTION?.value);
+    return fbBuilder.offset;
+  }
+  int addIncidenceAngleDeg(double? INCIDENCE_ANGLE_DEG) {
+    fbBuilder.addFloat64(8, INCIDENCE_ANGLE_DEG);
+    return fbBuilder.offset;
+  }
+  int addPathLengthInMaterialM(double? PATH_LENGTH_IN_MATERIAL_M) {
+    fbBuilder.addFloat64(9, PATH_LENGTH_IN_MATERIAL_M);
+    return fbBuilder.offset;
+  }
+  int addLossDb(double? LOSS_DB) {
+    fbBuilder.addFloat64(10, LOSS_DB);
+    return fbBuilder.offset;
+  }
+  int addExcessDelayS(double? EXCESS_DELAY_S) {
+    fbBuilder.addFloat64(11, EXCESS_DELAY_S);
+    return fbBuilder.offset;
+  }
+  int addFresnelClearanceFraction(double? FRESNEL_CLEARANCE_FRACTION) {
+    fbBuilder.addFloat64(12, FRESNEL_CLEARANCE_FRACTION);
+    return fbBuilder.offset;
+  }
+  int addDistanceFromTransmitterM(double? DISTANCE_FROM_TRANSMITTER_M) {
+    fbBuilder.addFloat64(13, DISTANCE_FROM_TRANSMITTER_M);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLObstructionObjectBuilder extends fb.ObjectBuilder {
+  final int? _SAMPLE_INDEX;
+  final String? _OBSTACLE_ID;
+  final String? _MATERIAL_ID;
+  final String? _GEOMETRY_REF_ID;
+  final String? _VAM_ID;
+  final String? _VARIANT_ID;
+  final int? _NORAD_CAT_ID;
+  final rflObstacleInteraction? _INTERACTION;
+  final double? _INCIDENCE_ANGLE_DEG;
+  final double? _PATH_LENGTH_IN_MATERIAL_M;
+  final double? _LOSS_DB;
+  final double? _EXCESS_DELAY_S;
+  final double? _FRESNEL_CLEARANCE_FRACTION;
+  final double? _DISTANCE_FROM_TRANSMITTER_M;
+
+  RFLObstructionObjectBuilder({
+    int? SAMPLE_INDEX,
+    int? sampleIndex,
+    String? OBSTACLE_ID,
+    String? obstacleId,
+    String? MATERIAL_ID,
+    String? materialId,
+    String? GEOMETRY_REF_ID,
+    String? geometryRefId,
+    String? VAM_ID,
+    String? vamId,
+    String? VARIANT_ID,
+    String? variantId,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    rflObstacleInteraction? INTERACTION,
+    double? INCIDENCE_ANGLE_DEG,
+    double? incidenceAngleDeg,
+    double? PATH_LENGTH_IN_MATERIAL_M,
+    double? pathLengthInMaterialM,
+    double? LOSS_DB,
+    double? lossDb,
+    double? EXCESS_DELAY_S,
+    double? excessDelayS,
+    double? FRESNEL_CLEARANCE_FRACTION,
+    double? fresnelClearanceFraction,
+    double? DISTANCE_FROM_TRANSMITTER_M,
+    double? distanceFromTransmitterM,
+  })
+      : _SAMPLE_INDEX = sampleIndex ?? SAMPLE_INDEX,
+        _OBSTACLE_ID = obstacleId ?? OBSTACLE_ID,
+        _MATERIAL_ID = materialId ?? MATERIAL_ID,
+        _GEOMETRY_REF_ID = geometryRefId ?? GEOMETRY_REF_ID,
+        _VAM_ID = vamId ?? VAM_ID,
+        _VARIANT_ID = variantId ?? VARIANT_ID,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _INTERACTION = INTERACTION,
+        _INCIDENCE_ANGLE_DEG = incidenceAngleDeg ?? INCIDENCE_ANGLE_DEG,
+        _PATH_LENGTH_IN_MATERIAL_M = pathLengthInMaterialM ?? PATH_LENGTH_IN_MATERIAL_M,
+        _LOSS_DB = lossDb ?? LOSS_DB,
+        _EXCESS_DELAY_S = excessDelayS ?? EXCESS_DELAY_S,
+        _FRESNEL_CLEARANCE_FRACTION = fresnelClearanceFraction ?? FRESNEL_CLEARANCE_FRACTION,
+        _DISTANCE_FROM_TRANSMITTER_M = distanceFromTransmitterM ?? DISTANCE_FROM_TRANSMITTER_M;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OBSTACLE_IDOffset = _OBSTACLE_ID == null ? null
+        : fbBuilder.writeString(_OBSTACLE_ID!);
+    final int? MATERIAL_IDOffset = _MATERIAL_ID == null ? null
+        : fbBuilder.writeString(_MATERIAL_ID!);
+    final int? GEOMETRY_REF_IDOffset = _GEOMETRY_REF_ID == null ? null
+        : fbBuilder.writeString(_GEOMETRY_REF_ID!);
+    final int? VAM_IDOffset = _VAM_ID == null ? null
+        : fbBuilder.writeString(_VAM_ID!);
+    final int? VARIANT_IDOffset = _VARIANT_ID == null ? null
+        : fbBuilder.writeString(_VARIANT_ID!);
+    fbBuilder.startTable(14);
+    fbBuilder.addUint32(0, _SAMPLE_INDEX);
+    fbBuilder.addOffset(1, OBSTACLE_IDOffset);
+    fbBuilder.addOffset(2, MATERIAL_IDOffset);
+    fbBuilder.addOffset(3, GEOMETRY_REF_IDOffset);
+    fbBuilder.addOffset(4, VAM_IDOffset);
+    fbBuilder.addOffset(5, VARIANT_IDOffset);
+    fbBuilder.addUint32(6, _NORAD_CAT_ID);
+    fbBuilder.addInt8(7, _INTERACTION?.value);
+    fbBuilder.addFloat64(8, _INCIDENCE_ANGLE_DEG);
+    fbBuilder.addFloat64(9, _PATH_LENGTH_IN_MATERIAL_M);
+    fbBuilder.addFloat64(10, _LOSS_DB);
+    fbBuilder.addFloat64(11, _EXCESS_DELAY_S);
+    fbBuilder.addFloat64(12, _FRESNEL_CLEARANCE_FRACTION);
+    fbBuilder.addFloat64(13, _DISTANCE_FROM_TRANSMITTER_M);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One endpoint of a link. Identity ONLY — position, antenna geometry and band
+///  capability are NOT copied here; they are joined from the standard named by
+///  ENDPOINT_KIND. A copied position silently goes stale against its source.
+class RFLEndpoint {
+  RFLEndpoint._(this._bc, this._bcOffset);
+  factory RFLEndpoint(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFLEndpoint> reader = _RFLEndpointReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Producer-stable identifier for this endpoint within the record.
+  String? get ENDPOINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get endpointId => ENDPOINT_ID;
+  rflEndpointKind get ENDPOINT_KIND => rflEndpointKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  rflEndpointKind get endpointKind => ENDPOINT_KIND;
+  ///  Human-readable name.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  `$GST.STATION_ID` when ENDPOINT_KIND is GEODETIC_TRACKING_STATION.
+  String? get GST_STATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get gstStationId => GST_STATION_ID;
+  ///  `$SIT` identifier when ENDPOINT_KIND is SATELLITE_GROUND_STATION.
+  String? get SIT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get sitId => SIT_ID;
+  ///  `$TBS.SITE_ID` when ENDPOINT_KIND is TERRESTRIAL_SITE.
+  String? get TBS_SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get tbsSiteId => TBS_SITE_ID;
+  ///  `$CAT.NORAD_CAT_ID` when the endpoint is an on-orbit object. 0 when
+  ///  unbound — never a placeholder catalogue number.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  International designator, `$CAT.OBJECT_ID`.
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get objectId => OBJECT_ID;
+  ///  `$RFB.ID` — the band specification (frequency, bandwidth, EIRP, gains,
+  ///  polarization) this endpoint transmits or receives on.
+  String? get RFB_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get rfbId => RFB_ID;
+  ///  `$RFE.ID` — the parametric emitter description, when one exists.
+  String? get RFE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get rfeId => RFE_ID;
+  ///  `$IQC` capture identifier, when the samples were derived from a recording.
+  String? get IQC_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get iqcId => IQC_ID;
+  ///  Beam identifier within the emitter.
+  String? get ID_BEAM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get idBeam => ID_BEAM;
+  ///  Channel or carrier identifier within the beam.
+  String? get CHANNEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get channelId => CHANNEL_ID;
+  ///  Polarization actually used on this link. Defaults to UNKNOWN explicitly:
+  ///  `rfPolarization` ordinal 0 is LHCP, so an unset field would otherwise
+  ///  decode as a real polarization.
+  rfPolarization get POLARIZATION => rfPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 30, 6));
+
+  @override
+  String toString() {
+    return 'RFLEndpoint{endpointId: ${endpointId}, endpointKind: ${endpointKind}, NAME: ${NAME}, gstStationId: ${gstStationId}, sitId: ${sitId}, tbsSiteId: ${tbsSiteId}, noradCatId: ${noradCatId}, objectId: ${objectId}, rfbId: ${rfbId}, rfeId: ${rfeId}, iqcId: ${iqcId}, idBeam: ${idBeam}, channelId: ${channelId}, POLARIZATION: ${POLARIZATION}}';
+  }
+}
+
+class _RFLEndpointReader extends fb.TableReader<RFLEndpoint> {
+  const _RFLEndpointReader();
+
+  @override
+  RFLEndpoint createObject(fb.BufferContext bc, int offset) =>
+    RFLEndpoint._(bc, offset);
+}
+
+class RFLEndpointBuilder {
+  RFLEndpointBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(14);
+  }
+
+  int addEndpointIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEndpointKind(rflEndpointKind? ENDPOINT_KIND) {
+    fbBuilder.addInt8(1, ENDPOINT_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addGstStationIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSitIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTbsSiteIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(6, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addRfbIdOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addRfeIdOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addIqcIdOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addIdBeamOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addChannelIdOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addPolarization(rfPolarization? POLARIZATION) {
+    fbBuilder.addInt8(13, POLARIZATION?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLEndpointObjectBuilder extends fb.ObjectBuilder {
+  final String? _ENDPOINT_ID;
+  final rflEndpointKind? _ENDPOINT_KIND;
+  final String? _NAME;
+  final String? _GST_STATION_ID;
+  final String? _SIT_ID;
+  final String? _TBS_SITE_ID;
+  final int? _NORAD_CAT_ID;
+  final String? _OBJECT_ID;
+  final String? _RFB_ID;
+  final String? _RFE_ID;
+  final String? _IQC_ID;
+  final String? _ID_BEAM;
+  final String? _CHANNEL_ID;
+  final rfPolarization? _POLARIZATION;
+
+  RFLEndpointObjectBuilder({
+    String? ENDPOINT_ID,
+    String? endpointId,
+    rflEndpointKind? ENDPOINT_KIND,
+    rflEndpointKind? endpointKind,
+    String? NAME,
+    String? GST_STATION_ID,
+    String? gstStationId,
+    String? SIT_ID,
+    String? sitId,
+    String? TBS_SITE_ID,
+    String? tbsSiteId,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? OBJECT_ID,
+    String? objectId,
+    String? RFB_ID,
+    String? rfbId,
+    String? RFE_ID,
+    String? rfeId,
+    String? IQC_ID,
+    String? iqcId,
+    String? ID_BEAM,
+    String? idBeam,
+    String? CHANNEL_ID,
+    String? channelId,
+    rfPolarization? POLARIZATION,
+  })
+      : _ENDPOINT_ID = endpointId ?? ENDPOINT_ID,
+        _ENDPOINT_KIND = endpointKind ?? ENDPOINT_KIND,
+        _NAME = NAME,
+        _GST_STATION_ID = gstStationId ?? GST_STATION_ID,
+        _SIT_ID = sitId ?? SIT_ID,
+        _TBS_SITE_ID = tbsSiteId ?? TBS_SITE_ID,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _RFB_ID = rfbId ?? RFB_ID,
+        _RFE_ID = rfeId ?? RFE_ID,
+        _IQC_ID = iqcId ?? IQC_ID,
+        _ID_BEAM = idBeam ?? ID_BEAM,
+        _CHANNEL_ID = channelId ?? CHANNEL_ID,
+        _POLARIZATION = POLARIZATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ENDPOINT_IDOffset = _ENDPOINT_ID == null ? null
+        : fbBuilder.writeString(_ENDPOINT_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? GST_STATION_IDOffset = _GST_STATION_ID == null ? null
+        : fbBuilder.writeString(_GST_STATION_ID!);
+    final int? SIT_IDOffset = _SIT_ID == null ? null
+        : fbBuilder.writeString(_SIT_ID!);
+    final int? TBS_SITE_IDOffset = _TBS_SITE_ID == null ? null
+        : fbBuilder.writeString(_TBS_SITE_ID!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? RFB_IDOffset = _RFB_ID == null ? null
+        : fbBuilder.writeString(_RFB_ID!);
+    final int? RFE_IDOffset = _RFE_ID == null ? null
+        : fbBuilder.writeString(_RFE_ID!);
+    final int? IQC_IDOffset = _IQC_ID == null ? null
+        : fbBuilder.writeString(_IQC_ID!);
+    final int? ID_BEAMOffset = _ID_BEAM == null ? null
+        : fbBuilder.writeString(_ID_BEAM!);
+    final int? CHANNEL_IDOffset = _CHANNEL_ID == null ? null
+        : fbBuilder.writeString(_CHANNEL_ID!);
+    fbBuilder.startTable(14);
+    fbBuilder.addOffset(0, ENDPOINT_IDOffset);
+    fbBuilder.addInt8(1, _ENDPOINT_KIND?.value);
+    fbBuilder.addOffset(2, NAMEOffset);
+    fbBuilder.addOffset(3, GST_STATION_IDOffset);
+    fbBuilder.addOffset(4, SIT_IDOffset);
+    fbBuilder.addOffset(5, TBS_SITE_IDOffset);
+    fbBuilder.addUint32(6, _NORAD_CAT_ID);
+    fbBuilder.addOffset(7, OBJECT_IDOffset);
+    fbBuilder.addOffset(8, RFB_IDOffset);
+    fbBuilder.addOffset(9, RFE_IDOffset);
+    fbBuilder.addOffset(10, IQC_IDOffset);
+    fbBuilder.addOffset(11, ID_BEAMOffset);
+    fbBuilder.addOffset(12, CHANNEL_IDOffset);
+    fbBuilder.addInt8(13, _POLARIZATION?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One modulation-and-coding choice available to a link. The table carries
+///  engineering capability only; catalogue or recommendation names belong in
+///  ID / NAME and provenance data, never in the schema vocabulary.
+class RFLModCod {
+  RFLModCod._(this._bc, this._bcOffset);
+  factory RFLModCod(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFLModCod> reader = _RFLModCodReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable identifier within the containing link's MODCOD_SET.
+  String? get MODCOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get modcodId => MODCOD_ID;
+  ///  Producer-supplied display name.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get MODULATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get CODING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Information bits divided by coded bits, in (0,1].
+  double get CODE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get codeRate => CODE_RATE;
+  double get BITS_PER_SYMBOL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get bitsPerSymbol => BITS_PER_SYMBOL;
+  double get SPECTRAL_EFFICIENCY_BPS_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get spectralEfficiencyBpsHz => SPECTRAL_EFFICIENCY_BPS_HZ;
+  double get REQUIRED_ES_N0_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get requiredEsN0Db => REQUIRED_ES_N0_DB;
+  double get REQUIRED_EB_N0_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get requiredEbN0Db => REQUIRED_EB_N0_DB;
+  double get TARGET_BIT_ERROR_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get targetBitErrorRate => TARGET_BIT_ERROR_RATE;
+  double get TARGET_BLOCK_ERROR_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get targetBlockErrorRate => TARGET_BLOCK_ERROR_RATE;
+  ///  Additional implementation margin required before this entry is selected.
+  double get REQUIRED_MARGIN_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get requiredMarginDb => REQUIRED_MARGIN_DB;
+  ///  Optional ceiling imposed by framing or implementation, bits per second.
+  double get MAXIMUM_DATA_RATE_BPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get maximumDataRateBps => MAXIMUM_DATA_RATE_BPS;
+
+  @override
+  String toString() {
+    return 'RFLModCod{modcodId: ${modcodId}, NAME: ${NAME}, MODULATION: ${MODULATION}, CODING: ${CODING}, codeRate: ${codeRate}, bitsPerSymbol: ${bitsPerSymbol}, spectralEfficiencyBpsHz: ${spectralEfficiencyBpsHz}, requiredEsN0Db: ${requiredEsN0Db}, requiredEbN0Db: ${requiredEbN0Db}, targetBitErrorRate: ${targetBitErrorRate}, targetBlockErrorRate: ${targetBlockErrorRate}, requiredMarginDb: ${requiredMarginDb}, maximumDataRateBps: ${maximumDataRateBps}}';
+  }
+}
+
+class _RFLModCodReader extends fb.TableReader<RFLModCod> {
+  const _RFLModCodReader();
+
+  @override
+  RFLModCod createObject(fb.BufferContext bc, int offset) =>
+    RFLModCod._(bc, offset);
+}
+
+class RFLModCodBuilder {
+  RFLModCodBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addModcodIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addModulationOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCodingOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCodeRate(double? CODE_RATE) {
+    fbBuilder.addFloat64(4, CODE_RATE);
+    return fbBuilder.offset;
+  }
+  int addBitsPerSymbol(double? BITS_PER_SYMBOL) {
+    fbBuilder.addFloat64(5, BITS_PER_SYMBOL);
+    return fbBuilder.offset;
+  }
+  int addSpectralEfficiencyBpsHz(double? SPECTRAL_EFFICIENCY_BPS_HZ) {
+    fbBuilder.addFloat64(6, SPECTRAL_EFFICIENCY_BPS_HZ);
+    return fbBuilder.offset;
+  }
+  int addRequiredEsN0Db(double? REQUIRED_ES_N0_DB) {
+    fbBuilder.addFloat64(7, REQUIRED_ES_N0_DB);
+    return fbBuilder.offset;
+  }
+  int addRequiredEbN0Db(double? REQUIRED_EB_N0_DB) {
+    fbBuilder.addFloat64(8, REQUIRED_EB_N0_DB);
+    return fbBuilder.offset;
+  }
+  int addTargetBitErrorRate(double? TARGET_BIT_ERROR_RATE) {
+    fbBuilder.addFloat64(9, TARGET_BIT_ERROR_RATE);
+    return fbBuilder.offset;
+  }
+  int addTargetBlockErrorRate(double? TARGET_BLOCK_ERROR_RATE) {
+    fbBuilder.addFloat64(10, TARGET_BLOCK_ERROR_RATE);
+    return fbBuilder.offset;
+  }
+  int addRequiredMarginDb(double? REQUIRED_MARGIN_DB) {
+    fbBuilder.addFloat64(11, REQUIRED_MARGIN_DB);
+    return fbBuilder.offset;
+  }
+  int addMaximumDataRateBps(double? MAXIMUM_DATA_RATE_BPS) {
+    fbBuilder.addFloat64(12, MAXIMUM_DATA_RATE_BPS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLModCodObjectBuilder extends fb.ObjectBuilder {
+  final String? _MODCOD_ID;
+  final String? _NAME;
+  final String? _MODULATION;
+  final String? _CODING;
+  final double? _CODE_RATE;
+  final double? _BITS_PER_SYMBOL;
+  final double? _SPECTRAL_EFFICIENCY_BPS_HZ;
+  final double? _REQUIRED_ES_N0_DB;
+  final double? _REQUIRED_EB_N0_DB;
+  final double? _TARGET_BIT_ERROR_RATE;
+  final double? _TARGET_BLOCK_ERROR_RATE;
+  final double? _REQUIRED_MARGIN_DB;
+  final double? _MAXIMUM_DATA_RATE_BPS;
+
+  RFLModCodObjectBuilder({
+    String? MODCOD_ID,
+    String? modcodId,
+    String? NAME,
+    String? MODULATION,
+    String? CODING,
+    double? CODE_RATE,
+    double? codeRate,
+    double? BITS_PER_SYMBOL,
+    double? bitsPerSymbol,
+    double? SPECTRAL_EFFICIENCY_BPS_HZ,
+    double? spectralEfficiencyBpsHz,
+    double? REQUIRED_ES_N0_DB,
+    double? requiredEsN0Db,
+    double? REQUIRED_EB_N0_DB,
+    double? requiredEbN0Db,
+    double? TARGET_BIT_ERROR_RATE,
+    double? targetBitErrorRate,
+    double? TARGET_BLOCK_ERROR_RATE,
+    double? targetBlockErrorRate,
+    double? REQUIRED_MARGIN_DB,
+    double? requiredMarginDb,
+    double? MAXIMUM_DATA_RATE_BPS,
+    double? maximumDataRateBps,
+  })
+      : _MODCOD_ID = modcodId ?? MODCOD_ID,
+        _NAME = NAME,
+        _MODULATION = MODULATION,
+        _CODING = CODING,
+        _CODE_RATE = codeRate ?? CODE_RATE,
+        _BITS_PER_SYMBOL = bitsPerSymbol ?? BITS_PER_SYMBOL,
+        _SPECTRAL_EFFICIENCY_BPS_HZ = spectralEfficiencyBpsHz ?? SPECTRAL_EFFICIENCY_BPS_HZ,
+        _REQUIRED_ES_N0_DB = requiredEsN0Db ?? REQUIRED_ES_N0_DB,
+        _REQUIRED_EB_N0_DB = requiredEbN0Db ?? REQUIRED_EB_N0_DB,
+        _TARGET_BIT_ERROR_RATE = targetBitErrorRate ?? TARGET_BIT_ERROR_RATE,
+        _TARGET_BLOCK_ERROR_RATE = targetBlockErrorRate ?? TARGET_BLOCK_ERROR_RATE,
+        _REQUIRED_MARGIN_DB = requiredMarginDb ?? REQUIRED_MARGIN_DB,
+        _MAXIMUM_DATA_RATE_BPS = maximumDataRateBps ?? MAXIMUM_DATA_RATE_BPS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MODCOD_IDOffset = _MODCOD_ID == null ? null
+        : fbBuilder.writeString(_MODCOD_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? MODULATIONOffset = _MODULATION == null ? null
+        : fbBuilder.writeString(_MODULATION!);
+    final int? CODINGOffset = _CODING == null ? null
+        : fbBuilder.writeString(_CODING!);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, MODCOD_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, MODULATIONOffset);
+    fbBuilder.addOffset(3, CODINGOffset);
+    fbBuilder.addFloat64(4, _CODE_RATE);
+    fbBuilder.addFloat64(5, _BITS_PER_SYMBOL);
+    fbBuilder.addFloat64(6, _SPECTRAL_EFFICIENCY_BPS_HZ);
+    fbBuilder.addFloat64(7, _REQUIRED_ES_N0_DB);
+    fbBuilder.addFloat64(8, _REQUIRED_EB_N0_DB);
+    fbBuilder.addFloat64(9, _TARGET_BIT_ERROR_RATE);
+    fbBuilder.addFloat64(10, _TARGET_BLOCK_ERROR_RATE);
+    fbBuilder.addFloat64(11, _REQUIRED_MARGIN_DB);
+    fbBuilder.addFloat64(12, _MAXIMUM_DATA_RATE_BPS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One link whose budget is sampled by this record.
+class RFLLink {
+  RFLLink._(this._bc, this._bcOffset);
+  factory RFLLink(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFLLink> reader = _RFLLinkReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Producer-stable link identifier. Joins `$ACI.ACIInterval.LINK_ID` and
+  ///  `$LKS.ID` when the same link also has an operational-state record.
+  String? get LINK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get linkId => LINK_ID;
+  ///  Human-readable link name.
+  String? get LINK_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get linkName => LINK_NAME;
+  rflLinkKind get LINK_KIND => rflLinkKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  rflLinkKind get linkKind => LINK_KIND;
+  ///  Transmitting endpoint.
+  RFLEndpoint? get TRANSMIT_ENDPOINT => RFLEndpoint.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  RFLEndpoint? get transmitEndpoint => TRANSMIT_ENDPOINT;
+  ///  Receiving endpoint.
+  RFLEndpoint? get RECEIVE_ENDPOINT => RFLEndpoint.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  RFLEndpoint? get receiveEndpoint => RECEIVE_ENDPOINT;
+  ///  Carrier centre frequency actually used, megahertz — the `$RFB` MHz
+  ///  convention, NOT the `$IQC` hertz convention. A consumer joining the two
+  ///  converts explicitly at the join. Band designation is NOT duplicated here:
+  ///  it is joined from `$RFB.BAND`.
+  double get CENTER_FREQUENCY_MHZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get centerFrequencyMhz => CENTER_FREQUENCY_MHZ;
+  ///  Occupied bandwidth, megahertz.
+  double get BANDWIDTH_MHZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get bandwidthMhz => BANDWIDTH_MHZ;
+  ///  Modulation as the producer states it (e.g. "QPSK", "8PSK", "16APSK").
+  String? get MODULATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Forward error correction scheme as the producer states it.
+  String? get CODING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Code rate as a fraction (0-1].
+  double get CODE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get codeRate => CODE_RATE;
+  ///  Symbol rate in baud (symbols per second), NOT kilobaud — the `$RFB.BAUD`
+  ///  convention.
+  double get SYMBOL_RATE_BAUD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get symbolRateBaud => SYMBOL_RATE_BAUD;
+  ///  Information bit rate the budget is stated for, bits per second.
+  double get DATA_RATE_BPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get dataRateBps => DATA_RATE_BPS;
+  ///  Required threshold this link is evaluated against. THRESHOLD_TERM,
+  ///  THRESHOLD_VALUE, THRESHOLD_UNITS and THRESHOLD_COMPARISON are meaningful
+  ///  only together; a LINK_MARGIN_DB column without them states a margin
+  ///  against an unstated requirement and MUST be refused.
+  rflBudgetTerm get THRESHOLD_TERM => rflBudgetTerm.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  rflBudgetTerm get thresholdTerm => THRESHOLD_TERM;
+  double get THRESHOLD_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get thresholdValue => THRESHOLD_VALUE;
+  String? get THRESHOLD_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get thresholdUnits => THRESHOLD_UNITS;
+  rflComparison get THRESHOLD_COMPARISON => rflComparison.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 34, 0));
+  rflComparison get thresholdComparison => THRESHOLD_COMPARISON;
+  ///  Receiver group this link belongs to. Links sharing a RECEIVER_GROUP_ID
+  ///  and CHANNEL_GROUP_ID are mutually interfering and MUST be evaluated
+  ///  together; a producer that shards a link matrix MUST keep a group intact
+  ///  within one shard.
+  String? get RECEIVER_GROUP_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get receiverGroupId => RECEIVER_GROUP_ID;
+  String? get CHANNEL_GROUP_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get channelGroupId => CHANNEL_GROUP_ID;
+  ///  Constellation or network this link belongs to.
+  String? get CONSTELLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Operator-facing service or mission designation.
+  String? get SERVICE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Ordered adaptive modulation-and-coding choices. Per-sample
+  ///  SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+  List<RFLModCod>? get MODCOD_SET => const fb.ListReader<RFLModCod>(RFLModCod.reader).vTableGetNullable(_bc, _bcOffset, 44);
+  List<RFLModCod>? get modcodSet => MODCOD_SET;
+  ///  Whether the producer evaluated adaptive selection for this link.
+  bool get ACM_ENABLED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 46, false);
+  bool get acmEnabled => ACM_ENABLED;
+
+  @override
+  String toString() {
+    return 'RFLLink{linkId: ${linkId}, linkName: ${linkName}, linkKind: ${linkKind}, transmitEndpoint: ${transmitEndpoint}, receiveEndpoint: ${receiveEndpoint}, centerFrequencyMhz: ${centerFrequencyMhz}, bandwidthMhz: ${bandwidthMhz}, MODULATION: ${MODULATION}, CODING: ${CODING}, codeRate: ${codeRate}, symbolRateBaud: ${symbolRateBaud}, dataRateBps: ${dataRateBps}, thresholdTerm: ${thresholdTerm}, thresholdValue: ${thresholdValue}, thresholdUnits: ${thresholdUnits}, thresholdComparison: ${thresholdComparison}, receiverGroupId: ${receiverGroupId}, channelGroupId: ${channelGroupId}, CONSTELLATION: ${CONSTELLATION}, SERVICE: ${SERVICE}, modcodSet: ${modcodSet}, acmEnabled: ${acmEnabled}}';
+  }
+}
+
+class _RFLLinkReader extends fb.TableReader<RFLLink> {
+  const _RFLLinkReader();
+
+  @override
+  RFLLink createObject(fb.BufferContext bc, int offset) =>
+    RFLLink._(bc, offset);
+}
+
+class RFLLinkBuilder {
+  RFLLinkBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(22);
+  }
+
+  int addLinkIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addLinkNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addLinkKind(rflLinkKind? LINK_KIND) {
+    fbBuilder.addInt8(2, LINK_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addTransmitEndpointOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiveEndpointOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterFrequencyMhz(double? CENTER_FREQUENCY_MHZ) {
+    fbBuilder.addFloat64(5, CENTER_FREQUENCY_MHZ);
+    return fbBuilder.offset;
+  }
+  int addBandwidthMhz(double? BANDWIDTH_MHZ) {
+    fbBuilder.addFloat64(6, BANDWIDTH_MHZ);
+    return fbBuilder.offset;
+  }
+  int addModulationOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCodingOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addCodeRate(double? CODE_RATE) {
+    fbBuilder.addFloat64(9, CODE_RATE);
+    return fbBuilder.offset;
+  }
+  int addSymbolRateBaud(double? SYMBOL_RATE_BAUD) {
+    fbBuilder.addFloat64(10, SYMBOL_RATE_BAUD);
+    return fbBuilder.offset;
+  }
+  int addDataRateBps(double? DATA_RATE_BPS) {
+    fbBuilder.addFloat64(11, DATA_RATE_BPS);
+    return fbBuilder.offset;
+  }
+  int addThresholdTerm(rflBudgetTerm? THRESHOLD_TERM) {
+    fbBuilder.addInt8(12, THRESHOLD_TERM?.value);
+    return fbBuilder.offset;
+  }
+  int addThresholdValue(double? THRESHOLD_VALUE) {
+    fbBuilder.addFloat64(13, THRESHOLD_VALUE);
+    return fbBuilder.offset;
+  }
+  int addThresholdUnitsOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addThresholdComparison(rflComparison? THRESHOLD_COMPARISON) {
+    fbBuilder.addInt8(15, THRESHOLD_COMPARISON?.value);
+    return fbBuilder.offset;
+  }
+  int addReceiverGroupIdOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addChannelGroupIdOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addConstellationOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addServiceOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addModcodSetOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addAcmEnabled(bool? ACM_ENABLED) {
+    fbBuilder.addBool(21, ACM_ENABLED);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLLinkObjectBuilder extends fb.ObjectBuilder {
+  final String? _LINK_ID;
+  final String? _LINK_NAME;
+  final rflLinkKind? _LINK_KIND;
+  final RFLEndpointObjectBuilder? _TRANSMIT_ENDPOINT;
+  final RFLEndpointObjectBuilder? _RECEIVE_ENDPOINT;
+  final double? _CENTER_FREQUENCY_MHZ;
+  final double? _BANDWIDTH_MHZ;
+  final String? _MODULATION;
+  final String? _CODING;
+  final double? _CODE_RATE;
+  final double? _SYMBOL_RATE_BAUD;
+  final double? _DATA_RATE_BPS;
+  final rflBudgetTerm? _THRESHOLD_TERM;
+  final double? _THRESHOLD_VALUE;
+  final String? _THRESHOLD_UNITS;
+  final rflComparison? _THRESHOLD_COMPARISON;
+  final String? _RECEIVER_GROUP_ID;
+  final String? _CHANNEL_GROUP_ID;
+  final String? _CONSTELLATION;
+  final String? _SERVICE;
+  final List<RFLModCodObjectBuilder>? _MODCOD_SET;
+  final bool? _ACM_ENABLED;
+
+  RFLLinkObjectBuilder({
+    String? LINK_ID,
+    String? linkId,
+    String? LINK_NAME,
+    String? linkName,
+    rflLinkKind? LINK_KIND,
+    rflLinkKind? linkKind,
+    RFLEndpointObjectBuilder? TRANSMIT_ENDPOINT,
+    RFLEndpointObjectBuilder? transmitEndpoint,
+    RFLEndpointObjectBuilder? RECEIVE_ENDPOINT,
+    RFLEndpointObjectBuilder? receiveEndpoint,
+    double? CENTER_FREQUENCY_MHZ,
+    double? centerFrequencyMhz,
+    double? BANDWIDTH_MHZ,
+    double? bandwidthMhz,
+    String? MODULATION,
+    String? CODING,
+    double? CODE_RATE,
+    double? codeRate,
+    double? SYMBOL_RATE_BAUD,
+    double? symbolRateBaud,
+    double? DATA_RATE_BPS,
+    double? dataRateBps,
+    rflBudgetTerm? THRESHOLD_TERM,
+    rflBudgetTerm? thresholdTerm,
+    double? THRESHOLD_VALUE,
+    double? thresholdValue,
+    String? THRESHOLD_UNITS,
+    String? thresholdUnits,
+    rflComparison? THRESHOLD_COMPARISON,
+    rflComparison? thresholdComparison,
+    String? RECEIVER_GROUP_ID,
+    String? receiverGroupId,
+    String? CHANNEL_GROUP_ID,
+    String? channelGroupId,
+    String? CONSTELLATION,
+    String? SERVICE,
+    List<RFLModCodObjectBuilder>? MODCOD_SET,
+    List<RFLModCodObjectBuilder>? modcodSet,
+    bool? ACM_ENABLED,
+    bool? acmEnabled,
+  })
+      : _LINK_ID = linkId ?? LINK_ID,
+        _LINK_NAME = linkName ?? LINK_NAME,
+        _LINK_KIND = linkKind ?? LINK_KIND,
+        _TRANSMIT_ENDPOINT = transmitEndpoint ?? TRANSMIT_ENDPOINT,
+        _RECEIVE_ENDPOINT = receiveEndpoint ?? RECEIVE_ENDPOINT,
+        _CENTER_FREQUENCY_MHZ = centerFrequencyMhz ?? CENTER_FREQUENCY_MHZ,
+        _BANDWIDTH_MHZ = bandwidthMhz ?? BANDWIDTH_MHZ,
+        _MODULATION = MODULATION,
+        _CODING = CODING,
+        _CODE_RATE = codeRate ?? CODE_RATE,
+        _SYMBOL_RATE_BAUD = symbolRateBaud ?? SYMBOL_RATE_BAUD,
+        _DATA_RATE_BPS = dataRateBps ?? DATA_RATE_BPS,
+        _THRESHOLD_TERM = thresholdTerm ?? THRESHOLD_TERM,
+        _THRESHOLD_VALUE = thresholdValue ?? THRESHOLD_VALUE,
+        _THRESHOLD_UNITS = thresholdUnits ?? THRESHOLD_UNITS,
+        _THRESHOLD_COMPARISON = thresholdComparison ?? THRESHOLD_COMPARISON,
+        _RECEIVER_GROUP_ID = receiverGroupId ?? RECEIVER_GROUP_ID,
+        _CHANNEL_GROUP_ID = channelGroupId ?? CHANNEL_GROUP_ID,
+        _CONSTELLATION = CONSTELLATION,
+        _SERVICE = SERVICE,
+        _MODCOD_SET = modcodSet ?? MODCOD_SET,
+        _ACM_ENABLED = acmEnabled ?? ACM_ENABLED;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LINK_IDOffset = _LINK_ID == null ? null
+        : fbBuilder.writeString(_LINK_ID!);
+    final int? LINK_NAMEOffset = _LINK_NAME == null ? null
+        : fbBuilder.writeString(_LINK_NAME!);
+    final int? TRANSMIT_ENDPOINTOffset = _TRANSMIT_ENDPOINT?.getOrCreateOffset(fbBuilder);
+    final int? RECEIVE_ENDPOINTOffset = _RECEIVE_ENDPOINT?.getOrCreateOffset(fbBuilder);
+    final int? MODULATIONOffset = _MODULATION == null ? null
+        : fbBuilder.writeString(_MODULATION!);
+    final int? CODINGOffset = _CODING == null ? null
+        : fbBuilder.writeString(_CODING!);
+    final int? THRESHOLD_UNITSOffset = _THRESHOLD_UNITS == null ? null
+        : fbBuilder.writeString(_THRESHOLD_UNITS!);
+    final int? RECEIVER_GROUP_IDOffset = _RECEIVER_GROUP_ID == null ? null
+        : fbBuilder.writeString(_RECEIVER_GROUP_ID!);
+    final int? CHANNEL_GROUP_IDOffset = _CHANNEL_GROUP_ID == null ? null
+        : fbBuilder.writeString(_CHANNEL_GROUP_ID!);
+    final int? CONSTELLATIONOffset = _CONSTELLATION == null ? null
+        : fbBuilder.writeString(_CONSTELLATION!);
+    final int? SERVICEOffset = _SERVICE == null ? null
+        : fbBuilder.writeString(_SERVICE!);
+    final int? MODCOD_SETOffset = _MODCOD_SET == null ? null
+        : fbBuilder.writeList(_MODCOD_SET!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(22);
+    fbBuilder.addOffset(0, LINK_IDOffset);
+    fbBuilder.addOffset(1, LINK_NAMEOffset);
+    fbBuilder.addInt8(2, _LINK_KIND?.value);
+    fbBuilder.addOffset(3, TRANSMIT_ENDPOINTOffset);
+    fbBuilder.addOffset(4, RECEIVE_ENDPOINTOffset);
+    fbBuilder.addFloat64(5, _CENTER_FREQUENCY_MHZ);
+    fbBuilder.addFloat64(6, _BANDWIDTH_MHZ);
+    fbBuilder.addOffset(7, MODULATIONOffset);
+    fbBuilder.addOffset(8, CODINGOffset);
+    fbBuilder.addFloat64(9, _CODE_RATE);
+    fbBuilder.addFloat64(10, _SYMBOL_RATE_BAUD);
+    fbBuilder.addFloat64(11, _DATA_RATE_BPS);
+    fbBuilder.addInt8(12, _THRESHOLD_TERM?.value);
+    fbBuilder.addFloat64(13, _THRESHOLD_VALUE);
+    fbBuilder.addOffset(14, THRESHOLD_UNITSOffset);
+    fbBuilder.addInt8(15, _THRESHOLD_COMPARISON?.value);
+    fbBuilder.addOffset(16, RECEIVER_GROUP_IDOffset);
+    fbBuilder.addOffset(17, CHANNEL_GROUP_IDOffset);
+    fbBuilder.addOffset(18, CONSTELLATIONOffset);
+    fbBuilder.addOffset(19, SERVICEOffset);
+    fbBuilder.addOffset(20, MODCOD_SETOffset);
+    fbBuilder.addBool(21, _ACM_ENABLED);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One interfering contribution to one sample. SPARSE: entries exist only
+///  where a contribution was computed, so a dense matrix is never forced into
+///  existence to say "no interference computed".
+class RFLInterferenceContribution {
+  RFLInterferenceContribution._(this._bc, this._bcOffset);
+  factory RFLInterferenceContribution(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFLInterferenceContribution> reader = _RFLInterferenceContributionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Index into the sample arrays this contribution applies to.
+  int get SAMPLE_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get sampleIndex => SAMPLE_INDEX;
+  ///  Endpoint identifier of the interfering emitter, when it is an endpoint of
+  ///  this record.
+  String? get SOURCE_ENDPOINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get sourceEndpointId => SOURCE_ENDPOINT_ID;
+  ///  `$RFE.ID` of the interfering emitter.
+  String? get RFE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get rfeId => RFE_ID;
+  ///  `$RFB.ID` of the interfering emission.
+  String? get RFB_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get rfbId => RFB_ID;
+  ///  Interfering object's catalogue number, 0 when unbound.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  Received interfering power at the victim receiver, dBW.
+  double get INTERFERENCE_POWER_DBW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get interferencePowerDbw => INTERFERENCE_POWER_DBW;
+  ///  Angular separation between the wanted and interfering paths at the
+  ///  victim receiver, degrees.
+  double get TOPOCENTRIC_SEPARATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get topocentricSeparationDeg => TOPOCENTRIC_SEPARATION_DEG;
+  ///  Fraction of the victim's bandwidth overlapped by this emission [0-1].
+  double get SPECTRAL_OVERLAP_FRACTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get spectralOverlapFraction => SPECTRAL_OVERLAP_FRACTION;
+  ///  Polarization isolation applied to this contribution, dB.
+  double get POLARIZATION_ISOLATION_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get polarizationIsolationDb => POLARIZATION_ISOLATION_DB;
+  ///  Discrimination applied from the victim antenna pattern, dB.
+  double get ANTENNA_DISCRIMINATION_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get antennaDiscriminationDb => ANTENNA_DISCRIMINATION_DB;
+
+  @override
+  String toString() {
+    return 'RFLInterferenceContribution{sampleIndex: ${sampleIndex}, sourceEndpointId: ${sourceEndpointId}, rfeId: ${rfeId}, rfbId: ${rfbId}, noradCatId: ${noradCatId}, interferencePowerDbw: ${interferencePowerDbw}, topocentricSeparationDeg: ${topocentricSeparationDeg}, spectralOverlapFraction: ${spectralOverlapFraction}, polarizationIsolationDb: ${polarizationIsolationDb}, antennaDiscriminationDb: ${antennaDiscriminationDb}}';
+  }
+}
+
+class _RFLInterferenceContributionReader extends fb.TableReader<RFLInterferenceContribution> {
+  const _RFLInterferenceContributionReader();
+
+  @override
+  RFLInterferenceContribution createObject(fb.BufferContext bc, int offset) =>
+    RFLInterferenceContribution._(bc, offset);
+}
+
+class RFLInterferenceContributionBuilder {
+  RFLInterferenceContributionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(10);
+  }
+
+  int addSampleIndex(int? SAMPLE_INDEX) {
+    fbBuilder.addUint32(0, SAMPLE_INDEX);
+    return fbBuilder.offset;
+  }
+  int addSourceEndpointIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addRfeIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRfbIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(4, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addInterferencePowerDbw(double? INTERFERENCE_POWER_DBW) {
+    fbBuilder.addFloat64(5, INTERFERENCE_POWER_DBW);
+    return fbBuilder.offset;
+  }
+  int addTopocentricSeparationDeg(double? TOPOCENTRIC_SEPARATION_DEG) {
+    fbBuilder.addFloat64(6, TOPOCENTRIC_SEPARATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addSpectralOverlapFraction(double? SPECTRAL_OVERLAP_FRACTION) {
+    fbBuilder.addFloat64(7, SPECTRAL_OVERLAP_FRACTION);
+    return fbBuilder.offset;
+  }
+  int addPolarizationIsolationDb(double? POLARIZATION_ISOLATION_DB) {
+    fbBuilder.addFloat64(8, POLARIZATION_ISOLATION_DB);
+    return fbBuilder.offset;
+  }
+  int addAntennaDiscriminationDb(double? ANTENNA_DISCRIMINATION_DB) {
+    fbBuilder.addFloat64(9, ANTENNA_DISCRIMINATION_DB);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLInterferenceContributionObjectBuilder extends fb.ObjectBuilder {
+  final int? _SAMPLE_INDEX;
+  final String? _SOURCE_ENDPOINT_ID;
+  final String? _RFE_ID;
+  final String? _RFB_ID;
+  final int? _NORAD_CAT_ID;
+  final double? _INTERFERENCE_POWER_DBW;
+  final double? _TOPOCENTRIC_SEPARATION_DEG;
+  final double? _SPECTRAL_OVERLAP_FRACTION;
+  final double? _POLARIZATION_ISOLATION_DB;
+  final double? _ANTENNA_DISCRIMINATION_DB;
+
+  RFLInterferenceContributionObjectBuilder({
+    int? SAMPLE_INDEX,
+    int? sampleIndex,
+    String? SOURCE_ENDPOINT_ID,
+    String? sourceEndpointId,
+    String? RFE_ID,
+    String? rfeId,
+    String? RFB_ID,
+    String? rfbId,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    double? INTERFERENCE_POWER_DBW,
+    double? interferencePowerDbw,
+    double? TOPOCENTRIC_SEPARATION_DEG,
+    double? topocentricSeparationDeg,
+    double? SPECTRAL_OVERLAP_FRACTION,
+    double? spectralOverlapFraction,
+    double? POLARIZATION_ISOLATION_DB,
+    double? polarizationIsolationDb,
+    double? ANTENNA_DISCRIMINATION_DB,
+    double? antennaDiscriminationDb,
+  })
+      : _SAMPLE_INDEX = sampleIndex ?? SAMPLE_INDEX,
+        _SOURCE_ENDPOINT_ID = sourceEndpointId ?? SOURCE_ENDPOINT_ID,
+        _RFE_ID = rfeId ?? RFE_ID,
+        _RFB_ID = rfbId ?? RFB_ID,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _INTERFERENCE_POWER_DBW = interferencePowerDbw ?? INTERFERENCE_POWER_DBW,
+        _TOPOCENTRIC_SEPARATION_DEG = topocentricSeparationDeg ?? TOPOCENTRIC_SEPARATION_DEG,
+        _SPECTRAL_OVERLAP_FRACTION = spectralOverlapFraction ?? SPECTRAL_OVERLAP_FRACTION,
+        _POLARIZATION_ISOLATION_DB = polarizationIsolationDb ?? POLARIZATION_ISOLATION_DB,
+        _ANTENNA_DISCRIMINATION_DB = antennaDiscriminationDb ?? ANTENNA_DISCRIMINATION_DB;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCE_ENDPOINT_IDOffset = _SOURCE_ENDPOINT_ID == null ? null
+        : fbBuilder.writeString(_SOURCE_ENDPOINT_ID!);
+    final int? RFE_IDOffset = _RFE_ID == null ? null
+        : fbBuilder.writeString(_RFE_ID!);
+    final int? RFB_IDOffset = _RFB_ID == null ? null
+        : fbBuilder.writeString(_RFB_ID!);
+    fbBuilder.startTable(10);
+    fbBuilder.addUint32(0, _SAMPLE_INDEX);
+    fbBuilder.addOffset(1, SOURCE_ENDPOINT_IDOffset);
+    fbBuilder.addOffset(2, RFE_IDOffset);
+    fbBuilder.addOffset(3, RFB_IDOffset);
+    fbBuilder.addUint32(4, _NORAD_CAT_ID);
+    fbBuilder.addFloat64(5, _INTERFERENCE_POWER_DBW);
+    fbBuilder.addFloat64(6, _TOPOCENTRIC_SEPARATION_DEG);
+    fbBuilder.addFloat64(7, _SPECTRAL_OVERLAP_FRACTION);
+    fbBuilder.addFloat64(8, _POLARIZATION_ISOLATION_DB);
+    fbBuilder.addFloat64(9, _ANTENNA_DISCRIMINATION_DB);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A named parameter of a model binding, with its unit stated. There is no
+///  encoding for a parameter value without a unit.
+class RFLModelParameter {
+  RFLModelParameter._(this._bc, this._bcOffset);
+  factory RFLModelParameter(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFLModelParameter> reader = _RFLModelParameterReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Non-numeric parameter value, when the parameter is categorical.
+  String? get TEXT_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get textValue => TEXT_VALUE;
+
+  @override
+  String toString() {
+    return 'RFLModelParameter{NAME: ${NAME}, VALUE: ${VALUE}, UNITS: ${UNITS}, textValue: ${textValue}}';
+  }
+}
+
+class _RFLModelParameterReader extends fb.TableReader<RFLModelParameter> {
+  const _RFLModelParameterReader();
+
+  @override
+  RFLModelParameter createObject(fb.BufferContext bc, int offset) =>
+    RFLModelParameter._(bc, offset);
+}
+
+class RFLModelParameterBuilder {
+  RFLModelParameterBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(1, VALUE);
+    return fbBuilder.offset;
+  }
+  int addUnitsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTextValueOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
@@ -904,37 +1817,1387 @@ class TIMBuilder {
   }
 }
 
-class TIMObjectBuilder extends fb.ObjectBuilder {
-  final timingStandard? _TIME_SYSTEM;
-  final TIMInstantObjectBuilder? _INSTANT;
-  final TIMConversionRequestObjectBuilder? _CONVERSION_REQUEST;
-  final TIMConversionResultObjectBuilder? _CONVERSION_RESULT;
+class RFLModelParameterObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final double? _VALUE;
+  final String? _UNITS;
+  final String? _TEXT_VALUE;
 
-  TIMObjectBuilder({
-    timingStandard? TIME_SYSTEM,
-    timingStandard? timeSystem,
-    TIMInstantObjectBuilder? INSTANT,
-    TIMConversionRequestObjectBuilder? CONVERSION_REQUEST,
-    TIMConversionRequestObjectBuilder? conversionRequest,
-    TIMConversionResultObjectBuilder? CONVERSION_RESULT,
-    TIMConversionResultObjectBuilder? conversionResult,
+  RFLModelParameterObjectBuilder({
+    String? NAME,
+    double? VALUE,
+    String? UNITS,
+    String? TEXT_VALUE,
+    String? textValue,
   })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
-        _INSTANT = INSTANT,
-        _CONVERSION_REQUEST = conversionRequest ?? CONVERSION_REQUEST,
-        _CONVERSION_RESULT = conversionResult ?? CONVERSION_RESULT;
+      : _NAME = NAME,
+        _VALUE = VALUE,
+        _UNITS = UNITS,
+        _TEXT_VALUE = textValue ?? TEXT_VALUE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? INSTANTOffset = _INSTANT?.getOrCreateOffset(fbBuilder);
-    final int? CONVERSION_REQUESTOffset = _CONVERSION_REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? CONVERSION_RESULTOffset = _CONVERSION_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? UNITSOffset = _UNITS == null ? null
+        : fbBuilder.writeString(_UNITS!);
+    final int? TEXT_VALUEOffset = _TEXT_VALUE == null ? null
+        : fbBuilder.writeString(_TEXT_VALUE!);
     fbBuilder.startTable(4);
-    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
-    fbBuilder.addOffset(1, INSTANTOffset);
-    fbBuilder.addOffset(2, CONVERSION_REQUESTOffset);
-    fbBuilder.addOffset(3, CONVERSION_RESULTOffset);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addFloat64(1, _VALUE);
+    fbBuilder.addOffset(2, UNITSOffset);
+    fbBuilder.addOffset(3, TEXT_VALUEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Which model produced one term of the budget. A loss term without a model
+///  binding is an unattributed number: rain attenuation from two different
+///  recommendations differs by decibels, and a consumer must be able to tell
+///  which one it is holding.
+class RFLModelBinding {
+  RFLModelBinding._(this._bc, this._bcOffset);
+  factory RFLModelBinding(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFLModelBinding> reader = _RFLModelBindingReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The budget term this binding produced.
+  rflBudgetTerm get TERM => rflBudgetTerm.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Model or recommendation identifier as its publisher states it (e.g. an
+  ///  ITU-R recommendation number with its revision).
+  String? get MODEL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get modelName => MODEL_NAME;
+  String? get MODEL_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get modelVersion => MODEL_VERSION;
+  ///  `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` of the module that evaluated it.
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get moduleId => MODULE_ID;
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get moduleVersion => MODULE_VERSION;
+  ///  Content hash of the exact artifact that produced the values.
+  String? get MODULE_CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get moduleContentHash => MODULE_CONTENT_HASH;
+  List<RFLModelParameter>? get PARAMETERS => const fb.ListReader<RFLModelParameter>(RFLModelParameter.reader).vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'RFLModelBinding{TERM: ${TERM}, modelName: ${modelName}, modelVersion: ${modelVersion}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, moduleContentHash: ${moduleContentHash}, PARAMETERS: ${PARAMETERS}}';
+  }
+}
+
+class _RFLModelBindingReader extends fb.TableReader<RFLModelBinding> {
+  const _RFLModelBindingReader();
+
+  @override
+  RFLModelBinding createObject(fb.BufferContext bc, int offset) =>
+    RFLModelBinding._(bc, offset);
+}
+
+class RFLModelBindingBuilder {
+  RFLModelBindingBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addTerm(rflBudgetTerm? TERM) {
+    fbBuilder.addInt8(0, TERM?.value);
+    return fbBuilder.offset;
+  }
+  int addModelNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addModelVersionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleContentHashOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addParametersOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLModelBindingObjectBuilder extends fb.ObjectBuilder {
+  final rflBudgetTerm? _TERM;
+  final String? _MODEL_NAME;
+  final String? _MODEL_VERSION;
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final String? _MODULE_CONTENT_HASH;
+  final List<RFLModelParameterObjectBuilder>? _PARAMETERS;
+
+  RFLModelBindingObjectBuilder({
+    rflBudgetTerm? TERM,
+    String? MODEL_NAME,
+    String? modelName,
+    String? MODEL_VERSION,
+    String? modelVersion,
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    String? MODULE_CONTENT_HASH,
+    String? moduleContentHash,
+    List<RFLModelParameterObjectBuilder>? PARAMETERS,
+  })
+      : _TERM = TERM,
+        _MODEL_NAME = modelName ?? MODEL_NAME,
+        _MODEL_VERSION = modelVersion ?? MODEL_VERSION,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _MODULE_CONTENT_HASH = moduleContentHash ?? MODULE_CONTENT_HASH,
+        _PARAMETERS = PARAMETERS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MODEL_NAMEOffset = _MODEL_NAME == null ? null
+        : fbBuilder.writeString(_MODEL_NAME!);
+    final int? MODEL_VERSIONOffset = _MODEL_VERSION == null ? null
+        : fbBuilder.writeString(_MODEL_VERSION!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? MODULE_CONTENT_HASHOffset = _MODULE_CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_MODULE_CONTENT_HASH!);
+    final int? PARAMETERSOffset = _PARAMETERS == null ? null
+        : fbBuilder.writeList(_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(7);
+    fbBuilder.addInt8(0, _TERM?.value);
+    fbBuilder.addOffset(1, MODEL_NAMEOffset);
+    fbBuilder.addOffset(2, MODEL_VERSIONOffset);
+    fbBuilder.addOffset(3, MODULE_IDOffset);
+    fbBuilder.addOffset(4, MODULE_VERSIONOffset);
+    fbBuilder.addOffset(5, MODULE_CONTENT_HASHOffset);
+    fbBuilder.addOffset(6, PARAMETERSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Where this sample set came from, stated once for the record.
+class RFLProvenance {
+  RFLProvenance._(this._bc, this._bcOffset);
+  factory RFLProvenance(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFLProvenance> reader = _RFLProvenanceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  rflMethod get METHOD => rflMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  The producing system, dataset or measurement campaign. Required: a
+  ///  budget time series with no stated source is not publishable.
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Replayable query or scenario reference that regenerates this set.
+  String? get SOURCE_QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sourceQuery => SOURCE_QUERY;
+  ///  Identifier of the propagator that produced the geometry columns. A record
+  ///  whose METHOD is MODELED or HYBRID and which carries geometry columns MUST
+  ///  name it: geometry is only as good as the propagator, and the propagator is
+  ///  a pluggable choice, never an assumed default.
+  String? get PROPAGATOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get propagatorId => PROPAGATOR_ID;
+  String? get PROPAGATOR_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get propagatorVersion => PROPAGATOR_VERSION;
+  ///  Force model or configuration identifier handed to the propagator.
+  String? get PROPAGATOR_CONFIGURATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get propagatorConfiguration => PROPAGATOR_CONFIGURATION;
+  ///  Uniform sampling step, seconds. Absent when SAMPLE_EPOCHS are irregular.
+  double get SAMPLING_STEP_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get samplingStepS => SAMPLING_STEP_S;
+  ///  Per-term model bindings.
+  List<RFLModelBinding>? get MODELS => const fb.ListReader<RFLModelBinding>(RFLModelBinding.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Weather or environment dataset the atmospheric terms were evaluated
+  ///  against, when they were not evaluated against a statistical model.
+  String? get ENVIRONMENT_DATASET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get environmentDataset => ENVIRONMENT_DATASET;
+  ///  Terrain or surface dataset the blockage terms were evaluated against.
+  String? get TERRAIN_DATASET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get terrainDataset => TERRAIN_DATASET;
+  ///  Unix ms this set was computed or recorded.
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get computedAt => COMPUTED_AT;
+  ///  Unix ms the upstream inputs were retrieved.
+  int get RETRIEVED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get retrievedAt => RETRIEVED_AT;
+  ///  Licence the source imposes on redistribution. An empty LICENSE means
+  ///  UNKNOWN TERMS — never public domain, never a grant to redistribute.
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  True when the licence forbids commercial use of this set.
+  bool get NON_COMMERCIAL_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get nonCommercialOnly => NON_COMMERCIAL_ONLY;
+  ///  Attribution the licence requires this record to carry downstream.
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+  ///  MODELS remains the per-budget-term attribution surface.
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get moduleId => MODULE_ID;
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get moduleVersion => MODULE_VERSION;
+  ///  Content hash of the exact producing WASM artifact.
+  String? get MODULE_CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get moduleContentHash => MODULE_CONTENT_HASH;
+
+  @override
+  String toString() {
+    return 'RFLProvenance{METHOD: ${METHOD}, SOURCE: ${SOURCE}, sourceQuery: ${sourceQuery}, propagatorId: ${propagatorId}, propagatorVersion: ${propagatorVersion}, propagatorConfiguration: ${propagatorConfiguration}, samplingStepS: ${samplingStepS}, MODELS: ${MODELS}, environmentDataset: ${environmentDataset}, terrainDataset: ${terrainDataset}, computedAt: ${computedAt}, retrievedAt: ${retrievedAt}, LICENSE: ${LICENSE}, nonCommercialOnly: ${nonCommercialOnly}, CITATION: ${CITATION}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, moduleContentHash: ${moduleContentHash}}';
+  }
+}
+
+class _RFLProvenanceReader extends fb.TableReader<RFLProvenance> {
+  const _RFLProvenanceReader();
+
+  @override
+  RFLProvenance createObject(fb.BufferContext bc, int offset) =>
+    RFLProvenance._(bc, offset);
+}
+
+class RFLProvenanceBuilder {
+  RFLProvenanceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(18);
+  }
+
+  int addMethod(rflMethod? METHOD) {
+    fbBuilder.addInt8(0, METHOD?.value);
+    return fbBuilder.offset;
+  }
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceQueryOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorVersionOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addSamplingStepS(double? SAMPLING_STEP_S) {
+    fbBuilder.addFloat64(6, SAMPLING_STEP_S);
+    return fbBuilder.offset;
+  }
+  int addModelsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addEnvironmentDatasetOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addTerrainDatasetOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(10, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAt(int? RETRIEVED_AT) {
+    fbBuilder.addUint64(11, RETRIEVED_AT);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addNonCommercialOnly(bool? NON_COMMERCIAL_ONLY) {
+    fbBuilder.addBool(13, NON_COMMERCIAL_ONLY);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleContentHashOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLProvenanceObjectBuilder extends fb.ObjectBuilder {
+  final rflMethod? _METHOD;
+  final String? _SOURCE;
+  final String? _SOURCE_QUERY;
+  final String? _PROPAGATOR_ID;
+  final String? _PROPAGATOR_VERSION;
+  final String? _PROPAGATOR_CONFIGURATION;
+  final double? _SAMPLING_STEP_S;
+  final List<RFLModelBindingObjectBuilder>? _MODELS;
+  final String? _ENVIRONMENT_DATASET;
+  final String? _TERRAIN_DATASET;
+  final int? _COMPUTED_AT;
+  final int? _RETRIEVED_AT;
+  final String? _LICENSE;
+  final bool? _NON_COMMERCIAL_ONLY;
+  final String? _CITATION;
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final String? _MODULE_CONTENT_HASH;
+
+  RFLProvenanceObjectBuilder({
+    rflMethod? METHOD,
+    String? SOURCE,
+    String? SOURCE_QUERY,
+    String? sourceQuery,
+    String? PROPAGATOR_ID,
+    String? propagatorId,
+    String? PROPAGATOR_VERSION,
+    String? propagatorVersion,
+    String? PROPAGATOR_CONFIGURATION,
+    String? propagatorConfiguration,
+    double? SAMPLING_STEP_S,
+    double? samplingStepS,
+    List<RFLModelBindingObjectBuilder>? MODELS,
+    String? ENVIRONMENT_DATASET,
+    String? environmentDataset,
+    String? TERRAIN_DATASET,
+    String? terrainDataset,
+    int? COMPUTED_AT,
+    int? computedAt,
+    int? RETRIEVED_AT,
+    int? retrievedAt,
+    String? LICENSE,
+    bool? NON_COMMERCIAL_ONLY,
+    bool? nonCommercialOnly,
+    String? CITATION,
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    String? MODULE_CONTENT_HASH,
+    String? moduleContentHash,
+  })
+      : _METHOD = METHOD,
+        _SOURCE = SOURCE,
+        _SOURCE_QUERY = sourceQuery ?? SOURCE_QUERY,
+        _PROPAGATOR_ID = propagatorId ?? PROPAGATOR_ID,
+        _PROPAGATOR_VERSION = propagatorVersion ?? PROPAGATOR_VERSION,
+        _PROPAGATOR_CONFIGURATION = propagatorConfiguration ?? PROPAGATOR_CONFIGURATION,
+        _SAMPLING_STEP_S = samplingStepS ?? SAMPLING_STEP_S,
+        _MODELS = MODELS,
+        _ENVIRONMENT_DATASET = environmentDataset ?? ENVIRONMENT_DATASET,
+        _TERRAIN_DATASET = terrainDataset ?? TERRAIN_DATASET,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
+        _LICENSE = LICENSE,
+        _NON_COMMERCIAL_ONLY = nonCommercialOnly ?? NON_COMMERCIAL_ONLY,
+        _CITATION = CITATION,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _MODULE_CONTENT_HASH = moduleContentHash ?? MODULE_CONTENT_HASH;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    final int? SOURCE_QUERYOffset = _SOURCE_QUERY == null ? null
+        : fbBuilder.writeString(_SOURCE_QUERY!);
+    final int? PROPAGATOR_IDOffset = _PROPAGATOR_ID == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_ID!);
+    final int? PROPAGATOR_VERSIONOffset = _PROPAGATOR_VERSION == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_VERSION!);
+    final int? PROPAGATOR_CONFIGURATIONOffset = _PROPAGATOR_CONFIGURATION == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_CONFIGURATION!);
+    final int? MODELSOffset = _MODELS == null ? null
+        : fbBuilder.writeList(_MODELS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ENVIRONMENT_DATASETOffset = _ENVIRONMENT_DATASET == null ? null
+        : fbBuilder.writeString(_ENVIRONMENT_DATASET!);
+    final int? TERRAIN_DATASETOffset = _TERRAIN_DATASET == null ? null
+        : fbBuilder.writeString(_TERRAIN_DATASET!);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? CITATIONOffset = _CITATION == null ? null
+        : fbBuilder.writeString(_CITATION!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? MODULE_CONTENT_HASHOffset = _MODULE_CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_MODULE_CONTENT_HASH!);
+    fbBuilder.startTable(18);
+    fbBuilder.addInt8(0, _METHOD?.value);
+    fbBuilder.addOffset(1, SOURCEOffset);
+    fbBuilder.addOffset(2, SOURCE_QUERYOffset);
+    fbBuilder.addOffset(3, PROPAGATOR_IDOffset);
+    fbBuilder.addOffset(4, PROPAGATOR_VERSIONOffset);
+    fbBuilder.addOffset(5, PROPAGATOR_CONFIGURATIONOffset);
+    fbBuilder.addFloat64(6, _SAMPLING_STEP_S);
+    fbBuilder.addOffset(7, MODELSOffset);
+    fbBuilder.addOffset(8, ENVIRONMENT_DATASETOffset);
+    fbBuilder.addOffset(9, TERRAIN_DATASETOffset);
+    fbBuilder.addUint64(10, _COMPUTED_AT);
+    fbBuilder.addUint64(11, _RETRIEVED_AT);
+    fbBuilder.addOffset(12, LICENSEOffset);
+    fbBuilder.addBool(13, _NON_COMMERCIAL_ONLY);
+    fbBuilder.addOffset(14, CITATIONOffset);
+    fbBuilder.addOffset(15, MODULE_IDOffset);
+    fbBuilder.addOffset(16, MODULE_VERSIONOffset);
+    fbBuilder.addOffset(17, MODULE_CONTENT_HASHOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  RF Link Sample
+class RFL {
+  RFL._(this._bc, this._bcOffset);
+  factory RFL(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFL> reader = _RFLReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable identifier of this sample set.
+  String? get RFL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get rflId => RFL_ID;
+  ///  Display name.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Analysis or scenario grouping identifier shared with the `$ACI` and
+  ///  `$CVP` products derived from this set.
+  String? get SCENARIO_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get scenarioId => SCENARIO_ID;
+  ///  Link definitions. SAMPLE_LINK_INDEXES index into this vector.
+  List<RFLLink>? get LINKS => const fb.ListReader<RFLLink>(RFLLink.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Number of samples. Every present metric array MUST have exactly this
+  ///  many entries.
+  int get SAMPLE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get sampleCount => SAMPLE_COUNT;
+  ///  Index into LINKS for each sample.
+  List<int>? get SAMPLE_LINK_INDEXES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<int>? get sampleLinkIndexes => SAMPLE_LINK_INDEXES;
+  ///  Sample epochs, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM. Samples
+  ///  need not be uniformly spaced and need not be grouped by link, but MUST be
+  ///  non-decreasing within each link.
+  List<double>? get SAMPLE_EPOCHS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<double>? get sampleEpochs => SAMPLE_EPOCHS;
+  ///  Time scale SAMPLE_EPOCHS are expressed in. Defaults to UTC explicitly:
+  ///  `timingStandard` ordinal 0 is GMST, so an unset field would otherwise
+  ///  decode as sidereal time.
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 11));
+  timingStandard get timeSystem => TIME_SYSTEM;
+  ///  Access state per sample.
+  List<rflAccessState>? get ACCESS_STATES => const fb.ListReader<rflAccessState>(rflAccessState.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  List<rflAccessState>? get accessStates => ACCESS_STATES;
+  ///  Slant range, metres.
+  List<double>? get RANGE_M => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<double>? get rangeM => RANGE_M;
+  ///  Range rate, metres per second; positive is opening.
+  List<double>? get RANGE_RATE_M_S => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<double>? get rangeRateMS => RANGE_RATE_M_S;
+  ///  Azimuth at the receiving endpoint, degrees east of north [0-360).
+  List<double>? get AZIMUTH_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 26);
+  List<double>? get azimuthDeg => AZIMUTH_DEG;
+  ///  Elevation at the receiving endpoint, degrees above the local horizon.
+  List<double>? get ELEVATION_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+  List<double>? get elevationDeg => ELEVATION_DEG;
+  ///  Azimuth at the transmitting endpoint, degrees east of north [0-360).
+  List<double>? get TRANSMIT_AZIMUTH_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 30);
+  List<double>? get transmitAzimuthDeg => TRANSMIT_AZIMUTH_DEG;
+  ///  Elevation at the transmitting endpoint, degrees.
+  List<double>? get TRANSMIT_ELEVATION_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 32);
+  List<double>? get transmitElevationDeg => TRANSMIT_ELEVATION_DEG;
+  ///  One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+  ///  positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+  ///  this record — a shift of a few kHz on a GHz carrier is destroyed by an
+  ///  MHz encoding.
+  List<double>? get DOPPLER_SHIFT_HZ => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 34);
+  List<double>? get dopplerShiftHz => DOPPLER_SHIFT_HZ;
+  ///  Doppler rate, hertz per second.
+  List<double>? get DOPPLER_RATE_HZ_S => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<double>? get dopplerRateHzS => DOPPLER_RATE_HZ_S;
+  ///  Effective isotropic radiated power toward the receiver, dBW.
+  List<double>? get EIRP_DBW => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 38);
+  List<double>? get eirpDbw => EIRP_DBW;
+  ///  Transmit antenna gain in the direction of the receiver, dBi.
+  List<double>? get TRANSMIT_ANTENNA_GAIN_DBI => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 40);
+  List<double>? get transmitAntennaGainDbi => TRANSMIT_ANTENNA_GAIN_DBI;
+  ///  Receive antenna gain in the direction of the transmitter, dBi.
+  List<double>? get RECEIVE_ANTENNA_GAIN_DBI => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 42);
+  List<double>? get receiveAntennaGainDbi => RECEIVE_ANTENNA_GAIN_DBI;
+  ///  Free-space path loss, dB.
+  List<double>? get FREE_SPACE_PATH_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<double>? get freeSpacePathLossDb => FREE_SPACE_PATH_LOSS_DB;
+  ///  Gaseous (oxygen and water vapour) absorption, dB.
+  List<double>? get GASEOUS_ABSORPTION_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 46);
+  List<double>? get gaseousAbsorptionLossDb => GASEOUS_ABSORPTION_LOSS_DB;
+  ///  Rain attenuation, dB.
+  List<double>? get RAIN_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 48);
+  List<double>? get rainLossDb => RAIN_LOSS_DB;
+  ///  Cloud and fog attenuation, dB.
+  List<double>? get CLOUD_FOG_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 50);
+  List<double>? get cloudFogLossDb => CLOUD_FOG_LOSS_DB;
+  ///  Tropospheric or ionospheric scintillation, dB.
+  List<double>? get SCINTILLATION_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 52);
+  List<double>? get scintillationLossDb => SCINTILLATION_LOSS_DB;
+  ///  Terrain diffraction and blockage, dB.
+  List<double>? get TERRAIN_DIFFRACTION_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 54);
+  List<double>? get terrainDiffractionLossDb => TERRAIN_DIFFRACTION_LOSS_DB;
+  ///  Total loss from 3D obstacles on the path, dB. The per-obstacle detail —
+  ///  which object, which material, at what angle, through how much of it — is
+  ///  in OBSTRUCTIONS.
+  List<double>? get OBSTRUCTION_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 56);
+  List<double>? get obstructionLossDb => OBSTRUCTION_LOSS_DB;
+  ///  Polarization mismatch, dB.
+  List<double>? get POLARIZATION_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 58);
+  List<double>? get polarizationLossDb => POLARIZATION_LOSS_DB;
+  ///  Antenna pointing error, dB.
+  List<double>? get POINTING_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 60);
+  List<double>? get pointingLossDb => POINTING_LOSS_DB;
+  ///  Implementation and hardware losses, dB.
+  List<double>? get IMPLEMENTATION_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 62);
+  List<double>? get implementationLossDb => IMPLEMENTATION_LOSS_DB;
+  ///  Total of all path terms actually applied, dB. Published as its own column
+  ///  rather than left to the consumer to sum: a producer that applied a term
+  ///  this schema has no column for MUST still report an honest total, and the
+  ///  discrepancy against the itemised columns is then visible.
+  List<double>? get TOTAL_PATH_LOSS_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 64);
+  List<double>? get totalPathLossDb => TOTAL_PATH_LOSS_DB;
+  ///  Received carrier power at the receiver input, dBW.
+  List<double>? get RECEIVED_POWER_DBW => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 66);
+  List<double>? get receivedPowerDbw => RECEIVED_POWER_DBW;
+  ///  Receiving system noise temperature, kelvin.
+  List<double>? get SYSTEM_NOISE_TEMPERATURE_K => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 68);
+  List<double>? get systemNoiseTemperatureK => SYSTEM_NOISE_TEMPERATURE_K;
+  ///  Receiving system figure of merit G/T, dB/K.
+  List<double>? get GAIN_TO_NOISE_TEMPERATURE_DB_PER_K => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 70);
+  List<double>? get gainToNoiseTemperatureDbPerK => GAIN_TO_NOISE_TEMPERATURE_DB_PER_K;
+  ///  Carrier-to-noise-density ratio C/N0, dB-Hz.
+  List<double>? get CARRIER_TO_NOISE_DENSITY_DBHZ => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 72);
+  List<double>? get carrierToNoiseDensityDbhz => CARRIER_TO_NOISE_DENSITY_DBHZ;
+  ///  Carrier-to-noise ratio C/N in the occupied bandwidth, dB.
+  List<double>? get CARRIER_TO_NOISE_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 74);
+  List<double>? get carrierToNoiseDb => CARRIER_TO_NOISE_DB;
+  ///  Energy per bit to noise density Eb/N0, dB.
+  List<double>? get ENERGY_PER_BIT_TO_NOISE_DENSITY_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 76);
+  List<double>? get energyPerBitToNoiseDensityDb => ENERGY_PER_BIT_TO_NOISE_DENSITY_DB;
+  ///  Bit error rate as a probability [0-1], NOT an exponent and NOT a
+  ///  percentage. 1e-6 is encoded 1e-6.
+  List<double>? get BIT_ERROR_RATE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 78);
+  List<double>? get bitErrorRate => BIT_ERROR_RATE;
+  ///  Link margin against the link's stated threshold, dB. Meaningless without
+  ///  RFLLink.THRESHOLD_TERM / THRESHOLD_VALUE / THRESHOLD_COMPARISON.
+  List<double>? get LINK_MARGIN_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 80);
+  List<double>? get linkMarginDb => LINK_MARGIN_DB;
+  ///  Achievable channel capacity, bits per second.
+  List<double>? get CHANNEL_CAPACITY_BPS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 82);
+  List<double>? get channelCapacityBps => CHANNEL_CAPACITY_BPS;
+  ///  Aggregate received interfering power, dBW.
+  List<double>? get INTERFERENCE_POWER_DBW => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 84);
+  List<double>? get interferencePowerDbw => INTERFERENCE_POWER_DBW;
+  ///  Carrier to noise-plus-interference ratio C/(N+I), dB.
+  List<double>? get CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 86);
+  List<double>? get carrierToNoisePlusInterferenceDb => CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB;
+  ///  Signal to interference-plus-noise ratio, dB.
+  List<double>? get SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 88);
+  List<double>? get signalToInterferencePlusNoiseDb => SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB;
+  ///  Per-contribution interference detail, sparse.
+  List<RFLInterferenceContribution>? get INTERFERENCE_CONTRIBUTIONS => const fb.ListReader<RFLInterferenceContribution>(RFLInterferenceContribution.reader).vTableGetNullable(_bc, _bcOffset, 90);
+  List<RFLInterferenceContribution>? get interferenceContributions => INTERFERENCE_CONTRIBUTIONS;
+  ///  Per-interaction obstacle detail, sparse. Each entry names the `$RFS`
+  ///  material it went through, reflected off or was blocked by.
+  List<RFLObstruction>? get OBSTRUCTIONS => const fb.ListReader<RFLObstruction>(RFLObstruction.reader).vTableGetNullable(_bc, _bcOffset, 92);
+  ///  The single condition that bound the link at each sample.
+  List<rflConstraint>? get LIMITING_CONSTRAINTS => const fb.ListReader<rflConstraint>(rflConstraint.reader).vTableGetNullable(_bc, _bcOffset, 94);
+  List<rflConstraint>? get limitingConstraints => LIMITING_CONSTRAINTS;
+  ///  Verbatim description required when a LIMITING_CONSTRAINTS entry is OTHER.
+  String? get LIMITING_CONSTRAINT_NOTE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
+  String? get limitingConstraintNote => LIMITING_CONSTRAINT_NOTE;
+  ///  Provenance of the whole set. Required: an unattributed budget is not
+  ///  publishable.
+  RFLProvenance? get PROVENANCE => RFLProvenance.reader.vTableGetNullable(_bc, _bcOffset, 98);
+  ///  Unix ms this record was serialized.
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 100, 0);
+  int get computedAt => COMPUTED_AT;
+  ///  `$EPM` identifier of the producing node.
+  String? get PRODUCER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
+  String? get producerId => PRODUCER_ID;
+  ///  Ed25519 signature by the producing `$EPM` over the size-prefixed
+  ///  FlatBuffer projection with both 64-byte signature payloads zeroed while
+  ///  preserving their vectors and offsets.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 104);
+  ///  Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  ///  field order, IDL capitalization, no insignificant whitespace, and both
+  ///  signature fields omitted.
+  List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 106);
+  List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
+  ///  Index into the selected link's RFLLink.MODCOD_SET for each sample.
+  ///  SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+  List<int>? get SELECTED_MODCOD_INDEX => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 108);
+  List<int>? get selectedModcodIndex => SELECTED_MODCOD_INDEX;
+  List<bool>? get SELECTED_MODCOD_VALID => const fb.ListReader<bool>(fb.BoolReader()).vTableGetNullable(_bc, _bcOffset, 110);
+  List<bool>? get selectedModcodValid => SELECTED_MODCOD_VALID;
+  ///  Spectral efficiency delivered by the selected entry, bit/s/Hz.
+  List<double>? get SPECTRAL_EFFICIENCY_BPS_HZ => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 112);
+  List<double>? get spectralEfficiencyBpsHz => SPECTRAL_EFFICIENCY_BPS_HZ;
+  ///  Delivered information rate after adaptive selection, bits per second.
+  List<double>? get ACHIEVED_DATA_RATE_BPS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 114);
+  List<double>? get achievedDataRateBps => ACHIEVED_DATA_RATE_BPS;
+  ///  Margin above the selected entry's threshold, dB.
+  List<double>? get ACM_MARGIN_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 116);
+  List<double>? get acmMarginDb => ACM_MARGIN_DB;
+  ///  Symbol energy to noise spectral density, dB.
+  List<double>? get ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 118);
+  List<double>? get energyPerSymbolToNoiseDensityDb => ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB;
+  ///  Decoded block error probability [0-1].
+  List<double>? get BLOCK_ERROR_RATE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 120);
+  List<double>? get blockErrorRate => BLOCK_ERROR_RATE;
+
+  @override
+  String toString() {
+    return 'RFL{rflId: ${rflId}, NAME: ${NAME}, scenarioId: ${scenarioId}, LINKS: ${LINKS}, sampleCount: ${sampleCount}, sampleLinkIndexes: ${sampleLinkIndexes}, sampleEpochs: ${sampleEpochs}, timeSystem: ${timeSystem}, accessStates: ${accessStates}, rangeM: ${rangeM}, rangeRateMS: ${rangeRateMS}, azimuthDeg: ${azimuthDeg}, elevationDeg: ${elevationDeg}, transmitAzimuthDeg: ${transmitAzimuthDeg}, transmitElevationDeg: ${transmitElevationDeg}, dopplerShiftHz: ${dopplerShiftHz}, dopplerRateHzS: ${dopplerRateHzS}, eirpDbw: ${eirpDbw}, transmitAntennaGainDbi: ${transmitAntennaGainDbi}, receiveAntennaGainDbi: ${receiveAntennaGainDbi}, freeSpacePathLossDb: ${freeSpacePathLossDb}, gaseousAbsorptionLossDb: ${gaseousAbsorptionLossDb}, rainLossDb: ${rainLossDb}, cloudFogLossDb: ${cloudFogLossDb}, scintillationLossDb: ${scintillationLossDb}, terrainDiffractionLossDb: ${terrainDiffractionLossDb}, obstructionLossDb: ${obstructionLossDb}, polarizationLossDb: ${polarizationLossDb}, pointingLossDb: ${pointingLossDb}, implementationLossDb: ${implementationLossDb}, totalPathLossDb: ${totalPathLossDb}, receivedPowerDbw: ${receivedPowerDbw}, systemNoiseTemperatureK: ${systemNoiseTemperatureK}, gainToNoiseTemperatureDbPerK: ${gainToNoiseTemperatureDbPerK}, carrierToNoiseDensityDbhz: ${carrierToNoiseDensityDbhz}, carrierToNoiseDb: ${carrierToNoiseDb}, energyPerBitToNoiseDensityDb: ${energyPerBitToNoiseDensityDb}, bitErrorRate: ${bitErrorRate}, linkMarginDb: ${linkMarginDb}, channelCapacityBps: ${channelCapacityBps}, interferencePowerDbw: ${interferencePowerDbw}, carrierToNoisePlusInterferenceDb: ${carrierToNoisePlusInterferenceDb}, signalToInterferencePlusNoiseDb: ${signalToInterferencePlusNoiseDb}, interferenceContributions: ${interferenceContributions}, OBSTRUCTIONS: ${OBSTRUCTIONS}, limitingConstraints: ${limitingConstraints}, limitingConstraintNote: ${limitingConstraintNote}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}, selectedModcodIndex: ${selectedModcodIndex}, selectedModcodValid: ${selectedModcodValid}, spectralEfficiencyBpsHz: ${spectralEfficiencyBpsHz}, achievedDataRateBps: ${achievedDataRateBps}, acmMarginDb: ${acmMarginDb}, energyPerSymbolToNoiseDensityDb: ${energyPerSymbolToNoiseDensityDb}, blockErrorRate: ${blockErrorRate}}';
+  }
+}
+
+class _RFLReader extends fb.TableReader<RFL> {
+  const _RFLReader();
+
+  @override
+  RFL createObject(fb.BufferContext bc, int offset) =>
+    RFL._(bc, offset);
+}
+
+class RFLBuilder {
+  RFLBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(59);
+  }
+
+  int addRflIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addScenarioIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addLinksOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSampleCount(int? SAMPLE_COUNT) {
+    fbBuilder.addUint32(4, SAMPLE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addSampleLinkIndexesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addSampleEpochsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
+    fbBuilder.addInt8(7, TIME_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
+  int addAccessStatesOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeMOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeRateMSOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addAzimuthDegOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addElevationDegOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitAzimuthDegOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitElevationDegOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addDopplerShiftHzOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addDopplerRateHzSOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addEirpDbwOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitAntennaGainDbiOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiveAntennaGainDbiOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addFreeSpacePathLossDbOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addGaseousAbsorptionLossDbOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addRainLossDbOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCloudFogLossDbOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addScintillationLossDbOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addTerrainDiffractionLossDbOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addObstructionLossDbOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addPolarizationLossDbOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addPointingLossDbOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addImplementationLossDbOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addTotalPathLossDbOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addReceivedPowerDbwOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addSystemNoiseTemperatureKOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addGainToNoiseTemperatureDbPerKOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addCarrierToNoiseDensityDbhzOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addCarrierToNoiseDbOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addEnergyPerBitToNoiseDensityDbOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addBitErrorRateOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addLinkMarginDbOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addChannelCapacityBpsOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addInterferencePowerDbwOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addCarrierToNoisePlusInterferenceDbOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addSignalToInterferencePlusNoiseDbOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addInterferenceContributionsOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addObstructionsOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
+    return fbBuilder.offset;
+  }
+  int addLimitingConstraintsOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addLimitingConstraintNoteOffset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(48, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addProducerIdOffset(int? offset) {
+    fbBuilder.addOffset(49, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(50, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalJsonSignatureOffset(int? offset) {
+    fbBuilder.addOffset(51, offset);
+    return fbBuilder.offset;
+  }
+  int addSelectedModcodIndexOffset(int? offset) {
+    fbBuilder.addOffset(52, offset);
+    return fbBuilder.offset;
+  }
+  int addSelectedModcodValidOffset(int? offset) {
+    fbBuilder.addOffset(53, offset);
+    return fbBuilder.offset;
+  }
+  int addSpectralEfficiencyBpsHzOffset(int? offset) {
+    fbBuilder.addOffset(54, offset);
+    return fbBuilder.offset;
+  }
+  int addAchievedDataRateBpsOffset(int? offset) {
+    fbBuilder.addOffset(55, offset);
+    return fbBuilder.offset;
+  }
+  int addAcmMarginDbOffset(int? offset) {
+    fbBuilder.addOffset(56, offset);
+    return fbBuilder.offset;
+  }
+  int addEnergyPerSymbolToNoiseDensityDbOffset(int? offset) {
+    fbBuilder.addOffset(57, offset);
+    return fbBuilder.offset;
+  }
+  int addBlockErrorRateOffset(int? offset) {
+    fbBuilder.addOffset(58, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLObjectBuilder extends fb.ObjectBuilder {
+  final String? _RFL_ID;
+  final String? _NAME;
+  final String? _SCENARIO_ID;
+  final List<RFLLinkObjectBuilder>? _LINKS;
+  final int? _SAMPLE_COUNT;
+  final List<int>? _SAMPLE_LINK_INDEXES;
+  final List<double>? _SAMPLE_EPOCHS;
+  final timingStandard? _TIME_SYSTEM;
+  final List<rflAccessState>? _ACCESS_STATES;
+  final List<double>? _RANGE_M;
+  final List<double>? _RANGE_RATE_M_S;
+  final List<double>? _AZIMUTH_DEG;
+  final List<double>? _ELEVATION_DEG;
+  final List<double>? _TRANSMIT_AZIMUTH_DEG;
+  final List<double>? _TRANSMIT_ELEVATION_DEG;
+  final List<double>? _DOPPLER_SHIFT_HZ;
+  final List<double>? _DOPPLER_RATE_HZ_S;
+  final List<double>? _EIRP_DBW;
+  final List<double>? _TRANSMIT_ANTENNA_GAIN_DBI;
+  final List<double>? _RECEIVE_ANTENNA_GAIN_DBI;
+  final List<double>? _FREE_SPACE_PATH_LOSS_DB;
+  final List<double>? _GASEOUS_ABSORPTION_LOSS_DB;
+  final List<double>? _RAIN_LOSS_DB;
+  final List<double>? _CLOUD_FOG_LOSS_DB;
+  final List<double>? _SCINTILLATION_LOSS_DB;
+  final List<double>? _TERRAIN_DIFFRACTION_LOSS_DB;
+  final List<double>? _OBSTRUCTION_LOSS_DB;
+  final List<double>? _POLARIZATION_LOSS_DB;
+  final List<double>? _POINTING_LOSS_DB;
+  final List<double>? _IMPLEMENTATION_LOSS_DB;
+  final List<double>? _TOTAL_PATH_LOSS_DB;
+  final List<double>? _RECEIVED_POWER_DBW;
+  final List<double>? _SYSTEM_NOISE_TEMPERATURE_K;
+  final List<double>? _GAIN_TO_NOISE_TEMPERATURE_DB_PER_K;
+  final List<double>? _CARRIER_TO_NOISE_DENSITY_DBHZ;
+  final List<double>? _CARRIER_TO_NOISE_DB;
+  final List<double>? _ENERGY_PER_BIT_TO_NOISE_DENSITY_DB;
+  final List<double>? _BIT_ERROR_RATE;
+  final List<double>? _LINK_MARGIN_DB;
+  final List<double>? _CHANNEL_CAPACITY_BPS;
+  final List<double>? _INTERFERENCE_POWER_DBW;
+  final List<double>? _CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB;
+  final List<double>? _SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB;
+  final List<RFLInterferenceContributionObjectBuilder>? _INTERFERENCE_CONTRIBUTIONS;
+  final List<RFLObstructionObjectBuilder>? _OBSTRUCTIONS;
+  final List<rflConstraint>? _LIMITING_CONSTRAINTS;
+  final String? _LIMITING_CONSTRAINT_NOTE;
+  final RFLProvenanceObjectBuilder? _PROVENANCE;
+  final int? _COMPUTED_AT;
+  final String? _PRODUCER_ID;
+  final List<int>? _SIGNATURE;
+  final List<int>? _CANONICAL_JSON_SIGNATURE;
+  final List<int>? _SELECTED_MODCOD_INDEX;
+  final List<bool>? _SELECTED_MODCOD_VALID;
+  final List<double>? _SPECTRAL_EFFICIENCY_BPS_HZ;
+  final List<double>? _ACHIEVED_DATA_RATE_BPS;
+  final List<double>? _ACM_MARGIN_DB;
+  final List<double>? _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB;
+  final List<double>? _BLOCK_ERROR_RATE;
+
+  RFLObjectBuilder({
+    String? RFL_ID,
+    String? rflId,
+    String? NAME,
+    String? SCENARIO_ID,
+    String? scenarioId,
+    List<RFLLinkObjectBuilder>? LINKS,
+    int? SAMPLE_COUNT,
+    int? sampleCount,
+    List<int>? SAMPLE_LINK_INDEXES,
+    List<int>? sampleLinkIndexes,
+    List<double>? SAMPLE_EPOCHS,
+    List<double>? sampleEpochs,
+    timingStandard? TIME_SYSTEM,
+    timingStandard? timeSystem,
+    List<rflAccessState>? ACCESS_STATES,
+    List<rflAccessState>? accessStates,
+    List<double>? RANGE_M,
+    List<double>? rangeM,
+    List<double>? RANGE_RATE_M_S,
+    List<double>? rangeRateMS,
+    List<double>? AZIMUTH_DEG,
+    List<double>? azimuthDeg,
+    List<double>? ELEVATION_DEG,
+    List<double>? elevationDeg,
+    List<double>? TRANSMIT_AZIMUTH_DEG,
+    List<double>? transmitAzimuthDeg,
+    List<double>? TRANSMIT_ELEVATION_DEG,
+    List<double>? transmitElevationDeg,
+    List<double>? DOPPLER_SHIFT_HZ,
+    List<double>? dopplerShiftHz,
+    List<double>? DOPPLER_RATE_HZ_S,
+    List<double>? dopplerRateHzS,
+    List<double>? EIRP_DBW,
+    List<double>? eirpDbw,
+    List<double>? TRANSMIT_ANTENNA_GAIN_DBI,
+    List<double>? transmitAntennaGainDbi,
+    List<double>? RECEIVE_ANTENNA_GAIN_DBI,
+    List<double>? receiveAntennaGainDbi,
+    List<double>? FREE_SPACE_PATH_LOSS_DB,
+    List<double>? freeSpacePathLossDb,
+    List<double>? GASEOUS_ABSORPTION_LOSS_DB,
+    List<double>? gaseousAbsorptionLossDb,
+    List<double>? RAIN_LOSS_DB,
+    List<double>? rainLossDb,
+    List<double>? CLOUD_FOG_LOSS_DB,
+    List<double>? cloudFogLossDb,
+    List<double>? SCINTILLATION_LOSS_DB,
+    List<double>? scintillationLossDb,
+    List<double>? TERRAIN_DIFFRACTION_LOSS_DB,
+    List<double>? terrainDiffractionLossDb,
+    List<double>? OBSTRUCTION_LOSS_DB,
+    List<double>? obstructionLossDb,
+    List<double>? POLARIZATION_LOSS_DB,
+    List<double>? polarizationLossDb,
+    List<double>? POINTING_LOSS_DB,
+    List<double>? pointingLossDb,
+    List<double>? IMPLEMENTATION_LOSS_DB,
+    List<double>? implementationLossDb,
+    List<double>? TOTAL_PATH_LOSS_DB,
+    List<double>? totalPathLossDb,
+    List<double>? RECEIVED_POWER_DBW,
+    List<double>? receivedPowerDbw,
+    List<double>? SYSTEM_NOISE_TEMPERATURE_K,
+    List<double>? systemNoiseTemperatureK,
+    List<double>? GAIN_TO_NOISE_TEMPERATURE_DB_PER_K,
+    List<double>? gainToNoiseTemperatureDbPerK,
+    List<double>? CARRIER_TO_NOISE_DENSITY_DBHZ,
+    List<double>? carrierToNoiseDensityDbhz,
+    List<double>? CARRIER_TO_NOISE_DB,
+    List<double>? carrierToNoiseDb,
+    List<double>? ENERGY_PER_BIT_TO_NOISE_DENSITY_DB,
+    List<double>? energyPerBitToNoiseDensityDb,
+    List<double>? BIT_ERROR_RATE,
+    List<double>? bitErrorRate,
+    List<double>? LINK_MARGIN_DB,
+    List<double>? linkMarginDb,
+    List<double>? CHANNEL_CAPACITY_BPS,
+    List<double>? channelCapacityBps,
+    List<double>? INTERFERENCE_POWER_DBW,
+    List<double>? interferencePowerDbw,
+    List<double>? CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB,
+    List<double>? carrierToNoisePlusInterferenceDb,
+    List<double>? SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB,
+    List<double>? signalToInterferencePlusNoiseDb,
+    List<RFLInterferenceContributionObjectBuilder>? INTERFERENCE_CONTRIBUTIONS,
+    List<RFLInterferenceContributionObjectBuilder>? interferenceContributions,
+    List<RFLObstructionObjectBuilder>? OBSTRUCTIONS,
+    List<rflConstraint>? LIMITING_CONSTRAINTS,
+    List<rflConstraint>? limitingConstraints,
+    String? LIMITING_CONSTRAINT_NOTE,
+    String? limitingConstraintNote,
+    RFLProvenanceObjectBuilder? PROVENANCE,
+    int? COMPUTED_AT,
+    int? computedAt,
+    String? PRODUCER_ID,
+    String? producerId,
+    List<int>? SIGNATURE,
+    List<int>? CANONICAL_JSON_SIGNATURE,
+    List<int>? canonicalJsonSignature,
+    List<int>? SELECTED_MODCOD_INDEX,
+    List<int>? selectedModcodIndex,
+    List<bool>? SELECTED_MODCOD_VALID,
+    List<bool>? selectedModcodValid,
+    List<double>? SPECTRAL_EFFICIENCY_BPS_HZ,
+    List<double>? spectralEfficiencyBpsHz,
+    List<double>? ACHIEVED_DATA_RATE_BPS,
+    List<double>? achievedDataRateBps,
+    List<double>? ACM_MARGIN_DB,
+    List<double>? acmMarginDb,
+    List<double>? ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
+    List<double>? energyPerSymbolToNoiseDensityDb,
+    List<double>? BLOCK_ERROR_RATE,
+    List<double>? blockErrorRate,
+  })
+      : _RFL_ID = rflId ?? RFL_ID,
+        _NAME = NAME,
+        _SCENARIO_ID = scenarioId ?? SCENARIO_ID,
+        _LINKS = LINKS,
+        _SAMPLE_COUNT = sampleCount ?? SAMPLE_COUNT,
+        _SAMPLE_LINK_INDEXES = sampleLinkIndexes ?? SAMPLE_LINK_INDEXES,
+        _SAMPLE_EPOCHS = sampleEpochs ?? SAMPLE_EPOCHS,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _ACCESS_STATES = accessStates ?? ACCESS_STATES,
+        _RANGE_M = rangeM ?? RANGE_M,
+        _RANGE_RATE_M_S = rangeRateMS ?? RANGE_RATE_M_S,
+        _AZIMUTH_DEG = azimuthDeg ?? AZIMUTH_DEG,
+        _ELEVATION_DEG = elevationDeg ?? ELEVATION_DEG,
+        _TRANSMIT_AZIMUTH_DEG = transmitAzimuthDeg ?? TRANSMIT_AZIMUTH_DEG,
+        _TRANSMIT_ELEVATION_DEG = transmitElevationDeg ?? TRANSMIT_ELEVATION_DEG,
+        _DOPPLER_SHIFT_HZ = dopplerShiftHz ?? DOPPLER_SHIFT_HZ,
+        _DOPPLER_RATE_HZ_S = dopplerRateHzS ?? DOPPLER_RATE_HZ_S,
+        _EIRP_DBW = eirpDbw ?? EIRP_DBW,
+        _TRANSMIT_ANTENNA_GAIN_DBI = transmitAntennaGainDbi ?? TRANSMIT_ANTENNA_GAIN_DBI,
+        _RECEIVE_ANTENNA_GAIN_DBI = receiveAntennaGainDbi ?? RECEIVE_ANTENNA_GAIN_DBI,
+        _FREE_SPACE_PATH_LOSS_DB = freeSpacePathLossDb ?? FREE_SPACE_PATH_LOSS_DB,
+        _GASEOUS_ABSORPTION_LOSS_DB = gaseousAbsorptionLossDb ?? GASEOUS_ABSORPTION_LOSS_DB,
+        _RAIN_LOSS_DB = rainLossDb ?? RAIN_LOSS_DB,
+        _CLOUD_FOG_LOSS_DB = cloudFogLossDb ?? CLOUD_FOG_LOSS_DB,
+        _SCINTILLATION_LOSS_DB = scintillationLossDb ?? SCINTILLATION_LOSS_DB,
+        _TERRAIN_DIFFRACTION_LOSS_DB = terrainDiffractionLossDb ?? TERRAIN_DIFFRACTION_LOSS_DB,
+        _OBSTRUCTION_LOSS_DB = obstructionLossDb ?? OBSTRUCTION_LOSS_DB,
+        _POLARIZATION_LOSS_DB = polarizationLossDb ?? POLARIZATION_LOSS_DB,
+        _POINTING_LOSS_DB = pointingLossDb ?? POINTING_LOSS_DB,
+        _IMPLEMENTATION_LOSS_DB = implementationLossDb ?? IMPLEMENTATION_LOSS_DB,
+        _TOTAL_PATH_LOSS_DB = totalPathLossDb ?? TOTAL_PATH_LOSS_DB,
+        _RECEIVED_POWER_DBW = receivedPowerDbw ?? RECEIVED_POWER_DBW,
+        _SYSTEM_NOISE_TEMPERATURE_K = systemNoiseTemperatureK ?? SYSTEM_NOISE_TEMPERATURE_K,
+        _GAIN_TO_NOISE_TEMPERATURE_DB_PER_K = gainToNoiseTemperatureDbPerK ?? GAIN_TO_NOISE_TEMPERATURE_DB_PER_K,
+        _CARRIER_TO_NOISE_DENSITY_DBHZ = carrierToNoiseDensityDbhz ?? CARRIER_TO_NOISE_DENSITY_DBHZ,
+        _CARRIER_TO_NOISE_DB = carrierToNoiseDb ?? CARRIER_TO_NOISE_DB,
+        _ENERGY_PER_BIT_TO_NOISE_DENSITY_DB = energyPerBitToNoiseDensityDb ?? ENERGY_PER_BIT_TO_NOISE_DENSITY_DB,
+        _BIT_ERROR_RATE = bitErrorRate ?? BIT_ERROR_RATE,
+        _LINK_MARGIN_DB = linkMarginDb ?? LINK_MARGIN_DB,
+        _CHANNEL_CAPACITY_BPS = channelCapacityBps ?? CHANNEL_CAPACITY_BPS,
+        _INTERFERENCE_POWER_DBW = interferencePowerDbw ?? INTERFERENCE_POWER_DBW,
+        _CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB = carrierToNoisePlusInterferenceDb ?? CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB,
+        _SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB = signalToInterferencePlusNoiseDb ?? SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB,
+        _INTERFERENCE_CONTRIBUTIONS = interferenceContributions ?? INTERFERENCE_CONTRIBUTIONS,
+        _OBSTRUCTIONS = OBSTRUCTIONS,
+        _LIMITING_CONSTRAINTS = limitingConstraints ?? LIMITING_CONSTRAINTS,
+        _LIMITING_CONSTRAINT_NOTE = limitingConstraintNote ?? LIMITING_CONSTRAINT_NOTE,
+        _PROVENANCE = PROVENANCE,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _PRODUCER_ID = producerId ?? PRODUCER_ID,
+        _SIGNATURE = SIGNATURE,
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE,
+        _SELECTED_MODCOD_INDEX = selectedModcodIndex ?? SELECTED_MODCOD_INDEX,
+        _SELECTED_MODCOD_VALID = selectedModcodValid ?? SELECTED_MODCOD_VALID,
+        _SPECTRAL_EFFICIENCY_BPS_HZ = spectralEfficiencyBpsHz ?? SPECTRAL_EFFICIENCY_BPS_HZ,
+        _ACHIEVED_DATA_RATE_BPS = achievedDataRateBps ?? ACHIEVED_DATA_RATE_BPS,
+        _ACM_MARGIN_DB = acmMarginDb ?? ACM_MARGIN_DB,
+        _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = energyPerSymbolToNoiseDensityDb ?? ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
+        _BLOCK_ERROR_RATE = blockErrorRate ?? BLOCK_ERROR_RATE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? RFL_IDOffset = _RFL_ID == null ? null
+        : fbBuilder.writeString(_RFL_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? SCENARIO_IDOffset = _SCENARIO_ID == null ? null
+        : fbBuilder.writeString(_SCENARIO_ID!);
+    final int? LINKSOffset = _LINKS == null ? null
+        : fbBuilder.writeList(_LINKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SAMPLE_LINK_INDEXESOffset = _SAMPLE_LINK_INDEXES == null ? null
+        : fbBuilder.writeListUint32(_SAMPLE_LINK_INDEXES!);
+    final int? SAMPLE_EPOCHSOffset = _SAMPLE_EPOCHS == null ? null
+        : fbBuilder.writeListFloat64(_SAMPLE_EPOCHS!);
+    final int? ACCESS_STATESOffset = _ACCESS_STATES == null ? null
+        : fbBuilder.writeListInt8(_ACCESS_STATES!.map((f) => f.value).toList());
+    final int? RANGE_MOffset = _RANGE_M == null ? null
+        : fbBuilder.writeListFloat64(_RANGE_M!);
+    final int? RANGE_RATE_M_SOffset = _RANGE_RATE_M_S == null ? null
+        : fbBuilder.writeListFloat64(_RANGE_RATE_M_S!);
+    final int? AZIMUTH_DEGOffset = _AZIMUTH_DEG == null ? null
+        : fbBuilder.writeListFloat64(_AZIMUTH_DEG!);
+    final int? ELEVATION_DEGOffset = _ELEVATION_DEG == null ? null
+        : fbBuilder.writeListFloat64(_ELEVATION_DEG!);
+    final int? TRANSMIT_AZIMUTH_DEGOffset = _TRANSMIT_AZIMUTH_DEG == null ? null
+        : fbBuilder.writeListFloat64(_TRANSMIT_AZIMUTH_DEG!);
+    final int? TRANSMIT_ELEVATION_DEGOffset = _TRANSMIT_ELEVATION_DEG == null ? null
+        : fbBuilder.writeListFloat64(_TRANSMIT_ELEVATION_DEG!);
+    final int? DOPPLER_SHIFT_HZOffset = _DOPPLER_SHIFT_HZ == null ? null
+        : fbBuilder.writeListFloat64(_DOPPLER_SHIFT_HZ!);
+    final int? DOPPLER_RATE_HZ_SOffset = _DOPPLER_RATE_HZ_S == null ? null
+        : fbBuilder.writeListFloat64(_DOPPLER_RATE_HZ_S!);
+    final int? EIRP_DBWOffset = _EIRP_DBW == null ? null
+        : fbBuilder.writeListFloat64(_EIRP_DBW!);
+    final int? TRANSMIT_ANTENNA_GAIN_DBIOffset = _TRANSMIT_ANTENNA_GAIN_DBI == null ? null
+        : fbBuilder.writeListFloat64(_TRANSMIT_ANTENNA_GAIN_DBI!);
+    final int? RECEIVE_ANTENNA_GAIN_DBIOffset = _RECEIVE_ANTENNA_GAIN_DBI == null ? null
+        : fbBuilder.writeListFloat64(_RECEIVE_ANTENNA_GAIN_DBI!);
+    final int? FREE_SPACE_PATH_LOSS_DBOffset = _FREE_SPACE_PATH_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_FREE_SPACE_PATH_LOSS_DB!);
+    final int? GASEOUS_ABSORPTION_LOSS_DBOffset = _GASEOUS_ABSORPTION_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_GASEOUS_ABSORPTION_LOSS_DB!);
+    final int? RAIN_LOSS_DBOffset = _RAIN_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_RAIN_LOSS_DB!);
+    final int? CLOUD_FOG_LOSS_DBOffset = _CLOUD_FOG_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_CLOUD_FOG_LOSS_DB!);
+    final int? SCINTILLATION_LOSS_DBOffset = _SCINTILLATION_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_SCINTILLATION_LOSS_DB!);
+    final int? TERRAIN_DIFFRACTION_LOSS_DBOffset = _TERRAIN_DIFFRACTION_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_TERRAIN_DIFFRACTION_LOSS_DB!);
+    final int? OBSTRUCTION_LOSS_DBOffset = _OBSTRUCTION_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_OBSTRUCTION_LOSS_DB!);
+    final int? POLARIZATION_LOSS_DBOffset = _POLARIZATION_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_POLARIZATION_LOSS_DB!);
+    final int? POINTING_LOSS_DBOffset = _POINTING_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_POINTING_LOSS_DB!);
+    final int? IMPLEMENTATION_LOSS_DBOffset = _IMPLEMENTATION_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_IMPLEMENTATION_LOSS_DB!);
+    final int? TOTAL_PATH_LOSS_DBOffset = _TOTAL_PATH_LOSS_DB == null ? null
+        : fbBuilder.writeListFloat64(_TOTAL_PATH_LOSS_DB!);
+    final int? RECEIVED_POWER_DBWOffset = _RECEIVED_POWER_DBW == null ? null
+        : fbBuilder.writeListFloat64(_RECEIVED_POWER_DBW!);
+    final int? SYSTEM_NOISE_TEMPERATURE_KOffset = _SYSTEM_NOISE_TEMPERATURE_K == null ? null
+        : fbBuilder.writeListFloat64(_SYSTEM_NOISE_TEMPERATURE_K!);
+    final int? GAIN_TO_NOISE_TEMPERATURE_DB_PER_KOffset = _GAIN_TO_NOISE_TEMPERATURE_DB_PER_K == null ? null
+        : fbBuilder.writeListFloat64(_GAIN_TO_NOISE_TEMPERATURE_DB_PER_K!);
+    final int? CARRIER_TO_NOISE_DENSITY_DBHZOffset = _CARRIER_TO_NOISE_DENSITY_DBHZ == null ? null
+        : fbBuilder.writeListFloat64(_CARRIER_TO_NOISE_DENSITY_DBHZ!);
+    final int? CARRIER_TO_NOISE_DBOffset = _CARRIER_TO_NOISE_DB == null ? null
+        : fbBuilder.writeListFloat64(_CARRIER_TO_NOISE_DB!);
+    final int? ENERGY_PER_BIT_TO_NOISE_DENSITY_DBOffset = _ENERGY_PER_BIT_TO_NOISE_DENSITY_DB == null ? null
+        : fbBuilder.writeListFloat64(_ENERGY_PER_BIT_TO_NOISE_DENSITY_DB!);
+    final int? BIT_ERROR_RATEOffset = _BIT_ERROR_RATE == null ? null
+        : fbBuilder.writeListFloat64(_BIT_ERROR_RATE!);
+    final int? LINK_MARGIN_DBOffset = _LINK_MARGIN_DB == null ? null
+        : fbBuilder.writeListFloat64(_LINK_MARGIN_DB!);
+    final int? CHANNEL_CAPACITY_BPSOffset = _CHANNEL_CAPACITY_BPS == null ? null
+        : fbBuilder.writeListFloat64(_CHANNEL_CAPACITY_BPS!);
+    final int? INTERFERENCE_POWER_DBWOffset = _INTERFERENCE_POWER_DBW == null ? null
+        : fbBuilder.writeListFloat64(_INTERFERENCE_POWER_DBW!);
+    final int? CARRIER_TO_NOISE_PLUS_INTERFERENCE_DBOffset = _CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB == null ? null
+        : fbBuilder.writeListFloat64(_CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB!);
+    final int? SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DBOffset = _SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB == null ? null
+        : fbBuilder.writeListFloat64(_SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB!);
+    final int? INTERFERENCE_CONTRIBUTIONSOffset = _INTERFERENCE_CONTRIBUTIONS == null ? null
+        : fbBuilder.writeList(_INTERFERENCE_CONTRIBUTIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? OBSTRUCTIONSOffset = _OBSTRUCTIONS == null ? null
+        : fbBuilder.writeList(_OBSTRUCTIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? LIMITING_CONSTRAINTSOffset = _LIMITING_CONSTRAINTS == null ? null
+        : fbBuilder.writeListInt8(_LIMITING_CONSTRAINTS!.map((f) => f.value).toList());
+    final int? LIMITING_CONSTRAINT_NOTEOffset = _LIMITING_CONSTRAINT_NOTE == null ? null
+        : fbBuilder.writeString(_LIMITING_CONSTRAINT_NOTE!);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? PRODUCER_IDOffset = _PRODUCER_ID == null ? null
+        : fbBuilder.writeString(_PRODUCER_ID!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
+    final int? SELECTED_MODCOD_INDEXOffset = _SELECTED_MODCOD_INDEX == null ? null
+        : fbBuilder.writeListUint32(_SELECTED_MODCOD_INDEX!);
+    final int? SELECTED_MODCOD_VALIDOffset = _SELECTED_MODCOD_VALID == null ? null
+        : fbBuilder.writeListBool(_SELECTED_MODCOD_VALID!);
+    final int? SPECTRAL_EFFICIENCY_BPS_HZOffset = _SPECTRAL_EFFICIENCY_BPS_HZ == null ? null
+        : fbBuilder.writeListFloat64(_SPECTRAL_EFFICIENCY_BPS_HZ!);
+    final int? ACHIEVED_DATA_RATE_BPSOffset = _ACHIEVED_DATA_RATE_BPS == null ? null
+        : fbBuilder.writeListFloat64(_ACHIEVED_DATA_RATE_BPS!);
+    final int? ACM_MARGIN_DBOffset = _ACM_MARGIN_DB == null ? null
+        : fbBuilder.writeListFloat64(_ACM_MARGIN_DB!);
+    final int? ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset = _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB == null ? null
+        : fbBuilder.writeListFloat64(_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB!);
+    final int? BLOCK_ERROR_RATEOffset = _BLOCK_ERROR_RATE == null ? null
+        : fbBuilder.writeListFloat64(_BLOCK_ERROR_RATE!);
+    fbBuilder.startTable(59);
+    fbBuilder.addOffset(0, RFL_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, SCENARIO_IDOffset);
+    fbBuilder.addOffset(3, LINKSOffset);
+    fbBuilder.addUint32(4, _SAMPLE_COUNT);
+    fbBuilder.addOffset(5, SAMPLE_LINK_INDEXESOffset);
+    fbBuilder.addOffset(6, SAMPLE_EPOCHSOffset);
+    fbBuilder.addInt8(7, _TIME_SYSTEM?.value);
+    fbBuilder.addOffset(8, ACCESS_STATESOffset);
+    fbBuilder.addOffset(9, RANGE_MOffset);
+    fbBuilder.addOffset(10, RANGE_RATE_M_SOffset);
+    fbBuilder.addOffset(11, AZIMUTH_DEGOffset);
+    fbBuilder.addOffset(12, ELEVATION_DEGOffset);
+    fbBuilder.addOffset(13, TRANSMIT_AZIMUTH_DEGOffset);
+    fbBuilder.addOffset(14, TRANSMIT_ELEVATION_DEGOffset);
+    fbBuilder.addOffset(15, DOPPLER_SHIFT_HZOffset);
+    fbBuilder.addOffset(16, DOPPLER_RATE_HZ_SOffset);
+    fbBuilder.addOffset(17, EIRP_DBWOffset);
+    fbBuilder.addOffset(18, TRANSMIT_ANTENNA_GAIN_DBIOffset);
+    fbBuilder.addOffset(19, RECEIVE_ANTENNA_GAIN_DBIOffset);
+    fbBuilder.addOffset(20, FREE_SPACE_PATH_LOSS_DBOffset);
+    fbBuilder.addOffset(21, GASEOUS_ABSORPTION_LOSS_DBOffset);
+    fbBuilder.addOffset(22, RAIN_LOSS_DBOffset);
+    fbBuilder.addOffset(23, CLOUD_FOG_LOSS_DBOffset);
+    fbBuilder.addOffset(24, SCINTILLATION_LOSS_DBOffset);
+    fbBuilder.addOffset(25, TERRAIN_DIFFRACTION_LOSS_DBOffset);
+    fbBuilder.addOffset(26, OBSTRUCTION_LOSS_DBOffset);
+    fbBuilder.addOffset(27, POLARIZATION_LOSS_DBOffset);
+    fbBuilder.addOffset(28, POINTING_LOSS_DBOffset);
+    fbBuilder.addOffset(29, IMPLEMENTATION_LOSS_DBOffset);
+    fbBuilder.addOffset(30, TOTAL_PATH_LOSS_DBOffset);
+    fbBuilder.addOffset(31, RECEIVED_POWER_DBWOffset);
+    fbBuilder.addOffset(32, SYSTEM_NOISE_TEMPERATURE_KOffset);
+    fbBuilder.addOffset(33, GAIN_TO_NOISE_TEMPERATURE_DB_PER_KOffset);
+    fbBuilder.addOffset(34, CARRIER_TO_NOISE_DENSITY_DBHZOffset);
+    fbBuilder.addOffset(35, CARRIER_TO_NOISE_DBOffset);
+    fbBuilder.addOffset(36, ENERGY_PER_BIT_TO_NOISE_DENSITY_DBOffset);
+    fbBuilder.addOffset(37, BIT_ERROR_RATEOffset);
+    fbBuilder.addOffset(38, LINK_MARGIN_DBOffset);
+    fbBuilder.addOffset(39, CHANNEL_CAPACITY_BPSOffset);
+    fbBuilder.addOffset(40, INTERFERENCE_POWER_DBWOffset);
+    fbBuilder.addOffset(41, CARRIER_TO_NOISE_PLUS_INTERFERENCE_DBOffset);
+    fbBuilder.addOffset(42, SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DBOffset);
+    fbBuilder.addOffset(43, INTERFERENCE_CONTRIBUTIONSOffset);
+    fbBuilder.addOffset(44, OBSTRUCTIONSOffset);
+    fbBuilder.addOffset(45, LIMITING_CONSTRAINTSOffset);
+    fbBuilder.addOffset(46, LIMITING_CONSTRAINT_NOTEOffset);
+    fbBuilder.addOffset(47, PROVENANCEOffset);
+    fbBuilder.addUint64(48, _COMPUTED_AT);
+    fbBuilder.addOffset(49, PRODUCER_IDOffset);
+    fbBuilder.addOffset(50, SIGNATUREOffset);
+    fbBuilder.addOffset(51, CANONICAL_JSON_SIGNATUREOffset);
+    fbBuilder.addOffset(52, SELECTED_MODCOD_INDEXOffset);
+    fbBuilder.addOffset(53, SELECTED_MODCOD_VALIDOffset);
+    fbBuilder.addOffset(54, SPECTRAL_EFFICIENCY_BPS_HZOffset);
+    fbBuilder.addOffset(55, ACHIEVED_DATA_RATE_BPSOffset);
+    fbBuilder.addOffset(56, ACM_MARGIN_DBOffset);
+    fbBuilder.addOffset(57, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset);
+    fbBuilder.addOffset(58, BLOCK_ERROR_RATEOffset);
     return fbBuilder.endTable();
   }
 

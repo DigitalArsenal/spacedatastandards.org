@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct mnvOrbitalState;
 struct mnvOrbitalStateBuilder;
 
@@ -231,15 +233,15 @@ struct mnvOrbitalState FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DRIFT_RATE() const {
     return GetField<double>(VT_DRIFT_RATE, 0.0);
   }
-  /// Position uncertainty U (km, 1-sigma)
+  /// Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
   double SIGMA_U() const {
     return GetField<double>(VT_SIGMA_U, 0.0);
   }
-  /// Position uncertainty V (km, 1-sigma)
+  /// Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
   double SIGMA_V() const {
     return GetField<double>(VT_SIGMA_V, 0.0);
   }
-  /// Position uncertainty W (km, 1-sigma)
+  /// Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
   double SIGMA_W() const {
     return GetField<double>(VT_SIGMA_W, 0.0);
   }
@@ -478,6 +480,12 @@ inline ::flatbuffers::Offset<mnvOrbitalState> CreatemnvOrbitalStateDirect(
 }
 
 /// Spacecraft Maneuver
+///
+/// U, V and W are the UVW axes of an orbit state: U radial, along the position
+/// vector away from the central body; W cross-track, along the orbit normal
+/// (the direction of r x v); V in-track, W x U, completing the right-handed
+/// frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+/// pre-maneuver state at EVENT_START_TIME.
 struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef MNVBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -525,7 +533,8 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_TAGS = 86,
     VT_SOURCED_DATA = 88,
     VT_SOURCED_DATA_TYPES = 90,
-    VT_TRANSACTION_ID = 92
+    VT_TRANSACTION_ID = 92,
+    VT_PROVENANCE = 94
   };
   /// Unique identifier
   const ::flatbuffers::String *ID() const {
@@ -583,7 +592,8 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
-  /// Maneuver event identifier
+  /// Maneuver event identifier. Records of one event share it: a merged event
+  /// and the source records it combines.
   const ::flatbuffers::String *EVENT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EVENT_ID);
   }
@@ -599,15 +609,15 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DELTA_VEL() const {
     return GetField<double>(VT_DELTA_VEL, 0.0);
   }
-  /// Delta-V along-track/U component (km/s)
+  /// Delta-V along U, radial (km/s)
   double DELTA_VEL_U() const {
     return GetField<double>(VT_DELTA_VEL_U, 0.0);
   }
-  /// Delta-V cross-track/V component (km/s)
+  /// Delta-V along V, in-track (km/s)
   double DELTA_VEL_V() const {
     return GetField<double>(VT_DELTA_VEL_V, 0.0);
   }
-  /// Delta-V radial/W component (km/s)
+  /// Delta-V along W, cross-track (km/s)
   double DELTA_VEL_W() const {
     return GetField<double>(VT_DELTA_VEL_W, 0.0);
   }
@@ -615,15 +625,15 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DELTA_POS() const {
     return GetField<double>(VT_DELTA_POS, 0.0);
   }
-  /// Delta position U component (km)
+  /// Delta position along U, radial (km)
   double DELTA_POS_U() const {
     return GetField<double>(VT_DELTA_POS_U, 0.0);
   }
-  /// Delta position V component (km)
+  /// Delta position along V, in-track (km)
   double DELTA_POS_V() const {
     return GetField<double>(VT_DELTA_POS_V, 0.0);
   }
-  /// Delta position W component (km)
+  /// Delta position along W, cross-track (km)
   double DELTA_POS_W() const {
     return GetField<double>(VT_DELTA_POS_W, 0.0);
   }
@@ -671,7 +681,8 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MNVR_ACCEL_TIMES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MNVR_ACCEL_TIMES);
   }
-  /// Acceleration values (km/s^2, 3 components per point)
+  /// Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+  /// the state at that point's MNVR_ACCEL_TIMES entry
   const ::flatbuffers::Vector<double> *MNVR_ACCELS() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_MNVR_ACCELS);
   }
@@ -695,7 +706,9 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
-  /// Sourced data references
+  /// Sourced data references: identifiers of the records this one was
+  /// determined from (CIDv1 for records of this network), such as the source
+  /// records a merged event combines
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCED_DATA() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SOURCED_DATA);
   }
@@ -706,6 +719,10 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Transaction identifier
   const ::flatbuffers::String *TRANSACTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
+  }
+  /// Where the maneuver's data comes from and the terms it travels under.
+  const PVN *PROVENANCE() const {
+    return GetPointer<const PVN *>(VT_PROVENANCE);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -782,6 +799,8 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SOURCED_DATA_TYPES()) &&
            VerifyOffset(verifier, VT_TRANSACTION_ID) &&
            verifier.VerifyString(TRANSACTION_ID()) &&
+           VerifyOffset(verifier, VT_PROVENANCE) &&
+           verifier.VerifyTable(PROVENANCE()) &&
            verifier.EndTable();
   }
 };
@@ -925,6 +944,9 @@ struct MNVBuilder {
   void add_TRANSACTION_ID(::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID) {
     fbb_.AddOffset(MNV::VT_TRANSACTION_ID, TRANSACTION_ID);
   }
+  void add_PROVENANCE(::flatbuffers::Offset<PVN> PROVENANCE) {
+    fbb_.AddOffset(MNV::VT_PROVENANCE, PROVENANCE);
+  }
   explicit MNVBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -982,7 +1004,8 @@ inline ::flatbuffers::Offset<MNV> CreateMNV(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SOURCED_DATA = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCED_DATA_TYPES = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
   MNVBuilder builder_(_fbb);
   builder_.add_STATE_MODEL_VERSION(STATE_MODEL_VERSION);
   builder_.add_POST_AREA(POST_AREA);
@@ -999,6 +1022,7 @@ inline ::flatbuffers::Offset<MNV> CreateMNV(
   builder_.add_MANEUVER_UNC(MANEUVER_UNC);
   builder_.add_TOTAL_BURN_TIME(TOTAL_BURN_TIME);
   builder_.add_CHARACTERIZATION_UNC(CHARACTERIZATION_UNC);
+  builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_TRANSACTION_ID(TRANSACTION_ID);
   builder_.add_SOURCED_DATA_TYPES(SOURCED_DATA_TYPES);
   builder_.add_SOURCED_DATA(SOURCED_DATA);
@@ -1078,7 +1102,8 @@ inline ::flatbuffers::Offset<MNV> CreateMNVDirect(
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCED_DATA = nullptr,
     const char *SOURCED_DATA_TYPES = nullptr,
-    const char *TRANSACTION_ID = nullptr) {
+    const char *TRANSACTION_ID = nullptr,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
@@ -1147,7 +1172,8 @@ inline ::flatbuffers::Offset<MNV> CreateMNVDirect(
       TAGS__,
       SOURCED_DATA__,
       SOURCED_DATA_TYPES__,
-      TRANSACTION_ID__);
+      TRANSACTION_ID__,
+      PROVENANCE);
 }
 
 inline const MNV *GetMNV(const void *buf) {

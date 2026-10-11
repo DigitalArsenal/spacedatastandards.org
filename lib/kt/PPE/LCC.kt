@@ -29,10 +29,10 @@ class LCC : Table() {
         __init(_i, _bb)
         return this
     }
-    val owner : Byte
+    val owner : UByte
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
      * Display name of the owner or source the code stands for.
@@ -106,7 +106,7 @@ class LCC : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LCCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LCC")
-        fun createLCC(builder: FlatBufferBuilder, owner: Byte, nameOffset: Int, descriptionOffset: Int, active: Boolean, sourceUrlOffset: Int, retrievedAtOffset: Int) : Int {
+        fun createLCC(builder: FlatBufferBuilder, owner: UByte, nameOffset: Int, descriptionOffset: Int, active: Boolean, sourceUrlOffset: Int, retrievedAtOffset: Int) : Int {
             builder.startTable(6)
             addRETRIEVEDAT(builder, retrievedAtOffset)
             addSOURCEURL(builder, sourceUrlOffset)
@@ -117,7 +117,7 @@ class LCC : Table() {
             return endLCC(builder)
         }
         fun startLCC(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addOWNER(builder: FlatBufferBuilder, owner: Byte) = builder.addByte(0, owner, 0)
+        fun addOWNER(builder: FlatBufferBuilder, owner: UByte) = builder.addByte(0, owner.toByte(), 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(2, description, 0)
         fun addACTIVE(builder: FlatBufferBuilder, active: Boolean) = builder.addBoolean(3, active, false)

@@ -8,57 +8,444 @@ import Common
 
 import FlatBuffers
 
-public enum meanElementSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum ephemerisFormat: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
+  ///  Simplified General Perturbation Model
+  case sgp = 0
   ///  Simplified General Perturbation Model 4
-  case sgp4 = 0
-  ///  Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
-  ///  as published in the 2022 astrodynamics conference literature.
-  case sgp4xp = 1
-  ///  Draper Semi-analytical Satellite Theory
-  case dsst = 2
-  ///  Universal Semianalytical Method
-  case usm = 3
+  case sgp4 = 1
+  ///  Simplified Deep Space Perturbation Model 4
+  case sdp4 = 2
+  ///  Simplified General Perturbation Model 8
+  case sgp8 = 3
+  ///  Simplified Deep Space Perturbation Model 8
+  case sdp8 = 4
 
-  public static var max: meanElementSource { return .usm }
-  public static var min: meanElementSource { return .sgp4 }
+  public static var max: ephemerisFormat { return .sdp8 }
+  public static var min: ephemerisFormat { return .sgp }
 }
 
 
-///  Mean Element Theory
-public struct MET: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Orbit Mean Elements Message
+public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$MET" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: MET.id, addPrefix: prefix) }
+  public static var id: String { "$OMM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OMM.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let MEAN_ELEMENT_THEORY: VOffset = 4
+    static let CCSDS_OMM_VERS: VOffset = 4
+    static let CREATION_DATE: VOffset = 6
+    static let ORIGINATOR: VOffset = 8
+    static let OBJECT_NAME: VOffset = 10
+    static let OBJECT_ID: VOffset = 12
+    static let CENTER_NAME: VOffset = 14
+    static let REFERENCE_FRAME: VOffset = 16
+    static let REFERENCE_FRAME_EPOCH: VOffset = 18
+    static let TIME_SYSTEM: VOffset = 20
+    static let MEAN_ELEMENT_THEORY: VOffset = 22
+    static let COMMENT: VOffset = 24
+    static let EPOCH: VOffset = 26
+    static let SEMI_MAJOR_AXIS: VOffset = 28
+    static let MEAN_MOTION: VOffset = 30
+    static let ECCENTRICITY: VOffset = 32
+    static let INCLINATION: VOffset = 34
+    static let RA_OF_ASC_NODE: VOffset = 36
+    static let ARG_OF_PERICENTER: VOffset = 38
+    static let MEAN_ANOMALY: VOffset = 40
+    static let GM: VOffset = 42
+    static let MASS: VOffset = 44
+    static let SOLAR_RAD_AREA: VOffset = 46
+    static let SOLAR_RAD_COEFF: VOffset = 48
+    static let DRAG_AREA: VOffset = 50
+    static let DRAG_COEFF: VOffset = 52
+    static let EPHEMERIS_TYPE: VOffset = 54
+    static let CLASSIFICATION_TYPE: VOffset = 56
+    static let NORAD_CAT_ID: VOffset = 58
+    static let ELEMENT_SET_NO: VOffset = 60
+    static let REV_AT_EPOCH: VOffset = 62
+    static let BSTAR: VOffset = 64
+    static let MEAN_MOTION_DOT: VOffset = 66
+    static let MEAN_MOTION_DDOT: VOffset = 68
+    static let COV_REFERENCE_FRAME: VOffset = 70
+    static let COVARIANCE: VOffset = 72
+    static let USER_DEFINED_BIP_0044_TYPE: VOffset = 74
+    static let USER_DEFINED_OBJECT_DESIGNATOR: VOffset = 76
+    static let USER_DEFINED_EARTH_MODEL: VOffset = 78
+    static let USER_DEFINED_EPOCH_TIMESTAMP: VOffset = 80
+    static let USER_DEFINED_MICROSECONDS: VOffset = 82
+    static let CLASSIFICATION: VOffset = 84
+    static let MESSAGE_ID: VOffset = 86
+    static let USER_DEFINED_PARAMETERS: VOffset = 88
+    static let PROVENANCE: VOffset = 90
+    static let COV_REALISM: VOffset = 92
   }
 
+  ///  CCSDS OMM Version
+  public var CCSDS_OMM_VERS: Double { let o = _accessor.offset(VT.CCSDS_OMM_VERS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Creation Date (ISO 8601 UTC format)
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  ///  Originator
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  ///  Satellite Name(s)
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  ///  International Designator (YYYY-NNNAAA)
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  ///  Center Name (e.g. EARTH, MARS)
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  Reference Frame
+  ///  Typically TEMEOFDATE
+  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Reference Frame Epoch (ISO 8601 UTC format)
+  public var REFERENCE_FRAME_EPOCH: String? { let o = _accessor.offset(VT.REFERENCE_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCE_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_FRAME_EPOCH) }
+  ///  Time System [M, UTC]
+  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .utc : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .utc }
+  ///  Mean Element Theory
   public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VT.MEAN_ELEMENT_THEORY); return o == 0 ? .sgp4 : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
-  public static func startMET(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  ///  COMMENT (O): every COMMENT line of the message, in message order, joined by
+  ///  a line feed. A message states comments in its header, its metadata and each
+  ///  data group; this field holds them all, so a message written from the record
+  ///  states them together in its header.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Semi-major axis in km or Mean Motion in rev/day
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
+  public var MEAN_MOTION: Double { let o = _accessor.offset(VT.MEAN_MOTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentricity (unitless)
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Inclination in degrees
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RA_OF_ASC_NODE in degrees
+  public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VT.RA_OF_ASC_NODE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ARG_OF_PERICENTER in degrees
+  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VT.ARG_OF_PERICENTER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MEAN_ANOMALY in degrees
+  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VT.MEAN_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  GM in km**3/s**2
+  public var GM: Double { let o = _accessor.offset(VT.GM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MASS in kg
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SOLAR_RAD_AREA in m**2
+  public var SOLAR_RAD_AREA: Double { let o = _accessor.offset(VT.SOLAR_RAD_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SOLAR_RAD_COEFF (unitless)
+  public var SOLAR_RAD_COEFF: Double { let o = _accessor.offset(VT.SOLAR_RAD_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  DRAG_AREA in m**2
+  public var DRAG_AREA: Double { let o = _accessor.offset(VT.DRAG_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  DRAG_COEFF (unitless)
+  public var DRAG_COEFF: Double { let o = _accessor.offset(VT.DRAG_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  ///  EPHEMERIS_TYPE Default=0
+  public var EPHEMERIS_TYPE: ephemerisFormat { let o = _accessor.offset(VT.EPHEMERIS_TYPE); return o == 0 ? .sgp4 : ephemerisFormat(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
+  ///  CLASSIFICATION_TYPE Default=U
+  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VT.CLASSIFICATION_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION_TYPE) }
+  ///  NORAD_CAT_ID (integer) [O if SGP/SGP4]
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  ELEMENT_SET_NO [O if SGP/SGP4]
+  public var ELEMENT_SET_NO: UInt32 { let o = _accessor.offset(VT.ELEMENT_SET_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  REV_AT_EPOCH [O if SGP/SGP4]
+  public var REV_AT_EPOCH: Double { let o = _accessor.offset(VT.REV_AT_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+  public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
+  public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  ///  COV_REF_FRAME reference frame for covariance [C if covariance given]
+  ///  Typically RSW
+  public var COV_REFERENCE_FRAME: RFM? { let o = _accessor.offset(VT.COV_REFERENCE_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  ///  Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///          CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///          CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///          CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  ///  Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  public var COVARIANCE: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE, byteSize: 8) }
+  public func withUnsafePointerToCovariance<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE, body: body) }
+  ///  USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
+  public var USER_DEFINED_BIP_0044_TYPE: UInt32 { let o = _accessor.offset(VT.USER_DEFINED_BIP_0044_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
+  public var USER_DEFINED_OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VT.USER_DEFINED_OBJECT_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var USER_DEFINED_OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.USER_DEFINED_OBJECT_DESIGNATOR) }
+  ///  USER_DEFINED_EARTH_MODEL [O, units per ICD]
+  public var USER_DEFINED_EARTH_MODEL: String? { let o = _accessor.offset(VT.USER_DEFINED_EARTH_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var USER_DEFINED_EARTH_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.USER_DEFINED_EARTH_MODEL) }
+  ///  USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
+  public var USER_DEFINED_EPOCH_TIMESTAMP: Double { let o = _accessor.offset(VT.USER_DEFINED_EPOCH_TIMESTAMP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  USER_DEFINED_MICROSECONDS [O, units per ICD]
+  public var USER_DEFINED_MICROSECONDS: Double { let o = _accessor.offset(VT.USER_DEFINED_MICROSECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+  ///  that states its security classification or handling caveat. Not
+  ///  CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
+  ///  MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+  ///  originator makes unique for this message.
+  public var MESSAGE_ID: String? { let o = _accessor.offset(VT.MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_ID) }
+  ///  Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+  ///  message that has no dedicated field above, in message order.
+  public var USER_DEFINED_PARAMETERS: FlatbufferVector<OMMUserDefinedParameter> { return _accessor.vector(at: VT.USER_DEFINED_PARAMETERS, byteSize: 4) }
+  ///  Where the element set comes from and the terms it travels under.
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Realism of COVARIANCE.
+  public var COV_REALISM: CVR? { let o = _accessor.offset(VT.COV_REALISM); return o == 0 ? nil : CVR(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startOMM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 45) }
+  public static func add(CCSDS_OMM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_OMM_VERS, def: 0.0, at: VT.CCSDS_OMM_VERS) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VT.REFERENCE_FRAME) }
+  public static func add(REFERENCE_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME_EPOCH, at: VT.REFERENCE_FRAME_EPOCH) }
+  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 11, at: VT.TIME_SYSTEM) }
   public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VT.MEAN_ELEMENT_THEORY) }
-  public static func endMET(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createMET(
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
+  public static func add(MEAN_MOTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION, def: 0.0, at: VT.MEAN_MOTION) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(RA_OF_ASC_NODE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_OF_ASC_NODE, def: 0.0, at: VT.RA_OF_ASC_NODE) }
+  public static func add(ARG_OF_PERICENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERICENTER, def: 0.0, at: VT.ARG_OF_PERICENTER) }
+  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VT.MEAN_ANOMALY) }
+  public static func add(GM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GM, def: 0.0, at: VT.GM) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(SOLAR_RAD_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_AREA, def: 0.0, at: VT.SOLAR_RAD_AREA) }
+  public static func add(SOLAR_RAD_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_COEFF, def: 0.0, at: VT.SOLAR_RAD_COEFF) }
+  public static func add(DRAG_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA, def: 0.0, at: VT.DRAG_AREA) }
+  public static func add(DRAG_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFF, def: 0.0, at: VT.DRAG_COEFF) }
+  public static func add(EPHEMERIS_TYPE: ephemerisFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPHEMERIS_TYPE.rawValue, def: 1, at: VT.EPHEMERIS_TYPE) }
+  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VT.CLASSIFICATION_TYPE) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(ELEMENT_SET_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEMENT_SET_NO, def: 0, at: VT.ELEMENT_SET_NO) }
+  public static func add(REV_AT_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REV_AT_EPOCH, def: 0.0, at: VT.REV_AT_EPOCH) }
+  public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VT.BSTAR) }
+  public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VT.MEAN_MOTION_DOT) }
+  public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VT.MEAN_MOTION_DDOT) }
+  public static func add(COV_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REFERENCE_FRAME, at: VT.COV_REFERENCE_FRAME) }
+  public static func addVectorOf(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VT.COVARIANCE) }
+  public static func add(USER_DEFINED_BIP_0044_TYPE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USER_DEFINED_BIP_0044_TYPE, def: 0, at: VT.USER_DEFINED_BIP_0044_TYPE) }
+  public static func add(USER_DEFINED_OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_OBJECT_DESIGNATOR, at: VT.USER_DEFINED_OBJECT_DESIGNATOR) }
+  public static func add(USER_DEFINED_EARTH_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_EARTH_MODEL, at: VT.USER_DEFINED_EARTH_MODEL) }
+  public static func add(USER_DEFINED_EPOCH_TIMESTAMP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USER_DEFINED_EPOCH_TIMESTAMP, def: 0.0, at: VT.USER_DEFINED_EPOCH_TIMESTAMP) }
+  public static func add(USER_DEFINED_MICROSECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USER_DEFINED_MICROSECONDS, def: 0.0, at: VT.USER_DEFINED_MICROSECONDS) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
+  public static func add(MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_ID, at: VT.MESSAGE_ID) }
+  public static func addVectorOf(USER_DEFINED_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_PARAMETERS, at: VT.USER_DEFINED_PARAMETERS) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
+  public static func endOMM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOMM(
     _ fbb: inout FlatBufferBuilder,
-    MEAN_ELEMENT_THEORY: meanElementSource = .sgp4
+    CCSDS_OMM_VERS: Double = 0.0,
+    CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
+    ORIGINATOROffset ORIGINATOR: Offset = Offset(),
+    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
+    REFERENCE_FRAME_EPOCHOffset REFERENCE_FRAME_EPOCH: Offset = Offset(),
+    TIME_SYSTEM: timingStandard = .utc,
+    MEAN_ELEMENT_THEORY: meanElementSource = .sgp4,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    EPOCHOffset EPOCH: Offset = Offset(),
+    SEMI_MAJOR_AXIS: Double = 0.0,
+    MEAN_MOTION: Double = 0.0,
+    ECCENTRICITY: Double = 0.0,
+    INCLINATION: Double = 0.0,
+    RA_OF_ASC_NODE: Double = 0.0,
+    ARG_OF_PERICENTER: Double = 0.0,
+    MEAN_ANOMALY: Double = 0.0,
+    GM: Double = 0.0,
+    MASS: Double = 0.0,
+    SOLAR_RAD_AREA: Double = 0.0,
+    SOLAR_RAD_COEFF: Double = 0.0,
+    DRAG_AREA: Double = 0.0,
+    DRAG_COEFF: Double = 0.0,
+    EPHEMERIS_TYPE: ephemerisFormat = .sgp4,
+    CLASSIFICATION_TYPEOffset CLASSIFICATION_TYPE: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    ELEMENT_SET_NO: UInt32 = 0,
+    REV_AT_EPOCH: Double = 0.0,
+    BSTAR: Double = 0.0,
+    MEAN_MOTION_DOT: Double = 0.0,
+    MEAN_MOTION_DDOT: Double = 0.0,
+    COV_REFERENCE_FRAMEOffset COV_REFERENCE_FRAME: Offset = Offset(),
+    COVARIANCEVectorOffset COVARIANCE: Offset = Offset(),
+    USER_DEFINED_BIP_0044_TYPE: UInt32 = 0,
+    USER_DEFINED_OBJECT_DESIGNATOROffset USER_DEFINED_OBJECT_DESIGNATOR: Offset = Offset(),
+    USER_DEFINED_EARTH_MODELOffset USER_DEFINED_EARTH_MODEL: Offset = Offset(),
+    USER_DEFINED_EPOCH_TIMESTAMP: Double = 0.0,
+    USER_DEFINED_MICROSECONDS: Double = 0.0,
+    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
+    MESSAGE_IDOffset MESSAGE_ID: Offset = Offset(),
+    USER_DEFINED_PARAMETERSVectorOffset USER_DEFINED_PARAMETERS: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    COV_REALISMOffset COV_REALISM: Offset = Offset()
   ) -> Offset {
-    let __start = MET.startMET(&fbb)
-    MET.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
-    return MET.endMET(&fbb, start: __start)
+    let __start = OMM.startOMM(&fbb)
+    OMM.add(CCSDS_OMM_VERS: CCSDS_OMM_VERS, &fbb)
+    OMM.add(CREATION_DATE: CREATION_DATE, &fbb)
+    OMM.add(ORIGINATOR: ORIGINATOR, &fbb)
+    OMM.add(OBJECT_NAME: OBJECT_NAME, &fbb)
+    OMM.add(OBJECT_ID: OBJECT_ID, &fbb)
+    OMM.add(CENTER_NAME: CENTER_NAME, &fbb)
+    OMM.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
+    OMM.add(REFERENCE_FRAME_EPOCH: REFERENCE_FRAME_EPOCH, &fbb)
+    OMM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    OMM.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
+    OMM.add(COMMENT: COMMENT, &fbb)
+    OMM.add(EPOCH: EPOCH, &fbb)
+    OMM.add(SEMI_MAJOR_AXIS: SEMI_MAJOR_AXIS, &fbb)
+    OMM.add(MEAN_MOTION: MEAN_MOTION, &fbb)
+    OMM.add(ECCENTRICITY: ECCENTRICITY, &fbb)
+    OMM.add(INCLINATION: INCLINATION, &fbb)
+    OMM.add(RA_OF_ASC_NODE: RA_OF_ASC_NODE, &fbb)
+    OMM.add(ARG_OF_PERICENTER: ARG_OF_PERICENTER, &fbb)
+    OMM.add(MEAN_ANOMALY: MEAN_ANOMALY, &fbb)
+    OMM.add(GM: GM, &fbb)
+    OMM.add(MASS: MASS, &fbb)
+    OMM.add(SOLAR_RAD_AREA: SOLAR_RAD_AREA, &fbb)
+    OMM.add(SOLAR_RAD_COEFF: SOLAR_RAD_COEFF, &fbb)
+    OMM.add(DRAG_AREA: DRAG_AREA, &fbb)
+    OMM.add(DRAG_COEFF: DRAG_COEFF, &fbb)
+    OMM.add(EPHEMERIS_TYPE: EPHEMERIS_TYPE, &fbb)
+    OMM.add(CLASSIFICATION_TYPE: CLASSIFICATION_TYPE, &fbb)
+    OMM.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    OMM.add(ELEMENT_SET_NO: ELEMENT_SET_NO, &fbb)
+    OMM.add(REV_AT_EPOCH: REV_AT_EPOCH, &fbb)
+    OMM.add(BSTAR: BSTAR, &fbb)
+    OMM.add(MEAN_MOTION_DOT: MEAN_MOTION_DOT, &fbb)
+    OMM.add(MEAN_MOTION_DDOT: MEAN_MOTION_DDOT, &fbb)
+    OMM.add(COV_REFERENCE_FRAME: COV_REFERENCE_FRAME, &fbb)
+    OMM.addVectorOf(COVARIANCE: COVARIANCE, &fbb)
+    OMM.add(USER_DEFINED_BIP_0044_TYPE: USER_DEFINED_BIP_0044_TYPE, &fbb)
+    OMM.add(USER_DEFINED_OBJECT_DESIGNATOR: USER_DEFINED_OBJECT_DESIGNATOR, &fbb)
+    OMM.add(USER_DEFINED_EARTH_MODEL: USER_DEFINED_EARTH_MODEL, &fbb)
+    OMM.add(USER_DEFINED_EPOCH_TIMESTAMP: USER_DEFINED_EPOCH_TIMESTAMP, &fbb)
+    OMM.add(USER_DEFINED_MICROSECONDS: USER_DEFINED_MICROSECONDS, &fbb)
+    OMM.add(CLASSIFICATION: CLASSIFICATION, &fbb)
+    OMM.add(MESSAGE_ID: MESSAGE_ID, &fbb)
+    OMM.addVectorOf(USER_DEFINED_PARAMETERS: USER_DEFINED_PARAMETERS, &fbb)
+    OMM.add(PROVENANCE: PROVENANCE, &fbb)
+    OMM.add(COV_REALISM: COV_REALISM, &fbb)
+    return OMM.endOMM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CCSDS_OMM_VERS, fieldName: "CCSDS_OMM_VERS", required: false, type: Double.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFERENCE_FRAME, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.REFERENCE_FRAME_EPOCH, fieldName: "REFERENCE_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
     try _v.visit(field: VT.MEAN_ELEMENT_THEORY, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION, fieldName: "MEAN_MOTION", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.RA_OF_ASC_NODE, fieldName: "RA_OF_ASC_NODE", required: false, type: Double.self)
+    try _v.visit(field: VT.ARG_OF_PERICENTER, fieldName: "ARG_OF_PERICENTER", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_ANOMALY, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.GM, fieldName: "GM", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLAR_RAD_AREA, fieldName: "SOLAR_RAD_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLAR_RAD_COEFF, fieldName: "SOLAR_RAD_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_AREA, fieldName: "DRAG_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_COEFF, fieldName: "DRAG_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.EPHEMERIS_TYPE, fieldName: "EPHEMERIS_TYPE", required: false, type: ephemerisFormat.self)
+    try _v.visit(field: VT.CLASSIFICATION_TYPE, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ELEMENT_SET_NO, fieldName: "ELEMENT_SET_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REV_AT_EPOCH, fieldName: "REV_AT_EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.BSTAR, fieldName: "BSTAR", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION_DOT, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION_DDOT, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
+    try _v.visit(field: VT.COV_REFERENCE_FRAME, fieldName: "COV_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.COVARIANCE, fieldName: "COVARIANCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.USER_DEFINED_BIP_0044_TYPE, fieldName: "USER_DEFINED_BIP_0044_TYPE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.USER_DEFINED_OBJECT_DESIGNATOR, fieldName: "USER_DEFINED_OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USER_DEFINED_EARTH_MODEL, fieldName: "USER_DEFINED_EARTH_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USER_DEFINED_EPOCH_TIMESTAMP, fieldName: "USER_DEFINED_EPOCH_TIMESTAMP", required: false, type: Double.self)
+    try _v.visit(field: VT.USER_DEFINED_MICROSECONDS, fieldName: "USER_DEFINED_MICROSECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_ID, fieldName: "MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USER_DEFINED_PARAMETERS, fieldName: "USER_DEFINED_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<OMMUserDefinedParameter>, OMMUserDefinedParameter>>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
+    try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<CVR>.self)
+    _v.finish()
+  }
+}
+
+///  One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML
+///  form: the parameter name (the x) and the value as written.
+public struct OMMUserDefinedParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OMM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OMMUserDefinedParameter.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PARAM_NAME: VOffset = 4
+    static let PARAM_VALUE: VOffset = 6
+  }
+
+  ///  x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  public var PARAM_NAME: String? { let o = _accessor.offset(VT.PARAM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAM_NAME) }
+  ///  The value as written, unit-less text
+  public var PARAM_VALUE: String? { let o = _accessor.offset(VT.PARAM_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAM_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAM_VALUE) }
+  public static func startOMMUserDefinedParameter(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(PARAM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAM_NAME, at: VT.PARAM_NAME) }
+  public static func add(PARAM_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAM_VALUE, at: VT.PARAM_VALUE) }
+  public static func endOMMUserDefinedParameter(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOMMUserDefinedParameter(
+    _ fbb: inout FlatBufferBuilder,
+    PARAM_NAMEOffset PARAM_NAME: Offset = Offset(),
+    PARAM_VALUEOffset PARAM_VALUE: Offset = Offset()
+  ) -> Offset {
+    let __start = OMMUserDefinedParameter.startOMMUserDefinedParameter(&fbb)
+    OMMUserDefinedParameter.add(PARAM_NAME: PARAM_NAME, &fbb)
+    OMMUserDefinedParameter.add(PARAM_VALUE: PARAM_VALUE, &fbb)
+    return OMMUserDefinedParameter.endOMMUserDefinedParameter(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PARAM_NAME, fieldName: "PARAM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAM_VALUE, fieldName: "PARAM_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

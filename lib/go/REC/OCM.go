@@ -592,7 +592,7 @@ func (rcv *OCM) OrbAveraging() []byte {
 /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
 /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
 /// Whether COVARIANCE_DATA's coverage was measured against independent
-/// reference states.
+/// reference states: Calibrated only when every COV_REALISM entry is.
 func (rcv *OCM) COV_CALIBRATION() covarianceCalibration {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -606,7 +606,7 @@ func (rcv *OCM) CovCalibration() covarianceCalibration {
 }
 
 /// Whether COVARIANCE_DATA's coverage was measured against independent
-/// reference states.
+/// reference states: Calibrated only when every COV_REALISM entry is.
 func (rcv *OCM) MutateCOV_CALIBRATION(n covarianceCalibration) bool {
 	return rcv._tab.MutateInt8Slot(46, int8(n))
 }
@@ -860,8 +860,62 @@ func (rcv *OCM) CovarianceBlocksLength() int {
 /// Every covariance time history of the message (COV_START blocks), in message
 /// order. COVARIANCE_DATA and the fields that go with it above state the first
 /// block when it is one line.
+/// Where the message's data comes from and the terms it travels under.
+func (rcv *OCM) PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OCM) Provenance(obj *PVN) *PVN {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Where the message's data comes from and the terms it travels under.
+/// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+/// STATE_DATA epochs, or one entry for every epoch.
+func (rcv *OCM) COV_REALISM(obj *CVR, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CVR)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OCM) CovRealism(obj *CVR, j int) bool {
+	return rcv.COV_REALISM(obj, j)
+}
+
+func (rcv *OCM) COV_REALISMLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCM) CovRealismLength() int {
+	return rcv.COV_REALISMLength()
+}
+
+/// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+/// STATE_DATA epochs, or one entry for every epoch.
 func OCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(31)
+	builder.StartObject(33)
 }
 func OCMAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HEADER), 0)
@@ -1114,6 +1168,24 @@ func OCMStartCOVARIANCE_BLOCKSVector(builder *flatbuffers.Builder, numElems int)
 }
 func OCMStartCovarianceBlocksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OCMStartCOVARIANCE_BLOCKSVector(builder, numElems)
+}
+func OCMAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func OCMAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	OCMAddPROVENANCE(builder, PROVENANCE)
+}
+func OCMAddCOV_REALISM(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(COV_REALISM), 0)
+}
+func OCMAddCovRealism(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
+	OCMAddCOV_REALISM(builder, COV_REALISM)
+}
+func OCMStartCOV_REALISMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OCMStartCovRealismVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMStartCOV_REALISMVector(builder, numElems)
 }
 func OCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

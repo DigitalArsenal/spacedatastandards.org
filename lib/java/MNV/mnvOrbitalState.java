@@ -120,15 +120,15 @@ public final class mnvOrbitalState extends com.google.flatbuffers.Table {
    */
   public double DRIFT_RATE() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Position uncertainty U (km, 1-sigma)
+   * Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
    */
   public double SIGMA_U() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Position uncertainty V (km, 1-sigma)
+   * Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
    */
   public double SIGMA_V() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Position uncertainty W (km, 1-sigma)
+   * Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
    */
   public double SIGMA_W() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 

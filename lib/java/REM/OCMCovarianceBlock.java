@@ -113,6 +113,15 @@ public final class OCMCovarianceBlock extends com.google.flatbuffers.Table {
   public int LINESLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
   public StringVector linesVector() { return linesVector(new StringVector()); }
   public StringVector linesVector(StringVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Realism of the block's covariance: one entry per line of LINES, in order,
+   * or one entry for every line.
+   */
+  public CVR COV_REALISM(int j) { return COV_REALISM(new CVR(), j); }
+  public CVR COV_REALISM(CVR obj, int j) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int COV_REALISMLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public CVR.Vector covRealismVector() { return covRealismVector(new CVR.Vector()); }
+  public CVR.Vector covRealismVector(CVR.Vector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOCMCovarianceBlock(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -129,11 +138,13 @@ public final class OCMCovarianceBlock extends com.google.flatbuffers.Table {
       int COV_TYPEOffset,
       byte COV_ORDERING,
       int COV_UNITSOffset,
-      int LINESOffset) {
-    builder.startTable(15);
+      int LINESOffset,
+      int COV_REALISMOffset) {
+    builder.startTable(16);
     OCMCovarianceBlock.addCovConfidence(builder, COV_CONFIDENCE);
     OCMCovarianceBlock.addCovScaleMax(builder, COV_SCALE_MAX);
     OCMCovarianceBlock.addCovScaleMin(builder, COV_SCALE_MIN);
+    OCMCovarianceBlock.addCovRealism(builder, COV_REALISMOffset);
     OCMCovarianceBlock.addLines(builder, LINESOffset);
     OCMCovarianceBlock.addCovUnits(builder, COV_UNITSOffset);
     OCMCovarianceBlock.addCovType(builder, COV_TYPEOffset);
@@ -149,7 +160,7 @@ public final class OCMCovarianceBlock extends com.google.flatbuffers.Table {
     return OCMCovarianceBlock.endOCMCovarianceBlock(builder);
   }
 
-  public static void startOCMCovarianceBlock(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startOCMCovarianceBlock(FlatBufferBuilder builder) { builder.startTable(16); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static void addCovId(FlatBufferBuilder builder, int COV_IDOffset) { builder.addOffset(1, COV_IDOffset, 0); }
   public static void addCovPrevId(FlatBufferBuilder builder, int COV_PREV_IDOffset) { builder.addOffset(2, COV_PREV_IDOffset, 0); }
@@ -167,6 +178,9 @@ public final class OCMCovarianceBlock extends com.google.flatbuffers.Table {
   public static void addLines(FlatBufferBuilder builder, int LINESOffset) { builder.addOffset(14, LINESOffset, 0); }
   public static int createLinesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startLinesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCovRealism(FlatBufferBuilder builder, int COV_REALISMOffset) { builder.addOffset(15, COV_REALISMOffset, 0); }
+  public static int createCovRealismVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCovRealismVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOCMCovarianceBlock(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

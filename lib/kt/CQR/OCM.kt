@@ -325,7 +325,7 @@ class OCM : Table() {
     fun orbAveragingInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
     /**
      * Whether COVARIANCE_DATA's coverage was measured against independent
-     * reference states.
+     * reference states: Calibrated only when every COV_REALISM entry is.
      */
     val covCalibration : Byte
         get() {
@@ -466,6 +466,35 @@ class OCM : Table() {
         get() {
             val o = __offset(64); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Where the message's data comes from and the terms it travels under.
+     */
+    val provenance : PVN? get() = provenance(PVN())
+    fun provenance(obj: PVN) : PVN? {
+        val o = __offset(66)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+     * STATE_DATA epochs, or one entry for every epoch.
+     */
+    fun covRealism(j: Int) : CVR? = covRealism(CVR(), j)
+    fun covRealism(obj: CVR, j: Int) : CVR? {
+        val o = __offset(68)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val covRealismLength : Int
+        get() {
+            val o = __offset(68); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
@@ -474,9 +503,11 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
-        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int, trajectoryBlocksOffset: Int, covarianceBlocksOffset: Int) : Int {
-            builder.startTable(31)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int, trajectoryBlocksOffset: Int, covarianceBlocksOffset: Int, provenanceOffset: Int, covRealismOffset: Int) : Int {
+            builder.startTable(33)
             addSTATESTEPSIZE(builder, stateStepSize)
+            addCOVREALISM(builder, covRealismOffset)
+            addPROVENANCE(builder, provenanceOffset)
             addCOVARIANCEBLOCKS(builder, covarianceBlocksOffset)
             addTRAJECTORYBLOCKS(builder, trajectoryBlocksOffset)
             addCOVUNITS(builder, covUnitsOffset)
@@ -509,7 +540,7 @@ class OCM : Table() {
             addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(31)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(33)
         fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
         fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
@@ -629,6 +660,16 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startCovarianceBlocksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(31, provenance, 0)
+        fun addCOVREALISM(builder: FlatBufferBuilder, covRealism: Int) = builder.addOffset(32, covRealism, 0)
+        fun createCovRealismVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovRealismVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

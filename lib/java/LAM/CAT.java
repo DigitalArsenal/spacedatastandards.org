@@ -55,7 +55,7 @@ public final class CAT extends com.google.flatbuffers.Table {
   /**
    * Ownership, typically country or company
    */
-  public byte OWNER() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public int OWNER() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
    * Launch Date [year-month-day] (ISO 8601)
    */
@@ -169,6 +169,23 @@ public final class CAT extends com.google.flatbuffers.Table {
   public String CATALOG_OBJECT_ID() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CATALOG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
   public ByteBuffer CATALOG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * The products an integrating catalog selected for the object as of
+   * PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+   * the same source and epoch where there is one. The object's maneuvers are
+   * its $MNV stream, not references here.
+   */
+  public CATProduct PRODUCTS(int j) { return PRODUCTS(new CATProduct(), j); }
+  public CATProduct PRODUCTS(CATProduct obj, int j) { int o = __offset(56); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PRODUCTSLength() { int o = __offset(56); return o != 0 ? __vector_len(o) : 0; }
+  public CATProduct.Vector productsVector() { return productsVector(new CATProduct.Vector()); }
+  public CATProduct.Vector productsVector(CATProduct.Vector obj) { int o = __offset(56); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * ISO 8601 UTC instant the selection in PRODUCTS holds at.
+   */
+  public String PRODUCTS_AS_OF() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PRODUCTS_AS_OFAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer PRODUCTS_AS_OFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
 
   public static int createCAT(FlatBufferBuilder builder,
       int OBJECT_NAMEOffset,
@@ -176,7 +193,7 @@ public final class CAT extends com.google.flatbuffers.Table {
       long NORAD_CAT_ID,
       byte OBJECT_TYPE,
       byte OPS_STATUS_CODE,
-      byte OWNER,
+      int OWNER,
       int LAUNCH_DATEOffset,
       int LAUNCH_SITEOffset,
       int DECAY_DATEOffset,
@@ -196,8 +213,10 @@ public final class CAT extends com.google.flatbuffers.Table {
       int PAYLOADSOffset,
       int BUS_IDOffset,
       int CATALOG_URIOffset,
-      int CATALOG_OBJECT_IDOffset) {
-    builder.startTable(26);
+      int CATALOG_OBJECT_IDOffset,
+      int PRODUCTSOffset,
+      int PRODUCTS_AS_OFOffset) {
+    builder.startTable(28);
     CAT.addMass(builder, MASS);
     CAT.addSize(builder, SIZE);
     CAT.addRcs(builder, RCS);
@@ -205,6 +224,8 @@ public final class CAT extends com.google.flatbuffers.Table {
     CAT.addApogee(builder, APOGEE);
     CAT.addInclination(builder, INCLINATION);
     CAT.addPeriod(builder, PERIOD);
+    CAT.addProductsAsOf(builder, PRODUCTS_AS_OFOffset);
+    CAT.addProducts(builder, PRODUCTSOffset);
     CAT.addCatalogObjectId(builder, CATALOG_OBJECT_IDOffset);
     CAT.addCatalogUri(builder, CATALOG_URIOffset);
     CAT.addBusId(builder, BUS_IDOffset);
@@ -227,13 +248,13 @@ public final class CAT extends com.google.flatbuffers.Table {
     return CAT.endCAT(builder);
   }
 
-  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(26); }
+  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(28); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(0, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(2, (int) NORAD_CAT_ID, (int) 0L); }
   public static void addObjectType(FlatBufferBuilder builder, byte OBJECT_TYPE) { builder.addByte(3, OBJECT_TYPE, 3); }
   public static void addOpsStatusCode(FlatBufferBuilder builder, byte OPS_STATUS_CODE) { builder.addByte(4, OPS_STATUS_CODE, 7); }
-  public static void addOwner(FlatBufferBuilder builder, byte OWNER) { builder.addByte(5, OWNER, 0); }
+  public static void addOwner(FlatBufferBuilder builder, int OWNER) { builder.addByte(5, (byte) OWNER, (byte) 0); }
   public static void addLaunchDate(FlatBufferBuilder builder, int LAUNCH_DATEOffset) { builder.addOffset(6, LAUNCH_DATEOffset, 0); }
   public static void addLaunchSite(FlatBufferBuilder builder, int LAUNCH_SITEOffset) { builder.addOffset(7, LAUNCH_SITEOffset, 0); }
   public static void addDecayDate(FlatBufferBuilder builder, int DECAY_DATEOffset) { builder.addOffset(8, DECAY_DATEOffset, 0); }
@@ -256,6 +277,10 @@ public final class CAT extends com.google.flatbuffers.Table {
   public static void addBusId(FlatBufferBuilder builder, int BUS_IDOffset) { builder.addOffset(23, BUS_IDOffset, 0); }
   public static void addCatalogUri(FlatBufferBuilder builder, int CATALOG_URIOffset) { builder.addOffset(24, CATALOG_URIOffset, 0); }
   public static void addCatalogObjectId(FlatBufferBuilder builder, int CATALOG_OBJECT_IDOffset) { builder.addOffset(25, CATALOG_OBJECT_IDOffset, 0); }
+  public static void addProducts(FlatBufferBuilder builder, int PRODUCTSOffset) { builder.addOffset(26, PRODUCTSOffset, 0); }
+  public static int createProductsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startProductsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addProductsAsOf(FlatBufferBuilder builder, int PRODUCTS_AS_OFOffset) { builder.addOffset(27, PRODUCTS_AS_OFOffset, 0); }
   public static int endCAT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

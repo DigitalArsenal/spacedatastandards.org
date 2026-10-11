@@ -5,332 +5,188 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum legacyCountryCode {
-  AB(0),
-  ABS(1),
-  AC(2),
-  ALG(3),
-  ANG(4),
-  ARGN(5),
-  ARM(6),
-  ASRA(7),
-  AUS(8),
-  AZER(9),
-  BEL(10),
-  BELA(11),
-  BERM(12),
-  BGD(13),
-  BHUT(14),
-  BOL(15),
-  BRAZ(16),
-  BUL(17),
-  CA(18),
-  CHBZ(19),
-  CHTU(20),
-  CHLE(21),
-  CIS(22),
-  COL(23),
-  CRI(24),
-  CZCH(25),
-  DEN(26),
-  DJI(27),
-  ECU(28),
-  EGYP(29),
-  ESA(30),
-  ESRO(31),
-  EST(32),
-  ETH(33),
-  EUME(34),
-  EUTE(35),
-  FGER(36),
-  FIN(37),
-  FR(38),
-  FRIT(39),
-  GER(40),
-  GHA(41),
-  GLOB(42),
-  GREC(43),
-  GRSA(44),
-  GUAT(45),
-  HUN(46),
-  IM(47),
-  IND(48),
-  INDO(49),
-  IRAN(50),
-  IRAQ(51),
-  IRID(52),
-  IRL(53),
-  ISRA(54),
-  ISRO(55),
-  ISS(56),
-  IT(57),
-  ITSO(58),
-  JPN(59),
-  KAZ(60),
-  KEN(61),
-  LAOS(62),
-  LKA(63),
-  LTU(64),
-  LUXE(65),
-  MA(66),
-  MALA(67),
-  MCO(68),
-  MDA(69),
-  MEX(70),
-  MMR(71),
-  MNG(72),
-  MUS(73),
-  NATO(74),
-  NETH(75),
-  NICO(76),
-  NIG(77),
-  NKOR(78),
-  NOR(79),
-  NPL(80),
-  NZ(81),
-  O3B(82),
-  ORB(83),
-  PAKI(84),
-  PERU(85),
-  POL(86),
-  POR(87),
-  PRC(88),
-  PRY(89),
-  PRES(90),
-  QAT(91),
-  RASC(92),
-  ROC(93),
-  ROM(94),
-  RP(95),
-  RWA(96),
-  SAFR(97),
-  SAUD(98),
-  SDN(99),
-  SEAL(100),
-  SES(101),
-  SGJP(102),
-  SING(103),
-  SKOR(104),
-  SPN(105),
-  STCT(106),
-  SVN(107),
-  SWED(108),
-  SWTZ(109),
-  TBD(110),
-  THAI(111),
-  TMMC(112),
-  TUN(113),
-  TURK(114),
-  UAE(115),
-  UK(116),
-  UKR(117),
-  UNK(118),
-  URY(119),
-  US(120),
-  USBZ(121),
-  VAT(122),
-  VENZ(123),
-  VTNM(124),
-  ZWE(125);
+///  Trajectory state representation type.
+///  Defines how trajectory data is parameterized in this OCM.
+///  CCSDS 502.0-B-3 Section 7 specifies multiple trajectory state types.
+enum trajectoryType {
+  CARTESIAN_PV(0),
+  CARTESIAN_PVA(1),
+  POLYNOMIAL_POS(2),
+  POLYNOMIAL_OE(3),
+  HERMITE(4),
+  LAGRANGE(5),
+  KEPLERIAN(6),
+  KEPLERIAN_MEAN(7),
+  EQUINOCTIAL(8),
+  EQUINOCTIAL_MOD(9);
 
   final int value;
-  const legacyCountryCode(this.value);
+  const trajectoryType(this.value);
 
-  factory legacyCountryCode.fromValue(int value) {
+  factory trajectoryType.fromValue(int value) {
     switch (value) {
-      case 0: return legacyCountryCode.AB;
-      case 1: return legacyCountryCode.ABS;
-      case 2: return legacyCountryCode.AC;
-      case 3: return legacyCountryCode.ALG;
-      case 4: return legacyCountryCode.ANG;
-      case 5: return legacyCountryCode.ARGN;
-      case 6: return legacyCountryCode.ARM;
-      case 7: return legacyCountryCode.ASRA;
-      case 8: return legacyCountryCode.AUS;
-      case 9: return legacyCountryCode.AZER;
-      case 10: return legacyCountryCode.BEL;
-      case 11: return legacyCountryCode.BELA;
-      case 12: return legacyCountryCode.BERM;
-      case 13: return legacyCountryCode.BGD;
-      case 14: return legacyCountryCode.BHUT;
-      case 15: return legacyCountryCode.BOL;
-      case 16: return legacyCountryCode.BRAZ;
-      case 17: return legacyCountryCode.BUL;
-      case 18: return legacyCountryCode.CA;
-      case 19: return legacyCountryCode.CHBZ;
-      case 20: return legacyCountryCode.CHTU;
-      case 21: return legacyCountryCode.CHLE;
-      case 22: return legacyCountryCode.CIS;
-      case 23: return legacyCountryCode.COL;
-      case 24: return legacyCountryCode.CRI;
-      case 25: return legacyCountryCode.CZCH;
-      case 26: return legacyCountryCode.DEN;
-      case 27: return legacyCountryCode.DJI;
-      case 28: return legacyCountryCode.ECU;
-      case 29: return legacyCountryCode.EGYP;
-      case 30: return legacyCountryCode.ESA;
-      case 31: return legacyCountryCode.ESRO;
-      case 32: return legacyCountryCode.EST;
-      case 33: return legacyCountryCode.ETH;
-      case 34: return legacyCountryCode.EUME;
-      case 35: return legacyCountryCode.EUTE;
-      case 36: return legacyCountryCode.FGER;
-      case 37: return legacyCountryCode.FIN;
-      case 38: return legacyCountryCode.FR;
-      case 39: return legacyCountryCode.FRIT;
-      case 40: return legacyCountryCode.GER;
-      case 41: return legacyCountryCode.GHA;
-      case 42: return legacyCountryCode.GLOB;
-      case 43: return legacyCountryCode.GREC;
-      case 44: return legacyCountryCode.GRSA;
-      case 45: return legacyCountryCode.GUAT;
-      case 46: return legacyCountryCode.HUN;
-      case 47: return legacyCountryCode.IM;
-      case 48: return legacyCountryCode.IND;
-      case 49: return legacyCountryCode.INDO;
-      case 50: return legacyCountryCode.IRAN;
-      case 51: return legacyCountryCode.IRAQ;
-      case 52: return legacyCountryCode.IRID;
-      case 53: return legacyCountryCode.IRL;
-      case 54: return legacyCountryCode.ISRA;
-      case 55: return legacyCountryCode.ISRO;
-      case 56: return legacyCountryCode.ISS;
-      case 57: return legacyCountryCode.IT;
-      case 58: return legacyCountryCode.ITSO;
-      case 59: return legacyCountryCode.JPN;
-      case 60: return legacyCountryCode.KAZ;
-      case 61: return legacyCountryCode.KEN;
-      case 62: return legacyCountryCode.LAOS;
-      case 63: return legacyCountryCode.LKA;
-      case 64: return legacyCountryCode.LTU;
-      case 65: return legacyCountryCode.LUXE;
-      case 66: return legacyCountryCode.MA;
-      case 67: return legacyCountryCode.MALA;
-      case 68: return legacyCountryCode.MCO;
-      case 69: return legacyCountryCode.MDA;
-      case 70: return legacyCountryCode.MEX;
-      case 71: return legacyCountryCode.MMR;
-      case 72: return legacyCountryCode.MNG;
-      case 73: return legacyCountryCode.MUS;
-      case 74: return legacyCountryCode.NATO;
-      case 75: return legacyCountryCode.NETH;
-      case 76: return legacyCountryCode.NICO;
-      case 77: return legacyCountryCode.NIG;
-      case 78: return legacyCountryCode.NKOR;
-      case 79: return legacyCountryCode.NOR;
-      case 80: return legacyCountryCode.NPL;
-      case 81: return legacyCountryCode.NZ;
-      case 82: return legacyCountryCode.O3B;
-      case 83: return legacyCountryCode.ORB;
-      case 84: return legacyCountryCode.PAKI;
-      case 85: return legacyCountryCode.PERU;
-      case 86: return legacyCountryCode.POL;
-      case 87: return legacyCountryCode.POR;
-      case 88: return legacyCountryCode.PRC;
-      case 89: return legacyCountryCode.PRY;
-      case 90: return legacyCountryCode.PRES;
-      case 91: return legacyCountryCode.QAT;
-      case 92: return legacyCountryCode.RASC;
-      case 93: return legacyCountryCode.ROC;
-      case 94: return legacyCountryCode.ROM;
-      case 95: return legacyCountryCode.RP;
-      case 96: return legacyCountryCode.RWA;
-      case 97: return legacyCountryCode.SAFR;
-      case 98: return legacyCountryCode.SAUD;
-      case 99: return legacyCountryCode.SDN;
-      case 100: return legacyCountryCode.SEAL;
-      case 101: return legacyCountryCode.SES;
-      case 102: return legacyCountryCode.SGJP;
-      case 103: return legacyCountryCode.SING;
-      case 104: return legacyCountryCode.SKOR;
-      case 105: return legacyCountryCode.SPN;
-      case 106: return legacyCountryCode.STCT;
-      case 107: return legacyCountryCode.SVN;
-      case 108: return legacyCountryCode.SWED;
-      case 109: return legacyCountryCode.SWTZ;
-      case 110: return legacyCountryCode.TBD;
-      case 111: return legacyCountryCode.THAI;
-      case 112: return legacyCountryCode.TMMC;
-      case 113: return legacyCountryCode.TUN;
-      case 114: return legacyCountryCode.TURK;
-      case 115: return legacyCountryCode.UAE;
-      case 116: return legacyCountryCode.UK;
-      case 117: return legacyCountryCode.UKR;
-      case 118: return legacyCountryCode.UNK;
-      case 119: return legacyCountryCode.URY;
-      case 120: return legacyCountryCode.US;
-      case 121: return legacyCountryCode.USBZ;
-      case 122: return legacyCountryCode.VAT;
-      case 123: return legacyCountryCode.VENZ;
-      case 124: return legacyCountryCode.VTNM;
-      case 125: return legacyCountryCode.ZWE;
+      case 0: return trajectoryType.CARTESIAN_PV;
+      case 1: return trajectoryType.CARTESIAN_PVA;
+      case 2: return trajectoryType.POLYNOMIAL_POS;
+      case 3: return trajectoryType.POLYNOMIAL_OE;
+      case 4: return trajectoryType.HERMITE;
+      case 5: return trajectoryType.LAGRANGE;
+      case 6: return trajectoryType.KEPLERIAN;
+      case 7: return trajectoryType.KEPLERIAN_MEAN;
+      case 8: return trajectoryType.EQUINOCTIAL;
+      case 9: return trajectoryType.EQUINOCTIAL_MOD;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static legacyCountryCode? _createOrNull(int? value) =>
-      value == null ? null : legacyCountryCode.fromValue(value);
+  static trajectoryType? _createOrNull(int? value) =>
+      value == null ? null : trajectoryType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 125;
-  static const fb.Reader<legacyCountryCode> reader = _legacyCountryCodeReader();
+  static const int maxValue = 9;
+  static const fb.Reader<trajectoryType> reader = _trajectoryTypeReader();
 }
 
-class _legacyCountryCodeReader extends fb.Reader<legacyCountryCode> {
-  const _legacyCountryCodeReader();
+class _trajectoryTypeReader extends fb.Reader<trajectoryType> {
+  const _trajectoryTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  legacyCountryCode read(fb.BufferContext bc, int offset) =>
-      legacyCountryCode.fromValue(const fb.Int8Reader().read(bc, offset));
+  trajectoryType read(fb.BufferContext bc, int offset) =>
+      trajectoryType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Legacy Country Code
-class LCC {
-  LCC._(this._bc, this._bcOffset);
-  factory LCC(List<int> bytes) {
+///  Estimator class that produced an orbit-determination solution
+///  (batch-vs-filter provenance).
+enum estimatorCategory {
+  Unknown(0),
+  BatchLeastSquares(1),
+  ExtendedKalman(2),
+  UnscentedKalman(3),
+  Smoother(4);
+
+  final int value;
+  const estimatorCategory(this.value);
+
+  factory estimatorCategory.fromValue(int value) {
+    switch (value) {
+      case 0: return estimatorCategory.Unknown;
+      case 1: return estimatorCategory.BatchLeastSquares;
+      case 2: return estimatorCategory.ExtendedKalman;
+      case 3: return estimatorCategory.UnscentedKalman;
+      case 4: return estimatorCategory.Smoother;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static estimatorCategory? _createOrNull(int? value) =>
+      value == null ? null : estimatorCategory.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<estimatorCategory> reader = _estimatorCategoryReader();
+}
+
+class _estimatorCategoryReader extends fb.Reader<estimatorCategory> {
+  const _estimatorCategoryReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  estimatorCategory read(fb.BufferContext bc, int offset) =>
+      estimatorCategory.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+enum covarianceOrdering {
+  LTM(0),
+  UTM(1),
+  FULL(2),
+  LTMWCC(3),
+  UTMWCC(4);
+
+  final int value;
+  const covarianceOrdering(this.value);
+
+  factory covarianceOrdering.fromValue(int value) {
+    switch (value) {
+      case 0: return covarianceOrdering.LTM;
+      case 1: return covarianceOrdering.UTM;
+      case 2: return covarianceOrdering.FULL;
+      case 3: return covarianceOrdering.LTMWCC;
+      case 4: return covarianceOrdering.UTMWCC;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static covarianceOrdering? _createOrNull(int? value) =>
+      value == null ? null : covarianceOrdering.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<covarianceOrdering> reader = _covarianceOrderingReader();
+}
+
+class _covarianceOrderingReader extends fb.Reader<covarianceOrdering> {
+  const _covarianceOrderingReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  covarianceOrdering read(fb.BufferContext bc, int offset) =>
+      covarianceOrdering.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class Header {
+  Header._(this._bc, this._bcOffset);
+  factory Header(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<LCC> reader = _LCCReader();
+  static const fb.Reader<Header> reader = _HeaderReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  legacyCountryCode get OWNER => legacyCountryCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Display name of the owner or source the code stands for.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Longer description of the owner or source.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  True while the code is in current use by the publishing catalogue.
-  bool get ACTIVE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
-  ///  URL of the reference table the row was retrieved from.
-  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get sourceUrl => SOURCE_URL;
-  ///  ISO 8601 UTC time the reference table was retrieved.
-  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get retrievedAt => RETRIEVED_AT;
+  ///  Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.
+  String? get CCSDS_OCM_VERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get ccsdsOcmVers => CCSDS_OCM_VERS;
+  ///  Comments (a contiguous set of one or more comment lines may be provided immediately after the version number).
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  User-defined free-text message classification/caveats of this OCM.
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  File creation date/time in UTC.
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get creationDate => CREATION_DATE;
+  ///  Creating agency or operator.
+  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Free-text field containing an ID that uniquely identifies a message from this originator.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get messageId => MESSAGE_ID;
 
   @override
   String toString() {
-    return 'LCC{OWNER: ${OWNER}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ACTIVE: ${ACTIVE}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}}';
+    return 'Header{ccsdsOcmVers: ${ccsdsOcmVers}, COMMENT: ${COMMENT}, CLASSIFICATION: ${CLASSIFICATION}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, messageId: ${messageId}}';
   }
 }
 
-class _LCCReader extends fb.TableReader<LCC> {
-  const _LCCReader();
+class _HeaderReader extends fb.TableReader<Header> {
+  const _HeaderReader();
 
   @override
-  LCC createObject(fb.BufferContext bc, int offset) =>
-    LCC._(bc, offset);
+  Header createObject(fb.BufferContext bc, int offset) =>
+    Header._(bc, offset);
 }
 
-class LCCBuilder {
-  LCCBuilder(this.fbBuilder);
+class HeaderBuilder {
+  HeaderBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -338,27 +194,27 @@ class LCCBuilder {
     fbBuilder.startTable(6);
   }
 
-  int addOwner(legacyCountryCode? OWNER) {
-    fbBuilder.addInt8(0, OWNER?.value);
+  int addCcsdsOcmVersOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addCommentOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDescriptionOffset(int? offset) {
+  int addClassificationOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addActive(bool? ACTIVE) {
-    fbBuilder.addBool(3, ACTIVE);
+  int addCreationDateOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addSourceUrlOffset(int? offset) {
+  int addOriginatorOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addRetrievedAtOffset(int? offset) {
+  int addMessageIdOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
@@ -368,49 +224,4770 @@ class LCCBuilder {
   }
 }
 
-class LCCObjectBuilder extends fb.ObjectBuilder {
-  final legacyCountryCode? _OWNER;
-  final String? _NAME;
-  final String? _DESCRIPTION;
-  final bool? _ACTIVE;
-  final String? _SOURCE_URL;
-  final String? _RETRIEVED_AT;
+class HeaderObjectBuilder extends fb.ObjectBuilder {
+  final String? _CCSDS_OCM_VERS;
+  final List<String>? _COMMENT;
+  final String? _CLASSIFICATION;
+  final String? _CREATION_DATE;
+  final String? _ORIGINATOR;
+  final String? _MESSAGE_ID;
 
-  LCCObjectBuilder({
-    legacyCountryCode? OWNER,
-    String? NAME,
-    String? DESCRIPTION,
-    bool? ACTIVE,
-    String? SOURCE_URL,
-    String? sourceUrl,
-    String? RETRIEVED_AT,
-    String? retrievedAt,
+  HeaderObjectBuilder({
+    String? CCSDS_OCM_VERS,
+    String? ccsdsOcmVers,
+    List<String>? COMMENT,
+    String? CLASSIFICATION,
+    String? CREATION_DATE,
+    String? creationDate,
+    String? ORIGINATOR,
+    String? MESSAGE_ID,
+    String? messageId,
   })
-      : _OWNER = OWNER,
-        _NAME = NAME,
-        _DESCRIPTION = DESCRIPTION,
-        _ACTIVE = ACTIVE,
-        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
-        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT;
+      : _CCSDS_OCM_VERS = ccsdsOcmVers ?? CCSDS_OCM_VERS,
+        _COMMENT = COMMENT,
+        _CLASSIFICATION = CLASSIFICATION,
+        _CREATION_DATE = creationDate ?? CREATION_DATE,
+        _ORIGINATOR = ORIGINATOR,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CCSDS_OCM_VERSOffset = _CCSDS_OCM_VERS == null ? null
+        : fbBuilder.writeString(_CCSDS_OCM_VERS!);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
+    final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
+        : fbBuilder.writeString(_CREATION_DATE!);
+    final int? ORIGINATOROffset = _ORIGINATOR == null ? null
+        : fbBuilder.writeString(_ORIGINATOR!);
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, CCSDS_OCM_VERSOffset);
+    fbBuilder.addOffset(1, COMMENTOffset);
+    fbBuilder.addOffset(2, CLASSIFICATIONOffset);
+    fbBuilder.addOffset(3, CREATION_DATEOffset);
+    fbBuilder.addOffset(4, ORIGINATOROffset);
+    fbBuilder.addOffset(5, MESSAGE_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class Metadata {
+  Metadata._(this._bc, this._bcOffset);
+  factory Metadata(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Metadata> reader = _MetadataReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Comments in the Metadata section.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Free-text field containing the name of the object.
+  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get objectName => OBJECT_NAME;
+  ///  International designator for the object as assigned by COSPAR.
+  String? get INTERNATIONAL_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get internationalDesignator => INTERNATIONAL_DESIGNATOR;
+  ///  Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained.
+  String? get CATALOG_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get catalogName => CATALOG_NAME;
+  ///  Unique satellite identification designator from the catalog.
+  String? get OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get objectDesignator => OBJECT_DESIGNATOR;
+  ///  Alternate names of this space object.
+  List<String>? get ALTERNATE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<String>? get alternateNames => ALTERNATE_NAMES;
+  ///  Originator or programmatic Point-of-Contact (PoC) for OCM.
+  String? get ORIGINATOR_POC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get originatorPoc => ORIGINATOR_POC;
+  ///  Contact position of the originator PoC.
+  String? get ORIGINATOR_POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get originatorPosition => ORIGINATOR_POSITION;
+  ///  Originator PoC phone number.
+  String? get ORIGINATOR_PHONE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get originatorPhone => ORIGINATOR_PHONE;
+  ///  Originator PoC email address.
+  String? get ORIGINATOR_EMAIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get originatorEmail => ORIGINATOR_EMAIL;
+  ///  Originator's physical address information.
+  String? get ORIGINATOR_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get originatorAddress => ORIGINATOR_ADDRESS;
+  ///  Creating agency or operator for technical contact.
+  String? get TECH_ORG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get techOrg => TECH_ORG;
+  ///  Technical Point-of-Contact (PoC) for OCM.
+  String? get TECH_POC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get techPoc => TECH_POC;
+  ///  Contact position of the technical PoC.
+  String? get TECH_POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get techPosition => TECH_POSITION;
+  ///  Technical PoC phone number.
+  String? get TECH_PHONE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get techPhone => TECH_PHONE;
+  ///  Technical PoC email address.
+  String? get TECH_EMAIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get techEmail => TECH_EMAIL;
+  ///  Technical PoC physical address information.
+  String? get TECH_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get techAddress => TECH_ADDRESS;
+  ///  ID that uniquely identifies the previous message from this originator.
+  String? get PREVIOUS_MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get previousMessageId => PREVIOUS_MESSAGE_ID;
+  ///  ID that uniquely identifies the next message from this originator.
+  String? get NEXT_MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get nextMessageId => NEXT_MESSAGE_ID;
+  ///  Unique identifier of Attitude Data Messages linked to this OCM.
+  String? get ADM_MSG_LINK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get admMsgLink => ADM_MSG_LINK;
+  ///  Unique identifier of Conjunction Data Messages linked to this OCM.
+  String? get CDM_MSG_LINK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get cdmMsgLink => CDM_MSG_LINK;
+  ///  Unique identifier of Pointing Request Messages linked to this OCM.
+  String? get PRM_MSG_LINK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get prmMsgLink => PRM_MSG_LINK;
+  ///  Unique identifier of Reentry Data Messages linked to this OCM.
+  String? get RDM_MSG_LINK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get rdmMsgLink => RDM_MSG_LINK;
+  ///  List of Tracking Data Messages upon which this orbit determination is based.
+  List<String>? get TDM_MSG_LINK => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 50);
+  List<String>? get tdmMsgLink => TDM_MSG_LINK;
+  ///  Operator of the space object.
+  String? get OPERATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  ///  Owner of the space object.
+  String? get OWNER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  ///  Country where the space object owner is based.
+  String? get COUNTRY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  ///  Name of the constellation to which this space object belongs.
+  String? get CONSTELLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS).
+  String? get OBJECT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get objectType => OBJECT_TYPE;
+  ///  Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get timeSystem => TIME_SYSTEM;
+  ///  Default epoch to which all relative times are referenced in data blocks.
+  String? get EPOCH_TZERO => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  String? get epochTzero => EPOCH_TZERO;
+  ///  Specification of the operational status of the space object.
+  String? get OPS_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  String? get opsStatus => OPS_STATUS;
+  ///  Specification of the type of orbit (e.g., GEO, LEO).
+  String? get ORBIT_CATEGORY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  String? get orbitCategory => ORBIT_CATEGORY;
+  ///  List of elements of information data blocks included in this message.
+  List<String>? get OCM_DATA_ELEMENTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 70);
+  List<String>? get ocmDataElements => OCM_DATA_ELEMENTS;
+  ///  Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK).
+  double get SCLK_OFFSET_AT_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
+  double get sclkOffsetAtEpoch => SCLK_OFFSET_AT_EPOCH;
+  ///  Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).
+  double get SCLK_SEC_PER_SI_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
+  double get sclkSecPerSiSec => SCLK_SEC_PER_SI_SEC;
+  ///  Creation epoch of the previous message from this originator.
+  String? get PREVIOUS_MESSAGE_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  String? get previousMessageEpoch => PREVIOUS_MESSAGE_EPOCH;
+  ///  Anticipated (or actual) epoch of the next message from this originator.
+  String? get NEXT_MESSAGE_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  String? get nextMessageEpoch => NEXT_MESSAGE_EPOCH;
+  ///  Time of the earliest data contained in the OCM.
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  String? get startTime => START_TIME;
+  ///  Time of the latest data contained in the OCM.
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get stopTime => STOP_TIME;
+  ///  Span of time that the OCM covers, measured in days.
+  double get TIME_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
+  double get timeSpan => TIME_SPAN;
+  ///  Difference (TAI - UTC) in seconds at EPOCH_TZERO.
+  double get TAIMUTC_AT_TZERO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
+  double get taimutcAtTzero => TAIMUTC_AT_TZERO;
+  ///  Epoch of next leap second.
+  String? get NEXT_LEAP_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  String? get nextLeapEpoch => NEXT_LEAP_EPOCH;
+  ///  Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH.
+  double get NEXT_LEAP_TAIMUTC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
+  double get nextLeapTaimutc => NEXT_LEAP_TAIMUTC;
+  ///  Difference (UT1 - UTC) in seconds at EPOCH_TZERO.
+  double get UT1MUTC_AT_TZERO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
+  double get ut1mutcAtTzero => UT1MUTC_AT_TZERO;
+  ///  Source and version of Earth Orientation Parameters used.
+  String? get EOP_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  String? get eopSource => EOP_SOURCE;
+  ///  Method used to select or interpolate sequential EOP data.
+  String? get INTERP_METHOD_EOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
+  String? get interpMethodEop => INTERP_METHOD_EOP;
+  ///  Source and version of celestial body ephemeris data used.
+  String? get CELESTIAL_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 98);
+  String? get celestialSource => CELESTIAL_SOURCE;
+
+  @override
+  String toString() {
+    return 'Metadata{COMMENT: ${COMMENT}, objectName: ${objectName}, internationalDesignator: ${internationalDesignator}, catalogName: ${catalogName}, objectDesignator: ${objectDesignator}, alternateNames: ${alternateNames}, originatorPoc: ${originatorPoc}, originatorPosition: ${originatorPosition}, originatorPhone: ${originatorPhone}, originatorEmail: ${originatorEmail}, originatorAddress: ${originatorAddress}, techOrg: ${techOrg}, techPoc: ${techPoc}, techPosition: ${techPosition}, techPhone: ${techPhone}, techEmail: ${techEmail}, techAddress: ${techAddress}, previousMessageId: ${previousMessageId}, nextMessageId: ${nextMessageId}, admMsgLink: ${admMsgLink}, cdmMsgLink: ${cdmMsgLink}, prmMsgLink: ${prmMsgLink}, rdmMsgLink: ${rdmMsgLink}, tdmMsgLink: ${tdmMsgLink}, OPERATOR: ${OPERATOR}, OWNER: ${OWNER}, COUNTRY: ${COUNTRY}, CONSTELLATION: ${CONSTELLATION}, objectType: ${objectType}, timeSystem: ${timeSystem}, epochTzero: ${epochTzero}, opsStatus: ${opsStatus}, orbitCategory: ${orbitCategory}, ocmDataElements: ${ocmDataElements}, sclkOffsetAtEpoch: ${sclkOffsetAtEpoch}, sclkSecPerSiSec: ${sclkSecPerSiSec}, previousMessageEpoch: ${previousMessageEpoch}, nextMessageEpoch: ${nextMessageEpoch}, startTime: ${startTime}, stopTime: ${stopTime}, timeSpan: ${timeSpan}, taimutcAtTzero: ${taimutcAtTzero}, nextLeapEpoch: ${nextLeapEpoch}, nextLeapTaimutc: ${nextLeapTaimutc}, ut1mutcAtTzero: ${ut1mutcAtTzero}, eopSource: ${eopSource}, interpMethodEop: ${interpMethodEop}, celestialSource: ${celestialSource}}';
+  }
+}
+
+class _MetadataReader extends fb.TableReader<Metadata> {
+  const _MetadataReader();
+
+  @override
+  Metadata createObject(fb.BufferContext bc, int offset) =>
+    Metadata._(bc, offset);
+}
+
+class MetadataBuilder {
+  MetadataBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(48);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addInternationalDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAlternateNamesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorPocOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorPositionOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorPhoneOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorEmailOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorAddressOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addTechOrgOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addTechPocOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addTechPositionOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addTechPhoneOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addTechEmailOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addTechAddressOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addPreviousMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addNextMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addAdmMsgLinkOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addCdmMsgLinkOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addPrmMsgLinkOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addRdmMsgLinkOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addTdmMsgLinkOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addOperatorOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addOwnerOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addCountryOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addConstellationOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectTypeOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochTzeroOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addOpsStatusOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitCategoryOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addOcmDataElementsOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addSclkOffsetAtEpoch(double? SCLK_OFFSET_AT_EPOCH) {
+    fbBuilder.addFloat64(34, SCLK_OFFSET_AT_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addSclkSecPerSiSec(double? SCLK_SEC_PER_SI_SEC) {
+    fbBuilder.addFloat64(35, SCLK_SEC_PER_SI_SEC);
+    return fbBuilder.offset;
+  }
+  int addPreviousMessageEpochOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addNextMessageEpochOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSpan(double? TIME_SPAN) {
+    fbBuilder.addFloat64(40, TIME_SPAN);
+    return fbBuilder.offset;
+  }
+  int addTaimutcAtTzero(double? TAIMUTC_AT_TZERO) {
+    fbBuilder.addFloat64(41, TAIMUTC_AT_TZERO);
+    return fbBuilder.offset;
+  }
+  int addNextLeapEpochOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addNextLeapTaimutc(double? NEXT_LEAP_TAIMUTC) {
+    fbBuilder.addFloat64(43, NEXT_LEAP_TAIMUTC);
+    return fbBuilder.offset;
+  }
+  int addUt1MutcAtTzero(double? UT1MUTC_AT_TZERO) {
+    fbBuilder.addFloat64(44, UT1MUTC_AT_TZERO);
+    return fbBuilder.offset;
+  }
+  int addEopSourceOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpMethodEopOffset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+  int addCelestialSourceOffset(int? offset) {
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class MetadataObjectBuilder extends fb.ObjectBuilder {
+  final List<String>? _COMMENT;
+  final String? _OBJECT_NAME;
+  final String? _INTERNATIONAL_DESIGNATOR;
+  final String? _CATALOG_NAME;
+  final String? _OBJECT_DESIGNATOR;
+  final List<String>? _ALTERNATE_NAMES;
+  final String? _ORIGINATOR_POC;
+  final String? _ORIGINATOR_POSITION;
+  final String? _ORIGINATOR_PHONE;
+  final String? _ORIGINATOR_EMAIL;
+  final String? _ORIGINATOR_ADDRESS;
+  final String? _TECH_ORG;
+  final String? _TECH_POC;
+  final String? _TECH_POSITION;
+  final String? _TECH_PHONE;
+  final String? _TECH_EMAIL;
+  final String? _TECH_ADDRESS;
+  final String? _PREVIOUS_MESSAGE_ID;
+  final String? _NEXT_MESSAGE_ID;
+  final String? _ADM_MSG_LINK;
+  final String? _CDM_MSG_LINK;
+  final String? _PRM_MSG_LINK;
+  final String? _RDM_MSG_LINK;
+  final List<String>? _TDM_MSG_LINK;
+  final String? _OPERATOR;
+  final String? _OWNER;
+  final String? _COUNTRY;
+  final String? _CONSTELLATION;
+  final String? _OBJECT_TYPE;
+  final String? _TIME_SYSTEM;
+  final String? _EPOCH_TZERO;
+  final String? _OPS_STATUS;
+  final String? _ORBIT_CATEGORY;
+  final List<String>? _OCM_DATA_ELEMENTS;
+  final double? _SCLK_OFFSET_AT_EPOCH;
+  final double? _SCLK_SEC_PER_SI_SEC;
+  final String? _PREVIOUS_MESSAGE_EPOCH;
+  final String? _NEXT_MESSAGE_EPOCH;
+  final String? _START_TIME;
+  final String? _STOP_TIME;
+  final double? _TIME_SPAN;
+  final double? _TAIMUTC_AT_TZERO;
+  final String? _NEXT_LEAP_EPOCH;
+  final double? _NEXT_LEAP_TAIMUTC;
+  final double? _UT1MUTC_AT_TZERO;
+  final String? _EOP_SOURCE;
+  final String? _INTERP_METHOD_EOP;
+  final String? _CELESTIAL_SOURCE;
+
+  MetadataObjectBuilder({
+    List<String>? COMMENT,
+    String? OBJECT_NAME,
+    String? objectName,
+    String? INTERNATIONAL_DESIGNATOR,
+    String? internationalDesignator,
+    String? CATALOG_NAME,
+    String? catalogName,
+    String? OBJECT_DESIGNATOR,
+    String? objectDesignator,
+    List<String>? ALTERNATE_NAMES,
+    List<String>? alternateNames,
+    String? ORIGINATOR_POC,
+    String? originatorPoc,
+    String? ORIGINATOR_POSITION,
+    String? originatorPosition,
+    String? ORIGINATOR_PHONE,
+    String? originatorPhone,
+    String? ORIGINATOR_EMAIL,
+    String? originatorEmail,
+    String? ORIGINATOR_ADDRESS,
+    String? originatorAddress,
+    String? TECH_ORG,
+    String? techOrg,
+    String? TECH_POC,
+    String? techPoc,
+    String? TECH_POSITION,
+    String? techPosition,
+    String? TECH_PHONE,
+    String? techPhone,
+    String? TECH_EMAIL,
+    String? techEmail,
+    String? TECH_ADDRESS,
+    String? techAddress,
+    String? PREVIOUS_MESSAGE_ID,
+    String? previousMessageId,
+    String? NEXT_MESSAGE_ID,
+    String? nextMessageId,
+    String? ADM_MSG_LINK,
+    String? admMsgLink,
+    String? CDM_MSG_LINK,
+    String? cdmMsgLink,
+    String? PRM_MSG_LINK,
+    String? prmMsgLink,
+    String? RDM_MSG_LINK,
+    String? rdmMsgLink,
+    List<String>? TDM_MSG_LINK,
+    List<String>? tdmMsgLink,
+    String? OPERATOR,
+    String? OWNER,
+    String? COUNTRY,
+    String? CONSTELLATION,
+    String? OBJECT_TYPE,
+    String? objectType,
+    String? TIME_SYSTEM,
+    String? timeSystem,
+    String? EPOCH_TZERO,
+    String? epochTzero,
+    String? OPS_STATUS,
+    String? opsStatus,
+    String? ORBIT_CATEGORY,
+    String? orbitCategory,
+    List<String>? OCM_DATA_ELEMENTS,
+    List<String>? ocmDataElements,
+    double? SCLK_OFFSET_AT_EPOCH,
+    double? sclkOffsetAtEpoch,
+    double? SCLK_SEC_PER_SI_SEC,
+    double? sclkSecPerSiSec,
+    String? PREVIOUS_MESSAGE_EPOCH,
+    String? previousMessageEpoch,
+    String? NEXT_MESSAGE_EPOCH,
+    String? nextMessageEpoch,
+    String? START_TIME,
+    String? startTime,
+    String? STOP_TIME,
+    String? stopTime,
+    double? TIME_SPAN,
+    double? timeSpan,
+    double? TAIMUTC_AT_TZERO,
+    double? taimutcAtTzero,
+    String? NEXT_LEAP_EPOCH,
+    String? nextLeapEpoch,
+    double? NEXT_LEAP_TAIMUTC,
+    double? nextLeapTaimutc,
+    double? UT1MUTC_AT_TZERO,
+    double? ut1mutcAtTzero,
+    String? EOP_SOURCE,
+    String? eopSource,
+    String? INTERP_METHOD_EOP,
+    String? interpMethodEop,
+    String? CELESTIAL_SOURCE,
+    String? celestialSource,
+  })
+      : _COMMENT = COMMENT,
+        _OBJECT_NAME = objectName ?? OBJECT_NAME,
+        _INTERNATIONAL_DESIGNATOR = internationalDesignator ?? INTERNATIONAL_DESIGNATOR,
+        _CATALOG_NAME = catalogName ?? CATALOG_NAME,
+        _OBJECT_DESIGNATOR = objectDesignator ?? OBJECT_DESIGNATOR,
+        _ALTERNATE_NAMES = alternateNames ?? ALTERNATE_NAMES,
+        _ORIGINATOR_POC = originatorPoc ?? ORIGINATOR_POC,
+        _ORIGINATOR_POSITION = originatorPosition ?? ORIGINATOR_POSITION,
+        _ORIGINATOR_PHONE = originatorPhone ?? ORIGINATOR_PHONE,
+        _ORIGINATOR_EMAIL = originatorEmail ?? ORIGINATOR_EMAIL,
+        _ORIGINATOR_ADDRESS = originatorAddress ?? ORIGINATOR_ADDRESS,
+        _TECH_ORG = techOrg ?? TECH_ORG,
+        _TECH_POC = techPoc ?? TECH_POC,
+        _TECH_POSITION = techPosition ?? TECH_POSITION,
+        _TECH_PHONE = techPhone ?? TECH_PHONE,
+        _TECH_EMAIL = techEmail ?? TECH_EMAIL,
+        _TECH_ADDRESS = techAddress ?? TECH_ADDRESS,
+        _PREVIOUS_MESSAGE_ID = previousMessageId ?? PREVIOUS_MESSAGE_ID,
+        _NEXT_MESSAGE_ID = nextMessageId ?? NEXT_MESSAGE_ID,
+        _ADM_MSG_LINK = admMsgLink ?? ADM_MSG_LINK,
+        _CDM_MSG_LINK = cdmMsgLink ?? CDM_MSG_LINK,
+        _PRM_MSG_LINK = prmMsgLink ?? PRM_MSG_LINK,
+        _RDM_MSG_LINK = rdmMsgLink ?? RDM_MSG_LINK,
+        _TDM_MSG_LINK = tdmMsgLink ?? TDM_MSG_LINK,
+        _OPERATOR = OPERATOR,
+        _OWNER = OWNER,
+        _COUNTRY = COUNTRY,
+        _CONSTELLATION = CONSTELLATION,
+        _OBJECT_TYPE = objectType ?? OBJECT_TYPE,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _EPOCH_TZERO = epochTzero ?? EPOCH_TZERO,
+        _OPS_STATUS = opsStatus ?? OPS_STATUS,
+        _ORBIT_CATEGORY = orbitCategory ?? ORBIT_CATEGORY,
+        _OCM_DATA_ELEMENTS = ocmDataElements ?? OCM_DATA_ELEMENTS,
+        _SCLK_OFFSET_AT_EPOCH = sclkOffsetAtEpoch ?? SCLK_OFFSET_AT_EPOCH,
+        _SCLK_SEC_PER_SI_SEC = sclkSecPerSiSec ?? SCLK_SEC_PER_SI_SEC,
+        _PREVIOUS_MESSAGE_EPOCH = previousMessageEpoch ?? PREVIOUS_MESSAGE_EPOCH,
+        _NEXT_MESSAGE_EPOCH = nextMessageEpoch ?? NEXT_MESSAGE_EPOCH,
+        _START_TIME = startTime ?? START_TIME,
+        _STOP_TIME = stopTime ?? STOP_TIME,
+        _TIME_SPAN = timeSpan ?? TIME_SPAN,
+        _TAIMUTC_AT_TZERO = taimutcAtTzero ?? TAIMUTC_AT_TZERO,
+        _NEXT_LEAP_EPOCH = nextLeapEpoch ?? NEXT_LEAP_EPOCH,
+        _NEXT_LEAP_TAIMUTC = nextLeapTaimutc ?? NEXT_LEAP_TAIMUTC,
+        _UT1MUTC_AT_TZERO = ut1mutcAtTzero ?? UT1MUTC_AT_TZERO,
+        _EOP_SOURCE = eopSource ?? EOP_SOURCE,
+        _INTERP_METHOD_EOP = interpMethodEop ?? INTERP_METHOD_EOP,
+        _CELESTIAL_SOURCE = celestialSource ?? CELESTIAL_SOURCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
+        : fbBuilder.writeString(_OBJECT_NAME!);
+    final int? INTERNATIONAL_DESIGNATOROffset = _INTERNATIONAL_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_INTERNATIONAL_DESIGNATOR!);
+    final int? CATALOG_NAMEOffset = _CATALOG_NAME == null ? null
+        : fbBuilder.writeString(_CATALOG_NAME!);
+    final int? OBJECT_DESIGNATOROffset = _OBJECT_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_OBJECT_DESIGNATOR!);
+    final int? ALTERNATE_NAMESOffset = _ALTERNATE_NAMES == null ? null
+        : fbBuilder.writeList(_ALTERNATE_NAMES!.map(fbBuilder.writeString).toList());
+    final int? ORIGINATOR_POCOffset = _ORIGINATOR_POC == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_POC!);
+    final int? ORIGINATOR_POSITIONOffset = _ORIGINATOR_POSITION == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_POSITION!);
+    final int? ORIGINATOR_PHONEOffset = _ORIGINATOR_PHONE == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_PHONE!);
+    final int? ORIGINATOR_EMAILOffset = _ORIGINATOR_EMAIL == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_EMAIL!);
+    final int? ORIGINATOR_ADDRESSOffset = _ORIGINATOR_ADDRESS == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_ADDRESS!);
+    final int? TECH_ORGOffset = _TECH_ORG == null ? null
+        : fbBuilder.writeString(_TECH_ORG!);
+    final int? TECH_POCOffset = _TECH_POC == null ? null
+        : fbBuilder.writeString(_TECH_POC!);
+    final int? TECH_POSITIONOffset = _TECH_POSITION == null ? null
+        : fbBuilder.writeString(_TECH_POSITION!);
+    final int? TECH_PHONEOffset = _TECH_PHONE == null ? null
+        : fbBuilder.writeString(_TECH_PHONE!);
+    final int? TECH_EMAILOffset = _TECH_EMAIL == null ? null
+        : fbBuilder.writeString(_TECH_EMAIL!);
+    final int? TECH_ADDRESSOffset = _TECH_ADDRESS == null ? null
+        : fbBuilder.writeString(_TECH_ADDRESS!);
+    final int? PREVIOUS_MESSAGE_IDOffset = _PREVIOUS_MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_PREVIOUS_MESSAGE_ID!);
+    final int? NEXT_MESSAGE_IDOffset = _NEXT_MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_NEXT_MESSAGE_ID!);
+    final int? ADM_MSG_LINKOffset = _ADM_MSG_LINK == null ? null
+        : fbBuilder.writeString(_ADM_MSG_LINK!);
+    final int? CDM_MSG_LINKOffset = _CDM_MSG_LINK == null ? null
+        : fbBuilder.writeString(_CDM_MSG_LINK!);
+    final int? PRM_MSG_LINKOffset = _PRM_MSG_LINK == null ? null
+        : fbBuilder.writeString(_PRM_MSG_LINK!);
+    final int? RDM_MSG_LINKOffset = _RDM_MSG_LINK == null ? null
+        : fbBuilder.writeString(_RDM_MSG_LINK!);
+    final int? TDM_MSG_LINKOffset = _TDM_MSG_LINK == null ? null
+        : fbBuilder.writeList(_TDM_MSG_LINK!.map(fbBuilder.writeString).toList());
+    final int? OPERATOROffset = _OPERATOR == null ? null
+        : fbBuilder.writeString(_OPERATOR!);
+    final int? OWNEROffset = _OWNER == null ? null
+        : fbBuilder.writeString(_OWNER!);
+    final int? COUNTRYOffset = _COUNTRY == null ? null
+        : fbBuilder.writeString(_COUNTRY!);
+    final int? CONSTELLATIONOffset = _CONSTELLATION == null ? null
+        : fbBuilder.writeString(_CONSTELLATION!);
+    final int? OBJECT_TYPEOffset = _OBJECT_TYPE == null ? null
+        : fbBuilder.writeString(_OBJECT_TYPE!);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? EPOCH_TZEROOffset = _EPOCH_TZERO == null ? null
+        : fbBuilder.writeString(_EPOCH_TZERO!);
+    final int? OPS_STATUSOffset = _OPS_STATUS == null ? null
+        : fbBuilder.writeString(_OPS_STATUS!);
+    final int? ORBIT_CATEGORYOffset = _ORBIT_CATEGORY == null ? null
+        : fbBuilder.writeString(_ORBIT_CATEGORY!);
+    final int? OCM_DATA_ELEMENTSOffset = _OCM_DATA_ELEMENTS == null ? null
+        : fbBuilder.writeList(_OCM_DATA_ELEMENTS!.map(fbBuilder.writeString).toList());
+    final int? PREVIOUS_MESSAGE_EPOCHOffset = _PREVIOUS_MESSAGE_EPOCH == null ? null
+        : fbBuilder.writeString(_PREVIOUS_MESSAGE_EPOCH!);
+    final int? NEXT_MESSAGE_EPOCHOffset = _NEXT_MESSAGE_EPOCH == null ? null
+        : fbBuilder.writeString(_NEXT_MESSAGE_EPOCH!);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? STOP_TIMEOffset = _STOP_TIME == null ? null
+        : fbBuilder.writeString(_STOP_TIME!);
+    final int? NEXT_LEAP_EPOCHOffset = _NEXT_LEAP_EPOCH == null ? null
+        : fbBuilder.writeString(_NEXT_LEAP_EPOCH!);
+    final int? EOP_SOURCEOffset = _EOP_SOURCE == null ? null
+        : fbBuilder.writeString(_EOP_SOURCE!);
+    final int? INTERP_METHOD_EOPOffset = _INTERP_METHOD_EOP == null ? null
+        : fbBuilder.writeString(_INTERP_METHOD_EOP!);
+    final int? CELESTIAL_SOURCEOffset = _CELESTIAL_SOURCE == null ? null
+        : fbBuilder.writeString(_CELESTIAL_SOURCE!);
+    fbBuilder.startTable(48);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, OBJECT_NAMEOffset);
+    fbBuilder.addOffset(2, INTERNATIONAL_DESIGNATOROffset);
+    fbBuilder.addOffset(3, CATALOG_NAMEOffset);
+    fbBuilder.addOffset(4, OBJECT_DESIGNATOROffset);
+    fbBuilder.addOffset(5, ALTERNATE_NAMESOffset);
+    fbBuilder.addOffset(6, ORIGINATOR_POCOffset);
+    fbBuilder.addOffset(7, ORIGINATOR_POSITIONOffset);
+    fbBuilder.addOffset(8, ORIGINATOR_PHONEOffset);
+    fbBuilder.addOffset(9, ORIGINATOR_EMAILOffset);
+    fbBuilder.addOffset(10, ORIGINATOR_ADDRESSOffset);
+    fbBuilder.addOffset(11, TECH_ORGOffset);
+    fbBuilder.addOffset(12, TECH_POCOffset);
+    fbBuilder.addOffset(13, TECH_POSITIONOffset);
+    fbBuilder.addOffset(14, TECH_PHONEOffset);
+    fbBuilder.addOffset(15, TECH_EMAILOffset);
+    fbBuilder.addOffset(16, TECH_ADDRESSOffset);
+    fbBuilder.addOffset(17, PREVIOUS_MESSAGE_IDOffset);
+    fbBuilder.addOffset(18, NEXT_MESSAGE_IDOffset);
+    fbBuilder.addOffset(19, ADM_MSG_LINKOffset);
+    fbBuilder.addOffset(20, CDM_MSG_LINKOffset);
+    fbBuilder.addOffset(21, PRM_MSG_LINKOffset);
+    fbBuilder.addOffset(22, RDM_MSG_LINKOffset);
+    fbBuilder.addOffset(23, TDM_MSG_LINKOffset);
+    fbBuilder.addOffset(24, OPERATOROffset);
+    fbBuilder.addOffset(25, OWNEROffset);
+    fbBuilder.addOffset(26, COUNTRYOffset);
+    fbBuilder.addOffset(27, CONSTELLATIONOffset);
+    fbBuilder.addOffset(28, OBJECT_TYPEOffset);
+    fbBuilder.addOffset(29, TIME_SYSTEMOffset);
+    fbBuilder.addOffset(30, EPOCH_TZEROOffset);
+    fbBuilder.addOffset(31, OPS_STATUSOffset);
+    fbBuilder.addOffset(32, ORBIT_CATEGORYOffset);
+    fbBuilder.addOffset(33, OCM_DATA_ELEMENTSOffset);
+    fbBuilder.addFloat64(34, _SCLK_OFFSET_AT_EPOCH);
+    fbBuilder.addFloat64(35, _SCLK_SEC_PER_SI_SEC);
+    fbBuilder.addOffset(36, PREVIOUS_MESSAGE_EPOCHOffset);
+    fbBuilder.addOffset(37, NEXT_MESSAGE_EPOCHOffset);
+    fbBuilder.addOffset(38, START_TIMEOffset);
+    fbBuilder.addOffset(39, STOP_TIMEOffset);
+    fbBuilder.addFloat64(40, _TIME_SPAN);
+    fbBuilder.addFloat64(41, _TAIMUTC_AT_TZERO);
+    fbBuilder.addOffset(42, NEXT_LEAP_EPOCHOffset);
+    fbBuilder.addFloat64(43, _NEXT_LEAP_TAIMUTC);
+    fbBuilder.addFloat64(44, _UT1MUTC_AT_TZERO);
+    fbBuilder.addOffset(45, EOP_SOURCEOffset);
+    fbBuilder.addOffset(46, INTERP_METHOD_EOPOffset);
+    fbBuilder.addOffset(47, CELESTIAL_SOURCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class StateVector {
+  StateVector._(this._bc, this._bcOffset);
+  factory StateVector(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<StateVector> reader = _StateVectorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Epoch of the state vector.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  X component of position in the specified reference frame.
+  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Y component of position.
+  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Z component of position.
+  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  X component of velocity.
+  double get X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get xDot => X_DOT;
+  ///  Y component of velocity.
+  double get Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get yDot => Y_DOT;
+  ///  Z component of velocity.
+  double get Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get zDot => Z_DOT;
+  ///  X component of acceleration.
+  double get X_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get xDdot => X_DDOT;
+  ///  Y component of acceleration.
+  double get Y_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get yDdot => Y_DDOT;
+  ///  Z component of acceleration.
+  double get Z_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get zDdot => Z_DDOT;
+
+  @override
+  String toString() {
+    return 'StateVector{EPOCH: ${EPOCH}, X: ${X}, Y: ${Y}, Z: ${Z}, xDot: ${xDot}, yDot: ${yDot}, zDot: ${zDot}, xDdot: ${xDdot}, yDdot: ${yDdot}, zDdot: ${zDdot}}';
+  }
+}
+
+class _StateVectorReader extends fb.TableReader<StateVector> {
+  const _StateVectorReader();
+
+  @override
+  StateVector createObject(fb.BufferContext bc, int offset) =>
+    StateVector._(bc, offset);
+}
+
+class StateVectorBuilder {
+  StateVectorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(10);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addX(double? X) {
+    fbBuilder.addFloat64(1, X);
+    return fbBuilder.offset;
+  }
+  int addY(double? Y) {
+    fbBuilder.addFloat64(2, Y);
+    return fbBuilder.offset;
+  }
+  int addZ(double? Z) {
+    fbBuilder.addFloat64(3, Z);
+    return fbBuilder.offset;
+  }
+  int addXDot(double? X_DOT) {
+    fbBuilder.addFloat64(4, X_DOT);
+    return fbBuilder.offset;
+  }
+  int addYDot(double? Y_DOT) {
+    fbBuilder.addFloat64(5, Y_DOT);
+    return fbBuilder.offset;
+  }
+  int addZDot(double? Z_DOT) {
+    fbBuilder.addFloat64(6, Z_DOT);
+    return fbBuilder.offset;
+  }
+  int addXDdot(double? X_DDOT) {
+    fbBuilder.addFloat64(7, X_DDOT);
+    return fbBuilder.offset;
+  }
+  int addYDdot(double? Y_DDOT) {
+    fbBuilder.addFloat64(8, Y_DDOT);
+    return fbBuilder.offset;
+  }
+  int addZDdot(double? Z_DDOT) {
+    fbBuilder.addFloat64(9, Z_DDOT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class StateVectorObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final double? _X;
+  final double? _Y;
+  final double? _Z;
+  final double? _X_DOT;
+  final double? _Y_DOT;
+  final double? _Z_DOT;
+  final double? _X_DDOT;
+  final double? _Y_DDOT;
+  final double? _Z_DDOT;
+
+  StateVectorObjectBuilder({
+    String? EPOCH,
+    double? X,
+    double? Y,
+    double? Z,
+    double? X_DOT,
+    double? xDot,
+    double? Y_DOT,
+    double? yDot,
+    double? Z_DOT,
+    double? zDot,
+    double? X_DDOT,
+    double? xDdot,
+    double? Y_DDOT,
+    double? yDdot,
+    double? Z_DDOT,
+    double? zDdot,
+  })
+      : _EPOCH = EPOCH,
+        _X = X,
+        _Y = Y,
+        _Z = Z,
+        _X_DOT = xDot ?? X_DOT,
+        _Y_DOT = yDot ?? Y_DOT,
+        _Z_DOT = zDot ?? Z_DOT,
+        _X_DDOT = xDdot ?? X_DDOT,
+        _Y_DDOT = yDdot ?? Y_DDOT,
+        _Z_DDOT = zDdot ?? Z_DDOT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(10);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _X);
+    fbBuilder.addFloat64(2, _Y);
+    fbBuilder.addFloat64(3, _Z);
+    fbBuilder.addFloat64(4, _X_DOT);
+    fbBuilder.addFloat64(5, _Y_DOT);
+    fbBuilder.addFloat64(6, _Z_DOT);
+    fbBuilder.addFloat64(7, _X_DDOT);
+    fbBuilder.addFloat64(8, _Y_DDOT);
+    fbBuilder.addFloat64(9, _Z_DDOT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class PhysicalProperties {
+  PhysicalProperties._(this._bc, this._bcOffset);
+  factory PhysicalProperties(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PhysicalProperties> reader = _PhysicalPropertiesReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Comments in the Physical Properties section.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Wet mass of the space object.
+  double get WET_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get wetMass => WET_MASS;
+  ///  Dry mass of the space object.
+  double get DRY_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get dryMass => DRY_MASS;
+  ///  Units for mass values.
+  String? get MASS_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get massUnits => MASS_UNITS;
+  ///  Quaternion component q1 of orientation from OEB to EME2000.
+  double get OEB_Q1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get oebQ1 => OEB_Q1;
+  ///  Quaternion component q2.
+  double get OEB_Q2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get oebQ2 => OEB_Q2;
+  ///  Quaternion component q3.
+  double get OEB_Q3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get oebQ3 => OEB_Q3;
+  ///  Quaternion scalar component qc.
+  double get OEB_QC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get oebQc => OEB_QC;
+  ///  Maximum dimension of the object along OEB frame axes.
+  double get OEB_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get oebMax => OEB_MAX;
+  ///  Intermediate dimension along OEB frame axes.
+  double get OEB_INT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get oebInt => OEB_INT;
+  ///  Minimum dimension of the object along OEB frame axes.
+  double get OEB_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get oebMin => OEB_MIN;
+  ///  Area along OEB_MAX axis.
+  double get AREA_ALONG_OEB_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get areaAlongOebMax => AREA_ALONG_OEB_MAX;
+  ///  Area along OEB_INT axis.
+  double get AREA_ALONG_OEB_INT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get areaAlongOebInt => AREA_ALONG_OEB_INT;
+  ///  Area along OEB_MIN axis.
+  double get AREA_ALONG_OEB_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get areaAlongOebMin => AREA_ALONG_OEB_MIN;
+  ///  Units for area values.
+  String? get AREA_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get areaUnits => AREA_UNITS;
+  ///  Constant area for drag computations.
+  double get DRAG_CONST_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get dragConstArea => DRAG_CONST_AREA;
+  ///  Nominal drag coefficient.
+  double get DRAG_COEFF_NOM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get dragCoeffNom => DRAG_COEFF_NOM;
+  ///  Uncertainty in the drag coefficient.
+  double get DRAG_UNCERTAINTY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get dragUncertainty => DRAG_UNCERTAINTY;
+  ///  Constant area for solar radiation pressure computations.
+  double get SRP_CONST_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get srpConstArea => SRP_CONST_AREA;
+  ///  Nominal solar radiation pressure coefficient.
+  double get SOLAR_RAD_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get solarRadCoeff => SOLAR_RAD_COEFF;
+  ///  Uncertainty in the solar radiation pressure coefficient.
+  double get SRP_UNCERTAINTY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get srpUncertainty => SRP_UNCERTAINTY;
+  ///  MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+  String? get MANUFACTURER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  ///  BUS_MODEL: the object's bus model.
+  String? get BUS_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get busModel => BUS_MODEL;
+  ///  DOCKED_WITH: comma-separated names of the objects it is docked with.
+  String? get DOCKED_WITH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get dockedWith => DOCKED_WITH;
+  ///  INITIAL_WET_MASS in kg, NaN when not stated.
+  double get INITIAL_WET_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, double.nan);
+  double get initialWetMass => INITIAL_WET_MASS;
+  ///  OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+  String? get OEB_PARENT_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get oebParentFrame => OEB_PARENT_FRAME;
+  ///  OEB_PARENT_FRAME_EPOCH.
+  String? get OEB_PARENT_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get oebParentFrameEpoch => OEB_PARENT_FRAME_EPOCH;
+  ///  AREA_MIN_FOR_PC in m**2, NaN when not stated.
+  double get AREA_MIN_FOR_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, double.nan);
+  double get areaMinForPc => AREA_MIN_FOR_PC;
+  ///  AREA_MAX_FOR_PC in m**2, NaN when not stated.
+  double get AREA_MAX_FOR_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, double.nan);
+  double get areaMaxForPc => AREA_MAX_FOR_PC;
+  ///  AREA_TYP_FOR_PC in m**2, NaN when not stated.
+  double get AREA_TYP_FOR_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, double.nan);
+  double get areaTypForPc => AREA_TYP_FOR_PC;
+  ///  RCS in m**2, NaN when not stated.
+  double get RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, double.nan);
+  ///  RCS_MIN in m**2, NaN when not stated.
+  double get RCS_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, double.nan);
+  double get rcsMin => RCS_MIN;
+  ///  RCS_MAX in m**2, NaN when not stated.
+  double get RCS_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, double.nan);
+  double get rcsMax => RCS_MAX;
+  ///  VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+  double get VM_ABSOLUTE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, double.nan);
+  double get vmAbsolute => VM_ABSOLUTE;
+  ///  VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+  double get VM_APPARENT_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, double.nan);
+  double get vmApparentMin => VM_APPARENT_MIN;
+  ///  VM_APPARENT: apparent visual magnitude, NaN when not stated.
+  double get VM_APPARENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, double.nan);
+  double get vmApparent => VM_APPARENT;
+  ///  VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+  double get VM_APPARENT_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, double.nan);
+  double get vmApparentMax => VM_APPARENT_MAX;
+  ///  REFLECTANCE: typical reflectivity, NaN when not stated.
+  double get REFLECTANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, double.nan);
+  ///  ATT_CONTROL_MODE.
+  String? get ATT_CONTROL_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  String? get attControlMode => ATT_CONTROL_MODE;
+  ///  ATT_ACTUATOR_TYPE.
+  String? get ATT_ACTUATOR_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get attActuatorType => ATT_ACTUATOR_TYPE;
+  ///  ATT_KNOWLEDGE in degrees, NaN when not stated.
+  double get ATT_KNOWLEDGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, double.nan);
+  double get attKnowledge => ATT_KNOWLEDGE;
+  ///  ATT_CONTROL in degrees, NaN when not stated.
+  double get ATT_CONTROL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, double.nan);
+  double get attControl => ATT_CONTROL;
+  ///  ATT_POINTING in degrees, NaN when not stated.
+  double get ATT_POINTING => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, double.nan);
+  double get attPointing => ATT_POINTING;
+  ///  AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+  double get AVG_MANEUVER_FREQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, double.nan);
+  double get avgManeuverFreq => AVG_MANEUVER_FREQ;
+  ///  MAX_THRUST in N, NaN when not stated.
+  double get MAX_THRUST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, double.nan);
+  double get maxThrust => MAX_THRUST;
+  ///  DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+  double get DV_BOL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, double.nan);
+  double get dvBol => DV_BOL;
+  ///  DV_REMAINING in km/s, NaN when not stated.
+  double get DV_REMAINING => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, double.nan);
+  double get dvRemaining => DV_REMAINING;
+  ///  IXX in kg*m**2, NaN when not stated.
+  double get IXX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, double.nan);
+  ///  IYY in kg*m**2, NaN when not stated.
+  double get IYY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, double.nan);
+  ///  IZZ in kg*m**2, NaN when not stated.
+  double get IZZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, double.nan);
+  ///  IXY in kg*m**2, NaN when not stated.
+  double get IXY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 104, double.nan);
+  ///  IXZ in kg*m**2, NaN when not stated.
+  double get IXZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 106, double.nan);
+  ///  IYZ in kg*m**2, NaN when not stated.
+  double get IYZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, double.nan);
+
+  @override
+  String toString() {
+    return 'PhysicalProperties{COMMENT: ${COMMENT}, wetMass: ${wetMass}, dryMass: ${dryMass}, massUnits: ${massUnits}, oebQ1: ${oebQ1}, oebQ2: ${oebQ2}, oebQ3: ${oebQ3}, oebQc: ${oebQc}, oebMax: ${oebMax}, oebInt: ${oebInt}, oebMin: ${oebMin}, areaAlongOebMax: ${areaAlongOebMax}, areaAlongOebInt: ${areaAlongOebInt}, areaAlongOebMin: ${areaAlongOebMin}, areaUnits: ${areaUnits}, dragConstArea: ${dragConstArea}, dragCoeffNom: ${dragCoeffNom}, dragUncertainty: ${dragUncertainty}, srpConstArea: ${srpConstArea}, solarRadCoeff: ${solarRadCoeff}, srpUncertainty: ${srpUncertainty}, MANUFACTURER: ${MANUFACTURER}, busModel: ${busModel}, dockedWith: ${dockedWith}, initialWetMass: ${initialWetMass}, oebParentFrame: ${oebParentFrame}, oebParentFrameEpoch: ${oebParentFrameEpoch}, areaMinForPc: ${areaMinForPc}, areaMaxForPc: ${areaMaxForPc}, areaTypForPc: ${areaTypForPc}, RCS: ${RCS}, rcsMin: ${rcsMin}, rcsMax: ${rcsMax}, vmAbsolute: ${vmAbsolute}, vmApparentMin: ${vmApparentMin}, vmApparent: ${vmApparent}, vmApparentMax: ${vmApparentMax}, REFLECTANCE: ${REFLECTANCE}, attControlMode: ${attControlMode}, attActuatorType: ${attActuatorType}, attKnowledge: ${attKnowledge}, attControl: ${attControl}, attPointing: ${attPointing}, avgManeuverFreq: ${avgManeuverFreq}, maxThrust: ${maxThrust}, dvBol: ${dvBol}, dvRemaining: ${dvRemaining}, IXX: ${IXX}, IYY: ${IYY}, IZZ: ${IZZ}, IXY: ${IXY}, IXZ: ${IXZ}, IYZ: ${IYZ}}';
+  }
+}
+
+class _PhysicalPropertiesReader extends fb.TableReader<PhysicalProperties> {
+  const _PhysicalPropertiesReader();
+
+  @override
+  PhysicalProperties createObject(fb.BufferContext bc, int offset) =>
+    PhysicalProperties._(bc, offset);
+}
+
+class PhysicalPropertiesBuilder {
+  PhysicalPropertiesBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(53);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addWetMass(double? WET_MASS) {
+    fbBuilder.addFloat64(1, WET_MASS);
+    return fbBuilder.offset;
+  }
+  int addDryMass(double? DRY_MASS) {
+    fbBuilder.addFloat64(2, DRY_MASS);
+    return fbBuilder.offset;
+  }
+  int addMassUnitsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addOebQ1(double? OEB_Q1) {
+    fbBuilder.addFloat64(4, OEB_Q1);
+    return fbBuilder.offset;
+  }
+  int addOebQ2(double? OEB_Q2) {
+    fbBuilder.addFloat64(5, OEB_Q2);
+    return fbBuilder.offset;
+  }
+  int addOebQ3(double? OEB_Q3) {
+    fbBuilder.addFloat64(6, OEB_Q3);
+    return fbBuilder.offset;
+  }
+  int addOebQc(double? OEB_QC) {
+    fbBuilder.addFloat64(7, OEB_QC);
+    return fbBuilder.offset;
+  }
+  int addOebMax(double? OEB_MAX) {
+    fbBuilder.addFloat64(8, OEB_MAX);
+    return fbBuilder.offset;
+  }
+  int addOebInt(double? OEB_INT) {
+    fbBuilder.addFloat64(9, OEB_INT);
+    return fbBuilder.offset;
+  }
+  int addOebMin(double? OEB_MIN) {
+    fbBuilder.addFloat64(10, OEB_MIN);
+    return fbBuilder.offset;
+  }
+  int addAreaAlongOebMax(double? AREA_ALONG_OEB_MAX) {
+    fbBuilder.addFloat64(11, AREA_ALONG_OEB_MAX);
+    return fbBuilder.offset;
+  }
+  int addAreaAlongOebInt(double? AREA_ALONG_OEB_INT) {
+    fbBuilder.addFloat64(12, AREA_ALONG_OEB_INT);
+    return fbBuilder.offset;
+  }
+  int addAreaAlongOebMin(double? AREA_ALONG_OEB_MIN) {
+    fbBuilder.addFloat64(13, AREA_ALONG_OEB_MIN);
+    return fbBuilder.offset;
+  }
+  int addAreaUnitsOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addDragConstArea(double? DRAG_CONST_AREA) {
+    fbBuilder.addFloat64(15, DRAG_CONST_AREA);
+    return fbBuilder.offset;
+  }
+  int addDragCoeffNom(double? DRAG_COEFF_NOM) {
+    fbBuilder.addFloat64(16, DRAG_COEFF_NOM);
+    return fbBuilder.offset;
+  }
+  int addDragUncertainty(double? DRAG_UNCERTAINTY) {
+    fbBuilder.addFloat64(17, DRAG_UNCERTAINTY);
+    return fbBuilder.offset;
+  }
+  int addSrpConstArea(double? SRP_CONST_AREA) {
+    fbBuilder.addFloat64(18, SRP_CONST_AREA);
+    return fbBuilder.offset;
+  }
+  int addSolarRadCoeff(double? SOLAR_RAD_COEFF) {
+    fbBuilder.addFloat64(19, SOLAR_RAD_COEFF);
+    return fbBuilder.offset;
+  }
+  int addSrpUncertainty(double? SRP_UNCERTAINTY) {
+    fbBuilder.addFloat64(20, SRP_UNCERTAINTY);
+    return fbBuilder.offset;
+  }
+  int addManufacturerOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addBusModelOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addDockedWithOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addInitialWetMass(double? INITIAL_WET_MASS) {
+    fbBuilder.addFloat64(24, INITIAL_WET_MASS);
+    return fbBuilder.offset;
+  }
+  int addOebParentFrameOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addOebParentFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addAreaMinForPc(double? AREA_MIN_FOR_PC) {
+    fbBuilder.addFloat64(27, AREA_MIN_FOR_PC);
+    return fbBuilder.offset;
+  }
+  int addAreaMaxForPc(double? AREA_MAX_FOR_PC) {
+    fbBuilder.addFloat64(28, AREA_MAX_FOR_PC);
+    return fbBuilder.offset;
+  }
+  int addAreaTypForPc(double? AREA_TYP_FOR_PC) {
+    fbBuilder.addFloat64(29, AREA_TYP_FOR_PC);
+    return fbBuilder.offset;
+  }
+  int addRcs(double? RCS) {
+    fbBuilder.addFloat64(30, RCS);
+    return fbBuilder.offset;
+  }
+  int addRcsMin(double? RCS_MIN) {
+    fbBuilder.addFloat64(31, RCS_MIN);
+    return fbBuilder.offset;
+  }
+  int addRcsMax(double? RCS_MAX) {
+    fbBuilder.addFloat64(32, RCS_MAX);
+    return fbBuilder.offset;
+  }
+  int addVmAbsolute(double? VM_ABSOLUTE) {
+    fbBuilder.addFloat64(33, VM_ABSOLUTE);
+    return fbBuilder.offset;
+  }
+  int addVmApparentMin(double? VM_APPARENT_MIN) {
+    fbBuilder.addFloat64(34, VM_APPARENT_MIN);
+    return fbBuilder.offset;
+  }
+  int addVmApparent(double? VM_APPARENT) {
+    fbBuilder.addFloat64(35, VM_APPARENT);
+    return fbBuilder.offset;
+  }
+  int addVmApparentMax(double? VM_APPARENT_MAX) {
+    fbBuilder.addFloat64(36, VM_APPARENT_MAX);
+    return fbBuilder.offset;
+  }
+  int addReflectance(double? REFLECTANCE) {
+    fbBuilder.addFloat64(37, REFLECTANCE);
+    return fbBuilder.offset;
+  }
+  int addAttControlModeOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addAttActuatorTypeOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addAttKnowledge(double? ATT_KNOWLEDGE) {
+    fbBuilder.addFloat64(40, ATT_KNOWLEDGE);
+    return fbBuilder.offset;
+  }
+  int addAttControl(double? ATT_CONTROL) {
+    fbBuilder.addFloat64(41, ATT_CONTROL);
+    return fbBuilder.offset;
+  }
+  int addAttPointing(double? ATT_POINTING) {
+    fbBuilder.addFloat64(42, ATT_POINTING);
+    return fbBuilder.offset;
+  }
+  int addAvgManeuverFreq(double? AVG_MANEUVER_FREQ) {
+    fbBuilder.addFloat64(43, AVG_MANEUVER_FREQ);
+    return fbBuilder.offset;
+  }
+  int addMaxThrust(double? MAX_THRUST) {
+    fbBuilder.addFloat64(44, MAX_THRUST);
+    return fbBuilder.offset;
+  }
+  int addDvBol(double? DV_BOL) {
+    fbBuilder.addFloat64(45, DV_BOL);
+    return fbBuilder.offset;
+  }
+  int addDvRemaining(double? DV_REMAINING) {
+    fbBuilder.addFloat64(46, DV_REMAINING);
+    return fbBuilder.offset;
+  }
+  int addIxx(double? IXX) {
+    fbBuilder.addFloat64(47, IXX);
+    return fbBuilder.offset;
+  }
+  int addIyy(double? IYY) {
+    fbBuilder.addFloat64(48, IYY);
+    return fbBuilder.offset;
+  }
+  int addIzz(double? IZZ) {
+    fbBuilder.addFloat64(49, IZZ);
+    return fbBuilder.offset;
+  }
+  int addIxy(double? IXY) {
+    fbBuilder.addFloat64(50, IXY);
+    return fbBuilder.offset;
+  }
+  int addIxz(double? IXZ) {
+    fbBuilder.addFloat64(51, IXZ);
+    return fbBuilder.offset;
+  }
+  int addIyz(double? IYZ) {
+    fbBuilder.addFloat64(52, IYZ);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PhysicalPropertiesObjectBuilder extends fb.ObjectBuilder {
+  final List<String>? _COMMENT;
+  final double? _WET_MASS;
+  final double? _DRY_MASS;
+  final String? _MASS_UNITS;
+  final double? _OEB_Q1;
+  final double? _OEB_Q2;
+  final double? _OEB_Q3;
+  final double? _OEB_QC;
+  final double? _OEB_MAX;
+  final double? _OEB_INT;
+  final double? _OEB_MIN;
+  final double? _AREA_ALONG_OEB_MAX;
+  final double? _AREA_ALONG_OEB_INT;
+  final double? _AREA_ALONG_OEB_MIN;
+  final String? _AREA_UNITS;
+  final double? _DRAG_CONST_AREA;
+  final double? _DRAG_COEFF_NOM;
+  final double? _DRAG_UNCERTAINTY;
+  final double? _SRP_CONST_AREA;
+  final double? _SOLAR_RAD_COEFF;
+  final double? _SRP_UNCERTAINTY;
+  final String? _MANUFACTURER;
+  final String? _BUS_MODEL;
+  final String? _DOCKED_WITH;
+  final double? _INITIAL_WET_MASS;
+  final String? _OEB_PARENT_FRAME;
+  final String? _OEB_PARENT_FRAME_EPOCH;
+  final double? _AREA_MIN_FOR_PC;
+  final double? _AREA_MAX_FOR_PC;
+  final double? _AREA_TYP_FOR_PC;
+  final double? _RCS;
+  final double? _RCS_MIN;
+  final double? _RCS_MAX;
+  final double? _VM_ABSOLUTE;
+  final double? _VM_APPARENT_MIN;
+  final double? _VM_APPARENT;
+  final double? _VM_APPARENT_MAX;
+  final double? _REFLECTANCE;
+  final String? _ATT_CONTROL_MODE;
+  final String? _ATT_ACTUATOR_TYPE;
+  final double? _ATT_KNOWLEDGE;
+  final double? _ATT_CONTROL;
+  final double? _ATT_POINTING;
+  final double? _AVG_MANEUVER_FREQ;
+  final double? _MAX_THRUST;
+  final double? _DV_BOL;
+  final double? _DV_REMAINING;
+  final double? _IXX;
+  final double? _IYY;
+  final double? _IZZ;
+  final double? _IXY;
+  final double? _IXZ;
+  final double? _IYZ;
+
+  PhysicalPropertiesObjectBuilder({
+    List<String>? COMMENT,
+    double? WET_MASS,
+    double? wetMass,
+    double? DRY_MASS,
+    double? dryMass,
+    String? MASS_UNITS,
+    String? massUnits,
+    double? OEB_Q1,
+    double? oebQ1,
+    double? OEB_Q2,
+    double? oebQ2,
+    double? OEB_Q3,
+    double? oebQ3,
+    double? OEB_QC,
+    double? oebQc,
+    double? OEB_MAX,
+    double? oebMax,
+    double? OEB_INT,
+    double? oebInt,
+    double? OEB_MIN,
+    double? oebMin,
+    double? AREA_ALONG_OEB_MAX,
+    double? areaAlongOebMax,
+    double? AREA_ALONG_OEB_INT,
+    double? areaAlongOebInt,
+    double? AREA_ALONG_OEB_MIN,
+    double? areaAlongOebMin,
+    String? AREA_UNITS,
+    String? areaUnits,
+    double? DRAG_CONST_AREA,
+    double? dragConstArea,
+    double? DRAG_COEFF_NOM,
+    double? dragCoeffNom,
+    double? DRAG_UNCERTAINTY,
+    double? dragUncertainty,
+    double? SRP_CONST_AREA,
+    double? srpConstArea,
+    double? SOLAR_RAD_COEFF,
+    double? solarRadCoeff,
+    double? SRP_UNCERTAINTY,
+    double? srpUncertainty,
+    String? MANUFACTURER,
+    String? BUS_MODEL,
+    String? busModel,
+    String? DOCKED_WITH,
+    String? dockedWith,
+    double? INITIAL_WET_MASS,
+    double? initialWetMass,
+    String? OEB_PARENT_FRAME,
+    String? oebParentFrame,
+    String? OEB_PARENT_FRAME_EPOCH,
+    String? oebParentFrameEpoch,
+    double? AREA_MIN_FOR_PC,
+    double? areaMinForPc,
+    double? AREA_MAX_FOR_PC,
+    double? areaMaxForPc,
+    double? AREA_TYP_FOR_PC,
+    double? areaTypForPc,
+    double? RCS,
+    double? RCS_MIN,
+    double? rcsMin,
+    double? RCS_MAX,
+    double? rcsMax,
+    double? VM_ABSOLUTE,
+    double? vmAbsolute,
+    double? VM_APPARENT_MIN,
+    double? vmApparentMin,
+    double? VM_APPARENT,
+    double? vmApparent,
+    double? VM_APPARENT_MAX,
+    double? vmApparentMax,
+    double? REFLECTANCE,
+    String? ATT_CONTROL_MODE,
+    String? attControlMode,
+    String? ATT_ACTUATOR_TYPE,
+    String? attActuatorType,
+    double? ATT_KNOWLEDGE,
+    double? attKnowledge,
+    double? ATT_CONTROL,
+    double? attControl,
+    double? ATT_POINTING,
+    double? attPointing,
+    double? AVG_MANEUVER_FREQ,
+    double? avgManeuverFreq,
+    double? MAX_THRUST,
+    double? maxThrust,
+    double? DV_BOL,
+    double? dvBol,
+    double? DV_REMAINING,
+    double? dvRemaining,
+    double? IXX,
+    double? IYY,
+    double? IZZ,
+    double? IXY,
+    double? IXZ,
+    double? IYZ,
+  })
+      : _COMMENT = COMMENT,
+        _WET_MASS = wetMass ?? WET_MASS,
+        _DRY_MASS = dryMass ?? DRY_MASS,
+        _MASS_UNITS = massUnits ?? MASS_UNITS,
+        _OEB_Q1 = oebQ1 ?? OEB_Q1,
+        _OEB_Q2 = oebQ2 ?? OEB_Q2,
+        _OEB_Q3 = oebQ3 ?? OEB_Q3,
+        _OEB_QC = oebQc ?? OEB_QC,
+        _OEB_MAX = oebMax ?? OEB_MAX,
+        _OEB_INT = oebInt ?? OEB_INT,
+        _OEB_MIN = oebMin ?? OEB_MIN,
+        _AREA_ALONG_OEB_MAX = areaAlongOebMax ?? AREA_ALONG_OEB_MAX,
+        _AREA_ALONG_OEB_INT = areaAlongOebInt ?? AREA_ALONG_OEB_INT,
+        _AREA_ALONG_OEB_MIN = areaAlongOebMin ?? AREA_ALONG_OEB_MIN,
+        _AREA_UNITS = areaUnits ?? AREA_UNITS,
+        _DRAG_CONST_AREA = dragConstArea ?? DRAG_CONST_AREA,
+        _DRAG_COEFF_NOM = dragCoeffNom ?? DRAG_COEFF_NOM,
+        _DRAG_UNCERTAINTY = dragUncertainty ?? DRAG_UNCERTAINTY,
+        _SRP_CONST_AREA = srpConstArea ?? SRP_CONST_AREA,
+        _SOLAR_RAD_COEFF = solarRadCoeff ?? SOLAR_RAD_COEFF,
+        _SRP_UNCERTAINTY = srpUncertainty ?? SRP_UNCERTAINTY,
+        _MANUFACTURER = MANUFACTURER,
+        _BUS_MODEL = busModel ?? BUS_MODEL,
+        _DOCKED_WITH = dockedWith ?? DOCKED_WITH,
+        _INITIAL_WET_MASS = initialWetMass ?? INITIAL_WET_MASS,
+        _OEB_PARENT_FRAME = oebParentFrame ?? OEB_PARENT_FRAME,
+        _OEB_PARENT_FRAME_EPOCH = oebParentFrameEpoch ?? OEB_PARENT_FRAME_EPOCH,
+        _AREA_MIN_FOR_PC = areaMinForPc ?? AREA_MIN_FOR_PC,
+        _AREA_MAX_FOR_PC = areaMaxForPc ?? AREA_MAX_FOR_PC,
+        _AREA_TYP_FOR_PC = areaTypForPc ?? AREA_TYP_FOR_PC,
+        _RCS = RCS,
+        _RCS_MIN = rcsMin ?? RCS_MIN,
+        _RCS_MAX = rcsMax ?? RCS_MAX,
+        _VM_ABSOLUTE = vmAbsolute ?? VM_ABSOLUTE,
+        _VM_APPARENT_MIN = vmApparentMin ?? VM_APPARENT_MIN,
+        _VM_APPARENT = vmApparent ?? VM_APPARENT,
+        _VM_APPARENT_MAX = vmApparentMax ?? VM_APPARENT_MAX,
+        _REFLECTANCE = REFLECTANCE,
+        _ATT_CONTROL_MODE = attControlMode ?? ATT_CONTROL_MODE,
+        _ATT_ACTUATOR_TYPE = attActuatorType ?? ATT_ACTUATOR_TYPE,
+        _ATT_KNOWLEDGE = attKnowledge ?? ATT_KNOWLEDGE,
+        _ATT_CONTROL = attControl ?? ATT_CONTROL,
+        _ATT_POINTING = attPointing ?? ATT_POINTING,
+        _AVG_MANEUVER_FREQ = avgManeuverFreq ?? AVG_MANEUVER_FREQ,
+        _MAX_THRUST = maxThrust ?? MAX_THRUST,
+        _DV_BOL = dvBol ?? DV_BOL,
+        _DV_REMAINING = dvRemaining ?? DV_REMAINING,
+        _IXX = IXX,
+        _IYY = IYY,
+        _IZZ = IZZ,
+        _IXY = IXY,
+        _IXZ = IXZ,
+        _IYZ = IYZ;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? MASS_UNITSOffset = _MASS_UNITS == null ? null
+        : fbBuilder.writeString(_MASS_UNITS!);
+    final int? AREA_UNITSOffset = _AREA_UNITS == null ? null
+        : fbBuilder.writeString(_AREA_UNITS!);
+    final int? MANUFACTUREROffset = _MANUFACTURER == null ? null
+        : fbBuilder.writeString(_MANUFACTURER!);
+    final int? BUS_MODELOffset = _BUS_MODEL == null ? null
+        : fbBuilder.writeString(_BUS_MODEL!);
+    final int? DOCKED_WITHOffset = _DOCKED_WITH == null ? null
+        : fbBuilder.writeString(_DOCKED_WITH!);
+    final int? OEB_PARENT_FRAMEOffset = _OEB_PARENT_FRAME == null ? null
+        : fbBuilder.writeString(_OEB_PARENT_FRAME!);
+    final int? OEB_PARENT_FRAME_EPOCHOffset = _OEB_PARENT_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_OEB_PARENT_FRAME_EPOCH!);
+    final int? ATT_CONTROL_MODEOffset = _ATT_CONTROL_MODE == null ? null
+        : fbBuilder.writeString(_ATT_CONTROL_MODE!);
+    final int? ATT_ACTUATOR_TYPEOffset = _ATT_ACTUATOR_TYPE == null ? null
+        : fbBuilder.writeString(_ATT_ACTUATOR_TYPE!);
+    fbBuilder.startTable(53);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addFloat64(1, _WET_MASS);
+    fbBuilder.addFloat64(2, _DRY_MASS);
+    fbBuilder.addOffset(3, MASS_UNITSOffset);
+    fbBuilder.addFloat64(4, _OEB_Q1);
+    fbBuilder.addFloat64(5, _OEB_Q2);
+    fbBuilder.addFloat64(6, _OEB_Q3);
+    fbBuilder.addFloat64(7, _OEB_QC);
+    fbBuilder.addFloat64(8, _OEB_MAX);
+    fbBuilder.addFloat64(9, _OEB_INT);
+    fbBuilder.addFloat64(10, _OEB_MIN);
+    fbBuilder.addFloat64(11, _AREA_ALONG_OEB_MAX);
+    fbBuilder.addFloat64(12, _AREA_ALONG_OEB_INT);
+    fbBuilder.addFloat64(13, _AREA_ALONG_OEB_MIN);
+    fbBuilder.addOffset(14, AREA_UNITSOffset);
+    fbBuilder.addFloat64(15, _DRAG_CONST_AREA);
+    fbBuilder.addFloat64(16, _DRAG_COEFF_NOM);
+    fbBuilder.addFloat64(17, _DRAG_UNCERTAINTY);
+    fbBuilder.addFloat64(18, _SRP_CONST_AREA);
+    fbBuilder.addFloat64(19, _SOLAR_RAD_COEFF);
+    fbBuilder.addFloat64(20, _SRP_UNCERTAINTY);
+    fbBuilder.addOffset(21, MANUFACTUREROffset);
+    fbBuilder.addOffset(22, BUS_MODELOffset);
+    fbBuilder.addOffset(23, DOCKED_WITHOffset);
+    fbBuilder.addFloat64(24, _INITIAL_WET_MASS);
+    fbBuilder.addOffset(25, OEB_PARENT_FRAMEOffset);
+    fbBuilder.addOffset(26, OEB_PARENT_FRAME_EPOCHOffset);
+    fbBuilder.addFloat64(27, _AREA_MIN_FOR_PC);
+    fbBuilder.addFloat64(28, _AREA_MAX_FOR_PC);
+    fbBuilder.addFloat64(29, _AREA_TYP_FOR_PC);
+    fbBuilder.addFloat64(30, _RCS);
+    fbBuilder.addFloat64(31, _RCS_MIN);
+    fbBuilder.addFloat64(32, _RCS_MAX);
+    fbBuilder.addFloat64(33, _VM_ABSOLUTE);
+    fbBuilder.addFloat64(34, _VM_APPARENT_MIN);
+    fbBuilder.addFloat64(35, _VM_APPARENT);
+    fbBuilder.addFloat64(36, _VM_APPARENT_MAX);
+    fbBuilder.addFloat64(37, _REFLECTANCE);
+    fbBuilder.addOffset(38, ATT_CONTROL_MODEOffset);
+    fbBuilder.addOffset(39, ATT_ACTUATOR_TYPEOffset);
+    fbBuilder.addFloat64(40, _ATT_KNOWLEDGE);
+    fbBuilder.addFloat64(41, _ATT_CONTROL);
+    fbBuilder.addFloat64(42, _ATT_POINTING);
+    fbBuilder.addFloat64(43, _AVG_MANEUVER_FREQ);
+    fbBuilder.addFloat64(44, _MAX_THRUST);
+    fbBuilder.addFloat64(45, _DV_BOL);
+    fbBuilder.addFloat64(46, _DV_REMAINING);
+    fbBuilder.addFloat64(47, _IXX);
+    fbBuilder.addFloat64(48, _IYY);
+    fbBuilder.addFloat64(49, _IZZ);
+    fbBuilder.addFloat64(50, _IXY);
+    fbBuilder.addFloat64(51, _IXZ);
+    fbBuilder.addFloat64(52, _IYZ);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class Perturbations {
+  Perturbations._(this._bc, this._bcOffset);
+  factory Perturbations(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Perturbations> reader = _PerturbationsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Comments in the Perturbations section.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Atmospheric model used.
+  ATM? get ATMOSPHERIC_MODEL => ATM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ATM? get atmosphericModel => ATMOSPHERIC_MODEL;
+  ///  Gravity model used.
+  String? get GRAVITY_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get gravityModel => GRAVITY_MODEL;
+  ///  Degree of the gravity model.
+  int get GRAVITY_DEGREE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get gravityDegree => GRAVITY_DEGREE;
+  ///  Order of the gravity model.
+  int get GRAVITY_ORDER => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get gravityOrder => GRAVITY_ORDER;
+  ///  Gravitational constant times the mass of the central body.
+  double get GM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  List of celestial bodies included in n-body perturbations.
+  List<String>? get N_BODY_PERTURBATIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<String>? get nBodyPerturbations => N_BODY_PERTURBATIONS;
+  ///  Ocean tides model used.
+  String? get OCEAN_TIDES_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get oceanTidesModel => OCEAN_TIDES_MODEL;
+  ///  Solid tides model used.
+  String? get SOLID_TIDES_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get solidTidesModel => SOLID_TIDES_MODEL;
+  ///  Atmospheric tides model used.
+  String? get ATMOSPHERIC_TIDES_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get atmosphericTidesModel => ATMOSPHERIC_TIDES_MODEL;
+  ///  Geopotential model used.
+  String? get GEOPOTENTIAL_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get geopotentialModel => GEOPOTENTIAL_MODEL;
+  ///  Solar radiation pressure model used.
+  String? get SOLAR_RAD_PRESSURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get solarRadPressure => SOLAR_RAD_PRESSURE;
+  ///  Albedo model used.
+  String? get ALBEDO => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Thermal model used.
+  String? get THERMAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Relativity model used.
+  String? get RELATIVITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Atmospheric drag model used.
+  String? get ATMOSPHERIC_DRAG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get atmosphericDrag => ATMOSPHERIC_DRAG;
+  ///  Fixed geomagnetic Kp index used.
+  double get FIXED_GEOMAG_KP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get fixedGeomagKp => FIXED_GEOMAG_KP;
+  ///  Fixed F10.7 solar flux value used.
+  double get FIXED_F10P7 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get fixedF10p7 => FIXED_F10P7;
+  ///  Fixed mean F10.7 solar flux value used.
+  double get FIXED_F10P7_MEAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get fixedF10p7Mean => FIXED_F10P7_MEAN;
+  ///  Fixed (time-invariant) geomagnetic index ap used in place of the normal
+  ///  time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+  double get FIXED_GEOMAG_AP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get fixedGeomagAp => FIXED_GEOMAG_AP;
+  ///  ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+  ///  above is the model family when the text names one.
+  String? get ATMOSPHERIC_MODEL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get atmosphericModelName => ATMOSPHERIC_MODEL_NAME;
+  ///  EQUATORIAL_RADIUS in km, NaN when not stated.
+  double get EQUATORIAL_RADIUS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, double.nan);
+  double get equatorialRadius => EQUATORIAL_RADIUS;
+  ///  CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+  double get CENTRAL_BODY_ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, double.nan);
+  double get centralBodyRotation => CENTRAL_BODY_ROTATION;
+  ///  OBLATE_FLATTENING, NaN when not stated.
+  double get OBLATE_FLATTENING => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, double.nan);
+  double get oblateFlattening => OBLATE_FLATTENING;
+  ///  REDUCTION_THEORY.
+  String? get REDUCTION_THEORY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get reductionTheory => REDUCTION_THEORY;
+  ///  ALBEDO_GRID_SIZE.
+  int get ALBEDO_GRID_SIZE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 54, 0);
+  int get albedoGridSize => ALBEDO_GRID_SIZE;
+  ///  SHADOW_MODEL.
+  String? get SHADOW_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get shadowModel => SHADOW_MODEL;
+  ///  SHADOW_BODIES.
+  String? get SHADOW_BODIES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get shadowBodies => SHADOW_BODIES;
+  ///  SW_DATA_SOURCE: the space weather data source.
+  String? get SW_DATA_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get swDataSource => SW_DATA_SOURCE;
+  ///  SW_DATA_EPOCH.
+  String? get SW_DATA_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get swDataEpoch => SW_DATA_EPOCH;
+  ///  SW_INTERP_METHOD.
+  String? get SW_INTERP_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  String? get swInterpMethod => SW_INTERP_METHOD;
+  ///  FIXED_GEOMAG_DST in nT, NaN when not stated.
+  double get FIXED_GEOMAG_DST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, double.nan);
+  double get fixedGeomagDst => FIXED_GEOMAG_DST;
+  ///  FIXED_M10P7, NaN when not stated.
+  double get FIXED_M10P7 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, double.nan);
+  double get fixedM10p7 => FIXED_M10P7;
+  ///  FIXED_M10P7_MEAN, NaN when not stated.
+  double get FIXED_M10P7_MEAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, double.nan);
+  double get fixedM10p7Mean => FIXED_M10P7_MEAN;
+  ///  FIXED_S10P7, NaN when not stated.
+  double get FIXED_S10P7 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, double.nan);
+  double get fixedS10p7 => FIXED_S10P7;
+  ///  FIXED_S10P7_MEAN, NaN when not stated.
+  double get FIXED_S10P7_MEAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, double.nan);
+  double get fixedS10p7Mean => FIXED_S10P7_MEAN;
+  ///  FIXED_Y10P7, NaN when not stated.
+  double get FIXED_Y10P7 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, double.nan);
+  double get fixedY10p7 => FIXED_Y10P7;
+  ///  FIXED_Y10P7_MEAN, NaN when not stated.
+  double get FIXED_Y10P7_MEAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, double.nan);
+  double get fixedY10p7Mean => FIXED_Y10P7_MEAN;
+
+  @override
+  String toString() {
+    return 'Perturbations{COMMENT: ${COMMENT}, atmosphericModel: ${atmosphericModel}, gravityModel: ${gravityModel}, gravityDegree: ${gravityDegree}, gravityOrder: ${gravityOrder}, GM: ${GM}, nBodyPerturbations: ${nBodyPerturbations}, oceanTidesModel: ${oceanTidesModel}, solidTidesModel: ${solidTidesModel}, atmosphericTidesModel: ${atmosphericTidesModel}, geopotentialModel: ${geopotentialModel}, solarRadPressure: ${solarRadPressure}, ALBEDO: ${ALBEDO}, THERMAL: ${THERMAL}, RELATIVITY: ${RELATIVITY}, atmosphericDrag: ${atmosphericDrag}, fixedGeomagKp: ${fixedGeomagKp}, fixedF10p7: ${fixedF10p7}, fixedF10p7Mean: ${fixedF10p7Mean}, fixedGeomagAp: ${fixedGeomagAp}, atmosphericModelName: ${atmosphericModelName}, equatorialRadius: ${equatorialRadius}, centralBodyRotation: ${centralBodyRotation}, oblateFlattening: ${oblateFlattening}, reductionTheory: ${reductionTheory}, albedoGridSize: ${albedoGridSize}, shadowModel: ${shadowModel}, shadowBodies: ${shadowBodies}, swDataSource: ${swDataSource}, swDataEpoch: ${swDataEpoch}, swInterpMethod: ${swInterpMethod}, fixedGeomagDst: ${fixedGeomagDst}, fixedM10p7: ${fixedM10p7}, fixedM10p7Mean: ${fixedM10p7Mean}, fixedS10p7: ${fixedS10p7}, fixedS10p7Mean: ${fixedS10p7Mean}, fixedY10p7: ${fixedY10p7}, fixedY10p7Mean: ${fixedY10p7Mean}}';
+  }
+}
+
+class _PerturbationsReader extends fb.TableReader<Perturbations> {
+  const _PerturbationsReader();
+
+  @override
+  Perturbations createObject(fb.BufferContext bc, int offset) =>
+    Perturbations._(bc, offset);
+}
+
+class PerturbationsBuilder {
+  PerturbationsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(38);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAtmosphericModelOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addGravityModelOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addGravityDegree(int? GRAVITY_DEGREE) {
+    fbBuilder.addInt32(3, GRAVITY_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addGravityOrder(int? GRAVITY_ORDER) {
+    fbBuilder.addInt32(4, GRAVITY_ORDER);
+    return fbBuilder.offset;
+  }
+  int addGm(double? GM) {
+    fbBuilder.addFloat64(5, GM);
+    return fbBuilder.offset;
+  }
+  int addNBodyPerturbationsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addOceanTidesModelOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addSolidTidesModelOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addAtmosphericTidesModelOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addGeopotentialModelOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addSolarRadPressureOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addAlbedoOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addThermalOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addRelativityOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addAtmosphericDragOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addFixedGeomagKp(double? FIXED_GEOMAG_KP) {
+    fbBuilder.addFloat64(16, FIXED_GEOMAG_KP);
+    return fbBuilder.offset;
+  }
+  int addFixedF10P7(double? FIXED_F10P7) {
+    fbBuilder.addFloat64(17, FIXED_F10P7);
+    return fbBuilder.offset;
+  }
+  int addFixedF10P7Mean(double? FIXED_F10P7_MEAN) {
+    fbBuilder.addFloat64(18, FIXED_F10P7_MEAN);
+    return fbBuilder.offset;
+  }
+  int addFixedGeomagAp(double? FIXED_GEOMAG_AP) {
+    fbBuilder.addFloat64(19, FIXED_GEOMAG_AP);
+    return fbBuilder.offset;
+  }
+  int addAtmosphericModelNameOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addEquatorialRadius(double? EQUATORIAL_RADIUS) {
+    fbBuilder.addFloat64(21, EQUATORIAL_RADIUS);
+    return fbBuilder.offset;
+  }
+  int addCentralBodyRotation(double? CENTRAL_BODY_ROTATION) {
+    fbBuilder.addFloat64(22, CENTRAL_BODY_ROTATION);
+    return fbBuilder.offset;
+  }
+  int addOblateFlattening(double? OBLATE_FLATTENING) {
+    fbBuilder.addFloat64(23, OBLATE_FLATTENING);
+    return fbBuilder.offset;
+  }
+  int addReductionTheoryOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addAlbedoGridSize(int? ALBEDO_GRID_SIZE) {
+    fbBuilder.addUint32(25, ALBEDO_GRID_SIZE);
+    return fbBuilder.offset;
+  }
+  int addShadowModelOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addShadowBodiesOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addSwDataSourceOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addSwDataEpochOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addSwInterpMethodOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addFixedGeomagDst(double? FIXED_GEOMAG_DST) {
+    fbBuilder.addFloat64(31, FIXED_GEOMAG_DST);
+    return fbBuilder.offset;
+  }
+  int addFixedM10P7(double? FIXED_M10P7) {
+    fbBuilder.addFloat64(32, FIXED_M10P7);
+    return fbBuilder.offset;
+  }
+  int addFixedM10P7Mean(double? FIXED_M10P7_MEAN) {
+    fbBuilder.addFloat64(33, FIXED_M10P7_MEAN);
+    return fbBuilder.offset;
+  }
+  int addFixedS10P7(double? FIXED_S10P7) {
+    fbBuilder.addFloat64(34, FIXED_S10P7);
+    return fbBuilder.offset;
+  }
+  int addFixedS10P7Mean(double? FIXED_S10P7_MEAN) {
+    fbBuilder.addFloat64(35, FIXED_S10P7_MEAN);
+    return fbBuilder.offset;
+  }
+  int addFixedY10P7(double? FIXED_Y10P7) {
+    fbBuilder.addFloat64(36, FIXED_Y10P7);
+    return fbBuilder.offset;
+  }
+  int addFixedY10P7Mean(double? FIXED_Y10P7_MEAN) {
+    fbBuilder.addFloat64(37, FIXED_Y10P7_MEAN);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PerturbationsObjectBuilder extends fb.ObjectBuilder {
+  final List<String>? _COMMENT;
+  final ATMObjectBuilder? _ATMOSPHERIC_MODEL;
+  final String? _GRAVITY_MODEL;
+  final int? _GRAVITY_DEGREE;
+  final int? _GRAVITY_ORDER;
+  final double? _GM;
+  final List<String>? _N_BODY_PERTURBATIONS;
+  final String? _OCEAN_TIDES_MODEL;
+  final String? _SOLID_TIDES_MODEL;
+  final String? _ATMOSPHERIC_TIDES_MODEL;
+  final String? _GEOPOTENTIAL_MODEL;
+  final String? _SOLAR_RAD_PRESSURE;
+  final String? _ALBEDO;
+  final String? _THERMAL;
+  final String? _RELATIVITY;
+  final String? _ATMOSPHERIC_DRAG;
+  final double? _FIXED_GEOMAG_KP;
+  final double? _FIXED_F10P7;
+  final double? _FIXED_F10P7_MEAN;
+  final double? _FIXED_GEOMAG_AP;
+  final String? _ATMOSPHERIC_MODEL_NAME;
+  final double? _EQUATORIAL_RADIUS;
+  final double? _CENTRAL_BODY_ROTATION;
+  final double? _OBLATE_FLATTENING;
+  final String? _REDUCTION_THEORY;
+  final int? _ALBEDO_GRID_SIZE;
+  final String? _SHADOW_MODEL;
+  final String? _SHADOW_BODIES;
+  final String? _SW_DATA_SOURCE;
+  final String? _SW_DATA_EPOCH;
+  final String? _SW_INTERP_METHOD;
+  final double? _FIXED_GEOMAG_DST;
+  final double? _FIXED_M10P7;
+  final double? _FIXED_M10P7_MEAN;
+  final double? _FIXED_S10P7;
+  final double? _FIXED_S10P7_MEAN;
+  final double? _FIXED_Y10P7;
+  final double? _FIXED_Y10P7_MEAN;
+
+  PerturbationsObjectBuilder({
+    List<String>? COMMENT,
+    ATMObjectBuilder? ATMOSPHERIC_MODEL,
+    ATMObjectBuilder? atmosphericModel,
+    String? GRAVITY_MODEL,
+    String? gravityModel,
+    int? GRAVITY_DEGREE,
+    int? gravityDegree,
+    int? GRAVITY_ORDER,
+    int? gravityOrder,
+    double? GM,
+    List<String>? N_BODY_PERTURBATIONS,
+    List<String>? nBodyPerturbations,
+    String? OCEAN_TIDES_MODEL,
+    String? oceanTidesModel,
+    String? SOLID_TIDES_MODEL,
+    String? solidTidesModel,
+    String? ATMOSPHERIC_TIDES_MODEL,
+    String? atmosphericTidesModel,
+    String? GEOPOTENTIAL_MODEL,
+    String? geopotentialModel,
+    String? SOLAR_RAD_PRESSURE,
+    String? solarRadPressure,
+    String? ALBEDO,
+    String? THERMAL,
+    String? RELATIVITY,
+    String? ATMOSPHERIC_DRAG,
+    String? atmosphericDrag,
+    double? FIXED_GEOMAG_KP,
+    double? fixedGeomagKp,
+    double? FIXED_F10P7,
+    double? fixedF10p7,
+    double? FIXED_F10P7_MEAN,
+    double? fixedF10p7Mean,
+    double? FIXED_GEOMAG_AP,
+    double? fixedGeomagAp,
+    String? ATMOSPHERIC_MODEL_NAME,
+    String? atmosphericModelName,
+    double? EQUATORIAL_RADIUS,
+    double? equatorialRadius,
+    double? CENTRAL_BODY_ROTATION,
+    double? centralBodyRotation,
+    double? OBLATE_FLATTENING,
+    double? oblateFlattening,
+    String? REDUCTION_THEORY,
+    String? reductionTheory,
+    int? ALBEDO_GRID_SIZE,
+    int? albedoGridSize,
+    String? SHADOW_MODEL,
+    String? shadowModel,
+    String? SHADOW_BODIES,
+    String? shadowBodies,
+    String? SW_DATA_SOURCE,
+    String? swDataSource,
+    String? SW_DATA_EPOCH,
+    String? swDataEpoch,
+    String? SW_INTERP_METHOD,
+    String? swInterpMethod,
+    double? FIXED_GEOMAG_DST,
+    double? fixedGeomagDst,
+    double? FIXED_M10P7,
+    double? fixedM10p7,
+    double? FIXED_M10P7_MEAN,
+    double? fixedM10p7Mean,
+    double? FIXED_S10P7,
+    double? fixedS10p7,
+    double? FIXED_S10P7_MEAN,
+    double? fixedS10p7Mean,
+    double? FIXED_Y10P7,
+    double? fixedY10p7,
+    double? FIXED_Y10P7_MEAN,
+    double? fixedY10p7Mean,
+  })
+      : _COMMENT = COMMENT,
+        _ATMOSPHERIC_MODEL = atmosphericModel ?? ATMOSPHERIC_MODEL,
+        _GRAVITY_MODEL = gravityModel ?? GRAVITY_MODEL,
+        _GRAVITY_DEGREE = gravityDegree ?? GRAVITY_DEGREE,
+        _GRAVITY_ORDER = gravityOrder ?? GRAVITY_ORDER,
+        _GM = GM,
+        _N_BODY_PERTURBATIONS = nBodyPerturbations ?? N_BODY_PERTURBATIONS,
+        _OCEAN_TIDES_MODEL = oceanTidesModel ?? OCEAN_TIDES_MODEL,
+        _SOLID_TIDES_MODEL = solidTidesModel ?? SOLID_TIDES_MODEL,
+        _ATMOSPHERIC_TIDES_MODEL = atmosphericTidesModel ?? ATMOSPHERIC_TIDES_MODEL,
+        _GEOPOTENTIAL_MODEL = geopotentialModel ?? GEOPOTENTIAL_MODEL,
+        _SOLAR_RAD_PRESSURE = solarRadPressure ?? SOLAR_RAD_PRESSURE,
+        _ALBEDO = ALBEDO,
+        _THERMAL = THERMAL,
+        _RELATIVITY = RELATIVITY,
+        _ATMOSPHERIC_DRAG = atmosphericDrag ?? ATMOSPHERIC_DRAG,
+        _FIXED_GEOMAG_KP = fixedGeomagKp ?? FIXED_GEOMAG_KP,
+        _FIXED_F10P7 = fixedF10p7 ?? FIXED_F10P7,
+        _FIXED_F10P7_MEAN = fixedF10p7Mean ?? FIXED_F10P7_MEAN,
+        _FIXED_GEOMAG_AP = fixedGeomagAp ?? FIXED_GEOMAG_AP,
+        _ATMOSPHERIC_MODEL_NAME = atmosphericModelName ?? ATMOSPHERIC_MODEL_NAME,
+        _EQUATORIAL_RADIUS = equatorialRadius ?? EQUATORIAL_RADIUS,
+        _CENTRAL_BODY_ROTATION = centralBodyRotation ?? CENTRAL_BODY_ROTATION,
+        _OBLATE_FLATTENING = oblateFlattening ?? OBLATE_FLATTENING,
+        _REDUCTION_THEORY = reductionTheory ?? REDUCTION_THEORY,
+        _ALBEDO_GRID_SIZE = albedoGridSize ?? ALBEDO_GRID_SIZE,
+        _SHADOW_MODEL = shadowModel ?? SHADOW_MODEL,
+        _SHADOW_BODIES = shadowBodies ?? SHADOW_BODIES,
+        _SW_DATA_SOURCE = swDataSource ?? SW_DATA_SOURCE,
+        _SW_DATA_EPOCH = swDataEpoch ?? SW_DATA_EPOCH,
+        _SW_INTERP_METHOD = swInterpMethod ?? SW_INTERP_METHOD,
+        _FIXED_GEOMAG_DST = fixedGeomagDst ?? FIXED_GEOMAG_DST,
+        _FIXED_M10P7 = fixedM10p7 ?? FIXED_M10P7,
+        _FIXED_M10P7_MEAN = fixedM10p7Mean ?? FIXED_M10P7_MEAN,
+        _FIXED_S10P7 = fixedS10p7 ?? FIXED_S10P7,
+        _FIXED_S10P7_MEAN = fixedS10p7Mean ?? FIXED_S10P7_MEAN,
+        _FIXED_Y10P7 = fixedY10p7 ?? FIXED_Y10P7,
+        _FIXED_Y10P7_MEAN = fixedY10p7Mean ?? FIXED_Y10P7_MEAN;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? ATMOSPHERIC_MODELOffset = _ATMOSPHERIC_MODEL?.getOrCreateOffset(fbBuilder);
+    final int? GRAVITY_MODELOffset = _GRAVITY_MODEL == null ? null
+        : fbBuilder.writeString(_GRAVITY_MODEL!);
+    final int? N_BODY_PERTURBATIONSOffset = _N_BODY_PERTURBATIONS == null ? null
+        : fbBuilder.writeList(_N_BODY_PERTURBATIONS!.map(fbBuilder.writeString).toList());
+    final int? OCEAN_TIDES_MODELOffset = _OCEAN_TIDES_MODEL == null ? null
+        : fbBuilder.writeString(_OCEAN_TIDES_MODEL!);
+    final int? SOLID_TIDES_MODELOffset = _SOLID_TIDES_MODEL == null ? null
+        : fbBuilder.writeString(_SOLID_TIDES_MODEL!);
+    final int? ATMOSPHERIC_TIDES_MODELOffset = _ATMOSPHERIC_TIDES_MODEL == null ? null
+        : fbBuilder.writeString(_ATMOSPHERIC_TIDES_MODEL!);
+    final int? GEOPOTENTIAL_MODELOffset = _GEOPOTENTIAL_MODEL == null ? null
+        : fbBuilder.writeString(_GEOPOTENTIAL_MODEL!);
+    final int? SOLAR_RAD_PRESSUREOffset = _SOLAR_RAD_PRESSURE == null ? null
+        : fbBuilder.writeString(_SOLAR_RAD_PRESSURE!);
+    final int? ALBEDOOffset = _ALBEDO == null ? null
+        : fbBuilder.writeString(_ALBEDO!);
+    final int? THERMALOffset = _THERMAL == null ? null
+        : fbBuilder.writeString(_THERMAL!);
+    final int? RELATIVITYOffset = _RELATIVITY == null ? null
+        : fbBuilder.writeString(_RELATIVITY!);
+    final int? ATMOSPHERIC_DRAGOffset = _ATMOSPHERIC_DRAG == null ? null
+        : fbBuilder.writeString(_ATMOSPHERIC_DRAG!);
+    final int? ATMOSPHERIC_MODEL_NAMEOffset = _ATMOSPHERIC_MODEL_NAME == null ? null
+        : fbBuilder.writeString(_ATMOSPHERIC_MODEL_NAME!);
+    final int? REDUCTION_THEORYOffset = _REDUCTION_THEORY == null ? null
+        : fbBuilder.writeString(_REDUCTION_THEORY!);
+    final int? SHADOW_MODELOffset = _SHADOW_MODEL == null ? null
+        : fbBuilder.writeString(_SHADOW_MODEL!);
+    final int? SHADOW_BODIESOffset = _SHADOW_BODIES == null ? null
+        : fbBuilder.writeString(_SHADOW_BODIES!);
+    final int? SW_DATA_SOURCEOffset = _SW_DATA_SOURCE == null ? null
+        : fbBuilder.writeString(_SW_DATA_SOURCE!);
+    final int? SW_DATA_EPOCHOffset = _SW_DATA_EPOCH == null ? null
+        : fbBuilder.writeString(_SW_DATA_EPOCH!);
+    final int? SW_INTERP_METHODOffset = _SW_INTERP_METHOD == null ? null
+        : fbBuilder.writeString(_SW_INTERP_METHOD!);
+    fbBuilder.startTable(38);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, ATMOSPHERIC_MODELOffset);
+    fbBuilder.addOffset(2, GRAVITY_MODELOffset);
+    fbBuilder.addInt32(3, _GRAVITY_DEGREE);
+    fbBuilder.addInt32(4, _GRAVITY_ORDER);
+    fbBuilder.addFloat64(5, _GM);
+    fbBuilder.addOffset(6, N_BODY_PERTURBATIONSOffset);
+    fbBuilder.addOffset(7, OCEAN_TIDES_MODELOffset);
+    fbBuilder.addOffset(8, SOLID_TIDES_MODELOffset);
+    fbBuilder.addOffset(9, ATMOSPHERIC_TIDES_MODELOffset);
+    fbBuilder.addOffset(10, GEOPOTENTIAL_MODELOffset);
+    fbBuilder.addOffset(11, SOLAR_RAD_PRESSUREOffset);
+    fbBuilder.addOffset(12, ALBEDOOffset);
+    fbBuilder.addOffset(13, THERMALOffset);
+    fbBuilder.addOffset(14, RELATIVITYOffset);
+    fbBuilder.addOffset(15, ATMOSPHERIC_DRAGOffset);
+    fbBuilder.addFloat64(16, _FIXED_GEOMAG_KP);
+    fbBuilder.addFloat64(17, _FIXED_F10P7);
+    fbBuilder.addFloat64(18, _FIXED_F10P7_MEAN);
+    fbBuilder.addFloat64(19, _FIXED_GEOMAG_AP);
+    fbBuilder.addOffset(20, ATMOSPHERIC_MODEL_NAMEOffset);
+    fbBuilder.addFloat64(21, _EQUATORIAL_RADIUS);
+    fbBuilder.addFloat64(22, _CENTRAL_BODY_ROTATION);
+    fbBuilder.addFloat64(23, _OBLATE_FLATTENING);
+    fbBuilder.addOffset(24, REDUCTION_THEORYOffset);
+    fbBuilder.addUint32(25, _ALBEDO_GRID_SIZE);
+    fbBuilder.addOffset(26, SHADOW_MODELOffset);
+    fbBuilder.addOffset(27, SHADOW_BODIESOffset);
+    fbBuilder.addOffset(28, SW_DATA_SOURCEOffset);
+    fbBuilder.addOffset(29, SW_DATA_EPOCHOffset);
+    fbBuilder.addOffset(30, SW_INTERP_METHODOffset);
+    fbBuilder.addFloat64(31, _FIXED_GEOMAG_DST);
+    fbBuilder.addFloat64(32, _FIXED_M10P7);
+    fbBuilder.addFloat64(33, _FIXED_M10P7_MEAN);
+    fbBuilder.addFloat64(34, _FIXED_S10P7);
+    fbBuilder.addFloat64(35, _FIXED_S10P7_MEAN);
+    fbBuilder.addFloat64(36, _FIXED_Y10P7);
+    fbBuilder.addFloat64(37, _FIXED_Y10P7_MEAN);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class Maneuver {
+  Maneuver._(this._bc, this._bcOffset);
+  factory Maneuver(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Maneuver> reader = _ManeuverReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Unique identifier for the maneuver.
+  String? get MAN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get manId => MAN_ID;
+  ///  Basis of the maneuver plan (e.g., planned, predicted, estimated).
+  String? get MAN_BASIS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get manBasis => MAN_BASIS;
+  ///  Identifier of the maneuver device.
+  String? get MAN_DEVICE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get manDeviceId => MAN_DEVICE_ID;
+  ///  Identifier of the previous maneuver.
+  String? get MAN_PREV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get manPrevId => MAN_PREV_ID;
+  ///  Purpose of the maneuver.
+  String? get MAN_PURPOSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get manPurpose => MAN_PURPOSE;
+  ///  Reference frame for the maneuver data.
+  String? get MAN_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get manRefFrame => MAN_REF_FRAME;
+  ///  Epoch of the maneuver reference frame.
+  String? get MAN_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get manFrameEpoch => MAN_FRAME_EPOCH;
+  ///  Type of maneuver (e.g., IMPULSIVE, FINITE).
+  String? get MAN_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get manType => MAN_TYPE;
+  ///  Start epoch of the maneuver.
+  String? get MAN_EPOCH_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get manEpochStart => MAN_EPOCH_START;
+  ///  Duration of the maneuver.
+  double get MAN_DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get manDuration => MAN_DURATION;
+  ///  Units for the maneuver data values.
+  List<String>? get MAN_UNITS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<String>? get manUnits => MAN_UNITS;
+  ///  Data associated with the maneuver.
+  List<String>? get DATA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Comments related to the maneuver.
+  List<String>? get MAN_COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
+  List<String>? get manComment => MAN_COMMENT;
+  ///  Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+  ///  CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+  ///  DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+  ///  Relative time tags are seconds from METADATA.EPOCH_TZERO.
+  List<String>? get MAN_COMPOSITION => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
+  List<String>? get manComposition => MAN_COMPOSITION;
+  ///  Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+  String? get MAN_NEXT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get manNextId => MAN_NEXT_ID;
+  ///  OD, navigation solution or simulation identifier (Table 6-7).
+  String? get MAN_BASIS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get manBasisId => MAN_BASIS_ID;
+  ///  Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+  ///  CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+  String? get MAN_PREV_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get manPrevEpoch => MAN_PREV_EPOCH;
+  ///  Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+  String? get MAN_NEXT_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get manNextEpoch => MAN_NEXT_EPOCH;
+  ///  Source of predicted orbit or attitude states (Table 6-7).
+  String? get MAN_PRED_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get manPredSource => MAN_PRED_SOURCE;
+  ///  Gravitational assist body name (Table 6-7).
+  String? get GRAV_ASSIST_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get gravAssistName => GRAV_ASSIST_NAME;
+  ///  CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+  String? get DC_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get dcType => DC_TYPE;
+  ///  Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+  String? get DC_WIN_OPEN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get dcWinOpen => DC_WIN_OPEN;
+  ///  Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+  String? get DC_WIN_CLOSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get dcWinClose => DC_WIN_CLOSE;
+  ///  Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+  int get DC_MIN_CYCLES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get dcMinCycles => DC_MIN_CYCLES;
+  int get DC_MAX_CYCLES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  int get dcMaxCycles => DC_MAX_CYCLES;
+  ///  Presence of the corresponding cycle bound; zero remains representable.
+  bool get HAS_DC_MIN_CYCLES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 54, false);
+  bool get hasDcMinCycles => HAS_DC_MIN_CYCLES;
+  bool get HAS_DC_MAX_CYCLES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, false);
+  bool get hasDcMaxCycles => HAS_DC_MAX_CYCLES;
+  ///  First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+  ///  Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+  String? get DC_EXEC_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get dcExecStart => DC_EXEC_START;
+  String? get DC_EXEC_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get dcExecStop => DC_EXEC_STOP;
+  ///  Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+  String? get DC_REF_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get dcRefTime => DC_REF_TIME;
+  ///  Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+  ///  Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+  double get DC_TIME_PULSE_DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, double.nan);
+  double get dcTimePulseDuration => DC_TIME_PULSE_DURATION;
+  double get DC_TIME_PULSE_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, double.nan);
+  double get dcTimePulsePeriod => DC_TIME_PULSE_PERIOD;
+  ///  Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+  ///  Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+  List<double>? get DC_REF_DIR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 68);
+  List<double>? get dcRefDir => DC_REF_DIR;
+  ///  Body frame of DC_BODY_TRIGGER (Table 6-7).
+  String? get DC_BODY_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  String? get dcBodyFrame => DC_BODY_FRAME;
+  ///  Three-component body-frame trigger unit direction (Table 6-7).
+  List<double>? get DC_BODY_TRIGGER => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 72);
+  List<double>? get dcBodyTrigger => DC_BODY_TRIGGER;
+  ///  Pulse start and stop phase angles, degrees; NaN means unspecified.
+  ///  CCSDS 502.0-B-3 Table 6-7.
+  double get DC_PA_START_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, double.nan);
+  double get dcPaStartAngle => DC_PA_START_ANGLE;
+  double get DC_PA_STOP_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, double.nan);
+  double get dcPaStopAngle => DC_PA_STOP_ANGLE;
+
+  @override
+  String toString() {
+    return 'Maneuver{manId: ${manId}, manBasis: ${manBasis}, manDeviceId: ${manDeviceId}, manPrevId: ${manPrevId}, manPurpose: ${manPurpose}, manRefFrame: ${manRefFrame}, manFrameEpoch: ${manFrameEpoch}, manType: ${manType}, manEpochStart: ${manEpochStart}, manDuration: ${manDuration}, manUnits: ${manUnits}, DATA: ${DATA}, manComment: ${manComment}, manComposition: ${manComposition}, manNextId: ${manNextId}, manBasisId: ${manBasisId}, manPrevEpoch: ${manPrevEpoch}, manNextEpoch: ${manNextEpoch}, manPredSource: ${manPredSource}, gravAssistName: ${gravAssistName}, dcType: ${dcType}, dcWinOpen: ${dcWinOpen}, dcWinClose: ${dcWinClose}, dcMinCycles: ${dcMinCycles}, dcMaxCycles: ${dcMaxCycles}, hasDcMinCycles: ${hasDcMinCycles}, hasDcMaxCycles: ${hasDcMaxCycles}, dcExecStart: ${dcExecStart}, dcExecStop: ${dcExecStop}, dcRefTime: ${dcRefTime}, dcTimePulseDuration: ${dcTimePulseDuration}, dcTimePulsePeriod: ${dcTimePulsePeriod}, dcRefDir: ${dcRefDir}, dcBodyFrame: ${dcBodyFrame}, dcBodyTrigger: ${dcBodyTrigger}, dcPaStartAngle: ${dcPaStartAngle}, dcPaStopAngle: ${dcPaStopAngle}}';
+  }
+}
+
+class _ManeuverReader extends fb.TableReader<Maneuver> {
+  const _ManeuverReader();
+
+  @override
+  Maneuver createObject(fb.BufferContext bc, int offset) =>
+    Maneuver._(bc, offset);
+}
+
+class ManeuverBuilder {
+  ManeuverBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(37);
+  }
+
+  int addManIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addManBasisOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addManDeviceIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addManPrevIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addManPurposeOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addManRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addManFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addManTypeOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addManEpochStartOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addManDuration(double? MAN_DURATION) {
+    fbBuilder.addFloat64(9, MAN_DURATION);
+    return fbBuilder.offset;
+  }
+  int addManUnitsOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addDataOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addManCommentOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addManCompositionOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addManNextIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addManBasisIdOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addManPrevEpochOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addManNextEpochOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addManPredSourceOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addGravAssistNameOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addDcTypeOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addDcWinOpenOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addDcWinCloseOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addDcMinCycles(int? DC_MIN_CYCLES) {
+    fbBuilder.addUint32(23, DC_MIN_CYCLES);
+    return fbBuilder.offset;
+  }
+  int addDcMaxCycles(int? DC_MAX_CYCLES) {
+    fbBuilder.addUint32(24, DC_MAX_CYCLES);
+    return fbBuilder.offset;
+  }
+  int addHasDcMinCycles(bool? HAS_DC_MIN_CYCLES) {
+    fbBuilder.addBool(25, HAS_DC_MIN_CYCLES);
+    return fbBuilder.offset;
+  }
+  int addHasDcMaxCycles(bool? HAS_DC_MAX_CYCLES) {
+    fbBuilder.addBool(26, HAS_DC_MAX_CYCLES);
+    return fbBuilder.offset;
+  }
+  int addDcExecStartOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addDcExecStopOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addDcRefTimeOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addDcTimePulseDuration(double? DC_TIME_PULSE_DURATION) {
+    fbBuilder.addFloat64(30, DC_TIME_PULSE_DURATION);
+    return fbBuilder.offset;
+  }
+  int addDcTimePulsePeriod(double? DC_TIME_PULSE_PERIOD) {
+    fbBuilder.addFloat64(31, DC_TIME_PULSE_PERIOD);
+    return fbBuilder.offset;
+  }
+  int addDcRefDirOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addDcBodyFrameOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addDcBodyTriggerOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addDcPaStartAngle(double? DC_PA_START_ANGLE) {
+    fbBuilder.addFloat64(35, DC_PA_START_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addDcPaStopAngle(double? DC_PA_STOP_ANGLE) {
+    fbBuilder.addFloat64(36, DC_PA_STOP_ANGLE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ManeuverObjectBuilder extends fb.ObjectBuilder {
+  final String? _MAN_ID;
+  final String? _MAN_BASIS;
+  final String? _MAN_DEVICE_ID;
+  final String? _MAN_PREV_ID;
+  final String? _MAN_PURPOSE;
+  final String? _MAN_REF_FRAME;
+  final String? _MAN_FRAME_EPOCH;
+  final String? _MAN_TYPE;
+  final String? _MAN_EPOCH_START;
+  final double? _MAN_DURATION;
+  final List<String>? _MAN_UNITS;
+  final List<String>? _DATA;
+  final List<String>? _MAN_COMMENT;
+  final List<String>? _MAN_COMPOSITION;
+  final String? _MAN_NEXT_ID;
+  final String? _MAN_BASIS_ID;
+  final String? _MAN_PREV_EPOCH;
+  final String? _MAN_NEXT_EPOCH;
+  final String? _MAN_PRED_SOURCE;
+  final String? _GRAV_ASSIST_NAME;
+  final String? _DC_TYPE;
+  final String? _DC_WIN_OPEN;
+  final String? _DC_WIN_CLOSE;
+  final int? _DC_MIN_CYCLES;
+  final int? _DC_MAX_CYCLES;
+  final bool? _HAS_DC_MIN_CYCLES;
+  final bool? _HAS_DC_MAX_CYCLES;
+  final String? _DC_EXEC_START;
+  final String? _DC_EXEC_STOP;
+  final String? _DC_REF_TIME;
+  final double? _DC_TIME_PULSE_DURATION;
+  final double? _DC_TIME_PULSE_PERIOD;
+  final List<double>? _DC_REF_DIR;
+  final String? _DC_BODY_FRAME;
+  final List<double>? _DC_BODY_TRIGGER;
+  final double? _DC_PA_START_ANGLE;
+  final double? _DC_PA_STOP_ANGLE;
+
+  ManeuverObjectBuilder({
+    String? MAN_ID,
+    String? manId,
+    String? MAN_BASIS,
+    String? manBasis,
+    String? MAN_DEVICE_ID,
+    String? manDeviceId,
+    String? MAN_PREV_ID,
+    String? manPrevId,
+    String? MAN_PURPOSE,
+    String? manPurpose,
+    String? MAN_REF_FRAME,
+    String? manRefFrame,
+    String? MAN_FRAME_EPOCH,
+    String? manFrameEpoch,
+    String? MAN_TYPE,
+    String? manType,
+    String? MAN_EPOCH_START,
+    String? manEpochStart,
+    double? MAN_DURATION,
+    double? manDuration,
+    List<String>? MAN_UNITS,
+    List<String>? manUnits,
+    List<String>? DATA,
+    List<String>? MAN_COMMENT,
+    List<String>? manComment,
+    List<String>? MAN_COMPOSITION,
+    List<String>? manComposition,
+    String? MAN_NEXT_ID,
+    String? manNextId,
+    String? MAN_BASIS_ID,
+    String? manBasisId,
+    String? MAN_PREV_EPOCH,
+    String? manPrevEpoch,
+    String? MAN_NEXT_EPOCH,
+    String? manNextEpoch,
+    String? MAN_PRED_SOURCE,
+    String? manPredSource,
+    String? GRAV_ASSIST_NAME,
+    String? gravAssistName,
+    String? DC_TYPE,
+    String? dcType,
+    String? DC_WIN_OPEN,
+    String? dcWinOpen,
+    String? DC_WIN_CLOSE,
+    String? dcWinClose,
+    int? DC_MIN_CYCLES,
+    int? dcMinCycles,
+    int? DC_MAX_CYCLES,
+    int? dcMaxCycles,
+    bool? HAS_DC_MIN_CYCLES,
+    bool? hasDcMinCycles,
+    bool? HAS_DC_MAX_CYCLES,
+    bool? hasDcMaxCycles,
+    String? DC_EXEC_START,
+    String? dcExecStart,
+    String? DC_EXEC_STOP,
+    String? dcExecStop,
+    String? DC_REF_TIME,
+    String? dcRefTime,
+    double? DC_TIME_PULSE_DURATION,
+    double? dcTimePulseDuration,
+    double? DC_TIME_PULSE_PERIOD,
+    double? dcTimePulsePeriod,
+    List<double>? DC_REF_DIR,
+    List<double>? dcRefDir,
+    String? DC_BODY_FRAME,
+    String? dcBodyFrame,
+    List<double>? DC_BODY_TRIGGER,
+    List<double>? dcBodyTrigger,
+    double? DC_PA_START_ANGLE,
+    double? dcPaStartAngle,
+    double? DC_PA_STOP_ANGLE,
+    double? dcPaStopAngle,
+  })
+      : _MAN_ID = manId ?? MAN_ID,
+        _MAN_BASIS = manBasis ?? MAN_BASIS,
+        _MAN_DEVICE_ID = manDeviceId ?? MAN_DEVICE_ID,
+        _MAN_PREV_ID = manPrevId ?? MAN_PREV_ID,
+        _MAN_PURPOSE = manPurpose ?? MAN_PURPOSE,
+        _MAN_REF_FRAME = manRefFrame ?? MAN_REF_FRAME,
+        _MAN_FRAME_EPOCH = manFrameEpoch ?? MAN_FRAME_EPOCH,
+        _MAN_TYPE = manType ?? MAN_TYPE,
+        _MAN_EPOCH_START = manEpochStart ?? MAN_EPOCH_START,
+        _MAN_DURATION = manDuration ?? MAN_DURATION,
+        _MAN_UNITS = manUnits ?? MAN_UNITS,
+        _DATA = DATA,
+        _MAN_COMMENT = manComment ?? MAN_COMMENT,
+        _MAN_COMPOSITION = manComposition ?? MAN_COMPOSITION,
+        _MAN_NEXT_ID = manNextId ?? MAN_NEXT_ID,
+        _MAN_BASIS_ID = manBasisId ?? MAN_BASIS_ID,
+        _MAN_PREV_EPOCH = manPrevEpoch ?? MAN_PREV_EPOCH,
+        _MAN_NEXT_EPOCH = manNextEpoch ?? MAN_NEXT_EPOCH,
+        _MAN_PRED_SOURCE = manPredSource ?? MAN_PRED_SOURCE,
+        _GRAV_ASSIST_NAME = gravAssistName ?? GRAV_ASSIST_NAME,
+        _DC_TYPE = dcType ?? DC_TYPE,
+        _DC_WIN_OPEN = dcWinOpen ?? DC_WIN_OPEN,
+        _DC_WIN_CLOSE = dcWinClose ?? DC_WIN_CLOSE,
+        _DC_MIN_CYCLES = dcMinCycles ?? DC_MIN_CYCLES,
+        _DC_MAX_CYCLES = dcMaxCycles ?? DC_MAX_CYCLES,
+        _HAS_DC_MIN_CYCLES = hasDcMinCycles ?? HAS_DC_MIN_CYCLES,
+        _HAS_DC_MAX_CYCLES = hasDcMaxCycles ?? HAS_DC_MAX_CYCLES,
+        _DC_EXEC_START = dcExecStart ?? DC_EXEC_START,
+        _DC_EXEC_STOP = dcExecStop ?? DC_EXEC_STOP,
+        _DC_REF_TIME = dcRefTime ?? DC_REF_TIME,
+        _DC_TIME_PULSE_DURATION = dcTimePulseDuration ?? DC_TIME_PULSE_DURATION,
+        _DC_TIME_PULSE_PERIOD = dcTimePulsePeriod ?? DC_TIME_PULSE_PERIOD,
+        _DC_REF_DIR = dcRefDir ?? DC_REF_DIR,
+        _DC_BODY_FRAME = dcBodyFrame ?? DC_BODY_FRAME,
+        _DC_BODY_TRIGGER = dcBodyTrigger ?? DC_BODY_TRIGGER,
+        _DC_PA_START_ANGLE = dcPaStartAngle ?? DC_PA_START_ANGLE,
+        _DC_PA_STOP_ANGLE = dcPaStopAngle ?? DC_PA_STOP_ANGLE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MAN_IDOffset = _MAN_ID == null ? null
+        : fbBuilder.writeString(_MAN_ID!);
+    final int? MAN_BASISOffset = _MAN_BASIS == null ? null
+        : fbBuilder.writeString(_MAN_BASIS!);
+    final int? MAN_DEVICE_IDOffset = _MAN_DEVICE_ID == null ? null
+        : fbBuilder.writeString(_MAN_DEVICE_ID!);
+    final int? MAN_PREV_IDOffset = _MAN_PREV_ID == null ? null
+        : fbBuilder.writeString(_MAN_PREV_ID!);
+    final int? MAN_PURPOSEOffset = _MAN_PURPOSE == null ? null
+        : fbBuilder.writeString(_MAN_PURPOSE!);
+    final int? MAN_REF_FRAMEOffset = _MAN_REF_FRAME == null ? null
+        : fbBuilder.writeString(_MAN_REF_FRAME!);
+    final int? MAN_FRAME_EPOCHOffset = _MAN_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_MAN_FRAME_EPOCH!);
+    final int? MAN_TYPEOffset = _MAN_TYPE == null ? null
+        : fbBuilder.writeString(_MAN_TYPE!);
+    final int? MAN_EPOCH_STARTOffset = _MAN_EPOCH_START == null ? null
+        : fbBuilder.writeString(_MAN_EPOCH_START!);
+    final int? MAN_UNITSOffset = _MAN_UNITS == null ? null
+        : fbBuilder.writeList(_MAN_UNITS!.map(fbBuilder.writeString).toList());
+    final int? DATAOffset = _DATA == null ? null
+        : fbBuilder.writeList(_DATA!.map(fbBuilder.writeString).toList());
+    final int? MAN_COMMENTOffset = _MAN_COMMENT == null ? null
+        : fbBuilder.writeList(_MAN_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? MAN_COMPOSITIONOffset = _MAN_COMPOSITION == null ? null
+        : fbBuilder.writeList(_MAN_COMPOSITION!.map(fbBuilder.writeString).toList());
+    final int? MAN_NEXT_IDOffset = _MAN_NEXT_ID == null ? null
+        : fbBuilder.writeString(_MAN_NEXT_ID!);
+    final int? MAN_BASIS_IDOffset = _MAN_BASIS_ID == null ? null
+        : fbBuilder.writeString(_MAN_BASIS_ID!);
+    final int? MAN_PREV_EPOCHOffset = _MAN_PREV_EPOCH == null ? null
+        : fbBuilder.writeString(_MAN_PREV_EPOCH!);
+    final int? MAN_NEXT_EPOCHOffset = _MAN_NEXT_EPOCH == null ? null
+        : fbBuilder.writeString(_MAN_NEXT_EPOCH!);
+    final int? MAN_PRED_SOURCEOffset = _MAN_PRED_SOURCE == null ? null
+        : fbBuilder.writeString(_MAN_PRED_SOURCE!);
+    final int? GRAV_ASSIST_NAMEOffset = _GRAV_ASSIST_NAME == null ? null
+        : fbBuilder.writeString(_GRAV_ASSIST_NAME!);
+    final int? DC_TYPEOffset = _DC_TYPE == null ? null
+        : fbBuilder.writeString(_DC_TYPE!);
+    final int? DC_WIN_OPENOffset = _DC_WIN_OPEN == null ? null
+        : fbBuilder.writeString(_DC_WIN_OPEN!);
+    final int? DC_WIN_CLOSEOffset = _DC_WIN_CLOSE == null ? null
+        : fbBuilder.writeString(_DC_WIN_CLOSE!);
+    final int? DC_EXEC_STARTOffset = _DC_EXEC_START == null ? null
+        : fbBuilder.writeString(_DC_EXEC_START!);
+    final int? DC_EXEC_STOPOffset = _DC_EXEC_STOP == null ? null
+        : fbBuilder.writeString(_DC_EXEC_STOP!);
+    final int? DC_REF_TIMEOffset = _DC_REF_TIME == null ? null
+        : fbBuilder.writeString(_DC_REF_TIME!);
+    final int? DC_REF_DIROffset = _DC_REF_DIR == null ? null
+        : fbBuilder.writeListFloat64(_DC_REF_DIR!);
+    final int? DC_BODY_FRAMEOffset = _DC_BODY_FRAME == null ? null
+        : fbBuilder.writeString(_DC_BODY_FRAME!);
+    final int? DC_BODY_TRIGGEROffset = _DC_BODY_TRIGGER == null ? null
+        : fbBuilder.writeListFloat64(_DC_BODY_TRIGGER!);
+    fbBuilder.startTable(37);
+    fbBuilder.addOffset(0, MAN_IDOffset);
+    fbBuilder.addOffset(1, MAN_BASISOffset);
+    fbBuilder.addOffset(2, MAN_DEVICE_IDOffset);
+    fbBuilder.addOffset(3, MAN_PREV_IDOffset);
+    fbBuilder.addOffset(4, MAN_PURPOSEOffset);
+    fbBuilder.addOffset(5, MAN_REF_FRAMEOffset);
+    fbBuilder.addOffset(6, MAN_FRAME_EPOCHOffset);
+    fbBuilder.addOffset(7, MAN_TYPEOffset);
+    fbBuilder.addOffset(8, MAN_EPOCH_STARTOffset);
+    fbBuilder.addFloat64(9, _MAN_DURATION);
+    fbBuilder.addOffset(10, MAN_UNITSOffset);
+    fbBuilder.addOffset(11, DATAOffset);
+    fbBuilder.addOffset(12, MAN_COMMENTOffset);
+    fbBuilder.addOffset(13, MAN_COMPOSITIONOffset);
+    fbBuilder.addOffset(14, MAN_NEXT_IDOffset);
+    fbBuilder.addOffset(15, MAN_BASIS_IDOffset);
+    fbBuilder.addOffset(16, MAN_PREV_EPOCHOffset);
+    fbBuilder.addOffset(17, MAN_NEXT_EPOCHOffset);
+    fbBuilder.addOffset(18, MAN_PRED_SOURCEOffset);
+    fbBuilder.addOffset(19, GRAV_ASSIST_NAMEOffset);
+    fbBuilder.addOffset(20, DC_TYPEOffset);
+    fbBuilder.addOffset(21, DC_WIN_OPENOffset);
+    fbBuilder.addOffset(22, DC_WIN_CLOSEOffset);
+    fbBuilder.addUint32(23, _DC_MIN_CYCLES);
+    fbBuilder.addUint32(24, _DC_MAX_CYCLES);
+    fbBuilder.addBool(25, _HAS_DC_MIN_CYCLES);
+    fbBuilder.addBool(26, _HAS_DC_MAX_CYCLES);
+    fbBuilder.addOffset(27, DC_EXEC_STARTOffset);
+    fbBuilder.addOffset(28, DC_EXEC_STOPOffset);
+    fbBuilder.addOffset(29, DC_REF_TIMEOffset);
+    fbBuilder.addFloat64(30, _DC_TIME_PULSE_DURATION);
+    fbBuilder.addFloat64(31, _DC_TIME_PULSE_PERIOD);
+    fbBuilder.addOffset(32, DC_REF_DIROffset);
+    fbBuilder.addOffset(33, DC_BODY_FRAMEOffset);
+    fbBuilder.addOffset(34, DC_BODY_TRIGGEROffset);
+    fbBuilder.addFloat64(35, _DC_PA_START_ANGLE);
+    fbBuilder.addFloat64(36, _DC_PA_STOP_ANGLE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+///  epoch and whether the orbit determination solved for it (a held value is a catalog value).
+class OCMDynamicParameter {
+  OCMDynamicParameter._(this._bc, this._bcOffset);
+  factory OCMDynamicParameter(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMDynamicParameter> reader = _OCMDynamicParameterReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+  ///  SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
+  ///  are the producer's, as in USER_DEFINED_PARAMETERS.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Value at the solution epoch, in UNITS.
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+  ///  m/s**2 for IN_TRACK_ACCELERATION.
+  String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  True when the orbit determination solved for the parameter, false when VALUE was held.
+  bool get SOLVED_FOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get solvedFor => SOLVED_FOR;
+
+  @override
+  String toString() {
+    return 'OCMDynamicParameter{NAME: ${NAME}, VALUE: ${VALUE}, UNITS: ${UNITS}, solvedFor: ${solvedFor}}';
+  }
+}
+
+class _OCMDynamicParameterReader extends fb.TableReader<OCMDynamicParameter> {
+  const _OCMDynamicParameterReader();
+
+  @override
+  OCMDynamicParameter createObject(fb.BufferContext bc, int offset) =>
+    OCMDynamicParameter._(bc, offset);
+}
+
+class OCMDynamicParameterBuilder {
+  OCMDynamicParameterBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(1, VALUE);
+    return fbBuilder.offset;
+  }
+  int addUnitsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSolvedFor(bool? SOLVED_FOR) {
+    fbBuilder.addBool(3, SOLVED_FOR);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMDynamicParameterObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final double? _VALUE;
+  final String? _UNITS;
+  final bool? _SOLVED_FOR;
+
+  OCMDynamicParameterObjectBuilder({
+    String? NAME,
+    double? VALUE,
+    String? UNITS,
+    bool? SOLVED_FOR,
+    bool? solvedFor,
+  })
+      : _NAME = NAME,
+        _VALUE = VALUE,
+        _UNITS = UNITS,
+        _SOLVED_FOR = solvedFor ?? SOLVED_FOR;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
-        : fbBuilder.writeString(_SOURCE_URL!);
-    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
-        : fbBuilder.writeString(_RETRIEVED_AT!);
-    fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _OWNER?.value);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, DESCRIPTIONOffset);
-    fbBuilder.addBool(3, _ACTIVE);
-    fbBuilder.addOffset(4, SOURCE_URLOffset);
-    fbBuilder.addOffset(5, RETRIEVED_ATOffset);
+    final int? UNITSOffset = _UNITS == null ? null
+        : fbBuilder.writeString(_UNITS!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addFloat64(1, _VALUE);
+    fbBuilder.addOffset(2, UNITSOffset);
+    fbBuilder.addBool(3, _SOLVED_FOR);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class OrbitDetermination {
+  OrbitDetermination._(this._bc, this._bcOffset);
+  factory OrbitDetermination(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OrbitDetermination> reader = _OrbitDeterminationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Unique identifier for the orbit determination.
+  String? get OD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get odId => OD_ID;
+  ///  Identifier of the previous orbit determination.
+  String? get OD_PREV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get odPrevId => OD_PREV_ID;
+  ///  Algorithm used for orbit determination.
+  String? get OD_ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get odAlgorithm => OD_ALGORITHM;
+  ///  Method used for orbit determination.
+  String? get OD_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get odMethod => OD_METHOD;
+  ///  Epoch of the orbit determination.
+  String? get OD_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get odEpoch => OD_EPOCH;
+  ///  Time tag of the orbit determination.
+  String? get OD_TIME_TAG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get odTimeTag => OD_TIME_TAG;
+  ///  Process noise model used.
+  String? get OD_PROCESS_NOISE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get odProcessNoise => OD_PROCESS_NOISE;
+  ///  Covariance reduction techniques used.
+  String? get OD_COV_REDUCTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get odCovReduction => OD_COV_REDUCTION;
+  ///  Noise models used.
+  String? get OD_NOISE_MODELS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get odNoiseModels => OD_NOISE_MODELS;
+  ///  Types of observations used (e.g., RANGE, DOPPLER).
+  List<String>? get OD_OBSERVATIONS_TYPE => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<String>? get odObservationsType => OD_OBSERVATIONS_TYPE;
+  ///  Number of observations used.
+  int get OD_OBSERVATIONS_USED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get odObservationsUsed => OD_OBSERVATIONS_USED;
+  ///  Number of tracks used.
+  int get OD_TRACKS_USED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get odTracksUsed => OD_TRACKS_USED;
+  ///  Data weighting scheme used.
+  String? get OD_DATA_WEIGHTING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get odDataWeighting => OD_DATA_WEIGHTING;
+  ///  Convergence criteria used.
+  String? get OD_CONVERGENCE_CRITERIA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get odConvergenceCriteria => OD_CONVERGENCE_CRITERIA;
+  ///  Parameters estimated during orbit determination.
+  List<String>? get OD_EST_PARAMETERS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 32);
+  List<String>? get odEstParameters => OD_EST_PARAMETERS;
+  ///  A priori data used for orbit determination.
+  String? get OD_APRIORI_DATA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get odAprioriData => OD_APRIORI_DATA;
+  ///  Residuals from the orbit determination.
+  String? get OD_RESIDUALS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get odResiduals => OD_RESIDUALS;
+  ///  Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  estimatorCategory get OD_ESTIMATOR => estimatorCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
+  estimatorCategory get odEstimator => OD_ESTIMATOR;
+  ///  RMS of post-fit residuals for this solution.
+  double get OD_RESIDUAL_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get odResidualRms => OD_RESIDUAL_RMS;
+  ///  Post-fit residual series, one entry per accepted observation.
+  List<double>? get OD_RESIDUALS_SERIES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 42);
+  List<double>? get odResidualsSeries => OD_RESIDUALS_SERIES;
+  ///  Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  ///  since 1970-01-01T00:00:00 UTC].
+  List<double>? get OD_RESIDUAL_EPOCHS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<double>? get odResidualEpochs => OD_RESIDUAL_EPOCHS;
+  ///  OD_ID of the batch baseline solution a filtered solution derives from and
+  ///  is compared against (empty for batch solutions).
+  String? get OD_BATCH_BASELINE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get odBatchBaselineId => OD_BATCH_BASELINE_ID;
+  ///  Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  ///  comparison.
+  double get OD_BATCH_BASELINE_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  double get odBatchBaselineRms => OD_BATCH_BASELINE_RMS;
+  ///  Specific energy dissipation rate in W/kg: energy removed from the orbit
+  ///  by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+  double get SEDR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+  double get WEIGHTED_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get weightedRms => WEIGHTED_RMS;
+  ///  Dynamical-model parameters of the solution with their values, solved for or held. An
+  ///  IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+  ///  COV_PARAMETERS names in the covariance are entries of this list.
+  List<OCMDynamicParameter>? get OD_DYNAMIC_PARAMETERS => const fb.ListReader<OCMDynamicParameter>(OCMDynamicParameter.reader).vTableGetNullable(_bc, _bcOffset, 54);
+  List<OCMDynamicParameter>? get odDynamicParameters => OD_DYNAMIC_PARAMETERS;
+  ///  DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+  double get DAYS_SINCE_FIRST_OBS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, double.nan);
+  double get daysSinceFirstObs => DAYS_SINCE_FIRST_OBS;
+  ///  DAYS_SINCE_LAST_OBS, NaN when not stated.
+  double get DAYS_SINCE_LAST_OBS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, double.nan);
+  double get daysSinceLastObs => DAYS_SINCE_LAST_OBS;
+  ///  RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  double get RECOMMENDED_OD_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, double.nan);
+  double get recommendedOdSpan => RECOMMENDED_OD_SPAN;
+  ///  ACTUAL_OD_SPAN in days, NaN when not stated.
+  double get ACTUAL_OD_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, double.nan);
+  double get actualOdSpan => ACTUAL_OD_SPAN;
+  ///  OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+  int get OBS_AVAILABLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 64, 0);
+  int get obsAvailable => OBS_AVAILABLE;
+  ///  TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+  int get TRACKS_AVAILABLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 66, 0);
+  int get tracksAvailable => TRACKS_AVAILABLE;
+  ///  MAXIMUM_OBS_GAP in days, NaN when not stated.
+  double get MAXIMUM_OBS_GAP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, double.nan);
+  double get maximumObsGap => MAXIMUM_OBS_GAP;
+  ///  OD_EPOCH_EIGMAJ in m, NaN when not stated.
+  double get OD_EPOCH_EIGMAJ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, double.nan);
+  double get odEpochEigmaj => OD_EPOCH_EIGMAJ;
+  ///  OD_EPOCH_EIGINT in m, NaN when not stated.
+  double get OD_EPOCH_EIGINT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, double.nan);
+  double get odEpochEigint => OD_EPOCH_EIGINT;
+  ///  OD_EPOCH_EIGMIN in m, NaN when not stated.
+  double get OD_EPOCH_EIGMIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, double.nan);
+  double get odEpochEigmin => OD_EPOCH_EIGMIN;
+  ///  OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+  double get OD_MAX_PRED_EIGMAJ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, double.nan);
+  double get odMaxPredEigmaj => OD_MAX_PRED_EIGMAJ;
+  ///  OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+  double get OD_MIN_PRED_EIGMIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, double.nan);
+  double get odMinPredEigmin => OD_MIN_PRED_EIGMIN;
+  ///  OD_CONFIDENCE in percent, NaN when not stated.
+  double get OD_CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, double.nan);
+  double get odConfidence => OD_CONFIDENCE;
+  ///  GDOP, NaN when not stated.
+  double get GDOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, double.nan);
+  ///  SOLVE_N: the number of solved-for states.
+  int get SOLVE_N => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 84, 0);
+  int get solveN => SOLVE_N;
+  ///  SOLVE_STATES: the solved-for states, as written.
+  String? get SOLVE_STATES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  String? get solveStates => SOLVE_STATES;
+  ///  CONSIDER_N: the number of consider parameters.
+  int get CONSIDER_N => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 88, 0);
+  int get considerN => CONSIDER_N;
+  ///  CONSIDER_PARAMS: the consider parameters, as written.
+  String? get CONSIDER_PARAMS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
+  String? get considerParams => CONSIDER_PARAMS;
+  ///  SENSORS_N: the number of sensors.
+  int get SENSORS_N => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 92, 0);
+  int get sensorsN => SENSORS_N;
+  ///  SENSORS: the sensors, as written.
+  String? get SENSORS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  ///  COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 96);
+
+  @override
+  String toString() {
+    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}, odEstimator: ${odEstimator}, odResidualRms: ${odResidualRms}, odResidualsSeries: ${odResidualsSeries}, odResidualEpochs: ${odResidualEpochs}, odBatchBaselineId: ${odBatchBaselineId}, odBatchBaselineRms: ${odBatchBaselineRms}, SEDR: ${SEDR}, weightedRms: ${weightedRms}, odDynamicParameters: ${odDynamicParameters}, daysSinceFirstObs: ${daysSinceFirstObs}, daysSinceLastObs: ${daysSinceLastObs}, recommendedOdSpan: ${recommendedOdSpan}, actualOdSpan: ${actualOdSpan}, obsAvailable: ${obsAvailable}, tracksAvailable: ${tracksAvailable}, maximumObsGap: ${maximumObsGap}, odEpochEigmaj: ${odEpochEigmaj}, odEpochEigint: ${odEpochEigint}, odEpochEigmin: ${odEpochEigmin}, odMaxPredEigmaj: ${odMaxPredEigmaj}, odMinPredEigmin: ${odMinPredEigmin}, odConfidence: ${odConfidence}, GDOP: ${GDOP}, solveN: ${solveN}, solveStates: ${solveStates}, considerN: ${considerN}, considerParams: ${considerParams}, sensorsN: ${sensorsN}, SENSORS: ${SENSORS}, COMMENT: ${COMMENT}}';
+  }
+}
+
+class _OrbitDeterminationReader extends fb.TableReader<OrbitDetermination> {
+  const _OrbitDeterminationReader();
+
+  @override
+  OrbitDetermination createObject(fb.BufferContext bc, int offset) =>
+    OrbitDetermination._(bc, offset);
+}
+
+class OrbitDeterminationBuilder {
+  OrbitDeterminationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(47);
+  }
+
+  int addOdIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addOdPrevIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addOdAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOdMethodOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addOdEpochOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addOdTimeTagOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addOdProcessNoiseOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addOdCovReductionOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addOdNoiseModelsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addOdObservationsTypeOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addOdObservationsUsed(int? OD_OBSERVATIONS_USED) {
+    fbBuilder.addInt32(10, OD_OBSERVATIONS_USED);
+    return fbBuilder.offset;
+  }
+  int addOdTracksUsed(int? OD_TRACKS_USED) {
+    fbBuilder.addInt32(11, OD_TRACKS_USED);
+    return fbBuilder.offset;
+  }
+  int addOdDataWeightingOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addOdConvergenceCriteriaOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addOdEstParametersOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addOdAprioriDataOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addOdResidualsOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addOdEstimator(estimatorCategory? OD_ESTIMATOR) {
+    fbBuilder.addInt8(17, OD_ESTIMATOR?.value);
+    return fbBuilder.offset;
+  }
+  int addOdResidualRms(double? OD_RESIDUAL_RMS) {
+    fbBuilder.addFloat64(18, OD_RESIDUAL_RMS);
+    return fbBuilder.offset;
+  }
+  int addOdResidualsSeriesOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addOdResidualEpochsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addOdBatchBaselineIdOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addOdBatchBaselineRms(double? OD_BATCH_BASELINE_RMS) {
+    fbBuilder.addFloat64(22, OD_BATCH_BASELINE_RMS);
+    return fbBuilder.offset;
+  }
+  int addSedr(double? SEDR) {
+    fbBuilder.addFloat64(23, SEDR);
+    return fbBuilder.offset;
+  }
+  int addWeightedRms(double? WEIGHTED_RMS) {
+    fbBuilder.addFloat64(24, WEIGHTED_RMS);
+    return fbBuilder.offset;
+  }
+  int addOdDynamicParametersOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addDaysSinceFirstObs(double? DAYS_SINCE_FIRST_OBS) {
+    fbBuilder.addFloat64(26, DAYS_SINCE_FIRST_OBS);
+    return fbBuilder.offset;
+  }
+  int addDaysSinceLastObs(double? DAYS_SINCE_LAST_OBS) {
+    fbBuilder.addFloat64(27, DAYS_SINCE_LAST_OBS);
+    return fbBuilder.offset;
+  }
+  int addRecommendedOdSpan(double? RECOMMENDED_OD_SPAN) {
+    fbBuilder.addFloat64(28, RECOMMENDED_OD_SPAN);
+    return fbBuilder.offset;
+  }
+  int addActualOdSpan(double? ACTUAL_OD_SPAN) {
+    fbBuilder.addFloat64(29, ACTUAL_OD_SPAN);
+    return fbBuilder.offset;
+  }
+  int addObsAvailable(int? OBS_AVAILABLE) {
+    fbBuilder.addUint32(30, OBS_AVAILABLE);
+    return fbBuilder.offset;
+  }
+  int addTracksAvailable(int? TRACKS_AVAILABLE) {
+    fbBuilder.addUint32(31, TRACKS_AVAILABLE);
+    return fbBuilder.offset;
+  }
+  int addMaximumObsGap(double? MAXIMUM_OBS_GAP) {
+    fbBuilder.addFloat64(32, MAXIMUM_OBS_GAP);
+    return fbBuilder.offset;
+  }
+  int addOdEpochEigmaj(double? OD_EPOCH_EIGMAJ) {
+    fbBuilder.addFloat64(33, OD_EPOCH_EIGMAJ);
+    return fbBuilder.offset;
+  }
+  int addOdEpochEigint(double? OD_EPOCH_EIGINT) {
+    fbBuilder.addFloat64(34, OD_EPOCH_EIGINT);
+    return fbBuilder.offset;
+  }
+  int addOdEpochEigmin(double? OD_EPOCH_EIGMIN) {
+    fbBuilder.addFloat64(35, OD_EPOCH_EIGMIN);
+    return fbBuilder.offset;
+  }
+  int addOdMaxPredEigmaj(double? OD_MAX_PRED_EIGMAJ) {
+    fbBuilder.addFloat64(36, OD_MAX_PRED_EIGMAJ);
+    return fbBuilder.offset;
+  }
+  int addOdMinPredEigmin(double? OD_MIN_PRED_EIGMIN) {
+    fbBuilder.addFloat64(37, OD_MIN_PRED_EIGMIN);
+    return fbBuilder.offset;
+  }
+  int addOdConfidence(double? OD_CONFIDENCE) {
+    fbBuilder.addFloat64(38, OD_CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addGdop(double? GDOP) {
+    fbBuilder.addFloat64(39, GDOP);
+    return fbBuilder.offset;
+  }
+  int addSolveN(int? SOLVE_N) {
+    fbBuilder.addUint32(40, SOLVE_N);
+    return fbBuilder.offset;
+  }
+  int addSolveStatesOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addConsiderN(int? CONSIDER_N) {
+    fbBuilder.addUint32(42, CONSIDER_N);
+    return fbBuilder.offset;
+  }
+  int addConsiderParamsOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addSensorsN(int? SENSORS_N) {
+    fbBuilder.addUint32(44, SENSORS_N);
+    return fbBuilder.offset;
+  }
+  int addSensorsOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
+  final String? _OD_ID;
+  final String? _OD_PREV_ID;
+  final String? _OD_ALGORITHM;
+  final String? _OD_METHOD;
+  final String? _OD_EPOCH;
+  final String? _OD_TIME_TAG;
+  final String? _OD_PROCESS_NOISE;
+  final String? _OD_COV_REDUCTION;
+  final String? _OD_NOISE_MODELS;
+  final List<String>? _OD_OBSERVATIONS_TYPE;
+  final int? _OD_OBSERVATIONS_USED;
+  final int? _OD_TRACKS_USED;
+  final String? _OD_DATA_WEIGHTING;
+  final String? _OD_CONVERGENCE_CRITERIA;
+  final List<String>? _OD_EST_PARAMETERS;
+  final String? _OD_APRIORI_DATA;
+  final String? _OD_RESIDUALS;
+  final estimatorCategory? _OD_ESTIMATOR;
+  final double? _OD_RESIDUAL_RMS;
+  final List<double>? _OD_RESIDUALS_SERIES;
+  final List<double>? _OD_RESIDUAL_EPOCHS;
+  final String? _OD_BATCH_BASELINE_ID;
+  final double? _OD_BATCH_BASELINE_RMS;
+  final double? _SEDR;
+  final double? _WEIGHTED_RMS;
+  final List<OCMDynamicParameterObjectBuilder>? _OD_DYNAMIC_PARAMETERS;
+  final double? _DAYS_SINCE_FIRST_OBS;
+  final double? _DAYS_SINCE_LAST_OBS;
+  final double? _RECOMMENDED_OD_SPAN;
+  final double? _ACTUAL_OD_SPAN;
+  final int? _OBS_AVAILABLE;
+  final int? _TRACKS_AVAILABLE;
+  final double? _MAXIMUM_OBS_GAP;
+  final double? _OD_EPOCH_EIGMAJ;
+  final double? _OD_EPOCH_EIGINT;
+  final double? _OD_EPOCH_EIGMIN;
+  final double? _OD_MAX_PRED_EIGMAJ;
+  final double? _OD_MIN_PRED_EIGMIN;
+  final double? _OD_CONFIDENCE;
+  final double? _GDOP;
+  final int? _SOLVE_N;
+  final String? _SOLVE_STATES;
+  final int? _CONSIDER_N;
+  final String? _CONSIDER_PARAMS;
+  final int? _SENSORS_N;
+  final String? _SENSORS;
+  final List<String>? _COMMENT;
+
+  OrbitDeterminationObjectBuilder({
+    String? OD_ID,
+    String? odId,
+    String? OD_PREV_ID,
+    String? odPrevId,
+    String? OD_ALGORITHM,
+    String? odAlgorithm,
+    String? OD_METHOD,
+    String? odMethod,
+    String? OD_EPOCH,
+    String? odEpoch,
+    String? OD_TIME_TAG,
+    String? odTimeTag,
+    String? OD_PROCESS_NOISE,
+    String? odProcessNoise,
+    String? OD_COV_REDUCTION,
+    String? odCovReduction,
+    String? OD_NOISE_MODELS,
+    String? odNoiseModels,
+    List<String>? OD_OBSERVATIONS_TYPE,
+    List<String>? odObservationsType,
+    int? OD_OBSERVATIONS_USED,
+    int? odObservationsUsed,
+    int? OD_TRACKS_USED,
+    int? odTracksUsed,
+    String? OD_DATA_WEIGHTING,
+    String? odDataWeighting,
+    String? OD_CONVERGENCE_CRITERIA,
+    String? odConvergenceCriteria,
+    List<String>? OD_EST_PARAMETERS,
+    List<String>? odEstParameters,
+    String? OD_APRIORI_DATA,
+    String? odAprioriData,
+    String? OD_RESIDUALS,
+    String? odResiduals,
+    estimatorCategory? OD_ESTIMATOR,
+    estimatorCategory? odEstimator,
+    double? OD_RESIDUAL_RMS,
+    double? odResidualRms,
+    List<double>? OD_RESIDUALS_SERIES,
+    List<double>? odResidualsSeries,
+    List<double>? OD_RESIDUAL_EPOCHS,
+    List<double>? odResidualEpochs,
+    String? OD_BATCH_BASELINE_ID,
+    String? odBatchBaselineId,
+    double? OD_BATCH_BASELINE_RMS,
+    double? odBatchBaselineRms,
+    double? SEDR,
+    double? WEIGHTED_RMS,
+    double? weightedRms,
+    List<OCMDynamicParameterObjectBuilder>? OD_DYNAMIC_PARAMETERS,
+    List<OCMDynamicParameterObjectBuilder>? odDynamicParameters,
+    double? DAYS_SINCE_FIRST_OBS,
+    double? daysSinceFirstObs,
+    double? DAYS_SINCE_LAST_OBS,
+    double? daysSinceLastObs,
+    double? RECOMMENDED_OD_SPAN,
+    double? recommendedOdSpan,
+    double? ACTUAL_OD_SPAN,
+    double? actualOdSpan,
+    int? OBS_AVAILABLE,
+    int? obsAvailable,
+    int? TRACKS_AVAILABLE,
+    int? tracksAvailable,
+    double? MAXIMUM_OBS_GAP,
+    double? maximumObsGap,
+    double? OD_EPOCH_EIGMAJ,
+    double? odEpochEigmaj,
+    double? OD_EPOCH_EIGINT,
+    double? odEpochEigint,
+    double? OD_EPOCH_EIGMIN,
+    double? odEpochEigmin,
+    double? OD_MAX_PRED_EIGMAJ,
+    double? odMaxPredEigmaj,
+    double? OD_MIN_PRED_EIGMIN,
+    double? odMinPredEigmin,
+    double? OD_CONFIDENCE,
+    double? odConfidence,
+    double? GDOP,
+    int? SOLVE_N,
+    int? solveN,
+    String? SOLVE_STATES,
+    String? solveStates,
+    int? CONSIDER_N,
+    int? considerN,
+    String? CONSIDER_PARAMS,
+    String? considerParams,
+    int? SENSORS_N,
+    int? sensorsN,
+    String? SENSORS,
+    List<String>? COMMENT,
+  })
+      : _OD_ID = odId ?? OD_ID,
+        _OD_PREV_ID = odPrevId ?? OD_PREV_ID,
+        _OD_ALGORITHM = odAlgorithm ?? OD_ALGORITHM,
+        _OD_METHOD = odMethod ?? OD_METHOD,
+        _OD_EPOCH = odEpoch ?? OD_EPOCH,
+        _OD_TIME_TAG = odTimeTag ?? OD_TIME_TAG,
+        _OD_PROCESS_NOISE = odProcessNoise ?? OD_PROCESS_NOISE,
+        _OD_COV_REDUCTION = odCovReduction ?? OD_COV_REDUCTION,
+        _OD_NOISE_MODELS = odNoiseModels ?? OD_NOISE_MODELS,
+        _OD_OBSERVATIONS_TYPE = odObservationsType ?? OD_OBSERVATIONS_TYPE,
+        _OD_OBSERVATIONS_USED = odObservationsUsed ?? OD_OBSERVATIONS_USED,
+        _OD_TRACKS_USED = odTracksUsed ?? OD_TRACKS_USED,
+        _OD_DATA_WEIGHTING = odDataWeighting ?? OD_DATA_WEIGHTING,
+        _OD_CONVERGENCE_CRITERIA = odConvergenceCriteria ?? OD_CONVERGENCE_CRITERIA,
+        _OD_EST_PARAMETERS = odEstParameters ?? OD_EST_PARAMETERS,
+        _OD_APRIORI_DATA = odAprioriData ?? OD_APRIORI_DATA,
+        _OD_RESIDUALS = odResiduals ?? OD_RESIDUALS,
+        _OD_ESTIMATOR = odEstimator ?? OD_ESTIMATOR,
+        _OD_RESIDUAL_RMS = odResidualRms ?? OD_RESIDUAL_RMS,
+        _OD_RESIDUALS_SERIES = odResidualsSeries ?? OD_RESIDUALS_SERIES,
+        _OD_RESIDUAL_EPOCHS = odResidualEpochs ?? OD_RESIDUAL_EPOCHS,
+        _OD_BATCH_BASELINE_ID = odBatchBaselineId ?? OD_BATCH_BASELINE_ID,
+        _OD_BATCH_BASELINE_RMS = odBatchBaselineRms ?? OD_BATCH_BASELINE_RMS,
+        _SEDR = SEDR,
+        _WEIGHTED_RMS = weightedRms ?? WEIGHTED_RMS,
+        _OD_DYNAMIC_PARAMETERS = odDynamicParameters ?? OD_DYNAMIC_PARAMETERS,
+        _DAYS_SINCE_FIRST_OBS = daysSinceFirstObs ?? DAYS_SINCE_FIRST_OBS,
+        _DAYS_SINCE_LAST_OBS = daysSinceLastObs ?? DAYS_SINCE_LAST_OBS,
+        _RECOMMENDED_OD_SPAN = recommendedOdSpan ?? RECOMMENDED_OD_SPAN,
+        _ACTUAL_OD_SPAN = actualOdSpan ?? ACTUAL_OD_SPAN,
+        _OBS_AVAILABLE = obsAvailable ?? OBS_AVAILABLE,
+        _TRACKS_AVAILABLE = tracksAvailable ?? TRACKS_AVAILABLE,
+        _MAXIMUM_OBS_GAP = maximumObsGap ?? MAXIMUM_OBS_GAP,
+        _OD_EPOCH_EIGMAJ = odEpochEigmaj ?? OD_EPOCH_EIGMAJ,
+        _OD_EPOCH_EIGINT = odEpochEigint ?? OD_EPOCH_EIGINT,
+        _OD_EPOCH_EIGMIN = odEpochEigmin ?? OD_EPOCH_EIGMIN,
+        _OD_MAX_PRED_EIGMAJ = odMaxPredEigmaj ?? OD_MAX_PRED_EIGMAJ,
+        _OD_MIN_PRED_EIGMIN = odMinPredEigmin ?? OD_MIN_PRED_EIGMIN,
+        _OD_CONFIDENCE = odConfidence ?? OD_CONFIDENCE,
+        _GDOP = GDOP,
+        _SOLVE_N = solveN ?? SOLVE_N,
+        _SOLVE_STATES = solveStates ?? SOLVE_STATES,
+        _CONSIDER_N = considerN ?? CONSIDER_N,
+        _CONSIDER_PARAMS = considerParams ?? CONSIDER_PARAMS,
+        _SENSORS_N = sensorsN ?? SENSORS_N,
+        _SENSORS = SENSORS,
+        _COMMENT = COMMENT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OD_IDOffset = _OD_ID == null ? null
+        : fbBuilder.writeString(_OD_ID!);
+    final int? OD_PREV_IDOffset = _OD_PREV_ID == null ? null
+        : fbBuilder.writeString(_OD_PREV_ID!);
+    final int? OD_ALGORITHMOffset = _OD_ALGORITHM == null ? null
+        : fbBuilder.writeString(_OD_ALGORITHM!);
+    final int? OD_METHODOffset = _OD_METHOD == null ? null
+        : fbBuilder.writeString(_OD_METHOD!);
+    final int? OD_EPOCHOffset = _OD_EPOCH == null ? null
+        : fbBuilder.writeString(_OD_EPOCH!);
+    final int? OD_TIME_TAGOffset = _OD_TIME_TAG == null ? null
+        : fbBuilder.writeString(_OD_TIME_TAG!);
+    final int? OD_PROCESS_NOISEOffset = _OD_PROCESS_NOISE == null ? null
+        : fbBuilder.writeString(_OD_PROCESS_NOISE!);
+    final int? OD_COV_REDUCTIONOffset = _OD_COV_REDUCTION == null ? null
+        : fbBuilder.writeString(_OD_COV_REDUCTION!);
+    final int? OD_NOISE_MODELSOffset = _OD_NOISE_MODELS == null ? null
+        : fbBuilder.writeString(_OD_NOISE_MODELS!);
+    final int? OD_OBSERVATIONS_TYPEOffset = _OD_OBSERVATIONS_TYPE == null ? null
+        : fbBuilder.writeList(_OD_OBSERVATIONS_TYPE!.map(fbBuilder.writeString).toList());
+    final int? OD_DATA_WEIGHTINGOffset = _OD_DATA_WEIGHTING == null ? null
+        : fbBuilder.writeString(_OD_DATA_WEIGHTING!);
+    final int? OD_CONVERGENCE_CRITERIAOffset = _OD_CONVERGENCE_CRITERIA == null ? null
+        : fbBuilder.writeString(_OD_CONVERGENCE_CRITERIA!);
+    final int? OD_EST_PARAMETERSOffset = _OD_EST_PARAMETERS == null ? null
+        : fbBuilder.writeList(_OD_EST_PARAMETERS!.map(fbBuilder.writeString).toList());
+    final int? OD_APRIORI_DATAOffset = _OD_APRIORI_DATA == null ? null
+        : fbBuilder.writeString(_OD_APRIORI_DATA!);
+    final int? OD_RESIDUALSOffset = _OD_RESIDUALS == null ? null
+        : fbBuilder.writeString(_OD_RESIDUALS!);
+    final int? OD_RESIDUALS_SERIESOffset = _OD_RESIDUALS_SERIES == null ? null
+        : fbBuilder.writeListFloat64(_OD_RESIDUALS_SERIES!);
+    final int? OD_RESIDUAL_EPOCHSOffset = _OD_RESIDUAL_EPOCHS == null ? null
+        : fbBuilder.writeListFloat64(_OD_RESIDUAL_EPOCHS!);
+    final int? OD_BATCH_BASELINE_IDOffset = _OD_BATCH_BASELINE_ID == null ? null
+        : fbBuilder.writeString(_OD_BATCH_BASELINE_ID!);
+    final int? OD_DYNAMIC_PARAMETERSOffset = _OD_DYNAMIC_PARAMETERS == null ? null
+        : fbBuilder.writeList(_OD_DYNAMIC_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SOLVE_STATESOffset = _SOLVE_STATES == null ? null
+        : fbBuilder.writeString(_SOLVE_STATES!);
+    final int? CONSIDER_PARAMSOffset = _CONSIDER_PARAMS == null ? null
+        : fbBuilder.writeString(_CONSIDER_PARAMS!);
+    final int? SENSORSOffset = _SENSORS == null ? null
+        : fbBuilder.writeString(_SENSORS!);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(47);
+    fbBuilder.addOffset(0, OD_IDOffset);
+    fbBuilder.addOffset(1, OD_PREV_IDOffset);
+    fbBuilder.addOffset(2, OD_ALGORITHMOffset);
+    fbBuilder.addOffset(3, OD_METHODOffset);
+    fbBuilder.addOffset(4, OD_EPOCHOffset);
+    fbBuilder.addOffset(5, OD_TIME_TAGOffset);
+    fbBuilder.addOffset(6, OD_PROCESS_NOISEOffset);
+    fbBuilder.addOffset(7, OD_COV_REDUCTIONOffset);
+    fbBuilder.addOffset(8, OD_NOISE_MODELSOffset);
+    fbBuilder.addOffset(9, OD_OBSERVATIONS_TYPEOffset);
+    fbBuilder.addInt32(10, _OD_OBSERVATIONS_USED);
+    fbBuilder.addInt32(11, _OD_TRACKS_USED);
+    fbBuilder.addOffset(12, OD_DATA_WEIGHTINGOffset);
+    fbBuilder.addOffset(13, OD_CONVERGENCE_CRITERIAOffset);
+    fbBuilder.addOffset(14, OD_EST_PARAMETERSOffset);
+    fbBuilder.addOffset(15, OD_APRIORI_DATAOffset);
+    fbBuilder.addOffset(16, OD_RESIDUALSOffset);
+    fbBuilder.addInt8(17, _OD_ESTIMATOR?.value);
+    fbBuilder.addFloat64(18, _OD_RESIDUAL_RMS);
+    fbBuilder.addOffset(19, OD_RESIDUALS_SERIESOffset);
+    fbBuilder.addOffset(20, OD_RESIDUAL_EPOCHSOffset);
+    fbBuilder.addOffset(21, OD_BATCH_BASELINE_IDOffset);
+    fbBuilder.addFloat64(22, _OD_BATCH_BASELINE_RMS);
+    fbBuilder.addFloat64(23, _SEDR);
+    fbBuilder.addFloat64(24, _WEIGHTED_RMS);
+    fbBuilder.addOffset(25, OD_DYNAMIC_PARAMETERSOffset);
+    fbBuilder.addFloat64(26, _DAYS_SINCE_FIRST_OBS);
+    fbBuilder.addFloat64(27, _DAYS_SINCE_LAST_OBS);
+    fbBuilder.addFloat64(28, _RECOMMENDED_OD_SPAN);
+    fbBuilder.addFloat64(29, _ACTUAL_OD_SPAN);
+    fbBuilder.addUint32(30, _OBS_AVAILABLE);
+    fbBuilder.addUint32(31, _TRACKS_AVAILABLE);
+    fbBuilder.addFloat64(32, _MAXIMUM_OBS_GAP);
+    fbBuilder.addFloat64(33, _OD_EPOCH_EIGMAJ);
+    fbBuilder.addFloat64(34, _OD_EPOCH_EIGINT);
+    fbBuilder.addFloat64(35, _OD_EPOCH_EIGMIN);
+    fbBuilder.addFloat64(36, _OD_MAX_PRED_EIGMAJ);
+    fbBuilder.addFloat64(37, _OD_MIN_PRED_EIGMIN);
+    fbBuilder.addFloat64(38, _OD_CONFIDENCE);
+    fbBuilder.addFloat64(39, _GDOP);
+    fbBuilder.addUint32(40, _SOLVE_N);
+    fbBuilder.addOffset(41, SOLVE_STATESOffset);
+    fbBuilder.addUint32(42, _CONSIDER_N);
+    fbBuilder.addOffset(43, CONSIDER_PARAMSOffset);
+    fbBuilder.addUint32(44, _SENSORS_N);
+    fbBuilder.addOffset(45, SENSORSOffset);
+    fbBuilder.addOffset(46, COMMENTOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):
+///  the block's keywords, and its data lines as written (a time tag, then the
+///  numbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state
+///  the first block's CARTPV or CARTPVA states for the modules that read those.
+class OCMTrajectoryBlock {
+  OCMTrajectoryBlock._(this._bc, this._bcOffset);
+  factory OCMTrajectoryBlock(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMTrajectoryBlock> reader = _OCMTrajectoryBlockReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  TRAJ_ID.
+  String? get TRAJ_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get trajId => TRAJ_ID;
+  ///  TRAJ_PREV_ID.
+  String? get TRAJ_PREV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get trajPrevId => TRAJ_PREV_ID;
+  ///  TRAJ_NEXT_ID.
+  String? get TRAJ_NEXT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get trajNextId => TRAJ_NEXT_ID;
+  ///  TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.
+  String? get TRAJ_BASIS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get trajBasis => TRAJ_BASIS;
+  ///  TRAJ_BASIS_ID.
+  String? get TRAJ_BASIS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get trajBasisId => TRAJ_BASIS_ID;
+  ///  INTERPOLATION: the recommended interpolation method.
+  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  INTERPOLATION_DEGREE.
+  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get interpolationDegree => INTERPOLATION_DEGREE;
+  ///  PROPAGATOR.
+  String? get PROPAGATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  CENTER_NAME.
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get centerName => CENTER_NAME;
+  ///  TRAJ_REF_FRAME.
+  String? get TRAJ_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get trajRefFrame => TRAJ_REF_FRAME;
+  ///  TRAJ_FRAME_EPOCH.
+  String? get TRAJ_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get trajFrameEpoch => TRAJ_FRAME_EPOCH;
+  ///  USEABLE_START_TIME.
+  String? get USEABLE_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get useableStartTime => USEABLE_START_TIME;
+  ///  USEABLE_STOP_TIME.
+  String? get USEABLE_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get useableStopTime => USEABLE_STOP_TIME;
+  ///  ORB_REVNUM, NaN when not stated.
+  double get ORB_REVNUM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, double.nan);
+  double get orbRevnum => ORB_REVNUM;
+  ///  ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.
+  int get ORB_REVNUM_BASIS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 34, -1);
+  int get orbRevnumBasis => ORB_REVNUM_BASIS;
+  ///  TRAJ_TYPE as written, for example CARTPV.
+  String? get TRAJ_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get trajType => TRAJ_TYPE;
+  ///  ORB_AVERAGING.
+  String? get ORB_AVERAGING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get orbAveraging => ORB_AVERAGING;
+  ///  TRAJ_UNITS.
+  String? get TRAJ_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get trajUnits => TRAJ_UNITS;
+  ///  The data lines, as written.
+  List<String>? get LINES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 42);
+
+  @override
+  String toString() {
+    return 'OCMTrajectoryBlock{COMMENT: ${COMMENT}, trajId: ${trajId}, trajPrevId: ${trajPrevId}, trajNextId: ${trajNextId}, trajBasis: ${trajBasis}, trajBasisId: ${trajBasisId}, INTERPOLATION: ${INTERPOLATION}, interpolationDegree: ${interpolationDegree}, PROPAGATOR: ${PROPAGATOR}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, useableStartTime: ${useableStartTime}, useableStopTime: ${useableStopTime}, orbRevnum: ${orbRevnum}, orbRevnumBasis: ${orbRevnumBasis}, trajType: ${trajType}, orbAveraging: ${orbAveraging}, trajUnits: ${trajUnits}, LINES: ${LINES}}';
+  }
+}
+
+class _OCMTrajectoryBlockReader extends fb.TableReader<OCMTrajectoryBlock> {
+  const _OCMTrajectoryBlockReader();
+
+  @override
+  OCMTrajectoryBlock createObject(fb.BufferContext bc, int offset) =>
+    OCMTrajectoryBlock._(bc, offset);
+}
+
+class OCMTrajectoryBlockBuilder {
+  OCMTrajectoryBlockBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(20);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajPrevIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajNextIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajBasisOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajBasisIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationDegree(int? INTERPOLATION_DEGREE) {
+    fbBuilder.addUint32(7, INTERPOLATION_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addPropagatorOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addUseableStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addUseableStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbRevnum(double? ORB_REVNUM) {
+    fbBuilder.addFloat64(14, ORB_REVNUM);
+    return fbBuilder.offset;
+  }
+  int addOrbRevnumBasis(int? ORB_REVNUM_BASIS) {
+    fbBuilder.addInt32(15, ORB_REVNUM_BASIS);
+    return fbBuilder.offset;
+  }
+  int addTrajTypeOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbAveragingOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajUnitsOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addLinesOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMTrajectoryBlockObjectBuilder extends fb.ObjectBuilder {
+  final String? _COMMENT;
+  final String? _TRAJ_ID;
+  final String? _TRAJ_PREV_ID;
+  final String? _TRAJ_NEXT_ID;
+  final String? _TRAJ_BASIS;
+  final String? _TRAJ_BASIS_ID;
+  final String? _INTERPOLATION;
+  final int? _INTERPOLATION_DEGREE;
+  final String? _PROPAGATOR;
+  final String? _CENTER_NAME;
+  final String? _TRAJ_REF_FRAME;
+  final String? _TRAJ_FRAME_EPOCH;
+  final String? _USEABLE_START_TIME;
+  final String? _USEABLE_STOP_TIME;
+  final double? _ORB_REVNUM;
+  final int? _ORB_REVNUM_BASIS;
+  final String? _TRAJ_TYPE;
+  final String? _ORB_AVERAGING;
+  final String? _TRAJ_UNITS;
+  final List<String>? _LINES;
+
+  OCMTrajectoryBlockObjectBuilder({
+    String? COMMENT,
+    String? TRAJ_ID,
+    String? trajId,
+    String? TRAJ_PREV_ID,
+    String? trajPrevId,
+    String? TRAJ_NEXT_ID,
+    String? trajNextId,
+    String? TRAJ_BASIS,
+    String? trajBasis,
+    String? TRAJ_BASIS_ID,
+    String? trajBasisId,
+    String? INTERPOLATION,
+    int? INTERPOLATION_DEGREE,
+    int? interpolationDegree,
+    String? PROPAGATOR,
+    String? CENTER_NAME,
+    String? centerName,
+    String? TRAJ_REF_FRAME,
+    String? trajRefFrame,
+    String? TRAJ_FRAME_EPOCH,
+    String? trajFrameEpoch,
+    String? USEABLE_START_TIME,
+    String? useableStartTime,
+    String? USEABLE_STOP_TIME,
+    String? useableStopTime,
+    double? ORB_REVNUM,
+    double? orbRevnum,
+    int? ORB_REVNUM_BASIS,
+    int? orbRevnumBasis,
+    String? TRAJ_TYPE,
+    String? trajType,
+    String? ORB_AVERAGING,
+    String? orbAveraging,
+    String? TRAJ_UNITS,
+    String? trajUnits,
+    List<String>? LINES,
+  })
+      : _COMMENT = COMMENT,
+        _TRAJ_ID = trajId ?? TRAJ_ID,
+        _TRAJ_PREV_ID = trajPrevId ?? TRAJ_PREV_ID,
+        _TRAJ_NEXT_ID = trajNextId ?? TRAJ_NEXT_ID,
+        _TRAJ_BASIS = trajBasis ?? TRAJ_BASIS,
+        _TRAJ_BASIS_ID = trajBasisId ?? TRAJ_BASIS_ID,
+        _INTERPOLATION = INTERPOLATION,
+        _INTERPOLATION_DEGREE = interpolationDegree ?? INTERPOLATION_DEGREE,
+        _PROPAGATOR = PROPAGATOR,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _TRAJ_REF_FRAME = trajRefFrame ?? TRAJ_REF_FRAME,
+        _TRAJ_FRAME_EPOCH = trajFrameEpoch ?? TRAJ_FRAME_EPOCH,
+        _USEABLE_START_TIME = useableStartTime ?? USEABLE_START_TIME,
+        _USEABLE_STOP_TIME = useableStopTime ?? USEABLE_STOP_TIME,
+        _ORB_REVNUM = orbRevnum ?? ORB_REVNUM,
+        _ORB_REVNUM_BASIS = orbRevnumBasis ?? ORB_REVNUM_BASIS,
+        _TRAJ_TYPE = trajType ?? TRAJ_TYPE,
+        _ORB_AVERAGING = orbAveraging ?? ORB_AVERAGING,
+        _TRAJ_UNITS = trajUnits ?? TRAJ_UNITS,
+        _LINES = LINES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? TRAJ_IDOffset = _TRAJ_ID == null ? null
+        : fbBuilder.writeString(_TRAJ_ID!);
+    final int? TRAJ_PREV_IDOffset = _TRAJ_PREV_ID == null ? null
+        : fbBuilder.writeString(_TRAJ_PREV_ID!);
+    final int? TRAJ_NEXT_IDOffset = _TRAJ_NEXT_ID == null ? null
+        : fbBuilder.writeString(_TRAJ_NEXT_ID!);
+    final int? TRAJ_BASISOffset = _TRAJ_BASIS == null ? null
+        : fbBuilder.writeString(_TRAJ_BASIS!);
+    final int? TRAJ_BASIS_IDOffset = _TRAJ_BASIS_ID == null ? null
+        : fbBuilder.writeString(_TRAJ_BASIS_ID!);
+    final int? INTERPOLATIONOffset = _INTERPOLATION == null ? null
+        : fbBuilder.writeString(_INTERPOLATION!);
+    final int? PROPAGATOROffset = _PROPAGATOR == null ? null
+        : fbBuilder.writeString(_PROPAGATOR!);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? TRAJ_REF_FRAMEOffset = _TRAJ_REF_FRAME == null ? null
+        : fbBuilder.writeString(_TRAJ_REF_FRAME!);
+    final int? TRAJ_FRAME_EPOCHOffset = _TRAJ_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_TRAJ_FRAME_EPOCH!);
+    final int? USEABLE_START_TIMEOffset = _USEABLE_START_TIME == null ? null
+        : fbBuilder.writeString(_USEABLE_START_TIME!);
+    final int? USEABLE_STOP_TIMEOffset = _USEABLE_STOP_TIME == null ? null
+        : fbBuilder.writeString(_USEABLE_STOP_TIME!);
+    final int? TRAJ_TYPEOffset = _TRAJ_TYPE == null ? null
+        : fbBuilder.writeString(_TRAJ_TYPE!);
+    final int? ORB_AVERAGINGOffset = _ORB_AVERAGING == null ? null
+        : fbBuilder.writeString(_ORB_AVERAGING!);
+    final int? TRAJ_UNITSOffset = _TRAJ_UNITS == null ? null
+        : fbBuilder.writeString(_TRAJ_UNITS!);
+    final int? LINESOffset = _LINES == null ? null
+        : fbBuilder.writeList(_LINES!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(20);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, TRAJ_IDOffset);
+    fbBuilder.addOffset(2, TRAJ_PREV_IDOffset);
+    fbBuilder.addOffset(3, TRAJ_NEXT_IDOffset);
+    fbBuilder.addOffset(4, TRAJ_BASISOffset);
+    fbBuilder.addOffset(5, TRAJ_BASIS_IDOffset);
+    fbBuilder.addOffset(6, INTERPOLATIONOffset);
+    fbBuilder.addUint32(7, _INTERPOLATION_DEGREE);
+    fbBuilder.addOffset(8, PROPAGATOROffset);
+    fbBuilder.addOffset(9, CENTER_NAMEOffset);
+    fbBuilder.addOffset(10, TRAJ_REF_FRAMEOffset);
+    fbBuilder.addOffset(11, TRAJ_FRAME_EPOCHOffset);
+    fbBuilder.addOffset(12, USEABLE_START_TIMEOffset);
+    fbBuilder.addOffset(13, USEABLE_STOP_TIMEOffset);
+    fbBuilder.addFloat64(14, _ORB_REVNUM);
+    fbBuilder.addInt32(15, _ORB_REVNUM_BASIS);
+    fbBuilder.addOffset(16, TRAJ_TYPEOffset);
+    fbBuilder.addOffset(17, ORB_AVERAGINGOffset);
+    fbBuilder.addOffset(18, TRAJ_UNITSOffset);
+    fbBuilder.addOffset(19, LINESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One covariance time history of an OCM (Table 6-6): the block's keywords and its
+///  data lines as written (a time tag, then the covariance in COV_ORDERING). The
+///  single-covariance fields of the OCM above state the first block when it is one
+///  line.
+class OCMCovarianceBlock {
+  OCMCovarianceBlock._(this._bc, this._bcOffset);
+  factory OCMCovarianceBlock(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMCovarianceBlock> reader = _OCMCovarianceBlockReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  COV_ID.
+  String? get COV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get covId => COV_ID;
+  ///  COV_PREV_ID.
+  String? get COV_PREV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get covPrevId => COV_PREV_ID;
+  ///  COV_NEXT_ID.
+  String? get COV_NEXT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get covNextId => COV_NEXT_ID;
+  ///  COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.
+  String? get COV_BASIS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get covBasis => COV_BASIS;
+  ///  COV_BASIS_ID.
+  String? get COV_BASIS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get covBasisId => COV_BASIS_ID;
+  ///  COV_REF_FRAME.
+  String? get COV_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get covRefFrame => COV_REF_FRAME;
+  ///  COV_FRAME_EPOCH.
+  String? get COV_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get covFrameEpoch => COV_FRAME_EPOCH;
+  ///  COV_SCALE_MIN, NaN when not stated.
+  double get COV_SCALE_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, double.nan);
+  double get covScaleMin => COV_SCALE_MIN;
+  ///  COV_SCALE_MAX, NaN when not stated.
+  double get COV_SCALE_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, double.nan);
+  double get covScaleMax => COV_SCALE_MAX;
+  ///  COV_CONFIDENCE in percent, NaN when not stated.
+  double get COV_CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, double.nan);
+  double get covConfidence => COV_CONFIDENCE;
+  ///  COV_TYPE as written, for example CARTPV.
+  String? get COV_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get covType => COV_TYPE;
+  ///  COV_ORDERING.
+  covarianceOrdering get COV_ORDERING => covarianceOrdering.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  covarianceOrdering get covOrdering => COV_ORDERING;
+  ///  COV_UNITS.
+  String? get COV_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get covUnits => COV_UNITS;
+  ///  The data lines, as written.
+  List<String>? get LINES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Realism of the block's covariance: one entry per line of LINES, in order,
+  ///  or one entry for every line.
+  List<CVR>? get COV_REALISM => const fb.ListReader<CVR>(CVR.reader).vTableGetNullable(_bc, _bcOffset, 34);
+  List<CVR>? get covRealism => COV_REALISM;
+
+  @override
+  String toString() {
+    return 'OCMCovarianceBlock{COMMENT: ${COMMENT}, covId: ${covId}, covPrevId: ${covPrevId}, covNextId: ${covNextId}, covBasis: ${covBasis}, covBasisId: ${covBasisId}, covRefFrame: ${covRefFrame}, covFrameEpoch: ${covFrameEpoch}, covScaleMin: ${covScaleMin}, covScaleMax: ${covScaleMax}, covConfidence: ${covConfidence}, covType: ${covType}, covOrdering: ${covOrdering}, covUnits: ${covUnits}, LINES: ${LINES}, covRealism: ${covRealism}}';
+  }
+}
+
+class _OCMCovarianceBlockReader extends fb.TableReader<OCMCovarianceBlock> {
+  const _OCMCovarianceBlockReader();
+
+  @override
+  OCMCovarianceBlock createObject(fb.BufferContext bc, int offset) =>
+    OCMCovarianceBlock._(bc, offset);
+}
+
+class OCMCovarianceBlockBuilder {
+  OCMCovarianceBlockBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(16);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCovIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCovPrevIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCovNextIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCovBasisOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCovBasisIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addCovFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCovScaleMin(double? COV_SCALE_MIN) {
+    fbBuilder.addFloat64(8, COV_SCALE_MIN);
+    return fbBuilder.offset;
+  }
+  int addCovScaleMax(double? COV_SCALE_MAX) {
+    fbBuilder.addFloat64(9, COV_SCALE_MAX);
+    return fbBuilder.offset;
+  }
+  int addCovConfidence(double? COV_CONFIDENCE) {
+    fbBuilder.addFloat64(10, COV_CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addCovTypeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addCovOrdering(covarianceOrdering? COV_ORDERING) {
+    fbBuilder.addInt8(12, COV_ORDERING?.value);
+    return fbBuilder.offset;
+  }
+  int addCovUnitsOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addLinesOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRealismOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMCovarianceBlockObjectBuilder extends fb.ObjectBuilder {
+  final String? _COMMENT;
+  final String? _COV_ID;
+  final String? _COV_PREV_ID;
+  final String? _COV_NEXT_ID;
+  final String? _COV_BASIS;
+  final String? _COV_BASIS_ID;
+  final String? _COV_REF_FRAME;
+  final String? _COV_FRAME_EPOCH;
+  final double? _COV_SCALE_MIN;
+  final double? _COV_SCALE_MAX;
+  final double? _COV_CONFIDENCE;
+  final String? _COV_TYPE;
+  final covarianceOrdering? _COV_ORDERING;
+  final String? _COV_UNITS;
+  final List<String>? _LINES;
+  final List<CVRObjectBuilder>? _COV_REALISM;
+
+  OCMCovarianceBlockObjectBuilder({
+    String? COMMENT,
+    String? COV_ID,
+    String? covId,
+    String? COV_PREV_ID,
+    String? covPrevId,
+    String? COV_NEXT_ID,
+    String? covNextId,
+    String? COV_BASIS,
+    String? covBasis,
+    String? COV_BASIS_ID,
+    String? covBasisId,
+    String? COV_REF_FRAME,
+    String? covRefFrame,
+    String? COV_FRAME_EPOCH,
+    String? covFrameEpoch,
+    double? COV_SCALE_MIN,
+    double? covScaleMin,
+    double? COV_SCALE_MAX,
+    double? covScaleMax,
+    double? COV_CONFIDENCE,
+    double? covConfidence,
+    String? COV_TYPE,
+    String? covType,
+    covarianceOrdering? COV_ORDERING,
+    covarianceOrdering? covOrdering,
+    String? COV_UNITS,
+    String? covUnits,
+    List<String>? LINES,
+    List<CVRObjectBuilder>? COV_REALISM,
+    List<CVRObjectBuilder>? covRealism,
+  })
+      : _COMMENT = COMMENT,
+        _COV_ID = covId ?? COV_ID,
+        _COV_PREV_ID = covPrevId ?? COV_PREV_ID,
+        _COV_NEXT_ID = covNextId ?? COV_NEXT_ID,
+        _COV_BASIS = covBasis ?? COV_BASIS,
+        _COV_BASIS_ID = covBasisId ?? COV_BASIS_ID,
+        _COV_REF_FRAME = covRefFrame ?? COV_REF_FRAME,
+        _COV_FRAME_EPOCH = covFrameEpoch ?? COV_FRAME_EPOCH,
+        _COV_SCALE_MIN = covScaleMin ?? COV_SCALE_MIN,
+        _COV_SCALE_MAX = covScaleMax ?? COV_SCALE_MAX,
+        _COV_CONFIDENCE = covConfidence ?? COV_CONFIDENCE,
+        _COV_TYPE = covType ?? COV_TYPE,
+        _COV_ORDERING = covOrdering ?? COV_ORDERING,
+        _COV_UNITS = covUnits ?? COV_UNITS,
+        _LINES = LINES,
+        _COV_REALISM = covRealism ?? COV_REALISM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? COV_IDOffset = _COV_ID == null ? null
+        : fbBuilder.writeString(_COV_ID!);
+    final int? COV_PREV_IDOffset = _COV_PREV_ID == null ? null
+        : fbBuilder.writeString(_COV_PREV_ID!);
+    final int? COV_NEXT_IDOffset = _COV_NEXT_ID == null ? null
+        : fbBuilder.writeString(_COV_NEXT_ID!);
+    final int? COV_BASISOffset = _COV_BASIS == null ? null
+        : fbBuilder.writeString(_COV_BASIS!);
+    final int? COV_BASIS_IDOffset = _COV_BASIS_ID == null ? null
+        : fbBuilder.writeString(_COV_BASIS_ID!);
+    final int? COV_REF_FRAMEOffset = _COV_REF_FRAME == null ? null
+        : fbBuilder.writeString(_COV_REF_FRAME!);
+    final int? COV_FRAME_EPOCHOffset = _COV_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_COV_FRAME_EPOCH!);
+    final int? COV_TYPEOffset = _COV_TYPE == null ? null
+        : fbBuilder.writeString(_COV_TYPE!);
+    final int? COV_UNITSOffset = _COV_UNITS == null ? null
+        : fbBuilder.writeString(_COV_UNITS!);
+    final int? LINESOffset = _LINES == null ? null
+        : fbBuilder.writeList(_LINES!.map(fbBuilder.writeString).toList());
+    final int? COV_REALISMOffset = _COV_REALISM == null ? null
+        : fbBuilder.writeList(_COV_REALISM!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(16);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, COV_IDOffset);
+    fbBuilder.addOffset(2, COV_PREV_IDOffset);
+    fbBuilder.addOffset(3, COV_NEXT_IDOffset);
+    fbBuilder.addOffset(4, COV_BASISOffset);
+    fbBuilder.addOffset(5, COV_BASIS_IDOffset);
+    fbBuilder.addOffset(6, COV_REF_FRAMEOffset);
+    fbBuilder.addOffset(7, COV_FRAME_EPOCHOffset);
+    fbBuilder.addFloat64(8, _COV_SCALE_MIN);
+    fbBuilder.addFloat64(9, _COV_SCALE_MAX);
+    fbBuilder.addFloat64(10, _COV_CONFIDENCE);
+    fbBuilder.addOffset(11, COV_TYPEOffset);
+    fbBuilder.addInt8(12, _COV_ORDERING?.value);
+    fbBuilder.addOffset(13, COV_UNITSOffset);
+    fbBuilder.addOffset(14, LINESOffset);
+    fbBuilder.addOffset(15, COV_REALISMOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class UserDefinedParameters {
+  UserDefinedParameters._(this._bc, this._bcOffset);
+  factory UserDefinedParameters(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<UserDefinedParameters> reader = _UserDefinedParametersReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Name of the user-defined parameter.
+  String? get PARAM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get paramName => PARAM_NAME;
+  ///  Value of the user-defined parameter.
+  String? get PARAM_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get paramValue => PARAM_VALUE;
+
+  @override
+  String toString() {
+    return 'UserDefinedParameters{paramName: ${paramName}, paramValue: ${paramValue}}';
+  }
+}
+
+class _UserDefinedParametersReader extends fb.TableReader<UserDefinedParameters> {
+  const _UserDefinedParametersReader();
+
+  @override
+  UserDefinedParameters createObject(fb.BufferContext bc, int offset) =>
+    UserDefinedParameters._(bc, offset);
+}
+
+class UserDefinedParametersBuilder {
+  UserDefinedParametersBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addParamNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addParamValueOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class UserDefinedParametersObjectBuilder extends fb.ObjectBuilder {
+  final String? _PARAM_NAME;
+  final String? _PARAM_VALUE;
+
+  UserDefinedParametersObjectBuilder({
+    String? PARAM_NAME,
+    String? paramName,
+    String? PARAM_VALUE,
+    String? paramValue,
+  })
+      : _PARAM_NAME = paramName ?? PARAM_NAME,
+        _PARAM_VALUE = paramValue ?? PARAM_VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PARAM_NAMEOffset = _PARAM_NAME == null ? null
+        : fbBuilder.writeString(_PARAM_NAME!);
+    final int? PARAM_VALUEOffset = _PARAM_VALUE == null ? null
+        : fbBuilder.writeString(_PARAM_VALUE!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, PARAM_NAMEOffset);
+    fbBuilder.addOffset(1, PARAM_VALUEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Orbit Comprehensive Message
+class OCM {
+  OCM._(this._bc, this._bcOffset);
+  factory OCM(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCM> reader = _OCMReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Header section of the OCM.
+  Header? get HEADER => Header.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Metadata section of the OCM.
+  Metadata? get METADATA => Metadata.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Trajectory state representation type.
+  ///  Determines how orbit state data is parameterized in this message.
+  ///  For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+  ///  For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
+  trajectoryType get TRAJ_TYPE => trajectoryType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  trajectoryType get trajType => TRAJ_TYPE;
+  ///  Legacy trajectory type string for backward compatibility and extended types
+  ///  (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+  String? get TRAJ_TYPE_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get trajTypeDescription => TRAJ_TYPE_DESCRIPTION;
+  ///  Time interval between state vectors in seconds; required without STATE_EPOCHS.
+  double get STATE_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get stateStepSize => STATE_STEP_SIZE;
+  ///  Number of components per state vector.
+  ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  ///  6 or 7 for the element sets named by TRAJ_TYPE.
+  int get STATE_VECTOR_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 6);
+  int get stateVectorSize => STATE_VECTOR_SIZE;
+  ///  State data as row-major array of doubles.
+  ///  Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  ///  Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
+  ///  Length must be divisible by STATE_VECTOR_SIZE.
+  ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+  List<double>? get STATE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<double>? get stateData => STATE_DATA;
+  ///  Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+  ///  COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+  ///  has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+  ///  state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+  ///  epoch, the lower triangle of the 6x6 position and velocity covariance.
+  List<double>? get COVARIANCE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get covarianceData => COVARIANCE_DATA;
+  ///  Polynomial position records.
+  ///  Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+  ///  with polynomial coefficients for X, Y, Z position (and optionally velocity).
+  ///  See PPE schema for record structure and evaluation procedure.
+  List<PPEPositionRecord>? get POLYNOMIAL_POSITION_RECORDS => const fb.ListReader<PPEPositionRecord>(PPEPositionRecord.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  List<PPEPositionRecord>? get polynomialPositionRecords => POLYNOMIAL_POSITION_RECORDS;
+  ///  Polynomial orbital element records.
+  ///  Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+  ///  with polynomial coefficients for classical orbital elements.
+  ///  See PPE schema for record structure and evaluation procedure.
+  List<PPEOrbitalElementRecord>? get POLYNOMIAL_OE_RECORDS => const fb.ListReader<PPEOrbitalElementRecord>(PPEOrbitalElementRecord.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  List<PPEOrbitalElementRecord>? get polynomialOeRecords => POLYNOMIAL_OE_RECORDS;
+  ///  Physical properties of the space object.
+  PhysicalProperties? get PHYSICAL_PROPERTIES => PhysicalProperties.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  PhysicalProperties? get physicalProperties => PHYSICAL_PROPERTIES;
+  ///  Maneuver data.
+  List<Maneuver>? get MANEUVER_DATA => const fb.ListReader<Maneuver>(Maneuver.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  List<Maneuver>? get maneuverData => MANEUVER_DATA;
+  ///  Perturbations parameters used.
+  Perturbations? get PERTURBATIONS => Perturbations.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Orbit determination data.
+  OrbitDetermination? get ORBIT_DETERMINATION => OrbitDetermination.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  OrbitDetermination? get orbitDetermination => ORBIT_DETERMINATION;
+  ///  User-defined parameters and supplemental comments.
+  List<UserDefinedParameters>? get USER_DEFINED_PARAMETERS => const fb.ListReader<UserDefinedParameters>(UserDefinedParameters.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  List<UserDefinedParameters>? get userDefinedParameters => USER_DEFINED_PARAMETERS;
+  ///  Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get centerName => CENTER_NAME;
+  ///  Reference frame of STATE_DATA and the polynomial records
+  ///  (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  RFM? get TRAJ_REF_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 36);
+  RFM? get trajRefFrame => TRAJ_REF_FRAME;
+  ///  Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+  ///  (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+  String? get TRAJ_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get trajFrameEpoch => TRAJ_FRAME_EPOCH;
+  ///  Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  RFM? get COV_REF_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  RFM? get covRefFrame => COV_REF_FRAME;
+  ///  Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+  int get ORB_REVNUM => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 42, 0);
+  int get orbRevnum => ORB_REVNUM;
+  ///  For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+  ///  KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+  String? get ORB_AVERAGING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get orbAveraging => ORB_AVERAGING;
+  ///  Whether COVARIANCE_DATA's coverage was measured against independent
+  ///  reference states: Calibrated only when every COV_REALISM entry is.
+  covarianceCalibration get COV_CALIBRATION => covarianceCalibration.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 46, 0));
+  covarianceCalibration get covCalibration => COV_CALIBRATION;
+  ///  Identifier of that calibration evidence (a report or record).
+  String? get COV_CALIBRATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get covCalibrationReference => COV_CALIBRATION_REFERENCE;
+  ///  Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+  ///  section 6.2.4). When nonempty, length equals STATE_DATA.length /
+  ///  STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+  ///  Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+  List<String>? get STATE_EPOCHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 50);
+  List<String>? get stateEpochs => STATE_EPOCHS;
+  ///  Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+  ///  (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+  ///  TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+  String? get COV_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get covType => COV_TYPE;
+  ///  Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  covarianceOrdering get COV_ORDERING => covarianceOrdering.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 54, 0));
+  covarianceOrdering get covOrdering => COV_ORDERING;
+  ///  Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+  ///  COV_PARAMETERS names.
+  int get COV_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 56, 6);
+  int get covSize => COV_SIZE;
+  ///  Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+  ///  by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+  ///  matrix reaches). A row the orbit determination did not solve for is zero.
+  List<String>? get COV_PARAMETERS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 58);
+  List<String>? get covParameters => COV_PARAMETERS;
+  ///  Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+  ///  dimensionless one.
+  List<String>? get COV_UNITS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 60);
+  List<String>? get covUnits => COV_UNITS;
+  ///  Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+  ///  blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+  ///  them above state the first block's CARTPV or CARTPVA states.
+  List<OCMTrajectoryBlock>? get TRAJECTORY_BLOCKS => const fb.ListReader<OCMTrajectoryBlock>(OCMTrajectoryBlock.reader).vTableGetNullable(_bc, _bcOffset, 62);
+  List<OCMTrajectoryBlock>? get trajectoryBlocks => TRAJECTORY_BLOCKS;
+  ///  Every covariance time history of the message (COV_START blocks), in message
+  ///  order. COVARIANCE_DATA and the fields that go with it above state the first
+  ///  block when it is one line.
+  List<OCMCovarianceBlock>? get COVARIANCE_BLOCKS => const fb.ListReader<OCMCovarianceBlock>(OCMCovarianceBlock.reader).vTableGetNullable(_bc, _bcOffset, 64);
+  List<OCMCovarianceBlock>? get covarianceBlocks => COVARIANCE_BLOCKS;
+  ///  Where the message's data comes from and the terms it travels under.
+  PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 66);
+  ///  Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+  ///  STATE_DATA epochs, or one entry for every epoch.
+  List<CVR>? get COV_REALISM => const fb.ListReader<CVR>(CVR.reader).vTableGetNullable(_bc, _bcOffset, 68);
+  List<CVR>? get covRealism => COV_REALISM;
+
+  @override
+  String toString() {
+    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, stateEpochs: ${stateEpochs}, covType: ${covType}, covOrdering: ${covOrdering}, covSize: ${covSize}, covParameters: ${covParameters}, covUnits: ${covUnits}, trajectoryBlocks: ${trajectoryBlocks}, covarianceBlocks: ${covarianceBlocks}, PROVENANCE: ${PROVENANCE}, covRealism: ${covRealism}}';
+  }
+}
+
+class _OCMReader extends fb.TableReader<OCM> {
+  const _OCMReader();
+
+  @override
+  OCM createObject(fb.BufferContext bc, int offset) =>
+    OCM._(bc, offset);
+}
+
+class OCMBuilder {
+  OCMBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(33);
+  }
+
+  int addHeaderOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addMetadataOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajType(trajectoryType? TRAJ_TYPE) {
+    fbBuilder.addInt8(2, TRAJ_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addTrajTypeDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addStateStepSize(double? STATE_STEP_SIZE) {
+    fbBuilder.addFloat64(4, STATE_STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addStateVectorSize(int? STATE_VECTOR_SIZE) {
+    fbBuilder.addUint8(5, STATE_VECTOR_SIZE);
+    return fbBuilder.offset;
+  }
+  int addStateDataOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceDataOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addPolynomialPositionRecordsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addPolynomialOeRecordsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addPhysicalPropertiesOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addManeuverDataOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addPerturbationsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitDeterminationOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedParametersOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbRevnum(int? ORB_REVNUM) {
+    fbBuilder.addUint32(19, ORB_REVNUM);
+    return fbBuilder.offset;
+  }
+  int addOrbAveragingOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addCovCalibration(covarianceCalibration? COV_CALIBRATION) {
+    fbBuilder.addInt8(21, COV_CALIBRATION?.value);
+    return fbBuilder.offset;
+  }
+  int addCovCalibrationReferenceOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addStateEpochsOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addCovTypeOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addCovOrdering(covarianceOrdering? COV_ORDERING) {
+    fbBuilder.addInt8(25, COV_ORDERING?.value);
+    return fbBuilder.offset;
+  }
+  int addCovSize(int? COV_SIZE) {
+    fbBuilder.addUint8(26, COV_SIZE);
+    return fbBuilder.offset;
+  }
+  int addCovParametersOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addCovUnitsOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajectoryBlocksOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceBlocksOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRealismOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMObjectBuilder extends fb.ObjectBuilder {
+  final HeaderObjectBuilder? _HEADER;
+  final MetadataObjectBuilder? _METADATA;
+  final trajectoryType? _TRAJ_TYPE;
+  final String? _TRAJ_TYPE_DESCRIPTION;
+  final double? _STATE_STEP_SIZE;
+  final int? _STATE_VECTOR_SIZE;
+  final List<double>? _STATE_DATA;
+  final List<double>? _COVARIANCE_DATA;
+  final List<PPEPositionRecordObjectBuilder>? _POLYNOMIAL_POSITION_RECORDS;
+  final List<PPEOrbitalElementRecordObjectBuilder>? _POLYNOMIAL_OE_RECORDS;
+  final PhysicalPropertiesObjectBuilder? _PHYSICAL_PROPERTIES;
+  final List<ManeuverObjectBuilder>? _MANEUVER_DATA;
+  final PerturbationsObjectBuilder? _PERTURBATIONS;
+  final OrbitDeterminationObjectBuilder? _ORBIT_DETERMINATION;
+  final List<UserDefinedParametersObjectBuilder>? _USER_DEFINED_PARAMETERS;
+  final String? _CENTER_NAME;
+  final RFMObjectBuilder? _TRAJ_REF_FRAME;
+  final String? _TRAJ_FRAME_EPOCH;
+  final RFMObjectBuilder? _COV_REF_FRAME;
+  final int? _ORB_REVNUM;
+  final String? _ORB_AVERAGING;
+  final covarianceCalibration? _COV_CALIBRATION;
+  final String? _COV_CALIBRATION_REFERENCE;
+  final List<String>? _STATE_EPOCHS;
+  final String? _COV_TYPE;
+  final covarianceOrdering? _COV_ORDERING;
+  final int? _COV_SIZE;
+  final List<String>? _COV_PARAMETERS;
+  final List<String>? _COV_UNITS;
+  final List<OCMTrajectoryBlockObjectBuilder>? _TRAJECTORY_BLOCKS;
+  final List<OCMCovarianceBlockObjectBuilder>? _COVARIANCE_BLOCKS;
+  final PVNObjectBuilder? _PROVENANCE;
+  final List<CVRObjectBuilder>? _COV_REALISM;
+
+  OCMObjectBuilder({
+    HeaderObjectBuilder? HEADER,
+    MetadataObjectBuilder? METADATA,
+    trajectoryType? TRAJ_TYPE,
+    trajectoryType? trajType,
+    String? TRAJ_TYPE_DESCRIPTION,
+    String? trajTypeDescription,
+    double? STATE_STEP_SIZE,
+    double? stateStepSize,
+    int? STATE_VECTOR_SIZE,
+    int? stateVectorSize,
+    List<double>? STATE_DATA,
+    List<double>? stateData,
+    List<double>? COVARIANCE_DATA,
+    List<double>? covarianceData,
+    List<PPEPositionRecordObjectBuilder>? POLYNOMIAL_POSITION_RECORDS,
+    List<PPEPositionRecordObjectBuilder>? polynomialPositionRecords,
+    List<PPEOrbitalElementRecordObjectBuilder>? POLYNOMIAL_OE_RECORDS,
+    List<PPEOrbitalElementRecordObjectBuilder>? polynomialOeRecords,
+    PhysicalPropertiesObjectBuilder? PHYSICAL_PROPERTIES,
+    PhysicalPropertiesObjectBuilder? physicalProperties,
+    List<ManeuverObjectBuilder>? MANEUVER_DATA,
+    List<ManeuverObjectBuilder>? maneuverData,
+    PerturbationsObjectBuilder? PERTURBATIONS,
+    OrbitDeterminationObjectBuilder? ORBIT_DETERMINATION,
+    OrbitDeterminationObjectBuilder? orbitDetermination,
+    List<UserDefinedParametersObjectBuilder>? USER_DEFINED_PARAMETERS,
+    List<UserDefinedParametersObjectBuilder>? userDefinedParameters,
+    String? CENTER_NAME,
+    String? centerName,
+    RFMObjectBuilder? TRAJ_REF_FRAME,
+    RFMObjectBuilder? trajRefFrame,
+    String? TRAJ_FRAME_EPOCH,
+    String? trajFrameEpoch,
+    RFMObjectBuilder? COV_REF_FRAME,
+    RFMObjectBuilder? covRefFrame,
+    int? ORB_REVNUM,
+    int? orbRevnum,
+    String? ORB_AVERAGING,
+    String? orbAveraging,
+    covarianceCalibration? COV_CALIBRATION,
+    covarianceCalibration? covCalibration,
+    String? COV_CALIBRATION_REFERENCE,
+    String? covCalibrationReference,
+    List<String>? STATE_EPOCHS,
+    List<String>? stateEpochs,
+    String? COV_TYPE,
+    String? covType,
+    covarianceOrdering? COV_ORDERING,
+    covarianceOrdering? covOrdering,
+    int? COV_SIZE,
+    int? covSize,
+    List<String>? COV_PARAMETERS,
+    List<String>? covParameters,
+    List<String>? COV_UNITS,
+    List<String>? covUnits,
+    List<OCMTrajectoryBlockObjectBuilder>? TRAJECTORY_BLOCKS,
+    List<OCMTrajectoryBlockObjectBuilder>? trajectoryBlocks,
+    List<OCMCovarianceBlockObjectBuilder>? COVARIANCE_BLOCKS,
+    List<OCMCovarianceBlockObjectBuilder>? covarianceBlocks,
+    PVNObjectBuilder? PROVENANCE,
+    List<CVRObjectBuilder>? COV_REALISM,
+    List<CVRObjectBuilder>? covRealism,
+  })
+      : _HEADER = HEADER,
+        _METADATA = METADATA,
+        _TRAJ_TYPE = trajType ?? TRAJ_TYPE,
+        _TRAJ_TYPE_DESCRIPTION = trajTypeDescription ?? TRAJ_TYPE_DESCRIPTION,
+        _STATE_STEP_SIZE = stateStepSize ?? STATE_STEP_SIZE,
+        _STATE_VECTOR_SIZE = stateVectorSize ?? STATE_VECTOR_SIZE,
+        _STATE_DATA = stateData ?? STATE_DATA,
+        _COVARIANCE_DATA = covarianceData ?? COVARIANCE_DATA,
+        _POLYNOMIAL_POSITION_RECORDS = polynomialPositionRecords ?? POLYNOMIAL_POSITION_RECORDS,
+        _POLYNOMIAL_OE_RECORDS = polynomialOeRecords ?? POLYNOMIAL_OE_RECORDS,
+        _PHYSICAL_PROPERTIES = physicalProperties ?? PHYSICAL_PROPERTIES,
+        _MANEUVER_DATA = maneuverData ?? MANEUVER_DATA,
+        _PERTURBATIONS = PERTURBATIONS,
+        _ORBIT_DETERMINATION = orbitDetermination ?? ORBIT_DETERMINATION,
+        _USER_DEFINED_PARAMETERS = userDefinedParameters ?? USER_DEFINED_PARAMETERS,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _TRAJ_REF_FRAME = trajRefFrame ?? TRAJ_REF_FRAME,
+        _TRAJ_FRAME_EPOCH = trajFrameEpoch ?? TRAJ_FRAME_EPOCH,
+        _COV_REF_FRAME = covRefFrame ?? COV_REF_FRAME,
+        _ORB_REVNUM = orbRevnum ?? ORB_REVNUM,
+        _ORB_AVERAGING = orbAveraging ?? ORB_AVERAGING,
+        _COV_CALIBRATION = covCalibration ?? COV_CALIBRATION,
+        _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE,
+        _STATE_EPOCHS = stateEpochs ?? STATE_EPOCHS,
+        _COV_TYPE = covType ?? COV_TYPE,
+        _COV_ORDERING = covOrdering ?? COV_ORDERING,
+        _COV_SIZE = covSize ?? COV_SIZE,
+        _COV_PARAMETERS = covParameters ?? COV_PARAMETERS,
+        _COV_UNITS = covUnits ?? COV_UNITS,
+        _TRAJECTORY_BLOCKS = trajectoryBlocks ?? TRAJECTORY_BLOCKS,
+        _COVARIANCE_BLOCKS = covarianceBlocks ?? COVARIANCE_BLOCKS,
+        _PROVENANCE = PROVENANCE,
+        _COV_REALISM = covRealism ?? COV_REALISM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? HEADEROffset = _HEADER?.getOrCreateOffset(fbBuilder);
+    final int? METADATAOffset = _METADATA?.getOrCreateOffset(fbBuilder);
+    final int? TRAJ_TYPE_DESCRIPTIONOffset = _TRAJ_TYPE_DESCRIPTION == null ? null
+        : fbBuilder.writeString(_TRAJ_TYPE_DESCRIPTION!);
+    final int? STATE_DATAOffset = _STATE_DATA == null ? null
+        : fbBuilder.writeListFloat64(_STATE_DATA!);
+    final int? COVARIANCE_DATAOffset = _COVARIANCE_DATA == null ? null
+        : fbBuilder.writeListFloat64(_COVARIANCE_DATA!);
+    final int? POLYNOMIAL_POSITION_RECORDSOffset = _POLYNOMIAL_POSITION_RECORDS == null ? null
+        : fbBuilder.writeList(_POLYNOMIAL_POSITION_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? POLYNOMIAL_OE_RECORDSOffset = _POLYNOMIAL_OE_RECORDS == null ? null
+        : fbBuilder.writeList(_POLYNOMIAL_OE_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PHYSICAL_PROPERTIESOffset = _PHYSICAL_PROPERTIES?.getOrCreateOffset(fbBuilder);
+    final int? MANEUVER_DATAOffset = _MANEUVER_DATA == null ? null
+        : fbBuilder.writeList(_MANEUVER_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PERTURBATIONSOffset = _PERTURBATIONS?.getOrCreateOffset(fbBuilder);
+    final int? ORBIT_DETERMINATIONOffset = _ORBIT_DETERMINATION?.getOrCreateOffset(fbBuilder);
+    final int? USER_DEFINED_PARAMETERSOffset = _USER_DEFINED_PARAMETERS == null ? null
+        : fbBuilder.writeList(_USER_DEFINED_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? TRAJ_REF_FRAMEOffset = _TRAJ_REF_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? TRAJ_FRAME_EPOCHOffset = _TRAJ_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_TRAJ_FRAME_EPOCH!);
+    final int? COV_REF_FRAMEOffset = _COV_REF_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? ORB_AVERAGINGOffset = _ORB_AVERAGING == null ? null
+        : fbBuilder.writeString(_ORB_AVERAGING!);
+    final int? COV_CALIBRATION_REFERENCEOffset = _COV_CALIBRATION_REFERENCE == null ? null
+        : fbBuilder.writeString(_COV_CALIBRATION_REFERENCE!);
+    final int? STATE_EPOCHSOffset = _STATE_EPOCHS == null ? null
+        : fbBuilder.writeList(_STATE_EPOCHS!.map(fbBuilder.writeString).toList());
+    final int? COV_TYPEOffset = _COV_TYPE == null ? null
+        : fbBuilder.writeString(_COV_TYPE!);
+    final int? COV_PARAMETERSOffset = _COV_PARAMETERS == null ? null
+        : fbBuilder.writeList(_COV_PARAMETERS!.map(fbBuilder.writeString).toList());
+    final int? COV_UNITSOffset = _COV_UNITS == null ? null
+        : fbBuilder.writeList(_COV_UNITS!.map(fbBuilder.writeString).toList());
+    final int? TRAJECTORY_BLOCKSOffset = _TRAJECTORY_BLOCKS == null ? null
+        : fbBuilder.writeList(_TRAJECTORY_BLOCKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? COVARIANCE_BLOCKSOffset = _COVARIANCE_BLOCKS == null ? null
+        : fbBuilder.writeList(_COVARIANCE_BLOCKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? COV_REALISMOffset = _COV_REALISM == null ? null
+        : fbBuilder.writeList(_COV_REALISM!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(33);
+    fbBuilder.addOffset(0, HEADEROffset);
+    fbBuilder.addOffset(1, METADATAOffset);
+    fbBuilder.addInt8(2, _TRAJ_TYPE?.value);
+    fbBuilder.addOffset(3, TRAJ_TYPE_DESCRIPTIONOffset);
+    fbBuilder.addFloat64(4, _STATE_STEP_SIZE);
+    fbBuilder.addUint8(5, _STATE_VECTOR_SIZE);
+    fbBuilder.addOffset(6, STATE_DATAOffset);
+    fbBuilder.addOffset(7, COVARIANCE_DATAOffset);
+    fbBuilder.addOffset(8, POLYNOMIAL_POSITION_RECORDSOffset);
+    fbBuilder.addOffset(9, POLYNOMIAL_OE_RECORDSOffset);
+    fbBuilder.addOffset(10, PHYSICAL_PROPERTIESOffset);
+    fbBuilder.addOffset(11, MANEUVER_DATAOffset);
+    fbBuilder.addOffset(12, PERTURBATIONSOffset);
+    fbBuilder.addOffset(13, ORBIT_DETERMINATIONOffset);
+    fbBuilder.addOffset(14, USER_DEFINED_PARAMETERSOffset);
+    fbBuilder.addOffset(15, CENTER_NAMEOffset);
+    fbBuilder.addOffset(16, TRAJ_REF_FRAMEOffset);
+    fbBuilder.addOffset(17, TRAJ_FRAME_EPOCHOffset);
+    fbBuilder.addOffset(18, COV_REF_FRAMEOffset);
+    fbBuilder.addUint32(19, _ORB_REVNUM);
+    fbBuilder.addOffset(20, ORB_AVERAGINGOffset);
+    fbBuilder.addInt8(21, _COV_CALIBRATION?.value);
+    fbBuilder.addOffset(22, COV_CALIBRATION_REFERENCEOffset);
+    fbBuilder.addOffset(23, STATE_EPOCHSOffset);
+    fbBuilder.addOffset(24, COV_TYPEOffset);
+    fbBuilder.addInt8(25, _COV_ORDERING?.value);
+    fbBuilder.addUint8(26, _COV_SIZE);
+    fbBuilder.addOffset(27, COV_PARAMETERSOffset);
+    fbBuilder.addOffset(28, COV_UNITSOffset);
+    fbBuilder.addOffset(29, TRAJECTORY_BLOCKSOffset);
+    fbBuilder.addOffset(30, COVARIANCE_BLOCKSOffset);
+    fbBuilder.addOffset(31, PROVENANCEOffset);
+    fbBuilder.addOffset(32, COV_REALISMOffset);
     return fbBuilder.endTable();
   }
 

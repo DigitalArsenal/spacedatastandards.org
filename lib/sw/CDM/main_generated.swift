@@ -8,1080 +8,640 @@ import Common
 
 import FlatBuffers
 
-///  https://www.sanaregistry.org/r/celestial_body_reference_frames/
-///  Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
-public enum CelestialFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum screeningVolumeShape: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  OID: 1.3.112.4.57.2.9
-  ///  Inertial Earth-centered frame aligned with Earth's center of mass.
-  case gcrf = 0
-  ///  OID: 1.3.112.4.57.2.11
-  ///  International Celestial Reference Frame based on distant quasars.
-  case icrf = 1
-  ///  OID: 1.3.112.4.57.2.14
-  ///  Classical J2000 inertial frame defined at epoch J2000.0.
-  case j2000 = 2
-  ///  OID: 1.3.112.4.57.2.15
-  ///  Updated J2000 frame using IAU2000A precession-nutation models.
-  case j2000a = 3
-  ///  OID: 1.3.112.4.57.2.7
-  ///  Earth Mean Equator frame at epoch J2000 used in orbit determination.
-  case eme2000 = 4
-  ///  OID: 1.3.112.4.57.2.25
-  ///  True Equator Mean Equinox of Date frame for satellite tracking.
-  case temeofdate = 5
-  ///  OID: 1.3.112.4.57.2.10
-  ///  Greenwich True of Date: Earth rotation relative to celestial reference.
-  case gtod = 6
-  ///  OID: 1.3.112.4.57.2.4
-  ///  Celestial Intermediate Reference System based on CIP and CIO.
-  case cirs = 7
-  ///  OID: 1.3.112.4.57.2.18
-  ///  Mean of Date (MOD) Earth frame using IAU1976 precession.
-  case modEarth = 8
-  ///  OID: 1.3.112.4.57.2.17
-  ///  Mean of Date (MOD) celestial body frame evaluated at each epoch.
-  case modCb = 9
-  ///  OID: 1.3.112.4.57.2.19
-  ///  Mean of Date (MOD) Moon frame evaluated at each epoch.
-  case modMoon = 10
-  ///  OID: 1.3.112.4.57.2.29
-  ///  True of Date (TOD) Earth frame with polar motion included.
-  case todEarth = 11
-  ///  OID: 1.3.112.4.57.2.28
-  ///  True of Date (TOD) celestial body frame.
-  case todCb = 12
-  ///  OID: 1.3.112.4.57.2.30
-  ///  True of Date (TOD) Moon frame.
-  case todMoon = 13
-  ///  OID: 1.3.112.4.57.2.32
-  ///  True of Epoch (TOE) Earth frame at specific epoch.
-  case toeEarth = 14
-  ///  OID: 1.3.112.4.57.2.31
-  ///  True of Epoch (TOE) celestial body frame at specific epoch.
-  case toeCb = 15
-  ///  OID: 1.3.112.4.57.2.33
-  ///  True of Epoch (TOE) Moon frame at specific epoch.
-  case toeMoon = 16
-  ///  OID: 1.3.112.4.57.2.13
-  ///  International Terrestrial Reference Frame 2000 (Earth-fixed).
-  case itrf2000 = 17
-  ///  OID: 1.3.112.4.57.2.13
-  ///  International Terrestrial Reference Frame 1993 (Earth-fixed).
-  case itrf93 = 18
-  ///  OID: 1.3.112.4.57.2.13
-  ///  International Terrestrial Reference Frame 1997 (Earth-fixed).
-  case itrf97 = 19
-  ///  OID: 1.3.112.4.57.2.6
-  ///  Earth-Fixed Geocentric frame using geodetic coordinates.
-  case efg = 20
-  ///  OID: 1.3.112.4.57.2.8
-  ///  Fixed frame of a celestial body.
-  case fixedCb = 21
-  ///  OID: 1.3.112.4.57.2.39
-  ///  Fixed Earth frame aligned with WGS84 ellipsoid.
-  case fixedEarth = 22
-  ///  WGS84 Earth-fixed terrestrial system.
-  case wgs84 = 23
-  ///  OID: 1.3.112.4.57.2.5
-  ///  Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
-  case dtrfyyyy = 24
-  ///  OID: 1.3.112.4.57.2.2
-  ///  Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
-  case alignEarth = 25
-  ///  OID: 1.3.112.4.57.2.1
-  ///  Mean Central Body Equator and Equinox (ALIGN_CB) frame.
-  case alignCb = 26
-  ///  OID: 1.3.112.4.57.2.3
-  ///  Classical Besselian 1950 equator and equinox frame.
-  case b1950 = 27
+  case ellipsoid = 0
+  case box = 1
 
-  public static var max: CelestialFrame { return .b1950 }
-  public static var min: CelestialFrame { return .gcrf }
+  public static var max: screeningVolumeShape { return .box }
+  public static var min: screeningVolumeShape { return .ellipsoid }
 }
 
 
-///  https://sanaregistry.org/r/spacecraft_body_reference_frames/
-///  Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
-public enum SpacecraftFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum covarianceAlgorithm: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  OID: 1.3.112.4.57.8.1
-  ///  Accelerometer instrument frame.
-  case accI = 0
-  ///  OID: 1.3.112.4.57.8.2
-  ///  Actuator system frame.
-  case actuatorI = 1
-  ///  OID: 1.3.112.4.57.8.3
-  ///  Attitude Sensor Target frame.
-  case astI = 2
-  ///  OID: 1.3.112.4.57.8.4
-  ///  Coarse Sun Sensor frame.
-  case cssI = 3
-  ///  OID: 1.3.112.4.57.8.5
-  ///  Digital Sun Sensor frame.
-  case dssI = 4
-  ///  OID: 1.3.112.4.57.8.6
-  ///  Earth Sensor Assembly frame.
-  case esaI = 5
-  ///  OID: 1.3.112.4.57.8.7
-  ///  Gyroscope instrument frame.
-  case gyroFrameI = 6
-  ///  OID: 1.3.112.4.57.8.8
-  ///  Inertial Measurement Unit frame.
-  case imuFrameI = 7
-  ///  OID: 1.3.112.4.57.8.9
-  ///  Generic instrument mounting frame.
-  case instrumentI = 8
-  ///  OID: 1.3.112.4.57.8.10
-  ///  Magnetic Torquer Assembly frame.
-  case mtaI = 9
-  ///  OID: 1.3.112.4.57.8.11
-  ///  Reaction Wheel assembly frame.
-  case rwI = 10
-  ///  OID: 1.3.112.4.57.8.12
-  ///  Solar Array frame.
-  case saI = 11
-  ///  OID: 1.3.112.4.57.8.13
-  ///  Spacecraft body fixed frame.
-  case scBodyI = 12
-  ///  OID: 1.3.112.4.57.8.14
-  ///  Generic sensor assembly frame.
-  case sensorI = 13
-  ///  OID: 1.3.112.4.57.8.15
-  ///  Star Tracker instrument frame.
-  case startrackerI = 14
-  ///  OID: 1.3.112.4.57.8.16
-  ///  Thermal Assembly Module frame.
-  case tamI = 15
+  case calculated = 0
+  case default_ = 1
 
-  public static var max: SpacecraftFrame { return .tamI }
-  public static var min: SpacecraftFrame { return .accI }
+  public static var max: covarianceAlgorithm { return .default_ }
+  public static var min: covarianceAlgorithm { return .calculated }
 }
 
 
-///  https://sanaregistry.org/r/orbit_relative_reference_frames/
-///  Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
-public enum OrbitFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  MANEUVERABLE of a CDM object (CCSDS 508.0-B-1): whether it can maneuver.
+///  UNSPECIFIED is the zero value: the record does not state it.
+public enum cdmManeuverable: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  OID: 1.3.112.4.57.3.1
-  ///  Earth Equatorial Inertial frame aligned with J2000 epoch.
-  case eqwInertial = 0
-  ///  OID: 1.3.112.4.57.3.3
-  ///  Local Vertical Local Horizontal inertial frame.
-  case lvlhInertial = 1
-  ///  OID: 1.3.112.4.57.3.2
-  ///  Local Vertical Local Horizontal rotating frame.
-  case lvlhRotating = 2
-  ///  OID: 1.3.112.4.57.3.5
-  ///  Normal along-track cross-track inertial frame.
-  case nswInertial = 3
-  ///  OID: 1.3.112.4.57.3.4
-  ///  Normal along-track cross-track rotating frame.
-  case nswRotating = 4
-  ///  OID: 1.3.112.4.57.3.7
-  ///  Orbit normal Tangential cross-track inertial frame.
-  case ntwInertial = 5
-  ///  OID: 1.3.112.4.57.3.6
-  ///  Orbit normal Tangential cross-track rotating frame.
-  case ntwRotating = 6
-  ///  OID: 1.3.112.4.57.3.8
-  ///  Perifocal frame aligned with orbit's perigee.
-  case pqwInertial = 7
-  ///  OID: 1.3.112.4.57.3.10
-  ///  Radial along-track cross-track inertial frame.
-  case rswInertial = 8
-  ///  OID: 1.3.112.4.57.3.9
-  ///  Radial along-track cross-track rotating frame.
-  case rswRotating = 9
-  ///  OID: 1.3.112.4.57.3.14
-  ///  South-East-Zenith inertial (topocentric) frame.
-  case sezInertial = 10
-  ///  OID: 1.3.112.4.57.3.13
-  ///  South-East-Zenith rotating (topocentric) frame.
-  case sezRotating = 11
-  ///  OID: 1.3.112.4.57.3.12
-  ///  Transverse normal cross-track inertial frame.
-  case tnwInertial = 12
-  ///  OID: 1.3.112.4.57.3.11
-  ///  Transverse normal cross-track rotating frame.
-  case tnwRotating = 13
-  ///  OID: 1.3.112.4.57.3.16
-  ///  Velocity-normal co-normal inertial frame.
-  case vncInertial = 14
-  ///  OID: 1.3.112.4.57.3.15
-  ///  Velocity-normal co-normal rotating frame.
-  case vncRotating = 15
-
-  public static var max: OrbitFrame { return .vncRotating }
-  public static var min: OrbitFrame { return .eqwInertial }
-}
-
-
-///  Non-registered or local use frames
-public enum CustomFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
-  case ecef = 0
-  ///  True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.
-  case teme = 1
-  ///  True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.
-  case temeofepoch = 2
-  ///  East-North-Up: Local tangent plane for surface points.
-  case enu = 3
-  ///  North-East-Down: Aviation/navigation frame aligned with gravity.
-  case ned = 4
-  ///  North-East-Up: Local tangent plane variant with Up positive.
-  case neu = 5
-  ///  Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
-  case ric = 6
-  ///  Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.
-  case rtn = 7
-  ///  Transverse-Velocity-Normal: Alternative orbit frame.
-  case tvn = 8
-  ///  Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.
-  case vvlh = 9
-  ///  Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.
-  case qsw = 10
-  ///  Local Tangent Plane: Surface-fixed frame centered on a point.
-  case ltp = 11
-  ///  Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.
-  case lvlh = 12
-  ///  Polar-North-East: Surface coordinate frame.
-  case pne = 13
-  ///  Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
-  case brf = 14
-  ///  Radial-Along-track-Cross-track: Same as RSW.
-  case rsw = 15
-  ///  Tangential-Normal-Cross-track: Same as TNW.
-  case tnw = 16
-  ///  Radial-UTF: Radial, Along-track, Cross-track variant.
-  case uvw = 17
-
-  public static var max: CustomFrame { return .uvw }
-  public static var min: CustomFrame { return .ecef }
-}
-
-
-///  Axis-set capability classes for a fully specified coordinate system.
-///  These name the ORIENTATION rule only; the ORIGIN is carried separately in
-///  RFMOrigin, so any axis set below combines with any origin. Append new
-///  values only; never reorder or reuse existing values.
-public enum rfmAxisType: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
   case unspecified = 0
-  ///  Mean equator and mean equinox of the J2000.0 epoch.
-  case meanEquatorEquinoxJ2000 = 1
-  ///  Mean ecliptic and mean equinox of the J2000.0 epoch.
-  case meanEclipticEquinoxJ2000 = 2
-  ///  International Celestial Reference Frame axes.
-  case icrf = 3
-  ///  True equator, mean equinox of date.
-  case trueEquatorMeanEquinoxOfDate = 4
-  ///  Mean equator of date (precession applied to the epoch of the state).
-  case meanOfDateEquator = 5
-  ///  Mean ecliptic of date.
-  case meanOfDateEcliptic = 6
-  ///  True equator of date (precession and nutation applied).
-  case trueOfDateEquator = 7
-  ///  True ecliptic of date.
-  case trueOfDateEcliptic = 8
-  ///  Mean equator of a fixed reference epoch.
-  case meanOfEpochEquator = 9
-  ///  Mean ecliptic of a fixed reference epoch.
-  case meanOfEpochEcliptic = 10
-  ///  True equator of a fixed reference epoch.
-  case trueOfEpochEquator = 11
-  ///  True ecliptic of a fixed reference epoch.
-  case trueOfEpochEcliptic = 12
-  ///  Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID,
-  ///  per its published rotation elements.
-  case bodyFixed = 13
-  ///  Non-rotating axes aligned with the reference body's equator and prime
-  ///  meridian at the reference epoch.
-  case bodyInertial = 14
-  ///  Axes built from the relative geometry of two named objects; see
-  ///  RFMObjectReferencedAxes.
-  case objectReferenced = 15
-  ///  Axes built by aligning one vector and constraining a second; see
-  ///  RFMLocalAlignedConstrainedAxes.
-  case localAlignedConstrained = 16
-  ///  Axes in the reference body's equatorial plane at the requested epoch.
-  case bodyEquator = 17
-  ///  Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the
-  ///  ecliptic north, commonly abbreviated GSE.
-  case solarEclipticMagnetospheric = 18
-  ///  Solar-magnetospheric axes: X toward the Sun, Z in the plane containing
-  ///  the body magnetic dipole, commonly abbreviated GSM.
-  case solarMagnetospheric = 19
-  ///  Local horizon axes at a surface site; the site is carried on RFMOrigin.
-  case topocentric = 20
-  ///  Axes fixed by the body spin axis and the body-to-Sun direction.
-  case bodySpinSun = 21
-  ///  Axes defined by a loaded ephemeris/orientation kernel; identified by
-  ///  KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem.
-  case ephemerisKernelDefined = 22
-  ///  LEGACY, retained and NAMED rather than left implicit: mean equator of
-  ///  date computed with the IAU-76/FK5 precession theory instead of the
-  ///  IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the
-  ///  milliarcsecond level and the two are not interchangeable.
-  case meanOfDateEquatorFk5 = 23
-  ///  LEGACY, retained and NAMED: true equator of date computed with the
-  ///  IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5.
-  case trueOfDateEquatorFk5 = 24
-  ///  True equator of date computed with the IERS Conventions (1996)
-  ///  reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980
-  ///  nutation with the observed celestial pole offsets applied. Distinct from
-  ///  TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR
-  ///  (IAU-2006/2000A).
-  case trueOfDateEquatorIers1996 = 25
-  ///  True equator of date computed with the IERS Conventions (2003)
-  ///  reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976
-  ///  precession with the IAU 2000 precession-rate corrections. The mean-of-date
-  ///  equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5.
-  case trueOfDateEquatorIers2003 = 26
-  ///  Topocentric East-North-Up axes at a surface site; the site is carried on
-  ///  RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does.
-  case topocentricEastNorthUp = 27
-  ///  Topocentric North-East-Down axes at a surface site.
-  case topocentricNorthEastDown = 28
-  ///  Topocentric South-East-Zenith axes at a surface site.
-  case topocentricSouthEastZenith = 29
-  ///  Orbital axes from the object's state: X along the velocity, Z along the
-  ///  orbit normal, Y completing the right-handed set (VNC). The object is the
-  ///  origin body of the coordinate system.
-  case orbitalVelocityNormalConormal = 30
-  ///  Orbital axes from the object's state: X radial (outward), Z along the
-  ///  orbit normal, Y transverse completing the set (RTN, also RSW).
-  case orbitalRadialTransverseNormal = 31
-  ///  Orbital axes from the object's state: Z toward the central body (nadir),
-  ///  Y opposite the orbit normal, X completing the set (LVLH).
-  case orbitalLocalVerticalLocalHorizontal = 32
+  case yes = 1
+  case no = 2
+  case notApplicable = 3
 
-  public static var max: rfmAxisType { return .orbitalLocalVerticalLocalHorizontal }
-  public static var min: rfmAxisType { return .unspecified }
+  public static var max: cdmManeuverable { return .notApplicable }
+  public static var min: cdmManeuverable { return .unspecified }
 }
 
 
-///  What kind of point a coordinate system is centred on. Append new values
-///  only; never reorder or reuse existing values.
-public enum rfmOriginKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  The centre of mass of a single celestial body.
-  case celestialBody = 1
-  ///  The barycentre of a named system of bodies.
-  case barycentre = 2
-  ///  A libration (Lagrange) point of a two-body system.
-  case librationPoint = 3
-  ///  Another tracked space object, identified by OBJECT_ID.
-  case spaceObject = 4
-  ///  A fixed site on a body surface, identified by SITE_ID and the geodetic
-  ///  fields on RFMOrigin.
-  case groundSite = 5
-
-  public static var max: rfmOriginKind { return .groundSite }
-  public static var min: rfmOriginKind { return .unspecified }
-}
-
-
-///  Libration point of the primary/secondary pair named on RFMOrigin. Append
-///  new values only; never reorder or reuse existing values.
-public enum rfmLibrationPoint: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  case l1 = 1
-  case l2 = 2
-  case l3 = 3
-  case l4 = 4
-  case l5 = 5
-
-  public static var max: rfmLibrationPoint { return .l5 }
-  public static var min: rfmLibrationPoint { return .unspecified }
-}
-
-
-///  Axis direction choices for OBJECT_REFERENCED axes. Append new values only.
-public enum rfmVectorSpecification: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Primary-to-secondary position direction.
-  case radial = 1
-  ///  Negated RADIAL.
-  case antiRadial = 2
-  ///  Relative velocity direction.
-  case velocity = 3
-  ///  Negated VELOCITY.
-  case antiVelocity = 4
-  ///  Orbit normal, RADIAL crossed into VELOCITY.
-  case orbitNormal = 5
-  ///  Negated ORBIT_NORMAL.
-  case antiOrbitNormal = 6
-
-  public static var max: rfmVectorSpecification { return .antiOrbitNormal }
-  public static var min: rfmVectorSpecification { return .unspecified }
-}
-
-
-///  Union ordinals are WIRE. Append new members LAST; never reorder.
-public enum RFMUnion: UInt8, FlatbuffersVectorInitializable, UnionEnum {
-  public typealias T = UInt8
-
-  public init?(value: T) {
-    self.init(rawValue: value)
-  }
-
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case none_ = 0
-  case celestialframewrapper = 1
-  case spacecraftframewrapper = 2
-  case orbitframewrapper = 3
-  case customframewrapper = 4
-  case rfmcoordinatesystemwrapper = 5
-
-  public static var max: RFMUnion { return .rfmcoordinatesystemwrapper }
-  public static var min: RFMUnion { return .none_ }
-}
-
-
-///  The point a coordinate system is centred on. Body and barycentre
-///  identifiers are integer ephemeris body codes; text NAME is descriptive
-///  only and is never the machine key.
-public struct RFMOrigin: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CDMObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFMOrigin.id, addPrefix: prefix) }
+  public static var id: String { "$CDM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CDMObject.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let KIND: VOffset = 4
-    static let CELESTIAL_BODY_ID: VOffset = 6
-    static let BARYCENTRE_ID: VOffset = 8
-    static let LIBRATION_POINT: VOffset = 10
-    static let LIBRATION_PRIMARY_ID: VOffset = 12
-    static let LIBRATION_SECONDARY_ID: VOffset = 14
-    static let OBJECT_ID: VOffset = 16
-    static let SITE_ID: VOffset = 18
-    static let SITE_BODY_ID: VOffset = 20
-    static let SITE_LATITUDE: VOffset = 22
-    static let SITE_LONGITUDE: VOffset = 24
-    static let SITE_ALTITUDE: VOffset = 26
-    static let NAME: VOffset = 28
+    static let COMMENT: VOffset = 4
+    static let OBJECT: VOffset = 6
+    static let POC: VOffset = 8
+    static let OPERATOR_CONTACT_POSITION: VOffset = 10
+    static let OPERATOR_ORGANIZATION: VOffset = 12
+    static let EPHEMERIS_NAME: VOffset = 14
+    static let COVARIANCE_METHOD: VOffset = 16
+    static let REFERENCE_FRAME: VOffset = 18
+    static let GRAVITY_MODEL: VOffset = 20
+    static let ATMOSPHERIC_MODEL: VOffset = 22
+    static let N_BODY_PERTURBATIONS: VOffset = 24
+    static let SOLAR_RAD_PRESSURE: VOffset = 26
+    static let EARTH_TIDES: VOffset = 28
+    static let INTRACK_THRUST: VOffset = 30
+    static let TIME_LASTOB_START: VOffset = 32
+    static let TIME_LASTOB_END: VOffset = 34
+    static let RECOMMENDED_OD_SPAN: VOffset = 36
+    static let ACTUAL_OD_SPAN: VOffset = 38
+    static let OBS_AVAILABLE: VOffset = 40
+    static let OBS_USED: VOffset = 42
+    static let TRACKS_AVAILABLE: VOffset = 44
+    static let TRACKS_USED: VOffset = 46
+    static let RESIDUALS_ACCEPTED: VOffset = 48
+    static let WEIGHTED_RMS: VOffset = 50
+    static let AREA_PC: VOffset = 52
+    static let AREA_DRG: VOffset = 54
+    static let AREA_SRP: VOffset = 56
+    static let CR_AREA_OVER_MASS: VOffset = 58
+    static let THRUST_ACCELERATION: VOffset = 60
+    static let SEDR: VOffset = 62
+    static let X: VOffset = 64
+    static let Y: VOffset = 66
+    static let Z: VOffset = 68
+    static let X_DOT: VOffset = 70
+    static let Y_DOT: VOffset = 72
+    static let Z_DOT: VOffset = 74
+    static let COVARIANCE: VOffset = 76
+    static let OBJECT_DESIGNATOR: VOffset = 78
+    static let CATALOG_NAME: VOffset = 80
+    static let MANEUVERABLE: VOffset = 82
+    static let CD_AREA_OVER_MASS: VOffset = 84
   }
 
-  public var KIND: rfmOriginKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : rfmOriginKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Ephemeris body code when KIND is CELESTIAL_BODY.
-  public var CELESTIAL_BODY_ID: Int32 { let o = _accessor.offset(VT.CELESTIAL_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Ephemeris body code of the barycentre when KIND is BARYCENTRE.
-  public var BARYCENTRE_ID: Int32 { let o = _accessor.offset(VT.BARYCENTRE_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Which libration point, when KIND is LIBRATION_POINT.
-  public var LIBRATION_POINT: rfmLibrationPoint { let o = _accessor.offset(VT.LIBRATION_POINT); return o == 0 ? .unspecified : rfmLibrationPoint(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Ephemeris body code of the libration system primary.
-  public var LIBRATION_PRIMARY_ID: Int32 { let o = _accessor.offset(VT.LIBRATION_PRIMARY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Ephemeris body code of the libration system secondary.
-  public var LIBRATION_SECONDARY_ID: Int32 { let o = _accessor.offset(VT.LIBRATION_SECONDARY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Identifier of the space object when KIND is SPACE_OBJECT.
-  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
-  ///  Identifier of the surface site when KIND is GROUND_SITE.
-  public var SITE_ID: String? { let o = _accessor.offset(VT.SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SITE_ID) }
-  ///  Ephemeris body code of the body the site sits on.
-  public var SITE_BODY_ID: Int32 { let o = _accessor.offset(VT.SITE_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Geodetic latitude of the site, degrees, positive north.
-  public var SITE_LATITUDE: Double { let o = _accessor.offset(VT.SITE_LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Geodetic longitude of the site, degrees, positive east.
-  public var SITE_LONGITUDE: Double { let o = _accessor.offset(VT.SITE_LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Height of the site above the reference ellipsoid, metres.
-  public var SITE_ALTITUDE: Double { let o = _accessor.offset(VT.SITE_ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Human-readable label. Descriptive only.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  public static func startRFMOrigin(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(KIND: rfmOriginKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
-  public static func add(CELESTIAL_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CELESTIAL_BODY_ID, def: 0, at: VT.CELESTIAL_BODY_ID) }
-  public static func add(BARYCENTRE_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BARYCENTRE_ID, def: 0, at: VT.BARYCENTRE_ID) }
-  public static func add(LIBRATION_POINT: rfmLibrationPoint, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIBRATION_POINT.rawValue, def: 0, at: VT.LIBRATION_POINT) }
-  public static func add(LIBRATION_PRIMARY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIBRATION_PRIMARY_ID, def: 0, at: VT.LIBRATION_PRIMARY_ID) }
-  public static func add(LIBRATION_SECONDARY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIBRATION_SECONDARY_ID, def: 0, at: VT.LIBRATION_SECONDARY_ID) }
-  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
-  public static func add(SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SITE_ID, at: VT.SITE_ID) }
-  public static func add(SITE_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SITE_BODY_ID, def: 0, at: VT.SITE_BODY_ID) }
-  public static func add(SITE_LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SITE_LATITUDE, def: 0.0, at: VT.SITE_LATITUDE) }
-  public static func add(SITE_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SITE_LONGITUDE, def: 0.0, at: VT.SITE_LONGITUDE) }
-  public static func add(SITE_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SITE_ALTITUDE, def: 0.0, at: VT.SITE_ALTITUDE) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func endRFMOrigin(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFMOrigin(
-    _ fbb: inout FlatBufferBuilder,
-    KIND: rfmOriginKind = .unspecified,
-    CELESTIAL_BODY_ID: Int32 = 0,
-    BARYCENTRE_ID: Int32 = 0,
-    LIBRATION_POINT: rfmLibrationPoint = .unspecified,
-    LIBRATION_PRIMARY_ID: Int32 = 0,
-    LIBRATION_SECONDARY_ID: Int32 = 0,
-    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
-    SITE_IDOffset SITE_ID: Offset = Offset(),
-    SITE_BODY_ID: Int32 = 0,
-    SITE_LATITUDE: Double = 0.0,
-    SITE_LONGITUDE: Double = 0.0,
-    SITE_ALTITUDE: Double = 0.0,
-    NAMEOffset NAME: Offset = Offset()
-  ) -> Offset {
-    let __start = RFMOrigin.startRFMOrigin(&fbb)
-    RFMOrigin.add(KIND: KIND, &fbb)
-    RFMOrigin.add(CELESTIAL_BODY_ID: CELESTIAL_BODY_ID, &fbb)
-    RFMOrigin.add(BARYCENTRE_ID: BARYCENTRE_ID, &fbb)
-    RFMOrigin.add(LIBRATION_POINT: LIBRATION_POINT, &fbb)
-    RFMOrigin.add(LIBRATION_PRIMARY_ID: LIBRATION_PRIMARY_ID, &fbb)
-    RFMOrigin.add(LIBRATION_SECONDARY_ID: LIBRATION_SECONDARY_ID, &fbb)
-    RFMOrigin.add(OBJECT_ID: OBJECT_ID, &fbb)
-    RFMOrigin.add(SITE_ID: SITE_ID, &fbb)
-    RFMOrigin.add(SITE_BODY_ID: SITE_BODY_ID, &fbb)
-    RFMOrigin.add(SITE_LATITUDE: SITE_LATITUDE, &fbb)
-    RFMOrigin.add(SITE_LONGITUDE: SITE_LONGITUDE, &fbb)
-    RFMOrigin.add(SITE_ALTITUDE: SITE_ALTITUDE, &fbb)
-    RFMOrigin.add(NAME: NAME, &fbb)
-    return RFMOrigin.endRFMOrigin(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: rfmOriginKind.self)
-    try _v.visit(field: VT.CELESTIAL_BODY_ID, fieldName: "CELESTIAL_BODY_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.BARYCENTRE_ID, fieldName: "BARYCENTRE_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.LIBRATION_POINT, fieldName: "LIBRATION_POINT", required: false, type: rfmLibrationPoint.self)
-    try _v.visit(field: VT.LIBRATION_PRIMARY_ID, fieldName: "LIBRATION_PRIMARY_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.LIBRATION_SECONDARY_ID, fieldName: "LIBRATION_SECONDARY_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SITE_ID, fieldName: "SITE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SITE_BODY_ID, fieldName: "SITE_BODY_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.SITE_LATITUDE, fieldName: "SITE_LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VT.SITE_LONGITUDE, fieldName: "SITE_LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VT.SITE_ALTITUDE, fieldName: "SITE_ALTITUDE", required: false, type: Double.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Axes built from the relative geometry of two objects. Exactly two of the
-///  three axis assignments are independent; the third completes the triad.
-public struct RFMObjectReferencedAxes: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFMObjectReferencedAxes.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let PRIMARY_OBJECT_ID: VOffset = 4
-    static let SECONDARY_OBJECT_ID: VOffset = 6
-    static let X_AXIS: VOffset = 8
-    static let Y_AXIS: VOffset = 10
-    static let Z_AXIS: VOffset = 12
-  }
-
-  public var PRIMARY_OBJECT_ID: String? { let o = _accessor.offset(VT.PRIMARY_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PRIMARY_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRIMARY_OBJECT_ID) }
-  public var SECONDARY_OBJECT_ID: String? { let o = _accessor.offset(VT.SECONDARY_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SECONDARY_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SECONDARY_OBJECT_ID) }
-  public var X_AXIS: rfmVectorSpecification { let o = _accessor.offset(VT.X_AXIS); return o == 0 ? .unspecified : rfmVectorSpecification(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  public var Y_AXIS: rfmVectorSpecification { let o = _accessor.offset(VT.Y_AXIS); return o == 0 ? .unspecified : rfmVectorSpecification(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  public var Z_AXIS: rfmVectorSpecification { let o = _accessor.offset(VT.Z_AXIS); return o == 0 ? .unspecified : rfmVectorSpecification(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  public static func startRFMObjectReferencedAxes(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(PRIMARY_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY_OBJECT_ID, at: VT.PRIMARY_OBJECT_ID) }
-  public static func add(SECONDARY_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECONDARY_OBJECT_ID, at: VT.SECONDARY_OBJECT_ID) }
-  public static func add(X_AXIS: rfmVectorSpecification, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_AXIS.rawValue, def: 0, at: VT.X_AXIS) }
-  public static func add(Y_AXIS: rfmVectorSpecification, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_AXIS.rawValue, def: 0, at: VT.Y_AXIS) }
-  public static func add(Z_AXIS: rfmVectorSpecification, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_AXIS.rawValue, def: 0, at: VT.Z_AXIS) }
-  public static func endRFMObjectReferencedAxes(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFMObjectReferencedAxes(
-    _ fbb: inout FlatBufferBuilder,
-    PRIMARY_OBJECT_IDOffset PRIMARY_OBJECT_ID: Offset = Offset(),
-    SECONDARY_OBJECT_IDOffset SECONDARY_OBJECT_ID: Offset = Offset(),
-    X_AXIS: rfmVectorSpecification = .unspecified,
-    Y_AXIS: rfmVectorSpecification = .unspecified,
-    Z_AXIS: rfmVectorSpecification = .unspecified
-  ) -> Offset {
-    let __start = RFMObjectReferencedAxes.startRFMObjectReferencedAxes(&fbb)
-    RFMObjectReferencedAxes.add(PRIMARY_OBJECT_ID: PRIMARY_OBJECT_ID, &fbb)
-    RFMObjectReferencedAxes.add(SECONDARY_OBJECT_ID: SECONDARY_OBJECT_ID, &fbb)
-    RFMObjectReferencedAxes.add(X_AXIS: X_AXIS, &fbb)
-    RFMObjectReferencedAxes.add(Y_AXIS: Y_AXIS, &fbb)
-    RFMObjectReferencedAxes.add(Z_AXIS: Z_AXIS, &fbb)
-    return RFMObjectReferencedAxes.endRFMObjectReferencedAxes(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.PRIMARY_OBJECT_ID, fieldName: "PRIMARY_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SECONDARY_OBJECT_ID, fieldName: "SECONDARY_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.X_AXIS, fieldName: "X_AXIS", required: false, type: rfmVectorSpecification.self)
-    try _v.visit(field: VT.Y_AXIS, fieldName: "Y_AXIS", required: false, type: rfmVectorSpecification.self)
-    try _v.visit(field: VT.Z_AXIS, fieldName: "Z_AXIS", required: false, type: rfmVectorSpecification.self)
-    _v.finish()
-  }
-}
-
-///  Axes built by aligning one vector with a reference direction and using a
-///  second vector as a constraint. Vectors are 3-element, expressed in the
-///  coordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.
-public struct RFMLocalAlignedConstrainedAxes: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFMLocalAlignedConstrainedAxes.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let REFERENCE_OBJECT_ID: VOffset = 4
-    static let REFERENCE_COORDINATE_SYSTEM_NAME: VOffset = 6
-    static let ALIGNMENT_VECTOR: VOffset = 8
-    static let ALIGNMENT_REFERENCE_VECTOR: VOffset = 10
-    static let CONSTRAINT_VECTOR: VOffset = 12
-    static let CONSTRAINT_REFERENCE_VECTOR: VOffset = 14
-  }
-
-  public var REFERENCE_OBJECT_ID: String? { let o = _accessor.offset(VT.REFERENCE_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REFERENCE_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_OBJECT_ID) }
-  public var REFERENCE_COORDINATE_SYSTEM_NAME: String? { let o = _accessor.offset(VT.REFERENCE_COORDINATE_SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REFERENCE_COORDINATE_SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_COORDINATE_SYSTEM_NAME) }
-  public var ALIGNMENT_VECTOR: FlatbufferVector<Double> { return _accessor.vector(at: VT.ALIGNMENT_VECTOR, byteSize: 8) }
-  public func withUnsafePointerToAlignmentVector<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ALIGNMENT_VECTOR, body: body) }
-  public var ALIGNMENT_REFERENCE_VECTOR: FlatbufferVector<Double> { return _accessor.vector(at: VT.ALIGNMENT_REFERENCE_VECTOR, byteSize: 8) }
-  public func withUnsafePointerToAlignmentReferenceVector<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ALIGNMENT_REFERENCE_VECTOR, body: body) }
-  public var CONSTRAINT_VECTOR: FlatbufferVector<Double> { return _accessor.vector(at: VT.CONSTRAINT_VECTOR, byteSize: 8) }
-  public func withUnsafePointerToConstraintVector<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CONSTRAINT_VECTOR, body: body) }
-  public var CONSTRAINT_REFERENCE_VECTOR: FlatbufferVector<Double> { return _accessor.vector(at: VT.CONSTRAINT_REFERENCE_VECTOR, byteSize: 8) }
-  public func withUnsafePointerToConstraintReferenceVector<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CONSTRAINT_REFERENCE_VECTOR, body: body) }
-  public static func startRFMLocalAlignedConstrainedAxes(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(REFERENCE_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_OBJECT_ID, at: VT.REFERENCE_OBJECT_ID) }
-  public static func add(REFERENCE_COORDINATE_SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_COORDINATE_SYSTEM_NAME, at: VT.REFERENCE_COORDINATE_SYSTEM_NAME) }
-  public static func addVectorOf(ALIGNMENT_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALIGNMENT_VECTOR, at: VT.ALIGNMENT_VECTOR) }
-  public static func addVectorOf(ALIGNMENT_REFERENCE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALIGNMENT_REFERENCE_VECTOR, at: VT.ALIGNMENT_REFERENCE_VECTOR) }
-  public static func addVectorOf(CONSTRAINT_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINT_VECTOR, at: VT.CONSTRAINT_VECTOR) }
-  public static func addVectorOf(CONSTRAINT_REFERENCE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINT_REFERENCE_VECTOR, at: VT.CONSTRAINT_REFERENCE_VECTOR) }
-  public static func endRFMLocalAlignedConstrainedAxes(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFMLocalAlignedConstrainedAxes(
-    _ fbb: inout FlatBufferBuilder,
-    REFERENCE_OBJECT_IDOffset REFERENCE_OBJECT_ID: Offset = Offset(),
-    REFERENCE_COORDINATE_SYSTEM_NAMEOffset REFERENCE_COORDINATE_SYSTEM_NAME: Offset = Offset(),
-    ALIGNMENT_VECTORVectorOffset ALIGNMENT_VECTOR: Offset = Offset(),
-    ALIGNMENT_REFERENCE_VECTORVectorOffset ALIGNMENT_REFERENCE_VECTOR: Offset = Offset(),
-    CONSTRAINT_VECTORVectorOffset CONSTRAINT_VECTOR: Offset = Offset(),
-    CONSTRAINT_REFERENCE_VECTORVectorOffset CONSTRAINT_REFERENCE_VECTOR: Offset = Offset()
-  ) -> Offset {
-    let __start = RFMLocalAlignedConstrainedAxes.startRFMLocalAlignedConstrainedAxes(&fbb)
-    RFMLocalAlignedConstrainedAxes.add(REFERENCE_OBJECT_ID: REFERENCE_OBJECT_ID, &fbb)
-    RFMLocalAlignedConstrainedAxes.add(REFERENCE_COORDINATE_SYSTEM_NAME: REFERENCE_COORDINATE_SYSTEM_NAME, &fbb)
-    RFMLocalAlignedConstrainedAxes.addVectorOf(ALIGNMENT_VECTOR: ALIGNMENT_VECTOR, &fbb)
-    RFMLocalAlignedConstrainedAxes.addVectorOf(ALIGNMENT_REFERENCE_VECTOR: ALIGNMENT_REFERENCE_VECTOR, &fbb)
-    RFMLocalAlignedConstrainedAxes.addVectorOf(CONSTRAINT_VECTOR: CONSTRAINT_VECTOR, &fbb)
-    RFMLocalAlignedConstrainedAxes.addVectorOf(CONSTRAINT_REFERENCE_VECTOR: CONSTRAINT_REFERENCE_VECTOR, &fbb)
-    return RFMLocalAlignedConstrainedAxes.endRFMLocalAlignedConstrainedAxes(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.REFERENCE_OBJECT_ID, fieldName: "REFERENCE_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.REFERENCE_COORDINATE_SYSTEM_NAME, fieldName: "REFERENCE_COORDINATE_SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ALIGNMENT_VECTOR, fieldName: "ALIGNMENT_VECTOR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.ALIGNMENT_REFERENCE_VECTOR, fieldName: "ALIGNMENT_REFERENCE_VECTOR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.CONSTRAINT_VECTOR, fieldName: "CONSTRAINT_VECTOR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.CONSTRAINT_REFERENCE_VECTOR, fieldName: "CONSTRAINT_REFERENCE_VECTOR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    _v.finish()
-  }
-}
-
-///  A fully specified coordinate system: an axis set, an origin, and the epoch
-///  and time system the axis set is evaluated at. This is the unit a frames
-///  consumer needs; the pre-existing RFMUnion members name an axis convention
-///  alone and cannot express an origin.
-public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFMCoordinateSystem.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let NAME: VOffset = 4
-    static let AXIS_TYPE: VOffset = 6
-    static let ORIGIN: VOffset = 8
-    static let AXIS_REFERENCE_BODY_ID: VOffset = 10
-    static let EPOCH: VOffset = 12
-    static let EPOCH_TIME_SYSTEM: VOffset = 14
-    static let OBJECT_REFERENCED_AXES: VOffset = 16
-    static let LOCAL_ALIGNED_CONSTRAINED_AXES: VOffset = 18
-    static let KERNEL_FRAME_NAME: VOffset = 20
-    static let KERNEL_FRAME_ID: VOffset = 22
-    static let EOP_DATA_SET_CID: VOffset = 24
-  }
-
-  ///  Stable name for this coordinate system within the producing data set.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Orientation rule.
-  public var AXIS_TYPE: rfmAxisType { let o = _accessor.offset(VT.AXIS_TYPE); return o == 0 ? .unspecified : rfmAxisType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Centre of the system.
-  public var ORIGIN: RFMOrigin? { let o = _accessor.offset(VT.ORIGIN); return o == 0 ? nil : RFMOrigin(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Ephemeris body code whose equator/rotation defines the axes, for the
-  ///  body-referenced axis types. Independent of ORIGIN.
-  public var AXIS_REFERENCE_BODY_ID: Int32 { let o = _accessor.offset(VT.AXIS_REFERENCE_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Reference epoch the axis set is evaluated at, ISO 8601. Required for the
-  ///  of-date and of-epoch axis types; ignored by the inertial ones.
-  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
-  ///  Time system the EPOCH is expressed in, named by the $TIM timingStandard
-  ///  member name (for example "UTC", "TAI", "TT", "TDB", "A1").
-  public var EPOCH_TIME_SYSTEM: String? { let o = _accessor.offset(VT.EPOCH_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TIME_SYSTEM) }
-  ///  Extra parameters for OBJECT_REFERENCED axes.
-  public var OBJECT_REFERENCED_AXES: RFMObjectReferencedAxes? { let o = _accessor.offset(VT.OBJECT_REFERENCED_AXES); return o == 0 ? nil : RFMObjectReferencedAxes(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.
-  public var LOCAL_ALIGNED_CONSTRAINED_AXES: RFMLocalAlignedConstrainedAxes? { let o = _accessor.offset(VT.LOCAL_ALIGNED_CONSTRAINED_AXES); return o == 0 ? nil : RFMLocalAlignedConstrainedAxes(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.
-  public var KERNEL_FRAME_NAME: String? { let o = _accessor.offset(VT.KERNEL_FRAME_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KERNEL_FRAME_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KERNEL_FRAME_NAME) }
-  ///  Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.
-  public var KERNEL_FRAME_ID: Int32 { let o = _accessor.offset(VT.KERNEL_FRAME_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Content identifier of the Earth-orientation data set used to realise
-  ///  this system, when the axis chain requires one. Recorded so that two
-  ///  consumers can prove they used the same table rather than assume it.
-  public var EOP_DATA_SET_CID: String? { let o = _accessor.offset(VT.EOP_DATA_SET_CID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EOP_DATA_SET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_DATA_SET_CID) }
-  public static func startRFMCoordinateSystem(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(AXIS_TYPE: rfmAxisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXIS_TYPE.rawValue, def: 0, at: VT.AXIS_TYPE) }
-  public static func add(ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN, at: VT.ORIGIN) }
-  public static func add(AXIS_REFERENCE_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXIS_REFERENCE_BODY_ID, def: 0, at: VT.AXIS_REFERENCE_BODY_ID) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
-  public static func add(EPOCH_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME_SYSTEM, at: VT.EPOCH_TIME_SYSTEM) }
-  public static func add(OBJECT_REFERENCED_AXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_REFERENCED_AXES, at: VT.OBJECT_REFERENCED_AXES) }
-  public static func add(LOCAL_ALIGNED_CONSTRAINED_AXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCAL_ALIGNED_CONSTRAINED_AXES, at: VT.LOCAL_ALIGNED_CONSTRAINED_AXES) }
-  public static func add(KERNEL_FRAME_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KERNEL_FRAME_NAME, at: VT.KERNEL_FRAME_NAME) }
-  public static func add(KERNEL_FRAME_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KERNEL_FRAME_ID, def: 0, at: VT.KERNEL_FRAME_ID) }
-  public static func add(EOP_DATA_SET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_DATA_SET_CID, at: VT.EOP_DATA_SET_CID) }
-  public static func endRFMCoordinateSystem(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFMCoordinateSystem(
-    _ fbb: inout FlatBufferBuilder,
-    NAMEOffset NAME: Offset = Offset(),
-    AXIS_TYPE: rfmAxisType = .unspecified,
-    ORIGINOffset ORIGIN: Offset = Offset(),
-    AXIS_REFERENCE_BODY_ID: Int32 = 0,
-    EPOCHOffset EPOCH: Offset = Offset(),
-    EPOCH_TIME_SYSTEMOffset EPOCH_TIME_SYSTEM: Offset = Offset(),
-    OBJECT_REFERENCED_AXESOffset OBJECT_REFERENCED_AXES: Offset = Offset(),
-    LOCAL_ALIGNED_CONSTRAINED_AXESOffset LOCAL_ALIGNED_CONSTRAINED_AXES: Offset = Offset(),
-    KERNEL_FRAME_NAMEOffset KERNEL_FRAME_NAME: Offset = Offset(),
-    KERNEL_FRAME_ID: Int32 = 0,
-    EOP_DATA_SET_CIDOffset EOP_DATA_SET_CID: Offset = Offset()
-  ) -> Offset {
-    let __start = RFMCoordinateSystem.startRFMCoordinateSystem(&fbb)
-    RFMCoordinateSystem.add(NAME: NAME, &fbb)
-    RFMCoordinateSystem.add(AXIS_TYPE: AXIS_TYPE, &fbb)
-    RFMCoordinateSystem.add(ORIGIN: ORIGIN, &fbb)
-    RFMCoordinateSystem.add(AXIS_REFERENCE_BODY_ID: AXIS_REFERENCE_BODY_ID, &fbb)
-    RFMCoordinateSystem.add(EPOCH: EPOCH, &fbb)
-    RFMCoordinateSystem.add(EPOCH_TIME_SYSTEM: EPOCH_TIME_SYSTEM, &fbb)
-    RFMCoordinateSystem.add(OBJECT_REFERENCED_AXES: OBJECT_REFERENCED_AXES, &fbb)
-    RFMCoordinateSystem.add(LOCAL_ALIGNED_CONSTRAINED_AXES: LOCAL_ALIGNED_CONSTRAINED_AXES, &fbb)
-    RFMCoordinateSystem.add(KERNEL_FRAME_NAME: KERNEL_FRAME_NAME, &fbb)
-    RFMCoordinateSystem.add(KERNEL_FRAME_ID: KERNEL_FRAME_ID, &fbb)
-    RFMCoordinateSystem.add(EOP_DATA_SET_CID: EOP_DATA_SET_CID, &fbb)
-    return RFMCoordinateSystem.endRFMCoordinateSystem(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.AXIS_TYPE, fieldName: "AXIS_TYPE", required: false, type: rfmAxisType.self)
-    try _v.visit(field: VT.ORIGIN, fieldName: "ORIGIN", required: false, type: ForwardOffset<RFMOrigin>.self)
-    try _v.visit(field: VT.AXIS_REFERENCE_BODY_ID, fieldName: "AXIS_REFERENCE_BODY_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EPOCH_TIME_SYSTEM, fieldName: "EPOCH_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJECT_REFERENCED_AXES, fieldName: "OBJECT_REFERENCED_AXES", required: false, type: ForwardOffset<RFMObjectReferencedAxes>.self)
-    try _v.visit(field: VT.LOCAL_ALIGNED_CONSTRAINED_AXES, fieldName: "LOCAL_ALIGNED_CONSTRAINED_AXES", required: false, type: ForwardOffset<RFMLocalAlignedConstrainedAxes>.self)
-    try _v.visit(field: VT.KERNEL_FRAME_NAME, fieldName: "KERNEL_FRAME_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.KERNEL_FRAME_ID, fieldName: "KERNEL_FRAME_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.EOP_DATA_SET_CID, fieldName: "EOP_DATA_SET_CID", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-public struct CelestialFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CelestialFrameWrapper.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let frame: VOffset = 4
-  }
-
-  public var frame: CelestialFrame { let o = _accessor.offset(VT.frame); return o == 0 ? .gcrf : CelestialFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gcrf }
-  public static func startCelestialFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(frame: CelestialFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VT.frame) }
-  public static func endCelestialFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createCelestialFrameWrapper(
-    _ fbb: inout FlatBufferBuilder,
-    frame: CelestialFrame = .gcrf
-  ) -> Offset {
-    let __start = CelestialFrameWrapper.startCelestialFrameWrapper(&fbb)
-    CelestialFrameWrapper.add(frame: frame, &fbb)
-    return CelestialFrameWrapper.endCelestialFrameWrapper(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.frame, fieldName: "frame", required: false, type: CelestialFrame.self)
-    _v.finish()
-  }
-}
-
-public struct SpacecraftFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SpacecraftFrameWrapper.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let frame: VOffset = 4
-  }
-
-  public var frame: SpacecraftFrame { let o = _accessor.offset(VT.frame); return o == 0 ? .accI : SpacecraftFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .accI }
-  public static func startSpacecraftFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(frame: SpacecraftFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VT.frame) }
-  public static func endSpacecraftFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createSpacecraftFrameWrapper(
-    _ fbb: inout FlatBufferBuilder,
-    frame: SpacecraftFrame = .accI
-  ) -> Offset {
-    let __start = SpacecraftFrameWrapper.startSpacecraftFrameWrapper(&fbb)
-    SpacecraftFrameWrapper.add(frame: frame, &fbb)
-    return SpacecraftFrameWrapper.endSpacecraftFrameWrapper(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.frame, fieldName: "frame", required: false, type: SpacecraftFrame.self)
-    _v.finish()
-  }
-}
-
-public struct OrbitFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OrbitFrameWrapper.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let frame: VOffset = 4
-  }
-
-  public var frame: OrbitFrame { let o = _accessor.offset(VT.frame); return o == 0 ? .eqwInertial : OrbitFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eqwInertial }
-  public static func startOrbitFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(frame: OrbitFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VT.frame) }
-  public static func endOrbitFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createOrbitFrameWrapper(
-    _ fbb: inout FlatBufferBuilder,
-    frame: OrbitFrame = .eqwInertial
-  ) -> Offset {
-    let __start = OrbitFrameWrapper.startOrbitFrameWrapper(&fbb)
-    OrbitFrameWrapper.add(frame: frame, &fbb)
-    return OrbitFrameWrapper.endOrbitFrameWrapper(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.frame, fieldName: "frame", required: false, type: OrbitFrame.self)
-    _v.finish()
-  }
-}
-
-public struct CustomFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CustomFrameWrapper.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let frame: VOffset = 4
-  }
-
-  public var frame: CustomFrame { let o = _accessor.offset(VT.frame); return o == 0 ? .ecef : CustomFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
-  public static func startCustomFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(frame: CustomFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VT.frame) }
-  public static func endCustomFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createCustomFrameWrapper(
-    _ fbb: inout FlatBufferBuilder,
-    frame: CustomFrame = .ecef
-  ) -> Offset {
-    let __start = CustomFrameWrapper.startCustomFrameWrapper(&fbb)
-    CustomFrameWrapper.add(frame: frame, &fbb)
-    return CustomFrameWrapper.endCustomFrameWrapper(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.frame, fieldName: "frame", required: false, type: CustomFrame.self)
-    _v.finish()
-  }
-}
-
-public struct RFMCoordinateSystemWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFMCoordinateSystemWrapper.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let COORDINATE_SYSTEM: VOffset = 4
-  }
-
-  public var COORDINATE_SYSTEM: RFMCoordinateSystem? { let o = _accessor.offset(VT.COORDINATE_SYSTEM); return o == 0 ? nil : RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startRFMCoordinateSystemWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(COORDINATE_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATE_SYSTEM, at: VT.COORDINATE_SYSTEM) }
-  public static func endRFMCoordinateSystemWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFMCoordinateSystemWrapper(
-    _ fbb: inout FlatBufferBuilder,
-    COORDINATE_SYSTEMOffset COORDINATE_SYSTEM: Offset = Offset()
-  ) -> Offset {
-    let __start = RFMCoordinateSystemWrapper.startRFMCoordinateSystemWrapper(&fbb)
-    RFMCoordinateSystemWrapper.add(COORDINATE_SYSTEM: COORDINATE_SYSTEM, &fbb)
-    return RFMCoordinateSystemWrapper.endRFMCoordinateSystemWrapper(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.COORDINATE_SYSTEM, fieldName: "COORDINATE_SYSTEM", required: false, type: ForwardOffset<RFMCoordinateSystem>.self)
-    _v.finish()
-  }
-}
-
-///  Reference Frame Message
-public struct RFM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let REFERENCE_FRAME_type: VOffset = 4
-    static let REFERENCE_FRAME: VOffset = 6
-    static let INDEX: VOffset = 8
-    static let NAME: VOffset = 10
-  }
-
-  public var REFERENCE_FRAME_type: RFMUnion { let o = _accessor.offset(VT.REFERENCE_FRAME_type); return o == 0 ? .none_ : RFMUnion(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
-  public func REFERENCE_FRAME<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : _accessor.union(o) }
-  public var INDEX: Int32 { let o = _accessor.offset(VT.INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  public static func startRFM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(REFERENCE_FRAME_type: RFMUnion, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME_type.rawValue, def: 0, at: VT.REFERENCE_FRAME_type) }
+  ///  A comment
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  public var OBJECT: CAT? { let o = _accessor.offset(VT.OBJECT); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Point of Contact
+  public var POC: EPM? { let o = _accessor.offset(VT.POC); return o == 0 ? nil : EPM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Operator contact position
+  public var OPERATOR_CONTACT_POSITION: String? { let o = _accessor.offset(VT.OPERATOR_CONTACT_POSITION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPERATOR_CONTACT_POSITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPERATOR_CONTACT_POSITION) }
+  ///  Operator organization
+  public var OPERATOR_ORGANIZATION: String? { let o = _accessor.offset(VT.OPERATOR_ORGANIZATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPERATOR_ORGANIZATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPERATOR_ORGANIZATION) }
+  ///  Ephemeris name
+  public var EPHEMERIS_NAME: String? { let o = _accessor.offset(VT.EPHEMERIS_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPHEMERIS_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPHEMERIS_NAME) }
+  ///  Covariance method
+  public var COVARIANCE_METHOD: covarianceAlgorithm { let o = _accessor.offset(VT.COVARIANCE_METHOD); return o == 0 ? .calculated : covarianceAlgorithm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .calculated }
+  ///  Reference Frame in which the object position is defined
+  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Gravity model
+  public var GRAVITY_MODEL: String? { let o = _accessor.offset(VT.GRAVITY_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRAVITY_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRAVITY_MODEL) }
+  ///  Atmospheric model
+  public var ATMOSPHERIC_MODEL: String? { let o = _accessor.offset(VT.ATMOSPHERIC_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATMOSPHERIC_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATMOSPHERIC_MODEL) }
+  ///  N-body perturbations
+  public var N_BODY_PERTURBATIONS: String? { let o = _accessor.offset(VT.N_BODY_PERTURBATIONS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var N_BODY_PERTURBATIONSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.N_BODY_PERTURBATIONS) }
+  ///  Solar radiation pressure
+  public var SOLAR_RAD_PRESSURE: Bool { let o = _accessor.offset(VT.SOLAR_RAD_PRESSURE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Earth tides
+  public var EARTH_TIDES: Bool { let o = _accessor.offset(VT.EARTH_TIDES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Intrack thrust
+  public var INTRACK_THRUST: Bool { let o = _accessor.offset(VT.INTRACK_THRUST); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Time of last observation start
+  public var TIME_LASTOB_START: String? { let o = _accessor.offset(VT.TIME_LASTOB_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_LASTOB_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_LASTOB_START) }
+  ///  Time of last observation end
+  public var TIME_LASTOB_END: String? { let o = _accessor.offset(VT.TIME_LASTOB_END); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_LASTOB_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_LASTOB_END) }
+  ///  Recommended observation data span
+  public var RECOMMENDED_OD_SPAN: Double { let o = _accessor.offset(VT.RECOMMENDED_OD_SPAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Actual observation data span
+  public var ACTUAL_OD_SPAN: Double { let o = _accessor.offset(VT.ACTUAL_OD_SPAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of observations available
+  public var OBS_AVAILABLE: UInt32 { let o = _accessor.offset(VT.OBS_AVAILABLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of observations used
+  public var OBS_USED: UInt32 { let o = _accessor.offset(VT.OBS_USED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of tracks available
+  public var TRACKS_AVAILABLE: UInt32 { let o = _accessor.offset(VT.TRACKS_AVAILABLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of tracks used
+  public var TRACKS_USED: UInt32 { let o = _accessor.offset(VT.TRACKS_USED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Residuals accepted
+  public var RESIDUALS_ACCEPTED: Double { let o = _accessor.offset(VT.RESIDUALS_ACCEPTED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Weighted root mean square
+  public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Area of the object
+  public var AREA_PC: Double { let o = _accessor.offset(VT.AREA_PC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Area of the object drag
+  public var AREA_DRG: Double { let o = _accessor.offset(VT.AREA_DRG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Area of the object solar radiation pressure
+  public var AREA_SRP: Double { let o = _accessor.offset(VT.AREA_SRP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Object's area-to-mass ratio
+  public var CR_AREA_OVER_MASS: Double { let o = _accessor.offset(VT.CR_AREA_OVER_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Object's thrust acceleration
+  public var THRUST_ACCELERATION: Double { let o = _accessor.offset(VT.THRUST_ACCELERATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Object's solar flux
+  public var SEDR: Double { let o = _accessor.offset(VT.SEDR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  X-coordinate of the object's position in RTN coordinates
+  public var X: Double { let o = _accessor.offset(VT.X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Y-coordinate of the object's position in RTN
+  public var Y: Double { let o = _accessor.offset(VT.Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Z-coordinate of the object's position in RTN
+  public var Z: Double { let o = _accessor.offset(VT.Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  X-coordinate of the object's position in RTN coordinates
+  public var X_DOT: Double { let o = _accessor.offset(VT.X_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Y-coordinate of the object's position in RTN
+  public var Y_DOT: Double { let o = _accessor.offset(VT.Y_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Z-coordinate of the object's position in RTN
+  public var Z_DOT: Double { let o = _accessor.offset(VT.Z_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  ///  Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///          CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///          CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///          CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///          CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///          CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+  public var COVARIANCE: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE, byteSize: 8) }
+  public func withUnsafePointerToCovariance<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE, body: body) }
+  ///  OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+  ///  as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VT.OBJECT_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_DESIGNATOR) }
+  ///  CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+  public var CATALOG_NAME: String? { let o = _accessor.offset(VT.CATALOG_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CATALOG_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CATALOG_NAME) }
+  ///  MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+  ///  same fact as a flag, true for YES.
+  public var MANEUVERABLE: cdmManeuverable { let o = _accessor.offset(VT.MANEUVERABLE); return o == 0 ? .unspecified : cdmManeuverable(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+  public var CD_AREA_OVER_MASS: Double { let o = _accessor.offset(VT.CD_AREA_OVER_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCDMObject(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 41) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VT.OBJECT) }
+  public static func add(POC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POC, at: VT.POC) }
+  public static func add(OPERATOR_CONTACT_POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATOR_CONTACT_POSITION, at: VT.OPERATOR_CONTACT_POSITION) }
+  public static func add(OPERATOR_ORGANIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATOR_ORGANIZATION, at: VT.OPERATOR_ORGANIZATION) }
+  public static func add(EPHEMERIS_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_NAME, at: VT.EPHEMERIS_NAME) }
+  public static func add(COVARIANCE_METHOD: covarianceAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVARIANCE_METHOD.rawValue, def: 0, at: VT.COVARIANCE_METHOD) }
   public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VT.REFERENCE_FRAME) }
-  public static func add(INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INDEX, def: 0, at: VT.INDEX) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func endRFM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFM(
+  public static func add(GRAVITY_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAVITY_MODEL, at: VT.GRAVITY_MODEL) }
+  public static func add(ATMOSPHERIC_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL, at: VT.ATMOSPHERIC_MODEL) }
+  public static func add(N_BODY_PERTURBATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: N_BODY_PERTURBATIONS, at: VT.N_BODY_PERTURBATIONS) }
+  public static func add(SOLAR_RAD_PRESSURE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_PRESSURE, def: false,
+   at: VT.SOLAR_RAD_PRESSURE) }
+  public static func add(EARTH_TIDES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EARTH_TIDES, def: false,
+   at: VT.EARTH_TIDES) }
+  public static func add(INTRACK_THRUST: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTRACK_THRUST, def: false,
+   at: VT.INTRACK_THRUST) }
+  public static func add(TIME_LASTOB_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_LASTOB_START, at: VT.TIME_LASTOB_START) }
+  public static func add(TIME_LASTOB_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_LASTOB_END, at: VT.TIME_LASTOB_END) }
+  public static func add(RECOMMENDED_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECOMMENDED_OD_SPAN, def: 0.0, at: VT.RECOMMENDED_OD_SPAN) }
+  public static func add(ACTUAL_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTUAL_OD_SPAN, def: 0.0, at: VT.ACTUAL_OD_SPAN) }
+  public static func add(OBS_AVAILABLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_AVAILABLE, def: 0, at: VT.OBS_AVAILABLE) }
+  public static func add(OBS_USED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_USED, def: 0, at: VT.OBS_USED) }
+  public static func add(TRACKS_AVAILABLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKS_AVAILABLE, def: 0, at: VT.TRACKS_AVAILABLE) }
+  public static func add(TRACKS_USED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKS_USED, def: 0, at: VT.TRACKS_USED) }
+  public static func add(RESIDUALS_ACCEPTED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESIDUALS_ACCEPTED, def: 0.0, at: VT.RESIDUALS_ACCEPTED) }
+  public static func add(WEIGHTED_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHTED_RMS, def: 0.0, at: VT.WEIGHTED_RMS) }
+  public static func add(AREA_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_PC, def: 0.0, at: VT.AREA_PC) }
+  public static func add(AREA_DRG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_DRG, def: 0.0, at: VT.AREA_DRG) }
+  public static func add(AREA_SRP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_SRP, def: 0.0, at: VT.AREA_SRP) }
+  public static func add(CR_AREA_OVER_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CR_AREA_OVER_MASS, def: 0.0, at: VT.CR_AREA_OVER_MASS) }
+  public static func add(THRUST_ACCELERATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST_ACCELERATION, def: 0.0, at: VT.THRUST_ACCELERATION) }
+  public static func add(SEDR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEDR, def: 0.0, at: VT.SEDR) }
+  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VT.X) }
+  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VT.Y) }
+  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VT.Z) }
+  public static func add(X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DOT, def: 0.0, at: VT.X_DOT) }
+  public static func add(Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DOT, def: 0.0, at: VT.Y_DOT) }
+  public static func add(Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DOT, def: 0.0, at: VT.Z_DOT) }
+  public static func addVectorOf(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VT.COVARIANCE) }
+  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VT.OBJECT_DESIGNATOR) }
+  public static func add(CATALOG_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_NAME, at: VT.CATALOG_NAME) }
+  public static func add(MANEUVERABLE: cdmManeuverable, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVERABLE.rawValue, def: 0, at: VT.MANEUVERABLE) }
+  public static func add(CD_AREA_OVER_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CD_AREA_OVER_MASS, def: 0.0, at: VT.CD_AREA_OVER_MASS) }
+  public static func endCDMObject(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCDMObject(
     _ fbb: inout FlatBufferBuilder,
-    REFERENCE_FRAME_type: RFMUnion = .none_,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    OBJECTOffset OBJECT: Offset = Offset(),
+    POCOffset POC: Offset = Offset(),
+    OPERATOR_CONTACT_POSITIONOffset OPERATOR_CONTACT_POSITION: Offset = Offset(),
+    OPERATOR_ORGANIZATIONOffset OPERATOR_ORGANIZATION: Offset = Offset(),
+    EPHEMERIS_NAMEOffset EPHEMERIS_NAME: Offset = Offset(),
+    COVARIANCE_METHOD: covarianceAlgorithm = .calculated,
     REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
-    INDEX: Int32 = 0,
-    NAMEOffset NAME: Offset = Offset()
+    GRAVITY_MODELOffset GRAVITY_MODEL: Offset = Offset(),
+    ATMOSPHERIC_MODELOffset ATMOSPHERIC_MODEL: Offset = Offset(),
+    N_BODY_PERTURBATIONSOffset N_BODY_PERTURBATIONS: Offset = Offset(),
+    SOLAR_RAD_PRESSURE: Bool = false,
+    EARTH_TIDES: Bool = false,
+    INTRACK_THRUST: Bool = false,
+    TIME_LASTOB_STARTOffset TIME_LASTOB_START: Offset = Offset(),
+    TIME_LASTOB_ENDOffset TIME_LASTOB_END: Offset = Offset(),
+    RECOMMENDED_OD_SPAN: Double = 0.0,
+    ACTUAL_OD_SPAN: Double = 0.0,
+    OBS_AVAILABLE: UInt32 = 0,
+    OBS_USED: UInt32 = 0,
+    TRACKS_AVAILABLE: UInt32 = 0,
+    TRACKS_USED: UInt32 = 0,
+    RESIDUALS_ACCEPTED: Double = 0.0,
+    WEIGHTED_RMS: Double = 0.0,
+    AREA_PC: Double = 0.0,
+    AREA_DRG: Double = 0.0,
+    AREA_SRP: Double = 0.0,
+    CR_AREA_OVER_MASS: Double = 0.0,
+    THRUST_ACCELERATION: Double = 0.0,
+    SEDR: Double = 0.0,
+    X: Double = 0.0,
+    Y: Double = 0.0,
+    Z: Double = 0.0,
+    X_DOT: Double = 0.0,
+    Y_DOT: Double = 0.0,
+    Z_DOT: Double = 0.0,
+    COVARIANCEVectorOffset COVARIANCE: Offset = Offset(),
+    OBJECT_DESIGNATOROffset OBJECT_DESIGNATOR: Offset = Offset(),
+    CATALOG_NAMEOffset CATALOG_NAME: Offset = Offset(),
+    MANEUVERABLE: cdmManeuverable = .unspecified,
+    CD_AREA_OVER_MASS: Double = 0.0
   ) -> Offset {
-    let __start = RFM.startRFM(&fbb)
-    RFM.add(REFERENCE_FRAME_type: REFERENCE_FRAME_type, &fbb)
-    RFM.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
-    RFM.add(INDEX: INDEX, &fbb)
-    RFM.add(NAME: NAME, &fbb)
-    return RFM.endRFM(&fbb, start: __start)
+    let __start = CDMObject.startCDMObject(&fbb)
+    CDMObject.add(COMMENT: COMMENT, &fbb)
+    CDMObject.add(OBJECT: OBJECT, &fbb)
+    CDMObject.add(POC: POC, &fbb)
+    CDMObject.add(OPERATOR_CONTACT_POSITION: OPERATOR_CONTACT_POSITION, &fbb)
+    CDMObject.add(OPERATOR_ORGANIZATION: OPERATOR_ORGANIZATION, &fbb)
+    CDMObject.add(EPHEMERIS_NAME: EPHEMERIS_NAME, &fbb)
+    CDMObject.add(COVARIANCE_METHOD: COVARIANCE_METHOD, &fbb)
+    CDMObject.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
+    CDMObject.add(GRAVITY_MODEL: GRAVITY_MODEL, &fbb)
+    CDMObject.add(ATMOSPHERIC_MODEL: ATMOSPHERIC_MODEL, &fbb)
+    CDMObject.add(N_BODY_PERTURBATIONS: N_BODY_PERTURBATIONS, &fbb)
+    CDMObject.add(SOLAR_RAD_PRESSURE: SOLAR_RAD_PRESSURE, &fbb)
+    CDMObject.add(EARTH_TIDES: EARTH_TIDES, &fbb)
+    CDMObject.add(INTRACK_THRUST: INTRACK_THRUST, &fbb)
+    CDMObject.add(TIME_LASTOB_START: TIME_LASTOB_START, &fbb)
+    CDMObject.add(TIME_LASTOB_END: TIME_LASTOB_END, &fbb)
+    CDMObject.add(RECOMMENDED_OD_SPAN: RECOMMENDED_OD_SPAN, &fbb)
+    CDMObject.add(ACTUAL_OD_SPAN: ACTUAL_OD_SPAN, &fbb)
+    CDMObject.add(OBS_AVAILABLE: OBS_AVAILABLE, &fbb)
+    CDMObject.add(OBS_USED: OBS_USED, &fbb)
+    CDMObject.add(TRACKS_AVAILABLE: TRACKS_AVAILABLE, &fbb)
+    CDMObject.add(TRACKS_USED: TRACKS_USED, &fbb)
+    CDMObject.add(RESIDUALS_ACCEPTED: RESIDUALS_ACCEPTED, &fbb)
+    CDMObject.add(WEIGHTED_RMS: WEIGHTED_RMS, &fbb)
+    CDMObject.add(AREA_PC: AREA_PC, &fbb)
+    CDMObject.add(AREA_DRG: AREA_DRG, &fbb)
+    CDMObject.add(AREA_SRP: AREA_SRP, &fbb)
+    CDMObject.add(CR_AREA_OVER_MASS: CR_AREA_OVER_MASS, &fbb)
+    CDMObject.add(THRUST_ACCELERATION: THRUST_ACCELERATION, &fbb)
+    CDMObject.add(SEDR: SEDR, &fbb)
+    CDMObject.add(X: X, &fbb)
+    CDMObject.add(Y: Y, &fbb)
+    CDMObject.add(Z: Z, &fbb)
+    CDMObject.add(X_DOT: X_DOT, &fbb)
+    CDMObject.add(Y_DOT: Y_DOT, &fbb)
+    CDMObject.add(Z_DOT: Z_DOT, &fbb)
+    CDMObject.addVectorOf(COVARIANCE: COVARIANCE, &fbb)
+    CDMObject.add(OBJECT_DESIGNATOR: OBJECT_DESIGNATOR, &fbb)
+    CDMObject.add(CATALOG_NAME: CATALOG_NAME, &fbb)
+    CDMObject.add(MANEUVERABLE: MANEUVERABLE, &fbb)
+    CDMObject.add(CD_AREA_OVER_MASS: CD_AREA_OVER_MASS, &fbb)
+    return CDMObject.endCDMObject(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(unionKey: VT.REFERENCE_FRAMEType, unionField: VT.REFERENCE_FRAME, unionKeyName: "REFERENCE_FRAMEType", fieldName: "REFERENCE_FRAME", required: false, completion: { (verifier, key: RFMUnion, pos) in
-      switch key {
-      case .none_:
-        break // NOTE - SWIFT doesnt support none
-      case .celestialframewrapper:
-        try ForwardOffset<CelestialFrameWrapper>.verify(&verifier, at: pos, of: CelestialFrameWrapper.self)
-      case .spacecraftframewrapper:
-        try ForwardOffset<SpacecraftFrameWrapper>.verify(&verifier, at: pos, of: SpacecraftFrameWrapper.self)
-      case .orbitframewrapper:
-        try ForwardOffset<OrbitFrameWrapper>.verify(&verifier, at: pos, of: OrbitFrameWrapper.self)
-      case .customframewrapper:
-        try ForwardOffset<CustomFrameWrapper>.verify(&verifier, at: pos, of: CustomFrameWrapper.self)
-      case .rfmcoordinatesystemwrapper:
-        try ForwardOffset<RFMCoordinateSystemWrapper>.verify(&verifier, at: pos, of: RFMCoordinateSystemWrapper.self)
-      }
-    })
-    try _v.visit(field: VT.INDEX, fieldName: "INDEX", required: false, type: Int32.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT, fieldName: "OBJECT", required: false, type: ForwardOffset<CAT>.self)
+    try _v.visit(field: VT.POC, fieldName: "POC", required: false, type: ForwardOffset<EPM>.self)
+    try _v.visit(field: VT.OPERATOR_CONTACT_POSITION, fieldName: "OPERATOR_CONTACT_POSITION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPERATOR_ORGANIZATION, fieldName: "OPERATOR_ORGANIZATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPHEMERIS_NAME, fieldName: "EPHEMERIS_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COVARIANCE_METHOD, fieldName: "COVARIANCE_METHOD", required: false, type: covarianceAlgorithm.self)
+    try _v.visit(field: VT.REFERENCE_FRAME, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.GRAVITY_MODEL, fieldName: "GRAVITY_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATMOSPHERIC_MODEL, fieldName: "ATMOSPHERIC_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.N_BODY_PERTURBATIONS, fieldName: "N_BODY_PERTURBATIONS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLAR_RAD_PRESSURE, fieldName: "SOLAR_RAD_PRESSURE", required: false, type: Bool.self)
+    try _v.visit(field: VT.EARTH_TIDES, fieldName: "EARTH_TIDES", required: false, type: Bool.self)
+    try _v.visit(field: VT.INTRACK_THRUST, fieldName: "INTRACK_THRUST", required: false, type: Bool.self)
+    try _v.visit(field: VT.TIME_LASTOB_START, fieldName: "TIME_LASTOB_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_LASTOB_END, fieldName: "TIME_LASTOB_END", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECOMMENDED_OD_SPAN, fieldName: "RECOMMENDED_OD_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VT.ACTUAL_OD_SPAN, fieldName: "ACTUAL_OD_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VT.OBS_AVAILABLE, fieldName: "OBS_AVAILABLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBS_USED, fieldName: "OBS_USED", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TRACKS_AVAILABLE, fieldName: "TRACKS_AVAILABLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TRACKS_USED, fieldName: "TRACKS_USED", required: false, type: UInt32.self)
+    try _v.visit(field: VT.RESIDUALS_ACCEPTED, fieldName: "RESIDUALS_ACCEPTED", required: false, type: Double.self)
+    try _v.visit(field: VT.WEIGHTED_RMS, fieldName: "WEIGHTED_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_PC, fieldName: "AREA_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_DRG, fieldName: "AREA_DRG", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_SRP, fieldName: "AREA_SRP", required: false, type: Double.self)
+    try _v.visit(field: VT.CR_AREA_OVER_MASS, fieldName: "CR_AREA_OVER_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.THRUST_ACCELERATION, fieldName: "THRUST_ACCELERATION", required: false, type: Double.self)
+    try _v.visit(field: VT.SEDR, fieldName: "SEDR", required: false, type: Double.self)
+    try _v.visit(field: VT.X, fieldName: "X", required: false, type: Double.self)
+    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: Double.self)
+    try _v.visit(field: VT.Z, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VT.X_DOT, fieldName: "X_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_DOT, fieldName: "Y_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Z_DOT, fieldName: "Z_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.COVARIANCE, fieldName: "COVARIANCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OBJECT_DESIGNATOR, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATALOG_NAME, fieldName: "CATALOG_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MANEUVERABLE, fieldName: "MANEUVERABLE", required: false, type: cdmManeuverable.self)
+    try _v.visit(field: VT.CD_AREA_OVER_MASS, fieldName: "CD_AREA_OVER_MASS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Conjunction Data Message
+///
+///  Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+///  SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+///  of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+///  km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+///  MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+///  COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+///  terms) are held as the message states them.
+public struct CDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CDM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CDM.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CCSDS_CDM_VERS: VOffset = 4
+    static let CREATION_DATE: VOffset = 6
+    static let ORIGINATOR: VOffset = 8
+    static let MESSAGE_FOR: VOffset = 10
+    static let MESSAGE_ID: VOffset = 12
+    static let TCA: VOffset = 14
+    static let MISS_DISTANCE: VOffset = 16
+    static let RELATIVE_SPEED: VOffset = 18
+    static let RELATIVE_POSITION_R: VOffset = 20
+    static let RELATIVE_POSITION_T: VOffset = 22
+    static let RELATIVE_POSITION_N: VOffset = 24
+    static let RELATIVE_VELOCITY_R: VOffset = 26
+    static let RELATIVE_VELOCITY_T: VOffset = 28
+    static let RELATIVE_VELOCITY_N: VOffset = 30
+    static let START_SCREEN_PERIOD: VOffset = 32
+    static let STOP_SCREEN_PERIOD: VOffset = 34
+    static let SCREEN_VOLUME_FRAME: VOffset = 36
+    static let SCREEN_VOLUME_SHAPE: VOffset = 38
+    static let SCREEN_VOLUME_X: VOffset = 40
+    static let SCREEN_VOLUME_Y: VOffset = 42
+    static let SCREEN_VOLUME_Z: VOffset = 44
+    static let SCREEN_ENTRY_TIME: VOffset = 46
+    static let SCREEN_EXIT_TIME: VOffset = 48
+    static let COLLISION_PROBABILITY: VOffset = 50
+    static let COLLISION_PROBABILITY_METHOD: VOffset = 52
+    static let OBJECT1: VOffset = 54
+    static let OBJECT2: VOffset = 56
+    static let OBJECT1_DATASOURCE: VOffset = 58
+    static let OBJECT2_DATASOURCE: VOffset = 60
+    static let COMMENT: VOffset = 62
+  }
+
+  ///  The version of the CCSDS CDM standard used
+  public var CCSDS_CDM_VERS: Double { let o = _accessor.offset(VT.CCSDS_CDM_VERS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The date the CDM message was created
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  ///  The originator of the CDM message
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  ///  The intended recipient of the CDM message
+  public var MESSAGE_FOR: String? { let o = _accessor.offset(VT.MESSAGE_FOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_FORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_FOR) }
+  ///  A unique identifier for the CDM message
+  public var MESSAGE_ID: String? { let o = _accessor.offset(VT.MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_ID) }
+  ///  Time of closest approach
+  public var TCA: String? { let o = _accessor.offset(VT.TCA); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TCASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TCA) }
+  ///  The miss distance between the two objects
+  public var MISS_DISTANCE: Double { let o = _accessor.offset(VT.MISS_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The relative speed between the two objects
+  public var RELATIVE_SPEED: Double { let o = _accessor.offset(VT.RELATIVE_SPEED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The relative position R component
+  public var RELATIVE_POSITION_R: Double { let o = _accessor.offset(VT.RELATIVE_POSITION_R); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The relative position T component
+  public var RELATIVE_POSITION_T: Double { let o = _accessor.offset(VT.RELATIVE_POSITION_T); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The relative position N component
+  public var RELATIVE_POSITION_N: Double { let o = _accessor.offset(VT.RELATIVE_POSITION_N); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The relative velocity R component
+  public var RELATIVE_VELOCITY_R: Double { let o = _accessor.offset(VT.RELATIVE_VELOCITY_R); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The relative velocity T component
+  public var RELATIVE_VELOCITY_T: Double { let o = _accessor.offset(VT.RELATIVE_VELOCITY_T); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The relative velocity N component
+  public var RELATIVE_VELOCITY_N: Double { let o = _accessor.offset(VT.RELATIVE_VELOCITY_N); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The start time of the screening period
+  public var START_SCREEN_PERIOD: String? { let o = _accessor.offset(VT.START_SCREEN_PERIOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_SCREEN_PERIODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_SCREEN_PERIOD) }
+  ///  The end time of the screening period
+  public var STOP_SCREEN_PERIOD: String? { let o = _accessor.offset(VT.STOP_SCREEN_PERIOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_SCREEN_PERIODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_SCREEN_PERIOD) }
+  ///  The reference frame for the screening volume
+  public var SCREEN_VOLUME_FRAME: RFM? { let o = _accessor.offset(VT.SCREEN_VOLUME_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  The shape of the screening volume
+  public var SCREEN_VOLUME_SHAPE: screeningVolumeShape { let o = _accessor.offset(VT.SCREEN_VOLUME_SHAPE); return o == 0 ? .ellipsoid : screeningVolumeShape(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ellipsoid }
+  ///  The X dimension of the screening volume
+  public var SCREEN_VOLUME_X: Double { let o = _accessor.offset(VT.SCREEN_VOLUME_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The Y dimension of the screening volume
+  public var SCREEN_VOLUME_Y: Double { let o = _accessor.offset(VT.SCREEN_VOLUME_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The Z dimension of the screening volume
+  public var SCREEN_VOLUME_Z: Double { let o = _accessor.offset(VT.SCREEN_VOLUME_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The time the objects entered the screening volume
+  public var SCREEN_ENTRY_TIME: String? { let o = _accessor.offset(VT.SCREEN_ENTRY_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCREEN_ENTRY_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCREEN_ENTRY_TIME) }
+  ///  The time the objects exited the screening volume
+  public var SCREEN_EXIT_TIME: String? { let o = _accessor.offset(VT.SCREEN_EXIT_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCREEN_EXIT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCREEN_EXIT_TIME) }
+  ///  The probability of collision between the two objects
+  public var COLLISION_PROBABILITY: Double { let o = _accessor.offset(VT.COLLISION_PROBABILITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The method used to calculate the collision probability
+  public var COLLISION_PROBABILITY_METHOD: String? { let o = _accessor.offset(VT.COLLISION_PROBABILITY_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLLISION_PROBABILITY_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLLISION_PROBABILITY_METHOD) }
+  ///  The first object in the CDM message
+  public var OBJECT1: CDMObject? { let o = _accessor.offset(VT.OBJECT1); return o == 0 ? nil : CDMObject(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  The second object in the CDM message
+  public var OBJECT2: CDMObject? { let o = _accessor.offset(VT.OBJECT2); return o == 0 ? nil : CDMObject(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Data Source for the positional information for Object 1
+  public var OBJECT1_DATASOURCE: PNM? { let o = _accessor.offset(VT.OBJECT1_DATASOURCE); return o == 0 ? nil : PNM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Data Source for the positional information for Object 2
+  public var OBJECT2_DATASOURCE: PNM? { let o = _accessor.offset(VT.OBJECT2_DATASOURCE); return o == 0 ? nil : PNM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  COMMENT lines of the message header and of its relative metadata and data
+  ///  (CCSDS 508.0-B-1), in message order, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  public static func startCDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 30) }
+  public static func add(CCSDS_CDM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_CDM_VERS, def: 0.0, at: VT.CCSDS_CDM_VERS) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func add(MESSAGE_FOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_FOR, at: VT.MESSAGE_FOR) }
+  public static func add(MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_ID, at: VT.MESSAGE_ID) }
+  public static func add(TCA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TCA, at: VT.TCA) }
+  public static func add(MISS_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISS_DISTANCE, def: 0.0, at: VT.MISS_DISTANCE) }
+  public static func add(RELATIVE_SPEED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_SPEED, def: 0.0, at: VT.RELATIVE_SPEED) }
+  public static func add(RELATIVE_POSITION_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_POSITION_R, def: 0.0, at: VT.RELATIVE_POSITION_R) }
+  public static func add(RELATIVE_POSITION_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_POSITION_T, def: 0.0, at: VT.RELATIVE_POSITION_T) }
+  public static func add(RELATIVE_POSITION_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_POSITION_N, def: 0.0, at: VT.RELATIVE_POSITION_N) }
+  public static func add(RELATIVE_VELOCITY_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_VELOCITY_R, def: 0.0, at: VT.RELATIVE_VELOCITY_R) }
+  public static func add(RELATIVE_VELOCITY_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_VELOCITY_T, def: 0.0, at: VT.RELATIVE_VELOCITY_T) }
+  public static func add(RELATIVE_VELOCITY_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_VELOCITY_N, def: 0.0, at: VT.RELATIVE_VELOCITY_N) }
+  public static func add(START_SCREEN_PERIOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_SCREEN_PERIOD, at: VT.START_SCREEN_PERIOD) }
+  public static func add(STOP_SCREEN_PERIOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_SCREEN_PERIOD, at: VT.STOP_SCREEN_PERIOD) }
+  public static func add(SCREEN_VOLUME_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREEN_VOLUME_FRAME, at: VT.SCREEN_VOLUME_FRAME) }
+  public static func add(SCREEN_VOLUME_SHAPE: screeningVolumeShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_SHAPE.rawValue, def: 0, at: VT.SCREEN_VOLUME_SHAPE) }
+  public static func add(SCREEN_VOLUME_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_X, def: 0.0, at: VT.SCREEN_VOLUME_X) }
+  public static func add(SCREEN_VOLUME_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_Y, def: 0.0, at: VT.SCREEN_VOLUME_Y) }
+  public static func add(SCREEN_VOLUME_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_Z, def: 0.0, at: VT.SCREEN_VOLUME_Z) }
+  public static func add(SCREEN_ENTRY_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREEN_ENTRY_TIME, at: VT.SCREEN_ENTRY_TIME) }
+  public static func add(SCREEN_EXIT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREEN_EXIT_TIME, at: VT.SCREEN_EXIT_TIME) }
+  public static func add(COLLISION_PROBABILITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLLISION_PROBABILITY, def: 0.0, at: VT.COLLISION_PROBABILITY) }
+  public static func add(COLLISION_PROBABILITY_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLISION_PROBABILITY_METHOD, at: VT.COLLISION_PROBABILITY_METHOD) }
+  public static func add(OBJECT1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT1, at: VT.OBJECT1) }
+  public static func add(OBJECT2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT2, at: VT.OBJECT2) }
+  public static func add(OBJECT1_DATASOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT1_DATASOURCE, at: VT.OBJECT1_DATASOURCE) }
+  public static func add(OBJECT2_DATASOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT2_DATASOURCE, at: VT.OBJECT2_DATASOURCE) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func endCDM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCDM(
+    _ fbb: inout FlatBufferBuilder,
+    CCSDS_CDM_VERS: Double = 0.0,
+    CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
+    ORIGINATOROffset ORIGINATOR: Offset = Offset(),
+    MESSAGE_FOROffset MESSAGE_FOR: Offset = Offset(),
+    MESSAGE_IDOffset MESSAGE_ID: Offset = Offset(),
+    TCAOffset TCA: Offset = Offset(),
+    MISS_DISTANCE: Double = 0.0,
+    RELATIVE_SPEED: Double = 0.0,
+    RELATIVE_POSITION_R: Double = 0.0,
+    RELATIVE_POSITION_T: Double = 0.0,
+    RELATIVE_POSITION_N: Double = 0.0,
+    RELATIVE_VELOCITY_R: Double = 0.0,
+    RELATIVE_VELOCITY_T: Double = 0.0,
+    RELATIVE_VELOCITY_N: Double = 0.0,
+    START_SCREEN_PERIODOffset START_SCREEN_PERIOD: Offset = Offset(),
+    STOP_SCREEN_PERIODOffset STOP_SCREEN_PERIOD: Offset = Offset(),
+    SCREEN_VOLUME_FRAMEOffset SCREEN_VOLUME_FRAME: Offset = Offset(),
+    SCREEN_VOLUME_SHAPE: screeningVolumeShape = .ellipsoid,
+    SCREEN_VOLUME_X: Double = 0.0,
+    SCREEN_VOLUME_Y: Double = 0.0,
+    SCREEN_VOLUME_Z: Double = 0.0,
+    SCREEN_ENTRY_TIMEOffset SCREEN_ENTRY_TIME: Offset = Offset(),
+    SCREEN_EXIT_TIMEOffset SCREEN_EXIT_TIME: Offset = Offset(),
+    COLLISION_PROBABILITY: Double = 0.0,
+    COLLISION_PROBABILITY_METHODOffset COLLISION_PROBABILITY_METHOD: Offset = Offset(),
+    OBJECT1Offset OBJECT1: Offset = Offset(),
+    OBJECT2Offset OBJECT2: Offset = Offset(),
+    OBJECT1_DATASOURCEOffset OBJECT1_DATASOURCE: Offset = Offset(),
+    OBJECT2_DATASOURCEOffset OBJECT2_DATASOURCE: Offset = Offset(),
+    COMMENTOffset COMMENT: Offset = Offset()
+  ) -> Offset {
+    let __start = CDM.startCDM(&fbb)
+    CDM.add(CCSDS_CDM_VERS: CCSDS_CDM_VERS, &fbb)
+    CDM.add(CREATION_DATE: CREATION_DATE, &fbb)
+    CDM.add(ORIGINATOR: ORIGINATOR, &fbb)
+    CDM.add(MESSAGE_FOR: MESSAGE_FOR, &fbb)
+    CDM.add(MESSAGE_ID: MESSAGE_ID, &fbb)
+    CDM.add(TCA: TCA, &fbb)
+    CDM.add(MISS_DISTANCE: MISS_DISTANCE, &fbb)
+    CDM.add(RELATIVE_SPEED: RELATIVE_SPEED, &fbb)
+    CDM.add(RELATIVE_POSITION_R: RELATIVE_POSITION_R, &fbb)
+    CDM.add(RELATIVE_POSITION_T: RELATIVE_POSITION_T, &fbb)
+    CDM.add(RELATIVE_POSITION_N: RELATIVE_POSITION_N, &fbb)
+    CDM.add(RELATIVE_VELOCITY_R: RELATIVE_VELOCITY_R, &fbb)
+    CDM.add(RELATIVE_VELOCITY_T: RELATIVE_VELOCITY_T, &fbb)
+    CDM.add(RELATIVE_VELOCITY_N: RELATIVE_VELOCITY_N, &fbb)
+    CDM.add(START_SCREEN_PERIOD: START_SCREEN_PERIOD, &fbb)
+    CDM.add(STOP_SCREEN_PERIOD: STOP_SCREEN_PERIOD, &fbb)
+    CDM.add(SCREEN_VOLUME_FRAME: SCREEN_VOLUME_FRAME, &fbb)
+    CDM.add(SCREEN_VOLUME_SHAPE: SCREEN_VOLUME_SHAPE, &fbb)
+    CDM.add(SCREEN_VOLUME_X: SCREEN_VOLUME_X, &fbb)
+    CDM.add(SCREEN_VOLUME_Y: SCREEN_VOLUME_Y, &fbb)
+    CDM.add(SCREEN_VOLUME_Z: SCREEN_VOLUME_Z, &fbb)
+    CDM.add(SCREEN_ENTRY_TIME: SCREEN_ENTRY_TIME, &fbb)
+    CDM.add(SCREEN_EXIT_TIME: SCREEN_EXIT_TIME, &fbb)
+    CDM.add(COLLISION_PROBABILITY: COLLISION_PROBABILITY, &fbb)
+    CDM.add(COLLISION_PROBABILITY_METHOD: COLLISION_PROBABILITY_METHOD, &fbb)
+    CDM.add(OBJECT1: OBJECT1, &fbb)
+    CDM.add(OBJECT2: OBJECT2, &fbb)
+    CDM.add(OBJECT1_DATASOURCE: OBJECT1_DATASOURCE, &fbb)
+    CDM.add(OBJECT2_DATASOURCE: OBJECT2_DATASOURCE, &fbb)
+    CDM.add(COMMENT: COMMENT, &fbb)
+    return CDM.endCDM(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CCSDS_CDM_VERS, fieldName: "CCSDS_CDM_VERS", required: false, type: Double.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_FOR, fieldName: "MESSAGE_FOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_ID, fieldName: "MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TCA, fieldName: "TCA", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MISS_DISTANCE, fieldName: "MISS_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_SPEED, fieldName: "RELATIVE_SPEED", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_POSITION_R, fieldName: "RELATIVE_POSITION_R", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_POSITION_T, fieldName: "RELATIVE_POSITION_T", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_POSITION_N, fieldName: "RELATIVE_POSITION_N", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_VELOCITY_R, fieldName: "RELATIVE_VELOCITY_R", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_VELOCITY_T, fieldName: "RELATIVE_VELOCITY_T", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_VELOCITY_N, fieldName: "RELATIVE_VELOCITY_N", required: false, type: Double.self)
+    try _v.visit(field: VT.START_SCREEN_PERIOD, fieldName: "START_SCREEN_PERIOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_SCREEN_PERIOD, fieldName: "STOP_SCREEN_PERIOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCREEN_VOLUME_FRAME, fieldName: "SCREEN_VOLUME_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.SCREEN_VOLUME_SHAPE, fieldName: "SCREEN_VOLUME_SHAPE", required: false, type: screeningVolumeShape.self)
+    try _v.visit(field: VT.SCREEN_VOLUME_X, fieldName: "SCREEN_VOLUME_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SCREEN_VOLUME_Y, fieldName: "SCREEN_VOLUME_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SCREEN_VOLUME_Z, fieldName: "SCREEN_VOLUME_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.SCREEN_ENTRY_TIME, fieldName: "SCREEN_ENTRY_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCREEN_EXIT_TIME, fieldName: "SCREEN_EXIT_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLISION_PROBABILITY, fieldName: "COLLISION_PROBABILITY", required: false, type: Double.self)
+    try _v.visit(field: VT.COLLISION_PROBABILITY_METHOD, fieldName: "COLLISION_PROBABILITY_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT1, fieldName: "OBJECT1", required: false, type: ForwardOffset<CDMObject>.self)
+    try _v.visit(field: VT.OBJECT2, fieldName: "OBJECT2", required: false, type: ForwardOffset<CDMObject>.self)
+    try _v.visit(field: VT.OBJECT1_DATASOURCE, fieldName: "OBJECT1_DATASOURCE", required: false, type: ForwardOffset<PNM>.self)
+    try _v.visit(field: VT.OBJECT2_DATASOURCE, fieldName: "OBJECT2_DATASOURCE", required: false, type: ForwardOffset<PNM>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -8,1699 +8,1133 @@ import Common
 
 import FlatBuffers
 
-///  Which kind of object owns a parameter. A parameter is meaningless without
-///  its owner: the same symbol evaluated on a space object and on a thruster
-///  are different quantities. Append new values only; never reorder or reuse
-///  existing values.
-public enum pceOwnerClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  What kind of event is being located. Every class is one instance of the
+///  same pair: an event function of time, and a refined root. Append new values
+///  only; never reorder or reuse existing values.
+public enum evlLocatorClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case unspecified = 0
-  ///  A tracked object with an orbital state.
-  case spaceObject = 1
-  ///  A point with an ephemeris but no vehicle properties: a celestial body,
-  ///  a barycentre, or a libration point.
-  case spacePoint = 2
-  ///  A fixed site on a body surface.
-  case groundSite = 3
-  ///  A thrust-producing device carried by a space object.
-  case thruster = 4
-  ///  A propellant reservoir carried by a space object.
-  case fuelTank = 5
-  ///  An instantaneous velocity change.
-  case impulsiveBurn = 6
-  ///  A thrust arc of finite duration.
-  case finiteBurn = 7
-  ///  An electrical power source and its bus.
-  case powerSystem = 8
-  ///  The orientation state of a space object.
-  case attitudeSystem = 9
-  ///  A differential-corrector or optimizer instance.
-  case solver = 10
-  ///  A set of space objects propagated together.
-  case objectGroup = 11
+  ///  Passage of the target through the shadow of one or more occulting
+  ///  bodies.
+  case eclipse = 1
+  ///  Visibility of the target from a surface site, subject to a horizon or
+  ///  mask constraint.
+  case contact = 2
+  ///  Entry of a body or object into a sensor field of view.
+  case intrusion = 3
+  ///  Passage of the target through an apsis of its orbit.
+  case apsides = 4
+  ///  Passage of the target through the node line of a stated coordinate
+  ///  system.
+  case nodeCrossing = 5
+  ///  The generic locator: a condition on any $PCE catalog parameter. Altitude
+  ///  crossings, latitude crossings and beta-angle limits are this class, not
+  ///  classes of their own.
+  case parameterCondition = 6
 
-  public static var max: pceOwnerClass { return .objectGroup }
-  public static var min: pceOwnerClass { return .unspecified }
+  public static var max: evlLocatorClass { return .parameterCondition }
+  public static var min: evlLocatorClass { return .unspecified }
 }
 
 
-///  The shape of a parameter's value. Append new values only.
-public enum pceDataType: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  What was found. Append new values only.
+public enum evlEventType: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case unspecified = 0
-  ///  One real number, carried in PCEParameterValue.VALUE.
-  case realScalar = 1
-  ///  An ordered run of real numbers, carried in PCEParameterValue.VALUES.
-  case realVector = 2
-  ///  A real matrix, carried row-major in PCEParameterValue.VALUES with
-  ///  ROW_COUNT and COLUMN_COUNT set.
-  case realMatrix = 3
-  ///  One integer, carried in PCEParameterValue.VALUE with no fractional part.
-  case integerScalar = 4
-  ///  Text, carried in PCEParameterValue.STRING_VALUE.
-  case string = 5
-  ///  An instant, carried in PCEParameterValue.STRING_VALUE as ISO 8601 or as
-  ///  the numeric day count in VALUE, per the parameter's own definition.
-  case epoch = 6
-  ///  A truth value, carried in PCEParameterValue.VALUE as 0 or 1.
-  case boolean = 7
+  ///  Total occultation of the illuminating body.
+  case umbra = 1
+  ///  Partial occultation of the illuminating body.
+  case penumbra = 2
+  ///  The occulting body is fully inside the illuminating body disc.
+  case antumbra = 3
+  ///  The target crossed the constraint boundary into visibility.
+  case rise = 4
+  ///  The target crossed the constraint boundary out of visibility.
+  case set_ = 5
+  ///  Entry into a bounded volume or field of view.
+  case entry = 6
+  ///  Exit from a bounded volume or field of view.
+  case exit = 7
+  ///  Maximum orbital radius.
+  case apoapsis = 8
+  ///  Minimum orbital radius.
+  case periapsis = 9
+  ///  Node crossing with the out-of-plane component increasing.
+  case ascendingNode = 10
+  ///  Node crossing with the out-of-plane component decreasing.
+  case descendingNode = 11
+  ///  A $PCE parameter condition was attained.
+  case conditionSatisfied = 12
 
-  public static var max: pceDataType { return .boolean }
-  public static var min: pceDataType { return .unspecified }
+  public static var max: evlEventType { return .conditionSatisfied }
+  public static var min: evlEventType { return .unspecified }
 }
 
 
-///  SI unit of a parameter value. The catalog is SI: metres, radians, seconds,
-///  kilograms. A provider MUST NOT publish degrees or kilometres under these
-///  members. PROVIDER_DEFINED holds a reserved high value so new SI units
-///  append contiguously without disturbing it. Append new values only.
-public enum pceUnit: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  A pure number.
-  case dimensionless = 1
-  case metre = 2
-  case metrePerSecond = 3
-  case metrePerSecondSquared = 4
-  case metreSquared = 5
-  ///  Specific angular momentum.
-  case metreSquaredPerSecond = 6
-  ///  Specific energy, including characteristic energy.
-  case metreSquaredPerSecondSquared = 7
-  case metreCubed = 8
-  case radian = 9
-  case radianPerSecond = 10
-  case second = 11
-  ///  Day of 86400 SI seconds; the unit of a modified Julian day count.
-  case day = 12
-  case kilogram = 13
-  case kilogramPerSecond = 14
-  case kilogramPerMetreCubed = 15
-  ///  Moment of inertia.
-  case kilogramMetreSquared = 16
-  case newton = 17
-  case newtonMetre = 18
-  case watt = 19
-  case pascal = 20
-  case kelvin = 21
-  ///  Area-to-mass ratio and ballistic coefficient reciprocal.
-  case metreSquaredPerKilogram = 22
-  ///  The unit is outside this vocabulary and is named in
-  ///  PCEParameterDescriptor.PROVIDER_DEFINED_UNIT_SYMBOL, which is then
-  ///  REQUIRED. A consumer that cannot resolve the symbol MUST refuse the
-  ///  value rather than assume DIMENSIONLESS.
-  case providerDefined = 100
-
-  public static var max: pceUnit { return .providerDefined }
-  public static var min: pceUnit { return .unspecified }
-}
-
-
-///  What geometric context a parameter needs before it has a value. This states
-///  the REQUIREMENT; the specific axis set and origin, when the parameter is
-///  only defined for one, are named by REQUIRED_AXIS_TYPE and
-///  REQUIRED_ORIGIN_KIND on the descriptor. Append new values only.
-public enum pceFrameDependency: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  The value is the same in every coordinate system: mass, duration,
-  ///  a tank pressure.
-  case frameIndependent = 1
-  ///  The value depends on the full coordinate system, axes and origin.
-  case coordinateSystemDependent = 2
-  ///  The value depends on the central body alone and not on the axes: the
-  ///  classical element set of a two-body orbit about a named body.
-  case centralBodyDependent = 3
-  ///  The value depends on a surface site as well as a body.
-  case surfaceSiteDependent = 4
-  ///  The value depends on a second object as well as the owner.
-  case secondObjectDependent = 5
-
-  public static var max: pceFrameDependency { return .secondObjectDependent }
-  public static var min: pceFrameDependency { return .unspecified }
-}
-
-
-///  Whether a named parameter can actually be evaluated by the publisher of
-///  this catalog. A name is DECLARED so that a consumer can resolve, report and
-///  refuse it deterministically; declaring it is not a claim that it computes.
-///  Append new values only.
-public enum pceAvailability: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  The publisher evaluates this parameter.
-  case implemented = 1
-  ///  The name is ratified and reserved, and the publisher REFUSES it with
-  ///  NOT_IMPLEMENTED. UNAVAILABLE_REASON states what is missing. A publisher
-  ///  MUST NOT substitute a neighbouring quantity.
-  case declaredUnavailable = 2
-  ///  Evaluated, but superseded; a consumer SHOULD migrate to the parameter
-  ///  named in SUPERSEDED_BY.
-  case deprecated = 3
-
-  public static var max: pceAvailability { return .deprecated }
-  public static var min: pceAvailability { return .unspecified }
-}
-
-
-///  Outcome of one parameter evaluation or one propagate-to-condition run.
-///  0 is UNSPECIFIED so an unset byte never decodes as success. Append new
+///  Geometry used to decide whether the target is illuminated. Append new
 ///  values only.
-public enum pceResultStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum evlShadowModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  The occulting body casts a cylinder; no penumbra exists.
+  case cylindrical = 1
+  ///  A single cone; umbra and penumbra are distinguished.
+  case conical = 2
+  ///  Umbra and penumbra cones evaluated separately, admitting antumbra.
+  case dualCone = 3
+
+  public static var max: evlShadowModel { return .dualCone }
+  public static var min: evlShadowModel { return .unspecified }
+}
+
+
+///  Whether the geometry is evaluated at the observed instant or corrected for
+///  signal travel. Append new values only.
+public enum evlAberrationCorrection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  Geometric positions at the same instant.
+  case noCorrection = 1
+  ///  Positions corrected for one-way signal travel time.
+  case lightTime = 2
+  ///  Light time and the observer's transverse motion.
+  case lightTimeAndStellarAberration = 3
+
+  public static var max: evlAberrationCorrection { return .lightTimeAndStellarAberration }
+  public static var min: evlAberrationCorrection { return .unspecified }
+}
+
+
+///  Boundary of a sensor acceptance volume. Append new values only.
+public enum evlFieldOfViewShape: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  A circular cone about the boresight, bounded by CONE_HALF_ANGLE_RAD.
+  case conic = 1
+  ///  A rectangular pyramid about the boresight, bounded by the two
+  ///  half-angles.
+  case rectangular = 2
+  ///  A custom boundary carried as a boresight-relative angular mask.
+  case customMask = 3
+
+  public static var max: evlFieldOfViewShape { return .customMask }
+  public static var min: evlFieldOfViewShape { return .unspecified }
+}
+
+
+///  Which instant inside an event a sample belongs to. Append new values only.
+public enum evlSamplePoint: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case eventStart = 1
+  case eventStop = 2
+  ///  The instant of the event's extremum: deepest obscuration, peak
+  ///  elevation, closest approach.
+  case eventExtremum = 3
+  ///  A sample inside the event that is none of the above.
+  case interior = 4
+
+  public static var max: evlSamplePoint { return .interior }
+  public static var min: evlSamplePoint { return .unspecified }
+}
+
+
+///  Outcome of a location run. 0 is UNSPECIFIED so an unset byte never decodes
+///  as success. An empty event list with STATUS OK is a complete answer: no
+///  events occurred. Append new values only.
+public enum evlResultStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case unspecified = 0
   case ok = 1
   case invalidInput = 2
-  ///  The name does not resolve in the publisher's catalog.
-  case unknownParameter = 3
-  ///  The name resolves and is DECLARED_UNAVAILABLE.
-  case notImplemented = 4
-  ///  A coordinate system, central body, site or second object the parameter
-  ///  requires was not supplied.
-  case missingDependency = 5
-  ///  The owning object or hardware item named on the request is not present.
-  case missingOwnerObject = 6
-  ///  The evaluation needs Earth-orientation data that was not supplied or
-  ///  does not span the epoch. The provider MUST fail here rather than
-  ///  silently extrapolate.
-  case missingEopData = 7
-  ///  The parameter is undefined at this state: a node angle at zero
-  ///  inclination, an argument of periapsis at zero eccentricity.
-  case singularAtState = 8
-  ///  The parameter is defined only on a regime this state is not in: a launch
-  ///  asymptote on a bound orbit.
-  case outOfDomain = 9
-  ///  A stopping condition was never attained inside the requested interval.
-  case goalNotAttained = 10
-  ///  The bracketing succeeded but the root refinement did not converge to the
-  ///  requested epoch tolerance.
-  case rootRefinementFailed = 11
-  ///  The run hit its step or evaluation budget before answering.
-  case budgetExceeded = 12
+  ///  The provider does not implement the requested locator class.
+  case unsupportedLocatorClass = 3
+  ///  The configuration table matching LOCATOR_CLASS was absent.
+  case missingConfiguration = 4
+  ///  The state source did not span the requested interval.
+  case missingEphemeris = 5
+  ///  The geometry needs Earth-orientation data that was not supplied or does
+  ///  not span the interval.
+  case missingEopData = 6
+  ///  A generic condition names a parameter the provider cannot evaluate, or
+  ///  one that does not support a stopping condition.
+  case parameterUnavailable = 7
+  ///  A crossing was bracketed but the refinement did not converge to
+  ///  REFINEMENT_TOLERANCE_SECONDS. The provider MUST report this rather than
+  ///  emit an unconverged epoch.
+  case rootRefinementFailed = 8
+  ///  The run hit MAXIMUM_EVENTS or its evaluation budget before reaching
+  ///  SCAN_STOP_EPOCH; the events reported are a prefix, not the whole answer.
+  case budgetExceeded = 9
 
-  public static var max: pceResultStatus { return .budgetExceeded }
-  public static var min: pceResultStatus { return .unspecified }
+  public static var max: evlResultStatus { return .budgetExceeded }
+  public static var min: evlResultStatus { return .unspecified }
 }
 
 
-///  Which crossing of the goal value satisfies a condition. Append new values
-///  only.
-public enum pceConditionDirection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Any crossing of GOAL_VALUE, in either direction.
-  case anyCrossing = 1
-  ///  Only a crossing with the parameter increasing through GOAL_VALUE.
-  case increasing = 2
-  ///  Only a crossing with the parameter decreasing through GOAL_VALUE.
-  case decreasing = 3
-
-  public static var max: pceConditionDirection { return .decreasing }
-  public static var min: pceConditionDirection { return .unspecified }
-}
-
-
-///  Direction of time for a propagate-to-condition run. Append new values only.
-public enum pcePropagationDirection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  case forward = 1
-  case backward = 2
-
-  public static var max: pcePropagationDirection { return .backward }
-  public static var min: pcePropagationDirection { return .unspecified }
-}
-
-
-///  The ratified roster of named calculation parameters.
-///
-///  A member's NAME is the machine key; there is deliberately no second text
-///  spelling of it on the wire, so a catalog and a request can never disagree
-///  about what was asked for. Values are allocated in family blocks and a new
-///  member is added at the END of its family's reserved range: an existing
-///  member's value is NEVER changed, because it is written into every stored
-///  catalog, request, report and event sample. A parameter outside this roster
-///  is carried as PROVIDER_DEFINED with PROVIDER_DEFINED_NAME set.
-///
-///  Angles are radians, lengths metres, durations seconds, masses kilograms.
-///  Declaring a member here is not a claim that any provider computes it;
-///  PCEParameterDescriptor.AVAILABILITY carries that fact per publisher.
-public enum pceParameter: UInt16, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt16
-  public static var byteSize: Int { return MemoryLayout<UInt16>.size }
-  public var value: UInt16 { return self.rawValue }
-  case unspecified = 0
-  case positionX = 1
-  case positionY = 2
-  case positionZ = 3
-  case velocityX = 4
-  case velocityY = 5
-  case velocityZ = 6
-  case positionMagnitude = 7
-  case velocityMagnitude = 8
-  ///  Right ascension of the position vector.
-  case rightAscension = 9
-  ///  Declination of the position vector.
-  case declination = 10
-  ///  Right ascension of the velocity vector.
-  case velocityRightAscension = 11
-  ///  Declination of the velocity vector.
-  case velocityDeclination = 12
-  ///  Angle between the velocity vector and the local horizontal plane.
-  case flightPathAngle = 13
-  ///  Azimuth of the velocity vector, measured from local north.
-  case azimuthAngle = 14
-  ///  Flight path angle measured from the local horizontal.
-  case horizontalFlightPathAngle = 15
-  ///  Component of velocity along the position unit vector. Its zero crossing
-  ///  IS the apsis condition; a stop at apoapsis is this parameter with goal
-  ///  0 and direction DECREASING.
-  case radialVelocity = 16
-  case angularMomentumMagnitude = 17
-  case angularMomentumX = 18
-  case angularMomentumY = 19
-  case angularMomentumZ = 20
-  case semiMajorAxis = 30
-  case eccentricity = 31
-  case inclination = 32
-  case rightAscensionOfAscendingNode = 33
-  case argumentOfPeriapsis = 34
-  case trueAnomaly = 35
-  case meanAnomaly = 36
-  case eccentricAnomaly = 37
-  case hyperbolicAnomaly = 38
-  case radiusOfPeriapsis = 39
-  case radiusOfApoapsis = 40
-  case altitudeOfPeriapsis = 41
-  case altitudeOfApoapsis = 42
-  case semilatusRectum = 43
-  case orbitPeriod = 44
-  case meanMotion = 45
-  ///  Specific orbital energy.
-  case specificOrbitalEnergy = 46
-  ///  Twice the specific orbital energy; the square of the hyperbolic excess
-  ///  speed on an escape trajectory.
-  case characteristicEnergy = 47
-  case velocityAtPeriapsis = 48
-  case velocityAtApoapsis = 49
-  ///  Argument of periapsis plus true anomaly.
-  case argumentOfLatitude = 50
-  case trueLongitude = 51
-  case meanLongitude = 52
-  ///  Angle between the orbit plane and the direction to the illuminating body.
-  case betaAngle = 53
-  case eccentricityVectorX = 54
-  case eccentricityVectorY = 55
-  case eccentricityVectorZ = 56
-  case semiMinorAxis = 57
-  case equinoctialH = 70
-  case equinoctialK = 71
-  case equinoctialP = 72
-  case equinoctialQ = 73
-  case equinoctialMeanLongitude = 74
-  case modifiedEquinoctialF = 75
-  case modifiedEquinoctialG = 76
-  case modifiedEquinoctialH = 77
-  case modifiedEquinoctialK = 78
-  case modifiedEquinoctialTrueLongitude = 79
-  case modifiedEquinoctialSemilatusRectum = 80
-  case alternateEquinoctialP = 81
-  case alternateEquinoctialQ = 82
-  case alternateEquinoctialMeanMotion = 83
-  case delaunayMeanAnomaly = 90
-  case delaunayArgumentOfPeriapsis = 91
-  case delaunayAscendingNode = 92
-  case delaunayActionTotal = 93
-  case delaunayActionAngularMomentum = 94
-  case delaunayActionPolarAngularMomentum = 95
-  case geodeticLatitude = 100
-  case geodeticLongitude = 101
-  case geodeticAltitude = 102
-  case geocentricLatitude = 103
-  case planetodeticRadiusMagnitude = 104
-  case planetodeticVelocityMagnitude = 105
-  case planetodeticAzimuth = 106
-  case planetodeticHorizontalFlightPathAngle = 107
-  ///  Local sidereal time at the sub-object meridian.
-  case localSiderealTime = 108
-  ///  Hour angle of the body prime meridian.
-  case primeMeridianHourAngle = 109
-  case bDotT = 120
-  case bDotR = 121
-  case bVectorMagnitude = 122
-  case bVectorAngle = 123
-  ///  Declination of the departure asymptote.
-  case declinationOfDepartureAsymptote = 124
-  ///  Right ascension of the departure asymptote.
-  case rightAscensionOfDepartureAsymptote = 125
-  case incomingRadiusOfPeriapsis = 126
-  case incomingCharacteristicEnergy = 127
-  case incomingAsymptoteRightAscension = 128
-  case incomingAsymptoteDeclination = 129
-  case incomingBVectorAzimuth = 130
-  case outgoingRadiusOfPeriapsis = 131
-  case outgoingCharacteristicEnergy = 132
-  case outgoingAsymptoteRightAscension = 133
-  case outgoingAsymptoteDeclination = 134
-  case outgoingBVectorAzimuth = 135
-  case hyperbolicExcessVelocity = 136
-  case brouwerShortSemiMajorAxis = 140
-  case brouwerShortEccentricity = 141
-  case brouwerShortInclination = 142
-  case brouwerShortRightAscensionOfAscendingNode = 143
-  case brouwerShortArgumentOfPeriapsis = 144
-  case brouwerShortMeanAnomaly = 145
-  case brouwerLongSemiMajorAxis = 146
-  case brouwerLongEccentricity = 147
-  case brouwerLongInclination = 148
-  case brouwerLongRightAscensionOfAscendingNode = 149
-  case brouwerLongArgumentOfPeriapsis = 150
-  case brouwerLongMeanAnomaly = 151
-  ///  Six by six orbit state transition matrix, row-major.
-  case orbitStateTransitionMatrix = 160
-  ///  Position-to-position three by three block.
-  case orbitStateTransitionMatrixA = 161
-  ///  Velocity-to-position three by three block.
-  case orbitStateTransitionMatrixB = 162
-  ///  Position-to-velocity three by three block.
-  case orbitStateTransitionMatrixC = 163
-  ///  Velocity-to-velocity three by three block.
-  case orbitStateTransitionMatrixD = 164
-  ///  Six by six orbit error covariance, row-major, in the request's
-  ///  coordinate system.
-  case orbitErrorCovarianceMatrix = 165
-  ///  Each EPOCH_ member is the owner epoch expressed in one time system.
-  ///  GREGORIAN members are ISO 8601 text; MODIFIED_JULIAN members are a day
-  ///  count. The time system is named by the $TIM timingStandard member.
-  case epochA1Gregorian = 180
-  case epochA1ModifiedJulian = 181
-  case epochTaiGregorian = 182
-  case epochTaiModifiedJulian = 183
-  case epochTtGregorian = 184
-  case epochTtModifiedJulian = 185
-  case epochTdbGregorian = 186
-  case epochTdbModifiedJulian = 187
-  case epochUtcGregorian = 188
-  case epochUtcModifiedJulian = 189
-  case epochUt1Gregorian = 190
-  case epochUt1ModifiedJulian = 191
-  case epochGpsGregorian = 192
-  case epochGpsModifiedJulian = 193
-  ///  Days since PCEEvaluationContext.REFERENCE_EPOCH.
-  case elapsedDays = 194
-  ///  Seconds since PCEEvaluationContext.REFERENCE_EPOCH.
-  case elapsedSeconds = 195
-  case dryMass = 220
-  case totalMass = 221
-  case dragCoefficient = 222
-  case dragArea = 223
-  case reflectivityCoefficient = 224
-  case solarRadiationPressureArea = 225
-  case atmosphericDensityScaleFactor = 226
-  case dragScaleFactor = 227
-  case solarRadiationPressureScaleFactor = 228
-  case ballisticCoefficient = 229
-  case areaToMassRatio = 230
-  case centerOfMassX = 231
-  case centerOfMassY = 232
-  case centerOfMassZ = 233
-  ///  Three by three inertia tensor, row-major, in body axes.
-  case momentOfInertiaMatrix = 234
-  case attitudeQuaternion1 = 250
-  case attitudeQuaternion2 = 251
-  case attitudeQuaternion3 = 252
-  ///  Scalar component of the attitude quaternion.
-  case attitudeQuaternion4 = 253
-  ///  Three by three direction cosine matrix, row-major.
-  case attitudeDirectionCosineMatrix = 254
-  case eulerAngle1 = 255
-  case eulerAngle2 = 256
-  case eulerAngle3 = 257
-  case eulerAngleRate1 = 258
-  case eulerAngleRate2 = 259
-  case eulerAngleRate3 = 260
-  case modifiedRodriguesParameter1 = 261
-  case modifiedRodriguesParameter2 = 262
-  case modifiedRodriguesParameter3 = 263
-  case angularVelocityX = 264
-  case angularVelocityY = 265
-  case angularVelocityZ = 266
-  case eulerAxisX = 267
-  case eulerAxisY = 268
-  case eulerAxisZ = 269
-  case principalRotationAngle = 270
-  case tankFuelMass = 300
-  case tankPressure = 301
-  case tankTemperature = 302
-  case tankReferenceTemperature = 303
-  case tankVolume = 304
-  case tankFuelDensity = 305
-  case thrusterDutyCycle = 320
-  case thrusterThrustScaleFactor = 321
-  case thrusterGravitationalAcceleration = 322
-  case thrusterMixtureRatio = 323
-  case thrusterSpecificImpulse = 324
-  case thrusterThrustMagnitude = 325
-  case thrusterMassFlowRate = 326
-  case thrusterDirectionX = 327
-  case thrusterDirectionY = 328
-  case thrusterDirectionZ = 329
-  ///  Coefficient vector of the thrust polynomial; address one coefficient
-  ///  with PCEParameterRef.ELEMENT_INDEX.
-  case thrusterThrustCoefficients = 330
-  ///  Coefficient vector of the specific-impulse polynomial; address one
-  ///  coefficient with PCEParameterRef.ELEMENT_INDEX.
-  case thrusterImpulseCoefficients = 331
-  ///  First component of the velocity change in the burn coordinate system.
-  case impulsiveBurnElement1 = 370
-  case impulsiveBurnElement2 = 371
-  case impulsiveBurnElement3 = 372
-  case impulsiveBurnDeltaVMagnitude = 373
-  case impulsiveBurnMassConsumed = 374
-  case finiteBurnThrustMagnitude = 390
-  case finiteBurnMassFlowRate = 391
-  case finiteBurnThrustX = 392
-  case finiteBurnThrustY = 393
-  case finiteBurnThrustZ = 394
-  case finiteBurnAccelerationMagnitude = 395
-  case finiteBurnMassConsumed = 396
-  case totalPowerAvailable = 410
-  case requiredBusPower = 411
-  case thrustPowerAvailable = 412
-  case generatedPower = 413
-  case totalTorqueX = 430
-  case totalTorqueY = 431
-  case totalTorqueZ = 432
-  case totalTorqueMagnitude = 433
-  ///  Run state of the solver, as an integer code the solver family defines.
-  case solverStatus = 450
-  case solverIterationCount = 451
-  case solverObjectiveValue = 452
-  case solverMaximumConstraintViolation = 453
-  ///  Distance from the owner to PCEParameterRef.SECOND_OBJECT_ID.
-  case relativeRange = 470
-  case relativeRangeRate = 471
-  case relativePositionX = 472
-  case relativePositionY = 473
-  case relativePositionZ = 474
-  case relativeVelocityX = 475
-  case relativeVelocityY = 476
-  case relativeVelocityZ = 477
-  ///  Azimuth of the owner as seen from the site named on the request.
-  case topocentricAzimuth = 478
-  ///  Elevation of the owner as seen from the site named on the request.
-  case topocentricElevation = 479
-  ///  Angle subtended at the owner between two named directions.
-  case angularSeparation = 480
-  ///  Angle at the owner between the illuminating body and the observer.
-  case solarPhaseAngle = 481
-  ///  Elevation of the illuminating body at the site named on the request.
-  case localSolarElevationAngle = 482
-  ///  Fraction of the illuminating body disc visible from the owner: 1 in full
-  ///  sunlight, 0 in umbra, between the two in penumbra. Its crossings ARE the
-  ///  eclipse entry and exit conditions.
-  case illuminationFraction = 483
-  ///  One-way signal propagation time between the owner and the observer.
-  case lightTimeDelay = 484
-  ///  The parameter is outside this roster and is named in
-  ///  PROVIDER_DEFINED_NAME. A consumer that cannot resolve that name MUST
-  ///  refuse the entry; it never guesses a neighbouring member.
-  case providerDefined = 65535
-
-  public static var max: pceParameter { return .providerDefined }
-  public static var min: pceParameter { return .unspecified }
-}
-
-
-///  A reference to one parameter, with the dependencies that make it evaluable.
-///  This is what a request, a stopping condition and a report column all name.
-public struct PCEParameterRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Configuration for ECLIPSE.
+public struct EVLEclipseConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEParameterRef.id, addPrefix: prefix) }
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLEclipseConfiguration.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let PARAMETER: VOffset = 4
-    static let PROVIDER_DEFINED_NAME: VOffset = 6
-    static let ELEMENT_INDEX: VOffset = 8
-    static let COORDINATE_SYSTEM_NAME: VOffset = 10
-    static let CENTRAL_BODY_ID: VOffset = 12
-    static let SITE_ID: VOffset = 14
-    static let SECOND_OBJECT_ID: VOffset = 16
-    static let OWNER_OBJECT_ID: VOffset = 18
-    static let OWNER_HARDWARE_NAME: VOffset = 20
-    static let TIME_SYSTEM: VOffset = 22
+    static let OCCULTING_BODY_IDS: VOffset = 4
+    static let ILLUMINATING_BODY_ID: VOffset = 6
+    static let SHADOW_MODEL: VOffset = 8
+    static let REPORT_UMBRA: VOffset = 10
+    static let REPORT_PENUMBRA: VOffset = 12
+    static let REPORT_ANTUMBRA: VOffset = 14
+    static let MINIMUM_DURATION_SECONDS: VOffset = 16
+    static let ABERRATION_CORRECTION: VOffset = 18
   }
 
-  ///  Roster member, or PROVIDER_DEFINED.
-  public var PARAMETER: pceParameter { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
-  ///  REQUIRED when PARAMETER is PROVIDER_DEFINED, absent otherwise.
-  public var PROVIDER_DEFINED_NAME: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROVIDER_DEFINED_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_NAME) }
-  ///  Component of a vector or matrix parameter, zero-based and row-major.
-  ///  Negative selects the whole value.
-  public var ELEMENT_INDEX: Int32 { let o = _accessor.offset(VT.ELEMENT_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Coordinate system this evaluation is expressed in; resolves against
-  ///  RFMCoordinateSystem.NAME in PCEEvaluationContext.COORDINATE_SYSTEMS.
-  ///  Absent means the context default.
-  public var COORDINATE_SYSTEM_NAME: String? { let o = _accessor.offset(VT.COORDINATE_SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COORDINATE_SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COORDINATE_SYSTEM_NAME) }
-  ///  Ephemeris body code of the central body, when the parameter is
-  ///  CENTRAL_BODY_DEPENDENT and the context default is not wanted.
-  public var CENTRAL_BODY_ID: Int32 { let o = _accessor.offset(VT.CENTRAL_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Site the parameter is evaluated from, when it is SURFACE_SITE_DEPENDENT.
-  public var SITE_ID: String? { let o = _accessor.offset(VT.SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SITE_ID) }
-  ///  Second object, when the parameter is SECOND_OBJECT_DEPENDENT.
-  public var SECOND_OBJECT_ID: String? { let o = _accessor.offset(VT.SECOND_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SECOND_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SECOND_OBJECT_ID) }
-  ///  Owning object, when the request evaluates more than one.
-  public var OWNER_OBJECT_ID: String? { let o = _accessor.offset(VT.OWNER_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OWNER_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OWNER_OBJECT_ID) }
-  ///  Owning hardware item, when the owner class is THRUSTER, FUEL_TANK or a
-  ///  burn.
-  public var OWNER_HARDWARE_NAME: String? { let o = _accessor.offset(VT.OWNER_HARDWARE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OWNER_HARDWARE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OWNER_HARDWARE_NAME) }
-  ///  Time system for an EPOCH-typed parameter, named by the $TIM
-  ///  timingStandard member name. Absent means the context default.
-  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
-  public static func startPCEParameterRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARAMETER.rawValue, def: 0, at: VT.PARAMETER) }
-  public static func add(PROVIDER_DEFINED_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_NAME, at: VT.PROVIDER_DEFINED_NAME) }
-  public static func add(ELEMENT_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEMENT_INDEX, def: -1, at: VT.ELEMENT_INDEX) }
-  public static func add(COORDINATE_SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATE_SYSTEM_NAME, at: VT.COORDINATE_SYSTEM_NAME) }
-  public static func add(CENTRAL_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY_ID, def: 0, at: VT.CENTRAL_BODY_ID) }
-  public static func add(SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SITE_ID, at: VT.SITE_ID) }
-  public static func add(SECOND_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECOND_OBJECT_ID, at: VT.SECOND_OBJECT_ID) }
-  public static func add(OWNER_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OWNER_OBJECT_ID, at: VT.OWNER_OBJECT_ID) }
-  public static func add(OWNER_HARDWARE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OWNER_HARDWARE_NAME, at: VT.OWNER_HARDWARE_NAME) }
-  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
-  public static func endPCEParameterRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEParameterRef(
-    _ fbb: inout FlatBufferBuilder,
-    PARAMETER: pceParameter = .unspecified,
-    PROVIDER_DEFINED_NAMEOffset PROVIDER_DEFINED_NAME: Offset = Offset(),
-    ELEMENT_INDEX: Int32 = -1,
-    COORDINATE_SYSTEM_NAMEOffset COORDINATE_SYSTEM_NAME: Offset = Offset(),
-    CENTRAL_BODY_ID: Int32 = 0,
-    SITE_IDOffset SITE_ID: Offset = Offset(),
-    SECOND_OBJECT_IDOffset SECOND_OBJECT_ID: Offset = Offset(),
-    OWNER_OBJECT_IDOffset OWNER_OBJECT_ID: Offset = Offset(),
-    OWNER_HARDWARE_NAMEOffset OWNER_HARDWARE_NAME: Offset = Offset(),
-    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset()
-  ) -> Offset {
-    let __start = PCEParameterRef.startPCEParameterRef(&fbb)
-    PCEParameterRef.add(PARAMETER: PARAMETER, &fbb)
-    PCEParameterRef.add(PROVIDER_DEFINED_NAME: PROVIDER_DEFINED_NAME, &fbb)
-    PCEParameterRef.add(ELEMENT_INDEX: ELEMENT_INDEX, &fbb)
-    PCEParameterRef.add(COORDINATE_SYSTEM_NAME: COORDINATE_SYSTEM_NAME, &fbb)
-    PCEParameterRef.add(CENTRAL_BODY_ID: CENTRAL_BODY_ID, &fbb)
-    PCEParameterRef.add(SITE_ID: SITE_ID, &fbb)
-    PCEParameterRef.add(SECOND_OBJECT_ID: SECOND_OBJECT_ID, &fbb)
-    PCEParameterRef.add(OWNER_OBJECT_ID: OWNER_OBJECT_ID, &fbb)
-    PCEParameterRef.add(OWNER_HARDWARE_NAME: OWNER_HARDWARE_NAME, &fbb)
-    PCEParameterRef.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    return PCEParameterRef.endPCEParameterRef(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: pceParameter.self)
-    try _v.visit(field: VT.PROVIDER_DEFINED_NAME, fieldName: "PROVIDER_DEFINED_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ELEMENT_INDEX, fieldName: "ELEMENT_INDEX", required: false, type: Int32.self)
-    try _v.visit(field: VT.COORDINATE_SYSTEM_NAME, fieldName: "COORDINATE_SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CENTRAL_BODY_ID, fieldName: "CENTRAL_BODY_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.SITE_ID, fieldName: "SITE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SECOND_OBJECT_ID, fieldName: "SECOND_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OWNER_OBJECT_ID, fieldName: "OWNER_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OWNER_HARDWARE_NAME, fieldName: "OWNER_HARDWARE_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  One roster entry as a named publisher implements it. The catalog is the
-///  authority a consumer resolves a name through BEFORE it asks for a value.
-public struct PCEParameterDescriptor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEParameterDescriptor.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let PARAMETER: VOffset = 4
-    static let PROVIDER_DEFINED_NAME: VOffset = 6
-    static let OWNER_CLASS: VOffset = 8
-    static let DATA_TYPE: VOffset = 10
-    static let UNIT: VOffset = 12
-    static let PROVIDER_DEFINED_UNIT_SYMBOL: VOffset = 14
-    static let ELEMENT_COUNT: VOffset = 16
-    static let ROW_COUNT: VOffset = 18
-    static let COLUMN_COUNT: VOffset = 20
-    static let FRAME_DEPENDENCY: VOffset = 22
-    static let REQUIRED_AXIS_TYPE: VOffset = 24
-    static let REQUIRED_ORIGIN_KIND: VOffset = 26
-    static let TIME_SYSTEM_DEPENDENT: VOffset = 28
-    static let STATE_REPRESENTATION: VOffset = 30
-    static let AVAILABILITY: VOffset = 32
-    static let UNAVAILABLE_REASON: VOffset = 34
-    static let SUPERSEDED_BY: VOffset = 36
-    static let SUPPORTS_STOPPING_CONDITION: VOffset = 38
-    static let IS_SETTABLE: VOffset = 40
-    static let IS_CYCLIC: VOffset = 42
-    static let CYCLE_LOWER_BOUND: VOffset = 44
-    static let CYCLE_UPPER_BOUND: VOffset = 46
-    static let DESCRIPTION: VOffset = 48
-  }
-
-  public var PARAMETER: pceParameter { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
-  ///  REQUIRED when PARAMETER is PROVIDER_DEFINED, absent otherwise.
-  public var PROVIDER_DEFINED_NAME: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROVIDER_DEFINED_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_NAME) }
-  public var OWNER_CLASS: pceOwnerClass { let o = _accessor.offset(VT.OWNER_CLASS); return o == 0 ? .unspecified : pceOwnerClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  public var DATA_TYPE: pceDataType { let o = _accessor.offset(VT.DATA_TYPE); return o == 0 ? .unspecified : pceDataType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  public var UNIT: pceUnit { let o = _accessor.offset(VT.UNIT); return o == 0 ? .unspecified : pceUnit(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  REQUIRED when UNIT is PROVIDER_DEFINED, absent otherwise.
-  public var PROVIDER_DEFINED_UNIT_SYMBOL: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_UNIT_SYMBOL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROVIDER_DEFINED_UNIT_SYMBOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_UNIT_SYMBOL) }
-  ///  Number of values for REAL_VECTOR, and rows times columns for
-  ///  REAL_MATRIX. Absent or 1 for a scalar.
-  public var ELEMENT_COUNT: Int32 { let o = _accessor.offset(VT.ELEMENT_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Matrix shape, REQUIRED when DATA_TYPE is REAL_MATRIX.
-  public var ROW_COUNT: Int32 { let o = _accessor.offset(VT.ROW_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var COLUMN_COUNT: Int32 { let o = _accessor.offset(VT.COLUMN_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var FRAME_DEPENDENCY: pceFrameDependency { let o = _accessor.offset(VT.FRAME_DEPENDENCY); return o == 0 ? .unspecified : pceFrameDependency(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  The one axis set this parameter is defined for, when it is defined for
-  ///  only one: planetodetic quantities require BODY_FIXED. UNSPECIFIED means
-  ///  any axis set the request names.
-  public var REQUIRED_AXIS_TYPE: rfmAxisType { let o = _accessor.offset(VT.REQUIRED_AXIS_TYPE); return o == 0 ? .unspecified : rfmAxisType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  The one origin kind this parameter is defined for, when it is defined
-  ///  for only one. UNSPECIFIED means any origin the request names.
-  public var REQUIRED_ORIGIN_KIND: rfmOriginKind { let o = _accessor.offset(VT.REQUIRED_ORIGIN_KIND); return o == 0 ? .unspecified : rfmOriginKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  The value changes with the time system it is asked for, independently of
-  ///  the frame.
-  public var TIME_SYSTEM_DEPENDENT: Bool { let o = _accessor.offset(VT.TIME_SYSTEM_DEPENDENT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  The element set this parameter is a member of, when it is a member of
-  ///  one; UNSPECIFIED for a derived scalar that belongs to no set.
-  public var STATE_REPRESENTATION: frmStateRepresentation { let o = _accessor.offset(VT.STATE_REPRESENTATION); return o == 0 ? .unspecified : frmStateRepresentation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  public var AVAILABILITY: pceAvailability { let o = _accessor.offset(VT.AVAILABILITY); return o == 0 ? .unspecified : pceAvailability(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  REQUIRED when AVAILABILITY is DECLARED_UNAVAILABLE: what is missing,
-  ///  stated as a capability, so a consumer can report the refusal.
-  public var UNAVAILABLE_REASON: String? { let o = _accessor.offset(VT.UNAVAILABLE_REASON); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UNAVAILABLE_REASONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNAVAILABLE_REASON) }
-  ///  REQUIRED when AVAILABILITY is DEPRECATED: the parameter to migrate to.
-  public var SUPERSEDED_BY: pceParameter { let o = _accessor.offset(VT.SUPERSEDED_BY); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
-  ///  The publisher can bracket and refine a root of this parameter, so it may
-  ///  be used as a stopping condition or a generic event function. A parameter
-  ///  that is not continuous in time MUST declare false.
-  public var SUPPORTS_STOPPING_CONDITION: Bool { let o = _accessor.offset(VT.SUPPORTS_STOPPING_CONDITION); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  The parameter can be written as well as read, so it may be a targeting
-  ///  variable.
-  public var IS_SETTABLE: Bool { let o = _accessor.offset(VT.IS_SETTABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  The value wraps: a goal crossing must be tested modulo the cycle.
-  public var IS_CYCLIC: Bool { let o = _accessor.offset(VT.IS_CYCLIC); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Inclusive lower and exclusive upper bound of the cycle, REQUIRED when
-  ///  IS_CYCLIC is true.
-  public var CYCLE_LOWER_BOUND: Double { let o = _accessor.offset(VT.CYCLE_LOWER_BOUND); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CYCLE_UPPER_BOUND: Double { let o = _accessor.offset(VT.CYCLE_UPPER_BOUND); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  One sentence, capability language, no product or organization names.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  public static func startPCEParameterDescriptor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
-  public static func add(PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARAMETER.rawValue, def: 0, at: VT.PARAMETER) }
-  public static func add(PROVIDER_DEFINED_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_NAME, at: VT.PROVIDER_DEFINED_NAME) }
-  public static func add(OWNER_CLASS: pceOwnerClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNER_CLASS.rawValue, def: 0, at: VT.OWNER_CLASS) }
-  public static func add(DATA_TYPE: pceDataType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_TYPE.rawValue, def: 0, at: VT.DATA_TYPE) }
-  public static func add(UNIT: pceUnit, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT.rawValue, def: 0, at: VT.UNIT) }
-  public static func add(PROVIDER_DEFINED_UNIT_SYMBOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_UNIT_SYMBOL, at: VT.PROVIDER_DEFINED_UNIT_SYMBOL) }
-  public static func add(ELEMENT_COUNT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEMENT_COUNT, def: 0, at: VT.ELEMENT_COUNT) }
-  public static func add(ROW_COUNT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROW_COUNT, def: 0, at: VT.ROW_COUNT) }
-  public static func add(COLUMN_COUNT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLUMN_COUNT, def: 0, at: VT.COLUMN_COUNT) }
-  public static func add(FRAME_DEPENDENCY: pceFrameDependency, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_DEPENDENCY.rawValue, def: 0, at: VT.FRAME_DEPENDENCY) }
-  public static func add(REQUIRED_AXIS_TYPE: rfmAxisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_AXIS_TYPE.rawValue, def: 0, at: VT.REQUIRED_AXIS_TYPE) }
-  public static func add(REQUIRED_ORIGIN_KIND: rfmOriginKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_ORIGIN_KIND.rawValue, def: 0, at: VT.REQUIRED_ORIGIN_KIND) }
-  public static func add(TIME_SYSTEM_DEPENDENT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM_DEPENDENT, def: false,
-   at: VT.TIME_SYSTEM_DEPENDENT) }
-  public static func add(STATE_REPRESENTATION: frmStateRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_REPRESENTATION.rawValue, def: 0, at: VT.STATE_REPRESENTATION) }
-  public static func add(AVAILABILITY: pceAvailability, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AVAILABILITY.rawValue, def: 0, at: VT.AVAILABILITY) }
-  public static func add(UNAVAILABLE_REASON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNAVAILABLE_REASON, at: VT.UNAVAILABLE_REASON) }
-  public static func add(SUPERSEDED_BY: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUPERSEDED_BY.rawValue, def: 0, at: VT.SUPERSEDED_BY) }
-  public static func add(SUPPORTS_STOPPING_CONDITION: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUPPORTS_STOPPING_CONDITION, def: false,
-   at: VT.SUPPORTS_STOPPING_CONDITION) }
-  public static func add(IS_SETTABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_SETTABLE, def: false,
-   at: VT.IS_SETTABLE) }
-  public static func add(IS_CYCLIC: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_CYCLIC, def: false,
-   at: VT.IS_CYCLIC) }
-  public static func add(CYCLE_LOWER_BOUND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CYCLE_LOWER_BOUND, def: 0.0, at: VT.CYCLE_LOWER_BOUND) }
-  public static func add(CYCLE_UPPER_BOUND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CYCLE_UPPER_BOUND, def: 0.0, at: VT.CYCLE_UPPER_BOUND) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func endPCEParameterDescriptor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEParameterDescriptor(
-    _ fbb: inout FlatBufferBuilder,
-    PARAMETER: pceParameter = .unspecified,
-    PROVIDER_DEFINED_NAMEOffset PROVIDER_DEFINED_NAME: Offset = Offset(),
-    OWNER_CLASS: pceOwnerClass = .unspecified,
-    DATA_TYPE: pceDataType = .unspecified,
-    UNIT: pceUnit = .unspecified,
-    PROVIDER_DEFINED_UNIT_SYMBOLOffset PROVIDER_DEFINED_UNIT_SYMBOL: Offset = Offset(),
-    ELEMENT_COUNT: Int32 = 0,
-    ROW_COUNT: Int32 = 0,
-    COLUMN_COUNT: Int32 = 0,
-    FRAME_DEPENDENCY: pceFrameDependency = .unspecified,
-    REQUIRED_AXIS_TYPE: rfmAxisType = .unspecified,
-    REQUIRED_ORIGIN_KIND: rfmOriginKind = .unspecified,
-    TIME_SYSTEM_DEPENDENT: Bool = false,
-    STATE_REPRESENTATION: frmStateRepresentation = .unspecified,
-    AVAILABILITY: pceAvailability = .unspecified,
-    UNAVAILABLE_REASONOffset UNAVAILABLE_REASON: Offset = Offset(),
-    SUPERSEDED_BY: pceParameter = .unspecified,
-    SUPPORTS_STOPPING_CONDITION: Bool = false,
-    IS_SETTABLE: Bool = false,
-    IS_CYCLIC: Bool = false,
-    CYCLE_LOWER_BOUND: Double = 0.0,
-    CYCLE_UPPER_BOUND: Double = 0.0,
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
-  ) -> Offset {
-    let __start = PCEParameterDescriptor.startPCEParameterDescriptor(&fbb)
-    PCEParameterDescriptor.add(PARAMETER: PARAMETER, &fbb)
-    PCEParameterDescriptor.add(PROVIDER_DEFINED_NAME: PROVIDER_DEFINED_NAME, &fbb)
-    PCEParameterDescriptor.add(OWNER_CLASS: OWNER_CLASS, &fbb)
-    PCEParameterDescriptor.add(DATA_TYPE: DATA_TYPE, &fbb)
-    PCEParameterDescriptor.add(UNIT: UNIT, &fbb)
-    PCEParameterDescriptor.add(PROVIDER_DEFINED_UNIT_SYMBOL: PROVIDER_DEFINED_UNIT_SYMBOL, &fbb)
-    PCEParameterDescriptor.add(ELEMENT_COUNT: ELEMENT_COUNT, &fbb)
-    PCEParameterDescriptor.add(ROW_COUNT: ROW_COUNT, &fbb)
-    PCEParameterDescriptor.add(COLUMN_COUNT: COLUMN_COUNT, &fbb)
-    PCEParameterDescriptor.add(FRAME_DEPENDENCY: FRAME_DEPENDENCY, &fbb)
-    PCEParameterDescriptor.add(REQUIRED_AXIS_TYPE: REQUIRED_AXIS_TYPE, &fbb)
-    PCEParameterDescriptor.add(REQUIRED_ORIGIN_KIND: REQUIRED_ORIGIN_KIND, &fbb)
-    PCEParameterDescriptor.add(TIME_SYSTEM_DEPENDENT: TIME_SYSTEM_DEPENDENT, &fbb)
-    PCEParameterDescriptor.add(STATE_REPRESENTATION: STATE_REPRESENTATION, &fbb)
-    PCEParameterDescriptor.add(AVAILABILITY: AVAILABILITY, &fbb)
-    PCEParameterDescriptor.add(UNAVAILABLE_REASON: UNAVAILABLE_REASON, &fbb)
-    PCEParameterDescriptor.add(SUPERSEDED_BY: SUPERSEDED_BY, &fbb)
-    PCEParameterDescriptor.add(SUPPORTS_STOPPING_CONDITION: SUPPORTS_STOPPING_CONDITION, &fbb)
-    PCEParameterDescriptor.add(IS_SETTABLE: IS_SETTABLE, &fbb)
-    PCEParameterDescriptor.add(IS_CYCLIC: IS_CYCLIC, &fbb)
-    PCEParameterDescriptor.add(CYCLE_LOWER_BOUND: CYCLE_LOWER_BOUND, &fbb)
-    PCEParameterDescriptor.add(CYCLE_UPPER_BOUND: CYCLE_UPPER_BOUND, &fbb)
-    PCEParameterDescriptor.add(DESCRIPTION: DESCRIPTION, &fbb)
-    return PCEParameterDescriptor.endPCEParameterDescriptor(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: pceParameter.self)
-    try _v.visit(field: VT.PROVIDER_DEFINED_NAME, fieldName: "PROVIDER_DEFINED_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OWNER_CLASS, fieldName: "OWNER_CLASS", required: false, type: pceOwnerClass.self)
-    try _v.visit(field: VT.DATA_TYPE, fieldName: "DATA_TYPE", required: false, type: pceDataType.self)
-    try _v.visit(field: VT.UNIT, fieldName: "UNIT", required: false, type: pceUnit.self)
-    try _v.visit(field: VT.PROVIDER_DEFINED_UNIT_SYMBOL, fieldName: "PROVIDER_DEFINED_UNIT_SYMBOL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ELEMENT_COUNT, fieldName: "ELEMENT_COUNT", required: false, type: Int32.self)
-    try _v.visit(field: VT.ROW_COUNT, fieldName: "ROW_COUNT", required: false, type: Int32.self)
-    try _v.visit(field: VT.COLUMN_COUNT, fieldName: "COLUMN_COUNT", required: false, type: Int32.self)
-    try _v.visit(field: VT.FRAME_DEPENDENCY, fieldName: "FRAME_DEPENDENCY", required: false, type: pceFrameDependency.self)
-    try _v.visit(field: VT.REQUIRED_AXIS_TYPE, fieldName: "REQUIRED_AXIS_TYPE", required: false, type: rfmAxisType.self)
-    try _v.visit(field: VT.REQUIRED_ORIGIN_KIND, fieldName: "REQUIRED_ORIGIN_KIND", required: false, type: rfmOriginKind.self)
-    try _v.visit(field: VT.TIME_SYSTEM_DEPENDENT, fieldName: "TIME_SYSTEM_DEPENDENT", required: false, type: Bool.self)
-    try _v.visit(field: VT.STATE_REPRESENTATION, fieldName: "STATE_REPRESENTATION", required: false, type: frmStateRepresentation.self)
-    try _v.visit(field: VT.AVAILABILITY, fieldName: "AVAILABILITY", required: false, type: pceAvailability.self)
-    try _v.visit(field: VT.UNAVAILABLE_REASON, fieldName: "UNAVAILABLE_REASON", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUPERSEDED_BY, fieldName: "SUPERSEDED_BY", required: false, type: pceParameter.self)
-    try _v.visit(field: VT.SUPPORTS_STOPPING_CONDITION, fieldName: "SUPPORTS_STOPPING_CONDITION", required: false, type: Bool.self)
-    try _v.visit(field: VT.IS_SETTABLE, fieldName: "IS_SETTABLE", required: false, type: Bool.self)
-    try _v.visit(field: VT.IS_CYCLIC, fieldName: "IS_CYCLIC", required: false, type: Bool.self)
-    try _v.visit(field: VT.CYCLE_LOWER_BOUND, fieldName: "CYCLE_LOWER_BOUND", required: false, type: Double.self)
-    try _v.visit(field: VT.CYCLE_UPPER_BOUND, fieldName: "CYCLE_UPPER_BOUND", required: false, type: Double.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  The roster a named publisher offers, resolved as a whole. A consumer
-///  caches this and resolves every later name against it.
-public struct PCEParameterCatalog: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEParameterCatalog.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let CATALOG_ID: VOffset = 4
-    static let PROVIDER_ID: VOffset = 6
-    static let PUBLISHED_AT: VOffset = 8
-    static let ENTRIES: VOffset = 10
-  }
-
-  ///  Identifier of the catalog itself.
-  public var CATALOG_ID: String? { let o = _accessor.offset(VT.CATALOG_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CATALOG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CATALOG_ID) }
-  ///  Identifier of the publisher that evaluates these parameters.
-  public var PROVIDER_ID: String? { let o = _accessor.offset(VT.PROVIDER_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROVIDER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_ID) }
-  ///  ISO 8601 instant this catalog was published.
-  public var PUBLISHED_AT: String? { let o = _accessor.offset(VT.PUBLISHED_AT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PUBLISHED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLISHED_AT) }
-  public var ENTRIES: FlatbufferVector<PCEParameterDescriptor> { return _accessor.vector(at: VT.ENTRIES, byteSize: 4) }
-  public static func startPCEParameterCatalog(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CATALOG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_ID, at: VT.CATALOG_ID) }
-  public static func add(PROVIDER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_ID, at: VT.PROVIDER_ID) }
-  public static func add(PUBLISHED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHED_AT, at: VT.PUBLISHED_AT) }
-  public static func addVectorOf(ENTRIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRIES, at: VT.ENTRIES) }
-  public static func endPCEParameterCatalog(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEParameterCatalog(
-    _ fbb: inout FlatBufferBuilder,
-    CATALOG_IDOffset CATALOG_ID: Offset = Offset(),
-    PROVIDER_IDOffset PROVIDER_ID: Offset = Offset(),
-    PUBLISHED_ATOffset PUBLISHED_AT: Offset = Offset(),
-    ENTRIESVectorOffset ENTRIES: Offset = Offset()
-  ) -> Offset {
-    let __start = PCEParameterCatalog.startPCEParameterCatalog(&fbb)
-    PCEParameterCatalog.add(CATALOG_ID: CATALOG_ID, &fbb)
-    PCEParameterCatalog.add(PROVIDER_ID: PROVIDER_ID, &fbb)
-    PCEParameterCatalog.add(PUBLISHED_AT: PUBLISHED_AT, &fbb)
-    PCEParameterCatalog.addVectorOf(ENTRIES: ENTRIES, &fbb)
-    return PCEParameterCatalog.endPCEParameterCatalog(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CATALOG_ID, fieldName: "CATALOG_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PROVIDER_ID, fieldName: "PROVIDER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PUBLISHED_AT, fieldName: "PUBLISHED_AT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ENTRIES, fieldName: "ENTRIES", required: false, type: ForwardOffset<Vector<ForwardOffset<PCEParameterDescriptor>, PCEParameterDescriptor>>.self)
-    _v.finish()
-  }
-}
-
-///  Everything an evaluation needs besides the state itself.
-public struct PCEEvaluationContext: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEEvaluationContext.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let OWNER_CLASS: VOffset = 4
-    static let OBJECT_ID: VOffset = 6
-    static let HARDWARE_NAME: VOffset = 8
-    static let CENTRAL_BODY_ID: VOffset = 10
-    static let GRAVITATIONAL_PARAMETER: VOffset = 12
-    static let EQUATORIAL_RADIUS_M: VOffset = 14
-    static let FLATTENING: VOffset = 16
-    static let COORDINATE_SYSTEMS: VOffset = 18
-    static let DEFAULT_COORDINATE_SYSTEM_NAME: VOffset = 20
-    static let DEFAULT_TIME_SYSTEM: VOffset = 22
-    static let REFERENCE_EPOCH: VOffset = 24
-    static let EOP_DATA_SET_CID: VOffset = 26
-    static let ILLUMINATING_BODY_ID: VOffset = 28
-  }
-
-  public var OWNER_CLASS: pceOwnerClass { let o = _accessor.offset(VT.OWNER_CLASS); return o == 0 ? .unspecified : pceOwnerClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Identifier of the object the parameters are evaluated on.
-  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
-  ///  Hardware item, when the owner class names one.
-  public var HARDWARE_NAME: String? { let o = _accessor.offset(VT.HARDWARE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HARDWARE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HARDWARE_NAME) }
-  ///  Ephemeris body code of the default central body.
-  public var CENTRAL_BODY_ID: Int32 { let o = _accessor.offset(VT.CENTRAL_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Gravitational parameter of the central body, m^3/s^2. Absent means the
-  ///  provider's own value for CENTRAL_BODY_ID.
-  public var GRAVITATIONAL_PARAMETER: Double { let o = _accessor.offset(VT.GRAVITATIONAL_PARAMETER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Shape of the central body, REQUIRED for planetodetic parameters.
-  public var EQUATORIAL_RADIUS_M: Double { let o = _accessor.offset(VT.EQUATORIAL_RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var FLATTENING: Double { let o = _accessor.offset(VT.FLATTENING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Fully specified coordinate systems, each named through
-  ///  RFMCoordinateSystem.NAME.
-  public var COORDINATE_SYSTEMS: FlatbufferVector<RFMCoordinateSystem> { return _accessor.vector(at: VT.COORDINATE_SYSTEMS, byteSize: 4) }
-  ///  Which of COORDINATE_SYSTEMS a parameter reference falls back to.
-  public var DEFAULT_COORDINATE_SYSTEM_NAME: String? { let o = _accessor.offset(VT.DEFAULT_COORDINATE_SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DEFAULT_COORDINATE_SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DEFAULT_COORDINATE_SYSTEM_NAME) }
-  ///  Time system a parameter reference falls back to, named by the $TIM
-  ///  timingStandard member name.
-  public var DEFAULT_TIME_SYSTEM: String? { let o = _accessor.offset(VT.DEFAULT_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DEFAULT_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DEFAULT_TIME_SYSTEM) }
-  ///  Zero of ELAPSED_DAYS and ELAPSED_SECONDS, ISO 8601.
-  public var REFERENCE_EPOCH: String? { let o = _accessor.offset(VT.REFERENCE_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REFERENCE_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_EPOCH) }
-  ///  Content identifier of the Earth-orientation data set the caller requires.
-  ///  A provider that cannot honour it returns MISSING_EOP_DATA rather than
-  ///  substituting another table.
-  public var EOP_DATA_SET_CID: String? { let o = _accessor.offset(VT.EOP_DATA_SET_CID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EOP_DATA_SET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_DATA_SET_CID) }
-  ///  Ephemeris body code of the illuminating body for lighting parameters.
+  ///  Ephemeris body codes of the bodies allowed to occult, in the order they
+  ///  are tested. More than one is normal.
+  public var OCCULTING_BODY_IDS: FlatbufferVector<Int32> { return _accessor.vector(at: VT.OCCULTING_BODY_IDS, byteSize: 4) }
+  public func withUnsafePointerToOccultingBodyIds<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OCCULTING_BODY_IDS, body: body) }
+  ///  Ephemeris body code of the illuminating body.
   public var ILLUMINATING_BODY_ID: Int32 { let o = _accessor.offset(VT.ILLUMINATING_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public static func startPCEEvaluationContext(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(OWNER_CLASS: pceOwnerClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNER_CLASS.rawValue, def: 0, at: VT.OWNER_CLASS) }
-  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
-  public static func add(HARDWARE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HARDWARE_NAME, at: VT.HARDWARE_NAME) }
-  public static func add(CENTRAL_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY_ID, def: 0, at: VT.CENTRAL_BODY_ID) }
-  public static func add(GRAVITATIONAL_PARAMETER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITATIONAL_PARAMETER, def: 0.0, at: VT.GRAVITATIONAL_PARAMETER) }
-  public static func add(EQUATORIAL_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EQUATORIAL_RADIUS_M, def: 0.0, at: VT.EQUATORIAL_RADIUS_M) }
-  public static func add(FLATTENING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLATTENING, def: 0.0, at: VT.FLATTENING) }
-  public static func addVectorOf(COORDINATE_SYSTEMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATE_SYSTEMS, at: VT.COORDINATE_SYSTEMS) }
-  public static func add(DEFAULT_COORDINATE_SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_COORDINATE_SYSTEM_NAME, at: VT.DEFAULT_COORDINATE_SYSTEM_NAME) }
-  public static func add(DEFAULT_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_TIME_SYSTEM, at: VT.DEFAULT_TIME_SYSTEM) }
-  public static func add(REFERENCE_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_EPOCH, at: VT.REFERENCE_EPOCH) }
-  public static func add(EOP_DATA_SET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_DATA_SET_CID, at: VT.EOP_DATA_SET_CID) }
+  public var SHADOW_MODEL: evlShadowModel { let o = _accessor.offset(VT.SHADOW_MODEL); return o == 0 ? .unspecified : evlShadowModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Which shadow regions to report. A model that cannot distinguish a region
+  ///  MUST refuse the request rather than fold it into a neighbour.
+  public var REPORT_UMBRA: Bool { let o = _accessor.offset(VT.REPORT_UMBRA); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var REPORT_PENUMBRA: Bool { let o = _accessor.offset(VT.REPORT_PENUMBRA); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var REPORT_ANTUMBRA: Bool { let o = _accessor.offset(VT.REPORT_ANTUMBRA); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Events shorter than this are not reported. 0 reports every event.
+  public var MINIMUM_DURATION_SECONDS: Double { let o = _accessor.offset(VT.MINIMUM_DURATION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Correct the illuminating-body direction for signal travel time.
+  public var ABERRATION_CORRECTION: evlAberrationCorrection { let o = _accessor.offset(VT.ABERRATION_CORRECTION); return o == 0 ? .unspecified : evlAberrationCorrection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public static func startEVLEclipseConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func addVectorOf(OCCULTING_BODY_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCULTING_BODY_IDS, at: VT.OCCULTING_BODY_IDS) }
   public static func add(ILLUMINATING_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ILLUMINATING_BODY_ID, def: 0, at: VT.ILLUMINATING_BODY_ID) }
-  public static func endPCEEvaluationContext(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEEvaluationContext(
+  public static func add(SHADOW_MODEL: evlShadowModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADOW_MODEL.rawValue, def: 0, at: VT.SHADOW_MODEL) }
+  public static func add(REPORT_UMBRA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_UMBRA, def: true,
+   at: VT.REPORT_UMBRA) }
+  public static func add(REPORT_PENUMBRA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_PENUMBRA, def: true,
+   at: VT.REPORT_PENUMBRA) }
+  public static func add(REPORT_ANTUMBRA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_ANTUMBRA, def: true,
+   at: VT.REPORT_ANTUMBRA) }
+  public static func add(MINIMUM_DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_DURATION_SECONDS, def: 0.0, at: VT.MINIMUM_DURATION_SECONDS) }
+  public static func add(ABERRATION_CORRECTION: evlAberrationCorrection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABERRATION_CORRECTION.rawValue, def: 0, at: VT.ABERRATION_CORRECTION) }
+  public static func endEVLEclipseConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLEclipseConfiguration(
     _ fbb: inout FlatBufferBuilder,
-    OWNER_CLASS: pceOwnerClass = .unspecified,
-    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
-    HARDWARE_NAMEOffset HARDWARE_NAME: Offset = Offset(),
-    CENTRAL_BODY_ID: Int32 = 0,
-    GRAVITATIONAL_PARAMETER: Double = 0.0,
-    EQUATORIAL_RADIUS_M: Double = 0.0,
-    FLATTENING: Double = 0.0,
-    COORDINATE_SYSTEMSVectorOffset COORDINATE_SYSTEMS: Offset = Offset(),
-    DEFAULT_COORDINATE_SYSTEM_NAMEOffset DEFAULT_COORDINATE_SYSTEM_NAME: Offset = Offset(),
-    DEFAULT_TIME_SYSTEMOffset DEFAULT_TIME_SYSTEM: Offset = Offset(),
-    REFERENCE_EPOCHOffset REFERENCE_EPOCH: Offset = Offset(),
-    EOP_DATA_SET_CIDOffset EOP_DATA_SET_CID: Offset = Offset(),
-    ILLUMINATING_BODY_ID: Int32 = 0
+    OCCULTING_BODY_IDSVectorOffset OCCULTING_BODY_IDS: Offset = Offset(),
+    ILLUMINATING_BODY_ID: Int32 = 0,
+    SHADOW_MODEL: evlShadowModel = .unspecified,
+    REPORT_UMBRA: Bool = true,
+    REPORT_PENUMBRA: Bool = true,
+    REPORT_ANTUMBRA: Bool = true,
+    MINIMUM_DURATION_SECONDS: Double = 0.0,
+    ABERRATION_CORRECTION: evlAberrationCorrection = .unspecified
   ) -> Offset {
-    let __start = PCEEvaluationContext.startPCEEvaluationContext(&fbb)
-    PCEEvaluationContext.add(OWNER_CLASS: OWNER_CLASS, &fbb)
-    PCEEvaluationContext.add(OBJECT_ID: OBJECT_ID, &fbb)
-    PCEEvaluationContext.add(HARDWARE_NAME: HARDWARE_NAME, &fbb)
-    PCEEvaluationContext.add(CENTRAL_BODY_ID: CENTRAL_BODY_ID, &fbb)
-    PCEEvaluationContext.add(GRAVITATIONAL_PARAMETER: GRAVITATIONAL_PARAMETER, &fbb)
-    PCEEvaluationContext.add(EQUATORIAL_RADIUS_M: EQUATORIAL_RADIUS_M, &fbb)
-    PCEEvaluationContext.add(FLATTENING: FLATTENING, &fbb)
-    PCEEvaluationContext.addVectorOf(COORDINATE_SYSTEMS: COORDINATE_SYSTEMS, &fbb)
-    PCEEvaluationContext.add(DEFAULT_COORDINATE_SYSTEM_NAME: DEFAULT_COORDINATE_SYSTEM_NAME, &fbb)
-    PCEEvaluationContext.add(DEFAULT_TIME_SYSTEM: DEFAULT_TIME_SYSTEM, &fbb)
-    PCEEvaluationContext.add(REFERENCE_EPOCH: REFERENCE_EPOCH, &fbb)
-    PCEEvaluationContext.add(EOP_DATA_SET_CID: EOP_DATA_SET_CID, &fbb)
-    PCEEvaluationContext.add(ILLUMINATING_BODY_ID: ILLUMINATING_BODY_ID, &fbb)
-    return PCEEvaluationContext.endPCEEvaluationContext(&fbb, start: __start)
+    let __start = EVLEclipseConfiguration.startEVLEclipseConfiguration(&fbb)
+    EVLEclipseConfiguration.addVectorOf(OCCULTING_BODY_IDS: OCCULTING_BODY_IDS, &fbb)
+    EVLEclipseConfiguration.add(ILLUMINATING_BODY_ID: ILLUMINATING_BODY_ID, &fbb)
+    EVLEclipseConfiguration.add(SHADOW_MODEL: SHADOW_MODEL, &fbb)
+    EVLEclipseConfiguration.add(REPORT_UMBRA: REPORT_UMBRA, &fbb)
+    EVLEclipseConfiguration.add(REPORT_PENUMBRA: REPORT_PENUMBRA, &fbb)
+    EVLEclipseConfiguration.add(REPORT_ANTUMBRA: REPORT_ANTUMBRA, &fbb)
+    EVLEclipseConfiguration.add(MINIMUM_DURATION_SECONDS: MINIMUM_DURATION_SECONDS, &fbb)
+    EVLEclipseConfiguration.add(ABERRATION_CORRECTION: ABERRATION_CORRECTION, &fbb)
+    return EVLEclipseConfiguration.endEVLEclipseConfiguration(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.OWNER_CLASS, fieldName: "OWNER_CLASS", required: false, type: pceOwnerClass.self)
-    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.HARDWARE_NAME, fieldName: "HARDWARE_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CENTRAL_BODY_ID, fieldName: "CENTRAL_BODY_ID", required: false, type: Int32.self)
-    try _v.visit(field: VT.GRAVITATIONAL_PARAMETER, fieldName: "GRAVITATIONAL_PARAMETER", required: false, type: Double.self)
-    try _v.visit(field: VT.EQUATORIAL_RADIUS_M, fieldName: "EQUATORIAL_RADIUS_M", required: false, type: Double.self)
-    try _v.visit(field: VT.FLATTENING, fieldName: "FLATTENING", required: false, type: Double.self)
-    try _v.visit(field: VT.COORDINATE_SYSTEMS, fieldName: "COORDINATE_SYSTEMS", required: false, type: ForwardOffset<Vector<ForwardOffset<RFMCoordinateSystem>, RFMCoordinateSystem>>.self)
-    try _v.visit(field: VT.DEFAULT_COORDINATE_SYSTEM_NAME, fieldName: "DEFAULT_COORDINATE_SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DEFAULT_TIME_SYSTEM, fieldName: "DEFAULT_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.REFERENCE_EPOCH, fieldName: "REFERENCE_EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EOP_DATA_SET_CID, fieldName: "EOP_DATA_SET_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OCCULTING_BODY_IDS, fieldName: "OCCULTING_BODY_IDS", required: false, type: ForwardOffset<Vector<Int32, Int32>>.self)
     try _v.visit(field: VT.ILLUMINATING_BODY_ID, fieldName: "ILLUMINATING_BODY_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHADOW_MODEL, fieldName: "SHADOW_MODEL", required: false, type: evlShadowModel.self)
+    try _v.visit(field: VT.REPORT_UMBRA, fieldName: "REPORT_UMBRA", required: false, type: Bool.self)
+    try _v.visit(field: VT.REPORT_PENUMBRA, fieldName: "REPORT_PENUMBRA", required: false, type: Bool.self)
+    try _v.visit(field: VT.REPORT_ANTUMBRA, fieldName: "REPORT_ANTUMBRA", required: false, type: Bool.self)
+    try _v.visit(field: VT.MINIMUM_DURATION_SECONDS, fieldName: "MINIMUM_DURATION_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.ABERRATION_CORRECTION, fieldName: "ABERRATION_CORRECTION", required: false, type: evlAberrationCorrection.self)
     _v.finish()
   }
 }
 
-///  Evaluate these parameters on these states. One state is a point query; a
-///  run of states is a report or a plot series, and carries the same shape.
-public struct PCEEvaluationRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Configuration for CONTACT.
+public struct EVLContactConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEEvaluationRequest.id, addPrefix: prefix) }
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLContactConfiguration.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CONTEXT: VOffset = 4
-    static let PARAMETERS: VOffset = 6
-    static let STATES: VOffset = 8
-    static let TRACE_ID: VOffset = 10
+    static let OBSERVER: VOffset = 4
+    static let SENSOR_ID: VOffset = 6
+    static let MINIMUM_ELEVATION_RAD: VOffset = 8
+    static let AZIMUTH_ELEVATION_MASK_RAD: VOffset = 10
+    static let OCCULTING_BODY_IDS: VOffset = 12
+    static let ABERRATION_CORRECTION: VOffset = 14
+    static let MINIMUM_DURATION_SECONDS: VOffset = 16
   }
 
+  ///  The observing point, normally a GROUND_SITE origin.
+  public var OBSERVER: RFMOrigin? { let o = _accessor.offset(VT.OBSERVER); return o == 0 ? nil : RFMOrigin(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Identifier of the observing site or sensor; resolves against $SEN.ID
+  ///  when the observer is an instrumented site.
+  public var SENSOR_ID: String? { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SENSOR_ID) }
+  ///  Elevation the target must exceed, radians, when no mask is supplied.
+  public var MINIMUM_ELEVATION_RAD: Double { let o = _accessor.offset(VT.MINIMUM_ELEVATION_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Horizon mask as azimuth and minimum-elevation pairs, radians, in
+  ///  ascending azimuth: [az0, el0, az1, el1, ...]. Present, it supersedes
+  ///  MINIMUM_ELEVATION_RAD. An odd length is INVALID_INPUT.
+  public var AZIMUTH_ELEVATION_MASK_RAD: FlatbufferVector<Double> { return _accessor.vector(at: VT.AZIMUTH_ELEVATION_MASK_RAD, byteSize: 8) }
+  public func withUnsafePointerToAzimuthElevationMaskRad<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.AZIMUTH_ELEVATION_MASK_RAD, body: body) }
+  ///  Bodies allowed to block the line of sight.
+  public var OCCULTING_BODY_IDS: FlatbufferVector<Int32> { return _accessor.vector(at: VT.OCCULTING_BODY_IDS, byteSize: 4) }
+  public func withUnsafePointerToOccultingBodyIds<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OCCULTING_BODY_IDS, body: body) }
+  public var ABERRATION_CORRECTION: evlAberrationCorrection { let o = _accessor.offset(VT.ABERRATION_CORRECTION); return o == 0 ? .unspecified : evlAberrationCorrection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Events shorter than this are not reported.
+  public var MINIMUM_DURATION_SECONDS: Double { let o = _accessor.offset(VT.MINIMUM_DURATION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startEVLContactConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(OBSERVER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER, at: VT.OBSERVER) }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
+  public static func add(MINIMUM_ELEVATION_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_ELEVATION_RAD, def: 0.0, at: VT.MINIMUM_ELEVATION_RAD) }
+  public static func addVectorOf(AZIMUTH_ELEVATION_MASK_RAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AZIMUTH_ELEVATION_MASK_RAD, at: VT.AZIMUTH_ELEVATION_MASK_RAD) }
+  public static func addVectorOf(OCCULTING_BODY_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCULTING_BODY_IDS, at: VT.OCCULTING_BODY_IDS) }
+  public static func add(ABERRATION_CORRECTION: evlAberrationCorrection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABERRATION_CORRECTION.rawValue, def: 0, at: VT.ABERRATION_CORRECTION) }
+  public static func add(MINIMUM_DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_DURATION_SECONDS, def: 0.0, at: VT.MINIMUM_DURATION_SECONDS) }
+  public static func endEVLContactConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLContactConfiguration(
+    _ fbb: inout FlatBufferBuilder,
+    OBSERVEROffset OBSERVER: Offset = Offset(),
+    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
+    MINIMUM_ELEVATION_RAD: Double = 0.0,
+    AZIMUTH_ELEVATION_MASK_RADVectorOffset AZIMUTH_ELEVATION_MASK_RAD: Offset = Offset(),
+    OCCULTING_BODY_IDSVectorOffset OCCULTING_BODY_IDS: Offset = Offset(),
+    ABERRATION_CORRECTION: evlAberrationCorrection = .unspecified,
+    MINIMUM_DURATION_SECONDS: Double = 0.0
+  ) -> Offset {
+    let __start = EVLContactConfiguration.startEVLContactConfiguration(&fbb)
+    EVLContactConfiguration.add(OBSERVER: OBSERVER, &fbb)
+    EVLContactConfiguration.add(SENSOR_ID: SENSOR_ID, &fbb)
+    EVLContactConfiguration.add(MINIMUM_ELEVATION_RAD: MINIMUM_ELEVATION_RAD, &fbb)
+    EVLContactConfiguration.addVectorOf(AZIMUTH_ELEVATION_MASK_RAD: AZIMUTH_ELEVATION_MASK_RAD, &fbb)
+    EVLContactConfiguration.addVectorOf(OCCULTING_BODY_IDS: OCCULTING_BODY_IDS, &fbb)
+    EVLContactConfiguration.add(ABERRATION_CORRECTION: ABERRATION_CORRECTION, &fbb)
+    EVLContactConfiguration.add(MINIMUM_DURATION_SECONDS: MINIMUM_DURATION_SECONDS, &fbb)
+    return EVLContactConfiguration.endEVLContactConfiguration(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OBSERVER, fieldName: "OBSERVER", required: false, type: ForwardOffset<RFMOrigin>.self)
+    try _v.visit(field: VT.SENSOR_ID, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MINIMUM_ELEVATION_RAD, fieldName: "MINIMUM_ELEVATION_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.AZIMUTH_ELEVATION_MASK_RAD, fieldName: "AZIMUTH_ELEVATION_MASK_RAD", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OCCULTING_BODY_IDS, fieldName: "OCCULTING_BODY_IDS", required: false, type: ForwardOffset<Vector<Int32, Int32>>.self)
+    try _v.visit(field: VT.ABERRATION_CORRECTION, fieldName: "ABERRATION_CORRECTION", required: false, type: evlAberrationCorrection.self)
+    try _v.visit(field: VT.MINIMUM_DURATION_SECONDS, fieldName: "MINIMUM_DURATION_SECONDS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Configuration for INTRUSION.
+public struct EVLIntrusionConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLIntrusionConfiguration.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SENSOR_ID: VOffset = 4
+    static let FIELD_OF_VIEW_SHAPE: VOffset = 6
+    static let BORESIGHT: VOffset = 8
+    static let BORESIGHT_COORDINATE_SYSTEM_NAME: VOffset = 10
+    static let CONE_HALF_ANGLE_RAD: VOffset = 12
+    static let RECTANGULAR_HALF_ANGLE_X_RAD: VOffset = 14
+    static let RECTANGULAR_HALF_ANGLE_Y_RAD: VOffset = 16
+    static let CUSTOM_MASK_RAD: VOffset = 18
+    static let INTRUDING_BODY_IDS: VOffset = 20
+    static let INTRUDING_OBJECT_IDS: VOffset = 22
+    static let USE_APPARENT_BODY_RADIUS: VOffset = 24
+    static let MINIMUM_DURATION_SECONDS: VOffset = 26
+  }
+
+  ///  Identifier of the sensor whose field of view is tested; resolves against
+  ///  $SEN.ID. The sensor's site data is NOT restated here.
+  public var SENSOR_ID: String? { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SENSOR_ID) }
+  public var FIELD_OF_VIEW_SHAPE: evlFieldOfViewShape { let o = _accessor.offset(VT.FIELD_OF_VIEW_SHAPE); return o == 0 ? .unspecified : evlFieldOfViewShape(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Boresight direction, expressed in BORESIGHT_COORDINATE_SYSTEM_NAME.
+  public var BORESIGHT: FRMVector3? { let o = _accessor.offset(VT.BORESIGHT); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Coordinate system BORESIGHT is expressed in; resolves against
+  ///  RFMCoordinateSystem.NAME on the request context.
+  public var BORESIGHT_COORDINATE_SYSTEM_NAME: String? { let o = _accessor.offset(VT.BORESIGHT_COORDINATE_SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BORESIGHT_COORDINATE_SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BORESIGHT_COORDINATE_SYSTEM_NAME) }
+  ///  Half-angle of a CONIC field of view, radians.
+  public var CONE_HALF_ANGLE_RAD: Double { let o = _accessor.offset(VT.CONE_HALF_ANGLE_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Half-angles of a RECTANGULAR field of view about the boresight, radians.
+  public var RECTANGULAR_HALF_ANGLE_X_RAD: Double { let o = _accessor.offset(VT.RECTANGULAR_HALF_ANGLE_X_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RECTANGULAR_HALF_ANGLE_Y_RAD: Double { let o = _accessor.offset(VT.RECTANGULAR_HALF_ANGLE_Y_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Boundary of a CUSTOM_MASK field of view as clock and cone angle pairs
+  ///  about the boresight, radians: [clock0, cone0, clock1, cone1, ...]. An
+  ///  odd length is INVALID_INPUT.
+  public var CUSTOM_MASK_RAD: FlatbufferVector<Double> { return _accessor.vector(at: VT.CUSTOM_MASK_RAD, byteSize: 8) }
+  public func withUnsafePointerToCustomMaskRad<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CUSTOM_MASK_RAD, body: body) }
+  ///  Ephemeris body codes of the bodies tested for intrusion.
+  public var INTRUDING_BODY_IDS: FlatbufferVector<Int32> { return _accessor.vector(at: VT.INTRUDING_BODY_IDS, byteSize: 4) }
+  public func withUnsafePointerToIntrudingBodyIds<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INTRUDING_BODY_IDS, body: body) }
+  ///  Identifiers of the tracked objects tested for intrusion.
+  public var INTRUDING_OBJECT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.INTRUDING_OBJECT_IDS, byteSize: 4) }
+  ///  Test the intruder's apparent disc rather than its centre, so an event
+  ///  begins when the limb enters the field of view.
+  public var USE_APPARENT_BODY_RADIUS: Bool { let o = _accessor.offset(VT.USE_APPARENT_BODY_RADIUS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var MINIMUM_DURATION_SECONDS: Double { let o = _accessor.offset(VT.MINIMUM_DURATION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startEVLIntrusionConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
+  public static func add(FIELD_OF_VIEW_SHAPE: evlFieldOfViewShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIELD_OF_VIEW_SHAPE.rawValue, def: 0, at: VT.FIELD_OF_VIEW_SHAPE) }
+  public static func add(BORESIGHT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BORESIGHT, at: VT.BORESIGHT) }
+  public static func add(BORESIGHT_COORDINATE_SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BORESIGHT_COORDINATE_SYSTEM_NAME, at: VT.BORESIGHT_COORDINATE_SYSTEM_NAME) }
+  public static func add(CONE_HALF_ANGLE_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONE_HALF_ANGLE_RAD, def: 0.0, at: VT.CONE_HALF_ANGLE_RAD) }
+  public static func add(RECTANGULAR_HALF_ANGLE_X_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECTANGULAR_HALF_ANGLE_X_RAD, def: 0.0, at: VT.RECTANGULAR_HALF_ANGLE_X_RAD) }
+  public static func add(RECTANGULAR_HALF_ANGLE_Y_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECTANGULAR_HALF_ANGLE_Y_RAD, def: 0.0, at: VT.RECTANGULAR_HALF_ANGLE_Y_RAD) }
+  public static func addVectorOf(CUSTOM_MASK_RAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM_MASK_RAD, at: VT.CUSTOM_MASK_RAD) }
+  public static func addVectorOf(INTRUDING_BODY_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTRUDING_BODY_IDS, at: VT.INTRUDING_BODY_IDS) }
+  public static func addVectorOf(INTRUDING_OBJECT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTRUDING_OBJECT_IDS, at: VT.INTRUDING_OBJECT_IDS) }
+  public static func add(USE_APPARENT_BODY_RADIUS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USE_APPARENT_BODY_RADIUS, def: false,
+   at: VT.USE_APPARENT_BODY_RADIUS) }
+  public static func add(MINIMUM_DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_DURATION_SECONDS, def: 0.0, at: VT.MINIMUM_DURATION_SECONDS) }
+  public static func endEVLIntrusionConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLIntrusionConfiguration(
+    _ fbb: inout FlatBufferBuilder,
+    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
+    FIELD_OF_VIEW_SHAPE: evlFieldOfViewShape = .unspecified,
+    BORESIGHTOffset BORESIGHT: Offset = Offset(),
+    BORESIGHT_COORDINATE_SYSTEM_NAMEOffset BORESIGHT_COORDINATE_SYSTEM_NAME: Offset = Offset(),
+    CONE_HALF_ANGLE_RAD: Double = 0.0,
+    RECTANGULAR_HALF_ANGLE_X_RAD: Double = 0.0,
+    RECTANGULAR_HALF_ANGLE_Y_RAD: Double = 0.0,
+    CUSTOM_MASK_RADVectorOffset CUSTOM_MASK_RAD: Offset = Offset(),
+    INTRUDING_BODY_IDSVectorOffset INTRUDING_BODY_IDS: Offset = Offset(),
+    INTRUDING_OBJECT_IDSVectorOffset INTRUDING_OBJECT_IDS: Offset = Offset(),
+    USE_APPARENT_BODY_RADIUS: Bool = false,
+    MINIMUM_DURATION_SECONDS: Double = 0.0
+  ) -> Offset {
+    let __start = EVLIntrusionConfiguration.startEVLIntrusionConfiguration(&fbb)
+    EVLIntrusionConfiguration.add(SENSOR_ID: SENSOR_ID, &fbb)
+    EVLIntrusionConfiguration.add(FIELD_OF_VIEW_SHAPE: FIELD_OF_VIEW_SHAPE, &fbb)
+    EVLIntrusionConfiguration.add(BORESIGHT: BORESIGHT, &fbb)
+    EVLIntrusionConfiguration.add(BORESIGHT_COORDINATE_SYSTEM_NAME: BORESIGHT_COORDINATE_SYSTEM_NAME, &fbb)
+    EVLIntrusionConfiguration.add(CONE_HALF_ANGLE_RAD: CONE_HALF_ANGLE_RAD, &fbb)
+    EVLIntrusionConfiguration.add(RECTANGULAR_HALF_ANGLE_X_RAD: RECTANGULAR_HALF_ANGLE_X_RAD, &fbb)
+    EVLIntrusionConfiguration.add(RECTANGULAR_HALF_ANGLE_Y_RAD: RECTANGULAR_HALF_ANGLE_Y_RAD, &fbb)
+    EVLIntrusionConfiguration.addVectorOf(CUSTOM_MASK_RAD: CUSTOM_MASK_RAD, &fbb)
+    EVLIntrusionConfiguration.addVectorOf(INTRUDING_BODY_IDS: INTRUDING_BODY_IDS, &fbb)
+    EVLIntrusionConfiguration.addVectorOf(INTRUDING_OBJECT_IDS: INTRUDING_OBJECT_IDS, &fbb)
+    EVLIntrusionConfiguration.add(USE_APPARENT_BODY_RADIUS: USE_APPARENT_BODY_RADIUS, &fbb)
+    EVLIntrusionConfiguration.add(MINIMUM_DURATION_SECONDS: MINIMUM_DURATION_SECONDS, &fbb)
+    return EVLIntrusionConfiguration.endEVLIntrusionConfiguration(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SENSOR_ID, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIELD_OF_VIEW_SHAPE, fieldName: "FIELD_OF_VIEW_SHAPE", required: false, type: evlFieldOfViewShape.self)
+    try _v.visit(field: VT.BORESIGHT, fieldName: "BORESIGHT", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.BORESIGHT_COORDINATE_SYSTEM_NAME, fieldName: "BORESIGHT_COORDINATE_SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONE_HALF_ANGLE_RAD, fieldName: "CONE_HALF_ANGLE_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.RECTANGULAR_HALF_ANGLE_X_RAD, fieldName: "RECTANGULAR_HALF_ANGLE_X_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.RECTANGULAR_HALF_ANGLE_Y_RAD, fieldName: "RECTANGULAR_HALF_ANGLE_Y_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.CUSTOM_MASK_RAD, fieldName: "CUSTOM_MASK_RAD", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.INTRUDING_BODY_IDS, fieldName: "INTRUDING_BODY_IDS", required: false, type: ForwardOffset<Vector<Int32, Int32>>.self)
+    try _v.visit(field: VT.INTRUDING_OBJECT_IDS, fieldName: "INTRUDING_OBJECT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.USE_APPARENT_BODY_RADIUS, fieldName: "USE_APPARENT_BODY_RADIUS", required: false, type: Bool.self)
+    try _v.visit(field: VT.MINIMUM_DURATION_SECONDS, fieldName: "MINIMUM_DURATION_SECONDS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Configuration for APSIDES.
+public struct EVLApsidesConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLApsidesConfiguration.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CENTRAL_BODY_ID: VOffset = 4
+    static let REPORT_APOAPSIS: VOffset = 6
+    static let REPORT_PERIAPSIS: VOffset = 8
+  }
+
+  ///  Ephemeris body code the radius is measured from. The apsis is the root
+  ///  of the RADIAL_VELOCITY parameter about this body, NOT an extremum of
+  ///  geodetic height; the two differ by tens of degrees of true anomaly on an
+  ///  oblate body.
+  public var CENTRAL_BODY_ID: Int32 { let o = _accessor.offset(VT.CENTRAL_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var REPORT_APOAPSIS: Bool { let o = _accessor.offset(VT.REPORT_APOAPSIS); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var REPORT_PERIAPSIS: Bool { let o = _accessor.offset(VT.REPORT_PERIAPSIS); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startEVLApsidesConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(CENTRAL_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY_ID, def: 0, at: VT.CENTRAL_BODY_ID) }
+  public static func add(REPORT_APOAPSIS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_APOAPSIS, def: true,
+   at: VT.REPORT_APOAPSIS) }
+  public static func add(REPORT_PERIAPSIS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_PERIAPSIS, def: true,
+   at: VT.REPORT_PERIAPSIS) }
+  public static func endEVLApsidesConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLApsidesConfiguration(
+    _ fbb: inout FlatBufferBuilder,
+    CENTRAL_BODY_ID: Int32 = 0,
+    REPORT_APOAPSIS: Bool = true,
+    REPORT_PERIAPSIS: Bool = true
+  ) -> Offset {
+    let __start = EVLApsidesConfiguration.startEVLApsidesConfiguration(&fbb)
+    EVLApsidesConfiguration.add(CENTRAL_BODY_ID: CENTRAL_BODY_ID, &fbb)
+    EVLApsidesConfiguration.add(REPORT_APOAPSIS: REPORT_APOAPSIS, &fbb)
+    EVLApsidesConfiguration.add(REPORT_PERIAPSIS: REPORT_PERIAPSIS, &fbb)
+    return EVLApsidesConfiguration.endEVLApsidesConfiguration(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CENTRAL_BODY_ID, fieldName: "CENTRAL_BODY_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.REPORT_APOAPSIS, fieldName: "REPORT_APOAPSIS", required: false, type: Bool.self)
+    try _v.visit(field: VT.REPORT_PERIAPSIS, fieldName: "REPORT_PERIAPSIS", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Configuration for NODE_CROSSING.
+public struct EVLNodeCrossingConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLNodeCrossingConfiguration.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let REFERENCE_COORDINATE_SYSTEM_NAME: VOffset = 4
+    static let REPORT_ASCENDING: VOffset = 6
+    static let REPORT_DESCENDING: VOffset = 8
+  }
+
+  ///  Coordinate system whose reference plane defines the node line; resolves
+  ///  against RFMCoordinateSystem.NAME on the request context.
+  public var REFERENCE_COORDINATE_SYSTEM_NAME: String? { let o = _accessor.offset(VT.REFERENCE_COORDINATE_SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCE_COORDINATE_SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_COORDINATE_SYSTEM_NAME) }
+  public var REPORT_ASCENDING: Bool { let o = _accessor.offset(VT.REPORT_ASCENDING); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var REPORT_DESCENDING: Bool { let o = _accessor.offset(VT.REPORT_DESCENDING); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startEVLNodeCrossingConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(REFERENCE_COORDINATE_SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_COORDINATE_SYSTEM_NAME, at: VT.REFERENCE_COORDINATE_SYSTEM_NAME) }
+  public static func add(REPORT_ASCENDING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_ASCENDING, def: true,
+   at: VT.REPORT_ASCENDING) }
+  public static func add(REPORT_DESCENDING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_DESCENDING, def: true,
+   at: VT.REPORT_DESCENDING) }
+  public static func endEVLNodeCrossingConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLNodeCrossingConfiguration(
+    _ fbb: inout FlatBufferBuilder,
+    REFERENCE_COORDINATE_SYSTEM_NAMEOffset REFERENCE_COORDINATE_SYSTEM_NAME: Offset = Offset(),
+    REPORT_ASCENDING: Bool = true,
+    REPORT_DESCENDING: Bool = true
+  ) -> Offset {
+    let __start = EVLNodeCrossingConfiguration.startEVLNodeCrossingConfiguration(&fbb)
+    EVLNodeCrossingConfiguration.add(REFERENCE_COORDINATE_SYSTEM_NAME: REFERENCE_COORDINATE_SYSTEM_NAME, &fbb)
+    EVLNodeCrossingConfiguration.add(REPORT_ASCENDING: REPORT_ASCENDING, &fbb)
+    EVLNodeCrossingConfiguration.add(REPORT_DESCENDING: REPORT_DESCENDING, &fbb)
+    return EVLNodeCrossingConfiguration.endEVLNodeCrossingConfiguration(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.REFERENCE_COORDINATE_SYSTEM_NAME, fieldName: "REFERENCE_COORDINATE_SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REPORT_ASCENDING, fieldName: "REPORT_ASCENDING", required: false, type: Bool.self)
+    try _v.visit(field: VT.REPORT_DESCENDING, fieldName: "REPORT_DESCENDING", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Configuration for PARAMETER_CONDITION, the generic locator.
+public struct EVLParameterConditionConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLParameterConditionConfiguration.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CONDITIONS: VOffset = 4
+    static let REPORT_AS_INTERVAL: VOffset = 6
+    static let MINIMUM_DURATION_SECONDS: VOffset = 8
+  }
+
+  ///  Conditions on $PCE catalog parameters. The predicate vocabulary is
+  ///  PCEParameterCondition and is NOT restated here.
+  public var CONDITIONS: FlatbufferVector<PCEParameterCondition> { return _accessor.vector(at: VT.CONDITIONS, byteSize: 4) }
+  ///  True reports the interval BETWEEN a satisfying crossing and the next
+  ///  unsatisfying one; false reports each crossing as an instantaneous event
+  ///  with equal start and stop epochs.
+  public var REPORT_AS_INTERVAL: Bool { let o = _accessor.offset(VT.REPORT_AS_INTERVAL); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var MINIMUM_DURATION_SECONDS: Double { let o = _accessor.offset(VT.MINIMUM_DURATION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startEVLParameterConditionConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func addVectorOf(CONDITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITIONS, at: VT.CONDITIONS) }
+  public static func add(REPORT_AS_INTERVAL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_AS_INTERVAL, def: true,
+   at: VT.REPORT_AS_INTERVAL) }
+  public static func add(MINIMUM_DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_DURATION_SECONDS, def: 0.0, at: VT.MINIMUM_DURATION_SECONDS) }
+  public static func endEVLParameterConditionConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLParameterConditionConfiguration(
+    _ fbb: inout FlatBufferBuilder,
+    CONDITIONSVectorOffset CONDITIONS: Offset = Offset(),
+    REPORT_AS_INTERVAL: Bool = true,
+    MINIMUM_DURATION_SECONDS: Double = 0.0
+  ) -> Offset {
+    let __start = EVLParameterConditionConfiguration.startEVLParameterConditionConfiguration(&fbb)
+    EVLParameterConditionConfiguration.addVectorOf(CONDITIONS: CONDITIONS, &fbb)
+    EVLParameterConditionConfiguration.add(REPORT_AS_INTERVAL: REPORT_AS_INTERVAL, &fbb)
+    EVLParameterConditionConfiguration.add(MINIMUM_DURATION_SECONDS: MINIMUM_DURATION_SECONDS, &fbb)
+    return EVLParameterConditionConfiguration.endEVLParameterConditionConfiguration(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CONDITIONS, fieldName: "CONDITIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<PCEParameterCondition>, PCEParameterCondition>>.self)
+    try _v.visit(field: VT.REPORT_AS_INTERVAL, fieldName: "REPORT_AS_INTERVAL", required: false, type: Bool.self)
+    try _v.visit(field: VT.MINIMUM_DURATION_SECONDS, fieldName: "MINIMUM_DURATION_SECONDS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Parameter values captured at one instant inside an event.
+public struct EVLEventSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLEventSample.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let POINT: VOffset = 4
+    static let SAMPLE: VOffset = 6
+  }
+
+  public var POINT: evlSamplePoint { let o = _accessor.offset(VT.POINT); return o == 0 ? .unspecified : evlSamplePoint(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var SAMPLE: PCEParameterSample? { let o = _accessor.offset(VT.SAMPLE); return o == 0 ? nil : PCEParameterSample(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startEVLEventSample(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(POINT: evlSamplePoint, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINT.rawValue, def: 0, at: VT.POINT) }
+  public static func add(SAMPLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE, at: VT.SAMPLE) }
+  public static func endEVLEventSample(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLEventSample(
+    _ fbb: inout FlatBufferBuilder,
+    POINT: evlSamplePoint = .unspecified,
+    SAMPLEOffset SAMPLE: Offset = Offset()
+  ) -> Offset {
+    let __start = EVLEventSample.startEVLEventSample(&fbb)
+    EVLEventSample.add(POINT: POINT, &fbb)
+    EVLEventSample.add(SAMPLE: SAMPLE, &fbb)
+    return EVLEventSample.endEVLEventSample(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.POINT, fieldName: "POINT", required: false, type: evlSamplePoint.self)
+    try _v.visit(field: VT.SAMPLE, fieldName: "SAMPLE", required: false, type: ForwardOffset<PCEParameterSample>.self)
+    _v.finish()
+  }
+}
+
+///  One located event. An instantaneous event has STOP_EPOCH equal to
+///  START_EPOCH and DURATION_SECONDS equal to 0.
+public struct EVLEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLEvent.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EVENT_TYPE: VOffset = 4
+    static let START_EPOCH: VOffset = 6
+    static let STOP_EPOCH: VOffset = 8
+    static let EPOCH_TIME_SYSTEM: VOffset = 10
+    static let DURATION_SECONDS: VOffset = 12
+    static let TARGET_OBJECT_ID: VOffset = 14
+    static let OCCULTING_BODY_ID: VOffset = 16
+    static let OBSERVER_ID: VOffset = 18
+    static let OBSERVED_OBJECT_ID: VOffset = 20
+    static let EXTREMUM_EPOCH: VOffset = 22
+    static let EXTREMUM_VALUE: VOffset = 24
+    static let EXTREMUM_PARAMETER: VOffset = 26
+    static let CONDITION_INDEX: VOffset = 28
+    static let SAMPLES: VOffset = 30
+  }
+
+  public var EVENT_TYPE: evlEventType { let o = _accessor.offset(VT.EVENT_TYPE); return o == 0 ? .unspecified : evlEventType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Entry epoch, ISO 8601.
+  public var START_EPOCH: String? { let o = _accessor.offset(VT.START_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_EPOCH) }
+  ///  Exit epoch, ISO 8601.
+  public var STOP_EPOCH: String? { let o = _accessor.offset(VT.STOP_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_EPOCH) }
+  ///  Time system of the epochs, named by the $TIM timingStandard member name.
+  public var EPOCH_TIME_SYSTEM: String? { let o = _accessor.offset(VT.EPOCH_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCH_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TIME_SYSTEM) }
+  ///  STOP_EPOCH minus START_EPOCH in seconds. Carried because it is the
+  ///  reported quantity of an event report and MUST agree with the epochs.
+  public var DURATION_SECONDS: Double { let o = _accessor.offset(VT.DURATION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The object the event happened to.
+  public var TARGET_OBJECT_ID: String? { let o = _accessor.offset(VT.TARGET_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_OBJECT_ID) }
+  ///  Ephemeris body code of the body that occulted or intruded, when one did.
+  public var OCCULTING_BODY_ID: Int32 { let o = _accessor.offset(VT.OCCULTING_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Identifier of the observing site or sensor, when the class has one.
+  public var OBSERVER_ID: String? { let o = _accessor.offset(VT.OBSERVER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSERVER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVER_ID) }
+  ///  Identifier of the observed body or object, when the class has one.
+  public var OBSERVED_OBJECT_ID: String? { let o = _accessor.offset(VT.OBSERVED_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSERVED_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVED_OBJECT_ID) }
+  ///  Epoch of the event's extremum, ISO 8601: deepest obscuration, peak
+  ///  elevation, closest approach. Absent when the class has no extremum.
+  public var EXTREMUM_EPOCH: String? { let o = _accessor.offset(VT.EXTREMUM_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTREMUM_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTREMUM_EPOCH) }
+  ///  Value at EXTREMUM_EPOCH, in the unit of EXTREMUM_PARAMETER.
+  public var EXTREMUM_VALUE: Double { let o = _accessor.offset(VT.EXTREMUM_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Which catalog parameter EXTREMUM_VALUE is a value of.
+  public var EXTREMUM_PARAMETER: pceParameter { let o = _accessor.offset(VT.EXTREMUM_PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
+  ///  Index into EVLEventLocationRequest.PARAMETER_CONDITION_CONFIGURATION's
+  ///  CONDITIONS for a generic event; negative for every other class.
+  public var CONDITION_INDEX: Int32 { let o = _accessor.offset(VT.CONDITION_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Requested parameters, evaluated at the instants of this event.
+  public var SAMPLES: FlatbufferVector<EVLEventSample> { return _accessor.vector(at: VT.SAMPLES, byteSize: 4) }
+  public static func startEVLEvent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func add(EVENT_TYPE: evlEventType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVENT_TYPE.rawValue, def: 0, at: VT.EVENT_TYPE) }
+  public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
+  public static func add(STOP_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_EPOCH, at: VT.STOP_EPOCH) }
+  public static func add(EPOCH_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME_SYSTEM, at: VT.EPOCH_TIME_SYSTEM) }
+  public static func add(DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_SECONDS, def: 0.0, at: VT.DURATION_SECONDS) }
+  public static func add(TARGET_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_OBJECT_ID, at: VT.TARGET_OBJECT_ID) }
+  public static func add(OCCULTING_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCCULTING_BODY_ID, def: 0, at: VT.OCCULTING_BODY_ID) }
+  public static func add(OBSERVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_ID, at: VT.OBSERVER_ID) }
+  public static func add(OBSERVED_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVED_OBJECT_ID, at: VT.OBSERVED_OBJECT_ID) }
+  public static func add(EXTREMUM_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTREMUM_EPOCH, at: VT.EXTREMUM_EPOCH) }
+  public static func add(EXTREMUM_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTREMUM_VALUE, def: 0.0, at: VT.EXTREMUM_VALUE) }
+  public static func add(EXTREMUM_PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTREMUM_PARAMETER.rawValue, def: 0, at: VT.EXTREMUM_PARAMETER) }
+  public static func add(CONDITION_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONDITION_INDEX, def: -1, at: VT.CONDITION_INDEX) }
+  public static func addVectorOf(SAMPLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLES, at: VT.SAMPLES) }
+  public static func endEVLEvent(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLEvent(
+    _ fbb: inout FlatBufferBuilder,
+    EVENT_TYPE: evlEventType = .unspecified,
+    START_EPOCHOffset START_EPOCH: Offset = Offset(),
+    STOP_EPOCHOffset STOP_EPOCH: Offset = Offset(),
+    EPOCH_TIME_SYSTEMOffset EPOCH_TIME_SYSTEM: Offset = Offset(),
+    DURATION_SECONDS: Double = 0.0,
+    TARGET_OBJECT_IDOffset TARGET_OBJECT_ID: Offset = Offset(),
+    OCCULTING_BODY_ID: Int32 = 0,
+    OBSERVER_IDOffset OBSERVER_ID: Offset = Offset(),
+    OBSERVED_OBJECT_IDOffset OBSERVED_OBJECT_ID: Offset = Offset(),
+    EXTREMUM_EPOCHOffset EXTREMUM_EPOCH: Offset = Offset(),
+    EXTREMUM_VALUE: Double = 0.0,
+    EXTREMUM_PARAMETER: pceParameter = .unspecified,
+    CONDITION_INDEX: Int32 = -1,
+    SAMPLESVectorOffset SAMPLES: Offset = Offset()
+  ) -> Offset {
+    let __start = EVLEvent.startEVLEvent(&fbb)
+    EVLEvent.add(EVENT_TYPE: EVENT_TYPE, &fbb)
+    EVLEvent.add(START_EPOCH: START_EPOCH, &fbb)
+    EVLEvent.add(STOP_EPOCH: STOP_EPOCH, &fbb)
+    EVLEvent.add(EPOCH_TIME_SYSTEM: EPOCH_TIME_SYSTEM, &fbb)
+    EVLEvent.add(DURATION_SECONDS: DURATION_SECONDS, &fbb)
+    EVLEvent.add(TARGET_OBJECT_ID: TARGET_OBJECT_ID, &fbb)
+    EVLEvent.add(OCCULTING_BODY_ID: OCCULTING_BODY_ID, &fbb)
+    EVLEvent.add(OBSERVER_ID: OBSERVER_ID, &fbb)
+    EVLEvent.add(OBSERVED_OBJECT_ID: OBSERVED_OBJECT_ID, &fbb)
+    EVLEvent.add(EXTREMUM_EPOCH: EXTREMUM_EPOCH, &fbb)
+    EVLEvent.add(EXTREMUM_VALUE: EXTREMUM_VALUE, &fbb)
+    EVLEvent.add(EXTREMUM_PARAMETER: EXTREMUM_PARAMETER, &fbb)
+    EVLEvent.add(CONDITION_INDEX: CONDITION_INDEX, &fbb)
+    EVLEvent.addVectorOf(SAMPLES: SAMPLES, &fbb)
+    return EVLEvent.endEVLEvent(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EVENT_TYPE, fieldName: "EVENT_TYPE", required: false, type: evlEventType.self)
+    try _v.visit(field: VT.START_EPOCH, fieldName: "START_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_EPOCH, fieldName: "STOP_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH_TIME_SYSTEM, fieldName: "EPOCH_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DURATION_SECONDS, fieldName: "DURATION_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_OBJECT_ID, fieldName: "TARGET_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OCCULTING_BODY_ID, fieldName: "OCCULTING_BODY_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.OBSERVER_ID, fieldName: "OBSERVER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBSERVED_OBJECT_ID, fieldName: "OBSERVED_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTREMUM_EPOCH, fieldName: "EXTREMUM_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTREMUM_VALUE, fieldName: "EXTREMUM_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTREMUM_PARAMETER, fieldName: "EXTREMUM_PARAMETER", required: false, type: pceParameter.self)
+    try _v.visit(field: VT.CONDITION_INDEX, fieldName: "CONDITION_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.SAMPLES, fieldName: "SAMPLES", required: false, type: ForwardOffset<Vector<ForwardOffset<EVLEventSample>, EVLEventSample>>.self)
+    _v.finish()
+  }
+}
+
+///  Locate events of one class over one interval.
+public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLEventLocationRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let LOCATOR_CLASS: VOffset = 4
+    static let TARGET_OBJECT_ID: VOffset = 6
+    static let CONTEXT: VOffset = 8
+    static let SCAN_START_EPOCH: VOffset = 10
+    static let SCAN_STOP_EPOCH: VOffset = 12
+    static let EPOCH_TIME_SYSTEM: VOffset = 14
+    static let SCAN_STEP_SECONDS: VOffset = 16
+    static let REFINEMENT_TOLERANCE_SECONDS: VOffset = 18
+    static let MAXIMUM_EVENTS: VOffset = 20
+    static let REPORT_PARAMETERS: VOffset = 22
+    static let ECLIPSE_CONFIGURATION: VOffset = 24
+    static let CONTACT_CONFIGURATION: VOffset = 26
+    static let INTRUSION_CONFIGURATION: VOffset = 28
+    static let APSIDES_CONFIGURATION: VOffset = 30
+    static let NODE_CROSSING_CONFIGURATION: VOffset = 32
+    static let PARAMETER_CONDITION_CONFIGURATION: VOffset = 34
+    static let TRACE_ID: VOffset = 36
+  }
+
+  public var LOCATOR_CLASS: evlLocatorClass { let o = _accessor.offset(VT.LOCATOR_CLASS); return o == 0 ? .unspecified : evlLocatorClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Object the events are located for.
+  public var TARGET_OBJECT_ID: String? { let o = _accessor.offset(VT.TARGET_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_OBJECT_ID) }
+  ///  Bodies, coordinate systems, epoch reference and Earth-orientation data
+  ///  set the geometry is evaluated in. The state source itself is a port the
+  ///  caller supplies and is NOT named here.
   public var CONTEXT: PCEEvaluationContext? { let o = _accessor.offset(VT.CONTEXT); return o == 0 ? nil : PCEEvaluationContext(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var PARAMETERS: FlatbufferVector<PCEParameterRef> { return _accessor.vector(at: VT.PARAMETERS, byteSize: 4) }
-  ///  States to evaluate at, in chronological order. Each carries its own
-  ///  epoch and coordinate system name.
-  public var STATES: FlatbufferVector<FRMStateVector> { return _accessor.vector(at: VT.STATES, byteSize: 4) }
+  ///  Interval to search, ISO 8601.
+  public var SCAN_START_EPOCH: String? { let o = _accessor.offset(VT.SCAN_START_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCAN_START_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCAN_START_EPOCH) }
+  public var SCAN_STOP_EPOCH: String? { let o = _accessor.offset(VT.SCAN_STOP_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCAN_STOP_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCAN_STOP_EPOCH) }
+  ///  Time system of the interval, named by the $TIM timingStandard member
+  ///  name.
+  public var EPOCH_TIME_SYSTEM: String? { let o = _accessor.offset(VT.EPOCH_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCH_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TIME_SYSTEM) }
+  ///  Coarse step the event function is sampled at before refinement. A
+  ///  provider MAY choose its own step when this is absent, and the located
+  ///  epochs MUST NOT depend on it beyond REFINEMENT_TOLERANCE_SECONDS.
+  public var SCAN_STEP_SECONDS: Double { let o = _accessor.offset(VT.SCAN_STEP_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Convergence bar on a located epoch. A provider that cannot meet it
+  ///  returns ROOT_REFINEMENT_FAILED.
+  public var REFINEMENT_TOLERANCE_SECONDS: Double { let o = _accessor.offset(VT.REFINEMENT_TOLERANCE_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper bound on reported events. 0 means no bound.
+  public var MAXIMUM_EVENTS: UInt32 { let o = _accessor.offset(VT.MAXIMUM_EVENTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Parameters to evaluate at each event's instants.
+  public var REPORT_PARAMETERS: FlatbufferVector<PCEParameterRef> { return _accessor.vector(at: VT.REPORT_PARAMETERS, byteSize: 4) }
+  ///  Exactly the configuration matching LOCATOR_CLASS is present; any other
+  ///  combination is MISSING_CONFIGURATION.
+  public var ECLIPSE_CONFIGURATION: EVLEclipseConfiguration? { let o = _accessor.offset(VT.ECLIPSE_CONFIGURATION); return o == 0 ? nil : EVLEclipseConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CONTACT_CONFIGURATION: EVLContactConfiguration? { let o = _accessor.offset(VT.CONTACT_CONFIGURATION); return o == 0 ? nil : EVLContactConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INTRUSION_CONFIGURATION: EVLIntrusionConfiguration? { let o = _accessor.offset(VT.INTRUSION_CONFIGURATION); return o == 0 ? nil : EVLIntrusionConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var APSIDES_CONFIGURATION: EVLApsidesConfiguration? { let o = _accessor.offset(VT.APSIDES_CONFIGURATION); return o == 0 ? nil : EVLApsidesConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var NODE_CROSSING_CONFIGURATION: EVLNodeCrossingConfiguration? { let o = _accessor.offset(VT.NODE_CROSSING_CONFIGURATION); return o == 0 ? nil : EVLNodeCrossingConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PARAMETER_CONDITION_CONFIGURATION: EVLParameterConditionConfiguration? { let o = _accessor.offset(VT.PARAMETER_CONDITION_CONFIGURATION); return o == 0 ? nil : EVLParameterConditionConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startPCEEvaluationRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func startEVLEventLocationRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  public static func add(LOCATOR_CLASS: evlLocatorClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATOR_CLASS.rawValue, def: 0, at: VT.LOCATOR_CLASS) }
+  public static func add(TARGET_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_OBJECT_ID, at: VT.TARGET_OBJECT_ID) }
   public static func add(CONTEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT, at: VT.CONTEXT) }
-  public static func addVectorOf(PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETERS, at: VT.PARAMETERS) }
-  public static func addVectorOf(STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATES, at: VT.STATES) }
+  public static func add(SCAN_START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCAN_START_EPOCH, at: VT.SCAN_START_EPOCH) }
+  public static func add(SCAN_STOP_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCAN_STOP_EPOCH, at: VT.SCAN_STOP_EPOCH) }
+  public static func add(EPOCH_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME_SYSTEM, at: VT.EPOCH_TIME_SYSTEM) }
+  public static func add(SCAN_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCAN_STEP_SECONDS, def: 0.0, at: VT.SCAN_STEP_SECONDS) }
+  public static func add(REFINEMENT_TOLERANCE_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFINEMENT_TOLERANCE_SECONDS, def: 0.0, at: VT.REFINEMENT_TOLERANCE_SECONDS) }
+  public static func add(MAXIMUM_EVENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_EVENTS, def: 0, at: VT.MAXIMUM_EVENTS) }
+  public static func addVectorOf(REPORT_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPORT_PARAMETERS, at: VT.REPORT_PARAMETERS) }
+  public static func add(ECLIPSE_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECLIPSE_CONFIGURATION, at: VT.ECLIPSE_CONFIGURATION) }
+  public static func add(CONTACT_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTACT_CONFIGURATION, at: VT.CONTACT_CONFIGURATION) }
+  public static func add(INTRUSION_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTRUSION_CONFIGURATION, at: VT.INTRUSION_CONFIGURATION) }
+  public static func add(APSIDES_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APSIDES_CONFIGURATION, at: VT.APSIDES_CONFIGURATION) }
+  public static func add(NODE_CROSSING_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_CROSSING_CONFIGURATION, at: VT.NODE_CROSSING_CONFIGURATION) }
+  public static func add(PARAMETER_CONDITION_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_CONDITION_CONFIGURATION, at: VT.PARAMETER_CONDITION_CONFIGURATION) }
   public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endPCEEvaluationRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEEvaluationRequest(
+  public static func endEVLEventLocationRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLEventLocationRequest(
     _ fbb: inout FlatBufferBuilder,
+    LOCATOR_CLASS: evlLocatorClass = .unspecified,
+    TARGET_OBJECT_IDOffset TARGET_OBJECT_ID: Offset = Offset(),
     CONTEXTOffset CONTEXT: Offset = Offset(),
-    PARAMETERSVectorOffset PARAMETERS: Offset = Offset(),
-    STATESVectorOffset STATES: Offset = Offset(),
+    SCAN_START_EPOCHOffset SCAN_START_EPOCH: Offset = Offset(),
+    SCAN_STOP_EPOCHOffset SCAN_STOP_EPOCH: Offset = Offset(),
+    EPOCH_TIME_SYSTEMOffset EPOCH_TIME_SYSTEM: Offset = Offset(),
+    SCAN_STEP_SECONDS: Double = 0.0,
+    REFINEMENT_TOLERANCE_SECONDS: Double = 0.0,
+    MAXIMUM_EVENTS: UInt32 = 0,
+    REPORT_PARAMETERSVectorOffset REPORT_PARAMETERS: Offset = Offset(),
+    ECLIPSE_CONFIGURATIONOffset ECLIPSE_CONFIGURATION: Offset = Offset(),
+    CONTACT_CONFIGURATIONOffset CONTACT_CONFIGURATION: Offset = Offset(),
+    INTRUSION_CONFIGURATIONOffset INTRUSION_CONFIGURATION: Offset = Offset(),
+    APSIDES_CONFIGURATIONOffset APSIDES_CONFIGURATION: Offset = Offset(),
+    NODE_CROSSING_CONFIGURATIONOffset NODE_CROSSING_CONFIGURATION: Offset = Offset(),
+    PARAMETER_CONDITION_CONFIGURATIONOffset PARAMETER_CONDITION_CONFIGURATION: Offset = Offset(),
     TRACE_IDOffset TRACE_ID: Offset = Offset()
   ) -> Offset {
-    let __start = PCEEvaluationRequest.startPCEEvaluationRequest(&fbb)
-    PCEEvaluationRequest.add(CONTEXT: CONTEXT, &fbb)
-    PCEEvaluationRequest.addVectorOf(PARAMETERS: PARAMETERS, &fbb)
-    PCEEvaluationRequest.addVectorOf(STATES: STATES, &fbb)
-    PCEEvaluationRequest.add(TRACE_ID: TRACE_ID, &fbb)
-    return PCEEvaluationRequest.endPCEEvaluationRequest(&fbb, start: __start)
+    let __start = EVLEventLocationRequest.startEVLEventLocationRequest(&fbb)
+    EVLEventLocationRequest.add(LOCATOR_CLASS: LOCATOR_CLASS, &fbb)
+    EVLEventLocationRequest.add(TARGET_OBJECT_ID: TARGET_OBJECT_ID, &fbb)
+    EVLEventLocationRequest.add(CONTEXT: CONTEXT, &fbb)
+    EVLEventLocationRequest.add(SCAN_START_EPOCH: SCAN_START_EPOCH, &fbb)
+    EVLEventLocationRequest.add(SCAN_STOP_EPOCH: SCAN_STOP_EPOCH, &fbb)
+    EVLEventLocationRequest.add(EPOCH_TIME_SYSTEM: EPOCH_TIME_SYSTEM, &fbb)
+    EVLEventLocationRequest.add(SCAN_STEP_SECONDS: SCAN_STEP_SECONDS, &fbb)
+    EVLEventLocationRequest.add(REFINEMENT_TOLERANCE_SECONDS: REFINEMENT_TOLERANCE_SECONDS, &fbb)
+    EVLEventLocationRequest.add(MAXIMUM_EVENTS: MAXIMUM_EVENTS, &fbb)
+    EVLEventLocationRequest.addVectorOf(REPORT_PARAMETERS: REPORT_PARAMETERS, &fbb)
+    EVLEventLocationRequest.add(ECLIPSE_CONFIGURATION: ECLIPSE_CONFIGURATION, &fbb)
+    EVLEventLocationRequest.add(CONTACT_CONFIGURATION: CONTACT_CONFIGURATION, &fbb)
+    EVLEventLocationRequest.add(INTRUSION_CONFIGURATION: INTRUSION_CONFIGURATION, &fbb)
+    EVLEventLocationRequest.add(APSIDES_CONFIGURATION: APSIDES_CONFIGURATION, &fbb)
+    EVLEventLocationRequest.add(NODE_CROSSING_CONFIGURATION: NODE_CROSSING_CONFIGURATION, &fbb)
+    EVLEventLocationRequest.add(PARAMETER_CONDITION_CONFIGURATION: PARAMETER_CONDITION_CONFIGURATION, &fbb)
+    EVLEventLocationRequest.add(TRACE_ID: TRACE_ID, &fbb)
+    return EVLEventLocationRequest.endEVLEventLocationRequest(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.LOCATOR_CLASS, fieldName: "LOCATOR_CLASS", required: false, type: evlLocatorClass.self)
+    try _v.visit(field: VT.TARGET_OBJECT_ID, fieldName: "TARGET_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CONTEXT, fieldName: "CONTEXT", required: false, type: ForwardOffset<PCEEvaluationContext>.self)
-    try _v.visit(field: VT.PARAMETERS, fieldName: "PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<PCEParameterRef>, PCEParameterRef>>.self)
-    try _v.visit(field: VT.STATES, fieldName: "STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<FRMStateVector>, FRMStateVector>>.self)
+    try _v.visit(field: VT.SCAN_START_EPOCH, fieldName: "SCAN_START_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCAN_STOP_EPOCH, fieldName: "SCAN_STOP_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH_TIME_SYSTEM, fieldName: "EPOCH_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCAN_STEP_SECONDS, fieldName: "SCAN_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.REFINEMENT_TOLERANCE_SECONDS, fieldName: "REFINEMENT_TOLERANCE_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_EVENTS, fieldName: "MAXIMUM_EVENTS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REPORT_PARAMETERS, fieldName: "REPORT_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<PCEParameterRef>, PCEParameterRef>>.self)
+    try _v.visit(field: VT.ECLIPSE_CONFIGURATION, fieldName: "ECLIPSE_CONFIGURATION", required: false, type: ForwardOffset<EVLEclipseConfiguration>.self)
+    try _v.visit(field: VT.CONTACT_CONFIGURATION, fieldName: "CONTACT_CONFIGURATION", required: false, type: ForwardOffset<EVLContactConfiguration>.self)
+    try _v.visit(field: VT.INTRUSION_CONFIGURATION, fieldName: "INTRUSION_CONFIGURATION", required: false, type: ForwardOffset<EVLIntrusionConfiguration>.self)
+    try _v.visit(field: VT.APSIDES_CONFIGURATION, fieldName: "APSIDES_CONFIGURATION", required: false, type: ForwardOffset<EVLApsidesConfiguration>.self)
+    try _v.visit(field: VT.NODE_CROSSING_CONFIGURATION, fieldName: "NODE_CROSSING_CONFIGURATION", required: false, type: ForwardOffset<EVLNodeCrossingConfiguration>.self)
+    try _v.visit(field: VT.PARAMETER_CONDITION_CONFIGURATION, fieldName: "PARAMETER_CONDITION_CONFIGURATION", required: false, type: ForwardOffset<EVLParameterConditionConfiguration>.self)
     try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  One parameter's value at one state. STATUS is per value: a request never
-///  fails as a whole because one name is unavailable.
-public struct PCEParameterValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  The events found, and the interval they were actually searched over.
+public struct EVLEventReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEParameterValue.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let PARAMETER: VOffset = 4
-    static let PROVIDER_DEFINED_NAME: VOffset = 6
-    static let STATUS: VOffset = 8
-    static let VALUE: VOffset = 10
-    static let VALUES: VOffset = 12
-    static let ROW_COUNT: VOffset = 14
-    static let COLUMN_COUNT: VOffset = 16
-    static let STRING_VALUE: VOffset = 18
-    static let UNIT: VOffset = 20
-    static let MESSAGE: VOffset = 22
-  }
-
-  public var PARAMETER: pceParameter { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
-  ///  REQUIRED when PARAMETER is PROVIDER_DEFINED.
-  public var PROVIDER_DEFINED_NAME: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROVIDER_DEFINED_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_NAME) }
-  public var STATUS: pceResultStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .unspecified : pceResultStatus(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Scalar, integer or boolean value. Absent for vector and matrix types.
-  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Vector or matrix values, row-major. Absent for scalar types; a scalar is
-  ///  NEVER also written here.
-  public var VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.VALUES, byteSize: 8) }
-  public func withUnsafePointerToValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VALUES, body: body) }
-  ///  Matrix shape, REQUIRED when the descriptor's DATA_TYPE is REAL_MATRIX.
-  public var ROW_COUNT: Int32 { let o = _accessor.offset(VT.ROW_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var COLUMN_COUNT: Int32 { let o = _accessor.offset(VT.COLUMN_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Text or ISO 8601 epoch value.
-  public var STRING_VALUE: String? { let o = _accessor.offset(VT.STRING_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STRING_VALUE) }
-  ///  Unit the value is expressed in, restating the descriptor so a value is
-  ///  self-describing when it travels without its catalog.
-  public var UNIT: pceUnit { let o = _accessor.offset(VT.UNIT); return o == 0 ? .unspecified : pceUnit(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Why STATUS is not OK, in capability language.
-  public var MESSAGE: String? { let o = _accessor.offset(VT.MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE) }
-  public static func startPCEParameterValue(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARAMETER.rawValue, def: 0, at: VT.PARAMETER) }
-  public static func add(PROVIDER_DEFINED_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_NAME, at: VT.PROVIDER_DEFINED_NAME) }
-  public static func add(STATUS: pceResultStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
-  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
-  public static func addVectorOf(VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUES, at: VT.VALUES) }
-  public static func add(ROW_COUNT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROW_COUNT, def: 0, at: VT.ROW_COUNT) }
-  public static func add(COLUMN_COUNT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLUMN_COUNT, def: 0, at: VT.COLUMN_COUNT) }
-  public static func add(STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRING_VALUE, at: VT.STRING_VALUE) }
-  public static func add(UNIT: pceUnit, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT.rawValue, def: 0, at: VT.UNIT) }
-  public static func add(MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE, at: VT.MESSAGE) }
-  public static func endPCEParameterValue(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEParameterValue(
-    _ fbb: inout FlatBufferBuilder,
-    PARAMETER: pceParameter = .unspecified,
-    PROVIDER_DEFINED_NAMEOffset PROVIDER_DEFINED_NAME: Offset = Offset(),
-    STATUS: pceResultStatus = .unspecified,
-    VALUE: Double = 0.0,
-    VALUESVectorOffset VALUES: Offset = Offset(),
-    ROW_COUNT: Int32 = 0,
-    COLUMN_COUNT: Int32 = 0,
-    STRING_VALUEOffset STRING_VALUE: Offset = Offset(),
-    UNIT: pceUnit = .unspecified,
-    MESSAGEOffset MESSAGE: Offset = Offset()
-  ) -> Offset {
-    let __start = PCEParameterValue.startPCEParameterValue(&fbb)
-    PCEParameterValue.add(PARAMETER: PARAMETER, &fbb)
-    PCEParameterValue.add(PROVIDER_DEFINED_NAME: PROVIDER_DEFINED_NAME, &fbb)
-    PCEParameterValue.add(STATUS: STATUS, &fbb)
-    PCEParameterValue.add(VALUE: VALUE, &fbb)
-    PCEParameterValue.addVectorOf(VALUES: VALUES, &fbb)
-    PCEParameterValue.add(ROW_COUNT: ROW_COUNT, &fbb)
-    PCEParameterValue.add(COLUMN_COUNT: COLUMN_COUNT, &fbb)
-    PCEParameterValue.add(STRING_VALUE: STRING_VALUE, &fbb)
-    PCEParameterValue.add(UNIT: UNIT, &fbb)
-    PCEParameterValue.add(MESSAGE: MESSAGE, &fbb)
-    return PCEParameterValue.endPCEParameterValue(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: pceParameter.self)
-    try _v.visit(field: VT.PROVIDER_DEFINED_NAME, fieldName: "PROVIDER_DEFINED_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: pceResultStatus.self)
-    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
-    try _v.visit(field: VT.VALUES, fieldName: "VALUES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.ROW_COUNT, fieldName: "ROW_COUNT", required: false, type: Int32.self)
-    try _v.visit(field: VT.COLUMN_COUNT, fieldName: "COLUMN_COUNT", required: false, type: Int32.self)
-    try _v.visit(field: VT.STRING_VALUE, fieldName: "STRING_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.UNIT, fieldName: "UNIT", required: false, type: pceUnit.self)
-    try _v.visit(field: VT.MESSAGE, fieldName: "MESSAGE", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  The evaluated parameters at ONE epoch.
-public struct PCEParameterSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEParameterSample.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let EPOCH: VOffset = 4
-    static let EPOCH_TIME_SYSTEM: VOffset = 6
-    static let PARAMETER_VALUES: VOffset = 8
-  }
-
-  ///  Epoch of this sample, ISO 8601.
-  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
-  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
-  public var EPOCH_TIME_SYSTEM: String? { let o = _accessor.offset(VT.EPOCH_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TIME_SYSTEM) }
-  public var PARAMETER_VALUES: FlatbufferVector<PCEParameterValue> { return _accessor.vector(at: VT.PARAMETER_VALUES, byteSize: 4) }
-  public static func startPCEParameterSample(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
-  public static func add(EPOCH_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME_SYSTEM, at: VT.EPOCH_TIME_SYSTEM) }
-  public static func addVectorOf(PARAMETER_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_VALUES, at: VT.PARAMETER_VALUES) }
-  public static func endPCEParameterSample(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEParameterSample(
-    _ fbb: inout FlatBufferBuilder,
-    EPOCHOffset EPOCH: Offset = Offset(),
-    EPOCH_TIME_SYSTEMOffset EPOCH_TIME_SYSTEM: Offset = Offset(),
-    PARAMETER_VALUESVectorOffset PARAMETER_VALUES: Offset = Offset()
-  ) -> Offset {
-    let __start = PCEParameterSample.startPCEParameterSample(&fbb)
-    PCEParameterSample.add(EPOCH: EPOCH, &fbb)
-    PCEParameterSample.add(EPOCH_TIME_SYSTEM: EPOCH_TIME_SYSTEM, &fbb)
-    PCEParameterSample.addVectorOf(PARAMETER_VALUES: PARAMETER_VALUES, &fbb)
-    return PCEParameterSample.endPCEParameterSample(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EPOCH_TIME_SYSTEM, fieldName: "EPOCH_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PARAMETER_VALUES, fieldName: "PARAMETER_VALUES", required: false, type: ForwardOffset<Vector<ForwardOffset<PCEParameterValue>, PCEParameterValue>>.self)
-    _v.finish()
-  }
-}
-
-public struct PCEEvaluationResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEEvaluationResult.id, addPrefix: prefix) }
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLEventReport.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let STATUS: VOffset = 4
     static let ERROR_MESSAGE: VOffset = 6
-    static let SAMPLES: VOffset = 8
-    static let EOP_DATA_SET_CID: VOffset = 10
-    static let TRACE_ID: VOffset = 12
+    static let LOCATOR_CLASS: VOffset = 8
+    static let TARGET_OBJECT_ID: VOffset = 10
+    static let SCAN_START_EPOCH: VOffset = 12
+    static let SCAN_STOP_EPOCH: VOffset = 14
+    static let EPOCH_TIME_SYSTEM: VOffset = 16
+    static let EVENTS: VOffset = 18
+    static let FUNCTION_EVALUATION_COUNT: VOffset = 20
+    static let EOP_DATA_SET_CID: VOffset = 22
+    static let TRACE_ID: VOffset = 24
   }
 
-  public var STATUS: pceResultStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .unspecified : pceResultStatus(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var STATUS: evlResultStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .unspecified : evlResultStatus(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
   public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
   public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  ///  One sample per requested state, in the requested order.
-  public var SAMPLES: FlatbufferVector<PCEParameterSample> { return _accessor.vector(at: VT.SAMPLES, byteSize: 4) }
+  public var LOCATOR_CLASS: evlLocatorClass { let o = _accessor.offset(VT.LOCATOR_CLASS); return o == 0 ? .unspecified : evlLocatorClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var TARGET_OBJECT_ID: String? { let o = _accessor.offset(VT.TARGET_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_OBJECT_ID) }
+  ///  Interval actually searched, ISO 8601. A BUDGET_EXCEEDED run reports the
+  ///  interval it reached, not the interval it was asked for.
+  public var SCAN_START_EPOCH: String? { let o = _accessor.offset(VT.SCAN_START_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCAN_START_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCAN_START_EPOCH) }
+  public var SCAN_STOP_EPOCH: String? { let o = _accessor.offset(VT.SCAN_STOP_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCAN_STOP_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCAN_STOP_EPOCH) }
+  ///  Time system of the epochs, named by the $TIM timingStandard member name.
+  public var EPOCH_TIME_SYSTEM: String? { let o = _accessor.offset(VT.EPOCH_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCH_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TIME_SYSTEM) }
+  ///  Events in chronological order of START_EPOCH.
+  public var EVENTS: FlatbufferVector<EVLEvent> { return _accessor.vector(at: VT.EVENTS, byteSize: 4) }
+  ///  Event-function evaluations actually performed, for step-independence
+  ///  evidence.
+  public var FUNCTION_EVALUATION_COUNT: UInt32 { let o = _accessor.offset(VT.FUNCTION_EVALUATION_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Content identifier of the Earth-orientation data set actually used.
   public var EOP_DATA_SET_CID: String? { let o = _accessor.offset(VT.EOP_DATA_SET_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var EOP_DATA_SET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_DATA_SET_CID) }
   public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startPCEEvaluationResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(STATUS: pceResultStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func startEVLEventReport(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(STATUS: evlResultStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
-  public static func addVectorOf(SAMPLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLES, at: VT.SAMPLES) }
+  public static func add(LOCATOR_CLASS: evlLocatorClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATOR_CLASS.rawValue, def: 0, at: VT.LOCATOR_CLASS) }
+  public static func add(TARGET_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_OBJECT_ID, at: VT.TARGET_OBJECT_ID) }
+  public static func add(SCAN_START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCAN_START_EPOCH, at: VT.SCAN_START_EPOCH) }
+  public static func add(SCAN_STOP_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCAN_STOP_EPOCH, at: VT.SCAN_STOP_EPOCH) }
+  public static func add(EPOCH_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME_SYSTEM, at: VT.EPOCH_TIME_SYSTEM) }
+  public static func addVectorOf(EVENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENTS, at: VT.EVENTS) }
+  public static func add(FUNCTION_EVALUATION_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FUNCTION_EVALUATION_COUNT, def: 0, at: VT.FUNCTION_EVALUATION_COUNT) }
   public static func add(EOP_DATA_SET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_DATA_SET_CID, at: VT.EOP_DATA_SET_CID) }
   public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endPCEEvaluationResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEEvaluationResult(
+  public static func endEVLEventReport(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLEventReport(
     _ fbb: inout FlatBufferBuilder,
-    STATUS: pceResultStatus = .unspecified,
+    STATUS: evlResultStatus = .unspecified,
     ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
-    SAMPLESVectorOffset SAMPLES: Offset = Offset(),
+    LOCATOR_CLASS: evlLocatorClass = .unspecified,
+    TARGET_OBJECT_IDOffset TARGET_OBJECT_ID: Offset = Offset(),
+    SCAN_START_EPOCHOffset SCAN_START_EPOCH: Offset = Offset(),
+    SCAN_STOP_EPOCHOffset SCAN_STOP_EPOCH: Offset = Offset(),
+    EPOCH_TIME_SYSTEMOffset EPOCH_TIME_SYSTEM: Offset = Offset(),
+    EVENTSVectorOffset EVENTS: Offset = Offset(),
+    FUNCTION_EVALUATION_COUNT: UInt32 = 0,
     EOP_DATA_SET_CIDOffset EOP_DATA_SET_CID: Offset = Offset(),
     TRACE_IDOffset TRACE_ID: Offset = Offset()
   ) -> Offset {
-    let __start = PCEEvaluationResult.startPCEEvaluationResult(&fbb)
-    PCEEvaluationResult.add(STATUS: STATUS, &fbb)
-    PCEEvaluationResult.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
-    PCEEvaluationResult.addVectorOf(SAMPLES: SAMPLES, &fbb)
-    PCEEvaluationResult.add(EOP_DATA_SET_CID: EOP_DATA_SET_CID, &fbb)
-    PCEEvaluationResult.add(TRACE_ID: TRACE_ID, &fbb)
-    return PCEEvaluationResult.endPCEEvaluationResult(&fbb, start: __start)
+    let __start = EVLEventReport.startEVLEventReport(&fbb)
+    EVLEventReport.add(STATUS: STATUS, &fbb)
+    EVLEventReport.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
+    EVLEventReport.add(LOCATOR_CLASS: LOCATOR_CLASS, &fbb)
+    EVLEventReport.add(TARGET_OBJECT_ID: TARGET_OBJECT_ID, &fbb)
+    EVLEventReport.add(SCAN_START_EPOCH: SCAN_START_EPOCH, &fbb)
+    EVLEventReport.add(SCAN_STOP_EPOCH: SCAN_STOP_EPOCH, &fbb)
+    EVLEventReport.add(EPOCH_TIME_SYSTEM: EPOCH_TIME_SYSTEM, &fbb)
+    EVLEventReport.addVectorOf(EVENTS: EVENTS, &fbb)
+    EVLEventReport.add(FUNCTION_EVALUATION_COUNT: FUNCTION_EVALUATION_COUNT, &fbb)
+    EVLEventReport.add(EOP_DATA_SET_CID: EOP_DATA_SET_CID, &fbb)
+    EVLEventReport.add(TRACE_ID: TRACE_ID, &fbb)
+    return EVLEventReport.endEVLEventReport(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: pceResultStatus.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: evlResultStatus.self)
     try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SAMPLES, fieldName: "SAMPLES", required: false, type: ForwardOffset<Vector<ForwardOffset<PCEParameterSample>, PCEParameterSample>>.self)
+    try _v.visit(field: VT.LOCATOR_CLASS, fieldName: "LOCATOR_CLASS", required: false, type: evlLocatorClass.self)
+    try _v.visit(field: VT.TARGET_OBJECT_ID, fieldName: "TARGET_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCAN_START_EPOCH, fieldName: "SCAN_START_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCAN_STOP_EPOCH, fieldName: "SCAN_STOP_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH_TIME_SYSTEM, fieldName: "EPOCH_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVENTS, fieldName: "EVENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<EVLEvent>, EVLEvent>>.self)
+    try _v.visit(field: VT.FUNCTION_EVALUATION_COUNT, fieldName: "FUNCTION_EVALUATION_COUNT", required: false, type: UInt32.self)
     try _v.visit(field: VT.EOP_DATA_SET_CID, fieldName: "EOP_DATA_SET_CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  A predicate on a named parameter: the parameter attains GOAL_VALUE, in
-///  DIRECTION, for the OCCURRENCE-th time. This is the ONE spelling of a
-///  stopping condition and of a generic event function; $EVL references it
-///  rather than minting a second one.
-public struct PCEParameterCondition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEParameterCondition.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let PARAMETER: VOffset = 4
-    static let GOAL_VALUE: VOffset = 6
-    static let DIRECTION: VOffset = 8
-    static let GOAL_TOLERANCE: VOffset = 10
-    static let OCCURRENCE: VOffset = 12
-  }
-
-  public var PARAMETER: PCEParameterRef? { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? nil : PCEParameterRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Value the parameter must attain, in the parameter's own SI unit.
-  public var GOAL_VALUE: Double { let o = _accessor.offset(VT.GOAL_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DIRECTION: pceConditionDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .unspecified : pceConditionDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Convergence bar on the parameter value at the reported epoch, in the
-  ///  parameter's own unit. A provider that cannot meet it returns
-  ///  ROOT_REFINEMENT_FAILED rather than reporting an unconverged root.
-  public var GOAL_TOLERANCE: Double { let o = _accessor.offset(VT.GOAL_TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Which attainment satisfies the condition, one-based. 0 and 1 both mean
-  ///  the first.
-  public var OCCURRENCE: UInt32 { let o = _accessor.offset(VT.OCCURRENCE); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startPCEParameterCondition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(PARAMETER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER, at: VT.PARAMETER) }
-  public static func add(GOAL_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GOAL_VALUE, def: 0.0, at: VT.GOAL_VALUE) }
-  public static func add(DIRECTION: pceConditionDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
-  public static func add(GOAL_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GOAL_TOLERANCE, def: 0.0, at: VT.GOAL_TOLERANCE) }
-  public static func add(OCCURRENCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCCURRENCE, def: 1, at: VT.OCCURRENCE) }
-  public static func endPCEParameterCondition(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEParameterCondition(
-    _ fbb: inout FlatBufferBuilder,
-    PARAMETEROffset PARAMETER: Offset = Offset(),
-    GOAL_VALUE: Double = 0.0,
-    DIRECTION: pceConditionDirection = .unspecified,
-    GOAL_TOLERANCE: Double = 0.0,
-    OCCURRENCE: UInt32 = 1
-  ) -> Offset {
-    let __start = PCEParameterCondition.startPCEParameterCondition(&fbb)
-    PCEParameterCondition.add(PARAMETER: PARAMETER, &fbb)
-    PCEParameterCondition.add(GOAL_VALUE: GOAL_VALUE, &fbb)
-    PCEParameterCondition.add(DIRECTION: DIRECTION, &fbb)
-    PCEParameterCondition.add(GOAL_TOLERANCE: GOAL_TOLERANCE, &fbb)
-    PCEParameterCondition.add(OCCURRENCE: OCCURRENCE, &fbb)
-    return PCEParameterCondition.endPCEParameterCondition(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: ForwardOffset<PCEParameterRef>.self)
-    try _v.visit(field: VT.GOAL_VALUE, fieldName: "GOAL_VALUE", required: false, type: Double.self)
-    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: pceConditionDirection.self)
-    try _v.visit(field: VT.GOAL_TOLERANCE, fieldName: "GOAL_TOLERANCE", required: false, type: Double.self)
-    try _v.visit(field: VT.OCCURRENCE, fieldName: "OCCURRENCE", required: false, type: UInt32.self)
-    _v.finish()
-  }
-}
-
-///  Propagate until a condition is attained. The propagator itself is NOT named
-///  here: it is a port the caller supplies, per the pluggable-propagation law.
-///  This record carries only the condition, the interval and the tolerances.
-public struct PCEStopRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEStopRequest.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let CONTEXT: VOffset = 4
-    static let INITIAL_STATE: VOffset = 6
-    static let CONDITIONS: VOffset = 8
-    static let DIRECTION: VOffset = 10
-    static let MAXIMUM_ELAPSED_SECONDS: VOffset = 12
-    static let EPOCH_TOLERANCE_SECONDS: VOffset = 14
-    static let SYNCHRONIZED_OBJECT_IDS: VOffset = 16
-    static let REPORT_PARAMETERS: VOffset = 18
-    static let TRACE_ID: VOffset = 20
-  }
-
-  public var CONTEXT: PCEEvaluationContext? { let o = _accessor.offset(VT.CONTEXT); return o == 0 ? nil : PCEEvaluationContext(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  State the propagation starts from.
-  public var INITIAL_STATE: FRMStateVector? { let o = _accessor.offset(VT.INITIAL_STATE); return o == 0 ? nil : FRMStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Conditions evaluated together; the run stops at whichever is attained
-  ///  first in time.
-  public var CONDITIONS: FlatbufferVector<PCEParameterCondition> { return _accessor.vector(at: VT.CONDITIONS, byteSize: 4) }
-  public var DIRECTION: pcePropagationDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .forward : pcePropagationDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .forward }
-  ///  Upper bound on the propagated interval. Reaching it without attaining a
-  ///  condition is GOAL_NOT_ATTAINED, never a silent stop.
-  public var MAXIMUM_ELAPSED_SECONDS: Double { let o = _accessor.offset(VT.MAXIMUM_ELAPSED_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Convergence bar on the stop epoch. The same scenario run at different
-  ///  step sizes MUST land inside this bar.
-  public var EPOCH_TOLERANCE_SECONDS: Double { let o = _accessor.offset(VT.EPOCH_TOLERANCE_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Objects propagated in step with the owner and reported at the same stop
-  ///  epoch.
-  public var SYNCHRONIZED_OBJECT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SYNCHRONIZED_OBJECT_IDS, byteSize: 4) }
-  ///  Parameters to evaluate at the stop epoch, beyond the condition itself.
-  public var REPORT_PARAMETERS: FlatbufferVector<PCEParameterRef> { return _accessor.vector(at: VT.REPORT_PARAMETERS, byteSize: 4) }
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startPCEStopRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(CONTEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT, at: VT.CONTEXT) }
-  public static func add(INITIAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_STATE, at: VT.INITIAL_STATE) }
-  public static func addVectorOf(CONDITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITIONS, at: VT.CONDITIONS) }
-  public static func add(DIRECTION: pcePropagationDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 1, at: VT.DIRECTION) }
-  public static func add(MAXIMUM_ELAPSED_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_ELAPSED_SECONDS, def: 0.0, at: VT.MAXIMUM_ELAPSED_SECONDS) }
-  public static func add(EPOCH_TOLERANCE_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_TOLERANCE_SECONDS, def: 0.0, at: VT.EPOCH_TOLERANCE_SECONDS) }
-  public static func addVectorOf(SYNCHRONIZED_OBJECT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYNCHRONIZED_OBJECT_IDS, at: VT.SYNCHRONIZED_OBJECT_IDS) }
-  public static func addVectorOf(REPORT_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPORT_PARAMETERS, at: VT.REPORT_PARAMETERS) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endPCEStopRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEStopRequest(
-    _ fbb: inout FlatBufferBuilder,
-    CONTEXTOffset CONTEXT: Offset = Offset(),
-    INITIAL_STATEOffset INITIAL_STATE: Offset = Offset(),
-    CONDITIONSVectorOffset CONDITIONS: Offset = Offset(),
-    DIRECTION: pcePropagationDirection = .forward,
-    MAXIMUM_ELAPSED_SECONDS: Double = 0.0,
-    EPOCH_TOLERANCE_SECONDS: Double = 0.0,
-    SYNCHRONIZED_OBJECT_IDSVectorOffset SYNCHRONIZED_OBJECT_IDS: Offset = Offset(),
-    REPORT_PARAMETERSVectorOffset REPORT_PARAMETERS: Offset = Offset(),
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
-  ) -> Offset {
-    let __start = PCEStopRequest.startPCEStopRequest(&fbb)
-    PCEStopRequest.add(CONTEXT: CONTEXT, &fbb)
-    PCEStopRequest.add(INITIAL_STATE: INITIAL_STATE, &fbb)
-    PCEStopRequest.addVectorOf(CONDITIONS: CONDITIONS, &fbb)
-    PCEStopRequest.add(DIRECTION: DIRECTION, &fbb)
-    PCEStopRequest.add(MAXIMUM_ELAPSED_SECONDS: MAXIMUM_ELAPSED_SECONDS, &fbb)
-    PCEStopRequest.add(EPOCH_TOLERANCE_SECONDS: EPOCH_TOLERANCE_SECONDS, &fbb)
-    PCEStopRequest.addVectorOf(SYNCHRONIZED_OBJECT_IDS: SYNCHRONIZED_OBJECT_IDS, &fbb)
-    PCEStopRequest.addVectorOf(REPORT_PARAMETERS: REPORT_PARAMETERS, &fbb)
-    PCEStopRequest.add(TRACE_ID: TRACE_ID, &fbb)
-    return PCEStopRequest.endPCEStopRequest(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CONTEXT, fieldName: "CONTEXT", required: false, type: ForwardOffset<PCEEvaluationContext>.self)
-    try _v.visit(field: VT.INITIAL_STATE, fieldName: "INITIAL_STATE", required: false, type: ForwardOffset<FRMStateVector>.self)
-    try _v.visit(field: VT.CONDITIONS, fieldName: "CONDITIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<PCEParameterCondition>, PCEParameterCondition>>.self)
-    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: pcePropagationDirection.self)
-    try _v.visit(field: VT.MAXIMUM_ELAPSED_SECONDS, fieldName: "MAXIMUM_ELAPSED_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.EPOCH_TOLERANCE_SECONDS, fieldName: "EPOCH_TOLERANCE_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.SYNCHRONIZED_OBJECT_IDS, fieldName: "SYNCHRONIZED_OBJECT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.REPORT_PARAMETERS, fieldName: "REPORT_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<PCEParameterRef>, PCEParameterRef>>.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Where a propagate-to-condition run actually landed.
-public struct PCEStopReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCEStopReport.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let STATUS: VOffset = 4
-    static let ERROR_MESSAGE: VOffset = 6
-    static let ATTAINED_CONDITION_INDEX: VOffset = 8
-    static let ATTAINED_OCCURRENCE: VOffset = 10
-    static let EPOCH: VOffset = 12
-    static let EPOCH_TIME_SYSTEM: VOffset = 14
-    static let ELAPSED_SECONDS: VOffset = 16
-    static let STATE: VOffset = 18
-    static let ACHIEVED_VALUE: VOffset = 20
-    static let GOAL_RESIDUAL: VOffset = 22
-    static let SYNCHRONIZED_STATES: VOffset = 24
-    static let SAMPLE: VOffset = 26
-    static let FUNCTION_EVALUATION_COUNT: VOffset = 28
-    static let TRACE_ID: VOffset = 30
-  }
-
-  public var STATUS: pceResultStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .unspecified : pceResultStatus(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  ///  Index into PCEStopRequest.CONDITIONS of the condition that stopped the
-  ///  run; negative when none did.
-  public var ATTAINED_CONDITION_INDEX: Int32 { let o = _accessor.offset(VT.ATTAINED_CONDITION_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Which attainment this was, one-based.
-  public var ATTAINED_OCCURRENCE: UInt32 { let o = _accessor.offset(VT.ATTAINED_OCCURRENCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Epoch the run stopped at, ISO 8601.
-  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
-  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
-  public var EPOCH_TIME_SYSTEM: String? { let o = _accessor.offset(VT.EPOCH_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TIME_SYSTEM) }
-  ///  Seconds of propagated time from the initial state to EPOCH; negative for
-  ///  a BACKWARD run.
-  public var ELAPSED_SECONDS: Double { let o = _accessor.offset(VT.ELAPSED_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  State at EPOCH.
-  public var STATE: FRMStateVector? { let o = _accessor.offset(VT.STATE); return o == 0 ? nil : FRMStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Value the condition parameter actually had at EPOCH.
-  public var ACHIEVED_VALUE: Double { let o = _accessor.offset(VT.ACHIEVED_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  ACHIEVED_VALUE minus GOAL_VALUE, in the parameter's own unit. This is
-  ///  the residual a consumer gates on; it is NOT assumed to be zero.
-  public var GOAL_RESIDUAL: Double { let o = _accessor.offset(VT.GOAL_RESIDUAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  States of SYNCHRONIZED_OBJECT_IDS at the same epoch, in that order.
-  public var SYNCHRONIZED_STATES: FlatbufferVector<FRMStateVector> { return _accessor.vector(at: VT.SYNCHRONIZED_STATES, byteSize: 4) }
-  ///  Parameters evaluated at the stop epoch.
-  public var SAMPLE: PCEParameterSample? { let o = _accessor.offset(VT.SAMPLE); return o == 0 ? nil : PCEParameterSample(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Root-refinement work actually done, for the step-independence evidence.
-  public var FUNCTION_EVALUATION_COUNT: UInt32 { let o = _accessor.offset(VT.FUNCTION_EVALUATION_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startPCEStopReport(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(STATUS: pceResultStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
-  public static func add(ATTAINED_CONDITION_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTAINED_CONDITION_INDEX, def: -1, at: VT.ATTAINED_CONDITION_INDEX) }
-  public static func add(ATTAINED_OCCURRENCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTAINED_OCCURRENCE, def: 0, at: VT.ATTAINED_OCCURRENCE) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
-  public static func add(EPOCH_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME_SYSTEM, at: VT.EPOCH_TIME_SYSTEM) }
-  public static func add(ELAPSED_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELAPSED_SECONDS, def: 0.0, at: VT.ELAPSED_SECONDS) }
-  public static func add(STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE, at: VT.STATE) }
-  public static func add(ACHIEVED_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACHIEVED_VALUE, def: 0.0, at: VT.ACHIEVED_VALUE) }
-  public static func add(GOAL_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GOAL_RESIDUAL, def: 0.0, at: VT.GOAL_RESIDUAL) }
-  public static func addVectorOf(SYNCHRONIZED_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYNCHRONIZED_STATES, at: VT.SYNCHRONIZED_STATES) }
-  public static func add(SAMPLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE, at: VT.SAMPLE) }
-  public static func add(FUNCTION_EVALUATION_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FUNCTION_EVALUATION_COUNT, def: 0, at: VT.FUNCTION_EVALUATION_COUNT) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endPCEStopReport(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCEStopReport(
-    _ fbb: inout FlatBufferBuilder,
-    STATUS: pceResultStatus = .unspecified,
-    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
-    ATTAINED_CONDITION_INDEX: Int32 = -1,
-    ATTAINED_OCCURRENCE: UInt32 = 0,
-    EPOCHOffset EPOCH: Offset = Offset(),
-    EPOCH_TIME_SYSTEMOffset EPOCH_TIME_SYSTEM: Offset = Offset(),
-    ELAPSED_SECONDS: Double = 0.0,
-    STATEOffset STATE: Offset = Offset(),
-    ACHIEVED_VALUE: Double = 0.0,
-    GOAL_RESIDUAL: Double = 0.0,
-    SYNCHRONIZED_STATESVectorOffset SYNCHRONIZED_STATES: Offset = Offset(),
-    SAMPLEOffset SAMPLE: Offset = Offset(),
-    FUNCTION_EVALUATION_COUNT: UInt32 = 0,
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
-  ) -> Offset {
-    let __start = PCEStopReport.startPCEStopReport(&fbb)
-    PCEStopReport.add(STATUS: STATUS, &fbb)
-    PCEStopReport.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
-    PCEStopReport.add(ATTAINED_CONDITION_INDEX: ATTAINED_CONDITION_INDEX, &fbb)
-    PCEStopReport.add(ATTAINED_OCCURRENCE: ATTAINED_OCCURRENCE, &fbb)
-    PCEStopReport.add(EPOCH: EPOCH, &fbb)
-    PCEStopReport.add(EPOCH_TIME_SYSTEM: EPOCH_TIME_SYSTEM, &fbb)
-    PCEStopReport.add(ELAPSED_SECONDS: ELAPSED_SECONDS, &fbb)
-    PCEStopReport.add(STATE: STATE, &fbb)
-    PCEStopReport.add(ACHIEVED_VALUE: ACHIEVED_VALUE, &fbb)
-    PCEStopReport.add(GOAL_RESIDUAL: GOAL_RESIDUAL, &fbb)
-    PCEStopReport.addVectorOf(SYNCHRONIZED_STATES: SYNCHRONIZED_STATES, &fbb)
-    PCEStopReport.add(SAMPLE: SAMPLE, &fbb)
-    PCEStopReport.add(FUNCTION_EVALUATION_COUNT: FUNCTION_EVALUATION_COUNT, &fbb)
-    PCEStopReport.add(TRACE_ID: TRACE_ID, &fbb)
-    return PCEStopReport.endPCEStopReport(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: pceResultStatus.self)
-    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ATTAINED_CONDITION_INDEX, fieldName: "ATTAINED_CONDITION_INDEX", required: false, type: Int32.self)
-    try _v.visit(field: VT.ATTAINED_OCCURRENCE, fieldName: "ATTAINED_OCCURRENCE", required: false, type: UInt32.self)
-    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EPOCH_TIME_SYSTEM, fieldName: "EPOCH_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ELAPSED_SECONDS, fieldName: "ELAPSED_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.STATE, fieldName: "STATE", required: false, type: ForwardOffset<FRMStateVector>.self)
-    try _v.visit(field: VT.ACHIEVED_VALUE, fieldName: "ACHIEVED_VALUE", required: false, type: Double.self)
-    try _v.visit(field: VT.GOAL_RESIDUAL, fieldName: "GOAL_RESIDUAL", required: false, type: Double.self)
-    try _v.visit(field: VT.SYNCHRONIZED_STATES, fieldName: "SYNCHRONIZED_STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<FRMStateVector>, FRMStateVector>>.self)
-    try _v.visit(field: VT.SAMPLE, fieldName: "SAMPLE", required: false, type: ForwardOffset<PCEParameterSample>.self)
-    try _v.visit(field: VT.FUNCTION_EVALUATION_COUNT, fieldName: "FUNCTION_EVALUATION_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Parameter Catalog and Evaluation
+///  Event Locator
 ///
-///  The named calculation parameters an analysis resolves through: their owner
-///  class, unit, data type, frame dependency and per-publisher availability
-///  (CATALOG), a request and result for evaluating named parameters on states
-///  at epochs in a stated coordinate system (EVALUATION_REQUEST /
-///  EVALUATION_RESULT), and propagate-to-condition, which is a predicate on one
-///  of those same names rather than a vocabulary of its own (STOP_REQUEST /
-///  STOP_REPORT). Stopping conditions, targeting goals, report columns and plot
-///  series all resolve names here, so a name means one thing everywhere.
+///  One request and one report for every class of located event: shadow
+///  passage, site visibility, sensor-field-of-view intrusion, apsis passage,
+///  node crossing, and the generic condition on any $PCE catalog parameter.
+///  Every class is the same pair of an event function and a refined root, so a
+///  new class is a configuration table and a vocabulary member, never a new
+///  record. Entry and exit epochs, duration, the occulting or observed body and
+///  the parameter values captured at each event's instants are reported in one
+///  shape, and the predicate of the generic class is $PCE's
+///  PCEParameterCondition rather than a second spelling of the same idea.
 ///
-///  Angles are radians, lengths metres, durations seconds, masses kilograms.
-///  A buffer carries the members its exchange needs; a catalog publication and
-///  an evaluation exchange are both complete $PCE records.
-public struct PCE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Angles are radians, durations seconds, epochs ISO 8601 in a named time
+///  system.
+public struct EVL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PCE" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCE.id, addPrefix: prefix) }
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVL.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CATALOG: VOffset = 4
-    static let EVALUATION_REQUEST: VOffset = 6
-    static let EVALUATION_RESULT: VOffset = 8
-    static let STOP_REQUEST: VOffset = 10
-    static let STOP_REPORT: VOffset = 12
+    static let LOCATION_REQUEST: VOffset = 4
+    static let EVENT_REPORT: VOffset = 6
   }
 
-  public var CATALOG: PCEParameterCatalog? { let o = _accessor.offset(VT.CATALOG); return o == 0 ? nil : PCEParameterCatalog(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var EVALUATION_REQUEST: PCEEvaluationRequest? { let o = _accessor.offset(VT.EVALUATION_REQUEST); return o == 0 ? nil : PCEEvaluationRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var EVALUATION_RESULT: PCEEvaluationResult? { let o = _accessor.offset(VT.EVALUATION_RESULT); return o == 0 ? nil : PCEEvaluationResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var STOP_REQUEST: PCEStopRequest? { let o = _accessor.offset(VT.STOP_REQUEST); return o == 0 ? nil : PCEStopRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var STOP_REPORT: PCEStopReport? { let o = _accessor.offset(VT.STOP_REPORT); return o == 0 ? nil : PCEStopReport(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startPCE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(CATALOG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG, at: VT.CATALOG) }
-  public static func add(EVALUATION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVALUATION_REQUEST, at: VT.EVALUATION_REQUEST) }
-  public static func add(EVALUATION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVALUATION_RESULT, at: VT.EVALUATION_RESULT) }
-  public static func add(STOP_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_REQUEST, at: VT.STOP_REQUEST) }
-  public static func add(STOP_REPORT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_REPORT, at: VT.STOP_REPORT) }
-  public static func endPCE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPCE(
+  public var LOCATION_REQUEST: EVLEventLocationRequest? { let o = _accessor.offset(VT.LOCATION_REQUEST); return o == 0 ? nil : EVLEventLocationRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EVENT_REPORT: EVLEventReport? { let o = _accessor.offset(VT.EVENT_REPORT); return o == 0 ? nil : EVLEventReport(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startEVL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(LOCATION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION_REQUEST, at: VT.LOCATION_REQUEST) }
+  public static func add(EVENT_REPORT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_REPORT, at: VT.EVENT_REPORT) }
+  public static func endEVL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVL(
     _ fbb: inout FlatBufferBuilder,
-    CATALOGOffset CATALOG: Offset = Offset(),
-    EVALUATION_REQUESTOffset EVALUATION_REQUEST: Offset = Offset(),
-    EVALUATION_RESULTOffset EVALUATION_RESULT: Offset = Offset(),
-    STOP_REQUESTOffset STOP_REQUEST: Offset = Offset(),
-    STOP_REPORTOffset STOP_REPORT: Offset = Offset()
+    LOCATION_REQUESTOffset LOCATION_REQUEST: Offset = Offset(),
+    EVENT_REPORTOffset EVENT_REPORT: Offset = Offset()
   ) -> Offset {
-    let __start = PCE.startPCE(&fbb)
-    PCE.add(CATALOG: CATALOG, &fbb)
-    PCE.add(EVALUATION_REQUEST: EVALUATION_REQUEST, &fbb)
-    PCE.add(EVALUATION_RESULT: EVALUATION_RESULT, &fbb)
-    PCE.add(STOP_REQUEST: STOP_REQUEST, &fbb)
-    PCE.add(STOP_REPORT: STOP_REPORT, &fbb)
-    return PCE.endPCE(&fbb, start: __start)
+    let __start = EVL.startEVL(&fbb)
+    EVL.add(LOCATION_REQUEST: LOCATION_REQUEST, &fbb)
+    EVL.add(EVENT_REPORT: EVENT_REPORT, &fbb)
+    return EVL.endEVL(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CATALOG, fieldName: "CATALOG", required: false, type: ForwardOffset<PCEParameterCatalog>.self)
-    try _v.visit(field: VT.EVALUATION_REQUEST, fieldName: "EVALUATION_REQUEST", required: false, type: ForwardOffset<PCEEvaluationRequest>.self)
-    try _v.visit(field: VT.EVALUATION_RESULT, fieldName: "EVALUATION_RESULT", required: false, type: ForwardOffset<PCEEvaluationResult>.self)
-    try _v.visit(field: VT.STOP_REQUEST, fieldName: "STOP_REQUEST", required: false, type: ForwardOffset<PCEStopRequest>.self)
-    try _v.visit(field: VT.STOP_REPORT, fieldName: "STOP_REPORT", required: false, type: ForwardOffset<PCEStopReport>.self)
+    try _v.visit(field: VT.LOCATION_REQUEST, fieldName: "LOCATION_REQUEST", required: false, type: ForwardOffset<EVLEventLocationRequest>.self)
+    try _v.visit(field: VT.EVENT_REPORT, fieldName: "EVENT_REPORT", required: false, type: ForwardOffset<EVLEventReport>.self)
     _v.finish()
   }
 }

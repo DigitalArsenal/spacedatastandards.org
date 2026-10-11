@@ -5,482 +5,449 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Capability class of a distributable software unit (module, application, or
-///  composed flow).
+///  Plugin type category.
 ///
-///  This enum IS the ratified category vocabulary. A storefront, library, module
-///  manifest and search surface all classify against these members and nothing
-///  else; a category that is not a member here does not exist. Members name
-///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
-///  site, organization, product, protocol brand or algorithm implementation;
-///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
-///  the taxonomy.
+///  DEPRECATED as a classification vocabulary — superseded by `$CCT`
+///  `capabilityClass`, read through `PLG.PRIMARY_CATEGORY` / `PLG.CATEGORIES`.
+///  The enum and the `PLUGIN_TYPE` field remain on the wire permanently
+///  (ordinals are wire values and published manifests decode against them);
+///  only their use as the grouping vocabulary is retired.
 ///
-///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
-///  reuse an ordinal. A reorder silently re-labels every published listing.
+///  It cannot be repaired in place, which is why it is superseded rather than
+///  extended:
+///    - it is SINGLE-VALUED, and a storefront browse surface classifies one
+///      unit under several categories;
+///    - ordinal 0 is `Sensor`, a REAL family, so an unset or zero-filled value
+///      decodes as a category the publisher never stated — the reason
+///      `Unspecified` had to be appended at the tail instead of held at 0;
+///    - it mixes capability families with node-internal plumbing
+///      (`Infrastructure`, `Licensing`, `Storefront`, `Publisher`), which are
+///      not shelves a catalogue consumer browses;
+///    - it carries `Basilisk`, a vendor-derived member that owner law
+///      2026-08-06 (no vendor/site/org names in standards) forbids;
+///    - a `byte` enum cannot carry the display name, summary, route slug,
+///      ordering or icon a storefront must render, and `$CCT` publishes all of
+///      them alongside the code.
 ///
-///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
-///  default-constructed classification can never decode as a real category. The
-///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
-///  ordinal 0 is a real family — and had to append an `Unspecified` member at
-///  the tail to recover. This enum does not repeat that.
-///
-///  Each member's canonical display name is stated in its doc comment and is
-///  part of the ratified contract: a consumer rendering a category label uses
-///  that string verbatim, so every surface spells a category identically. The
-///  canonical route slug is the member identifier lowercased with `_` replaced
-///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
-///  "rf-and-communications").
-enum capabilityClass {
-  UNSPECIFIED(0),
-  PROPAGATION(1),
-  ORBIT_DETERMINATION(2),
-  MANEUVER_PLANNING(3),
-  CONJUNCTION_ASSESSMENT(4),
-  REENTRY_AND_BREAKUP(5),
-  ATTITUDE_AND_POINTING(6),
-  REFERENCE_FRAMES_AND_TIME(7),
-  SENSORS_AND_COVERAGE(8),
-  TRACKING_AND_OBSERVATION(9),
-  RF_AND_COMMUNICATIONS(10),
-  ELECTRONIC_WARFARE(11),
-  SPACE_ENVIRONMENT(12),
-  DATA_SOURCES_AND_INGEST(13),
-  DATA_VALIDATION_AND_QUALITY(14),
-  CATALOG_AND_IDENTITY(15),
-  VISUALIZATION_AND_RENDERING(16),
-  GROUND_SEGMENT_AND_HARDWARE(17),
-  MISSION_DESIGN_AND_ANALYSIS(18),
-  FLOW_AND_COMPOSITION(19),
-  DATA_STORAGE_AND_QUERY(20),
-  SECURITY_AND_IDENTITY(21),
-  COMMERCE_AND_LICENSING(22),
-  NODE_INFRASTRUCTURE(23),
-  FOUNDATION_AND_MATH(24);
+///  MIGRATION: publishers SHOULD populate `PRIMARY_CATEGORY`/`CATEGORIES` and
+///  SHOULD continue to populate `PLUGIN_TYPE` for consumers pinned before the
+///  taxonomy existed. The per-member forward mapping is normative and is stated
+///  on `PLG.PRIMARY_CATEGORY`. Consumers that can read `PRIMARY_CATEGORY` MUST
+///  prefer it; `PLUGIN_TYPE` is a fallback only when `PRIMARY_CATEGORY` is
+///  `UNSPECIFIED`.
+enum pluginCategory {
+  Sensor(0),
+  Propagator(1),
+  Renderer(2),
+  Analysis(3),
+  DataSource(4),
+  EW(5),
+  Comms(6),
+  Physics(7),
+  Shader(8),
+  Parser(9),
+  Validator(10),
+  Interpolator(11),
+  Exporter(12),
+  Foundation(13),
+  Infrastructure(14),
+  Licensing(15),
+  Storefront(16),
+  Publisher(17),
+  Basilisk(18),
+  Maneuver(19),
+  Flow(20),
+  Unspecified(21);
 
   final int value;
-  const capabilityClass(this.value);
+  const pluginCategory(this.value);
 
-  factory capabilityClass.fromValue(int value) {
+  factory pluginCategory.fromValue(int value) {
     switch (value) {
-      case 0: return capabilityClass.UNSPECIFIED;
-      case 1: return capabilityClass.PROPAGATION;
-      case 2: return capabilityClass.ORBIT_DETERMINATION;
-      case 3: return capabilityClass.MANEUVER_PLANNING;
-      case 4: return capabilityClass.CONJUNCTION_ASSESSMENT;
-      case 5: return capabilityClass.REENTRY_AND_BREAKUP;
-      case 6: return capabilityClass.ATTITUDE_AND_POINTING;
-      case 7: return capabilityClass.REFERENCE_FRAMES_AND_TIME;
-      case 8: return capabilityClass.SENSORS_AND_COVERAGE;
-      case 9: return capabilityClass.TRACKING_AND_OBSERVATION;
-      case 10: return capabilityClass.RF_AND_COMMUNICATIONS;
-      case 11: return capabilityClass.ELECTRONIC_WARFARE;
-      case 12: return capabilityClass.SPACE_ENVIRONMENT;
-      case 13: return capabilityClass.DATA_SOURCES_AND_INGEST;
-      case 14: return capabilityClass.DATA_VALIDATION_AND_QUALITY;
-      case 15: return capabilityClass.CATALOG_AND_IDENTITY;
-      case 16: return capabilityClass.VISUALIZATION_AND_RENDERING;
-      case 17: return capabilityClass.GROUND_SEGMENT_AND_HARDWARE;
-      case 18: return capabilityClass.MISSION_DESIGN_AND_ANALYSIS;
-      case 19: return capabilityClass.FLOW_AND_COMPOSITION;
-      case 20: return capabilityClass.DATA_STORAGE_AND_QUERY;
-      case 21: return capabilityClass.SECURITY_AND_IDENTITY;
-      case 22: return capabilityClass.COMMERCE_AND_LICENSING;
-      case 23: return capabilityClass.NODE_INFRASTRUCTURE;
-      case 24: return capabilityClass.FOUNDATION_AND_MATH;
+      case 0: return pluginCategory.Sensor;
+      case 1: return pluginCategory.Propagator;
+      case 2: return pluginCategory.Renderer;
+      case 3: return pluginCategory.Analysis;
+      case 4: return pluginCategory.DataSource;
+      case 5: return pluginCategory.EW;
+      case 6: return pluginCategory.Comms;
+      case 7: return pluginCategory.Physics;
+      case 8: return pluginCategory.Shader;
+      case 9: return pluginCategory.Parser;
+      case 10: return pluginCategory.Validator;
+      case 11: return pluginCategory.Interpolator;
+      case 12: return pluginCategory.Exporter;
+      case 13: return pluginCategory.Foundation;
+      case 14: return pluginCategory.Infrastructure;
+      case 15: return pluginCategory.Licensing;
+      case 16: return pluginCategory.Storefront;
+      case 17: return pluginCategory.Publisher;
+      case 18: return pluginCategory.Basilisk;
+      case 19: return pluginCategory.Maneuver;
+      case 20: return pluginCategory.Flow;
+      case 21: return pluginCategory.Unspecified;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static capabilityClass? _createOrNull(int? value) =>
-      value == null ? null : capabilityClass.fromValue(value);
+  static pluginCategory? _createOrNull(int? value) =>
+      value == null ? null : pluginCategory.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 24;
-  static const fb.Reader<capabilityClass> reader = _capabilityClassReader();
+  static const int maxValue = 21;
+  static const fb.Reader<pluginCategory> reader = _pluginCategoryReader();
 }
 
-class _capabilityClassReader extends fb.Reader<capabilityClass> {
-  const _capabilityClassReader();
+class _pluginCategoryReader extends fb.Reader<pluginCategory> {
+  const _pluginCategoryReader();
 
   @override
   int get size => 1;
 
   @override
-  capabilityClass read(fb.BufferContext bc, int offset) =>
-      capabilityClass.fromValue(const fb.Uint8Reader().read(bc, offset));
+  pluginCategory read(fb.BufferContext bc, int offset) =>
+      pluginCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  One ratified category in the taxonomy.
-///
-///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
-///  without the label a surface will render, the sentence a browse row will
-///  show, and the route a link will target. This is what stops each consumer
-///  from inventing its own wording for the same code.
-class CCTCategory {
-  CCTCategory._(this._bc, this._bcOffset);
-  factory CCTCategory(List<int> bytes) {
+///  Storefront payment model for the plugin listing
+enum purchaseTier {
+  Free(0),
+  OneTime(1),
+  Subscription(2);
+
+  final int value;
+  const purchaseTier(this.value);
+
+  factory purchaseTier.fromValue(int value) {
+    switch (value) {
+      case 0: return purchaseTier.Free;
+      case 1: return purchaseTier.OneTime;
+      case 2: return purchaseTier.Subscription;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static purchaseTier? _createOrNull(int? value) =>
+      value == null ? null : purchaseTier.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<purchaseTier> reader = _purchaseTierReader();
+}
+
+class _purchaseTierReader extends fb.Reader<purchaseTier> {
+  const _purchaseTierReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  purchaseTier read(fb.BufferContext bc, int offset) =>
+      purchaseTier.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Publication visibility for the plugin listing
+enum publicationState {
+  Public(0),
+  Unlisted(1),
+  Retired(2);
+
+  final int value;
+  const publicationState(this.value);
+
+  factory publicationState.fromValue(int value) {
+    switch (value) {
+      case 0: return publicationState.Public;
+      case 1: return publicationState.Unlisted;
+      case 2: return publicationState.Retired;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static publicationState? _createOrNull(int? value) =>
+      value == null ? null : publicationState.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<publicationState> reader = _publicationStateReader();
+}
+
+class _publicationStateReader extends fb.Reader<publicationState> {
+  const _publicationStateReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  publicationState read(fb.BufferContext bc, int offset) =>
+      publicationState.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Canonical invoke surfaces a plugin artifact can expose. A single
+///  artifact can support multiple.
+enum invokeSurfaceKind {
+  DIRECT(0),
+  COMMAND(1);
+
+  final int value;
+  const invokeSurfaceKind(this.value);
+
+  factory invokeSurfaceKind.fromValue(int value) {
+    switch (value) {
+      case 0: return invokeSurfaceKind.DIRECT;
+      case 1: return invokeSurfaceKind.COMMAND;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static invokeSurfaceKind? _createOrNull(int? value) =>
+      value == null ? null : invokeSurfaceKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<invokeSurfaceKind> reader = _invokeSurfaceKindReader();
+}
+
+class _invokeSurfaceKindReader extends fb.Reader<invokeSurfaceKind> {
+  const _invokeSurfaceKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  invokeSurfaceKind read(fb.BufferContext bc, int offset) =>
+      invokeSurfaceKind.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Drain semantics for a method that operates over queued stream frames.
+///  Enum name is deliberately distinct from any camelCase field name
+///  (`DRAIN_POLICY` would collide otherwise).
+enum drainBehavior {
+  SINGLE_SHOT(0),
+  DRAIN_UNTIL_YIELD(1),
+  DRAIN_TO_EMPTY(2);
+
+  final int value;
+  const drainBehavior(this.value);
+
+  factory drainBehavior.fromValue(int value) {
+    switch (value) {
+      case 0: return drainBehavior.SINGLE_SHOT;
+      case 1: return drainBehavior.DRAIN_UNTIL_YIELD;
+      case 2: return drainBehavior.DRAIN_TO_EMPTY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static drainBehavior? _createOrNull(int? value) =>
+      value == null ? null : drainBehavior.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<drainBehavior> reader = _drainBehaviorReader();
+}
+
+class _drainBehaviorReader extends fb.Reader<drainBehavior> {
+  const _drainBehaviorReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  drainBehavior read(fb.BufferContext bc, int offset) =>
+      drainBehavior.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Host capability classes a plugin may request. Extends the simpler
+///  `PluginCapability` (which is name+version metadata) with the richer
+///  enum-based surface that runtime hosts gate on.
+enum hostCapabilityKind {
+  CLOCK(0),
+  RANDOM(1),
+  LOGGING(2),
+  TIMERS(3),
+  PUBSUB(4),
+  PROTOCOL_DIAL(5),
+  PROTOCOL_HANDLE(6),
+  STORAGE_QUERY(7),
+  SCENE_ACCESS(8),
+  ENTITY_ACCESS(9),
+  RENDER_HOOKS(10),
+  HTTP(11),
+  FILESYSTEM(12),
+  PIPE(13),
+  NETWORK(14),
+  DATABASE(15),
+  STORAGE_ADAPTER(16),
+  STORAGE_WRITE(17),
+  WALLET_SIGN(18),
+  IPFS(19),
+  TLS(20),
+  MQTT(21),
+  WEBSOCKET(22),
+  TCP(23),
+  UDP(24),
+  PROCESS_EXEC(25),
+  CONTEXT_READ(26),
+  CONTEXT_WRITE(27),
+  CRYPTO_HASH(28),
+  CRYPTO_SIGN(29),
+  CRYPTO_VERIFY(30),
+  CRYPTO_ENCRYPT(31),
+  CRYPTO_DECRYPT(32),
+  CRYPTO_KEY_AGREEMENT(33),
+  CRYPTO_KDF(34),
+  SCHEDULE_CRON(35),
+  STORAGE_INGEST(36);
+
+  final int value;
+  const hostCapabilityKind(this.value);
+
+  factory hostCapabilityKind.fromValue(int value) {
+    switch (value) {
+      case 0: return hostCapabilityKind.CLOCK;
+      case 1: return hostCapabilityKind.RANDOM;
+      case 2: return hostCapabilityKind.LOGGING;
+      case 3: return hostCapabilityKind.TIMERS;
+      case 4: return hostCapabilityKind.PUBSUB;
+      case 5: return hostCapabilityKind.PROTOCOL_DIAL;
+      case 6: return hostCapabilityKind.PROTOCOL_HANDLE;
+      case 7: return hostCapabilityKind.STORAGE_QUERY;
+      case 8: return hostCapabilityKind.SCENE_ACCESS;
+      case 9: return hostCapabilityKind.ENTITY_ACCESS;
+      case 10: return hostCapabilityKind.RENDER_HOOKS;
+      case 11: return hostCapabilityKind.HTTP;
+      case 12: return hostCapabilityKind.FILESYSTEM;
+      case 13: return hostCapabilityKind.PIPE;
+      case 14: return hostCapabilityKind.NETWORK;
+      case 15: return hostCapabilityKind.DATABASE;
+      case 16: return hostCapabilityKind.STORAGE_ADAPTER;
+      case 17: return hostCapabilityKind.STORAGE_WRITE;
+      case 18: return hostCapabilityKind.WALLET_SIGN;
+      case 19: return hostCapabilityKind.IPFS;
+      case 20: return hostCapabilityKind.TLS;
+      case 21: return hostCapabilityKind.MQTT;
+      case 22: return hostCapabilityKind.WEBSOCKET;
+      case 23: return hostCapabilityKind.TCP;
+      case 24: return hostCapabilityKind.UDP;
+      case 25: return hostCapabilityKind.PROCESS_EXEC;
+      case 26: return hostCapabilityKind.CONTEXT_READ;
+      case 27: return hostCapabilityKind.CONTEXT_WRITE;
+      case 28: return hostCapabilityKind.CRYPTO_HASH;
+      case 29: return hostCapabilityKind.CRYPTO_SIGN;
+      case 30: return hostCapabilityKind.CRYPTO_VERIFY;
+      case 31: return hostCapabilityKind.CRYPTO_ENCRYPT;
+      case 32: return hostCapabilityKind.CRYPTO_DECRYPT;
+      case 33: return hostCapabilityKind.CRYPTO_KEY_AGREEMENT;
+      case 34: return hostCapabilityKind.CRYPTO_KDF;
+      case 35: return hostCapabilityKind.SCHEDULE_CRON;
+      case 36: return hostCapabilityKind.STORAGE_INGEST;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static hostCapabilityKind? _createOrNull(int? value) =>
+      value == null ? null : hostCapabilityKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 36;
+  static const fb.Reader<hostCapabilityKind> reader = _hostCapabilityKindReader();
+}
+
+class _hostCapabilityKindReader extends fb.Reader<hostCapabilityKind> {
+  const _hostCapabilityKindReader();
+
+  @override
+  int get size => 2;
+
+  @override
+  hostCapabilityKind read(fb.BufferContext bc, int offset) =>
+      hostCapabilityKind.fromValue(const fb.Uint16Reader().read(bc, offset));
+}
+
+///  Compile-time routing decision for an edge. The aligned option is legal only
+///  when the producer and consumer share the declared arena and the runtime can
+///  prove bounds, alignment, ownership, mutability, and lifetime.
+enum flowEdgeRoutePolicy {
+  CANONICAL_ONLY(0),
+  ALIGNED_SHARED_ARENA_OR_CANONICAL(1);
+
+  final int value;
+  const flowEdgeRoutePolicy(this.value);
+
+  factory flowEdgeRoutePolicy.fromValue(int value) {
+    switch (value) {
+      case 0: return flowEdgeRoutePolicy.CANONICAL_ONLY;
+      case 1: return flowEdgeRoutePolicy.ALIGNED_SHARED_ARENA_OR_CANONICAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static flowEdgeRoutePolicy? _createOrNull(int? value) =>
+      value == null ? null : flowEdgeRoutePolicy.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<flowEdgeRoutePolicy> reader = _flowEdgeRoutePolicyReader();
+}
+
+class _flowEdgeRoutePolicyReader extends fb.Reader<flowEdgeRoutePolicy> {
+  const _flowEdgeRoutePolicyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  flowEdgeRoutePolicy read(fb.BufferContext bc, int offset) =>
+      flowEdgeRoutePolicy.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Plugin capability declaration
+class PluginCapability {
+  PluginCapability._(this._bc, this._bcOffset);
+  factory PluginCapability(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CCTCategory> reader = _CCTCategoryReader();
+  static const fb.Reader<PluginCapability> reader = _PluginCapabilityReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  The ratified category code. This is the join key every consumer uses.
-  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
-  ///  name stated in the CODE member's doc comment.
-  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get displayName => DISPLAY_NAME;
-  ///  One-sentence description shown on browse rows and category headers.
-  String? get SUMMARY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
-  ///  `-`. Published explicitly rather than derived so every surface routes
-  ///  identically.
-  String? get SLUG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Longer editorial description for a category landing page.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
-  ///  top-level category. A category MUST NOT name itself as its parent.
-  capabilityClass get PARENT => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ///  Presentation order within its parent, ascending. Ties break on
-  ///  DISPLAY_NAME.
-  int get SORT_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get sortOrder => SORT_ORDER;
-  ///  Search synonyms and alternate phrasings that resolve to this category.
-  ///  Feeds type-ahead; never rendered as the category label.
-  List<String>? get KEYWORDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
-  ///  URL: consuming node surfaces load zero external-origin bytes, so the
-  ///  consumer resolves this against its own local asset set.
-  String? get ICON_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get iconKey => ICON_KEY;
-
-  @override
-  String toString() {
-    return 'CCTCategory{CODE: ${CODE}, displayName: ${displayName}, SUMMARY: ${SUMMARY}, SLUG: ${SLUG}, DESCRIPTION: ${DESCRIPTION}, PARENT: ${PARENT}, sortOrder: ${sortOrder}, KEYWORDS: ${KEYWORDS}, iconKey: ${iconKey}}';
-  }
-}
-
-class _CCTCategoryReader extends fb.TableReader<CCTCategory> {
-  const _CCTCategoryReader();
-
-  @override
-  CCTCategory createObject(fb.BufferContext bc, int offset) =>
-    CCTCategory._(bc, offset);
-}
-
-class CCTCategoryBuilder {
-  CCTCategoryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(9);
-  }
-
-  int addCode(capabilityClass? CODE) {
-    fbBuilder.addUint8(0, CODE?.value);
-    return fbBuilder.offset;
-  }
-  int addDisplayNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addSummaryOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addSlugOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addParent(capabilityClass? PARENT) {
-    fbBuilder.addUint8(5, PARENT?.value);
-    return fbBuilder.offset;
-  }
-  int addSortOrder(int? SORT_ORDER) {
-    fbBuilder.addUint16(6, SORT_ORDER);
-    return fbBuilder.offset;
-  }
-  int addKeywordsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addIconKeyOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CCTCategoryObjectBuilder extends fb.ObjectBuilder {
-  final capabilityClass? _CODE;
-  final String? _DISPLAY_NAME;
-  final String? _SUMMARY;
-  final String? _SLUG;
-  final String? _DESCRIPTION;
-  final capabilityClass? _PARENT;
-  final int? _SORT_ORDER;
-  final List<String>? _KEYWORDS;
-  final String? _ICON_KEY;
-
-  CCTCategoryObjectBuilder({
-    capabilityClass? CODE,
-    String? DISPLAY_NAME,
-    String? displayName,
-    String? SUMMARY,
-    String? SLUG,
-    String? DESCRIPTION,
-    capabilityClass? PARENT,
-    int? SORT_ORDER,
-    int? sortOrder,
-    List<String>? KEYWORDS,
-    String? ICON_KEY,
-    String? iconKey,
-  })
-      : _CODE = CODE,
-        _DISPLAY_NAME = displayName ?? DISPLAY_NAME,
-        _SUMMARY = SUMMARY,
-        _SLUG = SLUG,
-        _DESCRIPTION = DESCRIPTION,
-        _PARENT = PARENT,
-        _SORT_ORDER = sortOrder ?? SORT_ORDER,
-        _KEYWORDS = KEYWORDS,
-        _ICON_KEY = iconKey ?? ICON_KEY;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
-        : fbBuilder.writeString(_DISPLAY_NAME!);
-    final int? SUMMARYOffset = _SUMMARY == null ? null
-        : fbBuilder.writeString(_SUMMARY!);
-    final int? SLUGOffset = _SLUG == null ? null
-        : fbBuilder.writeString(_SLUG!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? KEYWORDSOffset = _KEYWORDS == null ? null
-        : fbBuilder.writeList(_KEYWORDS!.map(fbBuilder.writeString).toList());
-    final int? ICON_KEYOffset = _ICON_KEY == null ? null
-        : fbBuilder.writeString(_ICON_KEY!);
-    fbBuilder.startTable(9);
-    fbBuilder.addUint8(0, _CODE?.value);
-    fbBuilder.addOffset(1, DISPLAY_NAMEOffset);
-    fbBuilder.addOffset(2, SUMMARYOffset);
-    fbBuilder.addOffset(3, SLUGOffset);
-    fbBuilder.addOffset(4, DESCRIPTIONOffset);
-    fbBuilder.addUint8(5, _PARENT?.value);
-    fbBuilder.addUint16(6, _SORT_ORDER);
-    fbBuilder.addOffset(7, KEYWORDSOffset);
-    fbBuilder.addOffset(8, ICON_KEYOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  An observed count of catalogue items in one category.
-///
-///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
-///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
-///  count can never omit when it was taken or what it was taken over. A consumer
-///  that needs a live number computes it from the items; a consumer rendering a
-///  published rollup MUST show it as of COUNTED_AT.
-class CCTCategoryRollup {
-  CCTCategoryRollup._(this._bc, this._bcOffset);
-  factory CCTCategoryRollup(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CCTCategoryRollup> reader = _CCTCategoryRollupReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Category being counted.
-  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
-  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
-  int get ITEM_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get itemCount => ITEM_COUNT;
-  ///  Identifier of the catalogue the count was taken over.
-  String? get SOURCE_CATALOG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get sourceCatalogId => SOURCE_CATALOG_ID;
-  ///  Unix seconds when the count was taken.
-  int get COUNTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get countedAt => COUNTED_AT;
-
-  @override
-  String toString() {
-    return 'CCTCategoryRollup{CODE: ${CODE}, itemCount: ${itemCount}, sourceCatalogId: ${sourceCatalogId}, countedAt: ${countedAt}}';
-  }
-}
-
-class _CCTCategoryRollupReader extends fb.TableReader<CCTCategoryRollup> {
-  const _CCTCategoryRollupReader();
-
-  @override
-  CCTCategoryRollup createObject(fb.BufferContext bc, int offset) =>
-    CCTCategoryRollup._(bc, offset);
-}
-
-class CCTCategoryRollupBuilder {
-  CCTCategoryRollupBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCode(capabilityClass? CODE) {
-    fbBuilder.addUint8(0, CODE?.value);
-    return fbBuilder.offset;
-  }
-  int addItemCount(int? ITEM_COUNT) {
-    fbBuilder.addUint32(1, ITEM_COUNT);
-    return fbBuilder.offset;
-  }
-  int addSourceCatalogIdOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addCountedAt(int? COUNTED_AT) {
-    fbBuilder.addUint64(3, COUNTED_AT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CCTCategoryRollupObjectBuilder extends fb.ObjectBuilder {
-  final capabilityClass? _CODE;
-  final int? _ITEM_COUNT;
-  final String? _SOURCE_CATALOG_ID;
-  final int? _COUNTED_AT;
-
-  CCTCategoryRollupObjectBuilder({
-    capabilityClass? CODE,
-    int? ITEM_COUNT,
-    int? itemCount,
-    String? SOURCE_CATALOG_ID,
-    String? sourceCatalogId,
-    int? COUNTED_AT,
-    int? countedAt,
-  })
-      : _CODE = CODE,
-        _ITEM_COUNT = itemCount ?? ITEM_COUNT,
-        _SOURCE_CATALOG_ID = sourceCatalogId ?? SOURCE_CATALOG_ID,
-        _COUNTED_AT = countedAt ?? COUNTED_AT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCE_CATALOG_IDOffset = _SOURCE_CATALOG_ID == null ? null
-        : fbBuilder.writeString(_SOURCE_CATALOG_ID!);
-    fbBuilder.startTable(4);
-    fbBuilder.addUint8(0, _CODE?.value);
-    fbBuilder.addUint32(1, _ITEM_COUNT);
-    fbBuilder.addOffset(2, SOURCE_CATALOG_IDOffset);
-    fbBuilder.addUint64(3, _COUNTED_AT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  $CCT — Capability Category Taxonomy.
-///
-///  The ratified set of capability classes that distributable units (modules,
-///  applications, composed flows) are classified under, together with the labels
-///  and routes every consuming surface renders. One published $CCT is the single
-///  source of truth shared by a storefront, a library, a search index and the
-///  unit manifests themselves.
-///
-///  Division of labour: `$CCT` = the category vocabulary and its presentation;
-///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
-///  application's manifest, which cites categories by code; `$PMM` = which
-///  modules a provider serves; `$STO`/`$STF` = commerce.
-class CCT {
-  CCT._(this._bc, this._bcOffset);
-  factory CCT(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CCT> reader = _CCTReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stable identifier of this taxonomy publication.
-  String? get TAXONOMY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get taxonomyId => TAXONOMY_ID;
-  ///  SemVer 2.0.0 version of the taxonomy content.
+  ///  Capability name, e.g., "gpu_compute", "wasm_simd"
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Capability version
   String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Unix seconds when this taxonomy revision was issued.
-  int get ISSUED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get issuedAt => ISSUED_AT;
-  ///  Human-readable title of the taxonomy.
-  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  The ratified categories. Every capabilityClass member a consumer may
-  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
-  List<CCTCategory>? get CATEGORIES => const fb.ListReader<CCTCategory>(CCTCategory.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Optional per-category item counts as observed over a named catalogue.
-  ///  Absent means counts are computed by the consumer.
-  List<CCTCategoryRollup>? get ROLLUPS => const fb.ListReader<CCTCategoryRollup>(CCTCategoryRollup.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Signature from the publishing node key over the canonical taxonomy bytes.
-  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Whether this capability is required
+  bool get REQUIRED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
 
   @override
   String toString() {
-    return 'CCT{taxonomyId: ${taxonomyId}, VERSION: ${VERSION}, issuedAt: ${issuedAt}, TITLE: ${TITLE}, CATEGORIES: ${CATEGORIES}, ROLLUPS: ${ROLLUPS}, SIGNATURE: ${SIGNATURE}}';
+    return 'PluginCapability{NAME: ${NAME}, VERSION: ${VERSION}, REQUIRED: ${REQUIRED}}';
   }
 }
 
-class _CCTReader extends fb.TableReader<CCT> {
-  const _CCTReader();
+class _PluginCapabilityReader extends fb.TableReader<PluginCapability> {
+  const _PluginCapabilityReader();
 
   @override
-  CCT createObject(fb.BufferContext bc, int offset) =>
-    CCT._(bc, offset);
+  PluginCapability createObject(fb.BufferContext bc, int offset) =>
+    PluginCapability._(bc, offset);
 }
 
-class CCTBuilder {
-  CCTBuilder(this.fbBuilder);
+class PluginCapabilityBuilder {
+  PluginCapabilityBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(3);
   }
 
-  int addTaxonomyIdOffset(int? offset) {
+  int addNameOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
@@ -488,23 +455,257 @@ class CCTBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addIssuedAt(int? ISSUED_AT) {
-    fbBuilder.addUint64(2, ISSUED_AT);
+  int addRequired(bool? REQUIRED) {
+    fbBuilder.addBool(2, REQUIRED);
     return fbBuilder.offset;
   }
-  int addTitleOffset(int? offset) {
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PluginCapabilityObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _VERSION;
+  final bool? _REQUIRED;
+
+  PluginCapabilityObjectBuilder({
+    String? NAME,
+    String? VERSION,
+    bool? REQUIRED,
+  })
+      : _NAME = NAME,
+        _VERSION = VERSION,
+        _REQUIRED = REQUIRED;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? VERSIONOffset = _VERSION == null ? null
+        : fbBuilder.writeString(_VERSION!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, VERSIONOffset);
+    fbBuilder.addBool(2, _REQUIRED);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Accepted schema family for a port. When a port accepts multiple wire
+///  formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE
+///  entry carries its own TAB.FlatBufferTypeRef with the schema identity,
+///  and the enclosing PLGPortManifest advertises both wire formats via
+///  ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises
+///  aligned-binary MUST also advertise the canonical flatbuffer fallback
+///  for the same schema and file identifier in the same set.
+class PLGAcceptedTypeSet {
+  PLGAcceptedTypeSet._(this._bc, this._bcOffset);
+  factory PLGAcceptedTypeSet(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGAcceptedTypeSet> reader = _PLGAcceptedTypeSetReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable type-set identifier within the port.
+  String? get SET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get setId => SET_ID;
+  ///  Specific FlatBuffer types accepted by the set.
+  List<FlatBufferTypeRef>? get ALLOWED_TYPES => const fb.ListReader<FlatBufferTypeRef>(FlatBufferTypeRef.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  List<FlatBufferTypeRef>? get allowedTypes => ALLOWED_TYPES;
+  ///  Wire formats this set accepts. If ALIGNED_BINARY is present,
+  ///  FLATBUFFER MUST also be present for the same schemas.
+  List<payloadWireFormat>? get ALLOWED_WIRE_FORMATS => const fb.ListReader<payloadWireFormat>(payloadWireFormat.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  List<payloadWireFormat>? get allowedWireFormats => ALLOWED_WIRE_FORMATS;
+  ///  Human-readable explanation of the accepted schema family.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'PLGAcceptedTypeSet{setId: ${setId}, allowedTypes: ${allowedTypes}, allowedWireFormats: ${allowedWireFormats}, DESCRIPTION: ${DESCRIPTION}}';
+  }
+}
+
+class _PLGAcceptedTypeSetReader extends fb.TableReader<PLGAcceptedTypeSet> {
+  const _PLGAcceptedTypeSetReader();
+
+  @override
+  PLGAcceptedTypeSet createObject(fb.BufferContext bc, int offset) =>
+    PLGAcceptedTypeSet._(bc, offset);
+}
+
+class PLGAcceptedTypeSetBuilder {
+  PLGAcceptedTypeSetBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addSetIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAllowedTypesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addAllowedWireFormatsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addCategoriesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGAcceptedTypeSetObjectBuilder extends fb.ObjectBuilder {
+  final String? _SET_ID;
+  final List<FlatBufferTypeRefObjectBuilder>? _ALLOWED_TYPES;
+  final List<payloadWireFormat>? _ALLOWED_WIRE_FORMATS;
+  final String? _DESCRIPTION;
+
+  PLGAcceptedTypeSetObjectBuilder({
+    String? SET_ID,
+    String? setId,
+    List<FlatBufferTypeRefObjectBuilder>? ALLOWED_TYPES,
+    List<FlatBufferTypeRefObjectBuilder>? allowedTypes,
+    List<payloadWireFormat>? ALLOWED_WIRE_FORMATS,
+    List<payloadWireFormat>? allowedWireFormats,
+    String? DESCRIPTION,
+  })
+      : _SET_ID = setId ?? SET_ID,
+        _ALLOWED_TYPES = allowedTypes ?? ALLOWED_TYPES,
+        _ALLOWED_WIRE_FORMATS = allowedWireFormats ?? ALLOWED_WIRE_FORMATS,
+        _DESCRIPTION = DESCRIPTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SET_IDOffset = _SET_ID == null ? null
+        : fbBuilder.writeString(_SET_ID!);
+    final int? ALLOWED_TYPESOffset = _ALLOWED_TYPES == null ? null
+        : fbBuilder.writeList(_ALLOWED_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ALLOWED_WIRE_FORMATSOffset = _ALLOWED_WIRE_FORMATS == null ? null
+        : fbBuilder.writeListUint8(_ALLOWED_WIRE_FORMATS!.map((f) => f.value).toList());
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, SET_IDOffset);
+    fbBuilder.addOffset(1, ALLOWED_TYPESOffset);
+    fbBuilder.addOffset(2, ALLOWED_WIRE_FORMATSOffset);
+    fbBuilder.addOffset(3, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One input or output port on a method.
+class PLGPortManifest {
+  PLGPortManifest._(this._bc, this._bcOffset);
+  factory PLGPortManifest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGPortManifest> reader = _PLGPortManifestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable port identifier within the method.
+  String? get PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get portId => PORT_ID;
+  ///  Human-readable name for UIs.
+  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get displayName => DISPLAY_NAME;
+  ///  Type sets accepted on this port.
+  List<PLGAcceptedTypeSet>? get ACCEPTED_TYPE_SETS => const fb.ListReader<PLGAcceptedTypeSet>(PLGAcceptedTypeSet.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  List<PLGAcceptedTypeSet>? get acceptedTypeSets => ACCEPTED_TYPE_SETS;
+  ///  Minimum number of streams that must be connected.
+  int get MIN_STREAMS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 10, 1);
+  int get minStreams => MIN_STREAMS;
+  ///  Maximum number of streams that may be connected.
+  int get MAX_STREAMS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 12, 1);
+  int get maxStreams => MAX_STREAMS;
+  ///  Whether the port must be connected for invocation.
+  bool get REQUIRED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, true);
+  ///  Optional human-readable description.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'PLGPortManifest{portId: ${portId}, displayName: ${displayName}, acceptedTypeSets: ${acceptedTypeSets}, minStreams: ${minStreams}, maxStreams: ${maxStreams}, REQUIRED: ${REQUIRED}, DESCRIPTION: ${DESCRIPTION}}';
+  }
+}
+
+class _PLGPortManifestReader extends fb.TableReader<PLGPortManifest> {
+  const _PLGPortManifestReader();
+
+  @override
+  PLGPortManifest createObject(fb.BufferContext bc, int offset) =>
+    PLGPortManifest._(bc, offset);
+}
+
+class PLGPortManifestBuilder {
+  PLGPortManifestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addPortIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addRollupsOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addDisplayNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSignatureOffset(int? offset) {
+  int addAcceptedTypeSetsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMinStreams(int? MIN_STREAMS) {
+    fbBuilder.addUint16(3, MIN_STREAMS);
+    return fbBuilder.offset;
+  }
+  int addMaxStreams(int? MAX_STREAMS) {
+    fbBuilder.addUint16(4, MAX_STREAMS);
+    return fbBuilder.offset;
+  }
+  int addRequired(bool? REQUIRED) {
+    fbBuilder.addBool(5, REQUIRED);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
@@ -514,57 +715,2555 @@ class CCTBuilder {
   }
 }
 
-class CCTObjectBuilder extends fb.ObjectBuilder {
-  final String? _TAXONOMY_ID;
-  final String? _VERSION;
-  final int? _ISSUED_AT;
-  final String? _TITLE;
-  final List<CCTCategoryObjectBuilder>? _CATEGORIES;
-  final List<CCTCategoryRollupObjectBuilder>? _ROLLUPS;
-  final List<int>? _SIGNATURE;
+class PLGPortManifestObjectBuilder extends fb.ObjectBuilder {
+  final String? _PORT_ID;
+  final String? _DISPLAY_NAME;
+  final List<PLGAcceptedTypeSetObjectBuilder>? _ACCEPTED_TYPE_SETS;
+  final int? _MIN_STREAMS;
+  final int? _MAX_STREAMS;
+  final bool? _REQUIRED;
+  final String? _DESCRIPTION;
 
-  CCTObjectBuilder({
-    String? TAXONOMY_ID,
-    String? taxonomyId,
-    String? VERSION,
-    int? ISSUED_AT,
-    int? issuedAt,
-    String? TITLE,
-    List<CCTCategoryObjectBuilder>? CATEGORIES,
-    List<CCTCategoryRollupObjectBuilder>? ROLLUPS,
-    List<int>? SIGNATURE,
+  PLGPortManifestObjectBuilder({
+    String? PORT_ID,
+    String? portId,
+    String? DISPLAY_NAME,
+    String? displayName,
+    List<PLGAcceptedTypeSetObjectBuilder>? ACCEPTED_TYPE_SETS,
+    List<PLGAcceptedTypeSetObjectBuilder>? acceptedTypeSets,
+    int? MIN_STREAMS,
+    int? minStreams,
+    int? MAX_STREAMS,
+    int? maxStreams,
+    bool? REQUIRED,
+    String? DESCRIPTION,
   })
-      : _TAXONOMY_ID = taxonomyId ?? TAXONOMY_ID,
-        _VERSION = VERSION,
-        _ISSUED_AT = issuedAt ?? ISSUED_AT,
-        _TITLE = TITLE,
-        _CATEGORIES = CATEGORIES,
-        _ROLLUPS = ROLLUPS,
-        _SIGNATURE = SIGNATURE;
+      : _PORT_ID = portId ?? PORT_ID,
+        _DISPLAY_NAME = displayName ?? DISPLAY_NAME,
+        _ACCEPTED_TYPE_SETS = acceptedTypeSets ?? ACCEPTED_TYPE_SETS,
+        _MIN_STREAMS = minStreams ?? MIN_STREAMS,
+        _MAX_STREAMS = maxStreams ?? MAX_STREAMS,
+        _REQUIRED = REQUIRED,
+        _DESCRIPTION = DESCRIPTION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? TAXONOMY_IDOffset = _TAXONOMY_ID == null ? null
-        : fbBuilder.writeString(_TAXONOMY_ID!);
+    final int? PORT_IDOffset = _PORT_ID == null ? null
+        : fbBuilder.writeString(_PORT_ID!);
+    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
+        : fbBuilder.writeString(_DISPLAY_NAME!);
+    final int? ACCEPTED_TYPE_SETSOffset = _ACCEPTED_TYPE_SETS == null ? null
+        : fbBuilder.writeList(_ACCEPTED_TYPE_SETS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, PORT_IDOffset);
+    fbBuilder.addOffset(1, DISPLAY_NAMEOffset);
+    fbBuilder.addOffset(2, ACCEPTED_TYPE_SETSOffset);
+    fbBuilder.addUint16(3, _MIN_STREAMS);
+    fbBuilder.addUint16(4, _MAX_STREAMS);
+    fbBuilder.addBool(5, _REQUIRED);
+    fbBuilder.addOffset(6, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One host capability dependency (richer form of PluginCapability).
+class PLGHostCapability {
+  PLGHostCapability._(this._bc, this._bcOffset);
+  factory PLGHostCapability(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGHostCapability> reader = _PLGHostCapabilityReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  hostCapabilityKind get CAPABILITY => hostCapabilityKind.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  String? get SCOPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  bool get REQUIRED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, true);
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'PLGHostCapability{CAPABILITY: ${CAPABILITY}, SCOPE: ${SCOPE}, REQUIRED: ${REQUIRED}, DESCRIPTION: ${DESCRIPTION}}';
+  }
+}
+
+class _PLGHostCapabilityReader extends fb.TableReader<PLGHostCapability> {
+  const _PLGHostCapabilityReader();
+
+  @override
+  PLGHostCapability createObject(fb.BufferContext bc, int offset) =>
+    PLGHostCapability._(bc, offset);
+}
+
+class PLGHostCapabilityBuilder {
+  PLGHostCapabilityBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addCapability(hostCapabilityKind? CAPABILITY) {
+    fbBuilder.addUint16(0, CAPABILITY?.value);
+    return fbBuilder.offset;
+  }
+  int addScopeOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addRequired(bool? REQUIRED) {
+    fbBuilder.addBool(2, REQUIRED);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGHostCapabilityObjectBuilder extends fb.ObjectBuilder {
+  final hostCapabilityKind? _CAPABILITY;
+  final String? _SCOPE;
+  final bool? _REQUIRED;
+  final String? _DESCRIPTION;
+
+  PLGHostCapabilityObjectBuilder({
+    hostCapabilityKind? CAPABILITY,
+    String? SCOPE,
+    bool? REQUIRED,
+    String? DESCRIPTION,
+  })
+      : _CAPABILITY = CAPABILITY,
+        _SCOPE = SCOPE,
+        _REQUIRED = REQUIRED,
+        _DESCRIPTION = DESCRIPTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SCOPEOffset = _SCOPE == null ? null
+        : fbBuilder.writeString(_SCOPE!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(4);
+    fbBuilder.addUint16(0, _CAPABILITY?.value);
+    fbBuilder.addOffset(1, SCOPEOffset);
+    fbBuilder.addBool(2, _REQUIRED);
+    fbBuilder.addOffset(3, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Timer entry declared by a plugin.
+class PLGTimerSpec {
+  PLGTimerSpec._(this._bc, this._bcOffset);
+  factory PLGTimerSpec(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGTimerSpec> reader = _PLGTimerSpecReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get TIMER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get timerId => TIMER_ID;
+  String? get METHOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get methodId => METHOD_ID;
+  String? get INPUT_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get inputPortId => INPUT_PORT_ID;
+  int get DEFAULT_INTERVAL_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get defaultIntervalMs => DEFAULT_INTERVAL_MS;
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'PLGTimerSpec{timerId: ${timerId}, methodId: ${methodId}, inputPortId: ${inputPortId}, defaultIntervalMs: ${defaultIntervalMs}, DESCRIPTION: ${DESCRIPTION}}';
+  }
+}
+
+class _PLGTimerSpecReader extends fb.TableReader<PLGTimerSpec> {
+  const _PLGTimerSpecReader();
+
+  @override
+  PLGTimerSpec createObject(fb.BufferContext bc, int offset) =>
+    PLGTimerSpec._(bc, offset);
+}
+
+class PLGTimerSpecBuilder {
+  PLGTimerSpecBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addTimerIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addMethodIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addInputPortIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDefaultIntervalMs(int? DEFAULT_INTERVAL_MS) {
+    fbBuilder.addUint64(3, DEFAULT_INTERVAL_MS);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGTimerSpecObjectBuilder extends fb.ObjectBuilder {
+  final String? _TIMER_ID;
+  final String? _METHOD_ID;
+  final String? _INPUT_PORT_ID;
+  final int? _DEFAULT_INTERVAL_MS;
+  final String? _DESCRIPTION;
+
+  PLGTimerSpecObjectBuilder({
+    String? TIMER_ID,
+    String? timerId,
+    String? METHOD_ID,
+    String? methodId,
+    String? INPUT_PORT_ID,
+    String? inputPortId,
+    int? DEFAULT_INTERVAL_MS,
+    int? defaultIntervalMs,
+    String? DESCRIPTION,
+  })
+      : _TIMER_ID = timerId ?? TIMER_ID,
+        _METHOD_ID = methodId ?? METHOD_ID,
+        _INPUT_PORT_ID = inputPortId ?? INPUT_PORT_ID,
+        _DEFAULT_INTERVAL_MS = defaultIntervalMs ?? DEFAULT_INTERVAL_MS,
+        _DESCRIPTION = DESCRIPTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TIMER_IDOffset = _TIMER_ID == null ? null
+        : fbBuilder.writeString(_TIMER_ID!);
+    final int? METHOD_IDOffset = _METHOD_ID == null ? null
+        : fbBuilder.writeString(_METHOD_ID!);
+    final int? INPUT_PORT_IDOffset = _INPUT_PORT_ID == null ? null
+        : fbBuilder.writeString(_INPUT_PORT_ID!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, TIMER_IDOffset);
+    fbBuilder.addOffset(1, METHOD_IDOffset);
+    fbBuilder.addOffset(2, INPUT_PORT_IDOffset);
+    fbBuilder.addUint64(3, _DEFAULT_INTERVAL_MS);
+    fbBuilder.addOffset(4, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Protocol handler declared by a plugin.
+class PLGProtocolSpec {
+  PLGProtocolSpec._(this._bc, this._bcOffset);
+  factory PLGProtocolSpec(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGProtocolSpec> reader = _PLGProtocolSpecReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get PROTOCOL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get protocolId => PROTOCOL_ID;
+  String? get METHOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get methodId => METHOD_ID;
+  String? get INPUT_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get inputPortId => INPUT_PORT_ID;
+  String? get OUTPUT_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get outputPortId => OUTPUT_PORT_ID;
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get WIRE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get wireId => WIRE_ID;
+  String? get TRANSPORT_KIND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get transportKind => TRANSPORT_KIND;
+  String? get ROLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get SPEC_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get specUri => SPEC_URI;
+  bool get AUTO_INSTALL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, true);
+  bool get autoInstall => AUTO_INSTALL;
+  bool get ADVERTISE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  String? get DISCOVERY_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get discoveryKey => DISCOVERY_KEY;
+  int get DEFAULT_PORT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get defaultPort => DEFAULT_PORT;
+  bool get REQUIRE_SECURE_TRANSPORT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get requireSecureTransport => REQUIRE_SECURE_TRANSPORT;
+
+  @override
+  String toString() {
+    return 'PLGProtocolSpec{protocolId: ${protocolId}, methodId: ${methodId}, inputPortId: ${inputPortId}, outputPortId: ${outputPortId}, DESCRIPTION: ${DESCRIPTION}, wireId: ${wireId}, transportKind: ${transportKind}, ROLE: ${ROLE}, specUri: ${specUri}, autoInstall: ${autoInstall}, ADVERTISE: ${ADVERTISE}, discoveryKey: ${discoveryKey}, defaultPort: ${defaultPort}, requireSecureTransport: ${requireSecureTransport}}';
+  }
+}
+
+class _PLGProtocolSpecReader extends fb.TableReader<PLGProtocolSpec> {
+  const _PLGProtocolSpecReader();
+
+  @override
+  PLGProtocolSpec createObject(fb.BufferContext bc, int offset) =>
+    PLGProtocolSpec._(bc, offset);
+}
+
+class PLGProtocolSpecBuilder {
+  PLGProtocolSpecBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(14);
+  }
+
+  int addProtocolIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addMethodIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addInputPortIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOutputPortIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addWireIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addTransportKindOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addRoleOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addSpecUriOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addAutoInstall(bool? AUTO_INSTALL) {
+    fbBuilder.addBool(9, AUTO_INSTALL);
+    return fbBuilder.offset;
+  }
+  int addAdvertise(bool? ADVERTISE) {
+    fbBuilder.addBool(10, ADVERTISE);
+    return fbBuilder.offset;
+  }
+  int addDiscoveryKeyOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addDefaultPort(int? DEFAULT_PORT) {
+    fbBuilder.addUint16(12, DEFAULT_PORT);
+    return fbBuilder.offset;
+  }
+  int addRequireSecureTransport(bool? REQUIRE_SECURE_TRANSPORT) {
+    fbBuilder.addBool(13, REQUIRE_SECURE_TRANSPORT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGProtocolSpecObjectBuilder extends fb.ObjectBuilder {
+  final String? _PROTOCOL_ID;
+  final String? _METHOD_ID;
+  final String? _INPUT_PORT_ID;
+  final String? _OUTPUT_PORT_ID;
+  final String? _DESCRIPTION;
+  final String? _WIRE_ID;
+  final String? _TRANSPORT_KIND;
+  final String? _ROLE;
+  final String? _SPEC_URI;
+  final bool? _AUTO_INSTALL;
+  final bool? _ADVERTISE;
+  final String? _DISCOVERY_KEY;
+  final int? _DEFAULT_PORT;
+  final bool? _REQUIRE_SECURE_TRANSPORT;
+
+  PLGProtocolSpecObjectBuilder({
+    String? PROTOCOL_ID,
+    String? protocolId,
+    String? METHOD_ID,
+    String? methodId,
+    String? INPUT_PORT_ID,
+    String? inputPortId,
+    String? OUTPUT_PORT_ID,
+    String? outputPortId,
+    String? DESCRIPTION,
+    String? WIRE_ID,
+    String? wireId,
+    String? TRANSPORT_KIND,
+    String? transportKind,
+    String? ROLE,
+    String? SPEC_URI,
+    String? specUri,
+    bool? AUTO_INSTALL,
+    bool? autoInstall,
+    bool? ADVERTISE,
+    String? DISCOVERY_KEY,
+    String? discoveryKey,
+    int? DEFAULT_PORT,
+    int? defaultPort,
+    bool? REQUIRE_SECURE_TRANSPORT,
+    bool? requireSecureTransport,
+  })
+      : _PROTOCOL_ID = protocolId ?? PROTOCOL_ID,
+        _METHOD_ID = methodId ?? METHOD_ID,
+        _INPUT_PORT_ID = inputPortId ?? INPUT_PORT_ID,
+        _OUTPUT_PORT_ID = outputPortId ?? OUTPUT_PORT_ID,
+        _DESCRIPTION = DESCRIPTION,
+        _WIRE_ID = wireId ?? WIRE_ID,
+        _TRANSPORT_KIND = transportKind ?? TRANSPORT_KIND,
+        _ROLE = ROLE,
+        _SPEC_URI = specUri ?? SPEC_URI,
+        _AUTO_INSTALL = autoInstall ?? AUTO_INSTALL,
+        _ADVERTISE = ADVERTISE,
+        _DISCOVERY_KEY = discoveryKey ?? DISCOVERY_KEY,
+        _DEFAULT_PORT = defaultPort ?? DEFAULT_PORT,
+        _REQUIRE_SECURE_TRANSPORT = requireSecureTransport ?? REQUIRE_SECURE_TRANSPORT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PROTOCOL_IDOffset = _PROTOCOL_ID == null ? null
+        : fbBuilder.writeString(_PROTOCOL_ID!);
+    final int? METHOD_IDOffset = _METHOD_ID == null ? null
+        : fbBuilder.writeString(_METHOD_ID!);
+    final int? INPUT_PORT_IDOffset = _INPUT_PORT_ID == null ? null
+        : fbBuilder.writeString(_INPUT_PORT_ID!);
+    final int? OUTPUT_PORT_IDOffset = _OUTPUT_PORT_ID == null ? null
+        : fbBuilder.writeString(_OUTPUT_PORT_ID!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? WIRE_IDOffset = _WIRE_ID == null ? null
+        : fbBuilder.writeString(_WIRE_ID!);
+    final int? TRANSPORT_KINDOffset = _TRANSPORT_KIND == null ? null
+        : fbBuilder.writeString(_TRANSPORT_KIND!);
+    final int? ROLEOffset = _ROLE == null ? null
+        : fbBuilder.writeString(_ROLE!);
+    final int? SPEC_URIOffset = _SPEC_URI == null ? null
+        : fbBuilder.writeString(_SPEC_URI!);
+    final int? DISCOVERY_KEYOffset = _DISCOVERY_KEY == null ? null
+        : fbBuilder.writeString(_DISCOVERY_KEY!);
+    fbBuilder.startTable(14);
+    fbBuilder.addOffset(0, PROTOCOL_IDOffset);
+    fbBuilder.addOffset(1, METHOD_IDOffset);
+    fbBuilder.addOffset(2, INPUT_PORT_IDOffset);
+    fbBuilder.addOffset(3, OUTPUT_PORT_IDOffset);
+    fbBuilder.addOffset(4, DESCRIPTIONOffset);
+    fbBuilder.addOffset(5, WIRE_IDOffset);
+    fbBuilder.addOffset(6, TRANSPORT_KINDOffset);
+    fbBuilder.addOffset(7, ROLEOffset);
+    fbBuilder.addOffset(8, SPEC_URIOffset);
+    fbBuilder.addBool(9, _AUTO_INSTALL);
+    fbBuilder.addBool(10, _ADVERTISE);
+    fbBuilder.addOffset(11, DISCOVERY_KEYOffset);
+    fbBuilder.addUint16(12, _DEFAULT_PORT);
+    fbBuilder.addBool(13, _REQUIRE_SECURE_TRANSPORT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Build artifact emitted by the plugin toolchain.
+class PLGBuildArtifact {
+  PLGBuildArtifact._(this._bc, this._bcOffset);
+  factory PLGBuildArtifact(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGBuildArtifact> reader = _PLGBuildArtifactReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get ARTIFACT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get artifactId => ARTIFACT_ID;
+  String? get KIND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get TARGET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get ENTRY_SYMBOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get entrySymbol => ENTRY_SYMBOL;
+
+  @override
+  String toString() {
+    return 'PLGBuildArtifact{artifactId: ${artifactId}, KIND: ${KIND}, PATH: ${PATH}, TARGET: ${TARGET}, entrySymbol: ${entrySymbol}}';
+  }
+}
+
+class _PLGBuildArtifactReader extends fb.TableReader<PLGBuildArtifact> {
+  const _PLGBuildArtifactReader();
+
+  @override
+  PLGBuildArtifact createObject(fb.BufferContext bc, int offset) =>
+    PLGBuildArtifact._(bc, offset);
+}
+
+class PLGBuildArtifactBuilder {
+  PLGBuildArtifactBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addArtifactIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addKindOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPathOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addEntrySymbolOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGBuildArtifactObjectBuilder extends fb.ObjectBuilder {
+  final String? _ARTIFACT_ID;
+  final String? _KIND;
+  final String? _PATH;
+  final String? _TARGET;
+  final String? _ENTRY_SYMBOL;
+
+  PLGBuildArtifactObjectBuilder({
+    String? ARTIFACT_ID,
+    String? artifactId,
+    String? KIND,
+    String? PATH,
+    String? TARGET,
+    String? ENTRY_SYMBOL,
+    String? entrySymbol,
+  })
+      : _ARTIFACT_ID = artifactId ?? ARTIFACT_ID,
+        _KIND = KIND,
+        _PATH = PATH,
+        _TARGET = TARGET,
+        _ENTRY_SYMBOL = entrySymbol ?? ENTRY_SYMBOL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ARTIFACT_IDOffset = _ARTIFACT_ID == null ? null
+        : fbBuilder.writeString(_ARTIFACT_ID!);
+    final int? KINDOffset = _KIND == null ? null
+        : fbBuilder.writeString(_KIND!);
+    final int? PATHOffset = _PATH == null ? null
+        : fbBuilder.writeString(_PATH!);
+    final int? TARGETOffset = _TARGET == null ? null
+        : fbBuilder.writeString(_TARGET!);
+    final int? ENTRY_SYMBOLOffset = _ENTRY_SYMBOL == null ? null
+        : fbBuilder.writeString(_ENTRY_SYMBOL!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, ARTIFACT_IDOffset);
+    fbBuilder.addOffset(1, KINDOffset);
+    fbBuilder.addOffset(2, PATHOffset);
+    fbBuilder.addOffset(3, TARGETOffset);
+    fbBuilder.addOffset(4, ENTRY_SYMBOLOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Canonical method declaration.
+class PLGMethodManifest {
+  PLGMethodManifest._(this._bc, this._bcOffset);
+  factory PLGMethodManifest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGMethodManifest> reader = _PLGMethodManifestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get METHOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get methodId => METHOD_ID;
+  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get displayName => DISPLAY_NAME;
+  List<PLGPortManifest>? get INPUT_PORTS => const fb.ListReader<PLGPortManifest>(PLGPortManifest.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  List<PLGPortManifest>? get inputPorts => INPUT_PORTS;
+  List<PLGPortManifest>? get OUTPUT_PORTS => const fb.ListReader<PLGPortManifest>(PLGPortManifest.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  List<PLGPortManifest>? get outputPorts => OUTPUT_PORTS;
+  int get MAX_BATCH => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 1);
+  int get maxBatch => MAX_BATCH;
+  drainBehavior get DRAIN_POLICY => drainBehavior.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 1));
+  drainBehavior get drainPolicy => DRAIN_POLICY;
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'PLGMethodManifest{methodId: ${methodId}, displayName: ${displayName}, inputPorts: ${inputPorts}, outputPorts: ${outputPorts}, maxBatch: ${maxBatch}, drainPolicy: ${drainPolicy}, DESCRIPTION: ${DESCRIPTION}}';
+  }
+}
+
+class _PLGMethodManifestReader extends fb.TableReader<PLGMethodManifest> {
+  const _PLGMethodManifestReader();
+
+  @override
+  PLGMethodManifest createObject(fb.BufferContext bc, int offset) =>
+    PLGMethodManifest._(bc, offset);
+}
+
+class PLGMethodManifestBuilder {
+  PLGMethodManifestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addMethodIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDisplayNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addInputPortsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOutputPortsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxBatch(int? MAX_BATCH) {
+    fbBuilder.addUint32(4, MAX_BATCH);
+    return fbBuilder.offset;
+  }
+  int addDrainPolicy(drainBehavior? DRAIN_POLICY) {
+    fbBuilder.addUint8(5, DRAIN_POLICY?.value);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGMethodManifestObjectBuilder extends fb.ObjectBuilder {
+  final String? _METHOD_ID;
+  final String? _DISPLAY_NAME;
+  final List<PLGPortManifestObjectBuilder>? _INPUT_PORTS;
+  final List<PLGPortManifestObjectBuilder>? _OUTPUT_PORTS;
+  final int? _MAX_BATCH;
+  final drainBehavior? _DRAIN_POLICY;
+  final String? _DESCRIPTION;
+
+  PLGMethodManifestObjectBuilder({
+    String? METHOD_ID,
+    String? methodId,
+    String? DISPLAY_NAME,
+    String? displayName,
+    List<PLGPortManifestObjectBuilder>? INPUT_PORTS,
+    List<PLGPortManifestObjectBuilder>? inputPorts,
+    List<PLGPortManifestObjectBuilder>? OUTPUT_PORTS,
+    List<PLGPortManifestObjectBuilder>? outputPorts,
+    int? MAX_BATCH,
+    int? maxBatch,
+    drainBehavior? DRAIN_POLICY,
+    drainBehavior? drainPolicy,
+    String? DESCRIPTION,
+  })
+      : _METHOD_ID = methodId ?? METHOD_ID,
+        _DISPLAY_NAME = displayName ?? DISPLAY_NAME,
+        _INPUT_PORTS = inputPorts ?? INPUT_PORTS,
+        _OUTPUT_PORTS = outputPorts ?? OUTPUT_PORTS,
+        _MAX_BATCH = maxBatch ?? MAX_BATCH,
+        _DRAIN_POLICY = drainPolicy ?? DRAIN_POLICY,
+        _DESCRIPTION = DESCRIPTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? METHOD_IDOffset = _METHOD_ID == null ? null
+        : fbBuilder.writeString(_METHOD_ID!);
+    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
+        : fbBuilder.writeString(_DISPLAY_NAME!);
+    final int? INPUT_PORTSOffset = _INPUT_PORTS == null ? null
+        : fbBuilder.writeList(_INPUT_PORTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? OUTPUT_PORTSOffset = _OUTPUT_PORTS == null ? null
+        : fbBuilder.writeList(_OUTPUT_PORTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, METHOD_IDOffset);
+    fbBuilder.addOffset(1, DISPLAY_NAMEOffset);
+    fbBuilder.addOffset(2, INPUT_PORTSOffset);
+    fbBuilder.addOffset(3, OUTPUT_PORTSOffset);
+    fbBuilder.addUint32(4, _MAX_BATCH);
+    fbBuilder.addUint8(5, _DRAIN_POLICY?.value);
+    fbBuilder.addOffset(6, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Plugin dependency on another plugin
+class PluginDependency {
+  PluginDependency._(this._bc, this._bcOffset);
+  factory PluginDependency(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PluginDependency> reader = _PluginDependencyReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Plugin ID of the dependency
+  String? get PLUGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get pluginId => PLUGIN_ID;
+  ///  Minimum version required (semver)
+  String? get MIN_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get minVersion => MIN_VERSION;
+  ///  Maximum version allowed (optional)
+  String? get MAX_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get maxVersion => MAX_VERSION;
+
+  @override
+  String toString() {
+    return 'PluginDependency{pluginId: ${pluginId}, minVersion: ${minVersion}, maxVersion: ${maxVersion}}';
+  }
+}
+
+class _PluginDependencyReader extends fb.TableReader<PluginDependency> {
+  const _PluginDependencyReader();
+
+  @override
+  PluginDependency createObject(fb.BufferContext bc, int offset) =>
+    PluginDependency._(bc, offset);
+}
+
+class PluginDependencyBuilder {
+  PluginDependencyBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addPluginIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addMinVersionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxVersionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PluginDependencyObjectBuilder extends fb.ObjectBuilder {
+  final String? _PLUGIN_ID;
+  final String? _MIN_VERSION;
+  final String? _MAX_VERSION;
+
+  PluginDependencyObjectBuilder({
+    String? PLUGIN_ID,
+    String? pluginId,
+    String? MIN_VERSION,
+    String? minVersion,
+    String? MAX_VERSION,
+    String? maxVersion,
+  })
+      : _PLUGIN_ID = pluginId ?? PLUGIN_ID,
+        _MIN_VERSION = minVersion ?? MIN_VERSION,
+        _MAX_VERSION = maxVersion ?? MAX_VERSION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PLUGIN_IDOffset = _PLUGIN_ID == null ? null
+        : fbBuilder.writeString(_PLUGIN_ID!);
+    final int? MIN_VERSIONOffset = _MIN_VERSION == null ? null
+        : fbBuilder.writeString(_MIN_VERSION!);
+    final int? MAX_VERSIONOffset = _MAX_VERSION == null ? null
+        : fbBuilder.writeString(_MAX_VERSION!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, PLUGIN_IDOffset);
+    fbBuilder.addOffset(1, MIN_VERSIONOffset);
+    fbBuilder.addOffset(2, MAX_VERSIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Plugin entry point function definition
+class EntryFunction {
+  EntryFunction._(this._bc, this._bcOffset);
+  factory EntryFunction(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EntryFunction> reader = _EntryFunctionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Function name as exported from WASM
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Human-readable description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Input parameter types (FlatBuffer schema names)
+  List<String>? get INPUT_SCHEMAS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<String>? get inputSchemas => INPUT_SCHEMAS;
+  ///  Output type (FlatBuffer schema name)
+  String? get OUTPUT_SCHEMA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get outputSchema => OUTPUT_SCHEMA;
+
+  @override
+  String toString() {
+    return 'EntryFunction{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, inputSchemas: ${inputSchemas}, outputSchema: ${outputSchema}}';
+  }
+}
+
+class _EntryFunctionReader extends fb.TableReader<EntryFunction> {
+  const _EntryFunctionReader();
+
+  @override
+  EntryFunction createObject(fb.BufferContext bc, int offset) =>
+    EntryFunction._(bc, offset);
+}
+
+class EntryFunctionBuilder {
+  EntryFunctionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addInputSchemasOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOutputSchemaOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EntryFunctionObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final List<String>? _INPUT_SCHEMAS;
+  final String? _OUTPUT_SCHEMA;
+
+  EntryFunctionObjectBuilder({
+    String? NAME,
+    String? DESCRIPTION,
+    List<String>? INPUT_SCHEMAS,
+    List<String>? inputSchemas,
+    String? OUTPUT_SCHEMA,
+    String? outputSchema,
+  })
+      : _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _INPUT_SCHEMAS = inputSchemas ?? INPUT_SCHEMAS,
+        _OUTPUT_SCHEMA = outputSchema ?? OUTPUT_SCHEMA;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? INPUT_SCHEMASOffset = _INPUT_SCHEMAS == null ? null
+        : fbBuilder.writeList(_INPUT_SCHEMAS!.map(fbBuilder.writeString).toList());
+    final int? OUTPUT_SCHEMAOffset = _OUTPUT_SCHEMA == null ? null
+        : fbBuilder.writeString(_OUTPUT_SCHEMA!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, DESCRIPTIONOffset);
+    fbBuilder.addOffset(2, INPUT_SCHEMASOffset);
+    fbBuilder.addOffset(3, OUTPUT_SCHEMAOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One node in a composed flow graph. A degenerate flow IS a module: a leaf
+///  module leaves the flow-graph fields on PLG empty; a composed flow populates
+///  them. This is how flows reuse the module schema rather than a separate one.
+class PLGFlowNode {
+  PLGFlowNode._(this._bc, this._bcOffset);
+  factory PLGFlowNode(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGFlowNode> reader = _PLGFlowNodeReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable node identifier within this flow
+  String? get NODE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get nodeId => NODE_ID;
+  ///  Plugin id of the module this node invokes
+  String? get PLUGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get pluginId => PLUGIN_ID;
+  ///  Method id invoked on the module
+  String? get METHOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get methodId => METHOD_ID;
+  ///  Node kind, e.g. "transform", "trigger", "capability"
+  String? get KIND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+  ///  independently instantiated signed WASM node, and "host-capability" = a
+  ///  generic host adapter.
+  String? get DISPATCH_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get dispatchModel => DISPATCH_MODEL;
+  ///  Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)
+  List<int>? get CONFIG => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Editor layout X position
+  double get UI_X => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get uiX => UI_X;
+  ///  Editor layout Y position
+  double get UI_Y => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get uiY => UI_Y;
+
+  @override
+  String toString() {
+    return 'PLGFlowNode{nodeId: ${nodeId}, pluginId: ${pluginId}, methodId: ${methodId}, KIND: ${KIND}, dispatchModel: ${dispatchModel}, CONFIG: ${CONFIG}, uiX: ${uiX}, uiY: ${uiY}}';
+  }
+}
+
+class _PLGFlowNodeReader extends fb.TableReader<PLGFlowNode> {
+  const _PLGFlowNodeReader();
+
+  @override
+  PLGFlowNode createObject(fb.BufferContext bc, int offset) =>
+    PLGFlowNode._(bc, offset);
+}
+
+class PLGFlowNodeBuilder {
+  PLGFlowNodeBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addNodeIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPluginIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addMethodIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addKindOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDispatchModelOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addConfigOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addUiX(double? UI_X) {
+    fbBuilder.addFloat32(6, UI_X);
+    return fbBuilder.offset;
+  }
+  int addUiY(double? UI_Y) {
+    fbBuilder.addFloat32(7, UI_Y);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGFlowNodeObjectBuilder extends fb.ObjectBuilder {
+  final String? _NODE_ID;
+  final String? _PLUGIN_ID;
+  final String? _METHOD_ID;
+  final String? _KIND;
+  final String? _DISPATCH_MODEL;
+  final List<int>? _CONFIG;
+  final double? _UI_X;
+  final double? _UI_Y;
+
+  PLGFlowNodeObjectBuilder({
+    String? NODE_ID,
+    String? nodeId,
+    String? PLUGIN_ID,
+    String? pluginId,
+    String? METHOD_ID,
+    String? methodId,
+    String? KIND,
+    String? DISPATCH_MODEL,
+    String? dispatchModel,
+    List<int>? CONFIG,
+    double? UI_X,
+    double? uiX,
+    double? UI_Y,
+    double? uiY,
+  })
+      : _NODE_ID = nodeId ?? NODE_ID,
+        _PLUGIN_ID = pluginId ?? PLUGIN_ID,
+        _METHOD_ID = methodId ?? METHOD_ID,
+        _KIND = KIND,
+        _DISPATCH_MODEL = dispatchModel ?? DISPATCH_MODEL,
+        _CONFIG = CONFIG,
+        _UI_X = uiX ?? UI_X,
+        _UI_Y = uiY ?? UI_Y;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NODE_IDOffset = _NODE_ID == null ? null
+        : fbBuilder.writeString(_NODE_ID!);
+    final int? PLUGIN_IDOffset = _PLUGIN_ID == null ? null
+        : fbBuilder.writeString(_PLUGIN_ID!);
+    final int? METHOD_IDOffset = _METHOD_ID == null ? null
+        : fbBuilder.writeString(_METHOD_ID!);
+    final int? KINDOffset = _KIND == null ? null
+        : fbBuilder.writeString(_KIND!);
+    final int? DISPATCH_MODELOffset = _DISPATCH_MODEL == null ? null
+        : fbBuilder.writeString(_DISPATCH_MODEL!);
+    final int? CONFIGOffset = _CONFIG == null ? null
+        : fbBuilder.writeListUint8(_CONFIG!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, NODE_IDOffset);
+    fbBuilder.addOffset(1, PLUGIN_IDOffset);
+    fbBuilder.addOffset(2, METHOD_IDOffset);
+    fbBuilder.addOffset(3, KINDOffset);
+    fbBuilder.addOffset(4, DISPATCH_MODELOffset);
+    fbBuilder.addOffset(5, CONFIGOffset);
+    fbBuilder.addFloat32(6, _UI_X);
+    fbBuilder.addFloat32(7, _UI_Y);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Exact validated SDS and representation contract bound into a signed flow
+///  edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;
+///  ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.
+class PLGFlowEdgeContract {
+  PLGFlowEdgeContract._(this._bc, this._bcOffset);
+  factory PLGFlowEdgeContract(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGFlowEdgeContract> reader = _PLGFlowEdgeContractReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Canonical SDS identity carried by the edge. NOT `required`: an edge may
+  ///  be opaque by design (see OPAQUE), and a signer must never be forced to
+  ///  invent an identity to satisfy the schema. A contract MUST carry exactly
+  ///  one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with
+  ///  both, is invalid and MUST be rejected by the compiler that signs the flow.
+  FlatBufferTypeRef? get CANONICAL_TYPE => FlatBufferTypeRef.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  FlatBufferTypeRef? get canonicalType => CANONICAL_TYPE;
+  FlatBufferTypeRef? get ALIGNED_TYPE => FlatBufferTypeRef.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  FlatBufferTypeRef? get alignedType => ALIGNED_TYPE;
+  bool get CANONICAL_FALLBACK_AVAILABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, true);
+  bool get canonicalFallbackAvailable => CANONICAL_FALLBACK_AVAILABLE;
+  bool get ALIGNED_ELIGIBLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get alignedEligible => ALIGNED_ELIGIBLE;
+  flowEdgeRoutePolicy get ROUTE_POLICY => flowEdgeRoutePolicy.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  flowEdgeRoutePolicy get routePolicy => ROUTE_POLICY;
+  ///  The edge carries bytes with no SDS identity BY DESIGN — an
+  ///  application-blind host-capability adapter (an HTTP body, a raw file
+  ///  chunk) or a timer TICK frame with no payload at all. This is a deliberate
+  ///  signed assertion of opacity, which is why it is an explicit flag rather
+  ///  than an absent CANONICAL_TYPE: a missing type must stay distinguishable
+  ///  from a declared-opaque one. An opaque edge is ineligible for the aligned
+  ///  route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.
+  bool get OPAQUE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+
+  @override
+  String toString() {
+    return 'PLGFlowEdgeContract{canonicalType: ${canonicalType}, alignedType: ${alignedType}, canonicalFallbackAvailable: ${canonicalFallbackAvailable}, alignedEligible: ${alignedEligible}, routePolicy: ${routePolicy}, OPAQUE: ${OPAQUE}}';
+  }
+}
+
+class _PLGFlowEdgeContractReader extends fb.TableReader<PLGFlowEdgeContract> {
+  const _PLGFlowEdgeContractReader();
+
+  @override
+  PLGFlowEdgeContract createObject(fb.BufferContext bc, int offset) =>
+    PLGFlowEdgeContract._(bc, offset);
+}
+
+class PLGFlowEdgeContractBuilder {
+  PLGFlowEdgeContractBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addCanonicalTypeOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAlignedTypeOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalFallbackAvailable(bool? CANONICAL_FALLBACK_AVAILABLE) {
+    fbBuilder.addBool(2, CANONICAL_FALLBACK_AVAILABLE);
+    return fbBuilder.offset;
+  }
+  int addAlignedEligible(bool? ALIGNED_ELIGIBLE) {
+    fbBuilder.addBool(3, ALIGNED_ELIGIBLE);
+    return fbBuilder.offset;
+  }
+  int addRoutePolicy(flowEdgeRoutePolicy? ROUTE_POLICY) {
+    fbBuilder.addUint8(4, ROUTE_POLICY?.value);
+    return fbBuilder.offset;
+  }
+  int addOpaque(bool? OPAQUE) {
+    fbBuilder.addBool(5, OPAQUE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGFlowEdgeContractObjectBuilder extends fb.ObjectBuilder {
+  final FlatBufferTypeRefObjectBuilder? _CANONICAL_TYPE;
+  final FlatBufferTypeRefObjectBuilder? _ALIGNED_TYPE;
+  final bool? _CANONICAL_FALLBACK_AVAILABLE;
+  final bool? _ALIGNED_ELIGIBLE;
+  final flowEdgeRoutePolicy? _ROUTE_POLICY;
+  final bool? _OPAQUE;
+
+  PLGFlowEdgeContractObjectBuilder({
+    FlatBufferTypeRefObjectBuilder? CANONICAL_TYPE,
+    FlatBufferTypeRefObjectBuilder? canonicalType,
+    FlatBufferTypeRefObjectBuilder? ALIGNED_TYPE,
+    FlatBufferTypeRefObjectBuilder? alignedType,
+    bool? CANONICAL_FALLBACK_AVAILABLE,
+    bool? canonicalFallbackAvailable,
+    bool? ALIGNED_ELIGIBLE,
+    bool? alignedEligible,
+    flowEdgeRoutePolicy? ROUTE_POLICY,
+    flowEdgeRoutePolicy? routePolicy,
+    bool? OPAQUE,
+  })
+      : _CANONICAL_TYPE = canonicalType ?? CANONICAL_TYPE,
+        _ALIGNED_TYPE = alignedType ?? ALIGNED_TYPE,
+        _CANONICAL_FALLBACK_AVAILABLE = canonicalFallbackAvailable ?? CANONICAL_FALLBACK_AVAILABLE,
+        _ALIGNED_ELIGIBLE = alignedEligible ?? ALIGNED_ELIGIBLE,
+        _ROUTE_POLICY = routePolicy ?? ROUTE_POLICY,
+        _OPAQUE = OPAQUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CANONICAL_TYPEOffset = _CANONICAL_TYPE?.getOrCreateOffset(fbBuilder);
+    final int? ALIGNED_TYPEOffset = _ALIGNED_TYPE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, CANONICAL_TYPEOffset);
+    fbBuilder.addOffset(1, ALIGNED_TYPEOffset);
+    fbBuilder.addBool(2, _CANONICAL_FALLBACK_AVAILABLE);
+    fbBuilder.addBool(3, _ALIGNED_ELIGIBLE);
+    fbBuilder.addUint8(4, _ROUTE_POLICY?.value);
+    fbBuilder.addBool(5, _OPAQUE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One directed edge wiring a producer output port to a consumer input port.
+class PLGFlowEdge {
+  PLGFlowEdge._(this._bc, this._bcOffset);
+  factory PLGFlowEdge(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGFlowEdge> reader = _PLGFlowEdgeReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable edge identifier
+  String? get EDGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get edgeId => EDGE_ID;
+  ///  Source node id
+  String? get FROM_NODE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get fromNodeId => FROM_NODE_ID;
+  ///  Source output port id
+  String? get FROM_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get fromPortId => FROM_PORT_ID;
+  ///  Destination node id
+  String? get TO_NODE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get toNodeId => TO_NODE_ID;
+  ///  Destination input port id
+  String? get TO_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get toPortId => TO_PORT_ID;
+  ///  Exact identity/layout and compile-time representation policy. NOT
+  ///  `required`: marking a NEW field of an EXISTING table required makes the
+  ///  FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+  ///  which is a breaking change to a ratified standard. Presence is enforced
+  ///  where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+  ///  edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+  ///  without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+  PLGFlowEdgeContract? get CONTRACT => PLGFlowEdgeContract.reader.vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'PLGFlowEdge{edgeId: ${edgeId}, fromNodeId: ${fromNodeId}, fromPortId: ${fromPortId}, toNodeId: ${toNodeId}, toPortId: ${toPortId}, CONTRACT: ${CONTRACT}}';
+  }
+}
+
+class _PLGFlowEdgeReader extends fb.TableReader<PLGFlowEdge> {
+  const _PLGFlowEdgeReader();
+
+  @override
+  PLGFlowEdge createObject(fb.BufferContext bc, int offset) =>
+    PLGFlowEdge._(bc, offset);
+}
+
+class PLGFlowEdgeBuilder {
+  PLGFlowEdgeBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addEdgeIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFromNodeIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addFromPortIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addToNodeIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addToPortIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addContractOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGFlowEdgeObjectBuilder extends fb.ObjectBuilder {
+  final String? _EDGE_ID;
+  final String? _FROM_NODE_ID;
+  final String? _FROM_PORT_ID;
+  final String? _TO_NODE_ID;
+  final String? _TO_PORT_ID;
+  final PLGFlowEdgeContractObjectBuilder? _CONTRACT;
+
+  PLGFlowEdgeObjectBuilder({
+    String? EDGE_ID,
+    String? edgeId,
+    String? FROM_NODE_ID,
+    String? fromNodeId,
+    String? FROM_PORT_ID,
+    String? fromPortId,
+    String? TO_NODE_ID,
+    String? toNodeId,
+    String? TO_PORT_ID,
+    String? toPortId,
+    PLGFlowEdgeContractObjectBuilder? CONTRACT,
+  })
+      : _EDGE_ID = edgeId ?? EDGE_ID,
+        _FROM_NODE_ID = fromNodeId ?? FROM_NODE_ID,
+        _FROM_PORT_ID = fromPortId ?? FROM_PORT_ID,
+        _TO_NODE_ID = toNodeId ?? TO_NODE_ID,
+        _TO_PORT_ID = toPortId ?? TO_PORT_ID,
+        _CONTRACT = CONTRACT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EDGE_IDOffset = _EDGE_ID == null ? null
+        : fbBuilder.writeString(_EDGE_ID!);
+    final int? FROM_NODE_IDOffset = _FROM_NODE_ID == null ? null
+        : fbBuilder.writeString(_FROM_NODE_ID!);
+    final int? FROM_PORT_IDOffset = _FROM_PORT_ID == null ? null
+        : fbBuilder.writeString(_FROM_PORT_ID!);
+    final int? TO_NODE_IDOffset = _TO_NODE_ID == null ? null
+        : fbBuilder.writeString(_TO_NODE_ID!);
+    final int? TO_PORT_IDOffset = _TO_PORT_ID == null ? null
+        : fbBuilder.writeString(_TO_PORT_ID!);
+    final int? CONTRACTOffset = _CONTRACT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, EDGE_IDOffset);
+    fbBuilder.addOffset(1, FROM_NODE_IDOffset);
+    fbBuilder.addOffset(2, FROM_PORT_IDOffset);
+    fbBuilder.addOffset(3, TO_NODE_IDOffset);
+    fbBuilder.addOffset(4, TO_PORT_IDOffset);
+    fbBuilder.addOffset(5, CONTRACTOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One flow trigger (e.g. a host timer or HTTP route) that starts a drain.
+class PLGFlowTrigger {
+  PLGFlowTrigger._(this._bc, this._bcOffset);
+  factory PLGFlowTrigger(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGFlowTrigger> reader = _PLGFlowTriggerReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable trigger identifier
+  String? get TRIGGER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get triggerId => TRIGGER_ID;
+  ///  Trigger kind, e.g. "timer", "http"
+  String? get KIND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Trigger source, e.g. "host-cron"
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Default firing interval in milliseconds (timer triggers)
+  int get DEFAULT_INTERVAL_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get defaultIntervalMs => DEFAULT_INTERVAL_MS;
+  ///  Mounted HTTP path (http triggers)
+  String? get HTTP_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get httpPath => HTTP_PATH;
+
+  @override
+  String toString() {
+    return 'PLGFlowTrigger{triggerId: ${triggerId}, KIND: ${KIND}, SOURCE: ${SOURCE}, defaultIntervalMs: ${defaultIntervalMs}, httpPath: ${httpPath}}';
+  }
+}
+
+class _PLGFlowTriggerReader extends fb.TableReader<PLGFlowTrigger> {
+  const _PLGFlowTriggerReader();
+
+  @override
+  PLGFlowTrigger createObject(fb.BufferContext bc, int offset) =>
+    PLGFlowTrigger._(bc, offset);
+}
+
+class PLGFlowTriggerBuilder {
+  PLGFlowTriggerBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addTriggerIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addKindOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDefaultIntervalMs(int? DEFAULT_INTERVAL_MS) {
+    fbBuilder.addUint64(3, DEFAULT_INTERVAL_MS);
+    return fbBuilder.offset;
+  }
+  int addHttpPathOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGFlowTriggerObjectBuilder extends fb.ObjectBuilder {
+  final String? _TRIGGER_ID;
+  final String? _KIND;
+  final String? _SOURCE;
+  final int? _DEFAULT_INTERVAL_MS;
+  final String? _HTTP_PATH;
+
+  PLGFlowTriggerObjectBuilder({
+    String? TRIGGER_ID,
+    String? triggerId,
+    String? KIND,
+    String? SOURCE,
+    int? DEFAULT_INTERVAL_MS,
+    int? defaultIntervalMs,
+    String? HTTP_PATH,
+    String? httpPath,
+  })
+      : _TRIGGER_ID = triggerId ?? TRIGGER_ID,
+        _KIND = KIND,
+        _SOURCE = SOURCE,
+        _DEFAULT_INTERVAL_MS = defaultIntervalMs ?? DEFAULT_INTERVAL_MS,
+        _HTTP_PATH = httpPath ?? HTTP_PATH;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TRIGGER_IDOffset = _TRIGGER_ID == null ? null
+        : fbBuilder.writeString(_TRIGGER_ID!);
+    final int? KINDOffset = _KIND == null ? null
+        : fbBuilder.writeString(_KIND!);
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    final int? HTTP_PATHOffset = _HTTP_PATH == null ? null
+        : fbBuilder.writeString(_HTTP_PATH!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, TRIGGER_IDOffset);
+    fbBuilder.addOffset(1, KINDOffset);
+    fbBuilder.addOffset(2, SOURCEOffset);
+    fbBuilder.addUint64(3, _DEFAULT_INTERVAL_MS);
+    fbBuilder.addOffset(4, HTTP_PATHOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Binds a trigger to the node + input port it delivers its frame to.
+class PLGFlowTriggerBinding {
+  PLGFlowTriggerBinding._(this._bc, this._bcOffset);
+  factory PLGFlowTriggerBinding(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLGFlowTriggerBinding> reader = _PLGFlowTriggerBindingReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Trigger identifier
+  String? get TRIGGER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get triggerId => TRIGGER_ID;
+  ///  Target node id
+  String? get TARGET_NODE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get targetNodeId => TARGET_NODE_ID;
+  ///  Target input port id
+  String? get TARGET_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get targetPortId => TARGET_PORT_ID;
+
+  @override
+  String toString() {
+    return 'PLGFlowTriggerBinding{triggerId: ${triggerId}, targetNodeId: ${targetNodeId}, targetPortId: ${targetPortId}}';
+  }
+}
+
+class _PLGFlowTriggerBindingReader extends fb.TableReader<PLGFlowTriggerBinding> {
+  const _PLGFlowTriggerBindingReader();
+
+  @override
+  PLGFlowTriggerBinding createObject(fb.BufferContext bc, int offset) =>
+    PLGFlowTriggerBinding._(bc, offset);
+}
+
+class PLGFlowTriggerBindingBuilder {
+  PLGFlowTriggerBindingBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addTriggerIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetNodeIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetPortIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGFlowTriggerBindingObjectBuilder extends fb.ObjectBuilder {
+  final String? _TRIGGER_ID;
+  final String? _TARGET_NODE_ID;
+  final String? _TARGET_PORT_ID;
+
+  PLGFlowTriggerBindingObjectBuilder({
+    String? TRIGGER_ID,
+    String? triggerId,
+    String? TARGET_NODE_ID,
+    String? targetNodeId,
+    String? TARGET_PORT_ID,
+    String? targetPortId,
+  })
+      : _TRIGGER_ID = triggerId ?? TRIGGER_ID,
+        _TARGET_NODE_ID = targetNodeId ?? TARGET_NODE_ID,
+        _TARGET_PORT_ID = targetPortId ?? TARGET_PORT_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TRIGGER_IDOffset = _TRIGGER_ID == null ? null
+        : fbBuilder.writeString(_TRIGGER_ID!);
+    final int? TARGET_NODE_IDOffset = _TARGET_NODE_ID == null ? null
+        : fbBuilder.writeString(_TARGET_NODE_ID!);
+    final int? TARGET_PORT_IDOffset = _TARGET_PORT_ID == null ? null
+        : fbBuilder.writeString(_TARGET_PORT_ID!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, TRIGGER_IDOffset);
+    fbBuilder.addOffset(1, TARGET_NODE_IDOffset);
+    fbBuilder.addOffset(2, TARGET_PORT_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Plugin Manifest - canonical signed storefront and WASM distribution record
+class PLG {
+  PLG._(this._bc, this._bcOffset);
+  factory PLG(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PLG> reader = _PLGReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Unique identifier for the plugin
+  String? get PLUGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get pluginId => PLUGIN_ID;
+  ///  Human-readable plugin name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Plugin version (semver format)
+  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Detailed description of plugin functionality
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Short marketing summary shown in storefront listings
+  String? get TAGLINE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Type/category of the plugin
+  pluginCategory get PLUGIN_TYPE => pluginCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  pluginCategory get pluginType => PLUGIN_TYPE;
+  ///  Human-readable publisher or organization name
+  String? get PUBLISHER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get publisherName => PUBLISHER_NAME;
+  ///  Publisher handle or username
+  String? get PUBLISHER_HANDLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get publisherHandle => PUBLISHER_HANDLE;
+  ///  Canonical publisher website
+  String? get PUBLISHER_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get publisherUrl => PUBLISHER_URL;
+  ///  Support or helpdesk URL for this plugin
+  String? get SUPPORT_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get supportUrl => SUPPORT_URL;
+  ///  Search and categorization tags for discovery
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Short feature bullets highlighted in storefront listings
+  List<String>? get FEATURES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Screenshot URLs showing the plugin in use
+  List<String>? get SCREENSHOT_URLS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
+  List<String>? get screenshotUrls => SCREENSHOT_URLS;
+  ///  Optional hero/banner image URL for the listing
+  String? get BANNER_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get bannerUrl => BANNER_URL;
+  ///  ABI version for compatibility checking
+  int get ABI_VERSION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 32, 1);
+  int get abiVersion => ABI_VERSION;
+  ///  SHA256 hash of the decrypted WASM binary
+  List<int>? get WASM_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 34);
+  List<int>? get wasmHash => WASM_HASH;
+  ///  Size of decrypted WASM binary in bytes
+  int get WASM_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  int get wasmSize => WASM_SIZE;
+  ///  IPFS CID of the encrypted WASM binary
+  String? get WASM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get wasmCid => WASM_CID;
+  ///  SHA256 hash of the encrypted delivery artifact bytes
+  List<int>? get ENCRYPTED_WASM_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 40);
+  List<int>? get encryptedWasmHash => ENCRYPTED_WASM_HASH;
+  ///  Size of the encrypted delivery artifact in bytes
+  int get ENCRYPTED_WASM_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 42, 0);
+  int get encryptedWasmSize => ENCRYPTED_WASM_SIZE;
+  ///  Entry point functions exported by the plugin
+  List<EntryFunction>? get ENTRY_FUNCTIONS => const fb.ListReader<EntryFunction>(EntryFunction.reader).vTableGetNullable(_bc, _bcOffset, 44);
+  List<EntryFunction>? get entryFunctions => ENTRY_FUNCTIONS;
+  ///  FlatBuffer schemas required by this plugin
+  List<String>? get REQUIRED_SCHEMAS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 46);
+  List<String>? get requiredSchemas => REQUIRED_SCHEMAS;
+  ///  Other plugins this depends on
+  List<PluginDependency>? get DEPENDENCIES => const fb.ListReader<PluginDependency>(PluginDependency.reader).vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Capabilities provided by this plugin
+  List<PluginCapability>? get CAPABILITIES => const fb.ListReader<PluginCapability>(PluginCapability.reader).vTableGetNullable(_bc, _bcOffset, 50);
+  ///  Peer ID of the plugin provider
+  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get providerPeerId => PROVIDER_PEER_ID;
+  ///  IPFS CID of provider's EPM (Entity Profile Message)
+  String? get PROVIDER_EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get providerEpmCid => PROVIDER_EPM_CID;
+  ///  Whether the WASM binary is encrypted
+  bool get ENCRYPTED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, true);
+  ///  Canonical required scope for grant issuance
+  String? get REQUIRED_SCOPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get requiredScope => REQUIRED_SCOPE;
+  ///  Provider-local identifier for the module content key
+  String? get KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get keyId => KEY_ID;
+  ///  Maximum grant timeout allowed for this module publication
+  int get MAX_GRANT_TIMEOUT_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 62, 0);
+  int get maxGrantTimeoutMs => MAX_GRANT_TIMEOUT_MS;
+  ///  Minimum permissions required to run
+  List<String>? get MIN_PERMISSIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 64);
+  List<String>? get minPermissions => MIN_PERMISSIONS;
+  ///  Unix timestamp when plugin was created
+  int get CREATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 66, 0);
+  int get createdAt => CREATED_AT;
+  ///  Unix timestamp when plugin was last updated
+  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 68, 0);
+  int get updatedAt => UPDATED_AT;
+  ///  URL to plugin documentation
+  String? get DOCUMENTATION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  String? get documentationUrl => DOCUMENTATION_URL;
+  ///  URL to plugin changelog or release notes
+  String? get CHANGELOG_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  String? get changelogUrl => CHANGELOG_URL;
+  ///  URL to plugin icon/logo
+  String? get ICON_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  String? get iconUrl => ICON_URL;
+  ///  License identifier (SPDX format)
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Commercial model used for storefront purchase flows
+  purchaseTier get PAYMENT_MODEL => purchaseTier.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 78, 0));
+  purchaseTier get paymentModel => PAYMENT_MODEL;
+  ///  Price in USD cents for one-time purchase or subscription period
+  int get PRICE_USD_CENTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 80, 0);
+  int get priceUsdCents => PRICE_USD_CENTS;
+  ///  Subscription billing period length in days
+  int get SUBSCRIPTION_PERIOD_DAYS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 82, 0);
+  int get subscriptionPeriodDays => SUBSCRIPTION_PERIOD_DAYS;
+  ///  Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  List<String>? get ACCEPTED_PAYMENT_METHODS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 84);
+  List<String>? get acceptedPaymentMethods => ACCEPTED_PAYMENT_METHODS;
+  ///  Storefront publication state for this manifest version
+  publicationState get LISTING_STATUS => publicationState.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 86, 0));
+  publicationState get listingStatus => LISTING_STATUS;
+  ///  Ed25519 signature from provider over manifest
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 88);
+  ///  Canonical invoke surfaces this artifact exposes. A single plugin
+  ///  MAY list both DIRECT and COMMAND when it supports both.
+  List<invokeSurfaceKind>? get INVOKE_SURFACES => const fb.ListReader<invokeSurfaceKind>(invokeSurfaceKind.reader).vTableGetNullable(_bc, _bcOffset, 90);
+  List<invokeSurfaceKind>? get invokeSurfaces => INVOKE_SURFACES;
+  ///  Rich per-method invoke manifests (port shape, drain semantics,
+  ///  accepted wire formats). ENTRY_FUNCTIONS retains the slim
+  ///  name+input_schemas+output_schema summary; METHODS carries the full
+  ///  invoke-surface detail including aligned-binary advertisement.
+  List<PLGMethodManifest>? get METHODS => const fb.ListReader<PLGMethodManifest>(PLGMethodManifest.reader).vTableGetNullable(_bc, _bcOffset, 92);
+  ///  Enum-typed host capability dependencies (richer than CAPABILITIES,
+  ///  which is string-tagged metadata).
+  List<PLGHostCapability>? get HOST_CAPABILITIES => const fb.ListReader<PLGHostCapability>(PLGHostCapability.reader).vTableGetNullable(_bc, _bcOffset, 94);
+  List<PLGHostCapability>? get hostCapabilities => HOST_CAPABILITIES;
+  ///  Timer declarations for scheduled invocations.
+  List<PLGTimerSpec>? get TIMERS => const fb.ListReader<PLGTimerSpec>(PLGTimerSpec.reader).vTableGetNullable(_bc, _bcOffset, 96);
+  ///  Protocol handler declarations.
+  List<PLGProtocolSpec>? get PROTOCOLS => const fb.ListReader<PLGProtocolSpec>(PLGProtocolSpec.reader).vTableGetNullable(_bc, _bcOffset, 98);
+  ///  FlatBuffer schemas this plugin depends on at the invoke surface.
+  List<FlatBufferTypeRef>? get SCHEMAS_USED => const fb.ListReader<FlatBufferTypeRef>(FlatBufferTypeRef.reader).vTableGetNullable(_bc, _bcOffset, 100);
+  List<FlatBufferTypeRef>? get schemasUsed => SCHEMAS_USED;
+  ///  Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+  List<PLGBuildArtifact>? get BUILD_ARTIFACTS => const fb.ListReader<PLGBuildArtifact>(PLGBuildArtifact.reader).vTableGetNullable(_bc, _bcOffset, 102);
+  List<PLGBuildArtifact>? get buildArtifacts => BUILD_ARTIFACTS;
+  ///  Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+  List<String>? get RUNTIME_TARGETS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 104);
+  List<String>? get runtimeTargets => RUNTIME_TARGETS;
+  ///  Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+  ///  a requester whose verified EPM binds an xpub in this list is granted (PKI
+  ///  identity authorization). Empty list = no xpub allowlist gate.
+  List<String>? get ALLOWED_XPUBS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 106);
+  List<String>? get allowedXpubs => ALLOWED_XPUBS;
+  ///  Composition graph (a degenerate flow is a module): the nodes this flow
+  ///  invokes. Empty for a leaf module; populated for a composed flow. The flow
+  ///  definition is this PLG FlatBuffer, not a bespoke JSON graph.
+  List<PLGFlowNode>? get FLOW_NODES => const fb.ListReader<PLGFlowNode>(PLGFlowNode.reader).vTableGetNullable(_bc, _bcOffset, 108);
+  List<PLGFlowNode>? get flowNodes => FLOW_NODES;
+  ///  Composition-graph edges wiring node output ports to input ports.
+  List<PLGFlowEdge>? get FLOW_EDGES => const fb.ListReader<PLGFlowEdge>(PLGFlowEdge.reader).vTableGetNullable(_bc, _bcOffset, 110);
+  List<PLGFlowEdge>? get flowEdges => FLOW_EDGES;
+  ///  Flow triggers (timer/http) that start a drain.
+  List<PLGFlowTrigger>? get FLOW_TRIGGERS => const fb.ListReader<PLGFlowTrigger>(PLGFlowTrigger.reader).vTableGetNullable(_bc, _bcOffset, 112);
+  List<PLGFlowTrigger>? get flowTriggers => FLOW_TRIGGERS;
+  ///  Bindings from triggers to the node + input port they deliver to.
+  List<PLGFlowTriggerBinding>? get FLOW_TRIGGER_BINDINGS => const fb.ListReader<PLGFlowTriggerBinding>(PLGFlowTriggerBinding.reader).vTableGetNullable(_bc, _bcOffset, 114);
+  List<PLGFlowTriggerBinding>? get flowTriggerBindings => FLOW_TRIGGER_BINDINGS;
+  ///  The one ratified $CCT category this module is shelved under. This is the
+  ///  category a storefront capsule, a library shelf and a breadcrumb show when
+  ///  exactly one must be chosen. UNSPECIFIED means the publisher did not
+  ///  classify the module; a consumer renders it ungrouped and never guesses.
+  ///
+  ///  This supersedes PLUGIN_TYPE for all storefront, library and search
+  ///  surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+  ///  `pluginCategory` vocabulary mixes capability families with node-internal
+  ///  plumbing, carries a legacy vendor-derived member, holds a real family at
+  ///  ordinal 0, and admits only one value. Canonical migration, applied by a
+  ///  publisher rewriting an old manifest:
+  ///    Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+  ///    Renderer->VISUALIZATION_AND_RENDERING,
+  ///    Analysis->MISSION_DESIGN_AND_ANALYSIS,
+  ///    DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+  ///    Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+  ///    Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+  ///    Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+  ///    Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+  ///    Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+  ///    Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+  ///    Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+  ///    Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+  ///  The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+  ///  PLUGIN_TYPE.
+  capabilityClass get PRIMARY_CATEGORY => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 116, 0));
+  capabilityClass get primaryCategory => PRIMARY_CATEGORY;
+  ///  Every ratified $CCT category this module belongs to, for browse, filter
+  ///  and per-category counting. A module MAY carry several. If nonempty it
+  ///  MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+  ///  a set PRIMARY_CATEGORY means the module belongs to that one category.
+  List<capabilityClass>? get CATEGORIES => const fb.ListReader<capabilityClass>(capabilityClass.reader).vTableGetNullable(_bc, _bcOffset, 118);
+
+  @override
+  String toString() {
+    return 'PLG{pluginId: ${pluginId}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, TAGLINE: ${TAGLINE}, pluginType: ${pluginType}, publisherName: ${publisherName}, publisherHandle: ${publisherHandle}, publisherUrl: ${publisherUrl}, supportUrl: ${supportUrl}, TAGS: ${TAGS}, FEATURES: ${FEATURES}, screenshotUrls: ${screenshotUrls}, bannerUrl: ${bannerUrl}, abiVersion: ${abiVersion}, wasmHash: ${wasmHash}, wasmSize: ${wasmSize}, wasmCid: ${wasmCid}, encryptedWasmHash: ${encryptedWasmHash}, encryptedWasmSize: ${encryptedWasmSize}, entryFunctions: ${entryFunctions}, requiredSchemas: ${requiredSchemas}, DEPENDENCIES: ${DEPENDENCIES}, CAPABILITIES: ${CAPABILITIES}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, ENCRYPTED: ${ENCRYPTED}, requiredScope: ${requiredScope}, keyId: ${keyId}, maxGrantTimeoutMs: ${maxGrantTimeoutMs}, minPermissions: ${minPermissions}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, documentationUrl: ${documentationUrl}, changelogUrl: ${changelogUrl}, iconUrl: ${iconUrl}, LICENSE: ${LICENSE}, paymentModel: ${paymentModel}, priceUsdCents: ${priceUsdCents}, subscriptionPeriodDays: ${subscriptionPeriodDays}, acceptedPaymentMethods: ${acceptedPaymentMethods}, listingStatus: ${listingStatus}, SIGNATURE: ${SIGNATURE}, invokeSurfaces: ${invokeSurfaces}, METHODS: ${METHODS}, hostCapabilities: ${hostCapabilities}, TIMERS: ${TIMERS}, PROTOCOLS: ${PROTOCOLS}, schemasUsed: ${schemasUsed}, buildArtifacts: ${buildArtifacts}, runtimeTargets: ${runtimeTargets}, allowedXpubs: ${allowedXpubs}, flowNodes: ${flowNodes}, flowEdges: ${flowEdges}, flowTriggers: ${flowTriggers}, flowTriggerBindings: ${flowTriggerBindings}, primaryCategory: ${primaryCategory}, CATEGORIES: ${CATEGORIES}}';
+  }
+}
+
+class _PLGReader extends fb.TableReader<PLG> {
+  const _PLGReader();
+
+  @override
+  PLG createObject(fb.BufferContext bc, int offset) =>
+    PLG._(bc, offset);
+}
+
+class PLGBuilder {
+  PLGBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(58);
+  }
+
+  int addPluginIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addVersionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTaglineOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addPluginType(pluginCategory? PLUGIN_TYPE) {
+    fbBuilder.addInt8(5, PLUGIN_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addPublisherNameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addPublisherHandleOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addPublisherUrlOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addSupportUrlOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addTagsOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addFeaturesOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addScreenshotUrlsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addBannerUrlOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addAbiVersion(int? ABI_VERSION) {
+    fbBuilder.addUint32(14, ABI_VERSION);
+    return fbBuilder.offset;
+  }
+  int addWasmHashOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addWasmSize(int? WASM_SIZE) {
+    fbBuilder.addUint64(16, WASM_SIZE);
+    return fbBuilder.offset;
+  }
+  int addWasmCidOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addEncryptedWasmHashOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addEncryptedWasmSize(int? ENCRYPTED_WASM_SIZE) {
+    fbBuilder.addUint64(19, ENCRYPTED_WASM_SIZE);
+    return fbBuilder.offset;
+  }
+  int addEntryFunctionsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addRequiredSchemasOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addDependenciesOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCapabilitiesOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderEpmCidOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addEncrypted(bool? ENCRYPTED) {
+    fbBuilder.addBool(26, ENCRYPTED);
+    return fbBuilder.offset;
+  }
+  int addRequiredScopeOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addKeyIdOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxGrantTimeoutMs(int? MAX_GRANT_TIMEOUT_MS) {
+    fbBuilder.addUint64(29, MAX_GRANT_TIMEOUT_MS);
+    return fbBuilder.offset;
+  }
+  int addMinPermissionsOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addCreatedAt(int? CREATED_AT) {
+    fbBuilder.addUint64(31, CREATED_AT);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAt(int? UPDATED_AT) {
+    fbBuilder.addUint64(32, UPDATED_AT);
+    return fbBuilder.offset;
+  }
+  int addDocumentationUrlOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addChangelogUrlOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addIconUrlOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addPaymentModel(purchaseTier? PAYMENT_MODEL) {
+    fbBuilder.addInt8(37, PAYMENT_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addPriceUsdCents(int? PRICE_USD_CENTS) {
+    fbBuilder.addUint32(38, PRICE_USD_CENTS);
+    return fbBuilder.offset;
+  }
+  int addSubscriptionPeriodDays(int? SUBSCRIPTION_PERIOD_DAYS) {
+    fbBuilder.addUint32(39, SUBSCRIPTION_PERIOD_DAYS);
+    return fbBuilder.offset;
+  }
+  int addAcceptedPaymentMethodsOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addListingStatus(publicationState? LISTING_STATUS) {
+    fbBuilder.addInt8(41, LISTING_STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addInvokeSurfacesOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addMethodsOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
+    return fbBuilder.offset;
+  }
+  int addHostCapabilitiesOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addTimersOffset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+  int addProtocolsOffset(int? offset) {
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
+  int addSchemasUsedOffset(int? offset) {
+    fbBuilder.addOffset(48, offset);
+    return fbBuilder.offset;
+  }
+  int addBuildArtifactsOffset(int? offset) {
+    fbBuilder.addOffset(49, offset);
+    return fbBuilder.offset;
+  }
+  int addRuntimeTargetsOffset(int? offset) {
+    fbBuilder.addOffset(50, offset);
+    return fbBuilder.offset;
+  }
+  int addAllowedXpubsOffset(int? offset) {
+    fbBuilder.addOffset(51, offset);
+    return fbBuilder.offset;
+  }
+  int addFlowNodesOffset(int? offset) {
+    fbBuilder.addOffset(52, offset);
+    return fbBuilder.offset;
+  }
+  int addFlowEdgesOffset(int? offset) {
+    fbBuilder.addOffset(53, offset);
+    return fbBuilder.offset;
+  }
+  int addFlowTriggersOffset(int? offset) {
+    fbBuilder.addOffset(54, offset);
+    return fbBuilder.offset;
+  }
+  int addFlowTriggerBindingsOffset(int? offset) {
+    fbBuilder.addOffset(55, offset);
+    return fbBuilder.offset;
+  }
+  int addPrimaryCategory(capabilityClass? PRIMARY_CATEGORY) {
+    fbBuilder.addUint8(56, PRIMARY_CATEGORY?.value);
+    return fbBuilder.offset;
+  }
+  int addCategoriesOffset(int? offset) {
+    fbBuilder.addOffset(57, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PLGObjectBuilder extends fb.ObjectBuilder {
+  final String? _PLUGIN_ID;
+  final String? _NAME;
+  final String? _VERSION;
+  final String? _DESCRIPTION;
+  final String? _TAGLINE;
+  final pluginCategory? _PLUGIN_TYPE;
+  final String? _PUBLISHER_NAME;
+  final String? _PUBLISHER_HANDLE;
+  final String? _PUBLISHER_URL;
+  final String? _SUPPORT_URL;
+  final List<String>? _TAGS;
+  final List<String>? _FEATURES;
+  final List<String>? _SCREENSHOT_URLS;
+  final String? _BANNER_URL;
+  final int? _ABI_VERSION;
+  final List<int>? _WASM_HASH;
+  final int? _WASM_SIZE;
+  final String? _WASM_CID;
+  final List<int>? _ENCRYPTED_WASM_HASH;
+  final int? _ENCRYPTED_WASM_SIZE;
+  final List<EntryFunctionObjectBuilder>? _ENTRY_FUNCTIONS;
+  final List<String>? _REQUIRED_SCHEMAS;
+  final List<PluginDependencyObjectBuilder>? _DEPENDENCIES;
+  final List<PluginCapabilityObjectBuilder>? _CAPABILITIES;
+  final String? _PROVIDER_PEER_ID;
+  final String? _PROVIDER_EPM_CID;
+  final bool? _ENCRYPTED;
+  final String? _REQUIRED_SCOPE;
+  final String? _KEY_ID;
+  final int? _MAX_GRANT_TIMEOUT_MS;
+  final List<String>? _MIN_PERMISSIONS;
+  final int? _CREATED_AT;
+  final int? _UPDATED_AT;
+  final String? _DOCUMENTATION_URL;
+  final String? _CHANGELOG_URL;
+  final String? _ICON_URL;
+  final String? _LICENSE;
+  final purchaseTier? _PAYMENT_MODEL;
+  final int? _PRICE_USD_CENTS;
+  final int? _SUBSCRIPTION_PERIOD_DAYS;
+  final List<String>? _ACCEPTED_PAYMENT_METHODS;
+  final publicationState? _LISTING_STATUS;
+  final List<int>? _SIGNATURE;
+  final List<invokeSurfaceKind>? _INVOKE_SURFACES;
+  final List<PLGMethodManifestObjectBuilder>? _METHODS;
+  final List<PLGHostCapabilityObjectBuilder>? _HOST_CAPABILITIES;
+  final List<PLGTimerSpecObjectBuilder>? _TIMERS;
+  final List<PLGProtocolSpecObjectBuilder>? _PROTOCOLS;
+  final List<FlatBufferTypeRefObjectBuilder>? _SCHEMAS_USED;
+  final List<PLGBuildArtifactObjectBuilder>? _BUILD_ARTIFACTS;
+  final List<String>? _RUNTIME_TARGETS;
+  final List<String>? _ALLOWED_XPUBS;
+  final List<PLGFlowNodeObjectBuilder>? _FLOW_NODES;
+  final List<PLGFlowEdgeObjectBuilder>? _FLOW_EDGES;
+  final List<PLGFlowTriggerObjectBuilder>? _FLOW_TRIGGERS;
+  final List<PLGFlowTriggerBindingObjectBuilder>? _FLOW_TRIGGER_BINDINGS;
+  final capabilityClass? _PRIMARY_CATEGORY;
+  final List<capabilityClass>? _CATEGORIES;
+
+  PLGObjectBuilder({
+    String? PLUGIN_ID,
+    String? pluginId,
+    String? NAME,
+    String? VERSION,
+    String? DESCRIPTION,
+    String? TAGLINE,
+    pluginCategory? PLUGIN_TYPE,
+    pluginCategory? pluginType,
+    String? PUBLISHER_NAME,
+    String? publisherName,
+    String? PUBLISHER_HANDLE,
+    String? publisherHandle,
+    String? PUBLISHER_URL,
+    String? publisherUrl,
+    String? SUPPORT_URL,
+    String? supportUrl,
+    List<String>? TAGS,
+    List<String>? FEATURES,
+    List<String>? SCREENSHOT_URLS,
+    List<String>? screenshotUrls,
+    String? BANNER_URL,
+    String? bannerUrl,
+    int? ABI_VERSION,
+    int? abiVersion,
+    List<int>? WASM_HASH,
+    List<int>? wasmHash,
+    int? WASM_SIZE,
+    int? wasmSize,
+    String? WASM_CID,
+    String? wasmCid,
+    List<int>? ENCRYPTED_WASM_HASH,
+    List<int>? encryptedWasmHash,
+    int? ENCRYPTED_WASM_SIZE,
+    int? encryptedWasmSize,
+    List<EntryFunctionObjectBuilder>? ENTRY_FUNCTIONS,
+    List<EntryFunctionObjectBuilder>? entryFunctions,
+    List<String>? REQUIRED_SCHEMAS,
+    List<String>? requiredSchemas,
+    List<PluginDependencyObjectBuilder>? DEPENDENCIES,
+    List<PluginCapabilityObjectBuilder>? CAPABILITIES,
+    String? PROVIDER_PEER_ID,
+    String? providerPeerId,
+    String? PROVIDER_EPM_CID,
+    String? providerEpmCid,
+    bool? ENCRYPTED,
+    String? REQUIRED_SCOPE,
+    String? requiredScope,
+    String? KEY_ID,
+    String? keyId,
+    int? MAX_GRANT_TIMEOUT_MS,
+    int? maxGrantTimeoutMs,
+    List<String>? MIN_PERMISSIONS,
+    List<String>? minPermissions,
+    int? CREATED_AT,
+    int? createdAt,
+    int? UPDATED_AT,
+    int? updatedAt,
+    String? DOCUMENTATION_URL,
+    String? documentationUrl,
+    String? CHANGELOG_URL,
+    String? changelogUrl,
+    String? ICON_URL,
+    String? iconUrl,
+    String? LICENSE,
+    purchaseTier? PAYMENT_MODEL,
+    purchaseTier? paymentModel,
+    int? PRICE_USD_CENTS,
+    int? priceUsdCents,
+    int? SUBSCRIPTION_PERIOD_DAYS,
+    int? subscriptionPeriodDays,
+    List<String>? ACCEPTED_PAYMENT_METHODS,
+    List<String>? acceptedPaymentMethods,
+    publicationState? LISTING_STATUS,
+    publicationState? listingStatus,
+    List<int>? SIGNATURE,
+    List<invokeSurfaceKind>? INVOKE_SURFACES,
+    List<invokeSurfaceKind>? invokeSurfaces,
+    List<PLGMethodManifestObjectBuilder>? METHODS,
+    List<PLGHostCapabilityObjectBuilder>? HOST_CAPABILITIES,
+    List<PLGHostCapabilityObjectBuilder>? hostCapabilities,
+    List<PLGTimerSpecObjectBuilder>? TIMERS,
+    List<PLGProtocolSpecObjectBuilder>? PROTOCOLS,
+    List<FlatBufferTypeRefObjectBuilder>? SCHEMAS_USED,
+    List<FlatBufferTypeRefObjectBuilder>? schemasUsed,
+    List<PLGBuildArtifactObjectBuilder>? BUILD_ARTIFACTS,
+    List<PLGBuildArtifactObjectBuilder>? buildArtifacts,
+    List<String>? RUNTIME_TARGETS,
+    List<String>? runtimeTargets,
+    List<String>? ALLOWED_XPUBS,
+    List<String>? allowedXpubs,
+    List<PLGFlowNodeObjectBuilder>? FLOW_NODES,
+    List<PLGFlowNodeObjectBuilder>? flowNodes,
+    List<PLGFlowEdgeObjectBuilder>? FLOW_EDGES,
+    List<PLGFlowEdgeObjectBuilder>? flowEdges,
+    List<PLGFlowTriggerObjectBuilder>? FLOW_TRIGGERS,
+    List<PLGFlowTriggerObjectBuilder>? flowTriggers,
+    List<PLGFlowTriggerBindingObjectBuilder>? FLOW_TRIGGER_BINDINGS,
+    List<PLGFlowTriggerBindingObjectBuilder>? flowTriggerBindings,
+    capabilityClass? PRIMARY_CATEGORY,
+    capabilityClass? primaryCategory,
+    List<capabilityClass>? CATEGORIES,
+  })
+      : _PLUGIN_ID = pluginId ?? PLUGIN_ID,
+        _NAME = NAME,
+        _VERSION = VERSION,
+        _DESCRIPTION = DESCRIPTION,
+        _TAGLINE = TAGLINE,
+        _PLUGIN_TYPE = pluginType ?? PLUGIN_TYPE,
+        _PUBLISHER_NAME = publisherName ?? PUBLISHER_NAME,
+        _PUBLISHER_HANDLE = publisherHandle ?? PUBLISHER_HANDLE,
+        _PUBLISHER_URL = publisherUrl ?? PUBLISHER_URL,
+        _SUPPORT_URL = supportUrl ?? SUPPORT_URL,
+        _TAGS = TAGS,
+        _FEATURES = FEATURES,
+        _SCREENSHOT_URLS = screenshotUrls ?? SCREENSHOT_URLS,
+        _BANNER_URL = bannerUrl ?? BANNER_URL,
+        _ABI_VERSION = abiVersion ?? ABI_VERSION,
+        _WASM_HASH = wasmHash ?? WASM_HASH,
+        _WASM_SIZE = wasmSize ?? WASM_SIZE,
+        _WASM_CID = wasmCid ?? WASM_CID,
+        _ENCRYPTED_WASM_HASH = encryptedWasmHash ?? ENCRYPTED_WASM_HASH,
+        _ENCRYPTED_WASM_SIZE = encryptedWasmSize ?? ENCRYPTED_WASM_SIZE,
+        _ENTRY_FUNCTIONS = entryFunctions ?? ENTRY_FUNCTIONS,
+        _REQUIRED_SCHEMAS = requiredSchemas ?? REQUIRED_SCHEMAS,
+        _DEPENDENCIES = DEPENDENCIES,
+        _CAPABILITIES = CAPABILITIES,
+        _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
+        _PROVIDER_EPM_CID = providerEpmCid ?? PROVIDER_EPM_CID,
+        _ENCRYPTED = ENCRYPTED,
+        _REQUIRED_SCOPE = requiredScope ?? REQUIRED_SCOPE,
+        _KEY_ID = keyId ?? KEY_ID,
+        _MAX_GRANT_TIMEOUT_MS = maxGrantTimeoutMs ?? MAX_GRANT_TIMEOUT_MS,
+        _MIN_PERMISSIONS = minPermissions ?? MIN_PERMISSIONS,
+        _CREATED_AT = createdAt ?? CREATED_AT,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+        _DOCUMENTATION_URL = documentationUrl ?? DOCUMENTATION_URL,
+        _CHANGELOG_URL = changelogUrl ?? CHANGELOG_URL,
+        _ICON_URL = iconUrl ?? ICON_URL,
+        _LICENSE = LICENSE,
+        _PAYMENT_MODEL = paymentModel ?? PAYMENT_MODEL,
+        _PRICE_USD_CENTS = priceUsdCents ?? PRICE_USD_CENTS,
+        _SUBSCRIPTION_PERIOD_DAYS = subscriptionPeriodDays ?? SUBSCRIPTION_PERIOD_DAYS,
+        _ACCEPTED_PAYMENT_METHODS = acceptedPaymentMethods ?? ACCEPTED_PAYMENT_METHODS,
+        _LISTING_STATUS = listingStatus ?? LISTING_STATUS,
+        _SIGNATURE = SIGNATURE,
+        _INVOKE_SURFACES = invokeSurfaces ?? INVOKE_SURFACES,
+        _METHODS = METHODS,
+        _HOST_CAPABILITIES = hostCapabilities ?? HOST_CAPABILITIES,
+        _TIMERS = TIMERS,
+        _PROTOCOLS = PROTOCOLS,
+        _SCHEMAS_USED = schemasUsed ?? SCHEMAS_USED,
+        _BUILD_ARTIFACTS = buildArtifacts ?? BUILD_ARTIFACTS,
+        _RUNTIME_TARGETS = runtimeTargets ?? RUNTIME_TARGETS,
+        _ALLOWED_XPUBS = allowedXpubs ?? ALLOWED_XPUBS,
+        _FLOW_NODES = flowNodes ?? FLOW_NODES,
+        _FLOW_EDGES = flowEdges ?? FLOW_EDGES,
+        _FLOW_TRIGGERS = flowTriggers ?? FLOW_TRIGGERS,
+        _FLOW_TRIGGER_BINDINGS = flowTriggerBindings ?? FLOW_TRIGGER_BINDINGS,
+        _PRIMARY_CATEGORY = primaryCategory ?? PRIMARY_CATEGORY,
+        _CATEGORIES = CATEGORIES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PLUGIN_IDOffset = _PLUGIN_ID == null ? null
+        : fbBuilder.writeString(_PLUGIN_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
     final int? VERSIONOffset = _VERSION == null ? null
         : fbBuilder.writeString(_VERSION!);
-    final int? TITLEOffset = _TITLE == null ? null
-        : fbBuilder.writeString(_TITLE!);
-    final int? CATEGORIESOffset = _CATEGORIES == null ? null
-        : fbBuilder.writeList(_CATEGORIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ROLLUPSOffset = _ROLLUPS == null ? null
-        : fbBuilder.writeList(_ROLLUPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? TAGLINEOffset = _TAGLINE == null ? null
+        : fbBuilder.writeString(_TAGLINE!);
+    final int? PUBLISHER_NAMEOffset = _PUBLISHER_NAME == null ? null
+        : fbBuilder.writeString(_PUBLISHER_NAME!);
+    final int? PUBLISHER_HANDLEOffset = _PUBLISHER_HANDLE == null ? null
+        : fbBuilder.writeString(_PUBLISHER_HANDLE!);
+    final int? PUBLISHER_URLOffset = _PUBLISHER_URL == null ? null
+        : fbBuilder.writeString(_PUBLISHER_URL!);
+    final int? SUPPORT_URLOffset = _SUPPORT_URL == null ? null
+        : fbBuilder.writeString(_SUPPORT_URL!);
+    final int? TAGSOffset = _TAGS == null ? null
+        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
+    final int? FEATURESOffset = _FEATURES == null ? null
+        : fbBuilder.writeList(_FEATURES!.map(fbBuilder.writeString).toList());
+    final int? SCREENSHOT_URLSOffset = _SCREENSHOT_URLS == null ? null
+        : fbBuilder.writeList(_SCREENSHOT_URLS!.map(fbBuilder.writeString).toList());
+    final int? BANNER_URLOffset = _BANNER_URL == null ? null
+        : fbBuilder.writeString(_BANNER_URL!);
+    final int? WASM_HASHOffset = _WASM_HASH == null ? null
+        : fbBuilder.writeListUint8(_WASM_HASH!);
+    final int? WASM_CIDOffset = _WASM_CID == null ? null
+        : fbBuilder.writeString(_WASM_CID!);
+    final int? ENCRYPTED_WASM_HASHOffset = _ENCRYPTED_WASM_HASH == null ? null
+        : fbBuilder.writeListUint8(_ENCRYPTED_WASM_HASH!);
+    final int? ENTRY_FUNCTIONSOffset = _ENTRY_FUNCTIONS == null ? null
+        : fbBuilder.writeList(_ENTRY_FUNCTIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? REQUIRED_SCHEMASOffset = _REQUIRED_SCHEMAS == null ? null
+        : fbBuilder.writeList(_REQUIRED_SCHEMAS!.map(fbBuilder.writeString).toList());
+    final int? DEPENDENCIESOffset = _DEPENDENCIES == null ? null
+        : fbBuilder.writeList(_DEPENDENCIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CAPABILITIESOffset = _CAPABILITIES == null ? null
+        : fbBuilder.writeList(_CAPABILITIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROVIDER_PEER_IDOffset = _PROVIDER_PEER_ID == null ? null
+        : fbBuilder.writeString(_PROVIDER_PEER_ID!);
+    final int? PROVIDER_EPM_CIDOffset = _PROVIDER_EPM_CID == null ? null
+        : fbBuilder.writeString(_PROVIDER_EPM_CID!);
+    final int? REQUIRED_SCOPEOffset = _REQUIRED_SCOPE == null ? null
+        : fbBuilder.writeString(_REQUIRED_SCOPE!);
+    final int? KEY_IDOffset = _KEY_ID == null ? null
+        : fbBuilder.writeString(_KEY_ID!);
+    final int? MIN_PERMISSIONSOffset = _MIN_PERMISSIONS == null ? null
+        : fbBuilder.writeList(_MIN_PERMISSIONS!.map(fbBuilder.writeString).toList());
+    final int? DOCUMENTATION_URLOffset = _DOCUMENTATION_URL == null ? null
+        : fbBuilder.writeString(_DOCUMENTATION_URL!);
+    final int? CHANGELOG_URLOffset = _CHANGELOG_URL == null ? null
+        : fbBuilder.writeString(_CHANGELOG_URL!);
+    final int? ICON_URLOffset = _ICON_URL == null ? null
+        : fbBuilder.writeString(_ICON_URL!);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? ACCEPTED_PAYMENT_METHODSOffset = _ACCEPTED_PAYMENT_METHODS == null ? null
+        : fbBuilder.writeList(_ACCEPTED_PAYMENT_METHODS!.map(fbBuilder.writeString).toList());
     final int? SIGNATUREOffset = _SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_SIGNATURE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, TAXONOMY_IDOffset);
-    fbBuilder.addOffset(1, VERSIONOffset);
-    fbBuilder.addUint64(2, _ISSUED_AT);
-    fbBuilder.addOffset(3, TITLEOffset);
-    fbBuilder.addOffset(4, CATEGORIESOffset);
-    fbBuilder.addOffset(5, ROLLUPSOffset);
-    fbBuilder.addOffset(6, SIGNATUREOffset);
+    final int? INVOKE_SURFACESOffset = _INVOKE_SURFACES == null ? null
+        : fbBuilder.writeListUint8(_INVOKE_SURFACES!.map((f) => f.value).toList());
+    final int? METHODSOffset = _METHODS == null ? null
+        : fbBuilder.writeList(_METHODS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? HOST_CAPABILITIESOffset = _HOST_CAPABILITIES == null ? null
+        : fbBuilder.writeList(_HOST_CAPABILITIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TIMERSOffset = _TIMERS == null ? null
+        : fbBuilder.writeList(_TIMERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROTOCOLSOffset = _PROTOCOLS == null ? null
+        : fbBuilder.writeList(_PROTOCOLS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SCHEMAS_USEDOffset = _SCHEMAS_USED == null ? null
+        : fbBuilder.writeList(_SCHEMAS_USED!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? BUILD_ARTIFACTSOffset = _BUILD_ARTIFACTS == null ? null
+        : fbBuilder.writeList(_BUILD_ARTIFACTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? RUNTIME_TARGETSOffset = _RUNTIME_TARGETS == null ? null
+        : fbBuilder.writeList(_RUNTIME_TARGETS!.map(fbBuilder.writeString).toList());
+    final int? ALLOWED_XPUBSOffset = _ALLOWED_XPUBS == null ? null
+        : fbBuilder.writeList(_ALLOWED_XPUBS!.map(fbBuilder.writeString).toList());
+    final int? FLOW_NODESOffset = _FLOW_NODES == null ? null
+        : fbBuilder.writeList(_FLOW_NODES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? FLOW_EDGESOffset = _FLOW_EDGES == null ? null
+        : fbBuilder.writeList(_FLOW_EDGES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? FLOW_TRIGGERSOffset = _FLOW_TRIGGERS == null ? null
+        : fbBuilder.writeList(_FLOW_TRIGGERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? FLOW_TRIGGER_BINDINGSOffset = _FLOW_TRIGGER_BINDINGS == null ? null
+        : fbBuilder.writeList(_FLOW_TRIGGER_BINDINGS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CATEGORIESOffset = _CATEGORIES == null ? null
+        : fbBuilder.writeListUint8(_CATEGORIES!.map((f) => f.value).toList());
+    fbBuilder.startTable(58);
+    fbBuilder.addOffset(0, PLUGIN_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, VERSIONOffset);
+    fbBuilder.addOffset(3, DESCRIPTIONOffset);
+    fbBuilder.addOffset(4, TAGLINEOffset);
+    fbBuilder.addInt8(5, _PLUGIN_TYPE?.value);
+    fbBuilder.addOffset(6, PUBLISHER_NAMEOffset);
+    fbBuilder.addOffset(7, PUBLISHER_HANDLEOffset);
+    fbBuilder.addOffset(8, PUBLISHER_URLOffset);
+    fbBuilder.addOffset(9, SUPPORT_URLOffset);
+    fbBuilder.addOffset(10, TAGSOffset);
+    fbBuilder.addOffset(11, FEATURESOffset);
+    fbBuilder.addOffset(12, SCREENSHOT_URLSOffset);
+    fbBuilder.addOffset(13, BANNER_URLOffset);
+    fbBuilder.addUint32(14, _ABI_VERSION);
+    fbBuilder.addOffset(15, WASM_HASHOffset);
+    fbBuilder.addUint64(16, _WASM_SIZE);
+    fbBuilder.addOffset(17, WASM_CIDOffset);
+    fbBuilder.addOffset(18, ENCRYPTED_WASM_HASHOffset);
+    fbBuilder.addUint64(19, _ENCRYPTED_WASM_SIZE);
+    fbBuilder.addOffset(20, ENTRY_FUNCTIONSOffset);
+    fbBuilder.addOffset(21, REQUIRED_SCHEMASOffset);
+    fbBuilder.addOffset(22, DEPENDENCIESOffset);
+    fbBuilder.addOffset(23, CAPABILITIESOffset);
+    fbBuilder.addOffset(24, PROVIDER_PEER_IDOffset);
+    fbBuilder.addOffset(25, PROVIDER_EPM_CIDOffset);
+    fbBuilder.addBool(26, _ENCRYPTED);
+    fbBuilder.addOffset(27, REQUIRED_SCOPEOffset);
+    fbBuilder.addOffset(28, KEY_IDOffset);
+    fbBuilder.addUint64(29, _MAX_GRANT_TIMEOUT_MS);
+    fbBuilder.addOffset(30, MIN_PERMISSIONSOffset);
+    fbBuilder.addUint64(31, _CREATED_AT);
+    fbBuilder.addUint64(32, _UPDATED_AT);
+    fbBuilder.addOffset(33, DOCUMENTATION_URLOffset);
+    fbBuilder.addOffset(34, CHANGELOG_URLOffset);
+    fbBuilder.addOffset(35, ICON_URLOffset);
+    fbBuilder.addOffset(36, LICENSEOffset);
+    fbBuilder.addInt8(37, _PAYMENT_MODEL?.value);
+    fbBuilder.addUint32(38, _PRICE_USD_CENTS);
+    fbBuilder.addUint32(39, _SUBSCRIPTION_PERIOD_DAYS);
+    fbBuilder.addOffset(40, ACCEPTED_PAYMENT_METHODSOffset);
+    fbBuilder.addInt8(41, _LISTING_STATUS?.value);
+    fbBuilder.addOffset(42, SIGNATUREOffset);
+    fbBuilder.addOffset(43, INVOKE_SURFACESOffset);
+    fbBuilder.addOffset(44, METHODSOffset);
+    fbBuilder.addOffset(45, HOST_CAPABILITIESOffset);
+    fbBuilder.addOffset(46, TIMERSOffset);
+    fbBuilder.addOffset(47, PROTOCOLSOffset);
+    fbBuilder.addOffset(48, SCHEMAS_USEDOffset);
+    fbBuilder.addOffset(49, BUILD_ARTIFACTSOffset);
+    fbBuilder.addOffset(50, RUNTIME_TARGETSOffset);
+    fbBuilder.addOffset(51, ALLOWED_XPUBSOffset);
+    fbBuilder.addOffset(52, FLOW_NODESOffset);
+    fbBuilder.addOffset(53, FLOW_EDGESOffset);
+    fbBuilder.addOffset(54, FLOW_TRIGGERSOffset);
+    fbBuilder.addOffset(55, FLOW_TRIGGER_BINDINGSOffset);
+    fbBuilder.addUint8(56, _PRIMARY_CATEGORY?.value);
+    fbBuilder.addOffset(57, CATEGORIESOffset);
     return fbBuilder.endTable();
   }
 

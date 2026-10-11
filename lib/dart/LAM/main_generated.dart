@@ -5,529 +5,310 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum missileStatus {
-  BOOSTING(0),
-  MIDCOURSE(1),
-  TERMINAL(2),
-  IMPACT(3),
-  BURNOUT(4),
-  INTERCEPTED(5),
-  LOST(6),
-  UNKNOWN(7);
+///  Launch-ascent mission phase.
+enum lamMissionPhase {
+  UNKNOWN(0),
+  PRELAUNCH(1),
+  LIFTOFF(2),
+  BOOST(3),
+  STAGE_SEPARATION(4),
+  UPPER_STAGE(5),
+  COAST(6),
+  ORBIT_INSERTION(7),
+  ABORT(8),
+  COMPLETE(9);
 
   final int value;
-  const missileStatus(this.value);
+  const lamMissionPhase(this.value);
 
-  factory missileStatus.fromValue(int value) {
+  factory lamMissionPhase.fromValue(int value) {
     switch (value) {
-      case 0: return missileStatus.BOOSTING;
-      case 1: return missileStatus.MIDCOURSE;
-      case 2: return missileStatus.TERMINAL;
-      case 3: return missileStatus.IMPACT;
-      case 4: return missileStatus.BURNOUT;
-      case 5: return missileStatus.INTERCEPTED;
-      case 6: return missileStatus.LOST;
-      case 7: return missileStatus.UNKNOWN;
+      case 0: return lamMissionPhase.UNKNOWN;
+      case 1: return lamMissionPhase.PRELAUNCH;
+      case 2: return lamMissionPhase.LIFTOFF;
+      case 3: return lamMissionPhase.BOOST;
+      case 4: return lamMissionPhase.STAGE_SEPARATION;
+      case 5: return lamMissionPhase.UPPER_STAGE;
+      case 6: return lamMissionPhase.COAST;
+      case 7: return lamMissionPhase.ORBIT_INSERTION;
+      case 8: return lamMissionPhase.ABORT;
+      case 9: return lamMissionPhase.COMPLETE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static missileStatus? _createOrNull(int? value) =>
-      value == null ? null : missileStatus.fromValue(value);
+  static lamMissionPhase? _createOrNull(int? value) =>
+      value == null ? null : lamMissionPhase.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
-  static const fb.Reader<missileStatus> reader = _missileStatusReader();
+  static const int maxValue = 9;
+  static const fb.Reader<lamMissionPhase> reader = _lamMissionPhaseReader();
 }
 
-class _missileStatusReader extends fb.Reader<missileStatus> {
-  const _missileStatusReader();
+class _lamMissionPhaseReader extends fb.Reader<lamMissionPhase> {
+  const _lamMissionPhaseReader();
 
   @override
   int get size => 1;
 
   @override
-  missileStatus read(fb.BufferContext bc, int offset) =>
-      missileStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+  lamMissionPhase read(fb.BufferContext bc, int offset) =>
+      lamMissionPhase.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum missileEnvironment {
-  SPACE(0),
-  ENDO_ATMOSPHERIC(1),
-  EXO_ATMOSPHERIC(2),
-  TRANSITIONAL(3),
-  UNKNOWN(4);
+///  Launch-ascent constraint status.
+enum lamConstraintStatus {
+  UNKNOWN(0),
+  NOMINAL(1),
+  WARNING(2),
+  VIOLATED(3),
+  WAIVED(4);
 
   final int value;
-  const missileEnvironment(this.value);
+  const lamConstraintStatus(this.value);
 
-  factory missileEnvironment.fromValue(int value) {
+  factory lamConstraintStatus.fromValue(int value) {
     switch (value) {
-      case 0: return missileEnvironment.SPACE;
-      case 1: return missileEnvironment.ENDO_ATMOSPHERIC;
-      case 2: return missileEnvironment.EXO_ATMOSPHERIC;
-      case 3: return missileEnvironment.TRANSITIONAL;
-      case 4: return missileEnvironment.UNKNOWN;
+      case 0: return lamConstraintStatus.UNKNOWN;
+      case 1: return lamConstraintStatus.NOMINAL;
+      case 2: return lamConstraintStatus.WARNING;
+      case 3: return lamConstraintStatus.VIOLATED;
+      case 4: return lamConstraintStatus.WAIVED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static missileEnvironment? _createOrNull(int? value) =>
-      value == null ? null : missileEnvironment.fromValue(value);
+  static lamConstraintStatus? _createOrNull(int? value) =>
+      value == null ? null : lamConstraintStatus.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 4;
-  static const fb.Reader<missileEnvironment> reader = _missileEnvironmentReader();
+  static const fb.Reader<lamConstraintStatus> reader = _lamConstraintStatusReader();
 }
 
-class _missileEnvironmentReader extends fb.Reader<missileEnvironment> {
-  const _missileEnvironmentReader();
+class _lamConstraintStatusReader extends fb.Reader<lamConstraintStatus> {
+  const _lamConstraintStatusReader();
 
   @override
   int get size => 1;
 
   @override
-  missileEnvironment read(fb.BufferContext bc, int offset) =>
-      missileEnvironment.fromValue(const fb.Int8Reader().read(bc, offset));
+  lamConstraintStatus read(fb.BufferContext bc, int offset) =>
+      lamConstraintStatus.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum aouReportType {
-  CIRCULAR(0),
-  ELLIPTICAL(1),
-  RECTANGULAR(2),
-  NONE(3);
+///  Direction of an ascent's ground track relative to the equator.
+enum lamPassDirection {
+  UNSPECIFIED(0),
+  NORTHBOUND(1),
+  SOUTHBOUND(2);
 
   final int value;
-  const aouReportType(this.value);
+  const lamPassDirection(this.value);
 
-  factory aouReportType.fromValue(int value) {
+  factory lamPassDirection.fromValue(int value) {
     switch (value) {
-      case 0: return aouReportType.CIRCULAR;
-      case 1: return aouReportType.ELLIPTICAL;
-      case 2: return aouReportType.RECTANGULAR;
-      case 3: return aouReportType.NONE;
+      case 0: return lamPassDirection.UNSPECIFIED;
+      case 1: return lamPassDirection.NORTHBOUND;
+      case 2: return lamPassDirection.SOUTHBOUND;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static aouReportType? _createOrNull(int? value) =>
-      value == null ? null : aouReportType.fromValue(value);
+  static lamPassDirection? _createOrNull(int? value) =>
+      value == null ? null : lamPassDirection.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<aouReportType> reader = _aouReportTypeReader();
+  static const int maxValue = 2;
+  static const fb.Reader<lamPassDirection> reader = _lamPassDirectionReader();
 }
 
-class _aouReportTypeReader extends fb.Reader<aouReportType> {
-  const _aouReportTypeReader();
+class _lamPassDirectionReader extends fb.Reader<lamPassDirection> {
+  const _lamPassDirectionReader();
 
   @override
   int get size => 1;
 
   @override
-  aouReportType read(fb.BufferContext bc, int offset) =>
-      aouReportType.fromValue(const fb.Int8Reader().read(bc, offset));
+  lamPassDirection read(fb.BufferContext bc, int offset) =>
+      lamPassDirection.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Missile Track
-class MST {
-  MST._(this._bc, this._bcOffset);
-  factory MST(List<int> bytes) {
+///  Origin of trajectory samples.
+enum lamTrajectorySource {
+  UNSPECIFIED(0),
+  PROJECTED(1),
+  TELEMETRY(2),
+  TRACKING(3),
+  SIMULATED(4);
+
+  final int value;
+  const lamTrajectorySource(this.value);
+
+  factory lamTrajectorySource.fromValue(int value) {
+    switch (value) {
+      case 0: return lamTrajectorySource.UNSPECIFIED;
+      case 1: return lamTrajectorySource.PROJECTED;
+      case 2: return lamTrajectorySource.TELEMETRY;
+      case 3: return lamTrajectorySource.TRACKING;
+      case 4: return lamTrajectorySource.SIMULATED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static lamTrajectorySource? _createOrNull(int? value) =>
+      value == null ? null : lamTrajectorySource.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<lamTrajectorySource> reader = _lamTrajectorySourceReader();
+}
+
+class _lamTrajectorySourceReader extends fb.Reader<lamTrajectorySource> {
+  const _lamTrajectorySourceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  lamTrajectorySource read(fb.BufferContext bc, int offset) =>
+      lamTrajectorySource.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Frame of speed samples.
+enum lamSpeedReference {
+  UNSPECIFIED(0),
+  EARTH_RELATIVE(1),
+  INERTIAL(2);
+
+  final int value;
+  const lamSpeedReference(this.value);
+
+  factory lamSpeedReference.fromValue(int value) {
+    switch (value) {
+      case 0: return lamSpeedReference.UNSPECIFIED;
+      case 1: return lamSpeedReference.EARTH_RELATIVE;
+      case 2: return lamSpeedReference.INERTIAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static lamSpeedReference? _createOrNull(int? value) =>
+      value == null ? null : lamSpeedReference.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<lamSpeedReference> reader = _lamSpeedReferenceReader();
+}
+
+class _lamSpeedReferenceReader extends fb.Reader<lamSpeedReference> {
+  const _lamSpeedReferenceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  lamSpeedReference read(fb.BufferContext bc, int offset) =>
+      lamSpeedReference.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Launch-ascent event.
+class lamAscentEvent {
+  lamAscentEvent._(this._bc, this._bcOffset);
+  factory lamAscentEvent(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<MST> reader = _MSTReader();
+  static const fb.Reader<lamAscentEvent> reader = _lamAscentEventReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Unique identifier
-  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Message type code
-  String? get MSG_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get msgType => MSG_TYPE;
-  ///  Message sub-type
-  String? get MSG_SUB_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get msgSubType => MSG_SUB_TYPE;
-  ///  Message creation date (ISO 8601)
-  String? get MSG_CREATE_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get msgCreateDate => MSG_CREATE_DATE;
-  ///  Track environment
-  missileEnvironment get ENVIRONMENT => missileEnvironment.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  ///  Object type classification
-  String? get OBJ_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get objType => OBJ_TYPE;
-  ///  Object type confidence (0-100)
-  int get OBJ_TYPE_CONF => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get objTypeConf => OBJ_TYPE_CONF;
-  ///  Object platform type
-  String? get OBJ_PLAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get objPlat => OBJ_PLAT;
-  ///  Object identity assessment
-  String? get OBJ_IDENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get objIdent => OBJ_IDENT;
-  ///  Space amplification data
-  String? get SPACE_AMP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get spaceAmp => SPACE_AMP;
-  ///  Space amplification confidence (0-100)
-  int get SPACE_AMP_CONF => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  int get spaceAmpConf => SPACE_AMP_CONF;
-  ///  Object activity
-  String? get OBJ_ACT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get objAct => OBJ_ACT;
-  ///  Space specific type
-  String? get SPACE_SPEC_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get spaceSpecType => SPACE_SPEC_TYPE;
-  ///  Aircraft sub-type (if applicable)
-  String? get ACFT_SUB_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get acftSubType => ACFT_SUB_TYPE;
-  ///  Object name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  ///  Call sign
-  String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  String? get callSign => CALL_SIGN;
-  ///  True if track is lost
-  bool get LOST_TRK_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
-  bool get lostTrkInd => LOST_TRK_IND;
-  ///  Track identifier
-  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
-  String? get trackId => TRACK_ID;
-  ///  Parent track identifier
-  String? get PARENT_TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
-  String? get parentTrackId => PARENT_TRACK_ID;
-  ///  Multi-unit identifier (source track)
-  String? get MUID_SRC_TRK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
-  String? get muidSrcTrk => MUID_SRC_TRK;
-  ///  Multi-unit identifier (source)
-  String? get MUID_SRC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
-  String? get muidSrc => MUID_SRC;
-  ///  Alert classification
-  String? get ALERT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
-  ///  Missile engagement status
-  missileStatus get MSL_STATUS => missileStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 48, 0));
-  missileStatus get mslStatus => MSL_STATUS;
-  ///  Track timestamp (ISO 8601)
-  String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
-  ///  AOU report type
-  aouReportType get AOU_RPT_TYPE => aouReportType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 52, 0));
-  aouReportType get aouRptType => AOU_RPT_TYPE;
-  ///  Containment probability (0-1)
-  double get CONTAINMENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  ///  Track confidence (0-1)
-  double get TRK_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  double get trkConf => TRK_CONF;
-  ///  Track quality (0-15)
-  int get TRK_QUAL => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 58, 0);
-  int get trkQual => TRK_QUAL;
-  ///  Elevation angle (degrees)
-  double get ANG_ELEV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  double get angElev => ANG_ELEV;
-  ///  Sensor mode
-  String? get SEN_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
-  String? get senMode => SEN_MODE;
-  ///  Information source
-  String? get INFO_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
-  String? get infoSource => INFO_SOURCE;
-  ///  True if object is in boost phase
-  bool get BOOSTING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 66, false);
-  ///  Polar singularity latitude (degrees)
-  double get POLAR_SING_LOC_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  double get polarSingLocLat => POLAR_SING_LOC_LAT;
-  ///  Polar singularity longitude (degrees)
-  double get POLAR_SING_LOC_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  double get polarSingLocLon => POLAR_SING_LOC_LON;
-  ///  True if emergency indicator set
-  bool get EMG_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 72, false);
-  bool get emgInd => EMG_IND;
-  ///  True if drop point indicator set
-  bool get DROP_PT_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 74, false);
-  bool get dropPtInd => DROP_PT_IND;
-  ///  Launch time (ISO 8601)
-  String? get LAUNCH_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
-  String? get launchTime => LAUNCH_TIME;
-  ///  Launch latitude (degrees)
-  double get LAUNCH_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
-  double get launchLat => LAUNCH_LAT;
-  ///  Launch longitude (degrees)
-  double get LAUNCH_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
-  double get launchLon => LAUNCH_LON;
-  ///  Azimuth correction (degrees)
-  double get AZ_CORR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
-  double get azCorr => AZ_CORR;
-  ///  Burnout altitude (km)
-  double get BURNOUT_ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  double get burnoutAlt => BURNOUT_ALT;
-  ///  Launch AOU type
-  aouReportType get LAUNCH_AOU_TYPE => aouReportType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 86, 0));
-  aouReportType get launchAouType => LAUNCH_AOU_TYPE;
-  ///  Predicted impact time (ISO 8601)
-  String? get IMPACT_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
-  String? get impactTime => IMPACT_TIME;
-  ///  Predicted impact latitude (degrees)
-  double get IMPACT_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
-  double get impactLat => IMPACT_LAT;
-  ///  Predicted impact longitude (degrees)
-  double get IMPACT_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
-  double get impactLon => IMPACT_LON;
-  ///  Impact AOU type
-  aouReportType get IMPACT_AOU_TYPE => aouReportType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 94, 0));
-  aouReportType get impactAouType => IMPACT_AOU_TYPE;
-  ///  Start time for vector data (ISO 8601)
-  String? get VECTOR_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
-  String? get vectorStartTime => VECTOR_START_TIME;
-  ///  Time interval between vector points (seconds)
-  double get VECTOR_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
-  double get vectorStepSize => VECTOR_STEP_SIZE;
-  ///  Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
-  int get VECTOR_COMPONENTS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 100, 6);
-  int get vectorComponents => VECTOR_COMPONENTS;
-  ///  Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
-  List<double>? get VECTORS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 102);
-  ///  AOU report data as flat array
-  List<double>? get AOU_RPT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 104);
-  List<double>? get aouRpt => AOU_RPT;
-  ///  Launch AOU data as flat array
-  List<double>? get LAUNCH_AOU => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 106);
-  List<double>? get launchAou => LAUNCH_AOU;
-  ///  Impact AOU data as flat array
-  List<double>? get IMPACT_AOU => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 108);
-  List<double>? get impactAou => IMPACT_AOU;
+  ///  Event identifier.
+  String? get EVENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get eventId => EVENT_ID;
+  ///  Event type or name.
+  String? get EVENT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get eventType => EVENT_TYPE;
+  ///  Event epoch in ISO 8601 UTC format.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Time from launch in seconds.
+  double get TIME_FROM_LAUNCH_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get timeFromLaunchS => TIME_FROM_LAUNCH_S;
+  ///  Mission phase at the event.
+  lamMissionPhase get PHASE => lamMissionPhase.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Altitude in meters.
+  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get altitudeM => ALTITUDE_M;
+  ///  Speed in meters per second.
+  double get SPEED_M_PER_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get speedMPerS => SPEED_M_PER_S;
+  ///  Vehicle mass in kilograms.
+  double get MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get massKg => MASS_KG;
+  ///  Free-form event description.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
 
   @override
   String toString() {
-    return 'MST{ID: ${ID}, msgType: ${msgType}, msgSubType: ${msgSubType}, msgCreateDate: ${msgCreateDate}, ENVIRONMENT: ${ENVIRONMENT}, objType: ${objType}, objTypeConf: ${objTypeConf}, objPlat: ${objPlat}, objIdent: ${objIdent}, spaceAmp: ${spaceAmp}, spaceAmpConf: ${spaceAmpConf}, objAct: ${objAct}, spaceSpecType: ${spaceSpecType}, acftSubType: ${acftSubType}, NAME: ${NAME}, callSign: ${callSign}, lostTrkInd: ${lostTrkInd}, trackId: ${trackId}, parentTrackId: ${parentTrackId}, muidSrcTrk: ${muidSrcTrk}, muidSrc: ${muidSrc}, ALERT: ${ALERT}, mslStatus: ${mslStatus}, TS: ${TS}, aouRptType: ${aouRptType}, CONTAINMENT: ${CONTAINMENT}, trkConf: ${trkConf}, trkQual: ${trkQual}, angElev: ${angElev}, senMode: ${senMode}, infoSource: ${infoSource}, BOOSTING: ${BOOSTING}, polarSingLocLat: ${polarSingLocLat}, polarSingLocLon: ${polarSingLocLon}, emgInd: ${emgInd}, dropPtInd: ${dropPtInd}, launchTime: ${launchTime}, launchLat: ${launchLat}, launchLon: ${launchLon}, azCorr: ${azCorr}, burnoutAlt: ${burnoutAlt}, launchAouType: ${launchAouType}, impactTime: ${impactTime}, impactLat: ${impactLat}, impactLon: ${impactLon}, impactAouType: ${impactAouType}, vectorStartTime: ${vectorStartTime}, vectorStepSize: ${vectorStepSize}, vectorComponents: ${vectorComponents}, VECTORS: ${VECTORS}, aouRpt: ${aouRpt}, launchAou: ${launchAou}, impactAou: ${impactAou}}';
+    return 'lamAscentEvent{eventId: ${eventId}, eventType: ${eventType}, EPOCH: ${EPOCH}, timeFromLaunchS: ${timeFromLaunchS}, PHASE: ${PHASE}, altitudeM: ${altitudeM}, speedMPerS: ${speedMPerS}, massKg: ${massKg}, DESCRIPTION: ${DESCRIPTION}}';
   }
 }
 
-class _MSTReader extends fb.TableReader<MST> {
-  const _MSTReader();
+class _lamAscentEventReader extends fb.TableReader<lamAscentEvent> {
+  const _lamAscentEventReader();
 
   @override
-  MST createObject(fb.BufferContext bc, int offset) =>
-    MST._(bc, offset);
+  lamAscentEvent createObject(fb.BufferContext bc, int offset) =>
+    lamAscentEvent._(bc, offset);
 }
 
-class MSTBuilder {
-  MSTBuilder(this.fbBuilder);
+class lamAscentEventBuilder {
+  lamAscentEventBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(53);
+    fbBuilder.startTable(9);
   }
 
-  int addIdOffset(int? offset) {
+  int addEventIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addMsgTypeOffset(int? offset) {
+  int addEventTypeOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addMsgSubTypeOffset(int? offset) {
+  int addEpochOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addMsgCreateDateOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addTimeFromLaunchS(double? TIME_FROM_LAUNCH_S) {
+    fbBuilder.addFloat64(3, TIME_FROM_LAUNCH_S);
     return fbBuilder.offset;
   }
-  int addEnvironment(missileEnvironment? ENVIRONMENT) {
-    fbBuilder.addInt8(4, ENVIRONMENT?.value);
+  int addPhase(lamMissionPhase? PHASE) {
+    fbBuilder.addInt8(4, PHASE?.value);
     return fbBuilder.offset;
   }
-  int addObjTypeOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addAltitudeM(double? ALTITUDE_M) {
+    fbBuilder.addFloat64(5, ALTITUDE_M);
     return fbBuilder.offset;
   }
-  int addObjTypeConf(int? OBJ_TYPE_CONF) {
-    fbBuilder.addUint8(6, OBJ_TYPE_CONF);
+  int addSpeedMPerS(double? SPEED_M_PER_S) {
+    fbBuilder.addFloat64(6, SPEED_M_PER_S);
     return fbBuilder.offset;
   }
-  int addObjPlatOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addMassKg(double? MASS_KG) {
+    fbBuilder.addFloat64(7, MASS_KG);
     return fbBuilder.offset;
   }
-  int addObjIdentOffset(int? offset) {
+  int addDescriptionOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addSpaceAmpOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addSpaceAmpConf(int? SPACE_AMP_CONF) {
-    fbBuilder.addUint8(10, SPACE_AMP_CONF);
-    return fbBuilder.offset;
-  }
-  int addObjActOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addSpaceSpecTypeOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addAcftSubTypeOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addCallSignOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addLostTrkInd(bool? LOST_TRK_IND) {
-    fbBuilder.addBool(16, LOST_TRK_IND);
-    return fbBuilder.offset;
-  }
-  int addTrackIdOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
-    return fbBuilder.offset;
-  }
-  int addParentTrackIdOffset(int? offset) {
-    fbBuilder.addOffset(18, offset);
-    return fbBuilder.offset;
-  }
-  int addMuidSrcTrkOffset(int? offset) {
-    fbBuilder.addOffset(19, offset);
-    return fbBuilder.offset;
-  }
-  int addMuidSrcOffset(int? offset) {
-    fbBuilder.addOffset(20, offset);
-    return fbBuilder.offset;
-  }
-  int addAlertOffset(int? offset) {
-    fbBuilder.addOffset(21, offset);
-    return fbBuilder.offset;
-  }
-  int addMslStatus(missileStatus? MSL_STATUS) {
-    fbBuilder.addInt8(22, MSL_STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addTsOffset(int? offset) {
-    fbBuilder.addOffset(23, offset);
-    return fbBuilder.offset;
-  }
-  int addAouRptType(aouReportType? AOU_RPT_TYPE) {
-    fbBuilder.addInt8(24, AOU_RPT_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addContainment(double? CONTAINMENT) {
-    fbBuilder.addFloat64(25, CONTAINMENT);
-    return fbBuilder.offset;
-  }
-  int addTrkConf(double? TRK_CONF) {
-    fbBuilder.addFloat64(26, TRK_CONF);
-    return fbBuilder.offset;
-  }
-  int addTrkQual(int? TRK_QUAL) {
-    fbBuilder.addUint8(27, TRK_QUAL);
-    return fbBuilder.offset;
-  }
-  int addAngElev(double? ANG_ELEV) {
-    fbBuilder.addFloat64(28, ANG_ELEV);
-    return fbBuilder.offset;
-  }
-  int addSenModeOffset(int? offset) {
-    fbBuilder.addOffset(29, offset);
-    return fbBuilder.offset;
-  }
-  int addInfoSourceOffset(int? offset) {
-    fbBuilder.addOffset(30, offset);
-    return fbBuilder.offset;
-  }
-  int addBoosting(bool? BOOSTING) {
-    fbBuilder.addBool(31, BOOSTING);
-    return fbBuilder.offset;
-  }
-  int addPolarSingLocLat(double? POLAR_SING_LOC_LAT) {
-    fbBuilder.addFloat64(32, POLAR_SING_LOC_LAT);
-    return fbBuilder.offset;
-  }
-  int addPolarSingLocLon(double? POLAR_SING_LOC_LON) {
-    fbBuilder.addFloat64(33, POLAR_SING_LOC_LON);
-    return fbBuilder.offset;
-  }
-  int addEmgInd(bool? EMG_IND) {
-    fbBuilder.addBool(34, EMG_IND);
-    return fbBuilder.offset;
-  }
-  int addDropPtInd(bool? DROP_PT_IND) {
-    fbBuilder.addBool(35, DROP_PT_IND);
-    return fbBuilder.offset;
-  }
-  int addLaunchTimeOffset(int? offset) {
-    fbBuilder.addOffset(36, offset);
-    return fbBuilder.offset;
-  }
-  int addLaunchLat(double? LAUNCH_LAT) {
-    fbBuilder.addFloat64(37, LAUNCH_LAT);
-    return fbBuilder.offset;
-  }
-  int addLaunchLon(double? LAUNCH_LON) {
-    fbBuilder.addFloat64(38, LAUNCH_LON);
-    return fbBuilder.offset;
-  }
-  int addAzCorr(double? AZ_CORR) {
-    fbBuilder.addFloat64(39, AZ_CORR);
-    return fbBuilder.offset;
-  }
-  int addBurnoutAlt(double? BURNOUT_ALT) {
-    fbBuilder.addFloat64(40, BURNOUT_ALT);
-    return fbBuilder.offset;
-  }
-  int addLaunchAouType(aouReportType? LAUNCH_AOU_TYPE) {
-    fbBuilder.addInt8(41, LAUNCH_AOU_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addImpactTimeOffset(int? offset) {
-    fbBuilder.addOffset(42, offset);
-    return fbBuilder.offset;
-  }
-  int addImpactLat(double? IMPACT_LAT) {
-    fbBuilder.addFloat64(43, IMPACT_LAT);
-    return fbBuilder.offset;
-  }
-  int addImpactLon(double? IMPACT_LON) {
-    fbBuilder.addFloat64(44, IMPACT_LON);
-    return fbBuilder.offset;
-  }
-  int addImpactAouType(aouReportType? IMPACT_AOU_TYPE) {
-    fbBuilder.addInt8(45, IMPACT_AOU_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addVectorStartTimeOffset(int? offset) {
-    fbBuilder.addOffset(46, offset);
-    return fbBuilder.offset;
-  }
-  int addVectorStepSize(double? VECTOR_STEP_SIZE) {
-    fbBuilder.addFloat64(47, VECTOR_STEP_SIZE);
-    return fbBuilder.offset;
-  }
-  int addVectorComponents(int? VECTOR_COMPONENTS) {
-    fbBuilder.addUint8(48, VECTOR_COMPONENTS);
-    return fbBuilder.offset;
-  }
-  int addVectorsOffset(int? offset) {
-    fbBuilder.addOffset(49, offset);
-    return fbBuilder.offset;
-  }
-  int addAouRptOffset(int? offset) {
-    fbBuilder.addOffset(50, offset);
-    return fbBuilder.offset;
-  }
-  int addLaunchAouOffset(int? offset) {
-    fbBuilder.addOffset(51, offset);
-    return fbBuilder.offset;
-  }
-  int addImpactAouOffset(int? offset) {
-    fbBuilder.addOffset(52, offset);
     return fbBuilder.offset;
   }
 
@@ -536,328 +317,1526 @@ class MSTBuilder {
   }
 }
 
-class MSTObjectBuilder extends fb.ObjectBuilder {
-  final String? _ID;
-  final String? _MSG_TYPE;
-  final String? _MSG_SUB_TYPE;
-  final String? _MSG_CREATE_DATE;
-  final missileEnvironment? _ENVIRONMENT;
-  final String? _OBJ_TYPE;
-  final int? _OBJ_TYPE_CONF;
-  final String? _OBJ_PLAT;
-  final String? _OBJ_IDENT;
-  final String? _SPACE_AMP;
-  final int? _SPACE_AMP_CONF;
-  final String? _OBJ_ACT;
-  final String? _SPACE_SPEC_TYPE;
-  final String? _ACFT_SUB_TYPE;
-  final String? _NAME;
-  final String? _CALL_SIGN;
-  final bool? _LOST_TRK_IND;
-  final String? _TRACK_ID;
-  final String? _PARENT_TRACK_ID;
-  final String? _MUID_SRC_TRK;
-  final String? _MUID_SRC;
-  final String? _ALERT;
-  final missileStatus? _MSL_STATUS;
-  final String? _TS;
-  final aouReportType? _AOU_RPT_TYPE;
-  final double? _CONTAINMENT;
-  final double? _TRK_CONF;
-  final int? _TRK_QUAL;
-  final double? _ANG_ELEV;
-  final String? _SEN_MODE;
-  final String? _INFO_SOURCE;
-  final bool? _BOOSTING;
-  final double? _POLAR_SING_LOC_LAT;
-  final double? _POLAR_SING_LOC_LON;
-  final bool? _EMG_IND;
-  final bool? _DROP_PT_IND;
-  final String? _LAUNCH_TIME;
-  final double? _LAUNCH_LAT;
-  final double? _LAUNCH_LON;
-  final double? _AZ_CORR;
-  final double? _BURNOUT_ALT;
-  final aouReportType? _LAUNCH_AOU_TYPE;
-  final String? _IMPACT_TIME;
-  final double? _IMPACT_LAT;
-  final double? _IMPACT_LON;
-  final aouReportType? _IMPACT_AOU_TYPE;
-  final String? _VECTOR_START_TIME;
-  final double? _VECTOR_STEP_SIZE;
-  final int? _VECTOR_COMPONENTS;
-  final List<double>? _VECTORS;
-  final List<double>? _AOU_RPT;
-  final List<double>? _LAUNCH_AOU;
-  final List<double>? _IMPACT_AOU;
+class lamAscentEventObjectBuilder extends fb.ObjectBuilder {
+  final String? _EVENT_ID;
+  final String? _EVENT_TYPE;
+  final String? _EPOCH;
+  final double? _TIME_FROM_LAUNCH_S;
+  final lamMissionPhase? _PHASE;
+  final double? _ALTITUDE_M;
+  final double? _SPEED_M_PER_S;
+  final double? _MASS_KG;
+  final String? _DESCRIPTION;
 
-  MSTObjectBuilder({
-    String? ID,
-    String? MSG_TYPE,
-    String? msgType,
-    String? MSG_SUB_TYPE,
-    String? msgSubType,
-    String? MSG_CREATE_DATE,
-    String? msgCreateDate,
-    missileEnvironment? ENVIRONMENT,
-    String? OBJ_TYPE,
-    String? objType,
-    int? OBJ_TYPE_CONF,
-    int? objTypeConf,
-    String? OBJ_PLAT,
-    String? objPlat,
-    String? OBJ_IDENT,
-    String? objIdent,
-    String? SPACE_AMP,
-    String? spaceAmp,
-    int? SPACE_AMP_CONF,
-    int? spaceAmpConf,
-    String? OBJ_ACT,
-    String? objAct,
-    String? SPACE_SPEC_TYPE,
-    String? spaceSpecType,
-    String? ACFT_SUB_TYPE,
-    String? acftSubType,
-    String? NAME,
-    String? CALL_SIGN,
-    String? callSign,
-    bool? LOST_TRK_IND,
-    bool? lostTrkInd,
-    String? TRACK_ID,
-    String? trackId,
-    String? PARENT_TRACK_ID,
-    String? parentTrackId,
-    String? MUID_SRC_TRK,
-    String? muidSrcTrk,
-    String? MUID_SRC,
-    String? muidSrc,
-    String? ALERT,
-    missileStatus? MSL_STATUS,
-    missileStatus? mslStatus,
-    String? TS,
-    aouReportType? AOU_RPT_TYPE,
-    aouReportType? aouRptType,
-    double? CONTAINMENT,
-    double? TRK_CONF,
-    double? trkConf,
-    int? TRK_QUAL,
-    int? trkQual,
-    double? ANG_ELEV,
-    double? angElev,
-    String? SEN_MODE,
-    String? senMode,
-    String? INFO_SOURCE,
-    String? infoSource,
-    bool? BOOSTING,
-    double? POLAR_SING_LOC_LAT,
-    double? polarSingLocLat,
-    double? POLAR_SING_LOC_LON,
-    double? polarSingLocLon,
-    bool? EMG_IND,
-    bool? emgInd,
-    bool? DROP_PT_IND,
-    bool? dropPtInd,
-    String? LAUNCH_TIME,
-    String? launchTime,
-    double? LAUNCH_LAT,
-    double? launchLat,
-    double? LAUNCH_LON,
-    double? launchLon,
-    double? AZ_CORR,
-    double? azCorr,
-    double? BURNOUT_ALT,
-    double? burnoutAlt,
-    aouReportType? LAUNCH_AOU_TYPE,
-    aouReportType? launchAouType,
-    String? IMPACT_TIME,
-    String? impactTime,
-    double? IMPACT_LAT,
-    double? impactLat,
-    double? IMPACT_LON,
-    double? impactLon,
-    aouReportType? IMPACT_AOU_TYPE,
-    aouReportType? impactAouType,
-    String? VECTOR_START_TIME,
-    String? vectorStartTime,
-    double? VECTOR_STEP_SIZE,
-    double? vectorStepSize,
-    int? VECTOR_COMPONENTS,
-    int? vectorComponents,
-    List<double>? VECTORS,
-    List<double>? AOU_RPT,
-    List<double>? aouRpt,
-    List<double>? LAUNCH_AOU,
-    List<double>? launchAou,
-    List<double>? IMPACT_AOU,
-    List<double>? impactAou,
+  lamAscentEventObjectBuilder({
+    String? EVENT_ID,
+    String? eventId,
+    String? EVENT_TYPE,
+    String? eventType,
+    String? EPOCH,
+    double? TIME_FROM_LAUNCH_S,
+    double? timeFromLaunchS,
+    lamMissionPhase? PHASE,
+    double? ALTITUDE_M,
+    double? altitudeM,
+    double? SPEED_M_PER_S,
+    double? speedMPerS,
+    double? MASS_KG,
+    double? massKg,
+    String? DESCRIPTION,
   })
-      : _ID = ID,
-        _MSG_TYPE = msgType ?? MSG_TYPE,
-        _MSG_SUB_TYPE = msgSubType ?? MSG_SUB_TYPE,
-        _MSG_CREATE_DATE = msgCreateDate ?? MSG_CREATE_DATE,
-        _ENVIRONMENT = ENVIRONMENT,
-        _OBJ_TYPE = objType ?? OBJ_TYPE,
-        _OBJ_TYPE_CONF = objTypeConf ?? OBJ_TYPE_CONF,
-        _OBJ_PLAT = objPlat ?? OBJ_PLAT,
-        _OBJ_IDENT = objIdent ?? OBJ_IDENT,
-        _SPACE_AMP = spaceAmp ?? SPACE_AMP,
-        _SPACE_AMP_CONF = spaceAmpConf ?? SPACE_AMP_CONF,
-        _OBJ_ACT = objAct ?? OBJ_ACT,
-        _SPACE_SPEC_TYPE = spaceSpecType ?? SPACE_SPEC_TYPE,
-        _ACFT_SUB_TYPE = acftSubType ?? ACFT_SUB_TYPE,
-        _NAME = NAME,
-        _CALL_SIGN = callSign ?? CALL_SIGN,
-        _LOST_TRK_IND = lostTrkInd ?? LOST_TRK_IND,
-        _TRACK_ID = trackId ?? TRACK_ID,
-        _PARENT_TRACK_ID = parentTrackId ?? PARENT_TRACK_ID,
-        _MUID_SRC_TRK = muidSrcTrk ?? MUID_SRC_TRK,
-        _MUID_SRC = muidSrc ?? MUID_SRC,
-        _ALERT = ALERT,
-        _MSL_STATUS = mslStatus ?? MSL_STATUS,
-        _TS = TS,
-        _AOU_RPT_TYPE = aouRptType ?? AOU_RPT_TYPE,
-        _CONTAINMENT = CONTAINMENT,
-        _TRK_CONF = trkConf ?? TRK_CONF,
-        _TRK_QUAL = trkQual ?? TRK_QUAL,
-        _ANG_ELEV = angElev ?? ANG_ELEV,
-        _SEN_MODE = senMode ?? SEN_MODE,
-        _INFO_SOURCE = infoSource ?? INFO_SOURCE,
-        _BOOSTING = BOOSTING,
-        _POLAR_SING_LOC_LAT = polarSingLocLat ?? POLAR_SING_LOC_LAT,
-        _POLAR_SING_LOC_LON = polarSingLocLon ?? POLAR_SING_LOC_LON,
-        _EMG_IND = emgInd ?? EMG_IND,
-        _DROP_PT_IND = dropPtInd ?? DROP_PT_IND,
-        _LAUNCH_TIME = launchTime ?? LAUNCH_TIME,
-        _LAUNCH_LAT = launchLat ?? LAUNCH_LAT,
-        _LAUNCH_LON = launchLon ?? LAUNCH_LON,
-        _AZ_CORR = azCorr ?? AZ_CORR,
-        _BURNOUT_ALT = burnoutAlt ?? BURNOUT_ALT,
-        _LAUNCH_AOU_TYPE = launchAouType ?? LAUNCH_AOU_TYPE,
-        _IMPACT_TIME = impactTime ?? IMPACT_TIME,
-        _IMPACT_LAT = impactLat ?? IMPACT_LAT,
-        _IMPACT_LON = impactLon ?? IMPACT_LON,
-        _IMPACT_AOU_TYPE = impactAouType ?? IMPACT_AOU_TYPE,
-        _VECTOR_START_TIME = vectorStartTime ?? VECTOR_START_TIME,
-        _VECTOR_STEP_SIZE = vectorStepSize ?? VECTOR_STEP_SIZE,
-        _VECTOR_COMPONENTS = vectorComponents ?? VECTOR_COMPONENTS,
-        _VECTORS = VECTORS,
-        _AOU_RPT = aouRpt ?? AOU_RPT,
-        _LAUNCH_AOU = launchAou ?? LAUNCH_AOU,
-        _IMPACT_AOU = impactAou ?? IMPACT_AOU;
+      : _EVENT_ID = eventId ?? EVENT_ID,
+        _EVENT_TYPE = eventType ?? EVENT_TYPE,
+        _EPOCH = EPOCH,
+        _TIME_FROM_LAUNCH_S = timeFromLaunchS ?? TIME_FROM_LAUNCH_S,
+        _PHASE = PHASE,
+        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _SPEED_M_PER_S = speedMPerS ?? SPEED_M_PER_S,
+        _MASS_KG = massKg ?? MASS_KG,
+        _DESCRIPTION = DESCRIPTION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? IDOffset = _ID == null ? null
-        : fbBuilder.writeString(_ID!);
-    final int? MSG_TYPEOffset = _MSG_TYPE == null ? null
-        : fbBuilder.writeString(_MSG_TYPE!);
-    final int? MSG_SUB_TYPEOffset = _MSG_SUB_TYPE == null ? null
-        : fbBuilder.writeString(_MSG_SUB_TYPE!);
-    final int? MSG_CREATE_DATEOffset = _MSG_CREATE_DATE == null ? null
-        : fbBuilder.writeString(_MSG_CREATE_DATE!);
-    final int? OBJ_TYPEOffset = _OBJ_TYPE == null ? null
-        : fbBuilder.writeString(_OBJ_TYPE!);
-    final int? OBJ_PLATOffset = _OBJ_PLAT == null ? null
-        : fbBuilder.writeString(_OBJ_PLAT!);
-    final int? OBJ_IDENTOffset = _OBJ_IDENT == null ? null
-        : fbBuilder.writeString(_OBJ_IDENT!);
-    final int? SPACE_AMPOffset = _SPACE_AMP == null ? null
-        : fbBuilder.writeString(_SPACE_AMP!);
-    final int? OBJ_ACTOffset = _OBJ_ACT == null ? null
-        : fbBuilder.writeString(_OBJ_ACT!);
-    final int? SPACE_SPEC_TYPEOffset = _SPACE_SPEC_TYPE == null ? null
-        : fbBuilder.writeString(_SPACE_SPEC_TYPE!);
-    final int? ACFT_SUB_TYPEOffset = _ACFT_SUB_TYPE == null ? null
-        : fbBuilder.writeString(_ACFT_SUB_TYPE!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? CALL_SIGNOffset = _CALL_SIGN == null ? null
-        : fbBuilder.writeString(_CALL_SIGN!);
-    final int? TRACK_IDOffset = _TRACK_ID == null ? null
-        : fbBuilder.writeString(_TRACK_ID!);
-    final int? PARENT_TRACK_IDOffset = _PARENT_TRACK_ID == null ? null
-        : fbBuilder.writeString(_PARENT_TRACK_ID!);
-    final int? MUID_SRC_TRKOffset = _MUID_SRC_TRK == null ? null
-        : fbBuilder.writeString(_MUID_SRC_TRK!);
-    final int? MUID_SRCOffset = _MUID_SRC == null ? null
-        : fbBuilder.writeString(_MUID_SRC!);
-    final int? ALERTOffset = _ALERT == null ? null
-        : fbBuilder.writeString(_ALERT!);
-    final int? TSOffset = _TS == null ? null
-        : fbBuilder.writeString(_TS!);
-    final int? SEN_MODEOffset = _SEN_MODE == null ? null
-        : fbBuilder.writeString(_SEN_MODE!);
-    final int? INFO_SOURCEOffset = _INFO_SOURCE == null ? null
-        : fbBuilder.writeString(_INFO_SOURCE!);
-    final int? LAUNCH_TIMEOffset = _LAUNCH_TIME == null ? null
-        : fbBuilder.writeString(_LAUNCH_TIME!);
-    final int? IMPACT_TIMEOffset = _IMPACT_TIME == null ? null
-        : fbBuilder.writeString(_IMPACT_TIME!);
-    final int? VECTOR_START_TIMEOffset = _VECTOR_START_TIME == null ? null
-        : fbBuilder.writeString(_VECTOR_START_TIME!);
-    final int? VECTORSOffset = _VECTORS == null ? null
-        : fbBuilder.writeListFloat64(_VECTORS!);
-    final int? AOU_RPTOffset = _AOU_RPT == null ? null
-        : fbBuilder.writeListFloat64(_AOU_RPT!);
-    final int? LAUNCH_AOUOffset = _LAUNCH_AOU == null ? null
-        : fbBuilder.writeListFloat64(_LAUNCH_AOU!);
-    final int? IMPACT_AOUOffset = _IMPACT_AOU == null ? null
-        : fbBuilder.writeListFloat64(_IMPACT_AOU!);
-    fbBuilder.startTable(53);
-    fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, MSG_TYPEOffset);
-    fbBuilder.addOffset(2, MSG_SUB_TYPEOffset);
-    fbBuilder.addOffset(3, MSG_CREATE_DATEOffset);
-    fbBuilder.addInt8(4, _ENVIRONMENT?.value);
-    fbBuilder.addOffset(5, OBJ_TYPEOffset);
-    fbBuilder.addUint8(6, _OBJ_TYPE_CONF);
-    fbBuilder.addOffset(7, OBJ_PLATOffset);
-    fbBuilder.addOffset(8, OBJ_IDENTOffset);
-    fbBuilder.addOffset(9, SPACE_AMPOffset);
-    fbBuilder.addUint8(10, _SPACE_AMP_CONF);
-    fbBuilder.addOffset(11, OBJ_ACTOffset);
-    fbBuilder.addOffset(12, SPACE_SPEC_TYPEOffset);
-    fbBuilder.addOffset(13, ACFT_SUB_TYPEOffset);
-    fbBuilder.addOffset(14, NAMEOffset);
-    fbBuilder.addOffset(15, CALL_SIGNOffset);
-    fbBuilder.addBool(16, _LOST_TRK_IND);
-    fbBuilder.addOffset(17, TRACK_IDOffset);
-    fbBuilder.addOffset(18, PARENT_TRACK_IDOffset);
-    fbBuilder.addOffset(19, MUID_SRC_TRKOffset);
-    fbBuilder.addOffset(20, MUID_SRCOffset);
-    fbBuilder.addOffset(21, ALERTOffset);
-    fbBuilder.addInt8(22, _MSL_STATUS?.value);
-    fbBuilder.addOffset(23, TSOffset);
-    fbBuilder.addInt8(24, _AOU_RPT_TYPE?.value);
-    fbBuilder.addFloat64(25, _CONTAINMENT);
-    fbBuilder.addFloat64(26, _TRK_CONF);
-    fbBuilder.addUint8(27, _TRK_QUAL);
-    fbBuilder.addFloat64(28, _ANG_ELEV);
-    fbBuilder.addOffset(29, SEN_MODEOffset);
-    fbBuilder.addOffset(30, INFO_SOURCEOffset);
-    fbBuilder.addBool(31, _BOOSTING);
-    fbBuilder.addFloat64(32, _POLAR_SING_LOC_LAT);
-    fbBuilder.addFloat64(33, _POLAR_SING_LOC_LON);
-    fbBuilder.addBool(34, _EMG_IND);
-    fbBuilder.addBool(35, _DROP_PT_IND);
-    fbBuilder.addOffset(36, LAUNCH_TIMEOffset);
-    fbBuilder.addFloat64(37, _LAUNCH_LAT);
-    fbBuilder.addFloat64(38, _LAUNCH_LON);
-    fbBuilder.addFloat64(39, _AZ_CORR);
-    fbBuilder.addFloat64(40, _BURNOUT_ALT);
-    fbBuilder.addInt8(41, _LAUNCH_AOU_TYPE?.value);
-    fbBuilder.addOffset(42, IMPACT_TIMEOffset);
-    fbBuilder.addFloat64(43, _IMPACT_LAT);
-    fbBuilder.addFloat64(44, _IMPACT_LON);
-    fbBuilder.addInt8(45, _IMPACT_AOU_TYPE?.value);
-    fbBuilder.addOffset(46, VECTOR_START_TIMEOffset);
-    fbBuilder.addFloat64(47, _VECTOR_STEP_SIZE);
-    fbBuilder.addUint8(48, _VECTOR_COMPONENTS);
-    fbBuilder.addOffset(49, VECTORSOffset);
-    fbBuilder.addOffset(50, AOU_RPTOffset);
-    fbBuilder.addOffset(51, LAUNCH_AOUOffset);
-    fbBuilder.addOffset(52, IMPACT_AOUOffset);
+    final int? EVENT_IDOffset = _EVENT_ID == null ? null
+        : fbBuilder.writeString(_EVENT_ID!);
+    final int? EVENT_TYPEOffset = _EVENT_TYPE == null ? null
+        : fbBuilder.writeString(_EVENT_TYPE!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, EVENT_IDOffset);
+    fbBuilder.addOffset(1, EVENT_TYPEOffset);
+    fbBuilder.addOffset(2, EPOCHOffset);
+    fbBuilder.addFloat64(3, _TIME_FROM_LAUNCH_S);
+    fbBuilder.addInt8(4, _PHASE?.value);
+    fbBuilder.addFloat64(5, _ALTITUDE_M);
+    fbBuilder.addFloat64(6, _SPEED_M_PER_S);
+    fbBuilder.addFloat64(7, _MASS_KG);
+    fbBuilder.addOffset(8, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Launch-ascent constraint violation.
+class lamConstraintViolation {
+  lamConstraintViolation._(this._bc, this._bcOffset);
+  factory lamConstraintViolation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<lamConstraintViolation> reader = _lamConstraintViolationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Constraint identifier.
+  String? get CONSTRAINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get constraintId => CONSTRAINT_ID;
+  ///  Constraint name.
+  String? get CONSTRAINT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get constraintName => CONSTRAINT_NAME;
+  ///  Constraint status.
+  lamConstraintStatus get STATUS => lamConstraintStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Epoch of closest approach or violation in ISO 8601 UTC format.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Time from launch in seconds.
+  double get TIME_FROM_LAUNCH_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get timeFromLaunchS => TIME_FROM_LAUNCH_S;
+  ///  Observed constraint value.
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Constraint limit.
+  double get LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Units for value and limit.
+  String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Free-form description.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+
+  @override
+  String toString() {
+    return 'lamConstraintViolation{constraintId: ${constraintId}, constraintName: ${constraintName}, STATUS: ${STATUS}, EPOCH: ${EPOCH}, timeFromLaunchS: ${timeFromLaunchS}, VALUE: ${VALUE}, LIMIT: ${LIMIT}, UNITS: ${UNITS}, DESCRIPTION: ${DESCRIPTION}}';
+  }
+}
+
+class _lamConstraintViolationReader extends fb.TableReader<lamConstraintViolation> {
+  const _lamConstraintViolationReader();
+
+  @override
+  lamConstraintViolation createObject(fb.BufferContext bc, int offset) =>
+    lamConstraintViolation._(bc, offset);
+}
+
+class lamConstraintViolationBuilder {
+  lamConstraintViolationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addConstraintIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addConstraintNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addStatus(lamConstraintStatus? STATUS) {
+    fbBuilder.addInt8(2, STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeFromLaunchS(double? TIME_FROM_LAUNCH_S) {
+    fbBuilder.addFloat64(4, TIME_FROM_LAUNCH_S);
+    return fbBuilder.offset;
+  }
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(5, VALUE);
+    return fbBuilder.offset;
+  }
+  int addLimit(double? LIMIT) {
+    fbBuilder.addFloat64(6, LIMIT);
+    return fbBuilder.offset;
+  }
+  int addUnitsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class lamConstraintViolationObjectBuilder extends fb.ObjectBuilder {
+  final String? _CONSTRAINT_ID;
+  final String? _CONSTRAINT_NAME;
+  final lamConstraintStatus? _STATUS;
+  final String? _EPOCH;
+  final double? _TIME_FROM_LAUNCH_S;
+  final double? _VALUE;
+  final double? _LIMIT;
+  final String? _UNITS;
+  final String? _DESCRIPTION;
+
+  lamConstraintViolationObjectBuilder({
+    String? CONSTRAINT_ID,
+    String? constraintId,
+    String? CONSTRAINT_NAME,
+    String? constraintName,
+    lamConstraintStatus? STATUS,
+    String? EPOCH,
+    double? TIME_FROM_LAUNCH_S,
+    double? timeFromLaunchS,
+    double? VALUE,
+    double? LIMIT,
+    String? UNITS,
+    String? DESCRIPTION,
+  })
+      : _CONSTRAINT_ID = constraintId ?? CONSTRAINT_ID,
+        _CONSTRAINT_NAME = constraintName ?? CONSTRAINT_NAME,
+        _STATUS = STATUS,
+        _EPOCH = EPOCH,
+        _TIME_FROM_LAUNCH_S = timeFromLaunchS ?? TIME_FROM_LAUNCH_S,
+        _VALUE = VALUE,
+        _LIMIT = LIMIT,
+        _UNITS = UNITS,
+        _DESCRIPTION = DESCRIPTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CONSTRAINT_IDOffset = _CONSTRAINT_ID == null ? null
+        : fbBuilder.writeString(_CONSTRAINT_ID!);
+    final int? CONSTRAINT_NAMEOffset = _CONSTRAINT_NAME == null ? null
+        : fbBuilder.writeString(_CONSTRAINT_NAME!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? UNITSOffset = _UNITS == null ? null
+        : fbBuilder.writeString(_UNITS!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, CONSTRAINT_IDOffset);
+    fbBuilder.addOffset(1, CONSTRAINT_NAMEOffset);
+    fbBuilder.addInt8(2, _STATUS?.value);
+    fbBuilder.addOffset(3, EPOCHOffset);
+    fbBuilder.addFloat64(4, _TIME_FROM_LAUNCH_S);
+    fbBuilder.addFloat64(5, _VALUE);
+    fbBuilder.addFloat64(6, _LIMIT);
+    fbBuilder.addOffset(7, UNITSOffset);
+    fbBuilder.addOffset(8, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Orbit a launch is steered to.
+class lamTargetOrbit {
+  lamTargetOrbit._(this._bc, this._bcOffset);
+  factory lamTargetOrbit(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<lamTargetOrbit> reader = _lamTargetOrbitReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Target inclination in degrees.
+  double get INCLINATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get inclinationDeg => INCLINATION_DEG;
+  ///  Ground-track direction of the ascent.
+  lamPassDirection get PASS_DIRECTION => lamPassDirection.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  lamPassDirection get passDirection => PASS_DIRECTION;
+  ///  Target periapsis altitude above the WGS-84 equatorial radius, in meters.
+  double get PERIAPSIS_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get periapsisAltitudeM => PERIAPSIS_ALTITUDE_M;
+  ///  Target apoapsis altitude above the WGS-84 equatorial radius, in meters.
+  double get APOAPSIS_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get apoapsisAltitudeM => APOAPSIS_ALTITUDE_M;
+  ///  Time from launch of orbit insertion (engine cutoff), in seconds.
+  double get INSERTION_TIME_FROM_LAUNCH_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get insertionTimeFromLaunchS => INSERTION_TIME_FROM_LAUNCH_S;
+  ///  Ephemeris of an object whose orbit plane the launch joins, in the TEME frame.
+  OEM? get PLANE_REFERENCE => OEM.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  OEM? get planeReference => PLANE_REFERENCE;
+
+  @override
+  String toString() {
+    return 'lamTargetOrbit{inclinationDeg: ${inclinationDeg}, passDirection: ${passDirection}, periapsisAltitudeM: ${periapsisAltitudeM}, apoapsisAltitudeM: ${apoapsisAltitudeM}, insertionTimeFromLaunchS: ${insertionTimeFromLaunchS}, planeReference: ${planeReference}}';
+  }
+}
+
+class _lamTargetOrbitReader extends fb.TableReader<lamTargetOrbit> {
+  const _lamTargetOrbitReader();
+
+  @override
+  lamTargetOrbit createObject(fb.BufferContext bc, int offset) =>
+    lamTargetOrbit._(bc, offset);
+}
+
+class lamTargetOrbitBuilder {
+  lamTargetOrbitBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addInclinationDeg(double? INCLINATION_DEG) {
+    fbBuilder.addFloat64(0, INCLINATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addPassDirection(lamPassDirection? PASS_DIRECTION) {
+    fbBuilder.addInt8(1, PASS_DIRECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addPeriapsisAltitudeM(double? PERIAPSIS_ALTITUDE_M) {
+    fbBuilder.addFloat64(2, PERIAPSIS_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addApoapsisAltitudeM(double? APOAPSIS_ALTITUDE_M) {
+    fbBuilder.addFloat64(3, APOAPSIS_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addInsertionTimeFromLaunchS(double? INSERTION_TIME_FROM_LAUNCH_S) {
+    fbBuilder.addFloat64(4, INSERTION_TIME_FROM_LAUNCH_S);
+    return fbBuilder.offset;
+  }
+  int addPlaneReferenceOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class lamTargetOrbitObjectBuilder extends fb.ObjectBuilder {
+  final double? _INCLINATION_DEG;
+  final lamPassDirection? _PASS_DIRECTION;
+  final double? _PERIAPSIS_ALTITUDE_M;
+  final double? _APOAPSIS_ALTITUDE_M;
+  final double? _INSERTION_TIME_FROM_LAUNCH_S;
+  final OEMObjectBuilder? _PLANE_REFERENCE;
+
+  lamTargetOrbitObjectBuilder({
+    double? INCLINATION_DEG,
+    double? inclinationDeg,
+    lamPassDirection? PASS_DIRECTION,
+    lamPassDirection? passDirection,
+    double? PERIAPSIS_ALTITUDE_M,
+    double? periapsisAltitudeM,
+    double? APOAPSIS_ALTITUDE_M,
+    double? apoapsisAltitudeM,
+    double? INSERTION_TIME_FROM_LAUNCH_S,
+    double? insertionTimeFromLaunchS,
+    OEMObjectBuilder? PLANE_REFERENCE,
+    OEMObjectBuilder? planeReference,
+  })
+      : _INCLINATION_DEG = inclinationDeg ?? INCLINATION_DEG,
+        _PASS_DIRECTION = passDirection ?? PASS_DIRECTION,
+        _PERIAPSIS_ALTITUDE_M = periapsisAltitudeM ?? PERIAPSIS_ALTITUDE_M,
+        _APOAPSIS_ALTITUDE_M = apoapsisAltitudeM ?? APOAPSIS_ALTITUDE_M,
+        _INSERTION_TIME_FROM_LAUNCH_S = insertionTimeFromLaunchS ?? INSERTION_TIME_FROM_LAUNCH_S,
+        _PLANE_REFERENCE = planeReference ?? PLANE_REFERENCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PLANE_REFERENCEOffset = _PLANE_REFERENCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addFloat64(0, _INCLINATION_DEG);
+    fbBuilder.addInt8(1, _PASS_DIRECTION?.value);
+    fbBuilder.addFloat64(2, _PERIAPSIS_ALTITUDE_M);
+    fbBuilder.addFloat64(3, _APOAPSIS_ALTITUDE_M);
+    fbBuilder.addFloat64(4, _INSERTION_TIME_FROM_LAUNCH_S);
+    fbBuilder.addOffset(5, PLANE_REFERENCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Orbit at insertion, measured or projected.
+class lamInsertionOrbit {
+  lamInsertionOrbit._(this._bc, this._bcOffset);
+  factory lamInsertionOrbit(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<lamInsertionOrbit> reader = _lamInsertionOrbitReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Insertion epoch in ISO 8601 UTC format.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Time from launch of insertion, in seconds.
+  double get TIME_FROM_LAUNCH_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get timeFromLaunchS => TIME_FROM_LAUNCH_S;
+  ///  Frame of the angular elements.
+  String? get REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get refFrame => REF_FRAME;
+  ///  Osculating semi-major axis in meters.
+  double get SEMI_MAJOR_AXIS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get semiMajorAxisM => SEMI_MAJOR_AXIS_M;
+  ///  Osculating eccentricity.
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Inclination in degrees.
+  double get INCLINATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get inclinationDeg => INCLINATION_DEG;
+  ///  Right ascension of the ascending node in degrees.
+  double get RAAN_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get raanDeg => RAAN_DEG;
+  ///  Argument of periapsis in degrees.
+  double get ARGUMENT_OF_PERIAPSIS_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get argumentOfPeriapsisDeg => ARGUMENT_OF_PERIAPSIS_DEG;
+  ///  Argument of latitude at insertion in degrees.
+  double get ARGUMENT_OF_LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get argumentOfLatitudeDeg => ARGUMENT_OF_LATITUDE_DEG;
+  ///  Periapsis altitude above the WGS-84 equatorial radius, in meters.
+  double get PERIAPSIS_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get periapsisAltitudeM => PERIAPSIS_ALTITUDE_M;
+  ///  Apoapsis altitude above the WGS-84 equatorial radius, in meters.
+  double get APOAPSIS_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get apoapsisAltitudeM => APOAPSIS_ALTITUDE_M;
+  ///  One-sigma uncertainty of RAAN_DEG in degrees.
+  double get RAAN_UNCERTAINTY_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get raanUncertaintyDeg => RAAN_UNCERTAINTY_DEG;
+  ///  One-sigma uncertainty of ARGUMENT_OF_LATITUDE_DEG in degrees.
+  double get ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get argumentOfLatitudeUncertaintyDeg => ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG;
+  ///  One-sigma uncertainty of PERIAPSIS_ALTITUDE_M in meters.
+  double get PERIAPSIS_ALTITUDE_UNCERTAINTY_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get periapsisAltitudeUncertaintyM => PERIAPSIS_ALTITUDE_UNCERTAINTY_M;
+  ///  One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
+  double get APOAPSIS_ALTITUDE_UNCERTAINTY_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get apoapsisAltitudeUncertaintyM => APOAPSIS_ALTITUDE_UNCERTAINTY_M;
+
+  @override
+  String toString() {
+    return 'lamInsertionOrbit{EPOCH: ${EPOCH}, timeFromLaunchS: ${timeFromLaunchS}, refFrame: ${refFrame}, semiMajorAxisM: ${semiMajorAxisM}, ECCENTRICITY: ${ECCENTRICITY}, inclinationDeg: ${inclinationDeg}, raanDeg: ${raanDeg}, argumentOfPeriapsisDeg: ${argumentOfPeriapsisDeg}, argumentOfLatitudeDeg: ${argumentOfLatitudeDeg}, periapsisAltitudeM: ${periapsisAltitudeM}, apoapsisAltitudeM: ${apoapsisAltitudeM}, raanUncertaintyDeg: ${raanUncertaintyDeg}, argumentOfLatitudeUncertaintyDeg: ${argumentOfLatitudeUncertaintyDeg}, periapsisAltitudeUncertaintyM: ${periapsisAltitudeUncertaintyM}, apoapsisAltitudeUncertaintyM: ${apoapsisAltitudeUncertaintyM}}';
+  }
+}
+
+class _lamInsertionOrbitReader extends fb.TableReader<lamInsertionOrbit> {
+  const _lamInsertionOrbitReader();
+
+  @override
+  lamInsertionOrbit createObject(fb.BufferContext bc, int offset) =>
+    lamInsertionOrbit._(bc, offset);
+}
+
+class lamInsertionOrbitBuilder {
+  lamInsertionOrbitBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(15);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeFromLaunchS(double? TIME_FROM_LAUNCH_S) {
+    fbBuilder.addFloat64(1, TIME_FROM_LAUNCH_S);
+    return fbBuilder.offset;
+  }
+  int addRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSemiMajorAxisM(double? SEMI_MAJOR_AXIS_M) {
+    fbBuilder.addFloat64(3, SEMI_MAJOR_AXIS_M);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(4, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addInclinationDeg(double? INCLINATION_DEG) {
+    fbBuilder.addFloat64(5, INCLINATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addRaanDeg(double? RAAN_DEG) {
+    fbBuilder.addFloat64(6, RAAN_DEG);
+    return fbBuilder.offset;
+  }
+  int addArgumentOfPeriapsisDeg(double? ARGUMENT_OF_PERIAPSIS_DEG) {
+    fbBuilder.addFloat64(7, ARGUMENT_OF_PERIAPSIS_DEG);
+    return fbBuilder.offset;
+  }
+  int addArgumentOfLatitudeDeg(double? ARGUMENT_OF_LATITUDE_DEG) {
+    fbBuilder.addFloat64(8, ARGUMENT_OF_LATITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addPeriapsisAltitudeM(double? PERIAPSIS_ALTITUDE_M) {
+    fbBuilder.addFloat64(9, PERIAPSIS_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addApoapsisAltitudeM(double? APOAPSIS_ALTITUDE_M) {
+    fbBuilder.addFloat64(10, APOAPSIS_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addRaanUncertaintyDeg(double? RAAN_UNCERTAINTY_DEG) {
+    fbBuilder.addFloat64(11, RAAN_UNCERTAINTY_DEG);
+    return fbBuilder.offset;
+  }
+  int addArgumentOfLatitudeUncertaintyDeg(double? ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG) {
+    fbBuilder.addFloat64(12, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
+    return fbBuilder.offset;
+  }
+  int addPeriapsisAltitudeUncertaintyM(double? PERIAPSIS_ALTITUDE_UNCERTAINTY_M) {
+    fbBuilder.addFloat64(13, PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
+    return fbBuilder.offset;
+  }
+  int addApoapsisAltitudeUncertaintyM(double? APOAPSIS_ALTITUDE_UNCERTAINTY_M) {
+    fbBuilder.addFloat64(14, APOAPSIS_ALTITUDE_UNCERTAINTY_M);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class lamInsertionOrbitObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final double? _TIME_FROM_LAUNCH_S;
+  final String? _REF_FRAME;
+  final double? _SEMI_MAJOR_AXIS_M;
+  final double? _ECCENTRICITY;
+  final double? _INCLINATION_DEG;
+  final double? _RAAN_DEG;
+  final double? _ARGUMENT_OF_PERIAPSIS_DEG;
+  final double? _ARGUMENT_OF_LATITUDE_DEG;
+  final double? _PERIAPSIS_ALTITUDE_M;
+  final double? _APOAPSIS_ALTITUDE_M;
+  final double? _RAAN_UNCERTAINTY_DEG;
+  final double? _ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG;
+  final double? _PERIAPSIS_ALTITUDE_UNCERTAINTY_M;
+  final double? _APOAPSIS_ALTITUDE_UNCERTAINTY_M;
+
+  lamInsertionOrbitObjectBuilder({
+    String? EPOCH,
+    double? TIME_FROM_LAUNCH_S,
+    double? timeFromLaunchS,
+    String? REF_FRAME,
+    String? refFrame,
+    double? SEMI_MAJOR_AXIS_M,
+    double? semiMajorAxisM,
+    double? ECCENTRICITY,
+    double? INCLINATION_DEG,
+    double? inclinationDeg,
+    double? RAAN_DEG,
+    double? raanDeg,
+    double? ARGUMENT_OF_PERIAPSIS_DEG,
+    double? argumentOfPeriapsisDeg,
+    double? ARGUMENT_OF_LATITUDE_DEG,
+    double? argumentOfLatitudeDeg,
+    double? PERIAPSIS_ALTITUDE_M,
+    double? periapsisAltitudeM,
+    double? APOAPSIS_ALTITUDE_M,
+    double? apoapsisAltitudeM,
+    double? RAAN_UNCERTAINTY_DEG,
+    double? raanUncertaintyDeg,
+    double? ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
+    double? argumentOfLatitudeUncertaintyDeg,
+    double? PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
+    double? periapsisAltitudeUncertaintyM,
+    double? APOAPSIS_ALTITUDE_UNCERTAINTY_M,
+    double? apoapsisAltitudeUncertaintyM,
+  })
+      : _EPOCH = EPOCH,
+        _TIME_FROM_LAUNCH_S = timeFromLaunchS ?? TIME_FROM_LAUNCH_S,
+        _REF_FRAME = refFrame ?? REF_FRAME,
+        _SEMI_MAJOR_AXIS_M = semiMajorAxisM ?? SEMI_MAJOR_AXIS_M,
+        _ECCENTRICITY = ECCENTRICITY,
+        _INCLINATION_DEG = inclinationDeg ?? INCLINATION_DEG,
+        _RAAN_DEG = raanDeg ?? RAAN_DEG,
+        _ARGUMENT_OF_PERIAPSIS_DEG = argumentOfPeriapsisDeg ?? ARGUMENT_OF_PERIAPSIS_DEG,
+        _ARGUMENT_OF_LATITUDE_DEG = argumentOfLatitudeDeg ?? ARGUMENT_OF_LATITUDE_DEG,
+        _PERIAPSIS_ALTITUDE_M = periapsisAltitudeM ?? PERIAPSIS_ALTITUDE_M,
+        _APOAPSIS_ALTITUDE_M = apoapsisAltitudeM ?? APOAPSIS_ALTITUDE_M,
+        _RAAN_UNCERTAINTY_DEG = raanUncertaintyDeg ?? RAAN_UNCERTAINTY_DEG,
+        _ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = argumentOfLatitudeUncertaintyDeg ?? ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
+        _PERIAPSIS_ALTITUDE_UNCERTAINTY_M = periapsisAltitudeUncertaintyM ?? PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
+        _APOAPSIS_ALTITUDE_UNCERTAINTY_M = apoapsisAltitudeUncertaintyM ?? APOAPSIS_ALTITUDE_UNCERTAINTY_M;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? REF_FRAMEOffset = _REF_FRAME == null ? null
+        : fbBuilder.writeString(_REF_FRAME!);
+    fbBuilder.startTable(15);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _TIME_FROM_LAUNCH_S);
+    fbBuilder.addOffset(2, REF_FRAMEOffset);
+    fbBuilder.addFloat64(3, _SEMI_MAJOR_AXIS_M);
+    fbBuilder.addFloat64(4, _ECCENTRICITY);
+    fbBuilder.addFloat64(5, _INCLINATION_DEG);
+    fbBuilder.addFloat64(6, _RAAN_DEG);
+    fbBuilder.addFloat64(7, _ARGUMENT_OF_PERIAPSIS_DEG);
+    fbBuilder.addFloat64(8, _ARGUMENT_OF_LATITUDE_DEG);
+    fbBuilder.addFloat64(9, _PERIAPSIS_ALTITUDE_M);
+    fbBuilder.addFloat64(10, _APOAPSIS_ALTITUDE_M);
+    fbBuilder.addFloat64(11, _RAAN_UNCERTAINTY_DEG);
+    fbBuilder.addFloat64(12, _ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
+    fbBuilder.addFloat64(13, _PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
+    fbBuilder.addFloat64(14, _APOAPSIS_ALTITUDE_UNCERTAINTY_M);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Launch Ascent Message
+class LAM {
+  LAM._(this._bc, this._bcOffset);
+  factory LAM(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<LAM> reader = _LAMReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Producer-defined message identifier.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get messageId => MESSAGE_ID;
+  ///  Message creation date in ISO 8601 UTC format.
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get creationDate => CREATION_DATE;
+  ///  Creating agency, application, or service.
+  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Mission name.
+  String? get MISSION_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get missionName => MISSION_NAME;
+  ///  Vehicle name.
+  String? get VEHICLE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get vehicleName => VEHICLE_NAME;
+  ///  Time system used by all epochs.
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get timeSystem => TIME_SYSTEM;
+  ///  Reference frame for trajectory data.
+  String? get REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get refFrame => REF_FRAME;
+  ///  Launch epoch in ISO 8601 UTC format.
+  String? get LAUNCH_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get launchEpoch => LAUNCH_EPOCH;
+  ///  Evaluation start epoch in ISO 8601 UTC format.
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get startTime => START_TIME;
+  ///  Evaluation stop epoch in ISO 8601 UTC format.
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get stopTime => STOP_TIME;
+  ///  Uniform propagation step size in seconds.
+  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get stepSize => STEP_SIZE;
+  ///  Source launch data message.
+  LDM? get LAUNCH_DATA => LDM.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  LDM? get launchData => LAUNCH_DATA;
+  ///  Rocket configuration used by the simulation.
+  ROC? get ROCKET_CONFIGURATION => ROC.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  ROC? get rocketConfiguration => ROCKET_CONFIGURATION;
+  ///  Launch event records used as source or result context.
+  List<LNE>? get EVENT_RECORDS => const fb.ListReader<LNE>(LNE.reader).vTableGetNullable(_bc, _bcOffset, 30);
+  List<LNE>? get eventRecords => EVENT_RECORDS;
+  ///  Launch detection records used as source or result context.
+  List<LND>? get DETECTIONS => const fb.ListReader<LND>(LND.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Boost or missile-track style records used as source or result context.
+  List<MST>? get BOOST_TRACKS => const fb.ListReader<MST>(MST.reader).vTableGetNullable(_bc, _bcOffset, 34);
+  List<MST>? get boostTracks => BOOST_TRACKS;
+  ///  Burnout vectors produced or consumed by the ascent simulation.
+  List<BOV>? get BURN_OUT_VECTORS => const fb.ListReader<BOV>(BOV.reader).vTableGetNullable(_bc, _bcOffset, 36);
+  List<BOV>? get burnOutVectors => BURN_OUT_VECTORS;
+  ///  Produced or consumed ephemeris.
+  OEM? get TRAJECTORY_OEM => OEM.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  OEM? get trajectoryOem => TRAJECTORY_OEM;
+  ///  Produced or consumed comprehensive trajectory.
+  OCM? get TRAJECTORY_OCM => OCM.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  OCM? get trajectoryOcm => TRAJECTORY_OCM;
+  ///  Atmosphere model request used by the ascent analysis.
+  ATM? get ATMOSPHERE => ATM.reader.vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Hypersonic conditions computed along the ascent trajectory.
+  HFC? get HYPERSONIC_CONDITIONS => HFC.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  HFC? get hypersonicConditions => HYPERSONIC_CONDITIONS;
+  ///  Propagator module, engine, or adapter name.
+  String? get PROPAGATOR_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get propagatorName => PROPAGATOR_NAME;
+  ///  Propagator module, engine, or adapter version.
+  String? get PROPAGATOR_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get propagatorVersion => PROPAGATOR_VERSION;
+  ///  Guidance model name.
+  String? get GUIDANCE_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get guidanceModel => GUIDANCE_MODEL;
+  ///  Thrust model name.
+  String? get THRUST_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get thrustModel => THRUST_MODEL;
+  ///  Aerodynamic model name.
+  String? get AERODYNAMIC_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get aerodynamicModel => AERODYNAMIC_MODEL;
+  ///  Current or terminal mission phase.
+  lamMissionPhase get PHASE => lamMissionPhase.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 56, 0));
+  ///  Aggregate constraint status.
+  lamConstraintStatus get CONSTRAINT_STATUS => lamConstraintStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 58, 0));
+  lamConstraintStatus get constraintStatus => CONSTRAINT_STATUS;
+  ///  Time from launch samples in seconds.
+  List<double>? get TIME_FROM_LAUNCH_S => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 60);
+  List<double>? get timeFromLaunchS => TIME_FROM_LAUNCH_S;
+  ///  Geodetic latitude samples in degrees.
+  List<double>? get LATITUDE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 62);
+  List<double>? get latitudeDeg => LATITUDE_DEG;
+  ///  Geodetic longitude samples in degrees.
+  List<double>? get LONGITUDE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 64);
+  List<double>? get longitudeDeg => LONGITUDE_DEG;
+  ///  Altitude samples in meters.
+  List<double>? get ALTITUDE_M => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 66);
+  List<double>? get altitudeM => ALTITUDE_M;
+  ///  Downrange distance samples in meters.
+  List<double>? get DOWNRANGE_M => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 68);
+  List<double>? get downrangeM => DOWNRANGE_M;
+  ///  Speed samples in meters per second.
+  List<double>? get SPEED_M_PER_S => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 70);
+  List<double>? get speedMPerS => SPEED_M_PER_S;
+  ///  Mach number samples.
+  List<double>? get MACH => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 72);
+  ///  Dynamic pressure samples in pascals.
+  List<double>? get DYNAMIC_PRESSURE_PA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 74);
+  List<double>? get dynamicPressurePa => DYNAMIC_PRESSURE_PA;
+  ///  Heat flux samples in watts per square meter.
+  List<double>? get HEAT_FLUX_W_PER_M2 => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 76);
+  List<double>? get heatFluxWPerM2 => HEAT_FLUX_W_PER_M2;
+  ///  Vehicle mass samples in kilograms.
+  List<double>? get MASS_KG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 78);
+  List<double>? get massKg => MASS_KG;
+  ///  Thrust samples in newtons.
+  List<double>? get THRUST_N => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 80);
+  List<double>? get thrustN => THRUST_N;
+  ///  Acceleration samples in g.
+  List<double>? get ACCELERATION_G => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 82);
+  List<double>? get accelerationG => ACCELERATION_G;
+  ///  Pitch angle samples in degrees.
+  List<double>? get PITCH_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 84);
+  List<double>? get pitchDeg => PITCH_DEG;
+  ///  Flight path angle samples in degrees.
+  List<double>? get FLIGHT_PATH_ANGLE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 86);
+  List<double>? get flightPathAngleDeg => FLIGHT_PATH_ANGLE_DEG;
+  ///  Instantaneous impact point latitude samples in degrees.
+  List<double>? get IIP_LATITUDE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 88);
+  List<double>? get iipLatitudeDeg => IIP_LATITUDE_DEG;
+  ///  Instantaneous impact point longitude samples in degrees.
+  List<double>? get IIP_LONGITUDE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 90);
+  List<double>? get iipLongitudeDeg => IIP_LONGITUDE_DEG;
+  ///  Maximum dynamic pressure in pascals.
+  double get MAX_DYNAMIC_PRESSURE_PA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
+  double get maxDynamicPressurePa => MAX_DYNAMIC_PRESSURE_PA;
+  ///  Epoch of maximum dynamic pressure in ISO 8601 UTC format.
+  String? get MAX_DYNAMIC_PRESSURE_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  String? get maxDynamicPressureEpoch => MAX_DYNAMIC_PRESSURE_EPOCH;
+  ///  Maximum heat flux in watts per square meter.
+  double get MAX_HEAT_FLUX_W_PER_M2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
+  double get maxHeatFluxWPerM2 => MAX_HEAT_FLUX_W_PER_M2;
+  ///  Epoch of maximum heat flux in ISO 8601 UTC format.
+  String? get MAX_HEAT_FLUX_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 98);
+  String? get maxHeatFluxEpoch => MAX_HEAT_FLUX_EPOCH;
+  ///  Orbit insertion epoch in ISO 8601 UTC format.
+  String? get ORBIT_INSERTION_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
+  String? get orbitInsertionEpoch => ORBIT_INSERTION_EPOCH;
+  ///  Achieved apoapsis in meters.
+  double get APOAPSIS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
+  double get apoapsisM => APOAPSIS_M;
+  ///  Achieved periapsis in meters.
+  double get PERIAPSIS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
+  double get periapsisM => PERIAPSIS_M;
+  ///  Achieved inclination in degrees.
+  double get INCLINATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
+  double get inclinationDeg => INCLINATION_DEG;
+  ///  Payload injection velocity error in meters per second.
+  double get PAYLOAD_INJECTION_ERROR_M_PER_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
+  double get payloadInjectionErrorMPerS => PAYLOAD_INJECTION_ERROR_M_PER_S;
+  ///  Key ascent events.
+  List<lamAscentEvent>? get ASCENT_EVENTS => const fb.ListReader<lamAscentEvent>(lamAscentEvent.reader).vTableGetNullable(_bc, _bcOffset, 110);
+  List<lamAscentEvent>? get ascentEvents => ASCENT_EVENTS;
+  ///  Constraint warnings and violations.
+  List<lamConstraintViolation>? get CONSTRAINT_VIOLATIONS => const fb.ListReader<lamConstraintViolation>(lamConstraintViolation.reader).vTableGetNullable(_bc, _bcOffset, 112);
+  List<lamConstraintViolation>? get constraintViolations => CONSTRAINT_VIOLATIONS;
+  ///  Free-form model assumptions or limitations.
+  List<String>? get ASSUMPTIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 114);
+  ///  Additional comments.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 116);
+  ///  Orbit the launch is steered to.
+  lamTargetOrbit? get TARGET_ORBIT => lamTargetOrbit.reader.vTableGetNullable(_bc, _bcOffset, 118);
+  lamTargetOrbit? get targetOrbit => TARGET_ORBIT;
+  ///  Origin of the trajectory samples.
+  lamTrajectorySource get TRAJECTORY_SOURCE => lamTrajectorySource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 120, 0));
+  lamTrajectorySource get trajectorySource => TRAJECTORY_SOURCE;
+  ///  Frame of SPEED_M_PER_S samples.
+  lamSpeedReference get SPEED_REFERENCE => lamSpeedReference.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 122, 0));
+  lamSpeedReference get speedReference => SPEED_REFERENCE;
+  ///  Orbit at insertion.
+  lamInsertionOrbit? get INSERTION => lamInsertionOrbit.reader.vTableGetNullable(_bc, _bcOffset, 124);
+  ///  Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  List<double>? get INSTANTANEOUS_PERIAPSIS_ALTITUDE_M => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 126);
+  List<double>? get instantaneousPeriapsisAltitudeM => INSTANTANEOUS_PERIAPSIS_ALTITUDE_M;
+  ///  Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  List<double>? get INSTANTANEOUS_APOAPSIS_ALTITUDE_M => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 128);
+  List<double>? get instantaneousApoapsisAltitudeM => INSTANTANEOUS_APOAPSIS_ALTITUDE_M;
+  ///  Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+  List<String>? get IN_PLANE_LIFTOFF_EPOCHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 130);
+  List<String>? get inPlaneLiftoffEpochs => IN_PLANE_LIFTOFF_EPOCHS;
+
+  @override
+  String toString() {
+    return 'LAM{messageId: ${messageId}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, missionName: ${missionName}, vehicleName: ${vehicleName}, timeSystem: ${timeSystem}, refFrame: ${refFrame}, launchEpoch: ${launchEpoch}, startTime: ${startTime}, stopTime: ${stopTime}, stepSize: ${stepSize}, launchData: ${launchData}, rocketConfiguration: ${rocketConfiguration}, eventRecords: ${eventRecords}, DETECTIONS: ${DETECTIONS}, boostTracks: ${boostTracks}, burnOutVectors: ${burnOutVectors}, trajectoryOem: ${trajectoryOem}, trajectoryOcm: ${trajectoryOcm}, ATMOSPHERE: ${ATMOSPHERE}, hypersonicConditions: ${hypersonicConditions}, propagatorName: ${propagatorName}, propagatorVersion: ${propagatorVersion}, guidanceModel: ${guidanceModel}, thrustModel: ${thrustModel}, aerodynamicModel: ${aerodynamicModel}, PHASE: ${PHASE}, constraintStatus: ${constraintStatus}, timeFromLaunchS: ${timeFromLaunchS}, latitudeDeg: ${latitudeDeg}, longitudeDeg: ${longitudeDeg}, altitudeM: ${altitudeM}, downrangeM: ${downrangeM}, speedMPerS: ${speedMPerS}, MACH: ${MACH}, dynamicPressurePa: ${dynamicPressurePa}, heatFluxWPerM2: ${heatFluxWPerM2}, massKg: ${massKg}, thrustN: ${thrustN}, accelerationG: ${accelerationG}, pitchDeg: ${pitchDeg}, flightPathAngleDeg: ${flightPathAngleDeg}, iipLatitudeDeg: ${iipLatitudeDeg}, iipLongitudeDeg: ${iipLongitudeDeg}, maxDynamicPressurePa: ${maxDynamicPressurePa}, maxDynamicPressureEpoch: ${maxDynamicPressureEpoch}, maxHeatFluxWPerM2: ${maxHeatFluxWPerM2}, maxHeatFluxEpoch: ${maxHeatFluxEpoch}, orbitInsertionEpoch: ${orbitInsertionEpoch}, apoapsisM: ${apoapsisM}, periapsisM: ${periapsisM}, inclinationDeg: ${inclinationDeg}, payloadInjectionErrorMPerS: ${payloadInjectionErrorMPerS}, ascentEvents: ${ascentEvents}, constraintViolations: ${constraintViolations}, ASSUMPTIONS: ${ASSUMPTIONS}, COMMENT: ${COMMENT}, targetOrbit: ${targetOrbit}, trajectorySource: ${trajectorySource}, speedReference: ${speedReference}, INSERTION: ${INSERTION}, instantaneousPeriapsisAltitudeM: ${instantaneousPeriapsisAltitudeM}, instantaneousApoapsisAltitudeM: ${instantaneousApoapsisAltitudeM}, inPlaneLiftoffEpochs: ${inPlaneLiftoffEpochs}}';
+  }
+}
+
+class _LAMReader extends fb.TableReader<LAM> {
+  const _LAMReader();
+
+  @override
+  LAM createObject(fb.BufferContext bc, int offset) =>
+    LAM._(bc, offset);
+}
+
+class LAMBuilder {
+  LAMBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(64);
+  }
+
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCreationDateOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMissionNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addVehicleNameOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchEpochOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addStepSize(double? STEP_SIZE) {
+    fbBuilder.addFloat64(10, STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addLaunchDataOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addRocketConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addEventRecordsOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addDetectionsOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addBoostTracksOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addBurnOutVectorsOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajectoryOemOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajectoryOcmOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addAtmosphereOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addHypersonicConditionsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorNameOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorVersionOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addGuidanceModelOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addThrustModelOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addAerodynamicModelOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addPhase(lamMissionPhase? PHASE) {
+    fbBuilder.addInt8(26, PHASE?.value);
+    return fbBuilder.offset;
+  }
+  int addConstraintStatus(lamConstraintStatus? CONSTRAINT_STATUS) {
+    fbBuilder.addInt8(27, CONSTRAINT_STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addTimeFromLaunchSOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addLatitudeDegOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addLongitudeDegOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addAltitudeMOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addDownrangeMOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addSpeedMPerSOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addMachOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addDynamicPressurePaOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addHeatFluxWPerM2Offset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addMassKgOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addThrustNOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addAccelerationGOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addPitchDegOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addFlightPathAngleDegOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addIipLatitudeDegOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addIipLongitudeDegOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxDynamicPressurePa(double? MAX_DYNAMIC_PRESSURE_PA) {
+    fbBuilder.addFloat64(44, MAX_DYNAMIC_PRESSURE_PA);
+    return fbBuilder.offset;
+  }
+  int addMaxDynamicPressureEpochOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxHeatFluxWPerM2(double? MAX_HEAT_FLUX_W_PER_M2) {
+    fbBuilder.addFloat64(46, MAX_HEAT_FLUX_W_PER_M2);
+    return fbBuilder.offset;
+  }
+  int addMaxHeatFluxEpochOffset(int? offset) {
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitInsertionEpochOffset(int? offset) {
+    fbBuilder.addOffset(48, offset);
+    return fbBuilder.offset;
+  }
+  int addApoapsisM(double? APOAPSIS_M) {
+    fbBuilder.addFloat64(49, APOAPSIS_M);
+    return fbBuilder.offset;
+  }
+  int addPeriapsisM(double? PERIAPSIS_M) {
+    fbBuilder.addFloat64(50, PERIAPSIS_M);
+    return fbBuilder.offset;
+  }
+  int addInclinationDeg(double? INCLINATION_DEG) {
+    fbBuilder.addFloat64(51, INCLINATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addPayloadInjectionErrorMPerS(double? PAYLOAD_INJECTION_ERROR_M_PER_S) {
+    fbBuilder.addFloat64(52, PAYLOAD_INJECTION_ERROR_M_PER_S);
+    return fbBuilder.offset;
+  }
+  int addAscentEventsOffset(int? offset) {
+    fbBuilder.addOffset(53, offset);
+    return fbBuilder.offset;
+  }
+  int addConstraintViolationsOffset(int? offset) {
+    fbBuilder.addOffset(54, offset);
+    return fbBuilder.offset;
+  }
+  int addAssumptionsOffset(int? offset) {
+    fbBuilder.addOffset(55, offset);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(56, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetOrbitOffset(int? offset) {
+    fbBuilder.addOffset(57, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajectorySource(lamTrajectorySource? TRAJECTORY_SOURCE) {
+    fbBuilder.addInt8(58, TRAJECTORY_SOURCE?.value);
+    return fbBuilder.offset;
+  }
+  int addSpeedReference(lamSpeedReference? SPEED_REFERENCE) {
+    fbBuilder.addInt8(59, SPEED_REFERENCE?.value);
+    return fbBuilder.offset;
+  }
+  int addInsertionOffset(int? offset) {
+    fbBuilder.addOffset(60, offset);
+    return fbBuilder.offset;
+  }
+  int addInstantaneousPeriapsisAltitudeMOffset(int? offset) {
+    fbBuilder.addOffset(61, offset);
+    return fbBuilder.offset;
+  }
+  int addInstantaneousApoapsisAltitudeMOffset(int? offset) {
+    fbBuilder.addOffset(62, offset);
+    return fbBuilder.offset;
+  }
+  int addInPlaneLiftoffEpochsOffset(int? offset) {
+    fbBuilder.addOffset(63, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class LAMObjectBuilder extends fb.ObjectBuilder {
+  final String? _MESSAGE_ID;
+  final String? _CREATION_DATE;
+  final String? _ORIGINATOR;
+  final String? _MISSION_NAME;
+  final String? _VEHICLE_NAME;
+  final String? _TIME_SYSTEM;
+  final String? _REF_FRAME;
+  final String? _LAUNCH_EPOCH;
+  final String? _START_TIME;
+  final String? _STOP_TIME;
+  final double? _STEP_SIZE;
+  final LDMObjectBuilder? _LAUNCH_DATA;
+  final ROCObjectBuilder? _ROCKET_CONFIGURATION;
+  final List<LNEObjectBuilder>? _EVENT_RECORDS;
+  final List<LNDObjectBuilder>? _DETECTIONS;
+  final List<MSTObjectBuilder>? _BOOST_TRACKS;
+  final List<BOVObjectBuilder>? _BURN_OUT_VECTORS;
+  final OEMObjectBuilder? _TRAJECTORY_OEM;
+  final OCMObjectBuilder? _TRAJECTORY_OCM;
+  final ATMObjectBuilder? _ATMOSPHERE;
+  final HFCObjectBuilder? _HYPERSONIC_CONDITIONS;
+  final String? _PROPAGATOR_NAME;
+  final String? _PROPAGATOR_VERSION;
+  final String? _GUIDANCE_MODEL;
+  final String? _THRUST_MODEL;
+  final String? _AERODYNAMIC_MODEL;
+  final lamMissionPhase? _PHASE;
+  final lamConstraintStatus? _CONSTRAINT_STATUS;
+  final List<double>? _TIME_FROM_LAUNCH_S;
+  final List<double>? _LATITUDE_DEG;
+  final List<double>? _LONGITUDE_DEG;
+  final List<double>? _ALTITUDE_M;
+  final List<double>? _DOWNRANGE_M;
+  final List<double>? _SPEED_M_PER_S;
+  final List<double>? _MACH;
+  final List<double>? _DYNAMIC_PRESSURE_PA;
+  final List<double>? _HEAT_FLUX_W_PER_M2;
+  final List<double>? _MASS_KG;
+  final List<double>? _THRUST_N;
+  final List<double>? _ACCELERATION_G;
+  final List<double>? _PITCH_DEG;
+  final List<double>? _FLIGHT_PATH_ANGLE_DEG;
+  final List<double>? _IIP_LATITUDE_DEG;
+  final List<double>? _IIP_LONGITUDE_DEG;
+  final double? _MAX_DYNAMIC_PRESSURE_PA;
+  final String? _MAX_DYNAMIC_PRESSURE_EPOCH;
+  final double? _MAX_HEAT_FLUX_W_PER_M2;
+  final String? _MAX_HEAT_FLUX_EPOCH;
+  final String? _ORBIT_INSERTION_EPOCH;
+  final double? _APOAPSIS_M;
+  final double? _PERIAPSIS_M;
+  final double? _INCLINATION_DEG;
+  final double? _PAYLOAD_INJECTION_ERROR_M_PER_S;
+  final List<lamAscentEventObjectBuilder>? _ASCENT_EVENTS;
+  final List<lamConstraintViolationObjectBuilder>? _CONSTRAINT_VIOLATIONS;
+  final List<String>? _ASSUMPTIONS;
+  final String? _COMMENT;
+  final lamTargetOrbitObjectBuilder? _TARGET_ORBIT;
+  final lamTrajectorySource? _TRAJECTORY_SOURCE;
+  final lamSpeedReference? _SPEED_REFERENCE;
+  final lamInsertionOrbitObjectBuilder? _INSERTION;
+  final List<double>? _INSTANTANEOUS_PERIAPSIS_ALTITUDE_M;
+  final List<double>? _INSTANTANEOUS_APOAPSIS_ALTITUDE_M;
+  final List<String>? _IN_PLANE_LIFTOFF_EPOCHS;
+
+  LAMObjectBuilder({
+    String? MESSAGE_ID,
+    String? messageId,
+    String? CREATION_DATE,
+    String? creationDate,
+    String? ORIGINATOR,
+    String? MISSION_NAME,
+    String? missionName,
+    String? VEHICLE_NAME,
+    String? vehicleName,
+    String? TIME_SYSTEM,
+    String? timeSystem,
+    String? REF_FRAME,
+    String? refFrame,
+    String? LAUNCH_EPOCH,
+    String? launchEpoch,
+    String? START_TIME,
+    String? startTime,
+    String? STOP_TIME,
+    String? stopTime,
+    double? STEP_SIZE,
+    double? stepSize,
+    LDMObjectBuilder? LAUNCH_DATA,
+    LDMObjectBuilder? launchData,
+    ROCObjectBuilder? ROCKET_CONFIGURATION,
+    ROCObjectBuilder? rocketConfiguration,
+    List<LNEObjectBuilder>? EVENT_RECORDS,
+    List<LNEObjectBuilder>? eventRecords,
+    List<LNDObjectBuilder>? DETECTIONS,
+    List<MSTObjectBuilder>? BOOST_TRACKS,
+    List<MSTObjectBuilder>? boostTracks,
+    List<BOVObjectBuilder>? BURN_OUT_VECTORS,
+    List<BOVObjectBuilder>? burnOutVectors,
+    OEMObjectBuilder? TRAJECTORY_OEM,
+    OEMObjectBuilder? trajectoryOem,
+    OCMObjectBuilder? TRAJECTORY_OCM,
+    OCMObjectBuilder? trajectoryOcm,
+    ATMObjectBuilder? ATMOSPHERE,
+    HFCObjectBuilder? HYPERSONIC_CONDITIONS,
+    HFCObjectBuilder? hypersonicConditions,
+    String? PROPAGATOR_NAME,
+    String? propagatorName,
+    String? PROPAGATOR_VERSION,
+    String? propagatorVersion,
+    String? GUIDANCE_MODEL,
+    String? guidanceModel,
+    String? THRUST_MODEL,
+    String? thrustModel,
+    String? AERODYNAMIC_MODEL,
+    String? aerodynamicModel,
+    lamMissionPhase? PHASE,
+    lamConstraintStatus? CONSTRAINT_STATUS,
+    lamConstraintStatus? constraintStatus,
+    List<double>? TIME_FROM_LAUNCH_S,
+    List<double>? timeFromLaunchS,
+    List<double>? LATITUDE_DEG,
+    List<double>? latitudeDeg,
+    List<double>? LONGITUDE_DEG,
+    List<double>? longitudeDeg,
+    List<double>? ALTITUDE_M,
+    List<double>? altitudeM,
+    List<double>? DOWNRANGE_M,
+    List<double>? downrangeM,
+    List<double>? SPEED_M_PER_S,
+    List<double>? speedMPerS,
+    List<double>? MACH,
+    List<double>? DYNAMIC_PRESSURE_PA,
+    List<double>? dynamicPressurePa,
+    List<double>? HEAT_FLUX_W_PER_M2,
+    List<double>? heatFluxWPerM2,
+    List<double>? MASS_KG,
+    List<double>? massKg,
+    List<double>? THRUST_N,
+    List<double>? thrustN,
+    List<double>? ACCELERATION_G,
+    List<double>? accelerationG,
+    List<double>? PITCH_DEG,
+    List<double>? pitchDeg,
+    List<double>? FLIGHT_PATH_ANGLE_DEG,
+    List<double>? flightPathAngleDeg,
+    List<double>? IIP_LATITUDE_DEG,
+    List<double>? iipLatitudeDeg,
+    List<double>? IIP_LONGITUDE_DEG,
+    List<double>? iipLongitudeDeg,
+    double? MAX_DYNAMIC_PRESSURE_PA,
+    double? maxDynamicPressurePa,
+    String? MAX_DYNAMIC_PRESSURE_EPOCH,
+    String? maxDynamicPressureEpoch,
+    double? MAX_HEAT_FLUX_W_PER_M2,
+    double? maxHeatFluxWPerM2,
+    String? MAX_HEAT_FLUX_EPOCH,
+    String? maxHeatFluxEpoch,
+    String? ORBIT_INSERTION_EPOCH,
+    String? orbitInsertionEpoch,
+    double? APOAPSIS_M,
+    double? apoapsisM,
+    double? PERIAPSIS_M,
+    double? periapsisM,
+    double? INCLINATION_DEG,
+    double? inclinationDeg,
+    double? PAYLOAD_INJECTION_ERROR_M_PER_S,
+    double? payloadInjectionErrorMPerS,
+    List<lamAscentEventObjectBuilder>? ASCENT_EVENTS,
+    List<lamAscentEventObjectBuilder>? ascentEvents,
+    List<lamConstraintViolationObjectBuilder>? CONSTRAINT_VIOLATIONS,
+    List<lamConstraintViolationObjectBuilder>? constraintViolations,
+    List<String>? ASSUMPTIONS,
+    String? COMMENT,
+    lamTargetOrbitObjectBuilder? TARGET_ORBIT,
+    lamTargetOrbitObjectBuilder? targetOrbit,
+    lamTrajectorySource? TRAJECTORY_SOURCE,
+    lamTrajectorySource? trajectorySource,
+    lamSpeedReference? SPEED_REFERENCE,
+    lamSpeedReference? speedReference,
+    lamInsertionOrbitObjectBuilder? INSERTION,
+    List<double>? INSTANTANEOUS_PERIAPSIS_ALTITUDE_M,
+    List<double>? instantaneousPeriapsisAltitudeM,
+    List<double>? INSTANTANEOUS_APOAPSIS_ALTITUDE_M,
+    List<double>? instantaneousApoapsisAltitudeM,
+    List<String>? IN_PLANE_LIFTOFF_EPOCHS,
+    List<String>? inPlaneLiftoffEpochs,
+  })
+      : _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _CREATION_DATE = creationDate ?? CREATION_DATE,
+        _ORIGINATOR = ORIGINATOR,
+        _MISSION_NAME = missionName ?? MISSION_NAME,
+        _VEHICLE_NAME = vehicleName ?? VEHICLE_NAME,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _REF_FRAME = refFrame ?? REF_FRAME,
+        _LAUNCH_EPOCH = launchEpoch ?? LAUNCH_EPOCH,
+        _START_TIME = startTime ?? START_TIME,
+        _STOP_TIME = stopTime ?? STOP_TIME,
+        _STEP_SIZE = stepSize ?? STEP_SIZE,
+        _LAUNCH_DATA = launchData ?? LAUNCH_DATA,
+        _ROCKET_CONFIGURATION = rocketConfiguration ?? ROCKET_CONFIGURATION,
+        _EVENT_RECORDS = eventRecords ?? EVENT_RECORDS,
+        _DETECTIONS = DETECTIONS,
+        _BOOST_TRACKS = boostTracks ?? BOOST_TRACKS,
+        _BURN_OUT_VECTORS = burnOutVectors ?? BURN_OUT_VECTORS,
+        _TRAJECTORY_OEM = trajectoryOem ?? TRAJECTORY_OEM,
+        _TRAJECTORY_OCM = trajectoryOcm ?? TRAJECTORY_OCM,
+        _ATMOSPHERE = ATMOSPHERE,
+        _HYPERSONIC_CONDITIONS = hypersonicConditions ?? HYPERSONIC_CONDITIONS,
+        _PROPAGATOR_NAME = propagatorName ?? PROPAGATOR_NAME,
+        _PROPAGATOR_VERSION = propagatorVersion ?? PROPAGATOR_VERSION,
+        _GUIDANCE_MODEL = guidanceModel ?? GUIDANCE_MODEL,
+        _THRUST_MODEL = thrustModel ?? THRUST_MODEL,
+        _AERODYNAMIC_MODEL = aerodynamicModel ?? AERODYNAMIC_MODEL,
+        _PHASE = PHASE,
+        _CONSTRAINT_STATUS = constraintStatus ?? CONSTRAINT_STATUS,
+        _TIME_FROM_LAUNCH_S = timeFromLaunchS ?? TIME_FROM_LAUNCH_S,
+        _LATITUDE_DEG = latitudeDeg ?? LATITUDE_DEG,
+        _LONGITUDE_DEG = longitudeDeg ?? LONGITUDE_DEG,
+        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _DOWNRANGE_M = downrangeM ?? DOWNRANGE_M,
+        _SPEED_M_PER_S = speedMPerS ?? SPEED_M_PER_S,
+        _MACH = MACH,
+        _DYNAMIC_PRESSURE_PA = dynamicPressurePa ?? DYNAMIC_PRESSURE_PA,
+        _HEAT_FLUX_W_PER_M2 = heatFluxWPerM2 ?? HEAT_FLUX_W_PER_M2,
+        _MASS_KG = massKg ?? MASS_KG,
+        _THRUST_N = thrustN ?? THRUST_N,
+        _ACCELERATION_G = accelerationG ?? ACCELERATION_G,
+        _PITCH_DEG = pitchDeg ?? PITCH_DEG,
+        _FLIGHT_PATH_ANGLE_DEG = flightPathAngleDeg ?? FLIGHT_PATH_ANGLE_DEG,
+        _IIP_LATITUDE_DEG = iipLatitudeDeg ?? IIP_LATITUDE_DEG,
+        _IIP_LONGITUDE_DEG = iipLongitudeDeg ?? IIP_LONGITUDE_DEG,
+        _MAX_DYNAMIC_PRESSURE_PA = maxDynamicPressurePa ?? MAX_DYNAMIC_PRESSURE_PA,
+        _MAX_DYNAMIC_PRESSURE_EPOCH = maxDynamicPressureEpoch ?? MAX_DYNAMIC_PRESSURE_EPOCH,
+        _MAX_HEAT_FLUX_W_PER_M2 = maxHeatFluxWPerM2 ?? MAX_HEAT_FLUX_W_PER_M2,
+        _MAX_HEAT_FLUX_EPOCH = maxHeatFluxEpoch ?? MAX_HEAT_FLUX_EPOCH,
+        _ORBIT_INSERTION_EPOCH = orbitInsertionEpoch ?? ORBIT_INSERTION_EPOCH,
+        _APOAPSIS_M = apoapsisM ?? APOAPSIS_M,
+        _PERIAPSIS_M = periapsisM ?? PERIAPSIS_M,
+        _INCLINATION_DEG = inclinationDeg ?? INCLINATION_DEG,
+        _PAYLOAD_INJECTION_ERROR_M_PER_S = payloadInjectionErrorMPerS ?? PAYLOAD_INJECTION_ERROR_M_PER_S,
+        _ASCENT_EVENTS = ascentEvents ?? ASCENT_EVENTS,
+        _CONSTRAINT_VIOLATIONS = constraintViolations ?? CONSTRAINT_VIOLATIONS,
+        _ASSUMPTIONS = ASSUMPTIONS,
+        _COMMENT = COMMENT,
+        _TARGET_ORBIT = targetOrbit ?? TARGET_ORBIT,
+        _TRAJECTORY_SOURCE = trajectorySource ?? TRAJECTORY_SOURCE,
+        _SPEED_REFERENCE = speedReference ?? SPEED_REFERENCE,
+        _INSERTION = INSERTION,
+        _INSTANTANEOUS_PERIAPSIS_ALTITUDE_M = instantaneousPeriapsisAltitudeM ?? INSTANTANEOUS_PERIAPSIS_ALTITUDE_M,
+        _INSTANTANEOUS_APOAPSIS_ALTITUDE_M = instantaneousApoapsisAltitudeM ?? INSTANTANEOUS_APOAPSIS_ALTITUDE_M,
+        _IN_PLANE_LIFTOFF_EPOCHS = inPlaneLiftoffEpochs ?? IN_PLANE_LIFTOFF_EPOCHS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
+        : fbBuilder.writeString(_CREATION_DATE!);
+    final int? ORIGINATOROffset = _ORIGINATOR == null ? null
+        : fbBuilder.writeString(_ORIGINATOR!);
+    final int? MISSION_NAMEOffset = _MISSION_NAME == null ? null
+        : fbBuilder.writeString(_MISSION_NAME!);
+    final int? VEHICLE_NAMEOffset = _VEHICLE_NAME == null ? null
+        : fbBuilder.writeString(_VEHICLE_NAME!);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? REF_FRAMEOffset = _REF_FRAME == null ? null
+        : fbBuilder.writeString(_REF_FRAME!);
+    final int? LAUNCH_EPOCHOffset = _LAUNCH_EPOCH == null ? null
+        : fbBuilder.writeString(_LAUNCH_EPOCH!);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? STOP_TIMEOffset = _STOP_TIME == null ? null
+        : fbBuilder.writeString(_STOP_TIME!);
+    final int? LAUNCH_DATAOffset = _LAUNCH_DATA?.getOrCreateOffset(fbBuilder);
+    final int? ROCKET_CONFIGURATIONOffset = _ROCKET_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    final int? EVENT_RECORDSOffset = _EVENT_RECORDS == null ? null
+        : fbBuilder.writeList(_EVENT_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? DETECTIONSOffset = _DETECTIONS == null ? null
+        : fbBuilder.writeList(_DETECTIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? BOOST_TRACKSOffset = _BOOST_TRACKS == null ? null
+        : fbBuilder.writeList(_BOOST_TRACKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? BURN_OUT_VECTORSOffset = _BURN_OUT_VECTORS == null ? null
+        : fbBuilder.writeList(_BURN_OUT_VECTORS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TRAJECTORY_OEMOffset = _TRAJECTORY_OEM?.getOrCreateOffset(fbBuilder);
+    final int? TRAJECTORY_OCMOffset = _TRAJECTORY_OCM?.getOrCreateOffset(fbBuilder);
+    final int? ATMOSPHEREOffset = _ATMOSPHERE?.getOrCreateOffset(fbBuilder);
+    final int? HYPERSONIC_CONDITIONSOffset = _HYPERSONIC_CONDITIONS?.getOrCreateOffset(fbBuilder);
+    final int? PROPAGATOR_NAMEOffset = _PROPAGATOR_NAME == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_NAME!);
+    final int? PROPAGATOR_VERSIONOffset = _PROPAGATOR_VERSION == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_VERSION!);
+    final int? GUIDANCE_MODELOffset = _GUIDANCE_MODEL == null ? null
+        : fbBuilder.writeString(_GUIDANCE_MODEL!);
+    final int? THRUST_MODELOffset = _THRUST_MODEL == null ? null
+        : fbBuilder.writeString(_THRUST_MODEL!);
+    final int? AERODYNAMIC_MODELOffset = _AERODYNAMIC_MODEL == null ? null
+        : fbBuilder.writeString(_AERODYNAMIC_MODEL!);
+    final int? TIME_FROM_LAUNCH_SOffset = _TIME_FROM_LAUNCH_S == null ? null
+        : fbBuilder.writeListFloat64(_TIME_FROM_LAUNCH_S!);
+    final int? LATITUDE_DEGOffset = _LATITUDE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_LATITUDE_DEG!);
+    final int? LONGITUDE_DEGOffset = _LONGITUDE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_LONGITUDE_DEG!);
+    final int? ALTITUDE_MOffset = _ALTITUDE_M == null ? null
+        : fbBuilder.writeListFloat64(_ALTITUDE_M!);
+    final int? DOWNRANGE_MOffset = _DOWNRANGE_M == null ? null
+        : fbBuilder.writeListFloat64(_DOWNRANGE_M!);
+    final int? SPEED_M_PER_SOffset = _SPEED_M_PER_S == null ? null
+        : fbBuilder.writeListFloat64(_SPEED_M_PER_S!);
+    final int? MACHOffset = _MACH == null ? null
+        : fbBuilder.writeListFloat64(_MACH!);
+    final int? DYNAMIC_PRESSURE_PAOffset = _DYNAMIC_PRESSURE_PA == null ? null
+        : fbBuilder.writeListFloat64(_DYNAMIC_PRESSURE_PA!);
+    final int? HEAT_FLUX_W_PER_M2Offset = _HEAT_FLUX_W_PER_M2 == null ? null
+        : fbBuilder.writeListFloat64(_HEAT_FLUX_W_PER_M2!);
+    final int? MASS_KGOffset = _MASS_KG == null ? null
+        : fbBuilder.writeListFloat64(_MASS_KG!);
+    final int? THRUST_NOffset = _THRUST_N == null ? null
+        : fbBuilder.writeListFloat64(_THRUST_N!);
+    final int? ACCELERATION_GOffset = _ACCELERATION_G == null ? null
+        : fbBuilder.writeListFloat64(_ACCELERATION_G!);
+    final int? PITCH_DEGOffset = _PITCH_DEG == null ? null
+        : fbBuilder.writeListFloat64(_PITCH_DEG!);
+    final int? FLIGHT_PATH_ANGLE_DEGOffset = _FLIGHT_PATH_ANGLE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_FLIGHT_PATH_ANGLE_DEG!);
+    final int? IIP_LATITUDE_DEGOffset = _IIP_LATITUDE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_IIP_LATITUDE_DEG!);
+    final int? IIP_LONGITUDE_DEGOffset = _IIP_LONGITUDE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_IIP_LONGITUDE_DEG!);
+    final int? MAX_DYNAMIC_PRESSURE_EPOCHOffset = _MAX_DYNAMIC_PRESSURE_EPOCH == null ? null
+        : fbBuilder.writeString(_MAX_DYNAMIC_PRESSURE_EPOCH!);
+    final int? MAX_HEAT_FLUX_EPOCHOffset = _MAX_HEAT_FLUX_EPOCH == null ? null
+        : fbBuilder.writeString(_MAX_HEAT_FLUX_EPOCH!);
+    final int? ORBIT_INSERTION_EPOCHOffset = _ORBIT_INSERTION_EPOCH == null ? null
+        : fbBuilder.writeString(_ORBIT_INSERTION_EPOCH!);
+    final int? ASCENT_EVENTSOffset = _ASCENT_EVENTS == null ? null
+        : fbBuilder.writeList(_ASCENT_EVENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CONSTRAINT_VIOLATIONSOffset = _CONSTRAINT_VIOLATIONS == null ? null
+        : fbBuilder.writeList(_CONSTRAINT_VIOLATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ASSUMPTIONSOffset = _ASSUMPTIONS == null ? null
+        : fbBuilder.writeList(_ASSUMPTIONS!.map(fbBuilder.writeString).toList());
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? TARGET_ORBITOffset = _TARGET_ORBIT?.getOrCreateOffset(fbBuilder);
+    final int? INSERTIONOffset = _INSERTION?.getOrCreateOffset(fbBuilder);
+    final int? INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset = _INSTANTANEOUS_PERIAPSIS_ALTITUDE_M == null ? null
+        : fbBuilder.writeListFloat64(_INSTANTANEOUS_PERIAPSIS_ALTITUDE_M!);
+    final int? INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset = _INSTANTANEOUS_APOAPSIS_ALTITUDE_M == null ? null
+        : fbBuilder.writeListFloat64(_INSTANTANEOUS_APOAPSIS_ALTITUDE_M!);
+    final int? IN_PLANE_LIFTOFF_EPOCHSOffset = _IN_PLANE_LIFTOFF_EPOCHS == null ? null
+        : fbBuilder.writeList(_IN_PLANE_LIFTOFF_EPOCHS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(64);
+    fbBuilder.addOffset(0, MESSAGE_IDOffset);
+    fbBuilder.addOffset(1, CREATION_DATEOffset);
+    fbBuilder.addOffset(2, ORIGINATOROffset);
+    fbBuilder.addOffset(3, MISSION_NAMEOffset);
+    fbBuilder.addOffset(4, VEHICLE_NAMEOffset);
+    fbBuilder.addOffset(5, TIME_SYSTEMOffset);
+    fbBuilder.addOffset(6, REF_FRAMEOffset);
+    fbBuilder.addOffset(7, LAUNCH_EPOCHOffset);
+    fbBuilder.addOffset(8, START_TIMEOffset);
+    fbBuilder.addOffset(9, STOP_TIMEOffset);
+    fbBuilder.addFloat64(10, _STEP_SIZE);
+    fbBuilder.addOffset(11, LAUNCH_DATAOffset);
+    fbBuilder.addOffset(12, ROCKET_CONFIGURATIONOffset);
+    fbBuilder.addOffset(13, EVENT_RECORDSOffset);
+    fbBuilder.addOffset(14, DETECTIONSOffset);
+    fbBuilder.addOffset(15, BOOST_TRACKSOffset);
+    fbBuilder.addOffset(16, BURN_OUT_VECTORSOffset);
+    fbBuilder.addOffset(17, TRAJECTORY_OEMOffset);
+    fbBuilder.addOffset(18, TRAJECTORY_OCMOffset);
+    fbBuilder.addOffset(19, ATMOSPHEREOffset);
+    fbBuilder.addOffset(20, HYPERSONIC_CONDITIONSOffset);
+    fbBuilder.addOffset(21, PROPAGATOR_NAMEOffset);
+    fbBuilder.addOffset(22, PROPAGATOR_VERSIONOffset);
+    fbBuilder.addOffset(23, GUIDANCE_MODELOffset);
+    fbBuilder.addOffset(24, THRUST_MODELOffset);
+    fbBuilder.addOffset(25, AERODYNAMIC_MODELOffset);
+    fbBuilder.addInt8(26, _PHASE?.value);
+    fbBuilder.addInt8(27, _CONSTRAINT_STATUS?.value);
+    fbBuilder.addOffset(28, TIME_FROM_LAUNCH_SOffset);
+    fbBuilder.addOffset(29, LATITUDE_DEGOffset);
+    fbBuilder.addOffset(30, LONGITUDE_DEGOffset);
+    fbBuilder.addOffset(31, ALTITUDE_MOffset);
+    fbBuilder.addOffset(32, DOWNRANGE_MOffset);
+    fbBuilder.addOffset(33, SPEED_M_PER_SOffset);
+    fbBuilder.addOffset(34, MACHOffset);
+    fbBuilder.addOffset(35, DYNAMIC_PRESSURE_PAOffset);
+    fbBuilder.addOffset(36, HEAT_FLUX_W_PER_M2Offset);
+    fbBuilder.addOffset(37, MASS_KGOffset);
+    fbBuilder.addOffset(38, THRUST_NOffset);
+    fbBuilder.addOffset(39, ACCELERATION_GOffset);
+    fbBuilder.addOffset(40, PITCH_DEGOffset);
+    fbBuilder.addOffset(41, FLIGHT_PATH_ANGLE_DEGOffset);
+    fbBuilder.addOffset(42, IIP_LATITUDE_DEGOffset);
+    fbBuilder.addOffset(43, IIP_LONGITUDE_DEGOffset);
+    fbBuilder.addFloat64(44, _MAX_DYNAMIC_PRESSURE_PA);
+    fbBuilder.addOffset(45, MAX_DYNAMIC_PRESSURE_EPOCHOffset);
+    fbBuilder.addFloat64(46, _MAX_HEAT_FLUX_W_PER_M2);
+    fbBuilder.addOffset(47, MAX_HEAT_FLUX_EPOCHOffset);
+    fbBuilder.addOffset(48, ORBIT_INSERTION_EPOCHOffset);
+    fbBuilder.addFloat64(49, _APOAPSIS_M);
+    fbBuilder.addFloat64(50, _PERIAPSIS_M);
+    fbBuilder.addFloat64(51, _INCLINATION_DEG);
+    fbBuilder.addFloat64(52, _PAYLOAD_INJECTION_ERROR_M_PER_S);
+    fbBuilder.addOffset(53, ASCENT_EVENTSOffset);
+    fbBuilder.addOffset(54, CONSTRAINT_VIOLATIONSOffset);
+    fbBuilder.addOffset(55, ASSUMPTIONSOffset);
+    fbBuilder.addOffset(56, COMMENTOffset);
+    fbBuilder.addOffset(57, TARGET_ORBITOffset);
+    fbBuilder.addInt8(58, _TRAJECTORY_SOURCE?.value);
+    fbBuilder.addInt8(59, _SPEED_REFERENCE?.value);
+    fbBuilder.addOffset(60, INSERTIONOffset);
+    fbBuilder.addOffset(61, INSTANTANEOUS_PERIAPSIS_ALTITUDE_MOffset);
+    fbBuilder.addOffset(62, INSTANTANEOUS_APOAPSIS_ALTITUDE_MOffset);
+    fbBuilder.addOffset(63, IN_PLANE_LIFTOFF_EPOCHSOffset);
     return fbBuilder.endTable();
   }
 

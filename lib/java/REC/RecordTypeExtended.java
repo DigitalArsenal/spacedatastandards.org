@@ -14,4 +14,6 @@ public final class RecordTypeExtended {
   private RecordTypeExtended() { }
   public static final int NONE = 0;
   public static final int ABA = 256;
+  public static final int CVR = 257;
+  public static final int PVN = 258;
 }

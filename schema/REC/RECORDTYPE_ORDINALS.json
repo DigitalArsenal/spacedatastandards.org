@@ -285,6 +285,8 @@
   "extended_enum": "RecordTypeExtended",
   "extended_note": "Wide record types (Record.EXTENDED_TYPE, ushort) for standards past the union's 255 ordinals; APPEND-ONLY FOREVER like the union.",
   "extended_ordinals": {
-    "ABA": 256
+    "ABA": 256,
+    "CVR": 257,
+    "PVN": 258
   }
 }

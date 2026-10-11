@@ -8,154 +8,245 @@ import Common
 
 import FlatBuffers
 
-///  Encryption Header for FlatBuffers field-level encryption
-///  Key exchange algorithm used to derive the shared secret
-public enum KeyExchange: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Direction of an RPC envelope.
+public enum rpcDirection: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case x25519 = 0
-  case secp256k1 = 1
-  case p256 = 2
+  case request = 0
+  case response = 1
 
-  public static var max: KeyExchange { return .p256 }
-  public static var min: KeyExchange { return .x25519 }
+  public static var max: rpcDirection { return .response }
+  public static var min: rpcDirection { return .request }
 }
 
 
-///  Symmetric encryption algorithm
-public enum SymmetricAlgo: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case aes256Ctr = 0
-
-  public static var max: SymmetricAlgo { return .aes256Ctr }
-  public static var min: SymmetricAlgo { return .aes256Ctr }
-}
-
-
-///  Key derivation function
-public enum KDF: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case hkdfSha256 = 0
-
-  public static var max: KDF { return .hkdfSha256 }
-  public static var min: KDF { return .hkdfSha256 }
-}
-
-
-///  Encryption Header containing all parameters needed for decryption
-public struct ENC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Plaintext carried, size-prefixed, inside RPC.CIPHERTEXT.
+public struct RPCBody: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$ENC" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ENC.id, addPrefix: prefix) }
+  public static var id: String { "$RPC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RPCBody.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let METHOD: VOffset = 4
+    static let ROUTE: VOffset = 6
+    static let BODY: VOffset = 8
+    static let BODY_FILE_ID: VOffset = 10
+    static let STATUS: VOffset = 12
+    static let SIGNER_KEY_ID: VOffset = 14
+    static let REPLY_KEY: VOffset = 16
+    static let REQUEST_NONCE: VOffset = 18
+    static let REQUEST_DIGEST: VOffset = 20
+  }
+
+  ///  Request method verb (for example GET, POST). Empty on a response.
+  public var METHOD: String? { let o = _accessor.offset(VT.METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.METHOD) }
+  ///  Request route, path plus optional query. Empty on a response.
+  public var ROUTE: String? { let o = _accessor.offset(VT.ROUTE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ROUTESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROUTE) }
+  ///  Request or response payload bytes.
+  public var BODY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.BODY, byteSize: 1) }
+  public func withUnsafePointerToBody<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BODY, body: body) }
+  ///  Four-character file identifier of BODY when BODY is a FlatBuffer,
+  ///  `$` included (for example "$EPM"). Empty when BODY is not a FlatBuffer.
+  public var BODY_FILE_ID: String? { let o = _accessor.offset(VT.BODY_FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BODY_FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BODY_FILE_ID) }
+  ///  Response status code. Zero on a request.
+  public var STATUS: UInt16 { let o = _accessor.offset(VT.STATUS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Identifier of the signer's key; MUST identify RPC.SIGNER_PUBLIC_KEY.
+  public var SIGNER_KEY_ID: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNER_KEY_ID, byteSize: 1) }
+  public func withUnsafePointerToSignerKeyId<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNER_KEY_ID, body: body) }
+  ///  Request only: public key the response is sealed to.
+  public var REPLY_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.REPLY_KEY, byteSize: 1) }
+  public func withUnsafePointerToReplyKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.REPLY_KEY, body: body) }
+  ///  Response only: RPC.NONCE of the request being answered.
+  public var REQUEST_NONCE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.REQUEST_NONCE, byteSize: 1) }
+  public func withUnsafePointerToRequestNonce<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.REQUEST_NONCE, body: body) }
+  ///  Response only: SHA-256 (32 bytes) of the complete size-prefixed request
+  ///  RPC FlatBuffer as received, signatures included.
+  public var REQUEST_DIGEST: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.REQUEST_DIGEST, byteSize: 1) }
+  public func withUnsafePointerToRequestDigest<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.REQUEST_DIGEST, body: body) }
+  public static func startRPCBody(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD, at: VT.METHOD) }
+  public static func add(ROUTE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROUTE, at: VT.ROUTE) }
+  public static func addVectorOf(BODY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BODY, at: VT.BODY) }
+  public static func add(BODY_FILE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BODY_FILE_ID, at: VT.BODY_FILE_ID) }
+  public static func add(STATUS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS, def: 0, at: VT.STATUS) }
+  public static func addVectorOf(SIGNER_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNER_KEY_ID, at: VT.SIGNER_KEY_ID) }
+  public static func addVectorOf(REPLY_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPLY_KEY, at: VT.REPLY_KEY) }
+  public static func addVectorOf(REQUEST_NONCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_NONCE, at: VT.REQUEST_NONCE) }
+  public static func addVectorOf(REQUEST_DIGEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_DIGEST, at: VT.REQUEST_DIGEST) }
+  public static func endRPCBody(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createRPCBody(
+    _ fbb: inout FlatBufferBuilder,
+    METHODOffset METHOD: Offset = Offset(),
+    ROUTEOffset ROUTE: Offset = Offset(),
+    BODYVectorOffset BODY: Offset = Offset(),
+    BODY_FILE_IDOffset BODY_FILE_ID: Offset = Offset(),
+    STATUS: UInt16 = 0,
+    SIGNER_KEY_IDVectorOffset SIGNER_KEY_ID: Offset = Offset(),
+    REPLY_KEYVectorOffset REPLY_KEY: Offset = Offset(),
+    REQUEST_NONCEVectorOffset REQUEST_NONCE: Offset = Offset(),
+    REQUEST_DIGESTVectorOffset REQUEST_DIGEST: Offset = Offset()
+  ) -> Offset {
+    let __start = RPCBody.startRPCBody(&fbb)
+    RPCBody.add(METHOD: METHOD, &fbb)
+    RPCBody.add(ROUTE: ROUTE, &fbb)
+    RPCBody.addVectorOf(BODY: BODY, &fbb)
+    RPCBody.add(BODY_FILE_ID: BODY_FILE_ID, &fbb)
+    RPCBody.add(STATUS: STATUS, &fbb)
+    RPCBody.addVectorOf(SIGNER_KEY_ID: SIGNER_KEY_ID, &fbb)
+    RPCBody.addVectorOf(REPLY_KEY: REPLY_KEY, &fbb)
+    RPCBody.addVectorOf(REQUEST_NONCE: REQUEST_NONCE, &fbb)
+    RPCBody.addVectorOf(REQUEST_DIGEST: REQUEST_DIGEST, &fbb)
+    return RPCBody.endRPCBody(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.METHOD, fieldName: "METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROUTE, fieldName: "ROUTE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BODY, fieldName: "BODY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.BODY_FILE_ID, fieldName: "BODY_FILE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.SIGNER_KEY_ID, fieldName: "SIGNER_KEY_ID", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.REPLY_KEY, fieldName: "REPLY_KEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.REQUEST_NONCE, fieldName: "REQUEST_NONCE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.REQUEST_DIGEST, fieldName: "REQUEST_DIGEST", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    _v.finish()
+  }
+}
+
+///  Sealed Remote Procedure Call envelope (outer, plaintext, signed).
+public struct RPC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RPC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RPC.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let VERSION: VOffset = 4
-    static let KEY_EXCHANGE: VOffset = 6
-    static let SYMMETRIC: VOffset = 8
-    static let KEY_DERIVATION: VOffset = 10
-    static let EPHEMERAL_PUBLIC_KEY: VOffset = 12
-    static let NONCE_START: VOffset = 14
-    static let RECIPIENT_KEY_ID: VOffset = 16
-    static let CONTEXT: VOffset = 18
-    static let SCHEMA_HASH: VOffset = 20
-    static let ROOT_TYPE: VOffset = 22
-    static let TIMESTAMP: VOffset = 24
+    static let DIRECTION: VOffset = 6
+    static let ENCRYPTION: VOffset = 8
+    static let SESSION_ID: VOffset = 10
+    static let SENDER_KEY_ID: VOffset = 12
+    static let TIMESTAMP: VOffset = 14
+    static let NONCE: VOffset = 16
+    static let CIPHERTEXT: VOffset = 18
+    static let SIGNER_PUBLIC_KEY: VOffset = 20
+    static let SIGNATURE_TYPE: VOffset = 22
+    static let SIGNATURE: VOffset = 24
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 26
   }
 
-  ///  Schema version for forward compatibility
+  ///  Envelope version. This document defines version 1.
   public var VERSION: UInt8 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 1 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Key exchange algorithm used
-  public var KEY_EXCHANGE: KeyExchange { let o = _accessor.offset(VT.KEY_EXCHANGE); return o == 0 ? .x25519 : KeyExchange(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .x25519 }
-  ///  Symmetric encryption algorithm used
-  public var SYMMETRIC: SymmetricAlgo { let o = _accessor.offset(VT.SYMMETRIC); return o == 0 ? .aes256Ctr : SymmetricAlgo(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .aes256Ctr }
-  ///  Key derivation function used
-  public var KEY_DERIVATION: KDF { let o = _accessor.offset(VT.KEY_DERIVATION); return o == 0 ? .hkdfSha256 : KDF(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .hkdfSha256 }
-  ///  Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
-  public var EPHEMERAL_PUBLIC_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.EPHEMERAL_PUBLIC_KEY, byteSize: 1) }
-  public func withUnsafePointerToEphemeralPublicKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.EPHEMERAL_PUBLIC_KEY, body: body) }
-  ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
-  public var NONCE_START: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.NONCE_START, byteSize: 1) }
-  public func withUnsafePointerToNonceStart<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NONCE_START, body: body) }
-  ///  Optional identifier for the recipient's public key (up to 32 bytes)
-  public var RECIPIENT_KEY_ID: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RECIPIENT_KEY_ID, byteSize: 1) }
-  public func withUnsafePointerToRecipientKeyId<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RECIPIENT_KEY_ID, body: body) }
-  ///  Optional domain separation context string
-  public var CONTEXT: String? { let o = _accessor.offset(VT.CONTEXT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTEXT) }
-  ///  Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
-  public var SCHEMA_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SCHEMA_HASH, byteSize: 1) }
-  public func withUnsafePointerToSchemaHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SCHEMA_HASH, body: body) }
-  ///  Optional root type name from the schema
-  public var ROOT_TYPE: String? { let o = _accessor.offset(VT.ROOT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROOT_TYPE) }
-  ///  Optional Unix timestamp (milliseconds) when encryption was performed
+  ///  Request or response.
+  public var DIRECTION: rpcDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .request : rpcDirection(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .request }
+  ///  Encryption header for CIPHERTEXT. CONTEXT is "RPC/1|request" or
+  ///  "RPC/1|response" matching DIRECTION.
+  public var ENCRYPTION: ENC! { let o = _accessor.offset(VT.ENCRYPTION); return ENC(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Optional session identifier established by a prior sign-in.
+  public var SESSION_ID: String? { let o = _accessor.offset(VT.SESSION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SESSION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SESSION_ID) }
+  ///  Optional identifier of the sender's key (routing hint only; the binding
+  ///  identity is SIGNER_PUBLIC_KEY checked against RPCBody.SIGNER_KEY_ID).
+  public var SENDER_KEY_ID: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SENDER_KEY_ID, byteSize: 1) }
+  public func withUnsafePointerToSenderKeyId<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SENDER_KEY_ID, body: body) }
+  ///  Sender clock at signing, milliseconds since the Unix epoch (UTC).
   public var TIMESTAMP: UInt64 { let o = _accessor.offset(VT.TIMESTAMP); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startENC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  ///  Random 16-byte nonce, unique per envelope.
+  public var NONCE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.NONCE, byteSize: 1) }
+  public func withUnsafePointerToNonce<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NONCE, body: body) }
+  ///  Encrypted size-prefixed RPCBody.
+  public var CIPHERTEXT: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CIPHERTEXT, byteSize: 1) }
+  public func withUnsafePointerToCiphertext<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CIPHERTEXT, body: body) }
+  ///  Ed25519 public key (32 bytes) that verifies both signatures.
+  public var SIGNER_PUBLIC_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNER_PUBLIC_KEY, byteSize: 1) }
+  public func withUnsafePointerToSignerPublicKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNER_PUBLIC_KEY, body: body) }
+  ///  Signature algorithm name. Version 1 defines "Ed25519".
+  public var SIGNATURE_TYPE: String? { let o = _accessor.offset(VT.SIGNATURE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE_TYPE) }
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  public static func startRPC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 1, at: VT.VERSION) }
-  public static func add(KEY_EXCHANGE: KeyExchange, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_EXCHANGE.rawValue, def: 0, at: VT.KEY_EXCHANGE) }
-  public static func add(SYMMETRIC: SymmetricAlgo, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYMMETRIC.rawValue, def: 0, at: VT.SYMMETRIC) }
-  public static func add(KEY_DERIVATION: KDF, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_DERIVATION.rawValue, def: 0, at: VT.KEY_DERIVATION) }
-  public static func addVectorOf(EPHEMERAL_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERAL_PUBLIC_KEY, at: VT.EPHEMERAL_PUBLIC_KEY) }
-  public static func addVectorOf(NONCE_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE_START, at: VT.NONCE_START) }
-  public static func addVectorOf(RECIPIENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECIPIENT_KEY_ID, at: VT.RECIPIENT_KEY_ID) }
-  public static func add(CONTEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT, at: VT.CONTEXT) }
-  public static func addVectorOf(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
-  public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VT.ROOT_TYPE) }
+  public static func add(DIRECTION: rpcDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
+  public static func add(ENCRYPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTION, at: VT.ENCRYPTION) }
+  public static func add(SESSION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SESSION_ID, at: VT.SESSION_ID) }
+  public static func addVectorOf(SENDER_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENDER_KEY_ID, at: VT.SENDER_KEY_ID) }
   public static func add(TIMESTAMP: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP, def: 0, at: VT.TIMESTAMP) }
-  public static func endENC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [12, 14]); return end }
-  public static func createENC(
+  public static func addVectorOf(NONCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE, at: VT.NONCE) }
+  public static func addVectorOf(CIPHERTEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CIPHERTEXT, at: VT.CIPHERTEXT) }
+  public static func addVectorOf(SIGNER_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNER_PUBLIC_KEY, at: VT.SIGNER_PUBLIC_KEY) }
+  public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VT.SIGNATURE_TYPE) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
+  public static func endRPC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8, 18, 20, 24, 26]); return end }
+  public static func createRPC(
     _ fbb: inout FlatBufferBuilder,
     VERSION: UInt8 = 1,
-    KEY_EXCHANGE: KeyExchange = .x25519,
-    SYMMETRIC: SymmetricAlgo = .aes256Ctr,
-    KEY_DERIVATION: KDF = .hkdfSha256,
-    EPHEMERAL_PUBLIC_KEYVectorOffset EPHEMERAL_PUBLIC_KEY: Offset,
-    NONCE_STARTVectorOffset NONCE_START: Offset,
-    RECIPIENT_KEY_IDVectorOffset RECIPIENT_KEY_ID: Offset = Offset(),
-    CONTEXTOffset CONTEXT: Offset = Offset(),
-    SCHEMA_HASHVectorOffset SCHEMA_HASH: Offset = Offset(),
-    ROOT_TYPEOffset ROOT_TYPE: Offset = Offset(),
-    TIMESTAMP: UInt64 = 0
+    DIRECTION: rpcDirection = .request,
+    ENCRYPTIONOffset ENCRYPTION: Offset,
+    SESSION_IDOffset SESSION_ID: Offset = Offset(),
+    SENDER_KEY_IDVectorOffset SENDER_KEY_ID: Offset = Offset(),
+    TIMESTAMP: UInt64 = 0,
+    NONCEVectorOffset NONCE: Offset = Offset(),
+    CIPHERTEXTVectorOffset CIPHERTEXT: Offset,
+    SIGNER_PUBLIC_KEYVectorOffset SIGNER_PUBLIC_KEY: Offset,
+    SIGNATURE_TYPEOffset SIGNATURE_TYPE: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset,
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset
   ) -> Offset {
-    let __start = ENC.startENC(&fbb)
-    ENC.add(VERSION: VERSION, &fbb)
-    ENC.add(KEY_EXCHANGE: KEY_EXCHANGE, &fbb)
-    ENC.add(SYMMETRIC: SYMMETRIC, &fbb)
-    ENC.add(KEY_DERIVATION: KEY_DERIVATION, &fbb)
-    ENC.addVectorOf(EPHEMERAL_PUBLIC_KEY: EPHEMERAL_PUBLIC_KEY, &fbb)
-    ENC.addVectorOf(NONCE_START: NONCE_START, &fbb)
-    ENC.addVectorOf(RECIPIENT_KEY_ID: RECIPIENT_KEY_ID, &fbb)
-    ENC.add(CONTEXT: CONTEXT, &fbb)
-    ENC.addVectorOf(SCHEMA_HASH: SCHEMA_HASH, &fbb)
-    ENC.add(ROOT_TYPE: ROOT_TYPE, &fbb)
-    ENC.add(TIMESTAMP: TIMESTAMP, &fbb)
-    return ENC.endENC(&fbb, start: __start)
+    let __start = RPC.startRPC(&fbb)
+    RPC.add(VERSION: VERSION, &fbb)
+    RPC.add(DIRECTION: DIRECTION, &fbb)
+    RPC.add(ENCRYPTION: ENCRYPTION, &fbb)
+    RPC.add(SESSION_ID: SESSION_ID, &fbb)
+    RPC.addVectorOf(SENDER_KEY_ID: SENDER_KEY_ID, &fbb)
+    RPC.add(TIMESTAMP: TIMESTAMP, &fbb)
+    RPC.addVectorOf(NONCE: NONCE, &fbb)
+    RPC.addVectorOf(CIPHERTEXT: CIPHERTEXT, &fbb)
+    RPC.addVectorOf(SIGNER_PUBLIC_KEY: SIGNER_PUBLIC_KEY, &fbb)
+    RPC.add(SIGNATURE_TYPE: SIGNATURE_TYPE, &fbb)
+    RPC.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    RPC.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
+    return RPC.endRPC(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt8.self)
-    try _v.visit(field: VT.KEY_EXCHANGE, fieldName: "KEY_EXCHANGE", required: false, type: KeyExchange.self)
-    try _v.visit(field: VT.SYMMETRIC, fieldName: "SYMMETRIC", required: false, type: SymmetricAlgo.self)
-    try _v.visit(field: VT.KEY_DERIVATION, fieldName: "KEY_DERIVATION", required: false, type: KDF.self)
-    try _v.visit(field: VT.EPHEMERAL_PUBLIC_KEY, fieldName: "EPHEMERAL_PUBLIC_KEY", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.NONCE_START, fieldName: "NONCE_START", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.RECIPIENT_KEY_ID, fieldName: "RECIPIENT_KEY_ID", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.CONTEXT, fieldName: "CONTEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.ROOT_TYPE, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: rpcDirection.self)
+    try _v.visit(field: VT.ENCRYPTION, fieldName: "ENCRYPTION", required: true, type: ForwardOffset<ENC>.self)
+    try _v.visit(field: VT.SESSION_ID, fieldName: "SESSION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SENDER_KEY_ID, fieldName: "SENDER_KEY_ID", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VT.TIMESTAMP, fieldName: "TIMESTAMP", required: false, type: UInt64.self)
+    try _v.visit(field: VT.NONCE, fieldName: "NONCE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CIPHERTEXT, fieldName: "CIPHERTEXT", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SIGNER_PUBLIC_KEY, fieldName: "SIGNER_PUBLIC_KEY", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SIGNATURE_TYPE, fieldName: "SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

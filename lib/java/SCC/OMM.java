@@ -253,6 +253,16 @@ public final class OMM extends com.google.flatbuffers.Table {
   public int USER_DEFINED_PARAMETERSLength() { int o = __offset(88); return o != 0 ? __vector_len(o) : 0; }
   public OMMUserDefinedParameter.Vector userDefinedParametersVector() { return userDefinedParametersVector(new OMMUserDefinedParameter.Vector()); }
   public OMMUserDefinedParameter.Vector userDefinedParametersVector(OMMUserDefinedParameter.Vector obj) { int o = __offset(88); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Where the element set comes from and the terms it travels under.
+   */
+  public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
+  public PVN PROVENANCE(PVN obj) { int o = __offset(90); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Realism of COVARIANCE.
+   */
+  public CVR COV_REALISM() { return COV_REALISM(new CVR()); }
+  public CVR COV_REALISM(CVR obj) { int o = __offset(92); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createOMM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS,
@@ -297,8 +307,10 @@ public final class OMM extends com.google.flatbuffers.Table {
       double USER_DEFINED_MICROSECONDS,
       int CLASSIFICATIONOffset,
       int MESSAGE_IDOffset,
-      int USER_DEFINED_PARAMETERSOffset) {
-    builder.startTable(43);
+      int USER_DEFINED_PARAMETERSOffset,
+      int PROVENANCEOffset,
+      int COV_REALISMOffset) {
+    builder.startTable(45);
     OMM.addUserDefinedMicroseconds(builder, USER_DEFINED_MICROSECONDS);
     OMM.addUserDefinedEpochTimestamp(builder, USER_DEFINED_EPOCH_TIMESTAMP);
     OMM.addMeanMotionDdot(builder, MEAN_MOTION_DDOT);
@@ -319,6 +331,8 @@ public final class OMM extends com.google.flatbuffers.Table {
     OMM.addMeanMotion(builder, MEAN_MOTION);
     OMM.addSemiMajorAxis(builder, SEMI_MAJOR_AXIS);
     OMM.addCcsdsOmmVers(builder, CCSDS_OMM_VERS);
+    OMM.addCovRealism(builder, COV_REALISMOffset);
+    OMM.addProvenance(builder, PROVENANCEOffset);
     OMM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERSOffset);
     OMM.addMessageId(builder, MESSAGE_IDOffset);
     OMM.addClassification(builder, CLASSIFICATIONOffset);
@@ -345,7 +359,7 @@ public final class OMM extends com.google.flatbuffers.Table {
     return OMM.endOMM(builder);
   }
 
-  public static void startOMM(FlatBufferBuilder builder) { builder.startTable(43); }
+  public static void startOMM(FlatBufferBuilder builder) { builder.startTable(45); }
   public static void addCcsdsOmmVers(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.addDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -393,6 +407,8 @@ public final class OMM extends com.google.flatbuffers.Table {
   public static void addUserDefinedParameters(FlatBufferBuilder builder, int USER_DEFINED_PARAMETERSOffset) { builder.addOffset(42, USER_DEFINED_PARAMETERSOffset, 0); }
   public static int createUserDefinedParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startUserDefinedParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(43, PROVENANCEOffset, 0); }
+  public static void addCovRealism(FlatBufferBuilder builder, int COV_REALISMOffset) { builder.addOffset(44, COV_REALISMOffset, 0); }
   public static int endOMM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

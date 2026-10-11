@@ -5,650 +5,1399 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Viewer map style for scenario display.
-enum viewerMapMode {
+///  Scenario reference category. This is intentionally broader than the
+///  underlying domain schemas because a scene reference can point at an SDS
+///  record, a variable placeholder, or a visual annotation.
+enum scenarioReferenceKind {
   UNKNOWN(0),
-  GEOGRAPHICAL_DAY_NIGHT(1),
-  GEOGRAPHICAL_CONSTANT(2),
-  POLITICAL(3);
+  SATELLITE(1),
+  GROUND_SITE(2),
+  SENSOR(3),
+  VARIABLE_SATELLITE(4),
+  VARIABLE_SITE(5),
+  POINT_OF_INTEREST(6),
+  EXCLUSION_ZONE(7),
+  OBSERVATION(8);
 
   final int value;
-  const viewerMapMode(this.value);
+  const scenarioReferenceKind(this.value);
 
-  factory viewerMapMode.fromValue(int value) {
+  factory scenarioReferenceKind.fromValue(int value) {
     switch (value) {
-      case 0: return viewerMapMode.UNKNOWN;
-      case 1: return viewerMapMode.GEOGRAPHICAL_DAY_NIGHT;
-      case 2: return viewerMapMode.GEOGRAPHICAL_CONSTANT;
-      case 3: return viewerMapMode.POLITICAL;
+      case 0: return scenarioReferenceKind.UNKNOWN;
+      case 1: return scenarioReferenceKind.SATELLITE;
+      case 2: return scenarioReferenceKind.GROUND_SITE;
+      case 3: return scenarioReferenceKind.SENSOR;
+      case 4: return scenarioReferenceKind.VARIABLE_SATELLITE;
+      case 5: return scenarioReferenceKind.VARIABLE_SITE;
+      case 6: return scenarioReferenceKind.POINT_OF_INTEREST;
+      case 7: return scenarioReferenceKind.EXCLUSION_ZONE;
+      case 8: return scenarioReferenceKind.OBSERVATION;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static viewerMapMode? _createOrNull(int? value) =>
-      value == null ? null : viewerMapMode.fromValue(value);
+  static scenarioReferenceKind? _createOrNull(int? value) =>
+      value == null ? null : scenarioReferenceKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<viewerMapMode> reader = _viewerMapModeReader();
+  static const int maxValue = 8;
+  static const fb.Reader<scenarioReferenceKind> reader = _scenarioReferenceKindReader();
 }
 
-class _viewerMapModeReader extends fb.Reader<viewerMapMode> {
-  const _viewerMapModeReader();
+class _scenarioReferenceKindReader extends fb.Reader<scenarioReferenceKind> {
+  const _scenarioReferenceKindReader();
 
   @override
   int get size => 1;
 
   @override
-  viewerMapMode read(fb.BufferContext bc, int offset) =>
-      viewerMapMode.fromValue(const fb.Int8Reader().read(bc, offset));
+  scenarioReferenceKind read(fb.BufferContext bc, int offset) =>
+      scenarioReferenceKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Camera frame mode relative to a focused satellite or default scene frame.
-enum viewerCameraFrameMode {
-  DEFAULT(0),
-  RADIAL_INTRACK(1),
-  CROSSTRACK_INTRACK(2),
-  RADIAL_CROSSTRACK(3);
+///  Scenario command action.
+enum scenarioActionCode {
+  NONE(0),
+  CLEAR(1),
+  RESET(2);
 
   final int value;
-  const viewerCameraFrameMode(this.value);
+  const scenarioActionCode(this.value);
 
-  factory viewerCameraFrameMode.fromValue(int value) {
+  factory scenarioActionCode.fromValue(int value) {
     switch (value) {
-      case 0: return viewerCameraFrameMode.DEFAULT;
-      case 1: return viewerCameraFrameMode.RADIAL_INTRACK;
-      case 2: return viewerCameraFrameMode.CROSSTRACK_INTRACK;
-      case 3: return viewerCameraFrameMode.RADIAL_CROSSTRACK;
+      case 0: return scenarioActionCode.NONE;
+      case 1: return scenarioActionCode.CLEAR;
+      case 2: return scenarioActionCode.RESET;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static viewerCameraFrameMode? _createOrNull(int? value) =>
-      value == null ? null : viewerCameraFrameMode.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<viewerCameraFrameMode> reader = _viewerCameraFrameModeReader();
-}
-
-class _viewerCameraFrameModeReader extends fb.Reader<viewerCameraFrameMode> {
-  const _viewerCameraFrameModeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  viewerCameraFrameMode read(fb.BufferContext bc, int offset) =>
-      viewerCameraFrameMode.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Satellite body alignment used by a 3D viewer when focused on a satellite.
-enum viewerSatelliteAlignmentMode {
-  UNKNOWN(0),
-  ORBITAL(1),
-  NADIR(2);
-
-  final int value;
-  const viewerSatelliteAlignmentMode(this.value);
-
-  factory viewerSatelliteAlignmentMode.fromValue(int value) {
-    switch (value) {
-      case 0: return viewerSatelliteAlignmentMode.UNKNOWN;
-      case 1: return viewerSatelliteAlignmentMode.ORBITAL;
-      case 2: return viewerSatelliteAlignmentMode.NADIR;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static viewerSatelliteAlignmentMode? _createOrNull(int? value) =>
-      value == null ? null : viewerSatelliteAlignmentMode.fromValue(value);
+  static scenarioActionCode? _createOrNull(int? value) =>
+      value == null ? null : scenarioActionCode.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 2;
-  static const fb.Reader<viewerSatelliteAlignmentMode> reader = _viewerSatelliteAlignmentModeReader();
+  static const fb.Reader<scenarioActionCode> reader = _scenarioActionCodeReader();
 }
 
-class _viewerSatelliteAlignmentModeReader extends fb.Reader<viewerSatelliteAlignmentMode> {
-  const _viewerSatelliteAlignmentModeReader();
+class _scenarioActionCodeReader extends fb.Reader<scenarioActionCode> {
+  const _scenarioActionCodeReader();
 
   @override
   int get size => 1;
 
   @override
-  viewerSatelliteAlignmentMode read(fb.BufferContext bc, int offset) =>
-      viewerSatelliteAlignmentMode.fromValue(const fb.Int8Reader().read(bc, offset));
+  scenarioActionCode read(fb.BufferContext bc, int offset) =>
+      scenarioActionCode.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Camera rotation offset. Quaternions are preferred when present; Euler
-///  angles are retained for import of older scenario JSON.
-class VSTCameraRotation {
-  VSTCameraRotation._(this._bc, this._bcOffset);
-  factory VSTCameraRotation(List<int> bytes) {
+///  Time-tagged point or annotation shown in a scenario.
+class SCNPointOfInterest {
+  SCNPointOfInterest._(this._bc, this._bcOffset);
+  factory SCNPointOfInterest(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<VSTCameraRotation> reader = _VSTCameraRotationReader();
+  static const fb.Reader<SCNPointOfInterest> reader = _SCNPointOfInterestReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Yaw angle in degrees for Euler-angle camera imports.
-  double get YAW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Pitch angle in degrees for Euler-angle camera imports.
-  double get PITCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  ///  Roll angle in degrees for Euler-angle camera imports.
-  double get ROLL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///  Quaternion x component for camera orientation.
-  double get QUATERNION_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get quaternionX => QUATERNION_X;
-  ///  Quaternion y component for camera orientation.
-  double get QUATERNION_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get quaternionY => QUATERNION_Y;
-  ///  Quaternion z component for camera orientation.
-  double get QUATERNION_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get quaternionZ => QUATERNION_Z;
-  ///  Quaternion w component for camera orientation.
-  double get QUATERNION_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get quaternionW => QUATERNION_W;
-  ///  True when quaternion fields define the authoritative rotation.
-  bool get USES_QUATERNION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, true);
-  bool get usesQuaternion => USES_QUATERNION;
+  ///  Display name for the point of interest.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Optional detail text shown with the point of interest.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  UTC epoch associated with the point of interest.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Seconds before the epoch when highlighting begins.
+  double get HIGHLIGHT_BEFORE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get highlightBefore => HIGHLIGHT_BEFORE;
+  ///  Seconds after the epoch when highlighting remains active.
+  double get HIGHLIGHT_AFTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get highlightAfter => HIGHLIGHT_AFTER;
+  ///  Display color token for the point of interest.
+  String? get COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  WGS84 geodetic position for the point of interest.
+  GJNPosition? get POSITION => GJNPosition.reader.vTableGetNullable(_bc, _bcOffset, 16);
 
   @override
   String toString() {
-    return 'VSTCameraRotation{YAW: ${YAW}, PITCH: ${PITCH}, ROLL: ${ROLL}, quaternionX: ${quaternionX}, quaternionY: ${quaternionY}, quaternionZ: ${quaternionZ}, quaternionW: ${quaternionW}, usesQuaternion: ${usesQuaternion}}';
+    return 'SCNPointOfInterest{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, EPOCH: ${EPOCH}, highlightBefore: ${highlightBefore}, highlightAfter: ${highlightAfter}, COLOR: ${COLOR}, POSITION: ${POSITION}}';
   }
 }
 
-class _VSTCameraRotationReader extends fb.TableReader<VSTCameraRotation> {
-  const _VSTCameraRotationReader();
+class _SCNPointOfInterestReader extends fb.TableReader<SCNPointOfInterest> {
+  const _SCNPointOfInterestReader();
 
   @override
-  VSTCameraRotation createObject(fb.BufferContext bc, int offset) =>
-    VSTCameraRotation._(bc, offset);
+  SCNPointOfInterest createObject(fb.BufferContext bc, int offset) =>
+    SCNPointOfInterest._(bc, offset);
 }
 
-class VSTCameraRotationBuilder {
-  VSTCameraRotationBuilder(this.fbBuilder);
+class SCNPointOfInterestBuilder {
+  SCNPointOfInterestBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(7);
   }
 
-  int addYaw(double? YAW) {
-    fbBuilder.addFloat64(0, YAW);
-    return fbBuilder.offset;
-  }
-  int addPitch(double? PITCH) {
-    fbBuilder.addFloat64(1, PITCH);
-    return fbBuilder.offset;
-  }
-  int addRoll(double? ROLL) {
-    fbBuilder.addFloat64(2, ROLL);
-    return fbBuilder.offset;
-  }
-  int addQuaternionX(double? QUATERNION_X) {
-    fbBuilder.addFloat64(3, QUATERNION_X);
-    return fbBuilder.offset;
-  }
-  int addQuaternionY(double? QUATERNION_Y) {
-    fbBuilder.addFloat64(4, QUATERNION_Y);
-    return fbBuilder.offset;
-  }
-  int addQuaternionZ(double? QUATERNION_Z) {
-    fbBuilder.addFloat64(5, QUATERNION_Z);
-    return fbBuilder.offset;
-  }
-  int addQuaternionW(double? QUATERNION_W) {
-    fbBuilder.addFloat64(6, QUATERNION_W);
-    return fbBuilder.offset;
-  }
-  int addUsesQuaternion(bool? USES_QUATERNION) {
-    fbBuilder.addBool(7, USES_QUATERNION);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class VSTCameraRotationObjectBuilder extends fb.ObjectBuilder {
-  final double? _YAW;
-  final double? _PITCH;
-  final double? _ROLL;
-  final double? _QUATERNION_X;
-  final double? _QUATERNION_Y;
-  final double? _QUATERNION_Z;
-  final double? _QUATERNION_W;
-  final bool? _USES_QUATERNION;
-
-  VSTCameraRotationObjectBuilder({
-    double? YAW,
-    double? PITCH,
-    double? ROLL,
-    double? QUATERNION_X,
-    double? quaternionX,
-    double? QUATERNION_Y,
-    double? quaternionY,
-    double? QUATERNION_Z,
-    double? quaternionZ,
-    double? QUATERNION_W,
-    double? quaternionW,
-    bool? USES_QUATERNION,
-    bool? usesQuaternion,
-  })
-      : _YAW = YAW,
-        _PITCH = PITCH,
-        _ROLL = ROLL,
-        _QUATERNION_X = quaternionX ?? QUATERNION_X,
-        _QUATERNION_Y = quaternionY ?? QUATERNION_Y,
-        _QUATERNION_Z = quaternionZ ?? QUATERNION_Z,
-        _QUATERNION_W = quaternionW ?? QUATERNION_W,
-        _USES_QUATERNION = usesQuaternion ?? USES_QUATERNION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(8);
-    fbBuilder.addFloat64(0, _YAW);
-    fbBuilder.addFloat64(1, _PITCH);
-    fbBuilder.addFloat64(2, _ROLL);
-    fbBuilder.addFloat64(3, _QUATERNION_X);
-    fbBuilder.addFloat64(4, _QUATERNION_Y);
-    fbBuilder.addFloat64(5, _QUATERNION_Z);
-    fbBuilder.addFloat64(6, _QUATERNION_W);
-    fbBuilder.addBool(7, _USES_QUATERNION);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  App display toggles for a scenario viewer.
-class VSTDisplaySettings {
-  VSTDisplaySettings._(this._bc, this._bcOffset);
-  factory VSTDisplaySettings(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<VSTDisplaySettings> reader = _VSTDisplaySettingsReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Active map rendering mode for the scenario viewer.
-  viewerMapMode get MAP_MODE => viewerMapMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  viewerMapMode get mapMode => MAP_MODE;
-  ///  Show geosynchronous belt reference markers.
-  bool get SHOW_GEO_BELT_MARKERS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
-  bool get showGeoBeltMarkers => SHOW_GEO_BELT_MARKERS;
-  ///  Show cislunar reference content.
-  bool get SHOW_CIS_LUNAR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
-  bool get showCisLunar => SHOW_CIS_LUNAR;
-  ///  Show the equator overlay.
-  bool get SHOW_EQUATOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
-  bool get showEquator => SHOW_EQUATOR;
-  ///  Show latitude grid lines.
-  bool get SHOW_LATITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
-  bool get showLatitude => SHOW_LATITUDE;
-  ///  Show longitude grid lines.
-  bool get SHOW_LONGITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
-  bool get showLongitude => SHOW_LONGITUDE;
-  ///  Show body shadow-cone overlays.
-  bool get SHOW_SHADOW_CONES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  bool get showShadowCones => SHOW_SHADOW_CONES;
-  ///  Show animated capture or GIF export controls.
-  bool get SHOW_GIF_CONTROLS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
-  bool get showGifControls => SHOW_GIF_CONTROLS;
-  ///  Render the atmospheric shell around the central body.
-  bool get SHOW_ATMOSPHERE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
-  bool get showAtmosphere => SHOW_ATMOSPHERE;
-  ///  Show the sun-direction indicator overlay.
-  bool get SHOW_SUN_DIRECTION_INDICATOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
-  bool get showSunDirectionIndicator => SHOW_SUN_DIRECTION_INDICATOR;
-  ///  Render the starfield background.
-  bool get USE_STARFIELD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
-  bool get useStarfield => USE_STARFIELD;
-  ///  Render orbits as stitched continuous paths.
-  bool get USE_STITCHED_ORBIT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
-  bool get useStitchedOrbit => USE_STITCHED_ORBIT;
-
-  @override
-  String toString() {
-    return 'VSTDisplaySettings{mapMode: ${mapMode}, showGeoBeltMarkers: ${showGeoBeltMarkers}, showCisLunar: ${showCisLunar}, showEquator: ${showEquator}, showLatitude: ${showLatitude}, showLongitude: ${showLongitude}, showShadowCones: ${showShadowCones}, showGifControls: ${showGifControls}, showAtmosphere: ${showAtmosphere}, showSunDirectionIndicator: ${showSunDirectionIndicator}, useStarfield: ${useStarfield}, useStitchedOrbit: ${useStitchedOrbit}}';
-  }
-}
-
-class _VSTDisplaySettingsReader extends fb.TableReader<VSTDisplaySettings> {
-  const _VSTDisplaySettingsReader();
-
-  @override
-  VSTDisplaySettings createObject(fb.BufferContext bc, int offset) =>
-    VSTDisplaySettings._(bc, offset);
-}
-
-class VSTDisplaySettingsBuilder {
-  VSTDisplaySettingsBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(12);
-  }
-
-  int addMapMode(viewerMapMode? MAP_MODE) {
-    fbBuilder.addInt8(0, MAP_MODE?.value);
-    return fbBuilder.offset;
-  }
-  int addShowGeoBeltMarkers(bool? SHOW_GEO_BELT_MARKERS) {
-    fbBuilder.addBool(1, SHOW_GEO_BELT_MARKERS);
-    return fbBuilder.offset;
-  }
-  int addShowCisLunar(bool? SHOW_CIS_LUNAR) {
-    fbBuilder.addBool(2, SHOW_CIS_LUNAR);
-    return fbBuilder.offset;
-  }
-  int addShowEquator(bool? SHOW_EQUATOR) {
-    fbBuilder.addBool(3, SHOW_EQUATOR);
-    return fbBuilder.offset;
-  }
-  int addShowLatitude(bool? SHOW_LATITUDE) {
-    fbBuilder.addBool(4, SHOW_LATITUDE);
-    return fbBuilder.offset;
-  }
-  int addShowLongitude(bool? SHOW_LONGITUDE) {
-    fbBuilder.addBool(5, SHOW_LONGITUDE);
-    return fbBuilder.offset;
-  }
-  int addShowShadowCones(bool? SHOW_SHADOW_CONES) {
-    fbBuilder.addBool(6, SHOW_SHADOW_CONES);
-    return fbBuilder.offset;
-  }
-  int addShowGifControls(bool? SHOW_GIF_CONTROLS) {
-    fbBuilder.addBool(7, SHOW_GIF_CONTROLS);
-    return fbBuilder.offset;
-  }
-  int addShowAtmosphere(bool? SHOW_ATMOSPHERE) {
-    fbBuilder.addBool(8, SHOW_ATMOSPHERE);
-    return fbBuilder.offset;
-  }
-  int addShowSunDirectionIndicator(bool? SHOW_SUN_DIRECTION_INDICATOR) {
-    fbBuilder.addBool(9, SHOW_SUN_DIRECTION_INDICATOR);
-    return fbBuilder.offset;
-  }
-  int addUseStarfield(bool? USE_STARFIELD) {
-    fbBuilder.addBool(10, USE_STARFIELD);
-    return fbBuilder.offset;
-  }
-  int addUseStitchedOrbit(bool? USE_STITCHED_ORBIT) {
-    fbBuilder.addBool(11, USE_STITCHED_ORBIT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class VSTDisplaySettingsObjectBuilder extends fb.ObjectBuilder {
-  final viewerMapMode? _MAP_MODE;
-  final bool? _SHOW_GEO_BELT_MARKERS;
-  final bool? _SHOW_CIS_LUNAR;
-  final bool? _SHOW_EQUATOR;
-  final bool? _SHOW_LATITUDE;
-  final bool? _SHOW_LONGITUDE;
-  final bool? _SHOW_SHADOW_CONES;
-  final bool? _SHOW_GIF_CONTROLS;
-  final bool? _SHOW_ATMOSPHERE;
-  final bool? _SHOW_SUN_DIRECTION_INDICATOR;
-  final bool? _USE_STARFIELD;
-  final bool? _USE_STITCHED_ORBIT;
-
-  VSTDisplaySettingsObjectBuilder({
-    viewerMapMode? MAP_MODE,
-    viewerMapMode? mapMode,
-    bool? SHOW_GEO_BELT_MARKERS,
-    bool? showGeoBeltMarkers,
-    bool? SHOW_CIS_LUNAR,
-    bool? showCisLunar,
-    bool? SHOW_EQUATOR,
-    bool? showEquator,
-    bool? SHOW_LATITUDE,
-    bool? showLatitude,
-    bool? SHOW_LONGITUDE,
-    bool? showLongitude,
-    bool? SHOW_SHADOW_CONES,
-    bool? showShadowCones,
-    bool? SHOW_GIF_CONTROLS,
-    bool? showGifControls,
-    bool? SHOW_ATMOSPHERE,
-    bool? showAtmosphere,
-    bool? SHOW_SUN_DIRECTION_INDICATOR,
-    bool? showSunDirectionIndicator,
-    bool? USE_STARFIELD,
-    bool? useStarfield,
-    bool? USE_STITCHED_ORBIT,
-    bool? useStitchedOrbit,
-  })
-      : _MAP_MODE = mapMode ?? MAP_MODE,
-        _SHOW_GEO_BELT_MARKERS = showGeoBeltMarkers ?? SHOW_GEO_BELT_MARKERS,
-        _SHOW_CIS_LUNAR = showCisLunar ?? SHOW_CIS_LUNAR,
-        _SHOW_EQUATOR = showEquator ?? SHOW_EQUATOR,
-        _SHOW_LATITUDE = showLatitude ?? SHOW_LATITUDE,
-        _SHOW_LONGITUDE = showLongitude ?? SHOW_LONGITUDE,
-        _SHOW_SHADOW_CONES = showShadowCones ?? SHOW_SHADOW_CONES,
-        _SHOW_GIF_CONTROLS = showGifControls ?? SHOW_GIF_CONTROLS,
-        _SHOW_ATMOSPHERE = showAtmosphere ?? SHOW_ATMOSPHERE,
-        _SHOW_SUN_DIRECTION_INDICATOR = showSunDirectionIndicator ?? SHOW_SUN_DIRECTION_INDICATOR,
-        _USE_STARFIELD = useStarfield ?? USE_STARFIELD,
-        _USE_STITCHED_ORBIT = useStitchedOrbit ?? USE_STITCHED_ORBIT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(12);
-    fbBuilder.addInt8(0, _MAP_MODE?.value);
-    fbBuilder.addBool(1, _SHOW_GEO_BELT_MARKERS);
-    fbBuilder.addBool(2, _SHOW_CIS_LUNAR);
-    fbBuilder.addBool(3, _SHOW_EQUATOR);
-    fbBuilder.addBool(4, _SHOW_LATITUDE);
-    fbBuilder.addBool(5, _SHOW_LONGITUDE);
-    fbBuilder.addBool(6, _SHOW_SHADOW_CONES);
-    fbBuilder.addBool(7, _SHOW_GIF_CONTROLS);
-    fbBuilder.addBool(8, _SHOW_ATMOSPHERE);
-    fbBuilder.addBool(9, _SHOW_SUN_DIRECTION_INDICATOR);
-    fbBuilder.addBool(10, _USE_STARFIELD);
-    fbBuilder.addBool(11, _USE_STITCHED_ORBIT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Camera options for a space-domain scenario viewer.
-class VSTCameraOptions {
-  VSTCameraOptions._(this._bc, this._bcOffset);
-  factory VSTCameraOptions(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<VSTCameraOptions> reader = _VSTCameraOptionsReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Camera frame relative to the focused target or default scene.
-  viewerCameraFrameMode get CAMERA_FRAME_MODE => viewerCameraFrameMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  viewerCameraFrameMode get cameraFrameMode => CAMERA_FRAME_MODE;
-  ///  Satellite body alignment mode when focused on a satellite.
-  viewerSatelliteAlignmentMode get SATELLITE_ALIGNMENT => viewerSatelliteAlignmentMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  viewerSatelliteAlignmentMode get satelliteAlignment => SATELLITE_ALIGNMENT;
-  ///  Camera distance from the current target in kilometers.
-  double get DISTANCE_FROM_TARGET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get distanceFromTarget => DISTANCE_FROM_TARGET;
-  ///  Camera orientation offset.
-  VSTCameraRotation? get ROTATION => VSTCameraRotation.reader.vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'VSTCameraOptions{cameraFrameMode: ${cameraFrameMode}, satelliteAlignment: ${satelliteAlignment}, distanceFromTarget: ${distanceFromTarget}, ROTATION: ${ROTATION}}';
-  }
-}
-
-class _VSTCameraOptionsReader extends fb.TableReader<VSTCameraOptions> {
-  const _VSTCameraOptionsReader();
-
-  @override
-  VSTCameraOptions createObject(fb.BufferContext bc, int offset) =>
-    VSTCameraOptions._(bc, offset);
-}
-
-class VSTCameraOptionsBuilder {
-  VSTCameraOptionsBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCameraFrameMode(viewerCameraFrameMode? CAMERA_FRAME_MODE) {
-    fbBuilder.addInt8(0, CAMERA_FRAME_MODE?.value);
-    return fbBuilder.offset;
-  }
-  int addSatelliteAlignment(viewerSatelliteAlignmentMode? SATELLITE_ALIGNMENT) {
-    fbBuilder.addInt8(1, SATELLITE_ALIGNMENT?.value);
-    return fbBuilder.offset;
-  }
-  int addDistanceFromTarget(double? DISTANCE_FROM_TARGET) {
-    fbBuilder.addFloat64(2, DISTANCE_FROM_TARGET);
-    return fbBuilder.offset;
-  }
-  int addRotationOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class VSTCameraOptionsObjectBuilder extends fb.ObjectBuilder {
-  final viewerCameraFrameMode? _CAMERA_FRAME_MODE;
-  final viewerSatelliteAlignmentMode? _SATELLITE_ALIGNMENT;
-  final double? _DISTANCE_FROM_TARGET;
-  final VSTCameraRotationObjectBuilder? _ROTATION;
-
-  VSTCameraOptionsObjectBuilder({
-    viewerCameraFrameMode? CAMERA_FRAME_MODE,
-    viewerCameraFrameMode? cameraFrameMode,
-    viewerSatelliteAlignmentMode? SATELLITE_ALIGNMENT,
-    viewerSatelliteAlignmentMode? satelliteAlignment,
-    double? DISTANCE_FROM_TARGET,
-    double? distanceFromTarget,
-    VSTCameraRotationObjectBuilder? ROTATION,
-  })
-      : _CAMERA_FRAME_MODE = cameraFrameMode ?? CAMERA_FRAME_MODE,
-        _SATELLITE_ALIGNMENT = satelliteAlignment ?? SATELLITE_ALIGNMENT,
-        _DISTANCE_FROM_TARGET = distanceFromTarget ?? DISTANCE_FROM_TARGET,
-        _ROTATION = ROTATION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ROTATIONOffset = _ROTATION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addInt8(0, _CAMERA_FRAME_MODE?.value);
-    fbBuilder.addInt8(1, _SATELLITE_ALIGNMENT?.value);
-    fbBuilder.addFloat64(2, _DISTANCE_FROM_TARGET);
-    fbBuilder.addOffset(3, ROTATIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Viewer State - display and camera state associated with a scenario.
-class VST {
-  VST._(this._bc, this._bcOffset);
-  factory VST(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<VST> reader = _VSTReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Camera settings for the current viewer state.
-  VSTCameraOptions? get CAMERA => VSTCameraOptions.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Display toggles and map style for the current viewer state.
-  VSTDisplaySettings? get DISPLAY_SETTINGS => VSTDisplaySettings.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  VSTDisplaySettings? get displaySettings => DISPLAY_SETTINGS;
-  ///  Reference id of the currently focused scenario object.
-  String? get FOCUSED_REFERENCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get focusedReferenceId => FOCUSED_REFERENCE_ID;
-  ///  Zero-based focused reference index, or -1 when no index is focused.
-  int get FOCUSED_REFERENCE_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, -1);
-  int get focusedReferenceIndex => FOCUSED_REFERENCE_INDEX;
-
-  @override
-  String toString() {
-    return 'VST{CAMERA: ${CAMERA}, displaySettings: ${displaySettings}, focusedReferenceId: ${focusedReferenceId}, focusedReferenceIndex: ${focusedReferenceIndex}}';
-  }
-}
-
-class _VSTReader extends fb.TableReader<VST> {
-  const _VSTReader();
-
-  @override
-  VST createObject(fb.BufferContext bc, int offset) =>
-    VST._(bc, offset);
-}
-
-class VSTBuilder {
-  VSTBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCameraOffset(int? offset) {
+  int addNameOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addDisplaySettingsOffset(int? offset) {
+  int addDescriptionOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addFocusedReferenceIdOffset(int? offset) {
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addHighlightBefore(double? HIGHLIGHT_BEFORE) {
+    fbBuilder.addFloat64(3, HIGHLIGHT_BEFORE);
+    return fbBuilder.offset;
+  }
+  int addHighlightAfter(double? HIGHLIGHT_AFTER) {
+    fbBuilder.addFloat64(4, HIGHLIGHT_AFTER);
+    return fbBuilder.offset;
+  }
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNPointOfInterestObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final String? _EPOCH;
+  final double? _HIGHLIGHT_BEFORE;
+  final double? _HIGHLIGHT_AFTER;
+  final String? _COLOR;
+  final GJNPositionObjectBuilder? _POSITION;
+
+  SCNPointOfInterestObjectBuilder({
+    String? NAME,
+    String? DESCRIPTION,
+    String? EPOCH,
+    double? HIGHLIGHT_BEFORE,
+    double? highlightBefore,
+    double? HIGHLIGHT_AFTER,
+    double? highlightAfter,
+    String? COLOR,
+    GJNPositionObjectBuilder? POSITION,
+  })
+      : _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _EPOCH = EPOCH,
+        _HIGHLIGHT_BEFORE = highlightBefore ?? HIGHLIGHT_BEFORE,
+        _HIGHLIGHT_AFTER = highlightAfter ?? HIGHLIGHT_AFTER,
+        _COLOR = COLOR,
+        _POSITION = POSITION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? COLOROffset = _COLOR == null ? null
+        : fbBuilder.writeString(_COLOR!);
+    final int? POSITIONOffset = _POSITION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, DESCRIPTIONOffset);
+    fbBuilder.addOffset(2, EPOCHOffset);
+    fbBuilder.addFloat64(3, _HIGHLIGHT_BEFORE);
+    fbBuilder.addFloat64(4, _HIGHLIGHT_AFTER);
+    fbBuilder.addOffset(5, COLOROffset);
+    fbBuilder.addOffset(6, POSITIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Sensor or site view-cone overlay used by scenario tools.
+class SCNViewCone {
+  SCNViewCone._(this._bc, this._bcOffset);
+  factory SCNViewCone(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNViewCone> reader = _SCNViewConeReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Minimum elevation angle in degrees.
+  double get MIN_ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get minElevation => MIN_ELEVATION;
+  ///  Maximum elevation angle in degrees.
+  double get MAX_ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get maxElevation => MAX_ELEVATION;
+  ///  Minimum azimuth angle in degrees.
+  double get MIN_AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get minAzimuth => MIN_AZIMUTH;
+  ///  Maximum azimuth angle in degrees.
+  double get MAX_AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get maxAzimuth => MAX_AZIMUTH;
+  ///  Maximum view-cone range in kilometers.
+  double get MAX_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get maxRange => MAX_RANGE;
+  ///  Half angle in degrees for cone-style overlays.
+  double get HALF_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get halfAngle => HALF_ANGLE;
+  ///  Dynamic range mode or expression used by the viewer.
+  String? get DYNAMIC_RANGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get dynamicRange => DYNAMIC_RANGE;
+
+  @override
+  String toString() {
+    return 'SCNViewCone{minElevation: ${minElevation}, maxElevation: ${maxElevation}, minAzimuth: ${minAzimuth}, maxAzimuth: ${maxAzimuth}, maxRange: ${maxRange}, halfAngle: ${halfAngle}, dynamicRange: ${dynamicRange}}';
+  }
+}
+
+class _SCNViewConeReader extends fb.TableReader<SCNViewCone> {
+  const _SCNViewConeReader();
+
+  @override
+  SCNViewCone createObject(fb.BufferContext bc, int offset) =>
+    SCNViewCone._(bc, offset);
+}
+
+class SCNViewConeBuilder {
+  SCNViewConeBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addMinElevation(double? MIN_ELEVATION) {
+    fbBuilder.addFloat64(0, MIN_ELEVATION);
+    return fbBuilder.offset;
+  }
+  int addMaxElevation(double? MAX_ELEVATION) {
+    fbBuilder.addFloat64(1, MAX_ELEVATION);
+    return fbBuilder.offset;
+  }
+  int addMinAzimuth(double? MIN_AZIMUTH) {
+    fbBuilder.addFloat64(2, MIN_AZIMUTH);
+    return fbBuilder.offset;
+  }
+  int addMaxAzimuth(double? MAX_AZIMUTH) {
+    fbBuilder.addFloat64(3, MAX_AZIMUTH);
+    return fbBuilder.offset;
+  }
+  int addMaxRange(double? MAX_RANGE) {
+    fbBuilder.addFloat64(4, MAX_RANGE);
+    return fbBuilder.offset;
+  }
+  int addHalfAngle(double? HALF_ANGLE) {
+    fbBuilder.addFloat64(5, HALF_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addDynamicRangeOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNViewConeObjectBuilder extends fb.ObjectBuilder {
+  final double? _MIN_ELEVATION;
+  final double? _MAX_ELEVATION;
+  final double? _MIN_AZIMUTH;
+  final double? _MAX_AZIMUTH;
+  final double? _MAX_RANGE;
+  final double? _HALF_ANGLE;
+  final String? _DYNAMIC_RANGE;
+
+  SCNViewConeObjectBuilder({
+    double? MIN_ELEVATION,
+    double? minElevation,
+    double? MAX_ELEVATION,
+    double? maxElevation,
+    double? MIN_AZIMUTH,
+    double? minAzimuth,
+    double? MAX_AZIMUTH,
+    double? maxAzimuth,
+    double? MAX_RANGE,
+    double? maxRange,
+    double? HALF_ANGLE,
+    double? halfAngle,
+    String? DYNAMIC_RANGE,
+    String? dynamicRange,
+  })
+      : _MIN_ELEVATION = minElevation ?? MIN_ELEVATION,
+        _MAX_ELEVATION = maxElevation ?? MAX_ELEVATION,
+        _MIN_AZIMUTH = minAzimuth ?? MIN_AZIMUTH,
+        _MAX_AZIMUTH = maxAzimuth ?? MAX_AZIMUTH,
+        _MAX_RANGE = maxRange ?? MAX_RANGE,
+        _HALF_ANGLE = halfAngle ?? HALF_ANGLE,
+        _DYNAMIC_RANGE = dynamicRange ?? DYNAMIC_RANGE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DYNAMIC_RANGEOffset = _DYNAMIC_RANGE == null ? null
+        : fbBuilder.writeString(_DYNAMIC_RANGE!);
+    fbBuilder.startTable(7);
+    fbBuilder.addFloat64(0, _MIN_ELEVATION);
+    fbBuilder.addFloat64(1, _MAX_ELEVATION);
+    fbBuilder.addFloat64(2, _MIN_AZIMUTH);
+    fbBuilder.addFloat64(3, _MAX_AZIMUTH);
+    fbBuilder.addFloat64(4, _MAX_RANGE);
+    fbBuilder.addFloat64(5, _HALF_ANGLE);
+    fbBuilder.addOffset(6, DYNAMIC_RANGEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Target pairing for sun-advantage visualization.
+class SCNSunAdvantageTarget {
+  SCNSunAdvantageTarget._(this._bc, this._bcOffset);
+  factory SCNSunAdvantageTarget(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNSunAdvantageTarget> reader = _SCNSunAdvantageTargetReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Target identifier for the paired object.
+  String? get TARGET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get targetId => TARGET_ID;
+  ///  NORAD catalog id of the target satellite when available.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  Site id associated with the target pairing.
+  String? get SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get siteId => SITE_ID;
+
+  @override
+  String toString() {
+    return 'SCNSunAdvantageTarget{targetId: ${targetId}, noradCatId: ${noradCatId}, siteId: ${siteId}}';
+  }
+}
+
+class _SCNSunAdvantageTargetReader extends fb.TableReader<SCNSunAdvantageTarget> {
+  const _SCNSunAdvantageTargetReader();
+
+  @override
+  SCNSunAdvantageTarget createObject(fb.BufferContext bc, int offset) =>
+    SCNSunAdvantageTarget._(bc, offset);
+}
+
+class SCNSunAdvantageTargetBuilder {
+  SCNSunAdvantageTargetBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addTargetIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(1, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addSiteIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNSunAdvantageTargetObjectBuilder extends fb.ObjectBuilder {
+  final String? _TARGET_ID;
+  final int? _NORAD_CAT_ID;
+  final String? _SITE_ID;
+
+  SCNSunAdvantageTargetObjectBuilder({
+    String? TARGET_ID,
+    String? targetId,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? SITE_ID,
+    String? siteId,
+  })
+      : _TARGET_ID = targetId ?? TARGET_ID,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _SITE_ID = siteId ?? SITE_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TARGET_IDOffset = _TARGET_ID == null ? null
+        : fbBuilder.writeString(_TARGET_ID!);
+    final int? SITE_IDOffset = _SITE_ID == null ? null
+        : fbBuilder.writeString(_SITE_ID!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, TARGET_IDOffset);
+    fbBuilder.addUint32(1, _NORAD_CAT_ID);
+    fbBuilder.addOffset(2, SITE_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
+///  when available; POINTS preserves simple WGS84 polygon imports.
+class SCNExclusionZone {
+  SCNExclusionZone._(this._bc, this._bcOffset);
+  factory SCNExclusionZone(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNExclusionZone> reader = _SCNExclusionZoneReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Display label for the exclusion zone.
+  String? get LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Fill color token for the exclusion zone.
+  String? get FILL_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get fillColor => FILL_COLOR;
+  ///  Label color token for the exclusion zone.
+  String? get LABEL_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get labelColor => LABEL_COLOR;
+  ///  True when the exclusion-zone polygon should be filled.
+  bool get IS_FILLED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get isFilled => IS_FILLED;
+  ///  Simple WGS84 polygon points for imported zones.
+  List<GJNPosition>? get POINTS => const fb.ListReader<GJNPosition>(GJNPosition.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Canonical GeoJSON geometry for the exclusion zone.
+  GJNGeometry? get BOUNDARY => GJNGeometry.reader.vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'SCNExclusionZone{LABEL: ${LABEL}, fillColor: ${fillColor}, labelColor: ${labelColor}, isFilled: ${isFilled}, POINTS: ${POINTS}, BOUNDARY: ${BOUNDARY}}';
+  }
+}
+
+class _SCNExclusionZoneReader extends fb.TableReader<SCNExclusionZone> {
+  const _SCNExclusionZoneReader();
+
+  @override
+  SCNExclusionZone createObject(fb.BufferContext bc, int offset) =>
+    SCNExclusionZone._(bc, offset);
+}
+
+class SCNExclusionZoneBuilder {
+  SCNExclusionZoneBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addLabelOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFillColorOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addLabelColorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addIsFilled(bool? IS_FILLED) {
+    fbBuilder.addBool(3, IS_FILLED);
+    return fbBuilder.offset;
+  }
+  int addPointsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addBoundaryOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNExclusionZoneObjectBuilder extends fb.ObjectBuilder {
+  final String? _LABEL;
+  final String? _FILL_COLOR;
+  final String? _LABEL_COLOR;
+  final bool? _IS_FILLED;
+  final List<GJNPositionObjectBuilder>? _POINTS;
+  final GJNGeometryObjectBuilder? _BOUNDARY;
+
+  SCNExclusionZoneObjectBuilder({
+    String? LABEL,
+    String? FILL_COLOR,
+    String? fillColor,
+    String? LABEL_COLOR,
+    String? labelColor,
+    bool? IS_FILLED,
+    bool? isFilled,
+    List<GJNPositionObjectBuilder>? POINTS,
+    GJNGeometryObjectBuilder? BOUNDARY,
+  })
+      : _LABEL = LABEL,
+        _FILL_COLOR = fillColor ?? FILL_COLOR,
+        _LABEL_COLOR = labelColor ?? LABEL_COLOR,
+        _IS_FILLED = isFilled ?? IS_FILLED,
+        _POINTS = POINTS,
+        _BOUNDARY = BOUNDARY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LABELOffset = _LABEL == null ? null
+        : fbBuilder.writeString(_LABEL!);
+    final int? FILL_COLOROffset = _FILL_COLOR == null ? null
+        : fbBuilder.writeString(_FILL_COLOR!);
+    final int? LABEL_COLOROffset = _LABEL_COLOR == null ? null
+        : fbBuilder.writeString(_LABEL_COLOR!);
+    final int? POINTSOffset = _POINTS == null ? null
+        : fbBuilder.writeList(_POINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? BOUNDARYOffset = _BOUNDARY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, LABELOffset);
+    fbBuilder.addOffset(1, FILL_COLOROffset);
+    fbBuilder.addOffset(2, LABEL_COLOROffset);
+    fbBuilder.addBool(3, _IS_FILLED);
+    fbBuilder.addOffset(4, POINTSOffset);
+    fbBuilder.addOffset(5, BOUNDARYOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Scene reference that binds viewer-scene state to existing SDS domain
+///  records without duplicating those records.
+class SCNReference {
+  SCNReference._(this._bc, this._bcOffset);
+  factory SCNReference(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNReference> reader = _SCNReferenceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable scenario-local id for this reference.
+  String? get REFERENCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get referenceId => REFERENCE_ID;
+  ///  Human-readable name for the reference.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Category of object or annotation represented by this reference.
+  scenarioReferenceKind get REFERENCE_KIND => scenarioReferenceKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  scenarioReferenceKind get referenceKind => REFERENCE_KIND;
+  ///  True when this reference represents a removal request.
+  bool get REMOVE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  ///  NORAD catalog id for satellite references when available.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  International designator or provider object id when available.
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get objectId => OBJECT_ID;
+  ///  Country associated with the reference.
+  String? get COUNTRY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Owner or operator label associated with the reference.
+  String? get OWNER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Source labels or URIs that produced this reference.
+  List<String>? get SOURCES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Data-mode labels associated with this reference.
+  List<String>? get DATA_MODES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<String>? get dataModes => DATA_MODES;
+  ///  Mean orbital elements associated with this reference.
+  List<OMM>? get MEAN_ELEMENTS => const fb.ListReader<OMM>(OMM.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  List<OMM>? get meanElements => MEAN_ELEMENTS;
+  ///  State vectors associated with this reference.
+  List<STV>? get STATE_VECTORS => const fb.ListReader<STV>(STV.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  List<STV>? get stateVectors => STATE_VECTORS;
+  ///  Maneuver records associated with this reference.
+  List<MNV>? get MANEUVERS => const fb.ListReader<MNV>(MNV.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Ground-site record associated with this reference.
+  SIT? get SITE => SIT.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Sensor record associated with this reference.
+  SEN? get SENSOR => SEN.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Sensor system id for references that identify a sensor by id.
+  String? get SENSOR_SYSTEM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get sensorSystemId => SENSOR_SYSTEM_ID;
+  ///  Sensor id for references that identify a sensor by id.
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get sensorId => SENSOR_ID;
+  ///  WGS84 site position when no SIT or SEN record is available.
+  GJNPosition? get SITE_POSITION => GJNPosition.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  GJNPosition? get sitePosition => SITE_POSITION;
+  ///  Scenario variable id for variable satellite references.
+  String? get VARIABLE_SATELLITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get variableSatelliteId => VARIABLE_SATELLITE_ID;
+  ///  Scenario variable id for variable site references.
+  String? get VARIABLE_SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get variableSiteId => VARIABLE_SITE_ID;
+  ///  Points of interest associated with this reference.
+  List<SCNPointOfInterest>? get POINTS => const fb.ListReader<SCNPointOfInterest>(SCNPointOfInterest.reader).vTableGetNullable(_bc, _bcOffset, 44);
+  ///  View-cone overlay associated with this reference.
+  SCNViewCone? get VIEW_CONE => SCNViewCone.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  SCNViewCone? get viewCone => VIEW_CONE;
+  ///  Sun-advantage target pairing for this reference.
+  SCNSunAdvantageTarget? get SUN_ADVANTAGE_TARGET => SCNSunAdvantageTarget.reader.vTableGetNullable(_bc, _bcOffset, 48);
+  SCNSunAdvantageTarget? get sunAdvantageTarget => SUN_ADVANTAGE_TARGET;
+  ///  Exclusion-zone geometry associated with this reference.
+  SCNExclusionZone? get EXCLUSION_ZONE => SCNExclusionZone.reader.vTableGetNullable(_bc, _bcOffset, 50);
+  SCNExclusionZone? get exclusionZone => EXCLUSION_ZONE;
+  ///  Electro-optical observation record associated with this reference.
+  EOO? get OBSERVATION_EO => EOO.reader.vTableGetNullable(_bc, _bcOffset, 52);
+  EOO? get observationEo => OBSERVATION_EO;
+  ///  Radar observation record associated with this reference.
+  RDO? get OBSERVATION_RADAR => RDO.reader.vTableGetNullable(_bc, _bcOffset, 54);
+  RDO? get observationRadar => OBSERVATION_RADAR;
+
+  @override
+  String toString() {
+    return 'SCNReference{referenceId: ${referenceId}, NAME: ${NAME}, referenceKind: ${referenceKind}, REMOVE: ${REMOVE}, noradCatId: ${noradCatId}, objectId: ${objectId}, COUNTRY: ${COUNTRY}, OWNER: ${OWNER}, SOURCES: ${SOURCES}, dataModes: ${dataModes}, meanElements: ${meanElements}, stateVectors: ${stateVectors}, MANEUVERS: ${MANEUVERS}, SITE: ${SITE}, SENSOR: ${SENSOR}, sensorSystemId: ${sensorSystemId}, sensorId: ${sensorId}, sitePosition: ${sitePosition}, variableSatelliteId: ${variableSatelliteId}, variableSiteId: ${variableSiteId}, POINTS: ${POINTS}, viewCone: ${viewCone}, sunAdvantageTarget: ${sunAdvantageTarget}, exclusionZone: ${exclusionZone}, observationEo: ${observationEo}, observationRadar: ${observationRadar}}';
+  }
+}
+
+class _SCNReferenceReader extends fb.TableReader<SCNReference> {
+  const _SCNReferenceReader();
+
+  @override
+  SCNReference createObject(fb.BufferContext bc, int offset) =>
+    SCNReference._(bc, offset);
+}
+
+class SCNReferenceBuilder {
+  SCNReferenceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(26);
+  }
+
+  int addReferenceIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceKind(scenarioReferenceKind? REFERENCE_KIND) {
+    fbBuilder.addInt8(2, REFERENCE_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addRemove(bool? REMOVE) {
+    fbBuilder.addBool(3, REMOVE);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(4, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addCountryOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addOwnerOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addSourcesOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addDataModesOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addMeanElementsOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addStateVectorsOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addManeuversOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addSiteOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addSensorOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addSensorSystemIdOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addSitePositionOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addVariableSatelliteIdOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addVariableSiteIdOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addPointsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addViewConeOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addSunAdvantageTargetOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addExclusionZoneOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addObservationEoOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addObservationRadarOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
+  final String? _REFERENCE_ID;
+  final String? _NAME;
+  final scenarioReferenceKind? _REFERENCE_KIND;
+  final bool? _REMOVE;
+  final int? _NORAD_CAT_ID;
+  final String? _OBJECT_ID;
+  final String? _COUNTRY;
+  final String? _OWNER;
+  final List<String>? _SOURCES;
+  final List<String>? _DATA_MODES;
+  final List<OMMObjectBuilder>? _MEAN_ELEMENTS;
+  final List<STVObjectBuilder>? _STATE_VECTORS;
+  final List<MNVObjectBuilder>? _MANEUVERS;
+  final SITObjectBuilder? _SITE;
+  final SENObjectBuilder? _SENSOR;
+  final String? _SENSOR_SYSTEM_ID;
+  final String? _SENSOR_ID;
+  final GJNPositionObjectBuilder? _SITE_POSITION;
+  final String? _VARIABLE_SATELLITE_ID;
+  final String? _VARIABLE_SITE_ID;
+  final List<SCNPointOfInterestObjectBuilder>? _POINTS;
+  final SCNViewConeObjectBuilder? _VIEW_CONE;
+  final SCNSunAdvantageTargetObjectBuilder? _SUN_ADVANTAGE_TARGET;
+  final SCNExclusionZoneObjectBuilder? _EXCLUSION_ZONE;
+  final EOOObjectBuilder? _OBSERVATION_EO;
+  final RDOObjectBuilder? _OBSERVATION_RADAR;
+
+  SCNReferenceObjectBuilder({
+    String? REFERENCE_ID,
+    String? referenceId,
+    String? NAME,
+    scenarioReferenceKind? REFERENCE_KIND,
+    scenarioReferenceKind? referenceKind,
+    bool? REMOVE,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? OBJECT_ID,
+    String? objectId,
+    String? COUNTRY,
+    String? OWNER,
+    List<String>? SOURCES,
+    List<String>? DATA_MODES,
+    List<String>? dataModes,
+    List<OMMObjectBuilder>? MEAN_ELEMENTS,
+    List<OMMObjectBuilder>? meanElements,
+    List<STVObjectBuilder>? STATE_VECTORS,
+    List<STVObjectBuilder>? stateVectors,
+    List<MNVObjectBuilder>? MANEUVERS,
+    SITObjectBuilder? SITE,
+    SENObjectBuilder? SENSOR,
+    String? SENSOR_SYSTEM_ID,
+    String? sensorSystemId,
+    String? SENSOR_ID,
+    String? sensorId,
+    GJNPositionObjectBuilder? SITE_POSITION,
+    GJNPositionObjectBuilder? sitePosition,
+    String? VARIABLE_SATELLITE_ID,
+    String? variableSatelliteId,
+    String? VARIABLE_SITE_ID,
+    String? variableSiteId,
+    List<SCNPointOfInterestObjectBuilder>? POINTS,
+    SCNViewConeObjectBuilder? VIEW_CONE,
+    SCNViewConeObjectBuilder? viewCone,
+    SCNSunAdvantageTargetObjectBuilder? SUN_ADVANTAGE_TARGET,
+    SCNSunAdvantageTargetObjectBuilder? sunAdvantageTarget,
+    SCNExclusionZoneObjectBuilder? EXCLUSION_ZONE,
+    SCNExclusionZoneObjectBuilder? exclusionZone,
+    EOOObjectBuilder? OBSERVATION_EO,
+    EOOObjectBuilder? observationEo,
+    RDOObjectBuilder? OBSERVATION_RADAR,
+    RDOObjectBuilder? observationRadar,
+  })
+      : _REFERENCE_ID = referenceId ?? REFERENCE_ID,
+        _NAME = NAME,
+        _REFERENCE_KIND = referenceKind ?? REFERENCE_KIND,
+        _REMOVE = REMOVE,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _COUNTRY = COUNTRY,
+        _OWNER = OWNER,
+        _SOURCES = SOURCES,
+        _DATA_MODES = dataModes ?? DATA_MODES,
+        _MEAN_ELEMENTS = meanElements ?? MEAN_ELEMENTS,
+        _STATE_VECTORS = stateVectors ?? STATE_VECTORS,
+        _MANEUVERS = MANEUVERS,
+        _SITE = SITE,
+        _SENSOR = SENSOR,
+        _SENSOR_SYSTEM_ID = sensorSystemId ?? SENSOR_SYSTEM_ID,
+        _SENSOR_ID = sensorId ?? SENSOR_ID,
+        _SITE_POSITION = sitePosition ?? SITE_POSITION,
+        _VARIABLE_SATELLITE_ID = variableSatelliteId ?? VARIABLE_SATELLITE_ID,
+        _VARIABLE_SITE_ID = variableSiteId ?? VARIABLE_SITE_ID,
+        _POINTS = POINTS,
+        _VIEW_CONE = viewCone ?? VIEW_CONE,
+        _SUN_ADVANTAGE_TARGET = sunAdvantageTarget ?? SUN_ADVANTAGE_TARGET,
+        _EXCLUSION_ZONE = exclusionZone ?? EXCLUSION_ZONE,
+        _OBSERVATION_EO = observationEo ?? OBSERVATION_EO,
+        _OBSERVATION_RADAR = observationRadar ?? OBSERVATION_RADAR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REFERENCE_IDOffset = _REFERENCE_ID == null ? null
+        : fbBuilder.writeString(_REFERENCE_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? COUNTRYOffset = _COUNTRY == null ? null
+        : fbBuilder.writeString(_COUNTRY!);
+    final int? OWNEROffset = _OWNER == null ? null
+        : fbBuilder.writeString(_OWNER!);
+    final int? SOURCESOffset = _SOURCES == null ? null
+        : fbBuilder.writeList(_SOURCES!.map(fbBuilder.writeString).toList());
+    final int? DATA_MODESOffset = _DATA_MODES == null ? null
+        : fbBuilder.writeList(_DATA_MODES!.map(fbBuilder.writeString).toList());
+    final int? MEAN_ELEMENTSOffset = _MEAN_ELEMENTS == null ? null
+        : fbBuilder.writeList(_MEAN_ELEMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? STATE_VECTORSOffset = _STATE_VECTORS == null ? null
+        : fbBuilder.writeList(_STATE_VECTORS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MANEUVERSOffset = _MANEUVERS == null ? null
+        : fbBuilder.writeList(_MANEUVERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SITEOffset = _SITE?.getOrCreateOffset(fbBuilder);
+    final int? SENSOROffset = _SENSOR?.getOrCreateOffset(fbBuilder);
+    final int? SENSOR_SYSTEM_IDOffset = _SENSOR_SYSTEM_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_SYSTEM_ID!);
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
+    final int? SITE_POSITIONOffset = _SITE_POSITION?.getOrCreateOffset(fbBuilder);
+    final int? VARIABLE_SATELLITE_IDOffset = _VARIABLE_SATELLITE_ID == null ? null
+        : fbBuilder.writeString(_VARIABLE_SATELLITE_ID!);
+    final int? VARIABLE_SITE_IDOffset = _VARIABLE_SITE_ID == null ? null
+        : fbBuilder.writeString(_VARIABLE_SITE_ID!);
+    final int? POINTSOffset = _POINTS == null ? null
+        : fbBuilder.writeList(_POINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? VIEW_CONEOffset = _VIEW_CONE?.getOrCreateOffset(fbBuilder);
+    final int? SUN_ADVANTAGE_TARGETOffset = _SUN_ADVANTAGE_TARGET?.getOrCreateOffset(fbBuilder);
+    final int? EXCLUSION_ZONEOffset = _EXCLUSION_ZONE?.getOrCreateOffset(fbBuilder);
+    final int? OBSERVATION_EOOffset = _OBSERVATION_EO?.getOrCreateOffset(fbBuilder);
+    final int? OBSERVATION_RADAROffset = _OBSERVATION_RADAR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(26);
+    fbBuilder.addOffset(0, REFERENCE_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addInt8(2, _REFERENCE_KIND?.value);
+    fbBuilder.addBool(3, _REMOVE);
+    fbBuilder.addUint32(4, _NORAD_CAT_ID);
+    fbBuilder.addOffset(5, OBJECT_IDOffset);
+    fbBuilder.addOffset(6, COUNTRYOffset);
+    fbBuilder.addOffset(7, OWNEROffset);
+    fbBuilder.addOffset(8, SOURCESOffset);
+    fbBuilder.addOffset(9, DATA_MODESOffset);
+    fbBuilder.addOffset(10, MEAN_ELEMENTSOffset);
+    fbBuilder.addOffset(11, STATE_VECTORSOffset);
+    fbBuilder.addOffset(12, MANEUVERSOffset);
+    fbBuilder.addOffset(13, SITEOffset);
+    fbBuilder.addOffset(14, SENSOROffset);
+    fbBuilder.addOffset(15, SENSOR_SYSTEM_IDOffset);
+    fbBuilder.addOffset(16, SENSOR_IDOffset);
+    fbBuilder.addOffset(17, SITE_POSITIONOffset);
+    fbBuilder.addOffset(18, VARIABLE_SATELLITE_IDOffset);
+    fbBuilder.addOffset(19, VARIABLE_SITE_IDOffset);
+    fbBuilder.addOffset(20, POINTSOffset);
+    fbBuilder.addOffset(21, VIEW_CONEOffset);
+    fbBuilder.addOffset(22, SUN_ADVANTAGE_TARGETOffset);
+    fbBuilder.addOffset(23, EXCLUSION_ZONEOffset);
+    fbBuilder.addOffset(24, OBSERVATION_EOOffset);
+    fbBuilder.addOffset(25, OBSERVATION_RADAROffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Imported scenario event payload composed from existing SDS records.
+class SCNEvent {
+  SCNEvent._(this._bc, this._bcOffset);
+  factory SCNEvent(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNEvent> reader = _SCNEventReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable id for the imported scenario event.
+  String? get EVENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get eventId => EVENT_ID;
+  ///  Mean orbital elements associated with the event.
+  List<OMM>? get MEAN_ELEMENTS => const fb.ListReader<OMM>(OMM.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  List<OMM>? get meanElements => MEAN_ELEMENTS;
+  ///  State vectors associated with the event.
+  List<STV>? get STATE_VECTORS => const fb.ListReader<STV>(STV.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  List<STV>? get stateVectors => STATE_VECTORS;
+  ///  Electro-optical observations associated with the event.
+  List<EOO>? get EO_OBSERVATIONS => const fb.ListReader<EOO>(EOO.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  List<EOO>? get eoObservations => EO_OBSERVATIONS;
+  ///  Radar observations associated with the event.
+  List<RDO>? get RADAR_OBSERVATIONS => const fb.ListReader<RDO>(RDO.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  List<RDO>? get radarObservations => RADAR_OBSERVATIONS;
+
+  @override
+  String toString() {
+    return 'SCNEvent{eventId: ${eventId}, meanElements: ${meanElements}, stateVectors: ${stateVectors}, eoObservations: ${eoObservations}, radarObservations: ${radarObservations}}';
+  }
+}
+
+class _SCNEventReader extends fb.TableReader<SCNEvent> {
+  const _SCNEventReader();
+
+  @override
+  SCNEvent createObject(fb.BufferContext bc, int offset) =>
+    SCNEvent._(bc, offset);
+}
+
+class SCNEventBuilder {
+  SCNEventBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addEventIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addMeanElementsOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addStateVectorsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEoObservationsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addRadarObservationsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNEventObjectBuilder extends fb.ObjectBuilder {
+  final String? _EVENT_ID;
+  final List<OMMObjectBuilder>? _MEAN_ELEMENTS;
+  final List<STVObjectBuilder>? _STATE_VECTORS;
+  final List<EOOObjectBuilder>? _EO_OBSERVATIONS;
+  final List<RDOObjectBuilder>? _RADAR_OBSERVATIONS;
+
+  SCNEventObjectBuilder({
+    String? EVENT_ID,
+    String? eventId,
+    List<OMMObjectBuilder>? MEAN_ELEMENTS,
+    List<OMMObjectBuilder>? meanElements,
+    List<STVObjectBuilder>? STATE_VECTORS,
+    List<STVObjectBuilder>? stateVectors,
+    List<EOOObjectBuilder>? EO_OBSERVATIONS,
+    List<EOOObjectBuilder>? eoObservations,
+    List<RDOObjectBuilder>? RADAR_OBSERVATIONS,
+    List<RDOObjectBuilder>? radarObservations,
+  })
+      : _EVENT_ID = eventId ?? EVENT_ID,
+        _MEAN_ELEMENTS = meanElements ?? MEAN_ELEMENTS,
+        _STATE_VECTORS = stateVectors ?? STATE_VECTORS,
+        _EO_OBSERVATIONS = eoObservations ?? EO_OBSERVATIONS,
+        _RADAR_OBSERVATIONS = radarObservations ?? RADAR_OBSERVATIONS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EVENT_IDOffset = _EVENT_ID == null ? null
+        : fbBuilder.writeString(_EVENT_ID!);
+    final int? MEAN_ELEMENTSOffset = _MEAN_ELEMENTS == null ? null
+        : fbBuilder.writeList(_MEAN_ELEMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? STATE_VECTORSOffset = _STATE_VECTORS == null ? null
+        : fbBuilder.writeList(_STATE_VECTORS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? EO_OBSERVATIONSOffset = _EO_OBSERVATIONS == null ? null
+        : fbBuilder.writeList(_EO_OBSERVATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? RADAR_OBSERVATIONSOffset = _RADAR_OBSERVATIONS == null ? null
+        : fbBuilder.writeList(_RADAR_OBSERVATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, EVENT_IDOffset);
+    fbBuilder.addOffset(1, MEAN_ELEMENTSOffset);
+    fbBuilder.addOffset(2, STATE_VECTORSOffset);
+    fbBuilder.addOffset(3, EO_OBSERVATIONSOffset);
+    fbBuilder.addOffset(4, RADAR_OBSERVATIONSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Scenario asset-change notification payload.
+class SCNAssetsChanged {
+  SCNAssetsChanged._(this._bc, this._bcOffset);
+  factory SCNAssetsChanged(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNAssetsChanged> reader = _SCNAssetsChangedReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Satellite references added by the asset-change event.
+  List<SCNReference>? get ADDED_SATELLITES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  List<SCNReference>? get addedSatellites => ADDED_SATELLITES;
+  ///  Ground-site references added by the asset-change event.
+  List<SCNReference>? get ADDED_GROUND_SITES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  List<SCNReference>? get addedGroundSites => ADDED_GROUND_SITES;
+  ///  Satellite references removed by the asset-change event.
+  List<SCNReference>? get REMOVED_SATELLITES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  List<SCNReference>? get removedSatellites => REMOVED_SATELLITES;
+  ///  Ground-site references removed by the asset-change event.
+  List<SCNReference>? get REMOVED_GROUND_SITES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  List<SCNReference>? get removedGroundSites => REMOVED_GROUND_SITES;
+  ///  Current satellite references after the asset-change event.
+  List<SCNReference>? get SATELLITES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Current ground-site references after the asset-change event.
+  List<SCNReference>? get GROUND_SITES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<SCNReference>? get groundSites => GROUND_SITES;
+  ///  Current full reference set after the asset-change event.
+  List<SCNReference>? get REFERENCES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'SCNAssetsChanged{addedSatellites: ${addedSatellites}, addedGroundSites: ${addedGroundSites}, removedSatellites: ${removedSatellites}, removedGroundSites: ${removedGroundSites}, SATELLITES: ${SATELLITES}, groundSites: ${groundSites}, REFERENCES: ${REFERENCES}}';
+  }
+}
+
+class _SCNAssetsChangedReader extends fb.TableReader<SCNAssetsChanged> {
+  const _SCNAssetsChangedReader();
+
+  @override
+  SCNAssetsChanged createObject(fb.BufferContext bc, int offset) =>
+    SCNAssetsChanged._(bc, offset);
+}
+
+class SCNAssetsChangedBuilder {
+  SCNAssetsChangedBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addAddedSatellitesOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAddedGroundSitesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addRemovedSatellitesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRemovedGroundSitesOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSatellitesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addGroundSitesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addReferencesOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNAssetsChangedObjectBuilder extends fb.ObjectBuilder {
+  final List<SCNReferenceObjectBuilder>? _ADDED_SATELLITES;
+  final List<SCNReferenceObjectBuilder>? _ADDED_GROUND_SITES;
+  final List<SCNReferenceObjectBuilder>? _REMOVED_SATELLITES;
+  final List<SCNReferenceObjectBuilder>? _REMOVED_GROUND_SITES;
+  final List<SCNReferenceObjectBuilder>? _SATELLITES;
+  final List<SCNReferenceObjectBuilder>? _GROUND_SITES;
+  final List<SCNReferenceObjectBuilder>? _REFERENCES;
+
+  SCNAssetsChangedObjectBuilder({
+    List<SCNReferenceObjectBuilder>? ADDED_SATELLITES,
+    List<SCNReferenceObjectBuilder>? addedSatellites,
+    List<SCNReferenceObjectBuilder>? ADDED_GROUND_SITES,
+    List<SCNReferenceObjectBuilder>? addedGroundSites,
+    List<SCNReferenceObjectBuilder>? REMOVED_SATELLITES,
+    List<SCNReferenceObjectBuilder>? removedSatellites,
+    List<SCNReferenceObjectBuilder>? REMOVED_GROUND_SITES,
+    List<SCNReferenceObjectBuilder>? removedGroundSites,
+    List<SCNReferenceObjectBuilder>? SATELLITES,
+    List<SCNReferenceObjectBuilder>? GROUND_SITES,
+    List<SCNReferenceObjectBuilder>? groundSites,
+    List<SCNReferenceObjectBuilder>? REFERENCES,
+  })
+      : _ADDED_SATELLITES = addedSatellites ?? ADDED_SATELLITES,
+        _ADDED_GROUND_SITES = addedGroundSites ?? ADDED_GROUND_SITES,
+        _REMOVED_SATELLITES = removedSatellites ?? REMOVED_SATELLITES,
+        _REMOVED_GROUND_SITES = removedGroundSites ?? REMOVED_GROUND_SITES,
+        _SATELLITES = SATELLITES,
+        _GROUND_SITES = groundSites ?? GROUND_SITES,
+        _REFERENCES = REFERENCES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ADDED_SATELLITESOffset = _ADDED_SATELLITES == null ? null
+        : fbBuilder.writeList(_ADDED_SATELLITES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ADDED_GROUND_SITESOffset = _ADDED_GROUND_SITES == null ? null
+        : fbBuilder.writeList(_ADDED_GROUND_SITES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? REMOVED_SATELLITESOffset = _REMOVED_SATELLITES == null ? null
+        : fbBuilder.writeList(_REMOVED_SATELLITES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? REMOVED_GROUND_SITESOffset = _REMOVED_GROUND_SITES == null ? null
+        : fbBuilder.writeList(_REMOVED_GROUND_SITES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SATELLITESOffset = _SATELLITES == null ? null
+        : fbBuilder.writeList(_SATELLITES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? GROUND_SITESOffset = _GROUND_SITES == null ? null
+        : fbBuilder.writeList(_GROUND_SITES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? REFERENCESOffset = _REFERENCES == null ? null
+        : fbBuilder.writeList(_REFERENCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, ADDED_SATELLITESOffset);
+    fbBuilder.addOffset(1, ADDED_GROUND_SITESOffset);
+    fbBuilder.addOffset(2, REMOVED_SATELLITESOffset);
+    fbBuilder.addOffset(3, REMOVED_GROUND_SITESOffset);
+    fbBuilder.addOffset(4, SATELLITESOffset);
+    fbBuilder.addOffset(5, GROUND_SITESOffset);
+    fbBuilder.addOffset(6, REFERENCESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Scenario - canonical scene composition and simulation state for external
+///  scenario controls integrations. Domain records remain in their native SDS
+///  schemas and are referenced or embedded here only as scenario content.
+class SCN {
+  SCN._(this._bc, this._bcOffset);
+  factory SCN(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCN> reader = _SCNReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable id for the scenario.
+  String? get SCENARIO_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get scenarioId => SCENARIO_ID;
+  ///  Objects, annotations, and variables included in the scenario.
+  List<SCNReference>? get REFERENCES => const fb.ListReader<SCNReference>(SCNReference.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Imported event payload associated with the scenario.
+  SCNEvent? get EVENT => SCNEvent.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Zero-based focused reference index, or -1 when no index is focused.
+  int get FOCUSED_REFERENCE_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, -1);
+  int get focusedReferenceIndex => FOCUSED_REFERENCE_INDEX;
+  ///  Reference id of the currently focused scenario object.
+  String? get FOCUSED_REFERENCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get focusedReferenceId => FOCUSED_REFERENCE_ID;
+  ///  Current scenario epoch as an ISO-8601 UTC timestamp.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Simulation time-rate multiplier.
+  double get SIM_SPEED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get simSpeed => SIM_SPEED;
+  ///  True when the viewer should use a body-fixed display frame.
+  bool get USE_BODY_FIXED_FRAME => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get useBodyFixedFrame => USE_BODY_FIXED_FRAME;
+  ///  Authoritative reference frame used for scenario propagation and display.
+  RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  RFM? get referenceFrame => REFERENCE_FRAME;
+  ///  Command action requested for the scenario.
+  scenarioActionCode get ACTION => scenarioActionCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Viewer camera and display state for the scenario.
+  VST? get VIEW_STATE => VST.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  VST? get viewState => VIEW_STATE;
+  ///  Asset-change notification payload for the scenario.
+  SCNAssetsChanged? get ASSETS_CHANGED => SCNAssetsChanged.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  SCNAssetsChanged? get assetsChanged => ASSETS_CHANGED;
+
+  @override
+  String toString() {
+    return 'SCN{scenarioId: ${scenarioId}, REFERENCES: ${REFERENCES}, EVENT: ${EVENT}, focusedReferenceIndex: ${focusedReferenceIndex}, focusedReferenceId: ${focusedReferenceId}, EPOCH: ${EPOCH}, simSpeed: ${simSpeed}, useBodyFixedFrame: ${useBodyFixedFrame}, referenceFrame: ${referenceFrame}, ACTION: ${ACTION}, viewState: ${viewState}, assetsChanged: ${assetsChanged}}';
+  }
+}
+
+class _SCNReader extends fb.TableReader<SCN> {
+  const _SCNReader();
+
+  @override
+  SCN createObject(fb.BufferContext bc, int offset) =>
+    SCN._(bc, offset);
+}
+
+class SCNBuilder {
+  SCNBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addScenarioIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addReferencesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addEventOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
@@ -656,44 +1405,121 @@ class VSTBuilder {
     fbBuilder.addInt32(3, FOCUSED_REFERENCE_INDEX);
     return fbBuilder.offset;
   }
+  int addFocusedReferenceIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addSimSpeed(double? SIM_SPEED) {
+    fbBuilder.addFloat64(6, SIM_SPEED);
+    return fbBuilder.offset;
+  }
+  int addUseBodyFixedFrame(bool? USE_BODY_FIXED_FRAME) {
+    fbBuilder.addBool(7, USE_BODY_FIXED_FRAME);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addAction(scenarioActionCode? ACTION) {
+    fbBuilder.addInt8(9, ACTION?.value);
+    return fbBuilder.offset;
+  }
+  int addViewStateOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addAssetsChangedOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
   }
 }
 
-class VSTObjectBuilder extends fb.ObjectBuilder {
-  final VSTCameraOptionsObjectBuilder? _CAMERA;
-  final VSTDisplaySettingsObjectBuilder? _DISPLAY_SETTINGS;
-  final String? _FOCUSED_REFERENCE_ID;
+class SCNObjectBuilder extends fb.ObjectBuilder {
+  final String? _SCENARIO_ID;
+  final List<SCNReferenceObjectBuilder>? _REFERENCES;
+  final SCNEventObjectBuilder? _EVENT;
   final int? _FOCUSED_REFERENCE_INDEX;
+  final String? _FOCUSED_REFERENCE_ID;
+  final String? _EPOCH;
+  final double? _SIM_SPEED;
+  final bool? _USE_BODY_FIXED_FRAME;
+  final RFMObjectBuilder? _REFERENCE_FRAME;
+  final scenarioActionCode? _ACTION;
+  final VSTObjectBuilder? _VIEW_STATE;
+  final SCNAssetsChangedObjectBuilder? _ASSETS_CHANGED;
 
-  VSTObjectBuilder({
-    VSTCameraOptionsObjectBuilder? CAMERA,
-    VSTDisplaySettingsObjectBuilder? DISPLAY_SETTINGS,
-    VSTDisplaySettingsObjectBuilder? displaySettings,
-    String? FOCUSED_REFERENCE_ID,
-    String? focusedReferenceId,
+  SCNObjectBuilder({
+    String? SCENARIO_ID,
+    String? scenarioId,
+    List<SCNReferenceObjectBuilder>? REFERENCES,
+    SCNEventObjectBuilder? EVENT,
     int? FOCUSED_REFERENCE_INDEX,
     int? focusedReferenceIndex,
+    String? FOCUSED_REFERENCE_ID,
+    String? focusedReferenceId,
+    String? EPOCH,
+    double? SIM_SPEED,
+    double? simSpeed,
+    bool? USE_BODY_FIXED_FRAME,
+    bool? useBodyFixedFrame,
+    RFMObjectBuilder? REFERENCE_FRAME,
+    RFMObjectBuilder? referenceFrame,
+    scenarioActionCode? ACTION,
+    VSTObjectBuilder? VIEW_STATE,
+    VSTObjectBuilder? viewState,
+    SCNAssetsChangedObjectBuilder? ASSETS_CHANGED,
+    SCNAssetsChangedObjectBuilder? assetsChanged,
   })
-      : _CAMERA = CAMERA,
-        _DISPLAY_SETTINGS = displaySettings ?? DISPLAY_SETTINGS,
+      : _SCENARIO_ID = scenarioId ?? SCENARIO_ID,
+        _REFERENCES = REFERENCES,
+        _EVENT = EVENT,
+        _FOCUSED_REFERENCE_INDEX = focusedReferenceIndex ?? FOCUSED_REFERENCE_INDEX,
         _FOCUSED_REFERENCE_ID = focusedReferenceId ?? FOCUSED_REFERENCE_ID,
-        _FOCUSED_REFERENCE_INDEX = focusedReferenceIndex ?? FOCUSED_REFERENCE_INDEX;
+        _EPOCH = EPOCH,
+        _SIM_SPEED = simSpeed ?? SIM_SPEED,
+        _USE_BODY_FIXED_FRAME = useBodyFixedFrame ?? USE_BODY_FIXED_FRAME,
+        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _ACTION = ACTION,
+        _VIEW_STATE = viewState ?? VIEW_STATE,
+        _ASSETS_CHANGED = assetsChanged ?? ASSETS_CHANGED;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? CAMERAOffset = _CAMERA?.getOrCreateOffset(fbBuilder);
-    final int? DISPLAY_SETTINGSOffset = _DISPLAY_SETTINGS?.getOrCreateOffset(fbBuilder);
+    final int? SCENARIO_IDOffset = _SCENARIO_ID == null ? null
+        : fbBuilder.writeString(_SCENARIO_ID!);
+    final int? REFERENCESOffset = _REFERENCES == null ? null
+        : fbBuilder.writeList(_REFERENCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? EVENTOffset = _EVENT?.getOrCreateOffset(fbBuilder);
     final int? FOCUSED_REFERENCE_IDOffset = _FOCUSED_REFERENCE_ID == null ? null
         : fbBuilder.writeString(_FOCUSED_REFERENCE_ID!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, CAMERAOffset);
-    fbBuilder.addOffset(1, DISPLAY_SETTINGSOffset);
-    fbBuilder.addOffset(2, FOCUSED_REFERENCE_IDOffset);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? VIEW_STATEOffset = _VIEW_STATE?.getOrCreateOffset(fbBuilder);
+    final int? ASSETS_CHANGEDOffset = _ASSETS_CHANGED?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, SCENARIO_IDOffset);
+    fbBuilder.addOffset(1, REFERENCESOffset);
+    fbBuilder.addOffset(2, EVENTOffset);
     fbBuilder.addInt32(3, _FOCUSED_REFERENCE_INDEX);
+    fbBuilder.addOffset(4, FOCUSED_REFERENCE_IDOffset);
+    fbBuilder.addOffset(5, EPOCHOffset);
+    fbBuilder.addFloat64(6, _SIM_SPEED);
+    fbBuilder.addBool(7, _USE_BODY_FIXED_FRAME);
+    fbBuilder.addOffset(8, REFERENCE_FRAMEOffset);
+    fbBuilder.addInt8(9, _ACTION?.value);
+    fbBuilder.addOffset(10, VIEW_STATEOffset);
+    fbBuilder.addOffset(11, ASSETS_CHANGEDOffset);
     return fbBuilder.endTable();
   }
 

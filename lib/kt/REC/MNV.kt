@@ -18,6 +18,12 @@ import kotlin.math.sign
 
 /**
  * Spacecraft Maneuver
+ *
+ * U, V and W are the UVW axes of an orbit state: U radial, along the position
+ * vector away from the central body; W cross-track, along the orbit normal
+ * (the direction of r x v); V in-track, W x U, completing the right-handed
+ * frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+ * pre-maneuver state at EVENT_START_TIME.
  */
 @Suppress("unused")
 class MNV : Table() {
@@ -196,7 +202,8 @@ class MNV : Table() {
     val origSensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
     fun origSensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
-     * Maneuver event identifier
+     * Maneuver event identifier. Records of one event share it: a merged event
+     * and the source records it combines.
      */
     val eventId : String?
         get() {
@@ -234,7 +241,7 @@ class MNV : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Delta-V along-track/U component (km/s)
+     * Delta-V along U, radial (km/s)
      */
     val deltaVelU : Double
         get() {
@@ -242,7 +249,7 @@ class MNV : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Delta-V cross-track/V component (km/s)
+     * Delta-V along V, in-track (km/s)
      */
     val deltaVelV : Double
         get() {
@@ -250,7 +257,7 @@ class MNV : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Delta-V radial/W component (km/s)
+     * Delta-V along W, cross-track (km/s)
      */
     val deltaVelW : Double
         get() {
@@ -266,7 +273,7 @@ class MNV : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Delta position U component (km)
+     * Delta position along U, radial (km)
      */
     val deltaPosU : Double
         get() {
@@ -274,7 +281,7 @@ class MNV : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Delta position V component (km)
+     * Delta position along V, in-track (km)
      */
     val deltaPosV : Double
         get() {
@@ -282,7 +289,7 @@ class MNV : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Delta position W component (km)
+     * Delta position along W, cross-track (km)
      */
     val deltaPosW : Double
         get() {
@@ -408,7 +415,8 @@ class MNV : Table() {
             val o = __offset(74); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Acceleration values (km/s^2, 3 components per point)
+     * Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+     * the state at that point's MNVR_ACCEL_TIMES entry
      */
     fun mnvrAccels(j: Int) : Double {
         val o = __offset(76)
@@ -499,7 +507,9 @@ class MNV : Table() {
             val o = __offset(86); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Sourced data references
+     * Sourced data references: identifiers of the records this one was
+     * determined from (CIDv1 for records of this network), such as the source
+     * records a merged event combines
      */
     fun sourcedData(j: Int) : String? {
         val o = __offset(88)
@@ -541,6 +551,18 @@ class MNV : Table() {
         }
     val transactionIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(92, 1)
     fun transactionIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 1)
+    /**
+     * Where the maneuver's data comes from and the terms it travels under.
+     */
+    val provenance : PVN? get() = provenance(PVN())
+    fun provenance(obj: PVN) : PVN? {
+        val o = __offset(94)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMNV(_bb: ByteBuffer): MNV = getRootAsMNV(_bb, MNV())
@@ -549,8 +571,8 @@ class MNV : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MNVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MNV")
-        fun createMNV(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, status: Byte, characterization: Byte, characterizationUnc: Double, reportTimeOffset: Int, eventStartTimeOffset: Int, eventEndTimeOffset: Int, totalBurnTime: Double, odFitEndTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, eventIdOffset: Int, uct: Boolean, maneuverUnc: Double, deltaVel: Double, deltaVelU: Double, deltaVelV: Double, deltaVelW: Double, deltaPos: Double, deltaPosU: Double, deltaPosV: Double, deltaPosW: Double, deltaMass: Double, preEventOffset: Int, postEventOffset: Int, postMass: Double, postArea: Double, covOffset: Int, numObs: UInt, stateModelOffset: Int, stateModelVersion: Double, numAccelPoints: UShort, mnvrAccelTimesOffset: Int, mnvrAccelsOffset: Int, mnvrAccelUncsOffset: Int, descriptionOffset: Int, descriptorOffset: Int, algorithmOffset: Int, tagsOffset: Int, sourcedDataOffset: Int, sourcedDataTypesOffset: Int, transactionIdOffset: Int) : Int {
-            builder.startTable(45)
+        fun createMNV(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, status: Byte, characterization: Byte, characterizationUnc: Double, reportTimeOffset: Int, eventStartTimeOffset: Int, eventEndTimeOffset: Int, totalBurnTime: Double, odFitEndTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, eventIdOffset: Int, uct: Boolean, maneuverUnc: Double, deltaVel: Double, deltaVelU: Double, deltaVelV: Double, deltaVelW: Double, deltaPos: Double, deltaPosU: Double, deltaPosV: Double, deltaPosW: Double, deltaMass: Double, preEventOffset: Int, postEventOffset: Int, postMass: Double, postArea: Double, covOffset: Int, numObs: UInt, stateModelOffset: Int, stateModelVersion: Double, numAccelPoints: UShort, mnvrAccelTimesOffset: Int, mnvrAccelsOffset: Int, mnvrAccelUncsOffset: Int, descriptionOffset: Int, descriptorOffset: Int, algorithmOffset: Int, tagsOffset: Int, sourcedDataOffset: Int, sourcedDataTypesOffset: Int, transactionIdOffset: Int, provenanceOffset: Int) : Int {
+            builder.startTable(46)
             addSTATEMODELVERSION(builder, stateModelVersion)
             addPOSTAREA(builder, postArea)
             addPOSTMASS(builder, postMass)
@@ -566,6 +588,7 @@ class MNV : Table() {
             addMANEUVERUNC(builder, maneuverUnc)
             addTOTALBURNTIME(builder, totalBurnTime)
             addCHARACTERIZATIONUNC(builder, characterizationUnc)
+            addPROVENANCE(builder, provenanceOffset)
             addTRANSACTIONID(builder, transactionIdOffset)
             addSOURCEDDATATYPES(builder, sourcedDataTypesOffset)
             addSOURCEDDATA(builder, sourcedDataOffset)
@@ -598,7 +621,7 @@ class MNV : Table() {
             addSTATUS(builder, status)
             return endMNV(builder)
         }
-        fun startMNV(builder: FlatBufferBuilder) = builder.startTable(45)
+        fun startMNV(builder: FlatBufferBuilder) = builder.startTable(46)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(1, satNo.toInt(), 0)
         fun addORIGOBJECTID(builder: FlatBufferBuilder, origObjectId: Int) = builder.addOffset(2, origObjectId, 0)
@@ -692,6 +715,7 @@ class MNV : Table() {
         fun startSourcedDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addSOURCEDDATATYPES(builder: FlatBufferBuilder, sourcedDataTypes: Int) = builder.addOffset(43, sourcedDataTypes, 0)
         fun addTRANSACTIONID(builder: FlatBufferBuilder, transactionId: Int) = builder.addOffset(44, transactionId, 0)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(45, provenance, 0)
         fun endMNV(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

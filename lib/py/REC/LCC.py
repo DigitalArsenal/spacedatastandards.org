@@ -33,7 +33,7 @@ class LCC(object):
     def OWNER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
     # Display name of the owner or source the code stands for.
@@ -83,7 +83,7 @@ def Start(builder):
     LCCStart(builder)
 
 def LCCAddOWNER(builder, OWNER):
-    builder.PrependInt8Slot(0, OWNER, 0)
+    builder.PrependUint8Slot(0, OWNER, 0)
 
 def AddOWNER(builder, OWNER):
     LCCAddOWNER(builder, OWNER)

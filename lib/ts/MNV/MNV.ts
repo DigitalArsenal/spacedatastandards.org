@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PVN, PVNT } from './PVN.js';
 import { maneuverCharacterization } from './maneuverCharacterization.js';
 import { maneuverStatus } from './maneuverStatus.js';
 import { mnvOrbitalState, mnvOrbitalStateT } from './mnvOrbitalState.js';
@@ -11,6 +12,12 @@ import { mnvOrbitalState, mnvOrbitalStateT } from './mnvOrbitalState.js';
 
 /**
  * Spacecraft Maneuver
+ *
+ * U, V and W are the UVW axes of an orbit state: U radial, along the position
+ * vector away from the central body; W cross-track, along the orbit normal
+ * (the direction of r x v); V in-track, W x U, completing the right-handed
+ * frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+ * pre-maneuver state at EVENT_START_TIME.
  */
 export class MNV implements flatbuffers.IUnpackableObject<MNVT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -165,7 +172,8 @@ ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Maneuver event identifier
+ * Maneuver event identifier. Records of one event share it: a merged event
+ * and the source records it combines.
  */
 EVENT_ID():string|null
 EVENT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -199,7 +207,7 @@ DELTA_VEL():number {
 }
 
 /**
- * Delta-V along-track/U component (km/s)
+ * Delta-V along U, radial (km/s)
  */
 DELTA_VEL_U():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
@@ -207,7 +215,7 @@ DELTA_VEL_U():number {
 }
 
 /**
- * Delta-V cross-track/V component (km/s)
+ * Delta-V along V, in-track (km/s)
  */
 DELTA_VEL_V():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
@@ -215,7 +223,7 @@ DELTA_VEL_V():number {
 }
 
 /**
- * Delta-V radial/W component (km/s)
+ * Delta-V along W, cross-track (km/s)
  */
 DELTA_VEL_W():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
@@ -231,7 +239,7 @@ DELTA_POS():number {
 }
 
 /**
- * Delta position U component (km)
+ * Delta position along U, radial (km)
  */
 DELTA_POS_U():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
@@ -239,7 +247,7 @@ DELTA_POS_U():number {
 }
 
 /**
- * Delta position V component (km)
+ * Delta position along V, in-track (km)
  */
 DELTA_POS_V():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
@@ -247,7 +255,7 @@ DELTA_POS_V():number {
 }
 
 /**
- * Delta position W component (km)
+ * Delta position along W, cross-track (km)
  */
 DELTA_POS_W():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
@@ -362,7 +370,8 @@ mnvrAccelTimesLength():number {
 }
 
 /**
- * Acceleration values (km/s^2, 3 components per point)
+ * Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+ * the state at that point's MNVR_ACCEL_TIMES entry
  */
 MNVR_ACCELS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 76);
@@ -443,7 +452,9 @@ tagsLength():number {
 }
 
 /**
- * Sourced data references
+ * Sourced data references: identifiers of the records this one was
+ * determined from (CIDv1 for records of this network), such as the source
+ * records a merged event combines
  */
 SOURCED_DATA(index: number):string
 SOURCED_DATA(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -477,8 +488,16 @@ TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Where the maneuver's data comes from and the terms it travels under.
+ */
+PROVENANCE(obj?:PVN):PVN|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startMNV(builder:flatbuffers.Builder) {
-  builder.startObject(45);
+  builder.startObject(46);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -748,6 +767,10 @@ static addTransactionId(builder:flatbuffers.Builder, TRANSACTION_IDOffset:flatbu
   builder.addFieldOffset(44, TRANSACTION_IDOffset, 0);
 }
 
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, PROVENANCEOffset, 0);
+}
+
 static endMNV(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -808,7 +831,8 @@ unpack(): MNVT {
     this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
     this.bb!.createScalarList<string>(this.SOURCED_DATA.bind(this), this.sourcedDataLength()),
     this.SOURCED_DATA_TYPES(),
-    this.TRANSACTION_ID()
+    this.TRANSACTION_ID(),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null)
   );
 }
 
@@ -859,6 +883,7 @@ unpackTo(_o: MNVT): void {
   _o.SOURCED_DATA = this.bb!.createScalarList<string>(this.SOURCED_DATA.bind(this), this.sourcedDataLength());
   _o.SOURCED_DATA_TYPES = this.SOURCED_DATA_TYPES();
   _o.TRANSACTION_ID = this.TRANSACTION_ID();
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
 }
 }
 
@@ -908,7 +933,8 @@ constructor(
   public TAGS: (string)[] = [],
   public SOURCED_DATA: (string)[] = [],
   public SOURCED_DATA_TYPES: string|Uint8Array|null = null,
-  public TRANSACTION_ID: string|Uint8Array|null = null
+  public TRANSACTION_ID: string|Uint8Array|null = null,
+  public PROVENANCE: PVNT|null = null
 ){}
 
 
@@ -937,6 +963,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SOURCED_DATA = MNV.createSourcedDataVector(builder, builder.createObjectOffsetList(this.SOURCED_DATA));
   const SOURCED_DATA_TYPES = (this.SOURCED_DATA_TYPES !== null ? builder.createString(this.SOURCED_DATA_TYPES!) : 0);
   const TRANSACTION_ID = (this.TRANSACTION_ID !== null ? builder.createString(this.TRANSACTION_ID!) : 0);
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
 
   MNV.startMNV(builder);
   MNV.addId(builder, ID);
@@ -984,6 +1011,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   MNV.addSourcedData(builder, SOURCED_DATA);
   MNV.addSourcedDataTypes(builder, SOURCED_DATA_TYPES);
   MNV.addTransactionId(builder, TRANSACTION_ID);
+  MNV.addProvenance(builder, PROVENANCE);
 
   return MNV.endMNV(builder);
 }

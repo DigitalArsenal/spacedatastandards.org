@@ -74,7 +74,7 @@ class CAT(object):
     def OWNER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
     # Launch Date [year-month-day] (ISO 8601)
@@ -268,8 +268,45 @@ class CAT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The products an integrating catalog selected for the object as of
+    # PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+    # the same source and epoch where there is one. The object's maneuvers are
+    # its $MNV stream, not references here.
+    # CAT
+    def PRODUCTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CATProduct import CATProduct
+            obj = CATProduct()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CAT
+    def PRODUCTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CAT
+    def PRODUCTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        return o == 0
+
+    # ISO 8601 UTC instant the selection in PRODUCTS holds at.
+    # CAT
+    def PRODUCTS_AS_OF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def CATStart(builder):
-    builder.StartObject(26)
+    builder.StartObject(28)
 
 def Start(builder):
     CATStart(builder)
@@ -305,7 +342,7 @@ def AddOPS_STATUS_CODE(builder, OPS_STATUS_CODE):
     CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
 
 def CATAddOWNER(builder, OWNER):
-    builder.PrependInt8Slot(5, OWNER, 0)
+    builder.PrependUint8Slot(5, OWNER, 0)
 
 def AddOWNER(builder, OWNER):
     CATAddOWNER(builder, OWNER)
@@ -442,12 +479,37 @@ def CATAddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID):
 def AddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID):
     CATAddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID)
 
+def CATAddPRODUCTS(builder, PRODUCTS):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(PRODUCTS), 0)
+
+def AddPRODUCTS(builder, PRODUCTS):
+    CATAddPRODUCTS(builder, PRODUCTS)
+
+def CATStartPRODUCTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPRODUCTSVector(builder, numElems):
+    return CATStartPRODUCTSVector(builder, numElems)
+
+def CATCreatePRODUCTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePRODUCTSVector(builder, data):
+    return CATCreatePRODUCTSVector(builder, data)
+
+def CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(PRODUCTS_AS_OF), 0)
+
+def AddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF):
+    CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF)
+
 def CATEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return CATEnd(builder)
 
+import CATProduct
 import PLD
 try:
     from typing import List
@@ -485,6 +547,8 @@ class CATT(object):
         BUS_ID = None,
         CATALOG_URI = None,
         CATALOG_OBJECT_ID = None,
+        PRODUCTS = None,
+        PRODUCTS_AS_OF = None,
     ):
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
@@ -512,6 +576,8 @@ class CATT(object):
         self.BUS_ID = BUS_ID  # type: Optional[str]
         self.CATALOG_URI = CATALOG_URI  # type: Optional[str]
         self.CATALOG_OBJECT_ID = CATALOG_OBJECT_ID  # type: Optional[str]
+        self.PRODUCTS = PRODUCTS  # type: Optional[List[CATProduct.CATProductT]]
+        self.PRODUCTS_AS_OF = PRODUCTS_AS_OF  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -567,6 +633,15 @@ class CATT(object):
         self.BUS_ID = CAT.BUS_ID()
         self.CATALOG_URI = CAT.CATALOG_URI()
         self.CATALOG_OBJECT_ID = CAT.CATALOG_OBJECT_ID()
+        if not CAT.PRODUCTSIsNone():
+            self.PRODUCTS = []
+            for i in range(CAT.PRODUCTSLength()):
+                if CAT.PRODUCTS(i) is None:
+                    self.PRODUCTS.append(None)
+                else:
+                    cATProduct_ = CATProduct.CATProductT.InitFromObj(CAT.PRODUCTS(i))
+                    self.PRODUCTS.append(cATProduct_)
+        self.PRODUCTS_AS_OF = CAT.PRODUCTS_AS_OF()
 
     # CATT
     def Pack(self, builder):
@@ -598,6 +673,16 @@ class CATT(object):
             CATALOG_URI = builder.CreateString(self.CATALOG_URI)
         if self.CATALOG_OBJECT_ID is not None:
             CATALOG_OBJECT_ID = builder.CreateString(self.CATALOG_OBJECT_ID)
+        if self.PRODUCTS is not None:
+            PRODUCTSlist = []
+            for i in range(len(self.PRODUCTS)):
+                PRODUCTSlist.append(self.PRODUCTS[i].Pack(builder))
+            CATStartPRODUCTSVector(builder, len(self.PRODUCTS))
+            for i in reversed(range(len(self.PRODUCTS))):
+                builder.PrependUOffsetTRelative(PRODUCTSlist[i])
+            PRODUCTS = builder.EndVector()
+        if self.PRODUCTS_AS_OF is not None:
+            PRODUCTS_AS_OF = builder.CreateString(self.PRODUCTS_AS_OF)
         CATStart(builder)
         if self.OBJECT_NAME is not None:
             CATAddOBJECT_NAME(builder, OBJECT_NAME)
@@ -636,5 +721,9 @@ class CATT(object):
             CATAddCATALOG_URI(builder, CATALOG_URI)
         if self.CATALOG_OBJECT_ID is not None:
             CATAddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID)
+        if self.PRODUCTS is not None:
+            CATAddPRODUCTS(builder, PRODUCTS)
+        if self.PRODUCTS_AS_OF is not None:
+            CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF)
         CAT = CATEnd(builder)
         return CAT

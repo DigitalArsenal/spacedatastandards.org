@@ -7,102 +7,651 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
-///  Conjunction Summary Message
-class CSM {
-  CSM._(this._bc, this._bcOffset);
-  factory CSM(List<int> bytes) {
+///  Conjunction request/result semantics (normative): use exactly one payload
+///  arm consistent with PIV.METHOD_ID. Errors belong in PIV status/error fields;
+///  an empty scientific result is not a successful response. UNSPECIFIED choices
+///  that affect evaluation and unsupported controls fail explicitly.
+///
+///  Inputs resolve to a common explicit RFM frame/origin and TIM time scale.
+///  Unknown ECI/ECEF realizations are errors, never aliases inferred by a guest.
+///  The host selects the propagator for mean elements; propagated OEM/PPE tracks
+///  accept any compatible provider. Source queries are provenance, not commands.
+///
+///  These tables define canonical FlatBuffers. Port manifests retain both
+///  FLATBUFFER and ALIGNED_BINARY with identical logical schema identity; an
+///  aligned peer needs a declared portable layout and codec, not merely an
+///  aligned pointer to these bytes. See TAB/PLG and GCT's section-layout precedent.
+///
+///  Append-only; no claim that every provider implements every choice.
+enum cqrProbabilityAlgorithm {
+  UNSPECIFIED(0),
+  FOSTER(1),
+  PATERA(2),
+  ALFANO_MAXIMUM(3),
+  CHAN(4),
+  ALFRIEND_1999(5),
+  ALFRIEND_1999_MAXIMUM(6),
+  ALFANO_2005(7),
+  LAAS_2015(8),
+  ALFRIEND_2D(9);
+
+  final int value;
+  const cqrProbabilityAlgorithm(this.value);
+
+  factory cqrProbabilityAlgorithm.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrProbabilityAlgorithm.UNSPECIFIED;
+      case 1: return cqrProbabilityAlgorithm.FOSTER;
+      case 2: return cqrProbabilityAlgorithm.PATERA;
+      case 3: return cqrProbabilityAlgorithm.ALFANO_MAXIMUM;
+      case 4: return cqrProbabilityAlgorithm.CHAN;
+      case 5: return cqrProbabilityAlgorithm.ALFRIEND_1999;
+      case 6: return cqrProbabilityAlgorithm.ALFRIEND_1999_MAXIMUM;
+      case 7: return cqrProbabilityAlgorithm.ALFANO_2005;
+      case 8: return cqrProbabilityAlgorithm.LAAS_2015;
+      case 9: return cqrProbabilityAlgorithm.ALFRIEND_2D;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrProbabilityAlgorithm? _createOrNull(int? value) =>
+      value == null ? null : cqrProbabilityAlgorithm.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 9;
+  static const fb.Reader<cqrProbabilityAlgorithm> reader = _cqrProbabilityAlgorithmReader();
+}
+
+class _cqrProbabilityAlgorithmReader extends fb.Reader<cqrProbabilityAlgorithm> {
+  const _cqrProbabilityAlgorithmReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrProbabilityAlgorithm read(fb.BufferContext bc, int offset) =>
+      cqrProbabilityAlgorithm.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum cqrUncertaintyOrigin {
+  UNSPECIFIED(0),
+  SUPPLIED_COVARIANCE(1),
+  SYNTHESIZED_COVARIANCE(2),
+  MAXIMUM_PROBABILITY_ONLY(3);
+
+  final int value;
+  const cqrUncertaintyOrigin(this.value);
+
+  factory cqrUncertaintyOrigin.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrUncertaintyOrigin.UNSPECIFIED;
+      case 1: return cqrUncertaintyOrigin.SUPPLIED_COVARIANCE;
+      case 2: return cqrUncertaintyOrigin.SYNTHESIZED_COVARIANCE;
+      case 3: return cqrUncertaintyOrigin.MAXIMUM_PROBABILITY_ONLY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrUncertaintyOrigin? _createOrNull(int? value) =>
+      value == null ? null : cqrUncertaintyOrigin.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<cqrUncertaintyOrigin> reader = _cqrUncertaintyOriginReader();
+}
+
+class _cqrUncertaintyOriginReader extends fb.Reader<cqrUncertaintyOrigin> {
+  const _cqrUncertaintyOriginReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrUncertaintyOrigin read(fb.BufferContext bc, int offset) =>
+      cqrUncertaintyOrigin.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Where an object's hard-body radius came from.
+enum cqrHardBodyRadiusBasis {
+  UNSPECIFIED(0),
+  SUPPLIED(1),
+  CATALOG_SIZE(2),
+  RADAR_CROSS_SECTION(3),
+  REQUEST_DEFAULT(4);
+
+  final int value;
+  const cqrHardBodyRadiusBasis(this.value);
+
+  factory cqrHardBodyRadiusBasis.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrHardBodyRadiusBasis.UNSPECIFIED;
+      case 1: return cqrHardBodyRadiusBasis.SUPPLIED;
+      case 2: return cqrHardBodyRadiusBasis.CATALOG_SIZE;
+      case 3: return cqrHardBodyRadiusBasis.RADAR_CROSS_SECTION;
+      case 4: return cqrHardBodyRadiusBasis.REQUEST_DEFAULT;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrHardBodyRadiusBasis? _createOrNull(int? value) =>
+      value == null ? null : cqrHardBodyRadiusBasis.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<cqrHardBodyRadiusBasis> reader = _cqrHardBodyRadiusBasisReader();
+}
+
+class _cqrHardBodyRadiusBasisReader extends fb.Reader<cqrHardBodyRadiusBasis> {
+  const _cqrHardBodyRadiusBasisReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrHardBodyRadiusBasis read(fb.BufferContext bc, int offset) =>
+      cqrHardBodyRadiusBasis.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Where an object's position covariance at TCA came from.
+enum cqrCovarianceBasis {
+  UNSPECIFIED(0),
+  NONE(1),
+  SOURCE_EPHEMERIS(2),
+  CONJUNCTION_MESSAGE(3),
+  ORBIT_DETERMINATION(4),
+  EMPIRICAL_MODEL(5);
+
+  final int value;
+  const cqrCovarianceBasis(this.value);
+
+  factory cqrCovarianceBasis.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrCovarianceBasis.UNSPECIFIED;
+      case 1: return cqrCovarianceBasis.NONE;
+      case 2: return cqrCovarianceBasis.SOURCE_EPHEMERIS;
+      case 3: return cqrCovarianceBasis.CONJUNCTION_MESSAGE;
+      case 4: return cqrCovarianceBasis.ORBIT_DETERMINATION;
+      case 5: return cqrCovarianceBasis.EMPIRICAL_MODEL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrCovarianceBasis? _createOrNull(int? value) =>
+      value == null ? null : cqrCovarianceBasis.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<cqrCovarianceBasis> reader = _cqrCovarianceBasisReader();
+}
+
+class _cqrCovarianceBasisReader extends fb.Reader<cqrCovarianceBasis> {
+  const _cqrCovarianceBasisReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrCovarianceBasis read(fb.BufferContext bc, int offset) =>
+      cqrCovarianceBasis.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  The assumed correlation between the two objects' position errors.
+enum cqrCovarianceCorrelation {
+  UNSPECIFIED(0),
+  INDEPENDENT(1),
+  SUPPLIED_CROSS_COVARIANCE(2);
+
+  final int value;
+  const cqrCovarianceCorrelation(this.value);
+
+  factory cqrCovarianceCorrelation.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrCovarianceCorrelation.UNSPECIFIED;
+      case 1: return cqrCovarianceCorrelation.INDEPENDENT;
+      case 2: return cqrCovarianceCorrelation.SUPPLIED_CROSS_COVARIANCE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrCovarianceCorrelation? _createOrNull(int? value) =>
+      value == null ? null : cqrCovarianceCorrelation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<cqrCovarianceCorrelation> reader = _cqrCovarianceCorrelationReader();
+}
+
+class _cqrCovarianceCorrelationReader extends fb.Reader<cqrCovarianceCorrelation> {
+  const _cqrCovarianceCorrelationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrCovarianceCorrelation read(fb.BufferContext bc, int offset) =>
+      cqrCovarianceCorrelation.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum cqrDocumentSyntax {
+  UNSPECIFIED(0),
+  CCSDS_CDM_KVN(1),
+  CCSDS_CDM_XML(2);
+
+  final int value;
+  const cqrDocumentSyntax(this.value);
+
+  factory cqrDocumentSyntax.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrDocumentSyntax.UNSPECIFIED;
+      case 1: return cqrDocumentSyntax.CCSDS_CDM_KVN;
+      case 2: return cqrDocumentSyntax.CCSDS_CDM_XML;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrDocumentSyntax? _createOrNull(int? value) =>
+      value == null ? null : cqrDocumentSyntax.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<cqrDocumentSyntax> reader = _cqrDocumentSyntaxReader();
+}
+
+class _cqrDocumentSyntaxReader extends fb.Reader<cqrDocumentSyntax> {
+  const _cqrDocumentSyntaxReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrDocumentSyntax read(fb.BufferContext bc, int offset) =>
+      cqrDocumentSyntax.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum cqrIndexRepresentation {
+  UNSPECIFIED(0),
+  SOURCE_DESCRIPTIONS(1),
+  POLYNOMIAL_SEGMENTS(2),
+  SAMPLED_STATES(3);
+
+  final int value;
+  const cqrIndexRepresentation(this.value);
+
+  factory cqrIndexRepresentation.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrIndexRepresentation.UNSPECIFIED;
+      case 1: return cqrIndexRepresentation.SOURCE_DESCRIPTIONS;
+      case 2: return cqrIndexRepresentation.POLYNOMIAL_SEGMENTS;
+      case 3: return cqrIndexRepresentation.SAMPLED_STATES;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrIndexRepresentation? _createOrNull(int? value) =>
+      value == null ? null : cqrIndexRepresentation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<cqrIndexRepresentation> reader = _cqrIndexRepresentationReader();
+}
+
+class _cqrIndexRepresentationReader extends fb.Reader<cqrIndexRepresentation> {
+  const _cqrIndexRepresentationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrIndexRepresentation read(fb.BufferContext bc, int offset) =>
+      cqrIndexRepresentation.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum cqrRefinementStrategy {
+  UNSPECIFIED(0),
+  EXACT_ONLY(1),
+  POLYNOMIAL_ONLY(2),
+  POLYNOMIAL_WITH_EXACT_POLISH(3);
+
+  final int value;
+  const cqrRefinementStrategy(this.value);
+
+  factory cqrRefinementStrategy.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrRefinementStrategy.UNSPECIFIED;
+      case 1: return cqrRefinementStrategy.EXACT_ONLY;
+      case 2: return cqrRefinementStrategy.POLYNOMIAL_ONLY;
+      case 3: return cqrRefinementStrategy.POLYNOMIAL_WITH_EXACT_POLISH;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrRefinementStrategy? _createOrNull(int? value) =>
+      value == null ? null : cqrRefinementStrategy.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<cqrRefinementStrategy> reader = _cqrRefinementStrategyReader();
+}
+
+class _cqrRefinementStrategyReader extends fb.Reader<cqrRefinementStrategy> {
+  const _cqrRefinementStrategyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrRefinementStrategy read(fb.BufferContext bc, int offset) =>
+      cqrRefinementStrategy.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum cqrDataOrigin {
+  UNSPECIFIED(0),
+  OMM_RECORD(1),
+  OCM_RECORD(2),
+  OEM_RECORD(3),
+  CDM_RECORD(4),
+  QUERY_SELECTION(5),
+  PUBLICATION(6),
+  PUBSUB_TOPIC(7);
+
+  final int value;
+  const cqrDataOrigin(this.value);
+
+  factory cqrDataOrigin.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrDataOrigin.UNSPECIFIED;
+      case 1: return cqrDataOrigin.OMM_RECORD;
+      case 2: return cqrDataOrigin.OCM_RECORD;
+      case 3: return cqrDataOrigin.OEM_RECORD;
+      case 4: return cqrDataOrigin.CDM_RECORD;
+      case 5: return cqrDataOrigin.QUERY_SELECTION;
+      case 6: return cqrDataOrigin.PUBLICATION;
+      case 7: return cqrDataOrigin.PUBSUB_TOPIC;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrDataOrigin? _createOrNull(int? value) =>
+      value == null ? null : cqrDataOrigin.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static const fb.Reader<cqrDataOrigin> reader = _cqrDataOriginReader();
+}
+
+class _cqrDataOriginReader extends fb.Reader<cqrDataOrigin> {
+  const _cqrDataOriginReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrDataOrigin read(fb.BufferContext bc, int offset) =>
+      cqrDataOrigin.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  On-orbit screening geometry; dimensions are metres.
+enum cqrVolumeGeometry {
+  SPHERICAL(0),
+  ELLIPSOIDAL(1),
+  BOX(2);
+
+  final int value;
+  const cqrVolumeGeometry(this.value);
+
+  factory cqrVolumeGeometry.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrVolumeGeometry.SPHERICAL;
+      case 1: return cqrVolumeGeometry.ELLIPSOIDAL;
+      case 2: return cqrVolumeGeometry.BOX;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrVolumeGeometry? _createOrNull(int? value) =>
+      value == null ? null : cqrVolumeGeometry.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<cqrVolumeGeometry> reader = _cqrVolumeGeometryReader();
+}
+
+class _cqrVolumeGeometryReader extends fb.Reader<cqrVolumeGeometry> {
+  const _cqrVolumeGeometryReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrVolumeGeometry read(fb.BufferContext bc, int offset) =>
+      cqrVolumeGeometry.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Object defining the centre and instantaneous RTN axes of a volume.
+enum cqrVolumeAnchor {
+  UNSPECIFIED(0),
+  PRIMARY(1),
+  SECONDARY(2),
+  BOTH(3);
+
+  final int value;
+  const cqrVolumeAnchor(this.value);
+
+  factory cqrVolumeAnchor.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrVolumeAnchor.UNSPECIFIED;
+      case 1: return cqrVolumeAnchor.PRIMARY;
+      case 2: return cqrVolumeAnchor.SECONDARY;
+      case 3: return cqrVolumeAnchor.BOTH;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrVolumeAnchor? _createOrNull(int? value) =>
+      value == null ? null : cqrVolumeAnchor.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<cqrVolumeAnchor> reader = _cqrVolumeAnchorReader();
+}
+
+class _cqrVolumeAnchorReader extends fb.Reader<cqrVolumeAnchor> {
+  const _cqrVolumeAnchorReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrVolumeAnchor read(fb.BufferContext bc, int offset) =>
+      cqrVolumeAnchor.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Launch and reentry screening (normative). A launch window is screened by
+///  sweeping liftoff times; each launched object (stage, payload or jettisoned
+///  component) is one segment whose trajectory is fixed relative to liftoff.
+///
+///  Every segment trajectory and every orbiting-object ephemeris is expressed
+///  in EVALUATION_FRAME, which must be Earth-fixed: a fixed-azimuth ascent has
+///  the same Earth-fixed state at liftoff + τ for every liftoff time. Segment
+///  epochs are absolute times for a liftoff at NOMINAL_LIFTOFF; a provider
+///  evaluates another liftoff time by shifting them. Orbiting objects are
+///  screened at absolute times. A provider never selects a propagator: mean
+///  elements reach it only as ephemerides produced by a host-selected
+///  propagator.
+///
+///  Distances are SI metres, times TIMInstant, probabilities unitless.
+///  Unsupported screening kinds fail explicitly; they are never approximated.
+///  Orbiting-object class used to choose a screening criterion.
+enum cqrLaunchObjectClass {
+  UNSPECIFIED(0),
+  INHABITABLE(1),
+  NON_DEBRIS(2),
+  DEBRIS(3);
+
+  final int value;
+  const cqrLaunchObjectClass(this.value);
+
+  factory cqrLaunchObjectClass.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrLaunchObjectClass.UNSPECIFIED;
+      case 1: return cqrLaunchObjectClass.INHABITABLE;
+      case 2: return cqrLaunchObjectClass.NON_DEBRIS;
+      case 3: return cqrLaunchObjectClass.DEBRIS;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrLaunchObjectClass? _createOrNull(int? value) =>
+      value == null ? null : cqrLaunchObjectClass.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<cqrLaunchObjectClass> reader = _cqrLaunchObjectClassReader();
+}
+
+class _cqrLaunchObjectClassReader extends fb.Reader<cqrLaunchObjectClass> {
+  const _cqrLaunchObjectClassReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrLaunchObjectClass read(fb.BufferContext bc, int offset) =>
+      cqrLaunchObjectClass.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  How one criterion decides a violation.
+enum cqrLaunchScreening {
+  UNSPECIFIED(0),
+  SPHERICAL(1),
+  ELLIPSOIDAL(2),
+  PROBABILITY(3);
+
+  final int value;
+  const cqrLaunchScreening(this.value);
+
+  factory cqrLaunchScreening.fromValue(int value) {
+    switch (value) {
+      case 0: return cqrLaunchScreening.UNSPECIFIED;
+      case 1: return cqrLaunchScreening.SPHERICAL;
+      case 2: return cqrLaunchScreening.ELLIPSOIDAL;
+      case 3: return cqrLaunchScreening.PROBABILITY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cqrLaunchScreening? _createOrNull(int? value) =>
+      value == null ? null : cqrLaunchScreening.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<cqrLaunchScreening> reader = _cqrLaunchScreeningReader();
+}
+
+class _cqrLaunchScreeningReader extends fb.Reader<cqrLaunchScreening> {
+  const _cqrLaunchScreeningReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cqrLaunchScreening read(fb.BufferContext bc, int offset) =>
+      cqrLaunchScreening.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Host-resolved provenance. Strings are evidence, not commands to execute.
+class CQRSourceProvenance {
+  CQRSourceProvenance._(this._bc, this._bcOffset);
+  factory CQRSourceProvenance(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CSM> reader = _CSMReader();
+  static const fb.Reader<CQRSourceProvenance> reader = _CQRSourceProvenanceReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Satellite name for the first object
-  CAT? get OBJECT_1 => CAT.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  CAT? get object1 => OBJECT_1;
-  ///  Days since epoch for the first object
-  double get DSE_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get dse1 => DSE_1;
-  ///  Satellite name for the second object
-  CAT? get OBJECT_2 => CAT.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  CAT? get object2 => OBJECT_2;
-  ///  Days since epoch for the second object
-  double get DSE_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get dse2 => DSE_2;
-  ///  Time of closest approach as a Unix timestamp
-  double get TCA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  ///  The distance or range between the two objects at TCA
-  double get TCA_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get tcaRange => TCA_RANGE;
-  ///  The magnitude of the relative velocity at TCA
-  double get TCA_RELATIVE_SPEED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get tcaRelativeSpeed => TCA_RELATIVE_SPEED;
-  ///  Maximum probability
-  double get MAX_PROB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get maxProb => MAX_PROB;
-  ///  Standard deviation that produces the maximum probability
-  double get DILUTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  cqrDataOrigin get ORIGIN_CLASS => cqrDataOrigin.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  cqrDataOrigin get originClass => ORIGIN_CLASS;
+  String? get SOURCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get sourceId => SOURCE_ID;
+  String? get PROVIDER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get providerId => PROVIDER_ID;
+  String? get SCHEMA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get schemaName => SCHEMA_NAME;
+  String? get FILE_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get fileIdentifier => FILE_IDENTIFIER;
+  String? get QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get QUERY_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get queryHash => QUERY_HASH;
+  String? get PNM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get pnmCid => PNM_CID;
+  String? get MANIFEST_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get manifestCid => MANIFEST_CID;
+  String? get TOPIC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
 
   @override
   String toString() {
-    return 'CSM{object1: ${object1}, dse1: ${dse1}, object2: ${object2}, dse2: ${dse2}, TCA: ${TCA}, tcaRange: ${tcaRange}, tcaRelativeSpeed: ${tcaRelativeSpeed}, maxProb: ${maxProb}, DILUTION: ${DILUTION}}';
+    return 'CQRSourceProvenance{originClass: ${originClass}, sourceId: ${sourceId}, providerId: ${providerId}, schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, QUERY: ${QUERY}, queryHash: ${queryHash}, pnmCid: ${pnmCid}, manifestCid: ${manifestCid}, TOPIC: ${TOPIC}}';
   }
 }
 
-class _CSMReader extends fb.TableReader<CSM> {
-  const _CSMReader();
+class _CQRSourceProvenanceReader extends fb.TableReader<CQRSourceProvenance> {
+  const _CQRSourceProvenanceReader();
 
   @override
-  CSM createObject(fb.BufferContext bc, int offset) =>
-    CSM._(bc, offset);
+  CQRSourceProvenance createObject(fb.BufferContext bc, int offset) =>
+    CQRSourceProvenance._(bc, offset);
 }
 
-class CSMBuilder {
-  CSMBuilder(this.fbBuilder);
+class CQRSourceProvenanceBuilder {
+  CQRSourceProvenanceBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(10);
   }
 
-  int addObject1Offset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addOriginClass(cqrDataOrigin? ORIGIN_CLASS) {
+    fbBuilder.addUint8(0, ORIGIN_CLASS?.value);
     return fbBuilder.offset;
   }
-  int addDse1(double? DSE_1) {
-    fbBuilder.addFloat64(1, DSE_1);
+  int addSourceIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addObject2Offset(int? offset) {
+  int addProviderIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addDse2(double? DSE_2) {
-    fbBuilder.addFloat64(3, DSE_2);
+  int addSchemaNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addTca(double? TCA) {
-    fbBuilder.addFloat64(4, TCA);
+  int addFileIdentifierOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addTcaRange(double? TCA_RANGE) {
-    fbBuilder.addFloat64(5, TCA_RANGE);
+  int addQueryOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addTcaRelativeSpeed(double? TCA_RELATIVE_SPEED) {
-    fbBuilder.addFloat64(6, TCA_RELATIVE_SPEED);
+  int addQueryHashOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addMaxProb(double? MAX_PROB) {
-    fbBuilder.addFloat64(7, MAX_PROB);
+  int addPnmCidOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addDilution(double? DILUTION) {
-    fbBuilder.addFloat64(8, DILUTION);
+  int addManifestCidOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addTopicOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
 
@@ -111,60 +660,4395 @@ class CSMBuilder {
   }
 }
 
-class CSMObjectBuilder extends fb.ObjectBuilder {
-  final CATObjectBuilder? _OBJECT_1;
-  final double? _DSE_1;
-  final CATObjectBuilder? _OBJECT_2;
-  final double? _DSE_2;
-  final double? _TCA;
-  final double? _TCA_RANGE;
-  final double? _TCA_RELATIVE_SPEED;
-  final double? _MAX_PROB;
-  final double? _DILUTION;
+class CQRSourceProvenanceObjectBuilder extends fb.ObjectBuilder {
+  final cqrDataOrigin? _ORIGIN_CLASS;
+  final String? _SOURCE_ID;
+  final String? _PROVIDER_ID;
+  final String? _SCHEMA_NAME;
+  final String? _FILE_IDENTIFIER;
+  final String? _QUERY;
+  final String? _QUERY_HASH;
+  final String? _PNM_CID;
+  final String? _MANIFEST_CID;
+  final String? _TOPIC;
 
-  CSMObjectBuilder({
-    CATObjectBuilder? OBJECT_1,
-    CATObjectBuilder? object1,
-    double? DSE_1,
-    double? dse1,
-    CATObjectBuilder? OBJECT_2,
-    CATObjectBuilder? object2,
-    double? DSE_2,
-    double? dse2,
-    double? TCA,
-    double? TCA_RANGE,
-    double? tcaRange,
-    double? TCA_RELATIVE_SPEED,
-    double? tcaRelativeSpeed,
-    double? MAX_PROB,
-    double? maxProb,
-    double? DILUTION,
+  CQRSourceProvenanceObjectBuilder({
+    cqrDataOrigin? ORIGIN_CLASS,
+    cqrDataOrigin? originClass,
+    String? SOURCE_ID,
+    String? sourceId,
+    String? PROVIDER_ID,
+    String? providerId,
+    String? SCHEMA_NAME,
+    String? schemaName,
+    String? FILE_IDENTIFIER,
+    String? fileIdentifier,
+    String? QUERY,
+    String? QUERY_HASH,
+    String? queryHash,
+    String? PNM_CID,
+    String? pnmCid,
+    String? MANIFEST_CID,
+    String? manifestCid,
+    String? TOPIC,
   })
-      : _OBJECT_1 = object1 ?? OBJECT_1,
-        _DSE_1 = dse1 ?? DSE_1,
-        _OBJECT_2 = object2 ?? OBJECT_2,
-        _DSE_2 = dse2 ?? DSE_2,
-        _TCA = TCA,
-        _TCA_RANGE = tcaRange ?? TCA_RANGE,
-        _TCA_RELATIVE_SPEED = tcaRelativeSpeed ?? TCA_RELATIVE_SPEED,
-        _MAX_PROB = maxProb ?? MAX_PROB,
-        _DILUTION = DILUTION;
+      : _ORIGIN_CLASS = originClass ?? ORIGIN_CLASS,
+        _SOURCE_ID = sourceId ?? SOURCE_ID,
+        _PROVIDER_ID = providerId ?? PROVIDER_ID,
+        _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
+        _FILE_IDENTIFIER = fileIdentifier ?? FILE_IDENTIFIER,
+        _QUERY = QUERY,
+        _QUERY_HASH = queryHash ?? QUERY_HASH,
+        _PNM_CID = pnmCid ?? PNM_CID,
+        _MANIFEST_CID = manifestCid ?? MANIFEST_CID,
+        _TOPIC = TOPIC;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? OBJECT_1Offset = _OBJECT_1?.getOrCreateOffset(fbBuilder);
-    final int? OBJECT_2Offset = _OBJECT_2?.getOrCreateOffset(fbBuilder);
+    final int? SOURCE_IDOffset = _SOURCE_ID == null ? null
+        : fbBuilder.writeString(_SOURCE_ID!);
+    final int? PROVIDER_IDOffset = _PROVIDER_ID == null ? null
+        : fbBuilder.writeString(_PROVIDER_ID!);
+    final int? SCHEMA_NAMEOffset = _SCHEMA_NAME == null ? null
+        : fbBuilder.writeString(_SCHEMA_NAME!);
+    final int? FILE_IDENTIFIEROffset = _FILE_IDENTIFIER == null ? null
+        : fbBuilder.writeString(_FILE_IDENTIFIER!);
+    final int? QUERYOffset = _QUERY == null ? null
+        : fbBuilder.writeString(_QUERY!);
+    final int? QUERY_HASHOffset = _QUERY_HASH == null ? null
+        : fbBuilder.writeString(_QUERY_HASH!);
+    final int? PNM_CIDOffset = _PNM_CID == null ? null
+        : fbBuilder.writeString(_PNM_CID!);
+    final int? MANIFEST_CIDOffset = _MANIFEST_CID == null ? null
+        : fbBuilder.writeString(_MANIFEST_CID!);
+    final int? TOPICOffset = _TOPIC == null ? null
+        : fbBuilder.writeString(_TOPIC!);
+    fbBuilder.startTable(10);
+    fbBuilder.addUint8(0, _ORIGIN_CLASS?.value);
+    fbBuilder.addOffset(1, SOURCE_IDOffset);
+    fbBuilder.addOffset(2, PROVIDER_IDOffset);
+    fbBuilder.addOffset(3, SCHEMA_NAMEOffset);
+    fbBuilder.addOffset(4, FILE_IDENTIFIEROffset);
+    fbBuilder.addOffset(5, QUERYOffset);
+    fbBuilder.addOffset(6, QUERY_HASHOffset);
+    fbBuilder.addOffset(7, PNM_CIDOffset);
+    fbBuilder.addOffset(8, MANIFEST_CIDOffset);
+    fbBuilder.addOffset(9, TOPICOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Exactly one scientific source arm, or a validated instance/source handle.
+///  OMM/TLE use their native mean-element units; OEM/PPE km and km/s; OCM its
+///  declared units. No implicit conversion of TEME, ECEF or ICRF-labelled data.
+class CQRObjectSource {
+  CQRObjectSource._(this._bc, this._bcOffset);
+  factory CQRObjectSource(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRObjectSource> reader = _CQRObjectSourceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get objectId => OBJECT_ID;
+  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get objectName => OBJECT_NAME;
+  int get NORAD_CATALOG_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get noradCatalogId => NORAD_CATALOG_ID;
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  int get SOURCE_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get sourceHandle => SOURCE_HANDLE;
+  ///  Host-connected provider for mean elements; no embedded fixed SGP4 choice.
+  String? get PROPAGATOR_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get propagatorPortId => PROPAGATOR_PORT_ID;
+  OMM? get MEAN_ELEMENTS => OMM.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  OMM? get meanElements => MEAN_ELEMENTS;
+  OEM? get EPHEMERIS => OEM.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  OCM? get COMPREHENSIVE_ORBIT => OCM.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  OCM? get comprehensiveOrbit => COMPREHENSIVE_ORBIT;
+  PPE? get POLYNOMIAL_EPHEMERIS => PPE.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  PPE? get polynomialEphemeris => POLYNOMIAL_EPHEMERIS;
+  PRWTleLines? get TLE_LINES => PRWTleLines.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  PRWTleLines? get tleLines => TLE_LINES;
+  CQRSourceProvenance? get PROVENANCE => CQRSourceProvenance.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Optional source epoch and perigee/apogee altitude above the reference
+  ///  Earth radius used by the source model, in SI metres (not geocentric radii).
+  TIMInstant? get SOURCE_EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  TIMInstant? get sourceEpoch => SOURCE_EPOCH;
+  double get PERIGEE_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get perigeeAltitudeM => PERIGEE_ALTITUDE_M;
+  ///  True when PERIGEE_ALTITUDE_M carries a value; false means absent.
+  bool get HAS_PERIGEE_ALTITUDE_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  bool get hasPerigeeAltitudeM => HAS_PERIGEE_ALTITUDE_M;
+  double get APOGEE_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get apogeeAltitudeM => APOGEE_ALTITUDE_M;
+  ///  True when APOGEE_ALTITUDE_M carries a value; false means absent.
+  bool get HAS_APOGEE_ALTITUDE_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
+  bool get hasApogeeAltitudeM => HAS_APOGEE_ALTITUDE_M;
+  ///  Hard-body radius in metres given with the source.
+  double get HARD_BODY_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get hardBodyRadiusM => HARD_BODY_RADIUS_M;
+  ///  True when HARD_BODY_RADIUS_M carries a value; false means absent.
+  bool get HAS_HARD_BODY_RADIUS_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
+  bool get hasHardBodyRadiusM => HAS_HARD_BODY_RADIUS_M;
+  ///  The object's catalog entry. Without a supplied radius, its SIZE, else
+  ///  its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+  CAT? get CATALOG_ENTRY => CAT.reader.vTableGetNullable(_bc, _bcOffset, 42);
+  CAT? get catalogEntry => CATALOG_ENTRY;
+
+  @override
+  String toString() {
+    return 'CQRObjectSource{objectId: ${objectId}, objectName: ${objectName}, noradCatalogId: ${noradCatalogId}, INSTANCE: ${INSTANCE}, sourceHandle: ${sourceHandle}, propagatorPortId: ${propagatorPortId}, meanElements: ${meanElements}, EPHEMERIS: ${EPHEMERIS}, comprehensiveOrbit: ${comprehensiveOrbit}, polynomialEphemeris: ${polynomialEphemeris}, tleLines: ${tleLines}, PROVENANCE: ${PROVENANCE}, sourceEpoch: ${sourceEpoch}, perigeeAltitudeM: ${perigeeAltitudeM}, hasPerigeeAltitudeM: ${hasPerigeeAltitudeM}, apogeeAltitudeM: ${apogeeAltitudeM}, hasApogeeAltitudeM: ${hasApogeeAltitudeM}, hardBodyRadiusM: ${hardBodyRadiusM}, hasHardBodyRadiusM: ${hasHardBodyRadiusM}, catalogEntry: ${catalogEntry}}';
+  }
+}
+
+class _CQRObjectSourceReader extends fb.TableReader<CQRObjectSource> {
+  const _CQRObjectSourceReader();
+
+  @override
+  CQRObjectSource createObject(fb.BufferContext bc, int offset) =>
+    CQRObjectSource._(bc, offset);
+}
+
+class CQRObjectSourceBuilder {
+  CQRObjectSourceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(20);
+  }
+
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatalogId(int? NORAD_CATALOG_ID) {
+    fbBuilder.addUint32(2, NORAD_CATALOG_ID);
+    return fbBuilder.offset;
+  }
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceHandle(int? SOURCE_HANDLE) {
+    fbBuilder.addUint32(4, SOURCE_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addPropagatorPortIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addMeanElementsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addComprehensiveOrbitOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addPolynomialEphemerisOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addTleLinesOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceEpochOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addPerigeeAltitudeM(double? PERIGEE_ALTITUDE_M) {
+    fbBuilder.addFloat64(13, PERIGEE_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addHasPerigeeAltitudeM(bool? HAS_PERIGEE_ALTITUDE_M) {
+    fbBuilder.addBool(14, HAS_PERIGEE_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addApogeeAltitudeM(double? APOGEE_ALTITUDE_M) {
+    fbBuilder.addFloat64(15, APOGEE_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addHasApogeeAltitudeM(bool? HAS_APOGEE_ALTITUDE_M) {
+    fbBuilder.addBool(16, HAS_APOGEE_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addHardBodyRadiusM(double? HARD_BODY_RADIUS_M) {
+    fbBuilder.addFloat64(17, HARD_BODY_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addHasHardBodyRadiusM(bool? HAS_HARD_BODY_RADIUS_M) {
+    fbBuilder.addBool(18, HAS_HARD_BODY_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addCatalogEntryOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRObjectSourceObjectBuilder extends fb.ObjectBuilder {
+  final String? _OBJECT_ID;
+  final String? _OBJECT_NAME;
+  final int? _NORAD_CATALOG_ID;
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _SOURCE_HANDLE;
+  final String? _PROPAGATOR_PORT_ID;
+  final OMMObjectBuilder? _MEAN_ELEMENTS;
+  final OEMObjectBuilder? _EPHEMERIS;
+  final OCMObjectBuilder? _COMPREHENSIVE_ORBIT;
+  final PPEObjectBuilder? _POLYNOMIAL_EPHEMERIS;
+  final PRWTleLinesObjectBuilder? _TLE_LINES;
+  final CQRSourceProvenanceObjectBuilder? _PROVENANCE;
+  final TIMInstantObjectBuilder? _SOURCE_EPOCH;
+  final double? _PERIGEE_ALTITUDE_M;
+  final bool? _HAS_PERIGEE_ALTITUDE_M;
+  final double? _APOGEE_ALTITUDE_M;
+  final bool? _HAS_APOGEE_ALTITUDE_M;
+  final double? _HARD_BODY_RADIUS_M;
+  final bool? _HAS_HARD_BODY_RADIUS_M;
+  final CATObjectBuilder? _CATALOG_ENTRY;
+
+  CQRObjectSourceObjectBuilder({
+    String? OBJECT_ID,
+    String? objectId,
+    String? OBJECT_NAME,
+    String? objectName,
+    int? NORAD_CATALOG_ID,
+    int? noradCatalogId,
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? SOURCE_HANDLE,
+    int? sourceHandle,
+    String? PROPAGATOR_PORT_ID,
+    String? propagatorPortId,
+    OMMObjectBuilder? MEAN_ELEMENTS,
+    OMMObjectBuilder? meanElements,
+    OEMObjectBuilder? EPHEMERIS,
+    OCMObjectBuilder? COMPREHENSIVE_ORBIT,
+    OCMObjectBuilder? comprehensiveOrbit,
+    PPEObjectBuilder? POLYNOMIAL_EPHEMERIS,
+    PPEObjectBuilder? polynomialEphemeris,
+    PRWTleLinesObjectBuilder? TLE_LINES,
+    PRWTleLinesObjectBuilder? tleLines,
+    CQRSourceProvenanceObjectBuilder? PROVENANCE,
+    TIMInstantObjectBuilder? SOURCE_EPOCH,
+    TIMInstantObjectBuilder? sourceEpoch,
+    double? PERIGEE_ALTITUDE_M,
+    double? perigeeAltitudeM,
+    bool? HAS_PERIGEE_ALTITUDE_M,
+    bool? hasPerigeeAltitudeM,
+    double? APOGEE_ALTITUDE_M,
+    double? apogeeAltitudeM,
+    bool? HAS_APOGEE_ALTITUDE_M,
+    bool? hasApogeeAltitudeM,
+    double? HARD_BODY_RADIUS_M,
+    double? hardBodyRadiusM,
+    bool? HAS_HARD_BODY_RADIUS_M,
+    bool? hasHardBodyRadiusM,
+    CATObjectBuilder? CATALOG_ENTRY,
+    CATObjectBuilder? catalogEntry,
+  })
+      : _OBJECT_ID = objectId ?? OBJECT_ID,
+        _OBJECT_NAME = objectName ?? OBJECT_NAME,
+        _NORAD_CATALOG_ID = noradCatalogId ?? NORAD_CATALOG_ID,
+        _INSTANCE = INSTANCE,
+        _SOURCE_HANDLE = sourceHandle ?? SOURCE_HANDLE,
+        _PROPAGATOR_PORT_ID = propagatorPortId ?? PROPAGATOR_PORT_ID,
+        _MEAN_ELEMENTS = meanElements ?? MEAN_ELEMENTS,
+        _EPHEMERIS = EPHEMERIS,
+        _COMPREHENSIVE_ORBIT = comprehensiveOrbit ?? COMPREHENSIVE_ORBIT,
+        _POLYNOMIAL_EPHEMERIS = polynomialEphemeris ?? POLYNOMIAL_EPHEMERIS,
+        _TLE_LINES = tleLines ?? TLE_LINES,
+        _PROVENANCE = PROVENANCE,
+        _SOURCE_EPOCH = sourceEpoch ?? SOURCE_EPOCH,
+        _PERIGEE_ALTITUDE_M = perigeeAltitudeM ?? PERIGEE_ALTITUDE_M,
+        _HAS_PERIGEE_ALTITUDE_M = hasPerigeeAltitudeM ?? HAS_PERIGEE_ALTITUDE_M,
+        _APOGEE_ALTITUDE_M = apogeeAltitudeM ?? APOGEE_ALTITUDE_M,
+        _HAS_APOGEE_ALTITUDE_M = hasApogeeAltitudeM ?? HAS_APOGEE_ALTITUDE_M,
+        _HARD_BODY_RADIUS_M = hardBodyRadiusM ?? HARD_BODY_RADIUS_M,
+        _HAS_HARD_BODY_RADIUS_M = hasHardBodyRadiusM ?? HAS_HARD_BODY_RADIUS_M,
+        _CATALOG_ENTRY = catalogEntry ?? CATALOG_ENTRY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
+        : fbBuilder.writeString(_OBJECT_NAME!);
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? PROPAGATOR_PORT_IDOffset = _PROPAGATOR_PORT_ID == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_PORT_ID!);
+    final int? MEAN_ELEMENTSOffset = _MEAN_ELEMENTS?.getOrCreateOffset(fbBuilder);
+    final int? EPHEMERISOffset = _EPHEMERIS?.getOrCreateOffset(fbBuilder);
+    final int? COMPREHENSIVE_ORBITOffset = _COMPREHENSIVE_ORBIT?.getOrCreateOffset(fbBuilder);
+    final int? POLYNOMIAL_EPHEMERISOffset = _POLYNOMIAL_EPHEMERIS?.getOrCreateOffset(fbBuilder);
+    final int? TLE_LINESOffset = _TLE_LINES?.getOrCreateOffset(fbBuilder);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? SOURCE_EPOCHOffset = _SOURCE_EPOCH?.getOrCreateOffset(fbBuilder);
+    final int? CATALOG_ENTRYOffset = _CATALOG_ENTRY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(20);
+    fbBuilder.addOffset(0, OBJECT_IDOffset);
+    fbBuilder.addOffset(1, OBJECT_NAMEOffset);
+    fbBuilder.addUint32(2, _NORAD_CATALOG_ID);
+    fbBuilder.addOffset(3, INSTANCEOffset);
+    fbBuilder.addUint32(4, _SOURCE_HANDLE);
+    fbBuilder.addOffset(5, PROPAGATOR_PORT_IDOffset);
+    fbBuilder.addOffset(6, MEAN_ELEMENTSOffset);
+    fbBuilder.addOffset(7, EPHEMERISOffset);
+    fbBuilder.addOffset(8, COMPREHENSIVE_ORBITOffset);
+    fbBuilder.addOffset(9, POLYNOMIAL_EPHEMERISOffset);
+    fbBuilder.addOffset(10, TLE_LINESOffset);
+    fbBuilder.addOffset(11, PROVENANCEOffset);
+    fbBuilder.addOffset(12, SOURCE_EPOCHOffset);
+    fbBuilder.addFloat64(13, _PERIGEE_ALTITUDE_M);
+    fbBuilder.addBool(14, _HAS_PERIGEE_ALTITUDE_M);
+    fbBuilder.addFloat64(15, _APOGEE_ALTITUDE_M);
+    fbBuilder.addBool(16, _HAS_APOGEE_ALTITUDE_M);
+    fbBuilder.addFloat64(17, _HARD_BODY_RADIUS_M);
+    fbBuilder.addBool(18, _HAS_HARD_BODY_RADIUS_M);
+    fbBuilder.addOffset(19, CATALOG_ENTRYOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Explicit UTC search window and positive resolution, SI seconds/metres.
+class CQRScreeningControls {
+  CQRScreeningControls._(this._bc, this._bcOffset);
+  factory CQRScreeningControls(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRScreeningControls> reader = _CQRScreeningControlsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  TIMInstant? get START_EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  TIMInstant? get startEpoch => START_EPOCH;
+  double get DURATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 604800.0);
+  double get durationSeconds => DURATION_SECONDS;
+  double get THRESHOLD_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 5000.0);
+  double get thresholdM => THRESHOLD_M;
+  int get REQUESTED_WORKERS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 1);
+  int get requestedWorkers => REQUESTED_WORKERS;
+  double get COARSE_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 60.0);
+  double get coarseStepSeconds => COARSE_STEP_SECONDS;
+  double get REFINEMENT_TOLERANCE_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.001);
+  double get refinementToleranceSeconds => REFINEMENT_TOLERANCE_SECONDS;
+  double get COMBINED_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 10.0);
+  double get combinedRadiusM => COMBINED_RADIUS_M;
+  bool get USE_KD_TREE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, true);
+  bool get useKdTree => USE_KD_TREE;
+  bool get USE_DYNAMIC_WINDOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, true);
+  bool get useDynamicWindow => USE_DYNAMIC_WINDOW;
+  bool get USE_PERIGEE_FILTER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, true);
+  bool get usePerigeeFilter => USE_PERIGEE_FILTER;
+  ///  Optional progress cadence; PIV carries backpressure, not scientific data.
+  double get PROGRESS_INTERVAL_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get progressIntervalSeconds => PROGRESS_INTERVAL_SECONDS;
+  ///  True when PROGRESS_INTERVAL_SECONDS carries a value; false means absent.
+  bool get HAS_PROGRESS_INTERVAL_SECONDS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get hasProgressIntervalSeconds => HAS_PROGRESS_INTERVAL_SECONDS;
+  cqrProbabilityAlgorithm get ALGORITHM => cqrProbabilityAlgorithm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 28, 3));
+  ///  SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+  ///  Admit local minima of relative distance inside or on the selected volume.
+  cqrVolumeGeometry get SCREENING => cqrVolumeGeometry.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 30, 0));
+  ///  RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+  double get RADIAL_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get radialM => RADIAL_M;
+  double get IN_TRACK_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get inTrackM => IN_TRACK_M;
+  double get CROSS_TRACK_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get crossTrackM => CROSS_TRACK_M;
+  ///  PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+  ///  R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+  ///  BOTH tests each object's volume independently and admits their union.
+  ///  UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+  cqrVolumeAnchor get VOLUME_CENTER => cqrVolumeAnchor.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 38, 1));
+  cqrVolumeAnchor get volumeCenter => VOLUME_CENTER;
+
+  @override
+  String toString() {
+    return 'CQRScreeningControls{startEpoch: ${startEpoch}, durationSeconds: ${durationSeconds}, thresholdM: ${thresholdM}, requestedWorkers: ${requestedWorkers}, coarseStepSeconds: ${coarseStepSeconds}, refinementToleranceSeconds: ${refinementToleranceSeconds}, combinedRadiusM: ${combinedRadiusM}, useKdTree: ${useKdTree}, useDynamicWindow: ${useDynamicWindow}, usePerigeeFilter: ${usePerigeeFilter}, progressIntervalSeconds: ${progressIntervalSeconds}, hasProgressIntervalSeconds: ${hasProgressIntervalSeconds}, ALGORITHM: ${ALGORITHM}, SCREENING: ${SCREENING}, radialM: ${radialM}, inTrackM: ${inTrackM}, crossTrackM: ${crossTrackM}, volumeCenter: ${volumeCenter}}';
+  }
+}
+
+class _CQRScreeningControlsReader extends fb.TableReader<CQRScreeningControls> {
+  const _CQRScreeningControlsReader();
+
+  @override
+  CQRScreeningControls createObject(fb.BufferContext bc, int offset) =>
+    CQRScreeningControls._(bc, offset);
+}
+
+class CQRScreeningControlsBuilder {
+  CQRScreeningControlsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(18);
+  }
+
+  int addStartEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDurationSeconds(double? DURATION_SECONDS) {
+    fbBuilder.addFloat64(1, DURATION_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addThresholdM(double? THRESHOLD_M) {
+    fbBuilder.addFloat64(2, THRESHOLD_M);
+    return fbBuilder.offset;
+  }
+  int addRequestedWorkers(int? REQUESTED_WORKERS) {
+    fbBuilder.addUint32(3, REQUESTED_WORKERS);
+    return fbBuilder.offset;
+  }
+  int addCoarseStepSeconds(double? COARSE_STEP_SECONDS) {
+    fbBuilder.addFloat64(4, COARSE_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addRefinementToleranceSeconds(double? REFINEMENT_TOLERANCE_SECONDS) {
+    fbBuilder.addFloat64(5, REFINEMENT_TOLERANCE_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addCombinedRadiusM(double? COMBINED_RADIUS_M) {
+    fbBuilder.addFloat64(6, COMBINED_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addUseKdTree(bool? USE_KD_TREE) {
+    fbBuilder.addBool(7, USE_KD_TREE);
+    return fbBuilder.offset;
+  }
+  int addUseDynamicWindow(bool? USE_DYNAMIC_WINDOW) {
+    fbBuilder.addBool(8, USE_DYNAMIC_WINDOW);
+    return fbBuilder.offset;
+  }
+  int addUsePerigeeFilter(bool? USE_PERIGEE_FILTER) {
+    fbBuilder.addBool(9, USE_PERIGEE_FILTER);
+    return fbBuilder.offset;
+  }
+  int addProgressIntervalSeconds(double? PROGRESS_INTERVAL_SECONDS) {
+    fbBuilder.addFloat64(10, PROGRESS_INTERVAL_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHasProgressIntervalSeconds(bool? HAS_PROGRESS_INTERVAL_SECONDS) {
+    fbBuilder.addBool(11, HAS_PROGRESS_INTERVAL_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addAlgorithm(cqrProbabilityAlgorithm? ALGORITHM) {
+    fbBuilder.addUint8(12, ALGORITHM?.value);
+    return fbBuilder.offset;
+  }
+  int addScreening(cqrVolumeGeometry? SCREENING) {
+    fbBuilder.addUint8(13, SCREENING?.value);
+    return fbBuilder.offset;
+  }
+  int addRadialM(double? RADIAL_M) {
+    fbBuilder.addFloat64(14, RADIAL_M);
+    return fbBuilder.offset;
+  }
+  int addInTrackM(double? IN_TRACK_M) {
+    fbBuilder.addFloat64(15, IN_TRACK_M);
+    return fbBuilder.offset;
+  }
+  int addCrossTrackM(double? CROSS_TRACK_M) {
+    fbBuilder.addFloat64(16, CROSS_TRACK_M);
+    return fbBuilder.offset;
+  }
+  int addVolumeCenter(cqrVolumeAnchor? VOLUME_CENTER) {
+    fbBuilder.addUint8(17, VOLUME_CENTER?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
+  final TIMInstantObjectBuilder? _START_EPOCH;
+  final double? _DURATION_SECONDS;
+  final double? _THRESHOLD_M;
+  final int? _REQUESTED_WORKERS;
+  final double? _COARSE_STEP_SECONDS;
+  final double? _REFINEMENT_TOLERANCE_SECONDS;
+  final double? _COMBINED_RADIUS_M;
+  final bool? _USE_KD_TREE;
+  final bool? _USE_DYNAMIC_WINDOW;
+  final bool? _USE_PERIGEE_FILTER;
+  final double? _PROGRESS_INTERVAL_SECONDS;
+  final bool? _HAS_PROGRESS_INTERVAL_SECONDS;
+  final cqrProbabilityAlgorithm? _ALGORITHM;
+  final cqrVolumeGeometry? _SCREENING;
+  final double? _RADIAL_M;
+  final double? _IN_TRACK_M;
+  final double? _CROSS_TRACK_M;
+  final cqrVolumeAnchor? _VOLUME_CENTER;
+
+  CQRScreeningControlsObjectBuilder({
+    TIMInstantObjectBuilder? START_EPOCH,
+    TIMInstantObjectBuilder? startEpoch,
+    double? DURATION_SECONDS,
+    double? durationSeconds,
+    double? THRESHOLD_M,
+    double? thresholdM,
+    int? REQUESTED_WORKERS,
+    int? requestedWorkers,
+    double? COARSE_STEP_SECONDS,
+    double? coarseStepSeconds,
+    double? REFINEMENT_TOLERANCE_SECONDS,
+    double? refinementToleranceSeconds,
+    double? COMBINED_RADIUS_M,
+    double? combinedRadiusM,
+    bool? USE_KD_TREE,
+    bool? useKdTree,
+    bool? USE_DYNAMIC_WINDOW,
+    bool? useDynamicWindow,
+    bool? USE_PERIGEE_FILTER,
+    bool? usePerigeeFilter,
+    double? PROGRESS_INTERVAL_SECONDS,
+    double? progressIntervalSeconds,
+    bool? HAS_PROGRESS_INTERVAL_SECONDS,
+    bool? hasProgressIntervalSeconds,
+    cqrProbabilityAlgorithm? ALGORITHM,
+    cqrVolumeGeometry? SCREENING,
+    double? RADIAL_M,
+    double? radialM,
+    double? IN_TRACK_M,
+    double? inTrackM,
+    double? CROSS_TRACK_M,
+    double? crossTrackM,
+    cqrVolumeAnchor? VOLUME_CENTER,
+    cqrVolumeAnchor? volumeCenter,
+  })
+      : _START_EPOCH = startEpoch ?? START_EPOCH,
+        _DURATION_SECONDS = durationSeconds ?? DURATION_SECONDS,
+        _THRESHOLD_M = thresholdM ?? THRESHOLD_M,
+        _REQUESTED_WORKERS = requestedWorkers ?? REQUESTED_WORKERS,
+        _COARSE_STEP_SECONDS = coarseStepSeconds ?? COARSE_STEP_SECONDS,
+        _REFINEMENT_TOLERANCE_SECONDS = refinementToleranceSeconds ?? REFINEMENT_TOLERANCE_SECONDS,
+        _COMBINED_RADIUS_M = combinedRadiusM ?? COMBINED_RADIUS_M,
+        _USE_KD_TREE = useKdTree ?? USE_KD_TREE,
+        _USE_DYNAMIC_WINDOW = useDynamicWindow ?? USE_DYNAMIC_WINDOW,
+        _USE_PERIGEE_FILTER = usePerigeeFilter ?? USE_PERIGEE_FILTER,
+        _PROGRESS_INTERVAL_SECONDS = progressIntervalSeconds ?? PROGRESS_INTERVAL_SECONDS,
+        _HAS_PROGRESS_INTERVAL_SECONDS = hasProgressIntervalSeconds ?? HAS_PROGRESS_INTERVAL_SECONDS,
+        _ALGORITHM = ALGORITHM,
+        _SCREENING = SCREENING,
+        _RADIAL_M = radialM ?? RADIAL_M,
+        _IN_TRACK_M = inTrackM ?? IN_TRACK_M,
+        _CROSS_TRACK_M = crossTrackM ?? CROSS_TRACK_M,
+        _VOLUME_CENTER = volumeCenter ?? VOLUME_CENTER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? START_EPOCHOffset = _START_EPOCH?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(18);
+    fbBuilder.addOffset(0, START_EPOCHOffset);
+    fbBuilder.addFloat64(1, _DURATION_SECONDS);
+    fbBuilder.addFloat64(2, _THRESHOLD_M);
+    fbBuilder.addUint32(3, _REQUESTED_WORKERS);
+    fbBuilder.addFloat64(4, _COARSE_STEP_SECONDS);
+    fbBuilder.addFloat64(5, _REFINEMENT_TOLERANCE_SECONDS);
+    fbBuilder.addFloat64(6, _COMBINED_RADIUS_M);
+    fbBuilder.addBool(7, _USE_KD_TREE);
+    fbBuilder.addBool(8, _USE_DYNAMIC_WINDOW);
+    fbBuilder.addBool(9, _USE_PERIGEE_FILTER);
+    fbBuilder.addFloat64(10, _PROGRESS_INTERVAL_SECONDS);
+    fbBuilder.addBool(11, _HAS_PROGRESS_INTERVAL_SECONDS);
+    fbBuilder.addUint8(12, _ALGORITHM?.value);
+    fbBuilder.addUint8(13, _SCREENING?.value);
+    fbBuilder.addFloat64(14, _RADIAL_M);
+    fbBuilder.addFloat64(15, _IN_TRACK_M);
+    fbBuilder.addFloat64(16, _CROSS_TRACK_M);
+    fbBuilder.addUint8(17, _VOLUME_CENTER?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
+///  Reject inconsistent radii instead of silently choosing one source.
+class CQRPairRequest {
+  CQRPairRequest._(this._bc, this._bcOffset);
+  factory CQRPairRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRPairRequest> reader = _CQRPairRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  CQRObjectSource? get PRIMARY => CQRObjectSource.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  CQRObjectSource? get SECONDARY => CQRObjectSource.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  CQRScreeningControls? get CONTROLS => CQRScreeningControls.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  double get PRIMARY_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 5.0);
+  double get primaryRadiusM => PRIMARY_RADIUS_M;
+  double get SECONDARY_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 5.0);
+  double get secondaryRadiusM => SECONDARY_RADIUS_M;
+  ///  Common inertial frame used for relative state and encounter-plane geometry.
+  RFMCoordinateSystem? get EVALUATION_FRAME => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  RFMCoordinateSystem? get evaluationFrame => EVALUATION_FRAME;
+
+  @override
+  String toString() {
+    return 'CQRPairRequest{PRIMARY: ${PRIMARY}, SECONDARY: ${SECONDARY}, CONTROLS: ${CONTROLS}, primaryRadiusM: ${primaryRadiusM}, secondaryRadiusM: ${secondaryRadiusM}, evaluationFrame: ${evaluationFrame}}';
+  }
+}
+
+class _CQRPairRequestReader extends fb.TableReader<CQRPairRequest> {
+  const _CQRPairRequestReader();
+
+  @override
+  CQRPairRequest createObject(fb.BufferContext bc, int offset) =>
+    CQRPairRequest._(bc, offset);
+}
+
+class CQRPairRequestBuilder {
+  CQRPairRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addPrimaryOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSecondaryOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addControlsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addPrimaryRadiusM(double? PRIMARY_RADIUS_M) {
+    fbBuilder.addFloat64(3, PRIMARY_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addSecondaryRadiusM(double? SECONDARY_RADIUS_M) {
+    fbBuilder.addFloat64(4, SECONDARY_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addEvaluationFrameOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRPairRequestObjectBuilder extends fb.ObjectBuilder {
+  final CQRObjectSourceObjectBuilder? _PRIMARY;
+  final CQRObjectSourceObjectBuilder? _SECONDARY;
+  final CQRScreeningControlsObjectBuilder? _CONTROLS;
+  final double? _PRIMARY_RADIUS_M;
+  final double? _SECONDARY_RADIUS_M;
+  final RFMCoordinateSystemObjectBuilder? _EVALUATION_FRAME;
+
+  CQRPairRequestObjectBuilder({
+    CQRObjectSourceObjectBuilder? PRIMARY,
+    CQRObjectSourceObjectBuilder? SECONDARY,
+    CQRScreeningControlsObjectBuilder? CONTROLS,
+    double? PRIMARY_RADIUS_M,
+    double? primaryRadiusM,
+    double? SECONDARY_RADIUS_M,
+    double? secondaryRadiusM,
+    RFMCoordinateSystemObjectBuilder? EVALUATION_FRAME,
+    RFMCoordinateSystemObjectBuilder? evaluationFrame,
+  })
+      : _PRIMARY = PRIMARY,
+        _SECONDARY = SECONDARY,
+        _CONTROLS = CONTROLS,
+        _PRIMARY_RADIUS_M = primaryRadiusM ?? PRIMARY_RADIUS_M,
+        _SECONDARY_RADIUS_M = secondaryRadiusM ?? SECONDARY_RADIUS_M,
+        _EVALUATION_FRAME = evaluationFrame ?? EVALUATION_FRAME;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PRIMARYOffset = _PRIMARY?.getOrCreateOffset(fbBuilder);
+    final int? SECONDARYOffset = _SECONDARY?.getOrCreateOffset(fbBuilder);
+    final int? CONTROLSOffset = _CONTROLS?.getOrCreateOffset(fbBuilder);
+    final int? EVALUATION_FRAMEOffset = _EVALUATION_FRAME?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, PRIMARYOffset);
+    fbBuilder.addOffset(1, SECONDARYOffset);
+    fbBuilder.addOffset(2, CONTROLSOffset);
+    fbBuilder.addFloat64(3, _PRIMARY_RADIUS_M);
+    fbBuilder.addFloat64(4, _SECONDARY_RADIUS_M);
+    fbBuilder.addOffset(5, EVALUATION_FRAMEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  All numerical fields in metres or square metres in one orthonormal plane.
+///  Xi/zeta axes are normal to relative velocity. Rotate displacement and
+///  covariance together when changing basis; covariance is finite symmetric
+///  positive semidefinite. Probability algorithms requiring an inverse reject
+///  singular covariance unless their documented method supports it.
+class CQRPlaneGeometry {
+  CQRPlaneGeometry._(this._bc, this._bcOffset);
+  factory CQRPlaneGeometry(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRPlaneGeometry> reader = _CQRPlaneGeometryReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get XI_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get xiM => XI_M;
+  double get ZETA_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get zetaM => ZETA_M;
+  double get VARIANCE_XI_M2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get varianceXiM2 => VARIANCE_XI_M2;
+  double get COVARIANCE_XI_ZETA_M2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get covarianceXiZetaM2 => COVARIANCE_XI_ZETA_M2;
+  double get VARIANCE_ZETA_M2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get varianceZetaM2 => VARIANCE_ZETA_M2;
+  double get COMBINED_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 10.0);
+  double get combinedRadiusM => COMBINED_RADIUS_M;
+
+  @override
+  String toString() {
+    return 'CQRPlaneGeometry{xiM: ${xiM}, zetaM: ${zetaM}, varianceXiM2: ${varianceXiM2}, covarianceXiZetaM2: ${covarianceXiZetaM2}, varianceZetaM2: ${varianceZetaM2}, combinedRadiusM: ${combinedRadiusM}}';
+  }
+}
+
+class _CQRPlaneGeometryReader extends fb.TableReader<CQRPlaneGeometry> {
+  const _CQRPlaneGeometryReader();
+
+  @override
+  CQRPlaneGeometry createObject(fb.BufferContext bc, int offset) =>
+    CQRPlaneGeometry._(bc, offset);
+}
+
+class CQRPlaneGeometryBuilder {
+  CQRPlaneGeometryBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addXiM(double? XI_M) {
+    fbBuilder.addFloat64(0, XI_M);
+    return fbBuilder.offset;
+  }
+  int addZetaM(double? ZETA_M) {
+    fbBuilder.addFloat64(1, ZETA_M);
+    return fbBuilder.offset;
+  }
+  int addVarianceXiM2(double? VARIANCE_XI_M2) {
+    fbBuilder.addFloat64(2, VARIANCE_XI_M2);
+    return fbBuilder.offset;
+  }
+  int addCovarianceXiZetaM2(double? COVARIANCE_XI_ZETA_M2) {
+    fbBuilder.addFloat64(3, COVARIANCE_XI_ZETA_M2);
+    return fbBuilder.offset;
+  }
+  int addVarianceZetaM2(double? VARIANCE_ZETA_M2) {
+    fbBuilder.addFloat64(4, VARIANCE_ZETA_M2);
+    return fbBuilder.offset;
+  }
+  int addCombinedRadiusM(double? COMBINED_RADIUS_M) {
+    fbBuilder.addFloat64(5, COMBINED_RADIUS_M);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRPlaneGeometryObjectBuilder extends fb.ObjectBuilder {
+  final double? _XI_M;
+  final double? _ZETA_M;
+  final double? _VARIANCE_XI_M2;
+  final double? _COVARIANCE_XI_ZETA_M2;
+  final double? _VARIANCE_ZETA_M2;
+  final double? _COMBINED_RADIUS_M;
+
+  CQRPlaneGeometryObjectBuilder({
+    double? XI_M,
+    double? xiM,
+    double? ZETA_M,
+    double? zetaM,
+    double? VARIANCE_XI_M2,
+    double? varianceXiM2,
+    double? COVARIANCE_XI_ZETA_M2,
+    double? covarianceXiZetaM2,
+    double? VARIANCE_ZETA_M2,
+    double? varianceZetaM2,
+    double? COMBINED_RADIUS_M,
+    double? combinedRadiusM,
+  })
+      : _XI_M = xiM ?? XI_M,
+        _ZETA_M = zetaM ?? ZETA_M,
+        _VARIANCE_XI_M2 = varianceXiM2 ?? VARIANCE_XI_M2,
+        _COVARIANCE_XI_ZETA_M2 = covarianceXiZetaM2 ?? COVARIANCE_XI_ZETA_M2,
+        _VARIANCE_ZETA_M2 = varianceZetaM2 ?? VARIANCE_ZETA_M2,
+        _COMBINED_RADIUS_M = combinedRadiusM ?? COMBINED_RADIUS_M;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(6);
+    fbBuilder.addFloat64(0, _XI_M);
+    fbBuilder.addFloat64(1, _ZETA_M);
+    fbBuilder.addFloat64(2, _VARIANCE_XI_M2);
+    fbBuilder.addFloat64(3, _COVARIANCE_XI_ZETA_M2);
+    fbBuilder.addFloat64(4, _VARIANCE_ZETA_M2);
+    fbBuilder.addFloat64(5, _COMBINED_RADIUS_M);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRProbabilityRequest {
+  CQRProbabilityRequest._(this._bc, this._bcOffset);
+  factory CQRProbabilityRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRProbabilityRequest> reader = _CQRProbabilityRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  CQRPlaneGeometry? get GEOMETRY => CQRPlaneGeometry.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  cqrProbabilityAlgorithm get ALGORITHM => cqrProbabilityAlgorithm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 1));
+
+  @override
+  String toString() {
+    return 'CQRProbabilityRequest{GEOMETRY: ${GEOMETRY}, ALGORITHM: ${ALGORITHM}}';
+  }
+}
+
+class _CQRProbabilityRequestReader extends fb.TableReader<CQRProbabilityRequest> {
+  const _CQRProbabilityRequestReader();
+
+  @override
+  CQRProbabilityRequest createObject(fb.BufferContext bc, int offset) =>
+    CQRProbabilityRequest._(bc, offset);
+}
+
+class CQRProbabilityRequestBuilder {
+  CQRProbabilityRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addGeometryOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAlgorithm(cqrProbabilityAlgorithm? ALGORITHM) {
+    fbBuilder.addUint8(1, ALGORITHM?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRProbabilityRequestObjectBuilder extends fb.ObjectBuilder {
+  final CQRPlaneGeometryObjectBuilder? _GEOMETRY;
+  final cqrProbabilityAlgorithm? _ALGORITHM;
+
+  CQRProbabilityRequestObjectBuilder({
+    CQRPlaneGeometryObjectBuilder? GEOMETRY,
+    cqrProbabilityAlgorithm? ALGORITHM,
+  })
+      : _GEOMETRY = GEOMETRY,
+        _ALGORITHM = ALGORITHM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? GEOMETRYOffset = _GEOMETRY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, GEOMETRYOffset);
+    fbBuilder.addUint8(1, _ALGORITHM?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Report the actual algorithm and uncertainty origin. With
+///  MAXIMUM_PROBABILITY_ONLY, MAXIMUM_PROBABILITY is present and PROBABILITY is
+///  inapplicable: consumers must ignore its default zero. Never report a heuristic
+///  maximum as probability computed from supplied covariance. Otherwise
+///  PROBABILITY is unitless in [0,1]; supplied/synthesized covariance is explicit.
+class CQRProbabilityResult {
+  CQRProbabilityResult._(this._bc, this._bcOffset);
+  factory CQRProbabilityResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRProbabilityResult> reader = _CQRProbabilityResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get PROBABILITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  cqrProbabilityAlgorithm get ALGORITHM => cqrProbabilityAlgorithm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  bool get CONVERGED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  int get ITERATIONS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  double get MAXIMUM_PROBABILITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get maximumProbability => MAXIMUM_PROBABILITY;
+  ///  True when MAXIMUM_PROBABILITY carries a value; false means absent.
+  bool get HAS_MAXIMUM_PROBABILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get hasMaximumProbability => HAS_MAXIMUM_PROBABILITY;
+  ///  Explicitly squared distance d^T C^-1 d, dimensionless.
+  double get MAHALANOBIS_SQUARED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get mahalanobisSquared => MAHALANOBIS_SQUARED;
+  ///  True when MAHALANOBIS_SQUARED carries a value; false means absent.
+  bool get HAS_MAHALANOBIS_SQUARED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get hasMahalanobisSquared => HAS_MAHALANOBIS_SQUARED;
+  cqrUncertaintyOrigin get UNCERTAINTY_SOURCE => cqrUncertaintyOrigin.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  cqrUncertaintyOrigin get uncertaintySource => UNCERTAINTY_SOURCE;
+  ///  For a covariance-based probability: whether the covariance's coverage was
+  ///  measured against independent reference states. Only CALIBRATED
+  ///  covariance supports a probability beyond "conditional on the stated
+  ///  assumptions".
+  covarianceCalibration get CALIBRATION => covarianceCalibration.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Identifier of the calibration evidence (a report or record).
+  String? get CALIBRATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get calibrationReference => CALIBRATION_REFERENCE;
+  ///  The correlation assumed between the two objects' errors.
+  cqrCovarianceCorrelation get CROSS_CORRELATION => cqrCovarianceCorrelation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 26, 0));
+  cqrCovarianceCorrelation get crossCorrelation => CROSS_CORRELATION;
+
+  @override
+  String toString() {
+    return 'CQRProbabilityResult{PROBABILITY: ${PROBABILITY}, ALGORITHM: ${ALGORITHM}, CONVERGED: ${CONVERGED}, ITERATIONS: ${ITERATIONS}, maximumProbability: ${maximumProbability}, hasMaximumProbability: ${hasMaximumProbability}, mahalanobisSquared: ${mahalanobisSquared}, hasMahalanobisSquared: ${hasMahalanobisSquared}, uncertaintySource: ${uncertaintySource}, CALIBRATION: ${CALIBRATION}, calibrationReference: ${calibrationReference}, crossCorrelation: ${crossCorrelation}}';
+  }
+}
+
+class _CQRProbabilityResultReader extends fb.TableReader<CQRProbabilityResult> {
+  const _CQRProbabilityResultReader();
+
+  @override
+  CQRProbabilityResult createObject(fb.BufferContext bc, int offset) =>
+    CQRProbabilityResult._(bc, offset);
+}
+
+class CQRProbabilityResultBuilder {
+  CQRProbabilityResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addProbability(double? PROBABILITY) {
+    fbBuilder.addFloat64(0, PROBABILITY);
+    return fbBuilder.offset;
+  }
+  int addAlgorithm(cqrProbabilityAlgorithm? ALGORITHM) {
+    fbBuilder.addUint8(1, ALGORITHM?.value);
+    return fbBuilder.offset;
+  }
+  int addConverged(bool? CONVERGED) {
+    fbBuilder.addBool(2, CONVERGED);
+    return fbBuilder.offset;
+  }
+  int addIterations(int? ITERATIONS) {
+    fbBuilder.addUint64(3, ITERATIONS);
+    return fbBuilder.offset;
+  }
+  int addMaximumProbability(double? MAXIMUM_PROBABILITY) {
+    fbBuilder.addFloat64(4, MAXIMUM_PROBABILITY);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumProbability(bool? HAS_MAXIMUM_PROBABILITY) {
+    fbBuilder.addBool(5, HAS_MAXIMUM_PROBABILITY);
+    return fbBuilder.offset;
+  }
+  int addMahalanobisSquared(double? MAHALANOBIS_SQUARED) {
+    fbBuilder.addFloat64(6, MAHALANOBIS_SQUARED);
+    return fbBuilder.offset;
+  }
+  int addHasMahalanobisSquared(bool? HAS_MAHALANOBIS_SQUARED) {
+    fbBuilder.addBool(7, HAS_MAHALANOBIS_SQUARED);
+    return fbBuilder.offset;
+  }
+  int addUncertaintySource(cqrUncertaintyOrigin? UNCERTAINTY_SOURCE) {
+    fbBuilder.addUint8(8, UNCERTAINTY_SOURCE?.value);
+    return fbBuilder.offset;
+  }
+  int addCalibration(covarianceCalibration? CALIBRATION) {
+    fbBuilder.addInt8(9, CALIBRATION?.value);
+    return fbBuilder.offset;
+  }
+  int addCalibrationReferenceOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addCrossCorrelation(cqrCovarianceCorrelation? CROSS_CORRELATION) {
+    fbBuilder.addUint8(11, CROSS_CORRELATION?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRProbabilityResultObjectBuilder extends fb.ObjectBuilder {
+  final double? _PROBABILITY;
+  final cqrProbabilityAlgorithm? _ALGORITHM;
+  final bool? _CONVERGED;
+  final int? _ITERATIONS;
+  final double? _MAXIMUM_PROBABILITY;
+  final bool? _HAS_MAXIMUM_PROBABILITY;
+  final double? _MAHALANOBIS_SQUARED;
+  final bool? _HAS_MAHALANOBIS_SQUARED;
+  final cqrUncertaintyOrigin? _UNCERTAINTY_SOURCE;
+  final covarianceCalibration? _CALIBRATION;
+  final String? _CALIBRATION_REFERENCE;
+  final cqrCovarianceCorrelation? _CROSS_CORRELATION;
+
+  CQRProbabilityResultObjectBuilder({
+    double? PROBABILITY,
+    cqrProbabilityAlgorithm? ALGORITHM,
+    bool? CONVERGED,
+    int? ITERATIONS,
+    double? MAXIMUM_PROBABILITY,
+    double? maximumProbability,
+    bool? HAS_MAXIMUM_PROBABILITY,
+    bool? hasMaximumProbability,
+    double? MAHALANOBIS_SQUARED,
+    double? mahalanobisSquared,
+    bool? HAS_MAHALANOBIS_SQUARED,
+    bool? hasMahalanobisSquared,
+    cqrUncertaintyOrigin? UNCERTAINTY_SOURCE,
+    cqrUncertaintyOrigin? uncertaintySource,
+    covarianceCalibration? CALIBRATION,
+    String? CALIBRATION_REFERENCE,
+    String? calibrationReference,
+    cqrCovarianceCorrelation? CROSS_CORRELATION,
+    cqrCovarianceCorrelation? crossCorrelation,
+  })
+      : _PROBABILITY = PROBABILITY,
+        _ALGORITHM = ALGORITHM,
+        _CONVERGED = CONVERGED,
+        _ITERATIONS = ITERATIONS,
+        _MAXIMUM_PROBABILITY = maximumProbability ?? MAXIMUM_PROBABILITY,
+        _HAS_MAXIMUM_PROBABILITY = hasMaximumProbability ?? HAS_MAXIMUM_PROBABILITY,
+        _MAHALANOBIS_SQUARED = mahalanobisSquared ?? MAHALANOBIS_SQUARED,
+        _HAS_MAHALANOBIS_SQUARED = hasMahalanobisSquared ?? HAS_MAHALANOBIS_SQUARED,
+        _UNCERTAINTY_SOURCE = uncertaintySource ?? UNCERTAINTY_SOURCE,
+        _CALIBRATION = CALIBRATION,
+        _CALIBRATION_REFERENCE = calibrationReference ?? CALIBRATION_REFERENCE,
+        _CROSS_CORRELATION = crossCorrelation ?? CROSS_CORRELATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CALIBRATION_REFERENCEOffset = _CALIBRATION_REFERENCE == null ? null
+        : fbBuilder.writeString(_CALIBRATION_REFERENCE!);
+    fbBuilder.startTable(12);
+    fbBuilder.addFloat64(0, _PROBABILITY);
+    fbBuilder.addUint8(1, _ALGORITHM?.value);
+    fbBuilder.addBool(2, _CONVERGED);
+    fbBuilder.addUint64(3, _ITERATIONS);
+    fbBuilder.addFloat64(4, _MAXIMUM_PROBABILITY);
+    fbBuilder.addBool(5, _HAS_MAXIMUM_PROBABILITY);
+    fbBuilder.addFloat64(6, _MAHALANOBIS_SQUARED);
+    fbBuilder.addBool(7, _HAS_MAHALANOBIS_SQUARED);
+    fbBuilder.addUint8(8, _UNCERTAINTY_SOURCE?.value);
+    fbBuilder.addInt8(9, _CALIBRATION?.value);
+    fbBuilder.addOffset(10, CALIBRATION_REFERENCEOffset);
+    fbBuilder.addUint8(11, _CROSS_CORRELATION?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRAlfanoRequest {
+  CQRAlfanoRequest._(this._bc, this._bcOffset);
+  factory CQRAlfanoRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRAlfanoRequest> reader = _CQRAlfanoRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get MISS_DISTANCE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get missDistanceM => MISS_DISTANCE_M;
+  double get COMBINED_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 10.0);
+  double get combinedRadiusM => COMBINED_RADIUS_M;
+
+  @override
+  String toString() {
+    return 'CQRAlfanoRequest{missDistanceM: ${missDistanceM}, combinedRadiusM: ${combinedRadiusM}}';
+  }
+}
+
+class _CQRAlfanoRequestReader extends fb.TableReader<CQRAlfanoRequest> {
+  const _CQRAlfanoRequestReader();
+
+  @override
+  CQRAlfanoRequest createObject(fb.BufferContext bc, int offset) =>
+    CQRAlfanoRequest._(bc, offset);
+}
+
+class CQRAlfanoRequestBuilder {
+  CQRAlfanoRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addMissDistanceM(double? MISS_DISTANCE_M) {
+    fbBuilder.addFloat64(0, MISS_DISTANCE_M);
+    return fbBuilder.offset;
+  }
+  int addCombinedRadiusM(double? COMBINED_RADIUS_M) {
+    fbBuilder.addFloat64(1, COMBINED_RADIUS_M);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRAlfanoRequestObjectBuilder extends fb.ObjectBuilder {
+  final double? _MISS_DISTANCE_M;
+  final double? _COMBINED_RADIUS_M;
+
+  CQRAlfanoRequestObjectBuilder({
+    double? MISS_DISTANCE_M,
+    double? missDistanceM,
+    double? COMBINED_RADIUS_M,
+    double? combinedRadiusM,
+  })
+      : _MISS_DISTANCE_M = missDistanceM ?? MISS_DISTANCE_M,
+        _COMBINED_RADIUS_M = combinedRadiusM ?? COMBINED_RADIUS_M;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addFloat64(0, _MISS_DISTANCE_M);
+    fbBuilder.addFloat64(1, _COMBINED_RADIUS_M);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRAlfanoResult {
+  CQRAlfanoResult._(this._bc, this._bcOffset);
+  factory CQRAlfanoResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRAlfanoResult> reader = _CQRAlfanoResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get MAXIMUM_PROBABILITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get maximumProbability => MAXIMUM_PROBABILITY;
+  double get DILUTION_THRESHOLD_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get dilutionThresholdM => DILUTION_THRESHOLD_M;
+  double get SIGMA_STAR_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get sigmaStarM => SIGMA_STAR_M;
+
+  @override
+  String toString() {
+    return 'CQRAlfanoResult{maximumProbability: ${maximumProbability}, dilutionThresholdM: ${dilutionThresholdM}, sigmaStarM: ${sigmaStarM}}';
+  }
+}
+
+class _CQRAlfanoResultReader extends fb.TableReader<CQRAlfanoResult> {
+  const _CQRAlfanoResultReader();
+
+  @override
+  CQRAlfanoResult createObject(fb.BufferContext bc, int offset) =>
+    CQRAlfanoResult._(bc, offset);
+}
+
+class CQRAlfanoResultBuilder {
+  CQRAlfanoResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addMaximumProbability(double? MAXIMUM_PROBABILITY) {
+    fbBuilder.addFloat64(0, MAXIMUM_PROBABILITY);
+    return fbBuilder.offset;
+  }
+  int addDilutionThresholdM(double? DILUTION_THRESHOLD_M) {
+    fbBuilder.addFloat64(1, DILUTION_THRESHOLD_M);
+    return fbBuilder.offset;
+  }
+  int addSigmaStarM(double? SIGMA_STAR_M) {
+    fbBuilder.addFloat64(2, SIGMA_STAR_M);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRAlfanoResultObjectBuilder extends fb.ObjectBuilder {
+  final double? _MAXIMUM_PROBABILITY;
+  final double? _DILUTION_THRESHOLD_M;
+  final double? _SIGMA_STAR_M;
+
+  CQRAlfanoResultObjectBuilder({
+    double? MAXIMUM_PROBABILITY,
+    double? maximumProbability,
+    double? DILUTION_THRESHOLD_M,
+    double? dilutionThresholdM,
+    double? SIGMA_STAR_M,
+    double? sigmaStarM,
+  })
+      : _MAXIMUM_PROBABILITY = maximumProbability ?? MAXIMUM_PROBABILITY,
+        _DILUTION_THRESHOLD_M = dilutionThresholdM ?? DILUTION_THRESHOLD_M,
+        _SIGMA_STAR_M = sigmaStarM ?? SIGMA_STAR_M;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addFloat64(0, _MAXIMUM_PROBABILITY);
+    fbBuilder.addFloat64(1, _DILUTION_THRESHOLD_M);
+    fbBuilder.addFloat64(2, _SIGMA_STAR_M);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Typed replacement of a bare raw-text port. Content is UTF-8 with no BOM;
+///  XML declaration, if present, must agree. Content must be nonempty CDM KVN
+///  or CDM XML matching SERIALIZATION; reject UNSPECIFIED and other documents.
+///  Not an arbitrary JSON container.
+class CQRNativeDocument {
+  CQRNativeDocument._(this._bc, this._bcOffset);
+  factory CQRNativeDocument(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRNativeDocument> reader = _CQRNativeDocumentReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  cqrDocumentSyntax get SERIALIZATION => cqrDocumentSyntax.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  List<int>? get CONTENT => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'CQRNativeDocument{SERIALIZATION: ${SERIALIZATION}, CONTENT: ${CONTENT}}';
+  }
+}
+
+class _CQRNativeDocumentReader extends fb.TableReader<CQRNativeDocument> {
+  const _CQRNativeDocumentReader();
+
+  @override
+  CQRNativeDocument createObject(fb.BufferContext bc, int offset) =>
+    CQRNativeDocument._(bc, offset);
+}
+
+class CQRNativeDocumentBuilder {
+  CQRNativeDocumentBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addSerialization(cqrDocumentSyntax? SERIALIZATION) {
+    fbBuilder.addUint8(0, SERIALIZATION?.value);
+    return fbBuilder.offset;
+  }
+  int addContentOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRNativeDocumentObjectBuilder extends fb.ObjectBuilder {
+  final cqrDocumentSyntax? _SERIALIZATION;
+  final List<int>? _CONTENT;
+
+  CQRNativeDocumentObjectBuilder({
+    cqrDocumentSyntax? SERIALIZATION,
+    List<int>? CONTENT,
+  })
+      : _SERIALIZATION = SERIALIZATION,
+        _CONTENT = CONTENT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CONTENTOffset = _CONTENT == null ? null
+        : fbBuilder.writeListUint8(_CONTENT!);
+    fbBuilder.startTable(2);
+    fbBuilder.addUint8(0, _SERIALIZATION?.value);
+    fbBuilder.addOffset(1, CONTENTOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Order arrays index the supplied catalog stream in exact reception order.
+///  Ranges are half-open; absent endpoints select the full respective range.
+class CQRCatalogRequest {
+  CQRCatalogRequest._(this._bc, this._bcOffset);
+  factory CQRCatalogRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRCatalogRequest> reader = _CQRCatalogRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<CQRObjectSource>? get PRIMARIES => const fb.ListReader<CQRObjectSource>(CQRObjectSource.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  List<CQRObjectSource>? get SECONDARIES => const fb.ListReader<CQRObjectSource>(CQRObjectSource.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  CQRScreeningControls? get CONTROLS => CQRScreeningControls.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  RFMCoordinateSystem? get EVALUATION_FRAME => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  RFMCoordinateSystem? get evaluationFrame => EVALUATION_FRAME;
+  List<int>? get ORDERED_CATALOG_INDICES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get orderedCatalogIndices => ORDERED_CATALOG_INDICES;
+  int get START_ORDER_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get startOrderIndex => START_ORDER_INDEX;
+  ///  True when START_ORDER_INDEX carries a value; false means absent.
+  bool get HAS_START_ORDER_INDEX => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get hasStartOrderIndex => HAS_START_ORDER_INDEX;
+  int get END_ORDER_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get endOrderIndex => END_ORDER_INDEX;
+  ///  True when END_ORDER_INDEX carries a value; false means absent.
+  bool get HAS_END_ORDER_INDEX => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasEndOrderIndex => HAS_END_ORDER_INDEX;
+  int get SECONDARY_START_ORDER_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get secondaryStartOrderIndex => SECONDARY_START_ORDER_INDEX;
+  ///  True when SECONDARY_START_ORDER_INDEX carries a value; false means absent.
+  bool get HAS_SECONDARY_START_ORDER_INDEX => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasSecondaryStartOrderIndex => HAS_SECONDARY_START_ORDER_INDEX;
+  int get SECONDARY_END_ORDER_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get secondaryEndOrderIndex => SECONDARY_END_ORDER_INDEX;
+  ///  True when SECONDARY_END_ORDER_INDEX carries a value; false means absent.
+  bool get HAS_SECONDARY_END_ORDER_INDEX => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  bool get hasSecondaryEndOrderIndex => HAS_SECONDARY_END_ORDER_INDEX;
+  List<CQRSourceProvenance>? get SELECTED_SOURCES => const fb.ListReader<CQRSourceProvenance>(CQRSourceProvenance.reader).vTableGetNullable(_bc, _bcOffset, 30);
+  List<CQRSourceProvenance>? get selectedSources => SELECTED_SOURCES;
+
+  @override
+  String toString() {
+    return 'CQRCatalogRequest{PRIMARIES: ${PRIMARIES}, SECONDARIES: ${SECONDARIES}, CONTROLS: ${CONTROLS}, evaluationFrame: ${evaluationFrame}, orderedCatalogIndices: ${orderedCatalogIndices}, startOrderIndex: ${startOrderIndex}, hasStartOrderIndex: ${hasStartOrderIndex}, endOrderIndex: ${endOrderIndex}, hasEndOrderIndex: ${hasEndOrderIndex}, secondaryStartOrderIndex: ${secondaryStartOrderIndex}, hasSecondaryStartOrderIndex: ${hasSecondaryStartOrderIndex}, secondaryEndOrderIndex: ${secondaryEndOrderIndex}, hasSecondaryEndOrderIndex: ${hasSecondaryEndOrderIndex}, selectedSources: ${selectedSources}}';
+  }
+}
+
+class _CQRCatalogRequestReader extends fb.TableReader<CQRCatalogRequest> {
+  const _CQRCatalogRequestReader();
+
+  @override
+  CQRCatalogRequest createObject(fb.BufferContext bc, int offset) =>
+    CQRCatalogRequest._(bc, offset);
+}
+
+class CQRCatalogRequestBuilder {
+  CQRCatalogRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(14);
+  }
+
+  int addPrimariesOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSecondariesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addControlsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEvaluationFrameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addOrderedCatalogIndicesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addStartOrderIndex(int? START_ORDER_INDEX) {
+    fbBuilder.addUint32(5, START_ORDER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addHasStartOrderIndex(bool? HAS_START_ORDER_INDEX) {
+    fbBuilder.addBool(6, HAS_START_ORDER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addEndOrderIndex(int? END_ORDER_INDEX) {
+    fbBuilder.addUint32(7, END_ORDER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addHasEndOrderIndex(bool? HAS_END_ORDER_INDEX) {
+    fbBuilder.addBool(8, HAS_END_ORDER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addSecondaryStartOrderIndex(int? SECONDARY_START_ORDER_INDEX) {
+    fbBuilder.addUint32(9, SECONDARY_START_ORDER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addHasSecondaryStartOrderIndex(bool? HAS_SECONDARY_START_ORDER_INDEX) {
+    fbBuilder.addBool(10, HAS_SECONDARY_START_ORDER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addSecondaryEndOrderIndex(int? SECONDARY_END_ORDER_INDEX) {
+    fbBuilder.addUint32(11, SECONDARY_END_ORDER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addHasSecondaryEndOrderIndex(bool? HAS_SECONDARY_END_ORDER_INDEX) {
+    fbBuilder.addBool(12, HAS_SECONDARY_END_ORDER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addSelectedSourcesOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRCatalogRequestObjectBuilder extends fb.ObjectBuilder {
+  final List<CQRObjectSourceObjectBuilder>? _PRIMARIES;
+  final List<CQRObjectSourceObjectBuilder>? _SECONDARIES;
+  final CQRScreeningControlsObjectBuilder? _CONTROLS;
+  final RFMCoordinateSystemObjectBuilder? _EVALUATION_FRAME;
+  final List<int>? _ORDERED_CATALOG_INDICES;
+  final int? _START_ORDER_INDEX;
+  final bool? _HAS_START_ORDER_INDEX;
+  final int? _END_ORDER_INDEX;
+  final bool? _HAS_END_ORDER_INDEX;
+  final int? _SECONDARY_START_ORDER_INDEX;
+  final bool? _HAS_SECONDARY_START_ORDER_INDEX;
+  final int? _SECONDARY_END_ORDER_INDEX;
+  final bool? _HAS_SECONDARY_END_ORDER_INDEX;
+  final List<CQRSourceProvenanceObjectBuilder>? _SELECTED_SOURCES;
+
+  CQRCatalogRequestObjectBuilder({
+    List<CQRObjectSourceObjectBuilder>? PRIMARIES,
+    List<CQRObjectSourceObjectBuilder>? SECONDARIES,
+    CQRScreeningControlsObjectBuilder? CONTROLS,
+    RFMCoordinateSystemObjectBuilder? EVALUATION_FRAME,
+    RFMCoordinateSystemObjectBuilder? evaluationFrame,
+    List<int>? ORDERED_CATALOG_INDICES,
+    List<int>? orderedCatalogIndices,
+    int? START_ORDER_INDEX,
+    int? startOrderIndex,
+    bool? HAS_START_ORDER_INDEX,
+    bool? hasStartOrderIndex,
+    int? END_ORDER_INDEX,
+    int? endOrderIndex,
+    bool? HAS_END_ORDER_INDEX,
+    bool? hasEndOrderIndex,
+    int? SECONDARY_START_ORDER_INDEX,
+    int? secondaryStartOrderIndex,
+    bool? HAS_SECONDARY_START_ORDER_INDEX,
+    bool? hasSecondaryStartOrderIndex,
+    int? SECONDARY_END_ORDER_INDEX,
+    int? secondaryEndOrderIndex,
+    bool? HAS_SECONDARY_END_ORDER_INDEX,
+    bool? hasSecondaryEndOrderIndex,
+    List<CQRSourceProvenanceObjectBuilder>? SELECTED_SOURCES,
+    List<CQRSourceProvenanceObjectBuilder>? selectedSources,
+  })
+      : _PRIMARIES = PRIMARIES,
+        _SECONDARIES = SECONDARIES,
+        _CONTROLS = CONTROLS,
+        _EVALUATION_FRAME = evaluationFrame ?? EVALUATION_FRAME,
+        _ORDERED_CATALOG_INDICES = orderedCatalogIndices ?? ORDERED_CATALOG_INDICES,
+        _START_ORDER_INDEX = startOrderIndex ?? START_ORDER_INDEX,
+        _HAS_START_ORDER_INDEX = hasStartOrderIndex ?? HAS_START_ORDER_INDEX,
+        _END_ORDER_INDEX = endOrderIndex ?? END_ORDER_INDEX,
+        _HAS_END_ORDER_INDEX = hasEndOrderIndex ?? HAS_END_ORDER_INDEX,
+        _SECONDARY_START_ORDER_INDEX = secondaryStartOrderIndex ?? SECONDARY_START_ORDER_INDEX,
+        _HAS_SECONDARY_START_ORDER_INDEX = hasSecondaryStartOrderIndex ?? HAS_SECONDARY_START_ORDER_INDEX,
+        _SECONDARY_END_ORDER_INDEX = secondaryEndOrderIndex ?? SECONDARY_END_ORDER_INDEX,
+        _HAS_SECONDARY_END_ORDER_INDEX = hasSecondaryEndOrderIndex ?? HAS_SECONDARY_END_ORDER_INDEX,
+        _SELECTED_SOURCES = selectedSources ?? SELECTED_SOURCES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PRIMARIESOffset = _PRIMARIES == null ? null
+        : fbBuilder.writeList(_PRIMARIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SECONDARIESOffset = _SECONDARIES == null ? null
+        : fbBuilder.writeList(_SECONDARIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CONTROLSOffset = _CONTROLS?.getOrCreateOffset(fbBuilder);
+    final int? EVALUATION_FRAMEOffset = _EVALUATION_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? ORDERED_CATALOG_INDICESOffset = _ORDERED_CATALOG_INDICES == null ? null
+        : fbBuilder.writeListUint32(_ORDERED_CATALOG_INDICES!);
+    final int? SELECTED_SOURCESOffset = _SELECTED_SOURCES == null ? null
+        : fbBuilder.writeList(_SELECTED_SOURCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(14);
+    fbBuilder.addOffset(0, PRIMARIESOffset);
+    fbBuilder.addOffset(1, SECONDARIESOffset);
+    fbBuilder.addOffset(2, CONTROLSOffset);
+    fbBuilder.addOffset(3, EVALUATION_FRAMEOffset);
+    fbBuilder.addOffset(4, ORDERED_CATALOG_INDICESOffset);
+    fbBuilder.addUint32(5, _START_ORDER_INDEX);
+    fbBuilder.addBool(6, _HAS_START_ORDER_INDEX);
+    fbBuilder.addUint32(7, _END_ORDER_INDEX);
+    fbBuilder.addBool(8, _HAS_END_ORDER_INDEX);
+    fbBuilder.addUint32(9, _SECONDARY_START_ORDER_INDEX);
+    fbBuilder.addBool(10, _HAS_SECONDARY_START_ORDER_INDEX);
+    fbBuilder.addUint32(11, _SECONDARY_END_ORDER_INDEX);
+    fbBuilder.addBool(12, _HAS_SECONDARY_END_ORDER_INDEX);
+    fbBuilder.addOffset(13, SELECTED_SOURCESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Explicit summary when legacy source lacks sufficient data for a full CDM.
+class CQREvent {
+  CQREvent._(this._bc, this._bcOffset);
+  factory CQREvent(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQREvent> reader = _CQREventReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get PRIMARY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get primaryId => PRIMARY_ID;
+  String? get SECONDARY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get secondaryId => SECONDARY_ID;
+  String? get PRIMARY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get primaryName => PRIMARY_NAME;
+  String? get SECONDARY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get secondaryName => SECONDARY_NAME;
+  int get PRIMARY_NORAD_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get primaryNoradId => PRIMARY_NORAD_ID;
+  int get SECONDARY_NORAD_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get secondaryNoradId => SECONDARY_NORAD_ID;
+  TIMInstant? get TCA => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  double get MISS_DISTANCE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get missDistanceM => MISS_DISTANCE_M;
+  double get RELATIVE_SPEED_M_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get relativeSpeedMS => RELATIVE_SPEED_M_S;
+  CQRProbabilityResult? get PROBABILITY => CQRProbabilityResult.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  double get DILUTION_THRESHOLD_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get dilutionThresholdM => DILUTION_THRESHOLD_M;
+  ///  True when DILUTION_THRESHOLD_M carries a value; false means absent.
+  bool get HAS_DILUTION_THRESHOLD_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get hasDilutionThresholdM => HAS_DILUTION_THRESHOLD_M;
+  ///  Primary-object RTN components in m and m/s; omitted when unavailable.
+  FRMVector3? get RELATIVE_POSITION_RTN => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  FRMVector3? get relativePositionRtn => RELATIVE_POSITION_RTN;
+  FRMVector3? get RELATIVE_VELOCITY_RTN => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  FRMVector3? get relativeVelocityRtn => RELATIVE_VELOCITY_RTN;
+  ///  One-sigma RTN values in metres, not covariance matrices.
+  FRMVector3? get PRIMARY_SIGMA_RTN_M => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  FRMVector3? get primarySigmaRtnM => PRIMARY_SIGMA_RTN_M;
+  FRMVector3? get SECONDARY_SIGMA_RTN_M => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 34);
+  FRMVector3? get secondarySigmaRtnM => SECONDARY_SIGMA_RTN_M;
+  double get PRIMARY_DAYS_SINCE_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get primaryDaysSinceEpoch => PRIMARY_DAYS_SINCE_EPOCH;
+  ///  True when PRIMARY_DAYS_SINCE_EPOCH carries a value; false means absent.
+  bool get HAS_PRIMARY_DAYS_SINCE_EPOCH => const fb.BoolReader().vTableGet(_bc, _bcOffset, 38, false);
+  bool get hasPrimaryDaysSinceEpoch => HAS_PRIMARY_DAYS_SINCE_EPOCH;
+  double get SECONDARY_DAYS_SINCE_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get secondaryDaysSinceEpoch => SECONDARY_DAYS_SINCE_EPOCH;
+  ///  True when SECONDARY_DAYS_SINCE_EPOCH carries a value; false means absent.
+  bool get HAS_SECONDARY_DAYS_SINCE_EPOCH => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
+  bool get hasSecondaryDaysSinceEpoch => HAS_SECONDARY_DAYS_SINCE_EPOCH;
+  ///  Full standards-backed result when physically available.
+  CDM? get CONJUNCTION_MESSAGE => CDM.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  CDM? get conjunctionMessage => CONJUNCTION_MESSAGE;
+  PRWResidentState? get PRIMARY_STATE => PRWResidentState.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  PRWResidentState? get primaryState => PRIMARY_STATE;
+  PRWResidentState? get SECONDARY_STATE => PRWResidentState.reader.vTableGetNullable(_bc, _bcOffset, 48);
+  PRWResidentState? get secondaryState => SECONDARY_STATE;
+  double get MAHALANOBIS_3D_SQUARED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  double get mahalanobis3dSquared => MAHALANOBIS_3D_SQUARED;
+  ///  True when MAHALANOBIS_3D_SQUARED carries a value; false means absent.
+  bool get HAS_MAHALANOBIS_3D_SQUARED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 52, false);
+  bool get hasMahalanobis3dSquared => HAS_MAHALANOBIS_3D_SQUARED;
+  double get COMBINED_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  double get combinedRadiusM => COMBINED_RADIUS_M;
+  ///  True when COMBINED_RADIUS_M carries a value; false means absent.
+  bool get HAS_COMBINED_RADIUS_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, false);
+  bool get hasCombinedRadiusM => HAS_COMBINED_RADIUS_M;
+  ///  Each object's hard-body radius in metres and where it came from;
+  ///  COMBINED_RADIUS_M is their sum.
+  double get PRIMARY_HARD_BODY_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  double get primaryHardBodyRadiusM => PRIMARY_HARD_BODY_RADIUS_M;
+  ///  True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  bool get HAS_PRIMARY_HARD_BODY_RADIUS_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 60, false);
+  bool get hasPrimaryHardBodyRadiusM => HAS_PRIMARY_HARD_BODY_RADIUS_M;
+  double get SECONDARY_HARD_BODY_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get secondaryHardBodyRadiusM => SECONDARY_HARD_BODY_RADIUS_M;
+  ///  True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  bool get HAS_SECONDARY_HARD_BODY_RADIUS_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 64, false);
+  bool get hasSecondaryHardBodyRadiusM => HAS_SECONDARY_HARD_BODY_RADIUS_M;
+  cqrHardBodyRadiusBasis get PRIMARY_RADIUS_BASIS => cqrHardBodyRadiusBasis.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 66, 0));
+  cqrHardBodyRadiusBasis get primaryRadiusBasis => PRIMARY_RADIUS_BASIS;
+  cqrHardBodyRadiusBasis get SECONDARY_RADIUS_BASIS => cqrHardBodyRadiusBasis.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 68, 0));
+  cqrHardBodyRadiusBasis get secondaryRadiusBasis => SECONDARY_RADIUS_BASIS;
+  ///  Where each object's position covariance came from; NONE means the event
+  ///  carries no covariance-based quantity for it.
+  cqrCovarianceBasis get PRIMARY_COVARIANCE_BASIS => cqrCovarianceBasis.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 70, 0));
+  cqrCovarianceBasis get primaryCovarianceBasis => PRIMARY_COVARIANCE_BASIS;
+  cqrCovarianceBasis get SECONDARY_COVARIANCE_BASIS => cqrCovarianceBasis.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 72, 0));
+  cqrCovarianceBasis get secondaryCovarianceBasis => SECONDARY_COVARIANCE_BASIS;
+  ///  Geometry used by the screening request that admitted this event.
+  cqrVolumeGeometry get SCREENING => cqrVolumeGeometry.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 74, 0));
+  ///  Volume(s) containing the other object at TCA; BOTH means both tests passed.
+  ///  UNSPECIFIED means admission provenance was not reported.
+  cqrVolumeAnchor get ADMITTED_BY => cqrVolumeAnchor.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 76, 0));
+  cqrVolumeAnchor get admittedBy => ADMITTED_BY;
+
+  @override
+  String toString() {
+    return 'CQREvent{primaryId: ${primaryId}, secondaryId: ${secondaryId}, primaryName: ${primaryName}, secondaryName: ${secondaryName}, primaryNoradId: ${primaryNoradId}, secondaryNoradId: ${secondaryNoradId}, TCA: ${TCA}, missDistanceM: ${missDistanceM}, relativeSpeedMS: ${relativeSpeedMS}, PROBABILITY: ${PROBABILITY}, dilutionThresholdM: ${dilutionThresholdM}, hasDilutionThresholdM: ${hasDilutionThresholdM}, relativePositionRtn: ${relativePositionRtn}, relativeVelocityRtn: ${relativeVelocityRtn}, primarySigmaRtnM: ${primarySigmaRtnM}, secondarySigmaRtnM: ${secondarySigmaRtnM}, primaryDaysSinceEpoch: ${primaryDaysSinceEpoch}, hasPrimaryDaysSinceEpoch: ${hasPrimaryDaysSinceEpoch}, secondaryDaysSinceEpoch: ${secondaryDaysSinceEpoch}, hasSecondaryDaysSinceEpoch: ${hasSecondaryDaysSinceEpoch}, conjunctionMessage: ${conjunctionMessage}, primaryState: ${primaryState}, secondaryState: ${secondaryState}, mahalanobis3dSquared: ${mahalanobis3dSquared}, hasMahalanobis3dSquared: ${hasMahalanobis3dSquared}, combinedRadiusM: ${combinedRadiusM}, hasCombinedRadiusM: ${hasCombinedRadiusM}, primaryHardBodyRadiusM: ${primaryHardBodyRadiusM}, hasPrimaryHardBodyRadiusM: ${hasPrimaryHardBodyRadiusM}, secondaryHardBodyRadiusM: ${secondaryHardBodyRadiusM}, hasSecondaryHardBodyRadiusM: ${hasSecondaryHardBodyRadiusM}, primaryRadiusBasis: ${primaryRadiusBasis}, secondaryRadiusBasis: ${secondaryRadiusBasis}, primaryCovarianceBasis: ${primaryCovarianceBasis}, secondaryCovarianceBasis: ${secondaryCovarianceBasis}, SCREENING: ${SCREENING}, admittedBy: ${admittedBy}}';
+  }
+}
+
+class _CQREventReader extends fb.TableReader<CQREvent> {
+  const _CQREventReader();
+
+  @override
+  CQREvent createObject(fb.BufferContext bc, int offset) =>
+    CQREvent._(bc, offset);
+}
+
+class CQREventBuilder {
+  CQREventBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(37);
+  }
+
+  int addPrimaryIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSecondaryIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPrimaryNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSecondaryNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addPrimaryNoradId(int? PRIMARY_NORAD_ID) {
+    fbBuilder.addUint32(4, PRIMARY_NORAD_ID);
+    return fbBuilder.offset;
+  }
+  int addSecondaryNoradId(int? SECONDARY_NORAD_ID) {
+    fbBuilder.addUint32(5, SECONDARY_NORAD_ID);
+    return fbBuilder.offset;
+  }
+  int addTcaOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addMissDistanceM(double? MISS_DISTANCE_M) {
+    fbBuilder.addFloat64(7, MISS_DISTANCE_M);
+    return fbBuilder.offset;
+  }
+  int addRelativeSpeedMS(double? RELATIVE_SPEED_M_S) {
+    fbBuilder.addFloat64(8, RELATIVE_SPEED_M_S);
+    return fbBuilder.offset;
+  }
+  int addProbabilityOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addDilutionThresholdM(double? DILUTION_THRESHOLD_M) {
+    fbBuilder.addFloat64(10, DILUTION_THRESHOLD_M);
+    return fbBuilder.offset;
+  }
+  int addHasDilutionThresholdM(bool? HAS_DILUTION_THRESHOLD_M) {
+    fbBuilder.addBool(11, HAS_DILUTION_THRESHOLD_M);
+    return fbBuilder.offset;
+  }
+  int addRelativePositionRtnOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addRelativeVelocityRtnOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addPrimarySigmaRtnMOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addSecondarySigmaRtnMOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addPrimaryDaysSinceEpoch(double? PRIMARY_DAYS_SINCE_EPOCH) {
+    fbBuilder.addFloat64(16, PRIMARY_DAYS_SINCE_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addHasPrimaryDaysSinceEpoch(bool? HAS_PRIMARY_DAYS_SINCE_EPOCH) {
+    fbBuilder.addBool(17, HAS_PRIMARY_DAYS_SINCE_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addSecondaryDaysSinceEpoch(double? SECONDARY_DAYS_SINCE_EPOCH) {
+    fbBuilder.addFloat64(18, SECONDARY_DAYS_SINCE_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addHasSecondaryDaysSinceEpoch(bool? HAS_SECONDARY_DAYS_SINCE_EPOCH) {
+    fbBuilder.addBool(19, HAS_SECONDARY_DAYS_SINCE_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addConjunctionMessageOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addPrimaryStateOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addSecondaryStateOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addMahalanobis3DSquared(double? MAHALANOBIS_3D_SQUARED) {
+    fbBuilder.addFloat64(23, MAHALANOBIS_3D_SQUARED);
+    return fbBuilder.offset;
+  }
+  int addHasMahalanobis3DSquared(bool? HAS_MAHALANOBIS_3D_SQUARED) {
+    fbBuilder.addBool(24, HAS_MAHALANOBIS_3D_SQUARED);
+    return fbBuilder.offset;
+  }
+  int addCombinedRadiusM(double? COMBINED_RADIUS_M) {
+    fbBuilder.addFloat64(25, COMBINED_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addHasCombinedRadiusM(bool? HAS_COMBINED_RADIUS_M) {
+    fbBuilder.addBool(26, HAS_COMBINED_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addPrimaryHardBodyRadiusM(double? PRIMARY_HARD_BODY_RADIUS_M) {
+    fbBuilder.addFloat64(27, PRIMARY_HARD_BODY_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addHasPrimaryHardBodyRadiusM(bool? HAS_PRIMARY_HARD_BODY_RADIUS_M) {
+    fbBuilder.addBool(28, HAS_PRIMARY_HARD_BODY_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addSecondaryHardBodyRadiusM(double? SECONDARY_HARD_BODY_RADIUS_M) {
+    fbBuilder.addFloat64(29, SECONDARY_HARD_BODY_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addHasSecondaryHardBodyRadiusM(bool? HAS_SECONDARY_HARD_BODY_RADIUS_M) {
+    fbBuilder.addBool(30, HAS_SECONDARY_HARD_BODY_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addPrimaryRadiusBasis(cqrHardBodyRadiusBasis? PRIMARY_RADIUS_BASIS) {
+    fbBuilder.addUint8(31, PRIMARY_RADIUS_BASIS?.value);
+    return fbBuilder.offset;
+  }
+  int addSecondaryRadiusBasis(cqrHardBodyRadiusBasis? SECONDARY_RADIUS_BASIS) {
+    fbBuilder.addUint8(32, SECONDARY_RADIUS_BASIS?.value);
+    return fbBuilder.offset;
+  }
+  int addPrimaryCovarianceBasis(cqrCovarianceBasis? PRIMARY_COVARIANCE_BASIS) {
+    fbBuilder.addUint8(33, PRIMARY_COVARIANCE_BASIS?.value);
+    return fbBuilder.offset;
+  }
+  int addSecondaryCovarianceBasis(cqrCovarianceBasis? SECONDARY_COVARIANCE_BASIS) {
+    fbBuilder.addUint8(34, SECONDARY_COVARIANCE_BASIS?.value);
+    return fbBuilder.offset;
+  }
+  int addScreening(cqrVolumeGeometry? SCREENING) {
+    fbBuilder.addUint8(35, SCREENING?.value);
+    return fbBuilder.offset;
+  }
+  int addAdmittedBy(cqrVolumeAnchor? ADMITTED_BY) {
+    fbBuilder.addUint8(36, ADMITTED_BY?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQREventObjectBuilder extends fb.ObjectBuilder {
+  final String? _PRIMARY_ID;
+  final String? _SECONDARY_ID;
+  final String? _PRIMARY_NAME;
+  final String? _SECONDARY_NAME;
+  final int? _PRIMARY_NORAD_ID;
+  final int? _SECONDARY_NORAD_ID;
+  final TIMInstantObjectBuilder? _TCA;
+  final double? _MISS_DISTANCE_M;
+  final double? _RELATIVE_SPEED_M_S;
+  final CQRProbabilityResultObjectBuilder? _PROBABILITY;
+  final double? _DILUTION_THRESHOLD_M;
+  final bool? _HAS_DILUTION_THRESHOLD_M;
+  final FRMVector3ObjectBuilder? _RELATIVE_POSITION_RTN;
+  final FRMVector3ObjectBuilder? _RELATIVE_VELOCITY_RTN;
+  final FRMVector3ObjectBuilder? _PRIMARY_SIGMA_RTN_M;
+  final FRMVector3ObjectBuilder? _SECONDARY_SIGMA_RTN_M;
+  final double? _PRIMARY_DAYS_SINCE_EPOCH;
+  final bool? _HAS_PRIMARY_DAYS_SINCE_EPOCH;
+  final double? _SECONDARY_DAYS_SINCE_EPOCH;
+  final bool? _HAS_SECONDARY_DAYS_SINCE_EPOCH;
+  final CDMObjectBuilder? _CONJUNCTION_MESSAGE;
+  final PRWResidentStateObjectBuilder? _PRIMARY_STATE;
+  final PRWResidentStateObjectBuilder? _SECONDARY_STATE;
+  final double? _MAHALANOBIS_3D_SQUARED;
+  final bool? _HAS_MAHALANOBIS_3D_SQUARED;
+  final double? _COMBINED_RADIUS_M;
+  final bool? _HAS_COMBINED_RADIUS_M;
+  final double? _PRIMARY_HARD_BODY_RADIUS_M;
+  final bool? _HAS_PRIMARY_HARD_BODY_RADIUS_M;
+  final double? _SECONDARY_HARD_BODY_RADIUS_M;
+  final bool? _HAS_SECONDARY_HARD_BODY_RADIUS_M;
+  final cqrHardBodyRadiusBasis? _PRIMARY_RADIUS_BASIS;
+  final cqrHardBodyRadiusBasis? _SECONDARY_RADIUS_BASIS;
+  final cqrCovarianceBasis? _PRIMARY_COVARIANCE_BASIS;
+  final cqrCovarianceBasis? _SECONDARY_COVARIANCE_BASIS;
+  final cqrVolumeGeometry? _SCREENING;
+  final cqrVolumeAnchor? _ADMITTED_BY;
+
+  CQREventObjectBuilder({
+    String? PRIMARY_ID,
+    String? primaryId,
+    String? SECONDARY_ID,
+    String? secondaryId,
+    String? PRIMARY_NAME,
+    String? primaryName,
+    String? SECONDARY_NAME,
+    String? secondaryName,
+    int? PRIMARY_NORAD_ID,
+    int? primaryNoradId,
+    int? SECONDARY_NORAD_ID,
+    int? secondaryNoradId,
+    TIMInstantObjectBuilder? TCA,
+    double? MISS_DISTANCE_M,
+    double? missDistanceM,
+    double? RELATIVE_SPEED_M_S,
+    double? relativeSpeedMS,
+    CQRProbabilityResultObjectBuilder? PROBABILITY,
+    double? DILUTION_THRESHOLD_M,
+    double? dilutionThresholdM,
+    bool? HAS_DILUTION_THRESHOLD_M,
+    bool? hasDilutionThresholdM,
+    FRMVector3ObjectBuilder? RELATIVE_POSITION_RTN,
+    FRMVector3ObjectBuilder? relativePositionRtn,
+    FRMVector3ObjectBuilder? RELATIVE_VELOCITY_RTN,
+    FRMVector3ObjectBuilder? relativeVelocityRtn,
+    FRMVector3ObjectBuilder? PRIMARY_SIGMA_RTN_M,
+    FRMVector3ObjectBuilder? primarySigmaRtnM,
+    FRMVector3ObjectBuilder? SECONDARY_SIGMA_RTN_M,
+    FRMVector3ObjectBuilder? secondarySigmaRtnM,
+    double? PRIMARY_DAYS_SINCE_EPOCH,
+    double? primaryDaysSinceEpoch,
+    bool? HAS_PRIMARY_DAYS_SINCE_EPOCH,
+    bool? hasPrimaryDaysSinceEpoch,
+    double? SECONDARY_DAYS_SINCE_EPOCH,
+    double? secondaryDaysSinceEpoch,
+    bool? HAS_SECONDARY_DAYS_SINCE_EPOCH,
+    bool? hasSecondaryDaysSinceEpoch,
+    CDMObjectBuilder? CONJUNCTION_MESSAGE,
+    CDMObjectBuilder? conjunctionMessage,
+    PRWResidentStateObjectBuilder? PRIMARY_STATE,
+    PRWResidentStateObjectBuilder? primaryState,
+    PRWResidentStateObjectBuilder? SECONDARY_STATE,
+    PRWResidentStateObjectBuilder? secondaryState,
+    double? MAHALANOBIS_3D_SQUARED,
+    double? mahalanobis3dSquared,
+    bool? HAS_MAHALANOBIS_3D_SQUARED,
+    bool? hasMahalanobis3dSquared,
+    double? COMBINED_RADIUS_M,
+    double? combinedRadiusM,
+    bool? HAS_COMBINED_RADIUS_M,
+    bool? hasCombinedRadiusM,
+    double? PRIMARY_HARD_BODY_RADIUS_M,
+    double? primaryHardBodyRadiusM,
+    bool? HAS_PRIMARY_HARD_BODY_RADIUS_M,
+    bool? hasPrimaryHardBodyRadiusM,
+    double? SECONDARY_HARD_BODY_RADIUS_M,
+    double? secondaryHardBodyRadiusM,
+    bool? HAS_SECONDARY_HARD_BODY_RADIUS_M,
+    bool? hasSecondaryHardBodyRadiusM,
+    cqrHardBodyRadiusBasis? PRIMARY_RADIUS_BASIS,
+    cqrHardBodyRadiusBasis? primaryRadiusBasis,
+    cqrHardBodyRadiusBasis? SECONDARY_RADIUS_BASIS,
+    cqrHardBodyRadiusBasis? secondaryRadiusBasis,
+    cqrCovarianceBasis? PRIMARY_COVARIANCE_BASIS,
+    cqrCovarianceBasis? primaryCovarianceBasis,
+    cqrCovarianceBasis? SECONDARY_COVARIANCE_BASIS,
+    cqrCovarianceBasis? secondaryCovarianceBasis,
+    cqrVolumeGeometry? SCREENING,
+    cqrVolumeAnchor? ADMITTED_BY,
+    cqrVolumeAnchor? admittedBy,
+  })
+      : _PRIMARY_ID = primaryId ?? PRIMARY_ID,
+        _SECONDARY_ID = secondaryId ?? SECONDARY_ID,
+        _PRIMARY_NAME = primaryName ?? PRIMARY_NAME,
+        _SECONDARY_NAME = secondaryName ?? SECONDARY_NAME,
+        _PRIMARY_NORAD_ID = primaryNoradId ?? PRIMARY_NORAD_ID,
+        _SECONDARY_NORAD_ID = secondaryNoradId ?? SECONDARY_NORAD_ID,
+        _TCA = TCA,
+        _MISS_DISTANCE_M = missDistanceM ?? MISS_DISTANCE_M,
+        _RELATIVE_SPEED_M_S = relativeSpeedMS ?? RELATIVE_SPEED_M_S,
+        _PROBABILITY = PROBABILITY,
+        _DILUTION_THRESHOLD_M = dilutionThresholdM ?? DILUTION_THRESHOLD_M,
+        _HAS_DILUTION_THRESHOLD_M = hasDilutionThresholdM ?? HAS_DILUTION_THRESHOLD_M,
+        _RELATIVE_POSITION_RTN = relativePositionRtn ?? RELATIVE_POSITION_RTN,
+        _RELATIVE_VELOCITY_RTN = relativeVelocityRtn ?? RELATIVE_VELOCITY_RTN,
+        _PRIMARY_SIGMA_RTN_M = primarySigmaRtnM ?? PRIMARY_SIGMA_RTN_M,
+        _SECONDARY_SIGMA_RTN_M = secondarySigmaRtnM ?? SECONDARY_SIGMA_RTN_M,
+        _PRIMARY_DAYS_SINCE_EPOCH = primaryDaysSinceEpoch ?? PRIMARY_DAYS_SINCE_EPOCH,
+        _HAS_PRIMARY_DAYS_SINCE_EPOCH = hasPrimaryDaysSinceEpoch ?? HAS_PRIMARY_DAYS_SINCE_EPOCH,
+        _SECONDARY_DAYS_SINCE_EPOCH = secondaryDaysSinceEpoch ?? SECONDARY_DAYS_SINCE_EPOCH,
+        _HAS_SECONDARY_DAYS_SINCE_EPOCH = hasSecondaryDaysSinceEpoch ?? HAS_SECONDARY_DAYS_SINCE_EPOCH,
+        _CONJUNCTION_MESSAGE = conjunctionMessage ?? CONJUNCTION_MESSAGE,
+        _PRIMARY_STATE = primaryState ?? PRIMARY_STATE,
+        _SECONDARY_STATE = secondaryState ?? SECONDARY_STATE,
+        _MAHALANOBIS_3D_SQUARED = mahalanobis3dSquared ?? MAHALANOBIS_3D_SQUARED,
+        _HAS_MAHALANOBIS_3D_SQUARED = hasMahalanobis3dSquared ?? HAS_MAHALANOBIS_3D_SQUARED,
+        _COMBINED_RADIUS_M = combinedRadiusM ?? COMBINED_RADIUS_M,
+        _HAS_COMBINED_RADIUS_M = hasCombinedRadiusM ?? HAS_COMBINED_RADIUS_M,
+        _PRIMARY_HARD_BODY_RADIUS_M = primaryHardBodyRadiusM ?? PRIMARY_HARD_BODY_RADIUS_M,
+        _HAS_PRIMARY_HARD_BODY_RADIUS_M = hasPrimaryHardBodyRadiusM ?? HAS_PRIMARY_HARD_BODY_RADIUS_M,
+        _SECONDARY_HARD_BODY_RADIUS_M = secondaryHardBodyRadiusM ?? SECONDARY_HARD_BODY_RADIUS_M,
+        _HAS_SECONDARY_HARD_BODY_RADIUS_M = hasSecondaryHardBodyRadiusM ?? HAS_SECONDARY_HARD_BODY_RADIUS_M,
+        _PRIMARY_RADIUS_BASIS = primaryRadiusBasis ?? PRIMARY_RADIUS_BASIS,
+        _SECONDARY_RADIUS_BASIS = secondaryRadiusBasis ?? SECONDARY_RADIUS_BASIS,
+        _PRIMARY_COVARIANCE_BASIS = primaryCovarianceBasis ?? PRIMARY_COVARIANCE_BASIS,
+        _SECONDARY_COVARIANCE_BASIS = secondaryCovarianceBasis ?? SECONDARY_COVARIANCE_BASIS,
+        _SCREENING = SCREENING,
+        _ADMITTED_BY = admittedBy ?? ADMITTED_BY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PRIMARY_IDOffset = _PRIMARY_ID == null ? null
+        : fbBuilder.writeString(_PRIMARY_ID!);
+    final int? SECONDARY_IDOffset = _SECONDARY_ID == null ? null
+        : fbBuilder.writeString(_SECONDARY_ID!);
+    final int? PRIMARY_NAMEOffset = _PRIMARY_NAME == null ? null
+        : fbBuilder.writeString(_PRIMARY_NAME!);
+    final int? SECONDARY_NAMEOffset = _SECONDARY_NAME == null ? null
+        : fbBuilder.writeString(_SECONDARY_NAME!);
+    final int? TCAOffset = _TCA?.getOrCreateOffset(fbBuilder);
+    final int? PROBABILITYOffset = _PROBABILITY?.getOrCreateOffset(fbBuilder);
+    final int? RELATIVE_POSITION_RTNOffset = _RELATIVE_POSITION_RTN?.getOrCreateOffset(fbBuilder);
+    final int? RELATIVE_VELOCITY_RTNOffset = _RELATIVE_VELOCITY_RTN?.getOrCreateOffset(fbBuilder);
+    final int? PRIMARY_SIGMA_RTN_MOffset = _PRIMARY_SIGMA_RTN_M?.getOrCreateOffset(fbBuilder);
+    final int? SECONDARY_SIGMA_RTN_MOffset = _SECONDARY_SIGMA_RTN_M?.getOrCreateOffset(fbBuilder);
+    final int? CONJUNCTION_MESSAGEOffset = _CONJUNCTION_MESSAGE?.getOrCreateOffset(fbBuilder);
+    final int? PRIMARY_STATEOffset = _PRIMARY_STATE?.getOrCreateOffset(fbBuilder);
+    final int? SECONDARY_STATEOffset = _SECONDARY_STATE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(37);
+    fbBuilder.addOffset(0, PRIMARY_IDOffset);
+    fbBuilder.addOffset(1, SECONDARY_IDOffset);
+    fbBuilder.addOffset(2, PRIMARY_NAMEOffset);
+    fbBuilder.addOffset(3, SECONDARY_NAMEOffset);
+    fbBuilder.addUint32(4, _PRIMARY_NORAD_ID);
+    fbBuilder.addUint32(5, _SECONDARY_NORAD_ID);
+    fbBuilder.addOffset(6, TCAOffset);
+    fbBuilder.addFloat64(7, _MISS_DISTANCE_M);
+    fbBuilder.addFloat64(8, _RELATIVE_SPEED_M_S);
+    fbBuilder.addOffset(9, PROBABILITYOffset);
+    fbBuilder.addFloat64(10, _DILUTION_THRESHOLD_M);
+    fbBuilder.addBool(11, _HAS_DILUTION_THRESHOLD_M);
+    fbBuilder.addOffset(12, RELATIVE_POSITION_RTNOffset);
+    fbBuilder.addOffset(13, RELATIVE_VELOCITY_RTNOffset);
+    fbBuilder.addOffset(14, PRIMARY_SIGMA_RTN_MOffset);
+    fbBuilder.addOffset(15, SECONDARY_SIGMA_RTN_MOffset);
+    fbBuilder.addFloat64(16, _PRIMARY_DAYS_SINCE_EPOCH);
+    fbBuilder.addBool(17, _HAS_PRIMARY_DAYS_SINCE_EPOCH);
+    fbBuilder.addFloat64(18, _SECONDARY_DAYS_SINCE_EPOCH);
+    fbBuilder.addBool(19, _HAS_SECONDARY_DAYS_SINCE_EPOCH);
+    fbBuilder.addOffset(20, CONJUNCTION_MESSAGEOffset);
+    fbBuilder.addOffset(21, PRIMARY_STATEOffset);
+    fbBuilder.addOffset(22, SECONDARY_STATEOffset);
+    fbBuilder.addFloat64(23, _MAHALANOBIS_3D_SQUARED);
+    fbBuilder.addBool(24, _HAS_MAHALANOBIS_3D_SQUARED);
+    fbBuilder.addFloat64(25, _COMBINED_RADIUS_M);
+    fbBuilder.addBool(26, _HAS_COMBINED_RADIUS_M);
+    fbBuilder.addFloat64(27, _PRIMARY_HARD_BODY_RADIUS_M);
+    fbBuilder.addBool(28, _HAS_PRIMARY_HARD_BODY_RADIUS_M);
+    fbBuilder.addFloat64(29, _SECONDARY_HARD_BODY_RADIUS_M);
+    fbBuilder.addBool(30, _HAS_SECONDARY_HARD_BODY_RADIUS_M);
+    fbBuilder.addUint8(31, _PRIMARY_RADIUS_BASIS?.value);
+    fbBuilder.addUint8(32, _SECONDARY_RADIUS_BASIS?.value);
+    fbBuilder.addUint8(33, _PRIMARY_COVARIANCE_BASIS?.value);
+    fbBuilder.addUint8(34, _SECONDARY_COVARIANCE_BASIS?.value);
+    fbBuilder.addUint8(35, _SCREENING?.value);
+    fbBuilder.addUint8(36, _ADMITTED_BY?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRScreeningStatistics {
+  CQRScreeningStatistics._(this._bc, this._bcOffset);
+  factory CQRScreeningStatistics(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRScreeningStatistics> reader = _CQRScreeningStatisticsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get TOTAL_OBJECTS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get totalObjects => TOTAL_OBJECTS;
+  int get PAIRS_SCREENED => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get pairsScreened => PAIRS_SCREENED;
+  int get PAIRS_PREFILTERED => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get pairsPrefiltered => PAIRS_PREFILTERED;
+  int get KD_TREE_CANDIDATES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get kdTreeCandidates => KD_TREE_CANDIDATES;
+  int get TCA_REFINED => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get tcaRefined => TCA_REFINED;
+  int get CONJUNCTIONS_FOUND => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get conjunctionsFound => CONJUNCTIONS_FOUND;
+  int get PROPAGATIONS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get FAILED_PAIRS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get failedPairs => FAILED_PAIRS;
+
+  @override
+  String toString() {
+    return 'CQRScreeningStatistics{totalObjects: ${totalObjects}, pairsScreened: ${pairsScreened}, pairsPrefiltered: ${pairsPrefiltered}, kdTreeCandidates: ${kdTreeCandidates}, tcaRefined: ${tcaRefined}, conjunctionsFound: ${conjunctionsFound}, PROPAGATIONS: ${PROPAGATIONS}, failedPairs: ${failedPairs}}';
+  }
+}
+
+class _CQRScreeningStatisticsReader extends fb.TableReader<CQRScreeningStatistics> {
+  const _CQRScreeningStatisticsReader();
+
+  @override
+  CQRScreeningStatistics createObject(fb.BufferContext bc, int offset) =>
+    CQRScreeningStatistics._(bc, offset);
+}
+
+class CQRScreeningStatisticsBuilder {
+  CQRScreeningStatisticsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addTotalObjects(int? TOTAL_OBJECTS) {
+    fbBuilder.addUint64(0, TOTAL_OBJECTS);
+    return fbBuilder.offset;
+  }
+  int addPairsScreened(int? PAIRS_SCREENED) {
+    fbBuilder.addUint64(1, PAIRS_SCREENED);
+    return fbBuilder.offset;
+  }
+  int addPairsPrefiltered(int? PAIRS_PREFILTERED) {
+    fbBuilder.addUint64(2, PAIRS_PREFILTERED);
+    return fbBuilder.offset;
+  }
+  int addKdTreeCandidates(int? KD_TREE_CANDIDATES) {
+    fbBuilder.addUint64(3, KD_TREE_CANDIDATES);
+    return fbBuilder.offset;
+  }
+  int addTcaRefined(int? TCA_REFINED) {
+    fbBuilder.addUint64(4, TCA_REFINED);
+    return fbBuilder.offset;
+  }
+  int addConjunctionsFound(int? CONJUNCTIONS_FOUND) {
+    fbBuilder.addUint64(5, CONJUNCTIONS_FOUND);
+    return fbBuilder.offset;
+  }
+  int addPropagations(int? PROPAGATIONS) {
+    fbBuilder.addUint64(6, PROPAGATIONS);
+    return fbBuilder.offset;
+  }
+  int addFailedPairs(int? FAILED_PAIRS) {
+    fbBuilder.addUint64(7, FAILED_PAIRS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRScreeningStatisticsObjectBuilder extends fb.ObjectBuilder {
+  final int? _TOTAL_OBJECTS;
+  final int? _PAIRS_SCREENED;
+  final int? _PAIRS_PREFILTERED;
+  final int? _KD_TREE_CANDIDATES;
+  final int? _TCA_REFINED;
+  final int? _CONJUNCTIONS_FOUND;
+  final int? _PROPAGATIONS;
+  final int? _FAILED_PAIRS;
+
+  CQRScreeningStatisticsObjectBuilder({
+    int? TOTAL_OBJECTS,
+    int? totalObjects,
+    int? PAIRS_SCREENED,
+    int? pairsScreened,
+    int? PAIRS_PREFILTERED,
+    int? pairsPrefiltered,
+    int? KD_TREE_CANDIDATES,
+    int? kdTreeCandidates,
+    int? TCA_REFINED,
+    int? tcaRefined,
+    int? CONJUNCTIONS_FOUND,
+    int? conjunctionsFound,
+    int? PROPAGATIONS,
+    int? FAILED_PAIRS,
+    int? failedPairs,
+  })
+      : _TOTAL_OBJECTS = totalObjects ?? TOTAL_OBJECTS,
+        _PAIRS_SCREENED = pairsScreened ?? PAIRS_SCREENED,
+        _PAIRS_PREFILTERED = pairsPrefiltered ?? PAIRS_PREFILTERED,
+        _KD_TREE_CANDIDATES = kdTreeCandidates ?? KD_TREE_CANDIDATES,
+        _TCA_REFINED = tcaRefined ?? TCA_REFINED,
+        _CONJUNCTIONS_FOUND = conjunctionsFound ?? CONJUNCTIONS_FOUND,
+        _PROPAGATIONS = PROPAGATIONS,
+        _FAILED_PAIRS = failedPairs ?? FAILED_PAIRS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(8);
+    fbBuilder.addUint64(0, _TOTAL_OBJECTS);
+    fbBuilder.addUint64(1, _PAIRS_SCREENED);
+    fbBuilder.addUint64(2, _PAIRS_PREFILTERED);
+    fbBuilder.addUint64(3, _KD_TREE_CANDIDATES);
+    fbBuilder.addUint64(4, _TCA_REFINED);
+    fbBuilder.addUint64(5, _CONJUNCTIONS_FOUND);
+    fbBuilder.addUint64(6, _PROPAGATIONS);
+    fbBuilder.addUint64(7, _FAILED_PAIRS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Stable order by TCA then primary/secondary identity; ties retain original
+///  input-pair order. EVENT_OFFSET indexes this order across bounded chunks.
+///  PIV output cap, YIELDED and BACKLOG_REMAINING carry stream backpressure.
+class CQRCatalogResult {
+  CQRCatalogResult._(this._bc, this._bcOffset);
+  factory CQRCatalogResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRCatalogResult> reader = _CQRCatalogResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get OBJECTS_PARSED => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get objectsParsed => OBJECTS_PARSED;
+  int get CONJUNCTIONS_FOUND => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get conjunctionsFound => CONJUNCTIONS_FOUND;
+  List<CQREvent>? get EVENTS => const fb.ListReader<CQREvent>(CQREvent.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  CQRScreeningStatistics? get STATISTICS => CQRScreeningStatistics.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  int get EVENT_OFFSET => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get eventOffset => EVENT_OFFSET;
+  bool get FINAL_CHUNK => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, true);
+  bool get finalChunk => FINAL_CHUNK;
+
+  @override
+  String toString() {
+    return 'CQRCatalogResult{objectsParsed: ${objectsParsed}, conjunctionsFound: ${conjunctionsFound}, EVENTS: ${EVENTS}, STATISTICS: ${STATISTICS}, eventOffset: ${eventOffset}, finalChunk: ${finalChunk}}';
+  }
+}
+
+class _CQRCatalogResultReader extends fb.TableReader<CQRCatalogResult> {
+  const _CQRCatalogResultReader();
+
+  @override
+  CQRCatalogResult createObject(fb.BufferContext bc, int offset) =>
+    CQRCatalogResult._(bc, offset);
+}
+
+class CQRCatalogResultBuilder {
+  CQRCatalogResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addObjectsParsed(int? OBJECTS_PARSED) {
+    fbBuilder.addUint64(0, OBJECTS_PARSED);
+    return fbBuilder.offset;
+  }
+  int addConjunctionsFound(int? CONJUNCTIONS_FOUND) {
+    fbBuilder.addUint64(1, CONJUNCTIONS_FOUND);
+    return fbBuilder.offset;
+  }
+  int addEventsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addStatisticsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addEventOffset(int? EVENT_OFFSET) {
+    fbBuilder.addUint64(4, EVENT_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addFinalChunk(bool? FINAL_CHUNK) {
+    fbBuilder.addBool(5, FINAL_CHUNK);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRCatalogResultObjectBuilder extends fb.ObjectBuilder {
+  final int? _OBJECTS_PARSED;
+  final int? _CONJUNCTIONS_FOUND;
+  final List<CQREventObjectBuilder>? _EVENTS;
+  final CQRScreeningStatisticsObjectBuilder? _STATISTICS;
+  final int? _EVENT_OFFSET;
+  final bool? _FINAL_CHUNK;
+
+  CQRCatalogResultObjectBuilder({
+    int? OBJECTS_PARSED,
+    int? objectsParsed,
+    int? CONJUNCTIONS_FOUND,
+    int? conjunctionsFound,
+    List<CQREventObjectBuilder>? EVENTS,
+    CQRScreeningStatisticsObjectBuilder? STATISTICS,
+    int? EVENT_OFFSET,
+    int? eventOffset,
+    bool? FINAL_CHUNK,
+    bool? finalChunk,
+  })
+      : _OBJECTS_PARSED = objectsParsed ?? OBJECTS_PARSED,
+        _CONJUNCTIONS_FOUND = conjunctionsFound ?? CONJUNCTIONS_FOUND,
+        _EVENTS = EVENTS,
+        _STATISTICS = STATISTICS,
+        _EVENT_OFFSET = eventOffset ?? EVENT_OFFSET,
+        _FINAL_CHUNK = finalChunk ?? FINAL_CHUNK;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EVENTSOffset = _EVENTS == null ? null
+        : fbBuilder.writeList(_EVENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? STATISTICSOffset = _STATISTICS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addUint64(0, _OBJECTS_PARSED);
+    fbBuilder.addUint64(1, _CONJUNCTIONS_FOUND);
+    fbBuilder.addOffset(2, EVENTSOffset);
+    fbBuilder.addOffset(3, STATISTICSOffset);
+    fbBuilder.addUint64(4, _EVENT_OFFSET);
+    fbBuilder.addBool(5, _FINAL_CHUNK);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Resident index construction reuses canonical sources, samples and PPE.
+///  SAMPLED_STATES consumes sampled OEM records in SOURCES[].EPHEMERIS;
+///  POLYNOMIAL_SEGMENTS consumes SEGMENTS/PPE. Handles are validated against
+///  INSTANCE identity/generation; they are never persisted process addresses.
+class CQRIndexRequest {
+  CQRIndexRequest._(this._bc, this._bcOffset);
+  factory CQRIndexRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRIndexRequest> reader = _CQRIndexRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get CATALOG_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get catalogHandle => CATALOG_HANDLE;
+  List<int>? get SOURCE_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<int>? get sourceHandles => SOURCE_HANDLES;
+  int get SEGMENT_SET_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get segmentSetHandle => SEGMENT_SET_HANDLE;
+  List<int>? get PRIMARY_SOURCE_HANDLES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get primarySourceHandles => PRIMARY_SOURCE_HANDLES;
+  cqrIndexRepresentation get INDEX_CONTENT => cqrIndexRepresentation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  cqrIndexRepresentation get indexContent => INDEX_CONTENT;
+  cqrRefinementStrategy get REFINEMENT_MODE => cqrRefinementStrategy.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  cqrRefinementStrategy get refinementMode => REFINEMENT_MODE;
+  List<CQRObjectSource>? get SOURCES => const fb.ListReader<CQRObjectSource>(CQRObjectSource.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  PRWDescribeResult? get SEGMENTS => PRWDescribeResult.reader.vTableGetNullable(_bc, _bcOffset, 20);
+
+  @override
+  String toString() {
+    return 'CQRIndexRequest{INSTANCE: ${INSTANCE}, catalogHandle: ${catalogHandle}, sourceHandles: ${sourceHandles}, segmentSetHandle: ${segmentSetHandle}, primarySourceHandles: ${primarySourceHandles}, indexContent: ${indexContent}, refinementMode: ${refinementMode}, SOURCES: ${SOURCES}, SEGMENTS: ${SEGMENTS}}';
+  }
+}
+
+class _CQRIndexRequestReader extends fb.TableReader<CQRIndexRequest> {
+  const _CQRIndexRequestReader();
+
+  @override
+  CQRIndexRequest createObject(fb.BufferContext bc, int offset) =>
+    CQRIndexRequest._(bc, offset);
+}
+
+class CQRIndexRequestBuilder {
+  CQRIndexRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
     fbBuilder.startTable(9);
-    fbBuilder.addOffset(0, OBJECT_1Offset);
-    fbBuilder.addFloat64(1, _DSE_1);
-    fbBuilder.addOffset(2, OBJECT_2Offset);
-    fbBuilder.addFloat64(3, _DSE_2);
-    fbBuilder.addFloat64(4, _TCA);
-    fbBuilder.addFloat64(5, _TCA_RANGE);
-    fbBuilder.addFloat64(6, _TCA_RELATIVE_SPEED);
-    fbBuilder.addFloat64(7, _MAX_PROB);
-    fbBuilder.addFloat64(8, _DILUTION);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogHandle(int? CATALOG_HANDLE) {
+    fbBuilder.addUint32(1, CATALOG_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addSourceHandlesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentSetHandle(int? SEGMENT_SET_HANDLE) {
+    fbBuilder.addUint32(3, SEGMENT_SET_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addPrimarySourceHandlesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addIndexContent(cqrIndexRepresentation? INDEX_CONTENT) {
+    fbBuilder.addUint8(5, INDEX_CONTENT?.value);
+    return fbBuilder.offset;
+  }
+  int addRefinementMode(cqrRefinementStrategy? REFINEMENT_MODE) {
+    fbBuilder.addUint8(6, REFINEMENT_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addSourcesOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRIndexRequestObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _CATALOG_HANDLE;
+  final List<int>? _SOURCE_HANDLES;
+  final int? _SEGMENT_SET_HANDLE;
+  final List<int>? _PRIMARY_SOURCE_HANDLES;
+  final cqrIndexRepresentation? _INDEX_CONTENT;
+  final cqrRefinementStrategy? _REFINEMENT_MODE;
+  final List<CQRObjectSourceObjectBuilder>? _SOURCES;
+  final PRWDescribeResultObjectBuilder? _SEGMENTS;
+
+  CQRIndexRequestObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? CATALOG_HANDLE,
+    int? catalogHandle,
+    List<int>? SOURCE_HANDLES,
+    List<int>? sourceHandles,
+    int? SEGMENT_SET_HANDLE,
+    int? segmentSetHandle,
+    List<int>? PRIMARY_SOURCE_HANDLES,
+    List<int>? primarySourceHandles,
+    cqrIndexRepresentation? INDEX_CONTENT,
+    cqrIndexRepresentation? indexContent,
+    cqrRefinementStrategy? REFINEMENT_MODE,
+    cqrRefinementStrategy? refinementMode,
+    List<CQRObjectSourceObjectBuilder>? SOURCES,
+    PRWDescribeResultObjectBuilder? SEGMENTS,
+  })
+      : _INSTANCE = INSTANCE,
+        _CATALOG_HANDLE = catalogHandle ?? CATALOG_HANDLE,
+        _SOURCE_HANDLES = sourceHandles ?? SOURCE_HANDLES,
+        _SEGMENT_SET_HANDLE = segmentSetHandle ?? SEGMENT_SET_HANDLE,
+        _PRIMARY_SOURCE_HANDLES = primarySourceHandles ?? PRIMARY_SOURCE_HANDLES,
+        _INDEX_CONTENT = indexContent ?? INDEX_CONTENT,
+        _REFINEMENT_MODE = refinementMode ?? REFINEMENT_MODE,
+        _SOURCES = SOURCES,
+        _SEGMENTS = SEGMENTS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? SOURCE_HANDLESOffset = _SOURCE_HANDLES == null ? null
+        : fbBuilder.writeListUint32(_SOURCE_HANDLES!);
+    final int? PRIMARY_SOURCE_HANDLESOffset = _PRIMARY_SOURCE_HANDLES == null ? null
+        : fbBuilder.writeListUint32(_PRIMARY_SOURCE_HANDLES!);
+    final int? SOURCESOffset = _SOURCES == null ? null
+        : fbBuilder.writeList(_SOURCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SEGMENTSOffset = _SEGMENTS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _CATALOG_HANDLE);
+    fbBuilder.addOffset(2, SOURCE_HANDLESOffset);
+    fbBuilder.addUint32(3, _SEGMENT_SET_HANDLE);
+    fbBuilder.addOffset(4, PRIMARY_SOURCE_HANDLESOffset);
+    fbBuilder.addUint8(5, _INDEX_CONTENT?.value);
+    fbBuilder.addUint8(6, _REFINEMENT_MODE?.value);
+    fbBuilder.addOffset(7, SOURCESOffset);
+    fbBuilder.addOffset(8, SEGMENTSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRIndexResult {
+  CQRIndexResult._(this._bc, this._bcOffset);
+  factory CQRIndexResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRIndexResult> reader = _CQRIndexResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get SCREENING_INDEX_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get screeningIndexHandle => SCREENING_INDEX_HANDLE;
+  int get SOURCE_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get sourceCount => SOURCE_COUNT;
+  int get CANDIDATE_PAIR_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get candidatePairCount => CANDIDATE_PAIR_COUNT;
+
+  @override
+  String toString() {
+    return 'CQRIndexResult{INSTANCE: ${INSTANCE}, screeningIndexHandle: ${screeningIndexHandle}, sourceCount: ${sourceCount}, candidatePairCount: ${candidatePairCount}}';
+  }
+}
+
+class _CQRIndexResultReader extends fb.TableReader<CQRIndexResult> {
+  const _CQRIndexResultReader();
+
+  @override
+  CQRIndexResult createObject(fb.BufferContext bc, int offset) =>
+    CQRIndexResult._(bc, offset);
+}
+
+class CQRIndexResultBuilder {
+  CQRIndexResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addScreeningIndexHandle(int? SCREENING_INDEX_HANDLE) {
+    fbBuilder.addUint32(1, SCREENING_INDEX_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addSourceCount(int? SOURCE_COUNT) {
+    fbBuilder.addUint64(2, SOURCE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addCandidatePairCount(int? CANDIDATE_PAIR_COUNT) {
+    fbBuilder.addUint64(3, CANDIDATE_PAIR_COUNT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRIndexResultObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _SCREENING_INDEX_HANDLE;
+  final int? _SOURCE_COUNT;
+  final int? _CANDIDATE_PAIR_COUNT;
+
+  CQRIndexResultObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? SCREENING_INDEX_HANDLE,
+    int? screeningIndexHandle,
+    int? SOURCE_COUNT,
+    int? sourceCount,
+    int? CANDIDATE_PAIR_COUNT,
+    int? candidatePairCount,
+  })
+      : _INSTANCE = INSTANCE,
+        _SCREENING_INDEX_HANDLE = screeningIndexHandle ?? SCREENING_INDEX_HANDLE,
+        _SOURCE_COUNT = sourceCount ?? SOURCE_COUNT,
+        _CANDIDATE_PAIR_COUNT = candidatePairCount ?? CANDIDATE_PAIR_COUNT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _SCREENING_INDEX_HANDLE);
+    fbBuilder.addUint64(2, _SOURCE_COUNT);
+    fbBuilder.addUint64(3, _CANDIDATE_PAIR_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRWindowRequest {
+  CQRWindowRequest._(this._bc, this._bcOffset);
+  factory CQRWindowRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRWindowRequest> reader = _CQRWindowRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get SCREENING_INDEX_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get screeningIndexHandle => SCREENING_INDEX_HANDLE;
+  CQRScreeningControls? get CONTROLS => CQRScreeningControls.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  RFMCoordinateSystem? get EVALUATION_FRAME => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  RFMCoordinateSystem? get evaluationFrame => EVALUATION_FRAME;
+
+  @override
+  String toString() {
+    return 'CQRWindowRequest{INSTANCE: ${INSTANCE}, screeningIndexHandle: ${screeningIndexHandle}, CONTROLS: ${CONTROLS}, evaluationFrame: ${evaluationFrame}}';
+  }
+}
+
+class _CQRWindowRequestReader extends fb.TableReader<CQRWindowRequest> {
+  const _CQRWindowRequestReader();
+
+  @override
+  CQRWindowRequest createObject(fb.BufferContext bc, int offset) =>
+    CQRWindowRequest._(bc, offset);
+}
+
+class CQRWindowRequestBuilder {
+  CQRWindowRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addScreeningIndexHandle(int? SCREENING_INDEX_HANDLE) {
+    fbBuilder.addUint32(1, SCREENING_INDEX_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addControlsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEvaluationFrameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRWindowRequestObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _SCREENING_INDEX_HANDLE;
+  final CQRScreeningControlsObjectBuilder? _CONTROLS;
+  final RFMCoordinateSystemObjectBuilder? _EVALUATION_FRAME;
+
+  CQRWindowRequestObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? SCREENING_INDEX_HANDLE,
+    int? screeningIndexHandle,
+    CQRScreeningControlsObjectBuilder? CONTROLS,
+    RFMCoordinateSystemObjectBuilder? EVALUATION_FRAME,
+    RFMCoordinateSystemObjectBuilder? evaluationFrame,
+  })
+      : _INSTANCE = INSTANCE,
+        _SCREENING_INDEX_HANDLE = screeningIndexHandle ?? SCREENING_INDEX_HANDLE,
+        _CONTROLS = CONTROLS,
+        _EVALUATION_FRAME = evaluationFrame ?? EVALUATION_FRAME;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    final int? CONTROLSOffset = _CONTROLS?.getOrCreateOffset(fbBuilder);
+    final int? EVALUATION_FRAMEOffset = _EVALUATION_FRAME?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _SCREENING_INDEX_HANDLE);
+    fbBuilder.addOffset(2, CONTROLSOffset);
+    fbBuilder.addOffset(3, EVALUATION_FRAMEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRDestroyRequest {
+  CQRDestroyRequest._(this._bc, this._bcOffset);
+  factory CQRDestroyRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRDestroyRequest> reader = _CQRDestroyRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PRWInstance? get INSTANCE => PRWInstance.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  int get SCREENING_INDEX_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get screeningIndexHandle => SCREENING_INDEX_HANDLE;
+
+  @override
+  String toString() {
+    return 'CQRDestroyRequest{INSTANCE: ${INSTANCE}, screeningIndexHandle: ${screeningIndexHandle}}';
+  }
+}
+
+class _CQRDestroyRequestReader extends fb.TableReader<CQRDestroyRequest> {
+  const _CQRDestroyRequestReader();
+
+  @override
+  CQRDestroyRequest createObject(fb.BufferContext bc, int offset) =>
+    CQRDestroyRequest._(bc, offset);
+}
+
+class CQRDestroyRequestBuilder {
+  CQRDestroyRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addInstanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addScreeningIndexHandle(int? SCREENING_INDEX_HANDLE) {
+    fbBuilder.addUint32(1, SCREENING_INDEX_HANDLE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRDestroyRequestObjectBuilder extends fb.ObjectBuilder {
+  final PRWInstanceObjectBuilder? _INSTANCE;
+  final int? _SCREENING_INDEX_HANDLE;
+
+  CQRDestroyRequestObjectBuilder({
+    PRWInstanceObjectBuilder? INSTANCE,
+    int? SCREENING_INDEX_HANDLE,
+    int? screeningIndexHandle,
+  })
+      : _INSTANCE = INSTANCE,
+        _SCREENING_INDEX_HANDLE = screeningIndexHandle ?? SCREENING_INDEX_HANDLE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INSTANCEOffset = _INSTANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, INSTANCEOffset);
+    fbBuilder.addUint32(1, _SCREENING_INDEX_HANDLE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRVersionResult {
+  CQRVersionResult._(this._bc, this._bcOffset);
+  factory CQRVersionResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRVersionResult> reader = _CQRVersionResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'CQRVersionResult{VERSION: ${VERSION}}';
+  }
+}
+
+class _CQRVersionResultReader extends fb.TableReader<CQRVersionResult> {
+  const _CQRVersionResultReader();
+
+  @override
+  CQRVersionResult createObject(fb.BufferContext bc, int offset) =>
+    CQRVersionResult._(bc, offset);
+}
+
+class CQRVersionResultBuilder {
+  CQRVersionResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addVersionOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRVersionResultObjectBuilder extends fb.ObjectBuilder {
+  final String? _VERSION;
+
+  CQRVersionResultObjectBuilder({
+    String? VERSION,
+  })
+      : _VERSION = VERSION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? VERSIONOffset = _VERSION == null ? null
+        : fbBuilder.writeString(_VERSION!);
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, VERSIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Screening criterion for one object class. Exactly one kind per entry;
+///  SCREENING selects which fields apply.
+class CQRLaunchCriterion {
+  CQRLaunchCriterion._(this._bc, this._bcOffset);
+  factory CQRLaunchCriterion(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRLaunchCriterion> reader = _CQRLaunchCriterionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  cqrLaunchObjectClass get OBJECT_CLASS => cqrLaunchObjectClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  cqrLaunchObjectClass get objectClass => OBJECT_CLASS;
+  cqrLaunchScreening get SCREENING => cqrLaunchScreening.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Sphere radius, metres (SPHERICAL).
+  double get RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get radiusM => RADIUS_M;
+  ///  Ellipsoid semi-axes, metres (ELLIPSOIDAL).
+  double get RADIAL_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get radialM => RADIAL_M;
+  double get IN_TRACK_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get inTrackM => IN_TRACK_M;
+  double get CROSS_TRACK_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get crossTrackM => CROSS_TRACK_M;
+  ///  Largest acceptable probability of collision (PROBABILITY).
+  double get MAX_PROBABILITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get maxProbability => MAX_PROBABILITY;
+  cqrProbabilityAlgorithm get ALGORITHM => cqrProbabilityAlgorithm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+
+  @override
+  String toString() {
+    return 'CQRLaunchCriterion{objectClass: ${objectClass}, SCREENING: ${SCREENING}, radiusM: ${radiusM}, radialM: ${radialM}, inTrackM: ${inTrackM}, crossTrackM: ${crossTrackM}, maxProbability: ${maxProbability}, ALGORITHM: ${ALGORITHM}}';
+  }
+}
+
+class _CQRLaunchCriterionReader extends fb.TableReader<CQRLaunchCriterion> {
+  const _CQRLaunchCriterionReader();
+
+  @override
+  CQRLaunchCriterion createObject(fb.BufferContext bc, int offset) =>
+    CQRLaunchCriterion._(bc, offset);
+}
+
+class CQRLaunchCriterionBuilder {
+  CQRLaunchCriterionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addObjectClass(cqrLaunchObjectClass? OBJECT_CLASS) {
+    fbBuilder.addUint8(0, OBJECT_CLASS?.value);
+    return fbBuilder.offset;
+  }
+  int addScreening(cqrLaunchScreening? SCREENING) {
+    fbBuilder.addUint8(1, SCREENING?.value);
+    return fbBuilder.offset;
+  }
+  int addRadiusM(double? RADIUS_M) {
+    fbBuilder.addFloat64(2, RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addRadialM(double? RADIAL_M) {
+    fbBuilder.addFloat64(3, RADIAL_M);
+    return fbBuilder.offset;
+  }
+  int addInTrackM(double? IN_TRACK_M) {
+    fbBuilder.addFloat64(4, IN_TRACK_M);
+    return fbBuilder.offset;
+  }
+  int addCrossTrackM(double? CROSS_TRACK_M) {
+    fbBuilder.addFloat64(5, CROSS_TRACK_M);
+    return fbBuilder.offset;
+  }
+  int addMaxProbability(double? MAX_PROBABILITY) {
+    fbBuilder.addFloat64(6, MAX_PROBABILITY);
+    return fbBuilder.offset;
+  }
+  int addAlgorithm(cqrProbabilityAlgorithm? ALGORITHM) {
+    fbBuilder.addUint8(7, ALGORITHM?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRLaunchCriterionObjectBuilder extends fb.ObjectBuilder {
+  final cqrLaunchObjectClass? _OBJECT_CLASS;
+  final cqrLaunchScreening? _SCREENING;
+  final double? _RADIUS_M;
+  final double? _RADIAL_M;
+  final double? _IN_TRACK_M;
+  final double? _CROSS_TRACK_M;
+  final double? _MAX_PROBABILITY;
+  final cqrProbabilityAlgorithm? _ALGORITHM;
+
+  CQRLaunchCriterionObjectBuilder({
+    cqrLaunchObjectClass? OBJECT_CLASS,
+    cqrLaunchObjectClass? objectClass,
+    cqrLaunchScreening? SCREENING,
+    double? RADIUS_M,
+    double? radiusM,
+    double? RADIAL_M,
+    double? radialM,
+    double? IN_TRACK_M,
+    double? inTrackM,
+    double? CROSS_TRACK_M,
+    double? crossTrackM,
+    double? MAX_PROBABILITY,
+    double? maxProbability,
+    cqrProbabilityAlgorithm? ALGORITHM,
+  })
+      : _OBJECT_CLASS = objectClass ?? OBJECT_CLASS,
+        _SCREENING = SCREENING,
+        _RADIUS_M = radiusM ?? RADIUS_M,
+        _RADIAL_M = radialM ?? RADIAL_M,
+        _IN_TRACK_M = inTrackM ?? IN_TRACK_M,
+        _CROSS_TRACK_M = crossTrackM ?? CROSS_TRACK_M,
+        _MAX_PROBABILITY = maxProbability ?? MAX_PROBABILITY,
+        _ALGORITHM = ALGORITHM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(8);
+    fbBuilder.addUint8(0, _OBJECT_CLASS?.value);
+    fbBuilder.addUint8(1, _SCREENING?.value);
+    fbBuilder.addFloat64(2, _RADIUS_M);
+    fbBuilder.addFloat64(3, _RADIAL_M);
+    fbBuilder.addFloat64(4, _IN_TRACK_M);
+    fbBuilder.addFloat64(5, _CROSS_TRACK_M);
+    fbBuilder.addFloat64(6, _MAX_PROBABILITY);
+    fbBuilder.addUint8(7, _ALGORITHM?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One launched object: its trajectory for a liftoff at NOMINAL_LIFTOFF.
+class CQRLaunchSegment {
+  CQRLaunchSegment._(this._bc, this._bcOffset);
+  factory CQRLaunchSegment(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRLaunchSegment> reader = _CQRLaunchSegmentReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get SEGMENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get segmentId => SEGMENT_ID;
+  String? get SEGMENT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get segmentName => SEGMENT_NAME;
+  ///  Sampled states in EVALUATION_FRAME, km and km/s as the OEM defines.
+  OEM? get TRAJECTORY => OEM.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Hard-body radius, metres.
+  double get RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 5.0);
+  double get radiusM => RADIUS_M;
+  ///  Radar cross section, square metres.
+  double get RADAR_CROSS_SECTION_M2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get radarCrossSectionM2 => RADAR_CROSS_SECTION_M2;
+  ///  True when RADAR_CROSS_SECTION_M2 carries a value; false means absent.
+  bool get HAS_RADAR_CROSS_SECTION_M2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get hasRadarCrossSectionM2 => HAS_RADAR_CROSS_SECTION_M2;
+  ///  Liftoff times this trajectory applies to, half-open [VALID_FROM,
+  ///  VALID_UNTIL). Absent bounds select the whole window. Windows whose
+  ///  trajectory changes (for example a varying azimuth) supply one segment
+  ///  per span.
+  TIMInstant? get VALID_FROM => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  TIMInstant? get validFrom => VALID_FROM;
+  TIMInstant? get VALID_UNTIL => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  TIMInstant? get validUntil => VALID_UNTIL;
+
+  @override
+  String toString() {
+    return 'CQRLaunchSegment{segmentId: ${segmentId}, segmentName: ${segmentName}, TRAJECTORY: ${TRAJECTORY}, radiusM: ${radiusM}, radarCrossSectionM2: ${radarCrossSectionM2}, hasRadarCrossSectionM2: ${hasRadarCrossSectionM2}, validFrom: ${validFrom}, validUntil: ${validUntil}}';
+  }
+}
+
+class _CQRLaunchSegmentReader extends fb.TableReader<CQRLaunchSegment> {
+  const _CQRLaunchSegmentReader();
+
+  @override
+  CQRLaunchSegment createObject(fb.BufferContext bc, int offset) =>
+    CQRLaunchSegment._(bc, offset);
+}
+
+class CQRLaunchSegmentBuilder {
+  CQRLaunchSegmentBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addSegmentIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajectoryOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRadiusM(double? RADIUS_M) {
+    fbBuilder.addFloat64(3, RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addRadarCrossSectionM2(double? RADAR_CROSS_SECTION_M2) {
+    fbBuilder.addFloat64(4, RADAR_CROSS_SECTION_M2);
+    return fbBuilder.offset;
+  }
+  int addHasRadarCrossSectionM2(bool? HAS_RADAR_CROSS_SECTION_M2) {
+    fbBuilder.addBool(5, HAS_RADAR_CROSS_SECTION_M2);
+    return fbBuilder.offset;
+  }
+  int addValidFromOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addValidUntilOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRLaunchSegmentObjectBuilder extends fb.ObjectBuilder {
+  final String? _SEGMENT_ID;
+  final String? _SEGMENT_NAME;
+  final OEMObjectBuilder? _TRAJECTORY;
+  final double? _RADIUS_M;
+  final double? _RADAR_CROSS_SECTION_M2;
+  final bool? _HAS_RADAR_CROSS_SECTION_M2;
+  final TIMInstantObjectBuilder? _VALID_FROM;
+  final TIMInstantObjectBuilder? _VALID_UNTIL;
+
+  CQRLaunchSegmentObjectBuilder({
+    String? SEGMENT_ID,
+    String? segmentId,
+    String? SEGMENT_NAME,
+    String? segmentName,
+    OEMObjectBuilder? TRAJECTORY,
+    double? RADIUS_M,
+    double? radiusM,
+    double? RADAR_CROSS_SECTION_M2,
+    double? radarCrossSectionM2,
+    bool? HAS_RADAR_CROSS_SECTION_M2,
+    bool? hasRadarCrossSectionM2,
+    TIMInstantObjectBuilder? VALID_FROM,
+    TIMInstantObjectBuilder? validFrom,
+    TIMInstantObjectBuilder? VALID_UNTIL,
+    TIMInstantObjectBuilder? validUntil,
+  })
+      : _SEGMENT_ID = segmentId ?? SEGMENT_ID,
+        _SEGMENT_NAME = segmentName ?? SEGMENT_NAME,
+        _TRAJECTORY = TRAJECTORY,
+        _RADIUS_M = radiusM ?? RADIUS_M,
+        _RADAR_CROSS_SECTION_M2 = radarCrossSectionM2 ?? RADAR_CROSS_SECTION_M2,
+        _HAS_RADAR_CROSS_SECTION_M2 = hasRadarCrossSectionM2 ?? HAS_RADAR_CROSS_SECTION_M2,
+        _VALID_FROM = validFrom ?? VALID_FROM,
+        _VALID_UNTIL = validUntil ?? VALID_UNTIL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SEGMENT_IDOffset = _SEGMENT_ID == null ? null
+        : fbBuilder.writeString(_SEGMENT_ID!);
+    final int? SEGMENT_NAMEOffset = _SEGMENT_NAME == null ? null
+        : fbBuilder.writeString(_SEGMENT_NAME!);
+    final int? TRAJECTORYOffset = _TRAJECTORY?.getOrCreateOffset(fbBuilder);
+    final int? VALID_FROMOffset = _VALID_FROM?.getOrCreateOffset(fbBuilder);
+    final int? VALID_UNTILOffset = _VALID_UNTIL?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, SEGMENT_IDOffset);
+    fbBuilder.addOffset(1, SEGMENT_NAMEOffset);
+    fbBuilder.addOffset(2, TRAJECTORYOffset);
+    fbBuilder.addFloat64(3, _RADIUS_M);
+    fbBuilder.addFloat64(4, _RADAR_CROSS_SECTION_M2);
+    fbBuilder.addBool(5, _HAS_RADAR_CROSS_SECTION_M2);
+    fbBuilder.addOffset(6, VALID_FROMOffset);
+    fbBuilder.addOffset(7, VALID_UNTILOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One orbiting object to screen against.
+class CQRLaunchObject {
+  CQRLaunchObject._(this._bc, this._bcOffset);
+  factory CQRLaunchObject(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRLaunchObject> reader = _CQRLaunchObjectReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Ephemeris in EVALUATION_FRAME covering the screened absolute times.
+  CQRObjectSource? get SOURCE => CQRObjectSource.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  cqrLaunchObjectClass get OBJECT_CLASS => cqrLaunchObjectClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  cqrLaunchObjectClass get objectClass => OBJECT_CLASS;
+  ///  A pre-coordinated rendezvous or close approach: reported, never a
+  ///  window closure.
+  bool get RENDEZVOUS_COORDINATED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get rendezvousCoordinated => RENDEZVOUS_COORDINATED;
+
+  @override
+  String toString() {
+    return 'CQRLaunchObject{SOURCE: ${SOURCE}, objectClass: ${objectClass}, rendezvousCoordinated: ${rendezvousCoordinated}}';
+  }
+}
+
+class _CQRLaunchObjectReader extends fb.TableReader<CQRLaunchObject> {
+  const _CQRLaunchObjectReader();
+
+  @override
+  CQRLaunchObject createObject(fb.BufferContext bc, int offset) =>
+    CQRLaunchObject._(bc, offset);
+}
+
+class CQRLaunchObjectBuilder {
+  CQRLaunchObjectBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectClass(cqrLaunchObjectClass? OBJECT_CLASS) {
+    fbBuilder.addUint8(1, OBJECT_CLASS?.value);
+    return fbBuilder.offset;
+  }
+  int addRendezvousCoordinated(bool? RENDEZVOUS_COORDINATED) {
+    fbBuilder.addBool(2, RENDEZVOUS_COORDINATED);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRLaunchObjectObjectBuilder extends fb.ObjectBuilder {
+  final CQRObjectSourceObjectBuilder? _SOURCE;
+  final cqrLaunchObjectClass? _OBJECT_CLASS;
+  final bool? _RENDEZVOUS_COORDINATED;
+
+  CQRLaunchObjectObjectBuilder({
+    CQRObjectSourceObjectBuilder? SOURCE,
+    cqrLaunchObjectClass? OBJECT_CLASS,
+    cqrLaunchObjectClass? objectClass,
+    bool? RENDEZVOUS_COORDINATED,
+    bool? rendezvousCoordinated,
+  })
+      : _SOURCE = SOURCE,
+        _OBJECT_CLASS = objectClass ?? OBJECT_CLASS,
+        _RENDEZVOUS_COORDINATED = rendezvousCoordinated ?? RENDEZVOUS_COORDINATED;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, SOURCEOffset);
+    fbBuilder.addUint8(1, _OBJECT_CLASS?.value);
+    fbBuilder.addBool(2, _RENDEZVOUS_COORDINATED);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRLaunchRequest {
+  CQRLaunchRequest._(this._bc, this._bcOffset);
+  factory CQRLaunchRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRLaunchRequest> reader = _CQRLaunchRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get MISSION_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get missionName => MISSION_NAME;
+  ///  Liftoff time the segment trajectories were produced for.
+  TIMInstant? get NOMINAL_LIFTOFF => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  TIMInstant? get nominalLiftoff => NOMINAL_LIFTOFF;
+  ///  Liftoff window, inclusive of both ends.
+  TIMInstant? get WINDOW_OPEN => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  TIMInstant? get windowOpen => WINDOW_OPEN;
+  TIMInstant? get WINDOW_CLOSE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  TIMInstant? get windowClose => WINDOW_CLOSE;
+  ///  Spacing of evaluated liftoff times, seconds.
+  double get LIFTOFF_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 1.0);
+  double get liftoffStepSeconds => LIFTOFF_STEP_SECONDS;
+  List<CQRLaunchSegment>? get SEGMENTS => const fb.ListReader<CQRLaunchSegment>(CQRLaunchSegment.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<CQRLaunchObject>? get OBJECTS => const fb.ListReader<CQRLaunchObject>(CQRLaunchObject.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  ///  One criterion per object class present in OBJECTS.
+  List<CQRLaunchCriterion>? get CRITERIA => const fb.ListReader<CQRLaunchCriterion>(CQRLaunchCriterion.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Segment states below this height above the reference ellipsoid are not
+  ///  screened, metres.
+  double get MINIMUM_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 150000.0);
+  double get minimumAltitudeM => MINIMUM_ALTITUDE_M;
+  ///  Screening ends this long after liftoff, seconds, or earlier where a
+  ///  trajectory ends.
+  double get SCREEN_SECONDS_AFTER_LIFTOFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 10800.0);
+  double get screenSecondsAfterLiftoff => SCREEN_SECONDS_AFTER_LIFTOFF;
+  ///  Time added before and after every closure for vehicle performance and
+  ///  timing uncertainty, seconds.
+  double get CLOSURE_PAD_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get closurePadSeconds => CLOSURE_PAD_SECONDS;
+  ///  Report approaches whose criterion ratio is below this value; 1 reports
+  ///  violations only.
+  double get REPORT_RATIO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 1.0);
+  double get reportRatio => REPORT_RATIO;
+  ///  Earth-fixed frame shared by every trajectory and ephemeris.
+  RFMCoordinateSystem? get EVALUATION_FRAME => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  RFMCoordinateSystem? get evaluationFrame => EVALUATION_FRAME;
+
+  @override
+  String toString() {
+    return 'CQRLaunchRequest{missionName: ${missionName}, nominalLiftoff: ${nominalLiftoff}, windowOpen: ${windowOpen}, windowClose: ${windowClose}, liftoffStepSeconds: ${liftoffStepSeconds}, SEGMENTS: ${SEGMENTS}, OBJECTS: ${OBJECTS}, CRITERIA: ${CRITERIA}, minimumAltitudeM: ${minimumAltitudeM}, screenSecondsAfterLiftoff: ${screenSecondsAfterLiftoff}, closurePadSeconds: ${closurePadSeconds}, reportRatio: ${reportRatio}, evaluationFrame: ${evaluationFrame}}';
+  }
+}
+
+class _CQRLaunchRequestReader extends fb.TableReader<CQRLaunchRequest> {
+  const _CQRLaunchRequestReader();
+
+  @override
+  CQRLaunchRequest createObject(fb.BufferContext bc, int offset) =>
+    CQRLaunchRequest._(bc, offset);
+}
+
+class CQRLaunchRequestBuilder {
+  CQRLaunchRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addMissionNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNominalLiftoffOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowOpenOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowCloseOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addLiftoffStepSeconds(double? LIFTOFF_STEP_SECONDS) {
+    fbBuilder.addFloat64(4, LIFTOFF_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addSegmentsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addCriteriaOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addMinimumAltitudeM(double? MINIMUM_ALTITUDE_M) {
+    fbBuilder.addFloat64(8, MINIMUM_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addScreenSecondsAfterLiftoff(double? SCREEN_SECONDS_AFTER_LIFTOFF) {
+    fbBuilder.addFloat64(9, SCREEN_SECONDS_AFTER_LIFTOFF);
+    return fbBuilder.offset;
+  }
+  int addClosurePadSeconds(double? CLOSURE_PAD_SECONDS) {
+    fbBuilder.addFloat64(10, CLOSURE_PAD_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addReportRatio(double? REPORT_RATIO) {
+    fbBuilder.addFloat64(11, REPORT_RATIO);
+    return fbBuilder.offset;
+  }
+  int addEvaluationFrameOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRLaunchRequestObjectBuilder extends fb.ObjectBuilder {
+  final String? _MISSION_NAME;
+  final TIMInstantObjectBuilder? _NOMINAL_LIFTOFF;
+  final TIMInstantObjectBuilder? _WINDOW_OPEN;
+  final TIMInstantObjectBuilder? _WINDOW_CLOSE;
+  final double? _LIFTOFF_STEP_SECONDS;
+  final List<CQRLaunchSegmentObjectBuilder>? _SEGMENTS;
+  final List<CQRLaunchObjectObjectBuilder>? _OBJECTS;
+  final List<CQRLaunchCriterionObjectBuilder>? _CRITERIA;
+  final double? _MINIMUM_ALTITUDE_M;
+  final double? _SCREEN_SECONDS_AFTER_LIFTOFF;
+  final double? _CLOSURE_PAD_SECONDS;
+  final double? _REPORT_RATIO;
+  final RFMCoordinateSystemObjectBuilder? _EVALUATION_FRAME;
+
+  CQRLaunchRequestObjectBuilder({
+    String? MISSION_NAME,
+    String? missionName,
+    TIMInstantObjectBuilder? NOMINAL_LIFTOFF,
+    TIMInstantObjectBuilder? nominalLiftoff,
+    TIMInstantObjectBuilder? WINDOW_OPEN,
+    TIMInstantObjectBuilder? windowOpen,
+    TIMInstantObjectBuilder? WINDOW_CLOSE,
+    TIMInstantObjectBuilder? windowClose,
+    double? LIFTOFF_STEP_SECONDS,
+    double? liftoffStepSeconds,
+    List<CQRLaunchSegmentObjectBuilder>? SEGMENTS,
+    List<CQRLaunchObjectObjectBuilder>? OBJECTS,
+    List<CQRLaunchCriterionObjectBuilder>? CRITERIA,
+    double? MINIMUM_ALTITUDE_M,
+    double? minimumAltitudeM,
+    double? SCREEN_SECONDS_AFTER_LIFTOFF,
+    double? screenSecondsAfterLiftoff,
+    double? CLOSURE_PAD_SECONDS,
+    double? closurePadSeconds,
+    double? REPORT_RATIO,
+    double? reportRatio,
+    RFMCoordinateSystemObjectBuilder? EVALUATION_FRAME,
+    RFMCoordinateSystemObjectBuilder? evaluationFrame,
+  })
+      : _MISSION_NAME = missionName ?? MISSION_NAME,
+        _NOMINAL_LIFTOFF = nominalLiftoff ?? NOMINAL_LIFTOFF,
+        _WINDOW_OPEN = windowOpen ?? WINDOW_OPEN,
+        _WINDOW_CLOSE = windowClose ?? WINDOW_CLOSE,
+        _LIFTOFF_STEP_SECONDS = liftoffStepSeconds ?? LIFTOFF_STEP_SECONDS,
+        _SEGMENTS = SEGMENTS,
+        _OBJECTS = OBJECTS,
+        _CRITERIA = CRITERIA,
+        _MINIMUM_ALTITUDE_M = minimumAltitudeM ?? MINIMUM_ALTITUDE_M,
+        _SCREEN_SECONDS_AFTER_LIFTOFF = screenSecondsAfterLiftoff ?? SCREEN_SECONDS_AFTER_LIFTOFF,
+        _CLOSURE_PAD_SECONDS = closurePadSeconds ?? CLOSURE_PAD_SECONDS,
+        _REPORT_RATIO = reportRatio ?? REPORT_RATIO,
+        _EVALUATION_FRAME = evaluationFrame ?? EVALUATION_FRAME;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MISSION_NAMEOffset = _MISSION_NAME == null ? null
+        : fbBuilder.writeString(_MISSION_NAME!);
+    final int? NOMINAL_LIFTOFFOffset = _NOMINAL_LIFTOFF?.getOrCreateOffset(fbBuilder);
+    final int? WINDOW_OPENOffset = _WINDOW_OPEN?.getOrCreateOffset(fbBuilder);
+    final int? WINDOW_CLOSEOffset = _WINDOW_CLOSE?.getOrCreateOffset(fbBuilder);
+    final int? SEGMENTSOffset = _SEGMENTS == null ? null
+        : fbBuilder.writeList(_SEGMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? OBJECTSOffset = _OBJECTS == null ? null
+        : fbBuilder.writeList(_OBJECTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CRITERIAOffset = _CRITERIA == null ? null
+        : fbBuilder.writeList(_CRITERIA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? EVALUATION_FRAMEOffset = _EVALUATION_FRAME?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, MISSION_NAMEOffset);
+    fbBuilder.addOffset(1, NOMINAL_LIFTOFFOffset);
+    fbBuilder.addOffset(2, WINDOW_OPENOffset);
+    fbBuilder.addOffset(3, WINDOW_CLOSEOffset);
+    fbBuilder.addFloat64(4, _LIFTOFF_STEP_SECONDS);
+    fbBuilder.addOffset(5, SEGMENTSOffset);
+    fbBuilder.addOffset(6, OBJECTSOffset);
+    fbBuilder.addOffset(7, CRITERIAOffset);
+    fbBuilder.addFloat64(8, _MINIMUM_ALTITUDE_M);
+    fbBuilder.addFloat64(9, _SCREEN_SECONDS_AFTER_LIFTOFF);
+    fbBuilder.addFloat64(10, _CLOSURE_PAD_SECONDS);
+    fbBuilder.addFloat64(11, _REPORT_RATIO);
+    fbBuilder.addOffset(12, EVALUATION_FRAMEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Liftoff times that violate at least one criterion, half-open [START, END),
+///  widened by the liftoff step and CLOSURE_PAD_SECONDS and merged.
+class CQRLaunchClosure {
+  CQRLaunchClosure._(this._bc, this._bcOffset);
+  factory CQRLaunchClosure(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRLaunchClosure> reader = _CQRLaunchClosureReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  TIMInstant? get START => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  TIMInstant? get END => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Orbiting objects that cause this closure.
+  List<String>? get OBJECT_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<String>? get objectIds => OBJECT_IDS;
+  ///  Segments involved.
+  List<String>? get SEGMENT_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<String>? get segmentIds => SEGMENT_IDS;
+
+  @override
+  String toString() {
+    return 'CQRLaunchClosure{START: ${START}, END: ${END}, objectIds: ${objectIds}, segmentIds: ${segmentIds}}';
+  }
+}
+
+class _CQRLaunchClosureReader extends fb.TableReader<CQRLaunchClosure> {
+  const _CQRLaunchClosureReader();
+
+  @override
+  CQRLaunchClosure createObject(fb.BufferContext bc, int offset) =>
+    CQRLaunchClosure._(bc, offset);
+}
+
+class CQRLaunchClosureBuilder {
+  CQRLaunchClosureBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addStartOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEndOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectIdsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentIdsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRLaunchClosureObjectBuilder extends fb.ObjectBuilder {
+  final TIMInstantObjectBuilder? _START;
+  final TIMInstantObjectBuilder? _END;
+  final List<String>? _OBJECT_IDS;
+  final List<String>? _SEGMENT_IDS;
+
+  CQRLaunchClosureObjectBuilder({
+    TIMInstantObjectBuilder? START,
+    TIMInstantObjectBuilder? END,
+    List<String>? OBJECT_IDS,
+    List<String>? objectIds,
+    List<String>? SEGMENT_IDS,
+    List<String>? segmentIds,
+  })
+      : _START = START,
+        _END = END,
+        _OBJECT_IDS = objectIds ?? OBJECT_IDS,
+        _SEGMENT_IDS = segmentIds ?? SEGMENT_IDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? STARTOffset = _START?.getOrCreateOffset(fbBuilder);
+    final int? ENDOffset = _END?.getOrCreateOffset(fbBuilder);
+    final int? OBJECT_IDSOffset = _OBJECT_IDS == null ? null
+        : fbBuilder.writeList(_OBJECT_IDS!.map(fbBuilder.writeString).toList());
+    final int? SEGMENT_IDSOffset = _SEGMENT_IDS == null ? null
+        : fbBuilder.writeList(_SEGMENT_IDS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, STARTOffset);
+    fbBuilder.addOffset(1, ENDOffset);
+    fbBuilder.addOffset(2, OBJECT_IDSOffset);
+    fbBuilder.addOffset(3, SEGMENT_IDSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Closest approach of one segment to one orbiting object for one liftoff
+///  time: the worst liftoff time of each contiguous run below REPORT_RATIO.
+class CQRLaunchApproach {
+  CQRLaunchApproach._(this._bc, this._bcOffset);
+  factory CQRLaunchApproach(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRLaunchApproach> reader = _CQRLaunchApproachReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get SEGMENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get segmentId => SEGMENT_ID;
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get objectId => OBJECT_ID;
+  cqrLaunchObjectClass get OBJECT_CLASS => cqrLaunchObjectClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  cqrLaunchObjectClass get objectClass => OBJECT_CLASS;
+  TIMInstant? get LIFTOFF => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  TIMInstant? get TCA => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  double get MISS_DISTANCE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get missDistanceM => MISS_DISTANCE_M;
+  double get RELATIVE_SPEED_M_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get relativeSpeedMS => RELATIVE_SPEED_M_S;
+  ///  Segment position relative to the orbiting object in the object's
+  ///  radial/in-track/cross-track frame, metres.
+  FRMVector3? get RELATIVE_POSITION_RTN => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  FRMVector3? get relativePositionRtn => RELATIVE_POSITION_RTN;
+  ///  Normalised separation: distance over radius (SPHERICAL) or ellipsoid
+  ///  radius (ELLIPSOIDAL). Below 1 violates.
+  double get CRITERION_RATIO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get criterionRatio => CRITERION_RATIO;
+  bool get VIOLATES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get RENDEZVOUS_COORDINATED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get rendezvousCoordinated => RENDEZVOUS_COORDINATED;
+  ///  First and last liftoff times of the run this approach represents.
+  TIMInstant? get RUN_START => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  TIMInstant? get runStart => RUN_START;
+  TIMInstant? get RUN_END => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  TIMInstant? get runEnd => RUN_END;
+
+  @override
+  String toString() {
+    return 'CQRLaunchApproach{segmentId: ${segmentId}, objectId: ${objectId}, objectClass: ${objectClass}, LIFTOFF: ${LIFTOFF}, TCA: ${TCA}, missDistanceM: ${missDistanceM}, relativeSpeedMS: ${relativeSpeedMS}, relativePositionRtn: ${relativePositionRtn}, criterionRatio: ${criterionRatio}, VIOLATES: ${VIOLATES}, rendezvousCoordinated: ${rendezvousCoordinated}, runStart: ${runStart}, runEnd: ${runEnd}}';
+  }
+}
+
+class _CQRLaunchApproachReader extends fb.TableReader<CQRLaunchApproach> {
+  const _CQRLaunchApproachReader();
+
+  @override
+  CQRLaunchApproach createObject(fb.BufferContext bc, int offset) =>
+    CQRLaunchApproach._(bc, offset);
+}
+
+class CQRLaunchApproachBuilder {
+  CQRLaunchApproachBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addSegmentIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectClass(cqrLaunchObjectClass? OBJECT_CLASS) {
+    fbBuilder.addUint8(2, OBJECT_CLASS?.value);
+    return fbBuilder.offset;
+  }
+  int addLiftoffOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTcaOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addMissDistanceM(double? MISS_DISTANCE_M) {
+    fbBuilder.addFloat64(5, MISS_DISTANCE_M);
+    return fbBuilder.offset;
+  }
+  int addRelativeSpeedMS(double? RELATIVE_SPEED_M_S) {
+    fbBuilder.addFloat64(6, RELATIVE_SPEED_M_S);
+    return fbBuilder.offset;
+  }
+  int addRelativePositionRtnOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCriterionRatio(double? CRITERION_RATIO) {
+    fbBuilder.addFloat64(8, CRITERION_RATIO);
+    return fbBuilder.offset;
+  }
+  int addViolates(bool? VIOLATES) {
+    fbBuilder.addBool(9, VIOLATES);
+    return fbBuilder.offset;
+  }
+  int addRendezvousCoordinated(bool? RENDEZVOUS_COORDINATED) {
+    fbBuilder.addBool(10, RENDEZVOUS_COORDINATED);
+    return fbBuilder.offset;
+  }
+  int addRunStartOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addRunEndOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRLaunchApproachObjectBuilder extends fb.ObjectBuilder {
+  final String? _SEGMENT_ID;
+  final String? _OBJECT_ID;
+  final cqrLaunchObjectClass? _OBJECT_CLASS;
+  final TIMInstantObjectBuilder? _LIFTOFF;
+  final TIMInstantObjectBuilder? _TCA;
+  final double? _MISS_DISTANCE_M;
+  final double? _RELATIVE_SPEED_M_S;
+  final FRMVector3ObjectBuilder? _RELATIVE_POSITION_RTN;
+  final double? _CRITERION_RATIO;
+  final bool? _VIOLATES;
+  final bool? _RENDEZVOUS_COORDINATED;
+  final TIMInstantObjectBuilder? _RUN_START;
+  final TIMInstantObjectBuilder? _RUN_END;
+
+  CQRLaunchApproachObjectBuilder({
+    String? SEGMENT_ID,
+    String? segmentId,
+    String? OBJECT_ID,
+    String? objectId,
+    cqrLaunchObjectClass? OBJECT_CLASS,
+    cqrLaunchObjectClass? objectClass,
+    TIMInstantObjectBuilder? LIFTOFF,
+    TIMInstantObjectBuilder? TCA,
+    double? MISS_DISTANCE_M,
+    double? missDistanceM,
+    double? RELATIVE_SPEED_M_S,
+    double? relativeSpeedMS,
+    FRMVector3ObjectBuilder? RELATIVE_POSITION_RTN,
+    FRMVector3ObjectBuilder? relativePositionRtn,
+    double? CRITERION_RATIO,
+    double? criterionRatio,
+    bool? VIOLATES,
+    bool? RENDEZVOUS_COORDINATED,
+    bool? rendezvousCoordinated,
+    TIMInstantObjectBuilder? RUN_START,
+    TIMInstantObjectBuilder? runStart,
+    TIMInstantObjectBuilder? RUN_END,
+    TIMInstantObjectBuilder? runEnd,
+  })
+      : _SEGMENT_ID = segmentId ?? SEGMENT_ID,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _OBJECT_CLASS = objectClass ?? OBJECT_CLASS,
+        _LIFTOFF = LIFTOFF,
+        _TCA = TCA,
+        _MISS_DISTANCE_M = missDistanceM ?? MISS_DISTANCE_M,
+        _RELATIVE_SPEED_M_S = relativeSpeedMS ?? RELATIVE_SPEED_M_S,
+        _RELATIVE_POSITION_RTN = relativePositionRtn ?? RELATIVE_POSITION_RTN,
+        _CRITERION_RATIO = criterionRatio ?? CRITERION_RATIO,
+        _VIOLATES = VIOLATES,
+        _RENDEZVOUS_COORDINATED = rendezvousCoordinated ?? RENDEZVOUS_COORDINATED,
+        _RUN_START = runStart ?? RUN_START,
+        _RUN_END = runEnd ?? RUN_END;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SEGMENT_IDOffset = _SEGMENT_ID == null ? null
+        : fbBuilder.writeString(_SEGMENT_ID!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? LIFTOFFOffset = _LIFTOFF?.getOrCreateOffset(fbBuilder);
+    final int? TCAOffset = _TCA?.getOrCreateOffset(fbBuilder);
+    final int? RELATIVE_POSITION_RTNOffset = _RELATIVE_POSITION_RTN?.getOrCreateOffset(fbBuilder);
+    final int? RUN_STARTOffset = _RUN_START?.getOrCreateOffset(fbBuilder);
+    final int? RUN_ENDOffset = _RUN_END?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, SEGMENT_IDOffset);
+    fbBuilder.addOffset(1, OBJECT_IDOffset);
+    fbBuilder.addUint8(2, _OBJECT_CLASS?.value);
+    fbBuilder.addOffset(3, LIFTOFFOffset);
+    fbBuilder.addOffset(4, TCAOffset);
+    fbBuilder.addFloat64(5, _MISS_DISTANCE_M);
+    fbBuilder.addFloat64(6, _RELATIVE_SPEED_M_S);
+    fbBuilder.addOffset(7, RELATIVE_POSITION_RTNOffset);
+    fbBuilder.addFloat64(8, _CRITERION_RATIO);
+    fbBuilder.addBool(9, _VIOLATES);
+    fbBuilder.addBool(10, _RENDEZVOUS_COORDINATED);
+    fbBuilder.addOffset(11, RUN_STARTOffset);
+    fbBuilder.addOffset(12, RUN_ENDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CQRLaunchResult {
+  CQRLaunchResult._(this._bc, this._bcOffset);
+  factory CQRLaunchResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRLaunchResult> reader = _CQRLaunchResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get MISSION_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get missionName => MISSION_NAME;
+  TIMInstant? get WINDOW_OPEN => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  TIMInstant? get windowOpen => WINDOW_OPEN;
+  TIMInstant? get WINDOW_CLOSE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  TIMInstant? get windowClose => WINDOW_CLOSE;
+  double get LIFTOFF_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get liftoffStepSeconds => LIFTOFF_STEP_SECONDS;
+  int get LIFTOFF_TIMES_EVALUATED => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get liftoffTimesEvaluated => LIFTOFF_TIMES_EVALUATED;
+  ///  Ordered by START.
+  List<CQRLaunchClosure>? get CLOSURES => const fb.ListReader<CQRLaunchClosure>(CQRLaunchClosure.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Ordered by LIFTOFF, then segment and object identity.
+  List<CQRLaunchApproach>? get APPROACHES => const fb.ListReader<CQRLaunchApproach>(CQRLaunchApproach.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  CQRScreeningStatistics? get STATISTICS => CQRScreeningStatistics.reader.vTableGetNullable(_bc, _bcOffset, 18);
+
+  @override
+  String toString() {
+    return 'CQRLaunchResult{missionName: ${missionName}, windowOpen: ${windowOpen}, windowClose: ${windowClose}, liftoffStepSeconds: ${liftoffStepSeconds}, liftoffTimesEvaluated: ${liftoffTimesEvaluated}, CLOSURES: ${CLOSURES}, APPROACHES: ${APPROACHES}, STATISTICS: ${STATISTICS}}';
+  }
+}
+
+class _CQRLaunchResultReader extends fb.TableReader<CQRLaunchResult> {
+  const _CQRLaunchResultReader();
+
+  @override
+  CQRLaunchResult createObject(fb.BufferContext bc, int offset) =>
+    CQRLaunchResult._(bc, offset);
+}
+
+class CQRLaunchResultBuilder {
+  CQRLaunchResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addMissionNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowOpenOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowCloseOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addLiftoffStepSeconds(double? LIFTOFF_STEP_SECONDS) {
+    fbBuilder.addFloat64(3, LIFTOFF_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addLiftoffTimesEvaluated(int? LIFTOFF_TIMES_EVALUATED) {
+    fbBuilder.addUint64(4, LIFTOFF_TIMES_EVALUATED);
+    return fbBuilder.offset;
+  }
+  int addClosuresOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addApproachesOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addStatisticsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRLaunchResultObjectBuilder extends fb.ObjectBuilder {
+  final String? _MISSION_NAME;
+  final TIMInstantObjectBuilder? _WINDOW_OPEN;
+  final TIMInstantObjectBuilder? _WINDOW_CLOSE;
+  final double? _LIFTOFF_STEP_SECONDS;
+  final int? _LIFTOFF_TIMES_EVALUATED;
+  final List<CQRLaunchClosureObjectBuilder>? _CLOSURES;
+  final List<CQRLaunchApproachObjectBuilder>? _APPROACHES;
+  final CQRScreeningStatisticsObjectBuilder? _STATISTICS;
+
+  CQRLaunchResultObjectBuilder({
+    String? MISSION_NAME,
+    String? missionName,
+    TIMInstantObjectBuilder? WINDOW_OPEN,
+    TIMInstantObjectBuilder? windowOpen,
+    TIMInstantObjectBuilder? WINDOW_CLOSE,
+    TIMInstantObjectBuilder? windowClose,
+    double? LIFTOFF_STEP_SECONDS,
+    double? liftoffStepSeconds,
+    int? LIFTOFF_TIMES_EVALUATED,
+    int? liftoffTimesEvaluated,
+    List<CQRLaunchClosureObjectBuilder>? CLOSURES,
+    List<CQRLaunchApproachObjectBuilder>? APPROACHES,
+    CQRScreeningStatisticsObjectBuilder? STATISTICS,
+  })
+      : _MISSION_NAME = missionName ?? MISSION_NAME,
+        _WINDOW_OPEN = windowOpen ?? WINDOW_OPEN,
+        _WINDOW_CLOSE = windowClose ?? WINDOW_CLOSE,
+        _LIFTOFF_STEP_SECONDS = liftoffStepSeconds ?? LIFTOFF_STEP_SECONDS,
+        _LIFTOFF_TIMES_EVALUATED = liftoffTimesEvaluated ?? LIFTOFF_TIMES_EVALUATED,
+        _CLOSURES = CLOSURES,
+        _APPROACHES = APPROACHES,
+        _STATISTICS = STATISTICS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MISSION_NAMEOffset = _MISSION_NAME == null ? null
+        : fbBuilder.writeString(_MISSION_NAME!);
+    final int? WINDOW_OPENOffset = _WINDOW_OPEN?.getOrCreateOffset(fbBuilder);
+    final int? WINDOW_CLOSEOffset = _WINDOW_CLOSE?.getOrCreateOffset(fbBuilder);
+    final int? CLOSURESOffset = _CLOSURES == null ? null
+        : fbBuilder.writeList(_CLOSURES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? APPROACHESOffset = _APPROACHES == null ? null
+        : fbBuilder.writeList(_APPROACHES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? STATISTICSOffset = _STATISTICS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, MISSION_NAMEOffset);
+    fbBuilder.addOffset(1, WINDOW_OPENOffset);
+    fbBuilder.addOffset(2, WINDOW_CLOSEOffset);
+    fbBuilder.addFloat64(3, _LIFTOFF_STEP_SECONDS);
+    fbBuilder.addUint64(4, _LIFTOFF_TIMES_EVALUATED);
+    fbBuilder.addOffset(5, CLOSURESOffset);
+    fbBuilder.addOffset(6, APPROACHESOffset);
+    fbBuilder.addOffset(7, STATISTICSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Conjunction Query and Result — pair/catalog screening, encounter-plane
+///  probability, typed native documents, resident screening-index control and
+///  launch-window screening.
+///  Exactly one arm per PIV payload, selected by the declared METHOD_ID.
+class CQR {
+  CQR._(this._bc, this._bcOffset);
+  factory CQR(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQR> reader = _CQRReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  CQRPairRequest? get PAIR_REQUEST => CQRPairRequest.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  CQRPairRequest? get pairRequest => PAIR_REQUEST;
+  CQRCatalogRequest? get CATALOG_REQUEST => CQRCatalogRequest.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  CQRCatalogRequest? get catalogRequest => CATALOG_REQUEST;
+  CQRProbabilityRequest? get PROBABILITY_REQUEST => CQRProbabilityRequest.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  CQRProbabilityRequest? get probabilityRequest => PROBABILITY_REQUEST;
+  CQRProbabilityResult? get PROBABILITY_RESULT => CQRProbabilityResult.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  CQRProbabilityResult? get probabilityResult => PROBABILITY_RESULT;
+  CQRAlfanoRequest? get ALFANO_REQUEST => CQRAlfanoRequest.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  CQRAlfanoRequest? get alfanoRequest => ALFANO_REQUEST;
+  CQRAlfanoResult? get ALFANO_RESULT => CQRAlfanoResult.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  CQRAlfanoResult? get alfanoResult => ALFANO_RESULT;
+  CQREvent? get EVENT_RESULT => CQREvent.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  CQREvent? get eventResult => EVENT_RESULT;
+  TIMInstant? get TCA_RESULT => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  TIMInstant? get tcaResult => TCA_RESULT;
+  CQRCatalogResult? get CATALOG_RESULT => CQRCatalogResult.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  CQRCatalogResult? get catalogResult => CATALOG_RESULT;
+  CQRNativeDocument? get NATIVE_DOCUMENT => CQRNativeDocument.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  CQRNativeDocument? get nativeDocument => NATIVE_DOCUMENT;
+  CQRIndexRequest? get INDEX_REQUEST => CQRIndexRequest.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  CQRIndexRequest? get indexRequest => INDEX_REQUEST;
+  CQRIndexResult? get INDEX_RESULT => CQRIndexResult.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  CQRIndexResult? get indexResult => INDEX_RESULT;
+  CQRWindowRequest? get WINDOW_REQUEST => CQRWindowRequest.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  CQRWindowRequest? get windowRequest => WINDOW_REQUEST;
+  CQRDestroyRequest? get DESTROY_REQUEST => CQRDestroyRequest.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  CQRDestroyRequest? get destroyRequest => DESTROY_REQUEST;
+  bool get VERSION_QUERY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  bool get versionQuery => VERSION_QUERY;
+  CQRVersionResult? get VERSION_RESULT => CQRVersionResult.reader.vTableGetNullable(_bc, _bcOffset, 34);
+  CQRVersionResult? get versionResult => VERSION_RESULT;
+  ///  APPENDED. Launch-window screening request and result.
+  CQRLaunchRequest? get LAUNCH_REQUEST => CQRLaunchRequest.reader.vTableGetNullable(_bc, _bcOffset, 36);
+  CQRLaunchRequest? get launchRequest => LAUNCH_REQUEST;
+  CQRLaunchResult? get LAUNCH_RESULT => CQRLaunchResult.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  CQRLaunchResult? get launchResult => LAUNCH_RESULT;
+
+  @override
+  String toString() {
+    return 'CQR{pairRequest: ${pairRequest}, catalogRequest: ${catalogRequest}, probabilityRequest: ${probabilityRequest}, probabilityResult: ${probabilityResult}, alfanoRequest: ${alfanoRequest}, alfanoResult: ${alfanoResult}, eventResult: ${eventResult}, tcaResult: ${tcaResult}, catalogResult: ${catalogResult}, nativeDocument: ${nativeDocument}, indexRequest: ${indexRequest}, indexResult: ${indexResult}, windowRequest: ${windowRequest}, destroyRequest: ${destroyRequest}, versionQuery: ${versionQuery}, versionResult: ${versionResult}, launchRequest: ${launchRequest}, launchResult: ${launchResult}}';
+  }
+}
+
+class _CQRReader extends fb.TableReader<CQR> {
+  const _CQRReader();
+
+  @override
+  CQR createObject(fb.BufferContext bc, int offset) =>
+    CQR._(bc, offset);
+}
+
+class CQRBuilder {
+  CQRBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(18);
+  }
+
+  int addPairRequestOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogRequestOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addProbabilityRequestOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addProbabilityResultOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addAlfanoRequestOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAlfanoResultOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addEventResultOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTcaResultOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogResultOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addNativeDocumentOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addIndexRequestOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addIndexResultOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowRequestOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addDestroyRequestOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addVersionQuery(bool? VERSION_QUERY) {
+    fbBuilder.addBool(14, VERSION_QUERY);
+    return fbBuilder.offset;
+  }
+  int addVersionResultOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchRequestOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchResultOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRObjectBuilder extends fb.ObjectBuilder {
+  final CQRPairRequestObjectBuilder? _PAIR_REQUEST;
+  final CQRCatalogRequestObjectBuilder? _CATALOG_REQUEST;
+  final CQRProbabilityRequestObjectBuilder? _PROBABILITY_REQUEST;
+  final CQRProbabilityResultObjectBuilder? _PROBABILITY_RESULT;
+  final CQRAlfanoRequestObjectBuilder? _ALFANO_REQUEST;
+  final CQRAlfanoResultObjectBuilder? _ALFANO_RESULT;
+  final CQREventObjectBuilder? _EVENT_RESULT;
+  final TIMInstantObjectBuilder? _TCA_RESULT;
+  final CQRCatalogResultObjectBuilder? _CATALOG_RESULT;
+  final CQRNativeDocumentObjectBuilder? _NATIVE_DOCUMENT;
+  final CQRIndexRequestObjectBuilder? _INDEX_REQUEST;
+  final CQRIndexResultObjectBuilder? _INDEX_RESULT;
+  final CQRWindowRequestObjectBuilder? _WINDOW_REQUEST;
+  final CQRDestroyRequestObjectBuilder? _DESTROY_REQUEST;
+  final bool? _VERSION_QUERY;
+  final CQRVersionResultObjectBuilder? _VERSION_RESULT;
+  final CQRLaunchRequestObjectBuilder? _LAUNCH_REQUEST;
+  final CQRLaunchResultObjectBuilder? _LAUNCH_RESULT;
+
+  CQRObjectBuilder({
+    CQRPairRequestObjectBuilder? PAIR_REQUEST,
+    CQRPairRequestObjectBuilder? pairRequest,
+    CQRCatalogRequestObjectBuilder? CATALOG_REQUEST,
+    CQRCatalogRequestObjectBuilder? catalogRequest,
+    CQRProbabilityRequestObjectBuilder? PROBABILITY_REQUEST,
+    CQRProbabilityRequestObjectBuilder? probabilityRequest,
+    CQRProbabilityResultObjectBuilder? PROBABILITY_RESULT,
+    CQRProbabilityResultObjectBuilder? probabilityResult,
+    CQRAlfanoRequestObjectBuilder? ALFANO_REQUEST,
+    CQRAlfanoRequestObjectBuilder? alfanoRequest,
+    CQRAlfanoResultObjectBuilder? ALFANO_RESULT,
+    CQRAlfanoResultObjectBuilder? alfanoResult,
+    CQREventObjectBuilder? EVENT_RESULT,
+    CQREventObjectBuilder? eventResult,
+    TIMInstantObjectBuilder? TCA_RESULT,
+    TIMInstantObjectBuilder? tcaResult,
+    CQRCatalogResultObjectBuilder? CATALOG_RESULT,
+    CQRCatalogResultObjectBuilder? catalogResult,
+    CQRNativeDocumentObjectBuilder? NATIVE_DOCUMENT,
+    CQRNativeDocumentObjectBuilder? nativeDocument,
+    CQRIndexRequestObjectBuilder? INDEX_REQUEST,
+    CQRIndexRequestObjectBuilder? indexRequest,
+    CQRIndexResultObjectBuilder? INDEX_RESULT,
+    CQRIndexResultObjectBuilder? indexResult,
+    CQRWindowRequestObjectBuilder? WINDOW_REQUEST,
+    CQRWindowRequestObjectBuilder? windowRequest,
+    CQRDestroyRequestObjectBuilder? DESTROY_REQUEST,
+    CQRDestroyRequestObjectBuilder? destroyRequest,
+    bool? VERSION_QUERY,
+    bool? versionQuery,
+    CQRVersionResultObjectBuilder? VERSION_RESULT,
+    CQRVersionResultObjectBuilder? versionResult,
+    CQRLaunchRequestObjectBuilder? LAUNCH_REQUEST,
+    CQRLaunchRequestObjectBuilder? launchRequest,
+    CQRLaunchResultObjectBuilder? LAUNCH_RESULT,
+    CQRLaunchResultObjectBuilder? launchResult,
+  })
+      : _PAIR_REQUEST = pairRequest ?? PAIR_REQUEST,
+        _CATALOG_REQUEST = catalogRequest ?? CATALOG_REQUEST,
+        _PROBABILITY_REQUEST = probabilityRequest ?? PROBABILITY_REQUEST,
+        _PROBABILITY_RESULT = probabilityResult ?? PROBABILITY_RESULT,
+        _ALFANO_REQUEST = alfanoRequest ?? ALFANO_REQUEST,
+        _ALFANO_RESULT = alfanoResult ?? ALFANO_RESULT,
+        _EVENT_RESULT = eventResult ?? EVENT_RESULT,
+        _TCA_RESULT = tcaResult ?? TCA_RESULT,
+        _CATALOG_RESULT = catalogResult ?? CATALOG_RESULT,
+        _NATIVE_DOCUMENT = nativeDocument ?? NATIVE_DOCUMENT,
+        _INDEX_REQUEST = indexRequest ?? INDEX_REQUEST,
+        _INDEX_RESULT = indexResult ?? INDEX_RESULT,
+        _WINDOW_REQUEST = windowRequest ?? WINDOW_REQUEST,
+        _DESTROY_REQUEST = destroyRequest ?? DESTROY_REQUEST,
+        _VERSION_QUERY = versionQuery ?? VERSION_QUERY,
+        _VERSION_RESULT = versionResult ?? VERSION_RESULT,
+        _LAUNCH_REQUEST = launchRequest ?? LAUNCH_REQUEST,
+        _LAUNCH_RESULT = launchResult ?? LAUNCH_RESULT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PAIR_REQUESTOffset = _PAIR_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? CATALOG_REQUESTOffset = _CATALOG_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? PROBABILITY_REQUESTOffset = _PROBABILITY_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? PROBABILITY_RESULTOffset = _PROBABILITY_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? ALFANO_REQUESTOffset = _ALFANO_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? ALFANO_RESULTOffset = _ALFANO_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? EVENT_RESULTOffset = _EVENT_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? TCA_RESULTOffset = _TCA_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? CATALOG_RESULTOffset = _CATALOG_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? NATIVE_DOCUMENTOffset = _NATIVE_DOCUMENT?.getOrCreateOffset(fbBuilder);
+    final int? INDEX_REQUESTOffset = _INDEX_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? INDEX_RESULTOffset = _INDEX_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? WINDOW_REQUESTOffset = _WINDOW_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? DESTROY_REQUESTOffset = _DESTROY_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? VERSION_RESULTOffset = _VERSION_RESULT?.getOrCreateOffset(fbBuilder);
+    final int? LAUNCH_REQUESTOffset = _LAUNCH_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? LAUNCH_RESULTOffset = _LAUNCH_RESULT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(18);
+    fbBuilder.addOffset(0, PAIR_REQUESTOffset);
+    fbBuilder.addOffset(1, CATALOG_REQUESTOffset);
+    fbBuilder.addOffset(2, PROBABILITY_REQUESTOffset);
+    fbBuilder.addOffset(3, PROBABILITY_RESULTOffset);
+    fbBuilder.addOffset(4, ALFANO_REQUESTOffset);
+    fbBuilder.addOffset(5, ALFANO_RESULTOffset);
+    fbBuilder.addOffset(6, EVENT_RESULTOffset);
+    fbBuilder.addOffset(7, TCA_RESULTOffset);
+    fbBuilder.addOffset(8, CATALOG_RESULTOffset);
+    fbBuilder.addOffset(9, NATIVE_DOCUMENTOffset);
+    fbBuilder.addOffset(10, INDEX_REQUESTOffset);
+    fbBuilder.addOffset(11, INDEX_RESULTOffset);
+    fbBuilder.addOffset(12, WINDOW_REQUESTOffset);
+    fbBuilder.addOffset(13, DESTROY_REQUESTOffset);
+    fbBuilder.addBool(14, _VERSION_QUERY);
+    fbBuilder.addOffset(15, VERSION_RESULTOffset);
+    fbBuilder.addOffset(16, LAUNCH_REQUESTOffset);
+    fbBuilder.addOffset(17, LAUNCH_RESULTOffset);
     return fbBuilder.endTable();
   }
 

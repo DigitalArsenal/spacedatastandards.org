@@ -239,7 +239,7 @@ class mnvOrbitalState extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Position uncertainty U (km, 1-sigma)
+    /// Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
     /**
      * @return double
      */
@@ -249,7 +249,7 @@ class mnvOrbitalState extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Position uncertainty V (km, 1-sigma)
+    /// Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
     /**
      * @return double
      */
@@ -259,7 +259,7 @@ class mnvOrbitalState extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Position uncertainty W (km, 1-sigma)
+    /// Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
     /**
      * @return double
      */

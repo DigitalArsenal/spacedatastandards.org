@@ -8,482 +8,1010 @@ import Common
 
 import FlatBuffers
 
-public enum missileStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Launch-ascent mission phase.
+public enum lamMissionPhase: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case boosting = 0
-  case midcourse = 1
-  case terminal = 2
-  case impact = 3
-  case burnout = 4
-  case intercepted = 5
-  case lost = 6
-  case unknown = 7
+  case unknown = 0
+  case prelaunch = 1
+  case liftoff = 2
+  case boost = 3
+  case stageSeparation = 4
+  case upperStage = 5
+  case coast = 6
+  case orbitInsertion = 7
+  case abort = 8
+  case complete = 9
 
-  public static var max: missileStatus { return .unknown }
-  public static var min: missileStatus { return .boosting }
+  public static var max: lamMissionPhase { return .complete }
+  public static var min: lamMissionPhase { return .unknown }
 }
 
 
-public enum missileEnvironment: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Launch-ascent constraint status.
+public enum lamConstraintStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case space = 0
-  case endoAtmospheric = 1
-  case exoAtmospheric = 2
-  case transitional = 3
-  case unknown = 4
+  case unknown = 0
+  case nominal = 1
+  case warning = 2
+  case violated = 3
+  case waived = 4
 
-  public static var max: missileEnvironment { return .unknown }
-  public static var min: missileEnvironment { return .space }
+  public static var max: lamConstraintStatus { return .waived }
+  public static var min: lamConstraintStatus { return .unknown }
 }
 
 
-public enum aouReportType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Direction of an ascent's ground track relative to the equator.
+public enum lamPassDirection: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case circular = 0
-  case elliptical = 1
-  case rectangular = 2
-  case none_ = 3
+  case unspecified = 0
+  ///  Climbs northward, into the ascending half of the orbit.
+  case northbound = 1
+  ///  Climbs southward, into the descending half of the orbit.
+  case southbound = 2
 
-  public static var max: aouReportType { return .none_ }
-  public static var min: aouReportType { return .circular }
+  public static var max: lamPassDirection { return .southbound }
+  public static var min: lamPassDirection { return .unspecified }
 }
 
 
-///  Missile Track
-public struct MST: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Origin of trajectory samples.
+public enum lamTrajectorySource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  Projected from a target orbit and a reference ascent profile.
+  case projected = 1
+  ///  Reconstructed from vehicle telemetry.
+  case telemetry = 2
+  ///  Reconstructed from tracking observations or catalog element sets.
+  case tracking = 3
+  ///  Produced by a physics simulation of the vehicle.
+  case simulated = 4
+
+  public static var max: lamTrajectorySource { return .simulated }
+  public static var min: lamTrajectorySource { return .unspecified }
+}
+
+
+///  Frame of speed samples.
+public enum lamSpeedReference: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  Speed relative to the rotating Earth, as launch broadcasts report it.
+  case earthRelative = 1
+  ///  Speed in an inertial frame.
+  case inertial = 2
+
+  public static var max: lamSpeedReference { return .inertial }
+  public static var min: lamSpeedReference { return .unspecified }
+}
+
+
+///  Launch-ascent event.
+public struct lamAscentEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$MST" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: MST.id, addPrefix: prefix) }
+  public static var id: String { "$LAM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: lamAscentEvent.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let ID: VOffset = 4
-    static let MSG_TYPE: VOffset = 6
-    static let MSG_SUB_TYPE: VOffset = 8
-    static let MSG_CREATE_DATE: VOffset = 10
-    static let ENVIRONMENT: VOffset = 12
-    static let OBJ_TYPE: VOffset = 14
-    static let OBJ_TYPE_CONF: VOffset = 16
-    static let OBJ_PLAT: VOffset = 18
-    static let OBJ_IDENT: VOffset = 20
-    static let SPACE_AMP: VOffset = 22
-    static let SPACE_AMP_CONF: VOffset = 24
-    static let OBJ_ACT: VOffset = 26
-    static let SPACE_SPEC_TYPE: VOffset = 28
-    static let ACFT_SUB_TYPE: VOffset = 30
-    static let NAME: VOffset = 32
-    static let CALL_SIGN: VOffset = 34
-    static let LOST_TRK_IND: VOffset = 36
-    static let TRACK_ID: VOffset = 38
-    static let PARENT_TRACK_ID: VOffset = 40
-    static let MUID_SRC_TRK: VOffset = 42
-    static let MUID_SRC: VOffset = 44
-    static let ALERT: VOffset = 46
-    static let MSL_STATUS: VOffset = 48
-    static let TS: VOffset = 50
-    static let AOU_RPT_TYPE: VOffset = 52
-    static let CONTAINMENT: VOffset = 54
-    static let TRK_CONF: VOffset = 56
-    static let TRK_QUAL: VOffset = 58
-    static let ANG_ELEV: VOffset = 60
-    static let SEN_MODE: VOffset = 62
-    static let INFO_SOURCE: VOffset = 64
-    static let BOOSTING: VOffset = 66
-    static let POLAR_SING_LOC_LAT: VOffset = 68
-    static let POLAR_SING_LOC_LON: VOffset = 70
-    static let EMG_IND: VOffset = 72
-    static let DROP_PT_IND: VOffset = 74
-    static let LAUNCH_TIME: VOffset = 76
-    static let LAUNCH_LAT: VOffset = 78
-    static let LAUNCH_LON: VOffset = 80
-    static let AZ_CORR: VOffset = 82
-    static let BURNOUT_ALT: VOffset = 84
-    static let LAUNCH_AOU_TYPE: VOffset = 86
-    static let IMPACT_TIME: VOffset = 88
-    static let IMPACT_LAT: VOffset = 90
-    static let IMPACT_LON: VOffset = 92
-    static let IMPACT_AOU_TYPE: VOffset = 94
-    static let VECTOR_START_TIME: VOffset = 96
-    static let VECTOR_STEP_SIZE: VOffset = 98
-    static let VECTOR_COMPONENTS: VOffset = 100
-    static let VECTORS: VOffset = 102
-    static let AOU_RPT: VOffset = 104
-    static let LAUNCH_AOU: VOffset = 106
-    static let IMPACT_AOU: VOffset = 108
+    static let EVENT_ID: VOffset = 4
+    static let EVENT_TYPE: VOffset = 6
+    static let EPOCH: VOffset = 8
+    static let TIME_FROM_LAUNCH_S: VOffset = 10
+    static let PHASE: VOffset = 12
+    static let ALTITUDE_M: VOffset = 14
+    static let SPEED_M_PER_S: VOffset = 16
+    static let MASS_KG: VOffset = 18
+    static let DESCRIPTION: VOffset = 20
   }
 
-  ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
-  ///  Message type code
-  public var MSG_TYPE: String? { let o = _accessor.offset(VT.MSG_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSG_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSG_TYPE) }
-  ///  Message sub-type
-  public var MSG_SUB_TYPE: String? { let o = _accessor.offset(VT.MSG_SUB_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSG_SUB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSG_SUB_TYPE) }
-  ///  Message creation date (ISO 8601)
-  public var MSG_CREATE_DATE: String? { let o = _accessor.offset(VT.MSG_CREATE_DATE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSG_CREATE_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSG_CREATE_DATE) }
-  ///  Track environment
-  public var ENVIRONMENT: missileEnvironment { let o = _accessor.offset(VT.ENVIRONMENT); return o == 0 ? .space : missileEnvironment(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .space }
-  ///  Object type classification
-  public var OBJ_TYPE: String? { let o = _accessor.offset(VT.OBJ_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_TYPE) }
-  ///  Object type confidence (0-100)
-  public var OBJ_TYPE_CONF: UInt8 { let o = _accessor.offset(VT.OBJ_TYPE_CONF); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Object platform type
-  public var OBJ_PLAT: String? { let o = _accessor.offset(VT.OBJ_PLAT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_PLATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_PLAT) }
-  ///  Object identity assessment
-  public var OBJ_IDENT: String? { let o = _accessor.offset(VT.OBJ_IDENT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_IDENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_IDENT) }
-  ///  Space amplification data
-  public var SPACE_AMP: String? { let o = _accessor.offset(VT.SPACE_AMP); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPACE_AMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPACE_AMP) }
-  ///  Space amplification confidence (0-100)
-  public var SPACE_AMP_CONF: UInt8 { let o = _accessor.offset(VT.SPACE_AMP_CONF); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Object activity
-  public var OBJ_ACT: String? { let o = _accessor.offset(VT.OBJ_ACT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_ACTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_ACT) }
-  ///  Space specific type
-  public var SPACE_SPEC_TYPE: String? { let o = _accessor.offset(VT.SPACE_SPEC_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPACE_SPEC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPACE_SPEC_TYPE) }
-  ///  Aircraft sub-type (if applicable)
-  public var ACFT_SUB_TYPE: String? { let o = _accessor.offset(VT.ACFT_SUB_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ACFT_SUB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACFT_SUB_TYPE) }
-  ///  Object name
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Call sign
-  public var CALL_SIGN: String? { let o = _accessor.offset(VT.CALL_SIGN); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CALL_SIGNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CALL_SIGN) }
-  ///  True if track is lost
-  public var LOST_TRK_IND: Bool { let o = _accessor.offset(VT.LOST_TRK_IND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Track identifier
-  public var TRACK_ID: String? { let o = _accessor.offset(VT.TRACK_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACK_ID) }
-  ///  Parent track identifier
-  public var PARENT_TRACK_ID: String? { let o = _accessor.offset(VT.PARENT_TRACK_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARENT_TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARENT_TRACK_ID) }
-  ///  Multi-unit identifier (source track)
-  public var MUID_SRC_TRK: String? { let o = _accessor.offset(VT.MUID_SRC_TRK); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MUID_SRC_TRKSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MUID_SRC_TRK) }
-  ///  Multi-unit identifier (source)
-  public var MUID_SRC: String? { let o = _accessor.offset(VT.MUID_SRC); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MUID_SRCSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MUID_SRC) }
-  ///  Alert classification
-  public var ALERT: String? { let o = _accessor.offset(VT.ALERT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALERTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALERT) }
-  ///  Missile engagement status
-  public var MSL_STATUS: missileStatus { let o = _accessor.offset(VT.MSL_STATUS); return o == 0 ? .boosting : missileStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .boosting }
-  ///  Track timestamp (ISO 8601)
-  public var TS: String? { let o = _accessor.offset(VT.TS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TS) }
-  ///  AOU report type
-  public var AOU_RPT_TYPE: aouReportType { let o = _accessor.offset(VT.AOU_RPT_TYPE); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
-  ///  Containment probability (0-1)
-  public var CONTAINMENT: Double { let o = _accessor.offset(VT.CONTAINMENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Track confidence (0-1)
-  public var TRK_CONF: Double { let o = _accessor.offset(VT.TRK_CONF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Track quality (0-15)
-  public var TRK_QUAL: UInt8 { let o = _accessor.offset(VT.TRK_QUAL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Elevation angle (degrees)
-  public var ANG_ELEV: Double { let o = _accessor.offset(VT.ANG_ELEV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Sensor mode
-  public var SEN_MODE: String? { let o = _accessor.offset(VT.SEN_MODE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SEN_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SEN_MODE) }
-  ///  Information source
-  public var INFO_SOURCE: String? { let o = _accessor.offset(VT.INFO_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INFO_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INFO_SOURCE) }
-  ///  True if object is in boost phase
-  public var BOOSTING: Bool { let o = _accessor.offset(VT.BOOSTING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Polar singularity latitude (degrees)
-  public var POLAR_SING_LOC_LAT: Double { let o = _accessor.offset(VT.POLAR_SING_LOC_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Polar singularity longitude (degrees)
-  public var POLAR_SING_LOC_LON: Double { let o = _accessor.offset(VT.POLAR_SING_LOC_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  True if emergency indicator set
-  public var EMG_IND: Bool { let o = _accessor.offset(VT.EMG_IND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  True if drop point indicator set
-  public var DROP_PT_IND: Bool { let o = _accessor.offset(VT.DROP_PT_IND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Launch time (ISO 8601)
-  public var LAUNCH_TIME: String? { let o = _accessor.offset(VT.LAUNCH_TIME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_TIME) }
-  ///  Launch latitude (degrees)
-  public var LAUNCH_LAT: Double { let o = _accessor.offset(VT.LAUNCH_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Launch longitude (degrees)
-  public var LAUNCH_LON: Double { let o = _accessor.offset(VT.LAUNCH_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Azimuth correction (degrees)
-  public var AZ_CORR: Double { let o = _accessor.offset(VT.AZ_CORR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Burnout altitude (km)
-  public var BURNOUT_ALT: Double { let o = _accessor.offset(VT.BURNOUT_ALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Launch AOU type
-  public var LAUNCH_AOU_TYPE: aouReportType { let o = _accessor.offset(VT.LAUNCH_AOU_TYPE); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
-  ///  Predicted impact time (ISO 8601)
-  public var IMPACT_TIME: String? { let o = _accessor.offset(VT.IMPACT_TIME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMPACT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMPACT_TIME) }
-  ///  Predicted impact latitude (degrees)
-  public var IMPACT_LAT: Double { let o = _accessor.offset(VT.IMPACT_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Predicted impact longitude (degrees)
-  public var IMPACT_LON: Double { let o = _accessor.offset(VT.IMPACT_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Impact AOU type
-  public var IMPACT_AOU_TYPE: aouReportType { let o = _accessor.offset(VT.IMPACT_AOU_TYPE); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
-  ///  Start time for vector data (ISO 8601)
-  public var VECTOR_START_TIME: String? { let o = _accessor.offset(VT.VECTOR_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VECTOR_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VECTOR_START_TIME) }
-  ///  Time interval between vector points (seconds)
-  public var VECTOR_STEP_SIZE: Double { let o = _accessor.offset(VT.VECTOR_STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
-  public var VECTOR_COMPONENTS: UInt8 { let o = _accessor.offset(VT.VECTOR_COMPONENTS); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
-  public var VECTORS: FlatbufferVector<Double> { return _accessor.vector(at: VT.VECTORS, byteSize: 8) }
-  public func withUnsafePointerToVectors<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VECTORS, body: body) }
-  ///  AOU report data as flat array
-  public var AOU_RPT: FlatbufferVector<Double> { return _accessor.vector(at: VT.AOU_RPT, byteSize: 8) }
-  public func withUnsafePointerToAouRpt<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.AOU_RPT, body: body) }
-  ///  Launch AOU data as flat array
-  public var LAUNCH_AOU: FlatbufferVector<Double> { return _accessor.vector(at: VT.LAUNCH_AOU, byteSize: 8) }
-  public func withUnsafePointerToLaunchAou<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LAUNCH_AOU, body: body) }
-  ///  Impact AOU data as flat array
-  public var IMPACT_AOU: FlatbufferVector<Double> { return _accessor.vector(at: VT.IMPACT_AOU, byteSize: 8) }
-  public func withUnsafePointerToImpactAou<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.IMPACT_AOU, body: body) }
-  public static func startMST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 53) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(MSG_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TYPE, at: VT.MSG_TYPE) }
-  public static func add(MSG_SUB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_SUB_TYPE, at: VT.MSG_SUB_TYPE) }
-  public static func add(MSG_CREATE_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_CREATE_DATE, at: VT.MSG_CREATE_DATE) }
-  public static func add(ENVIRONMENT: missileEnvironment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT.rawValue, def: 0, at: VT.ENVIRONMENT) }
-  public static func add(OBJ_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_TYPE, at: VT.OBJ_TYPE) }
-  public static func add(OBJ_TYPE_CONF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJ_TYPE_CONF, def: 0, at: VT.OBJ_TYPE_CONF) }
-  public static func add(OBJ_PLAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_PLAT, at: VT.OBJ_PLAT) }
-  public static func add(OBJ_IDENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_IDENT, at: VT.OBJ_IDENT) }
-  public static func add(SPACE_AMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPACE_AMP, at: VT.SPACE_AMP) }
-  public static func add(SPACE_AMP_CONF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACE_AMP_CONF, def: 0, at: VT.SPACE_AMP_CONF) }
-  public static func add(OBJ_ACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_ACT, at: VT.OBJ_ACT) }
-  public static func add(SPACE_SPEC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPACE_SPEC_TYPE, at: VT.SPACE_SPEC_TYPE) }
-  public static func add(ACFT_SUB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACFT_SUB_TYPE, at: VT.ACFT_SUB_TYPE) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(CALL_SIGN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALL_SIGN, at: VT.CALL_SIGN) }
-  public static func add(LOST_TRK_IND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOST_TRK_IND, def: false,
-   at: VT.LOST_TRK_IND) }
-  public static func add(TRACK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_ID, at: VT.TRACK_ID) }
-  public static func add(PARENT_TRACK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARENT_TRACK_ID, at: VT.PARENT_TRACK_ID) }
-  public static func add(MUID_SRC_TRK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MUID_SRC_TRK, at: VT.MUID_SRC_TRK) }
-  public static func add(MUID_SRC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MUID_SRC, at: VT.MUID_SRC) }
-  public static func add(ALERT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALERT, at: VT.ALERT) }
-  public static func add(MSL_STATUS: missileStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MSL_STATUS.rawValue, def: 0, at: VT.MSL_STATUS) }
-  public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VT.TS) }
-  public static func add(AOU_RPT_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AOU_RPT_TYPE.rawValue, def: 0, at: VT.AOU_RPT_TYPE) }
-  public static func add(CONTAINMENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTAINMENT, def: 0.0, at: VT.CONTAINMENT) }
-  public static func add(TRK_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_CONF, def: 0.0, at: VT.TRK_CONF) }
-  public static func add(TRK_QUAL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_QUAL, def: 0, at: VT.TRK_QUAL) }
-  public static func add(ANG_ELEV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANG_ELEV, def: 0.0, at: VT.ANG_ELEV) }
-  public static func add(SEN_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_MODE, at: VT.SEN_MODE) }
-  public static func add(INFO_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INFO_SOURCE, at: VT.INFO_SOURCE) }
-  public static func add(BOOSTING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOOSTING, def: false,
-   at: VT.BOOSTING) }
-  public static func add(POLAR_SING_LOC_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_SING_LOC_LAT, def: 0.0, at: VT.POLAR_SING_LOC_LAT) }
-  public static func add(POLAR_SING_LOC_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_SING_LOC_LON, def: 0.0, at: VT.POLAR_SING_LOC_LON) }
-  public static func add(EMG_IND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EMG_IND, def: false,
-   at: VT.EMG_IND) }
-  public static func add(DROP_PT_IND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DROP_PT_IND, def: false,
-   at: VT.DROP_PT_IND) }
-  public static func add(LAUNCH_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_TIME, at: VT.LAUNCH_TIME) }
-  public static func add(LAUNCH_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_LAT, def: 0.0, at: VT.LAUNCH_LAT) }
-  public static func add(LAUNCH_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_LON, def: 0.0, at: VT.LAUNCH_LON) }
-  public static func add(AZ_CORR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZ_CORR, def: 0.0, at: VT.AZ_CORR) }
-  public static func add(BURNOUT_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURNOUT_ALT, def: 0.0, at: VT.BURNOUT_ALT) }
-  public static func add(LAUNCH_AOU_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_AOU_TYPE.rawValue, def: 0, at: VT.LAUNCH_AOU_TYPE) }
-  public static func add(IMPACT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_TIME, at: VT.IMPACT_TIME) }
-  public static func add(IMPACT_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_LAT, def: 0.0, at: VT.IMPACT_LAT) }
-  public static func add(IMPACT_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_LON, def: 0.0, at: VT.IMPACT_LON) }
-  public static func add(IMPACT_AOU_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_AOU_TYPE.rawValue, def: 0, at: VT.IMPACT_AOU_TYPE) }
-  public static func add(VECTOR_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VECTOR_START_TIME, at: VT.VECTOR_START_TIME) }
-  public static func add(VECTOR_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_STEP_SIZE, def: 0.0, at: VT.VECTOR_STEP_SIZE) }
-  public static func add(VECTOR_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_COMPONENTS, def: 6, at: VT.VECTOR_COMPONENTS) }
-  public static func addVectorOf(VECTORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VECTORS, at: VT.VECTORS) }
-  public static func addVectorOf(AOU_RPT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AOU_RPT, at: VT.AOU_RPT) }
-  public static func addVectorOf(LAUNCH_AOU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_AOU, at: VT.LAUNCH_AOU) }
-  public static func addVectorOf(IMPACT_AOU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_AOU, at: VT.IMPACT_AOU) }
-  public static func endMST(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createMST(
+  ///  Event identifier.
+  public var EVENT_ID: String? { let o = _accessor.offset(VT.EVENT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_ID) }
+  ///  Event type or name.
+  public var EVENT_TYPE: String? { let o = _accessor.offset(VT.EVENT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_TYPE) }
+  ///  Event epoch in ISO 8601 UTC format.
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Time from launch in seconds.
+  public var TIME_FROM_LAUNCH_S: Double { let o = _accessor.offset(VT.TIME_FROM_LAUNCH_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mission phase at the event.
+  public var PHASE: lamMissionPhase { let o = _accessor.offset(VT.PHASE); return o == 0 ? .unknown : lamMissionPhase(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Altitude in meters.
+  public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Speed in meters per second.
+  public var SPEED_M_PER_S: Double { let o = _accessor.offset(VT.SPEED_M_PER_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Vehicle mass in kilograms.
+  public var MASS_KG: Double { let o = _accessor.offset(VT.MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Free-form event description.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public static func startlamAscentEvent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(EVENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_ID, at: VT.EVENT_ID) }
+  public static func add(EVENT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_TYPE, at: VT.EVENT_TYPE) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(TIME_FROM_LAUNCH_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_FROM_LAUNCH_S, def: 0.0, at: VT.TIME_FROM_LAUNCH_S) }
+  public static func add(PHASE: lamMissionPhase, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PHASE.rawValue, def: 0, at: VT.PHASE) }
+  public static func add(ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_M, def: 0.0, at: VT.ALTITUDE_M) }
+  public static func add(SPEED_M_PER_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED_M_PER_S, def: 0.0, at: VT.SPEED_M_PER_S) }
+  public static func add(MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS_KG, def: 0.0, at: VT.MASS_KG) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func endlamAscentEvent(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createlamAscentEvent(
     _ fbb: inout FlatBufferBuilder,
-    IDOffset ID: Offset = Offset(),
-    MSG_TYPEOffset MSG_TYPE: Offset = Offset(),
-    MSG_SUB_TYPEOffset MSG_SUB_TYPE: Offset = Offset(),
-    MSG_CREATE_DATEOffset MSG_CREATE_DATE: Offset = Offset(),
-    ENVIRONMENT: missileEnvironment = .space,
-    OBJ_TYPEOffset OBJ_TYPE: Offset = Offset(),
-    OBJ_TYPE_CONF: UInt8 = 0,
-    OBJ_PLATOffset OBJ_PLAT: Offset = Offset(),
-    OBJ_IDENTOffset OBJ_IDENT: Offset = Offset(),
-    SPACE_AMPOffset SPACE_AMP: Offset = Offset(),
-    SPACE_AMP_CONF: UInt8 = 0,
-    OBJ_ACTOffset OBJ_ACT: Offset = Offset(),
-    SPACE_SPEC_TYPEOffset SPACE_SPEC_TYPE: Offset = Offset(),
-    ACFT_SUB_TYPEOffset ACFT_SUB_TYPE: Offset = Offset(),
-    NAMEOffset NAME: Offset = Offset(),
-    CALL_SIGNOffset CALL_SIGN: Offset = Offset(),
-    LOST_TRK_IND: Bool = false,
-    TRACK_IDOffset TRACK_ID: Offset = Offset(),
-    PARENT_TRACK_IDOffset PARENT_TRACK_ID: Offset = Offset(),
-    MUID_SRC_TRKOffset MUID_SRC_TRK: Offset = Offset(),
-    MUID_SRCOffset MUID_SRC: Offset = Offset(),
-    ALERTOffset ALERT: Offset = Offset(),
-    MSL_STATUS: missileStatus = .boosting,
-    TSOffset TS: Offset = Offset(),
-    AOU_RPT_TYPE: aouReportType = .circular,
-    CONTAINMENT: Double = 0.0,
-    TRK_CONF: Double = 0.0,
-    TRK_QUAL: UInt8 = 0,
-    ANG_ELEV: Double = 0.0,
-    SEN_MODEOffset SEN_MODE: Offset = Offset(),
-    INFO_SOURCEOffset INFO_SOURCE: Offset = Offset(),
-    BOOSTING: Bool = false,
-    POLAR_SING_LOC_LAT: Double = 0.0,
-    POLAR_SING_LOC_LON: Double = 0.0,
-    EMG_IND: Bool = false,
-    DROP_PT_IND: Bool = false,
-    LAUNCH_TIMEOffset LAUNCH_TIME: Offset = Offset(),
-    LAUNCH_LAT: Double = 0.0,
-    LAUNCH_LON: Double = 0.0,
-    AZ_CORR: Double = 0.0,
-    BURNOUT_ALT: Double = 0.0,
-    LAUNCH_AOU_TYPE: aouReportType = .circular,
-    IMPACT_TIMEOffset IMPACT_TIME: Offset = Offset(),
-    IMPACT_LAT: Double = 0.0,
-    IMPACT_LON: Double = 0.0,
-    IMPACT_AOU_TYPE: aouReportType = .circular,
-    VECTOR_START_TIMEOffset VECTOR_START_TIME: Offset = Offset(),
-    VECTOR_STEP_SIZE: Double = 0.0,
-    VECTOR_COMPONENTS: UInt8 = 6,
-    VECTORSVectorOffset VECTORS: Offset = Offset(),
-    AOU_RPTVectorOffset AOU_RPT: Offset = Offset(),
-    LAUNCH_AOUVectorOffset LAUNCH_AOU: Offset = Offset(),
-    IMPACT_AOUVectorOffset IMPACT_AOU: Offset = Offset()
+    EVENT_IDOffset EVENT_ID: Offset = Offset(),
+    EVENT_TYPEOffset EVENT_TYPE: Offset = Offset(),
+    EPOCHOffset EPOCH: Offset = Offset(),
+    TIME_FROM_LAUNCH_S: Double = 0.0,
+    PHASE: lamMissionPhase = .unknown,
+    ALTITUDE_M: Double = 0.0,
+    SPEED_M_PER_S: Double = 0.0,
+    MASS_KG: Double = 0.0,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
   ) -> Offset {
-    let __start = MST.startMST(&fbb)
-    MST.add(ID: ID, &fbb)
-    MST.add(MSG_TYPE: MSG_TYPE, &fbb)
-    MST.add(MSG_SUB_TYPE: MSG_SUB_TYPE, &fbb)
-    MST.add(MSG_CREATE_DATE: MSG_CREATE_DATE, &fbb)
-    MST.add(ENVIRONMENT: ENVIRONMENT, &fbb)
-    MST.add(OBJ_TYPE: OBJ_TYPE, &fbb)
-    MST.add(OBJ_TYPE_CONF: OBJ_TYPE_CONF, &fbb)
-    MST.add(OBJ_PLAT: OBJ_PLAT, &fbb)
-    MST.add(OBJ_IDENT: OBJ_IDENT, &fbb)
-    MST.add(SPACE_AMP: SPACE_AMP, &fbb)
-    MST.add(SPACE_AMP_CONF: SPACE_AMP_CONF, &fbb)
-    MST.add(OBJ_ACT: OBJ_ACT, &fbb)
-    MST.add(SPACE_SPEC_TYPE: SPACE_SPEC_TYPE, &fbb)
-    MST.add(ACFT_SUB_TYPE: ACFT_SUB_TYPE, &fbb)
-    MST.add(NAME: NAME, &fbb)
-    MST.add(CALL_SIGN: CALL_SIGN, &fbb)
-    MST.add(LOST_TRK_IND: LOST_TRK_IND, &fbb)
-    MST.add(TRACK_ID: TRACK_ID, &fbb)
-    MST.add(PARENT_TRACK_ID: PARENT_TRACK_ID, &fbb)
-    MST.add(MUID_SRC_TRK: MUID_SRC_TRK, &fbb)
-    MST.add(MUID_SRC: MUID_SRC, &fbb)
-    MST.add(ALERT: ALERT, &fbb)
-    MST.add(MSL_STATUS: MSL_STATUS, &fbb)
-    MST.add(TS: TS, &fbb)
-    MST.add(AOU_RPT_TYPE: AOU_RPT_TYPE, &fbb)
-    MST.add(CONTAINMENT: CONTAINMENT, &fbb)
-    MST.add(TRK_CONF: TRK_CONF, &fbb)
-    MST.add(TRK_QUAL: TRK_QUAL, &fbb)
-    MST.add(ANG_ELEV: ANG_ELEV, &fbb)
-    MST.add(SEN_MODE: SEN_MODE, &fbb)
-    MST.add(INFO_SOURCE: INFO_SOURCE, &fbb)
-    MST.add(BOOSTING: BOOSTING, &fbb)
-    MST.add(POLAR_SING_LOC_LAT: POLAR_SING_LOC_LAT, &fbb)
-    MST.add(POLAR_SING_LOC_LON: POLAR_SING_LOC_LON, &fbb)
-    MST.add(EMG_IND: EMG_IND, &fbb)
-    MST.add(DROP_PT_IND: DROP_PT_IND, &fbb)
-    MST.add(LAUNCH_TIME: LAUNCH_TIME, &fbb)
-    MST.add(LAUNCH_LAT: LAUNCH_LAT, &fbb)
-    MST.add(LAUNCH_LON: LAUNCH_LON, &fbb)
-    MST.add(AZ_CORR: AZ_CORR, &fbb)
-    MST.add(BURNOUT_ALT: BURNOUT_ALT, &fbb)
-    MST.add(LAUNCH_AOU_TYPE: LAUNCH_AOU_TYPE, &fbb)
-    MST.add(IMPACT_TIME: IMPACT_TIME, &fbb)
-    MST.add(IMPACT_LAT: IMPACT_LAT, &fbb)
-    MST.add(IMPACT_LON: IMPACT_LON, &fbb)
-    MST.add(IMPACT_AOU_TYPE: IMPACT_AOU_TYPE, &fbb)
-    MST.add(VECTOR_START_TIME: VECTOR_START_TIME, &fbb)
-    MST.add(VECTOR_STEP_SIZE: VECTOR_STEP_SIZE, &fbb)
-    MST.add(VECTOR_COMPONENTS: VECTOR_COMPONENTS, &fbb)
-    MST.addVectorOf(VECTORS: VECTORS, &fbb)
-    MST.addVectorOf(AOU_RPT: AOU_RPT, &fbb)
-    MST.addVectorOf(LAUNCH_AOU: LAUNCH_AOU, &fbb)
-    MST.addVectorOf(IMPACT_AOU: IMPACT_AOU, &fbb)
-    return MST.endMST(&fbb, start: __start)
+    let __start = lamAscentEvent.startlamAscentEvent(&fbb)
+    lamAscentEvent.add(EVENT_ID: EVENT_ID, &fbb)
+    lamAscentEvent.add(EVENT_TYPE: EVENT_TYPE, &fbb)
+    lamAscentEvent.add(EPOCH: EPOCH, &fbb)
+    lamAscentEvent.add(TIME_FROM_LAUNCH_S: TIME_FROM_LAUNCH_S, &fbb)
+    lamAscentEvent.add(PHASE: PHASE, &fbb)
+    lamAscentEvent.add(ALTITUDE_M: ALTITUDE_M, &fbb)
+    lamAscentEvent.add(SPEED_M_PER_S: SPEED_M_PER_S, &fbb)
+    lamAscentEvent.add(MASS_KG: MASS_KG, &fbb)
+    lamAscentEvent.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return lamAscentEvent.endlamAscentEvent(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MSG_TYPE, fieldName: "MSG_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MSG_SUB_TYPE, fieldName: "MSG_SUB_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MSG_CREATE_DATE, fieldName: "MSG_CREATE_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ENVIRONMENT, fieldName: "ENVIRONMENT", required: false, type: missileEnvironment.self)
-    try _v.visit(field: VT.OBJ_TYPE, fieldName: "OBJ_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJ_TYPE_CONF, fieldName: "OBJ_TYPE_CONF", required: false, type: UInt8.self)
-    try _v.visit(field: VT.OBJ_PLAT, fieldName: "OBJ_PLAT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJ_IDENT, fieldName: "OBJ_IDENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPACE_AMP, fieldName: "SPACE_AMP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPACE_AMP_CONF, fieldName: "SPACE_AMP_CONF", required: false, type: UInt8.self)
-    try _v.visit(field: VT.OBJ_ACT, fieldName: "OBJ_ACT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPACE_SPEC_TYPE, fieldName: "SPACE_SPEC_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ACFT_SUB_TYPE, fieldName: "ACFT_SUB_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CALL_SIGN, fieldName: "CALL_SIGN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LOST_TRK_IND, fieldName: "LOST_TRK_IND", required: false, type: Bool.self)
-    try _v.visit(field: VT.TRACK_ID, fieldName: "TRACK_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PARENT_TRACK_ID, fieldName: "PARENT_TRACK_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MUID_SRC_TRK, fieldName: "MUID_SRC_TRK", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MUID_SRC, fieldName: "MUID_SRC", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ALERT, fieldName: "ALERT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MSL_STATUS, fieldName: "MSL_STATUS", required: false, type: missileStatus.self)
-    try _v.visit(field: VT.TS, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.AOU_RPT_TYPE, fieldName: "AOU_RPT_TYPE", required: false, type: aouReportType.self)
-    try _v.visit(field: VT.CONTAINMENT, fieldName: "CONTAINMENT", required: false, type: Double.self)
-    try _v.visit(field: VT.TRK_CONF, fieldName: "TRK_CONF", required: false, type: Double.self)
-    try _v.visit(field: VT.TRK_QUAL, fieldName: "TRK_QUAL", required: false, type: UInt8.self)
-    try _v.visit(field: VT.ANG_ELEV, fieldName: "ANG_ELEV", required: false, type: Double.self)
-    try _v.visit(field: VT.SEN_MODE, fieldName: "SEN_MODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.INFO_SOURCE, fieldName: "INFO_SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.BOOSTING, fieldName: "BOOSTING", required: false, type: Bool.self)
-    try _v.visit(field: VT.POLAR_SING_LOC_LAT, fieldName: "POLAR_SING_LOC_LAT", required: false, type: Double.self)
-    try _v.visit(field: VT.POLAR_SING_LOC_LON, fieldName: "POLAR_SING_LOC_LON", required: false, type: Double.self)
-    try _v.visit(field: VT.EMG_IND, fieldName: "EMG_IND", required: false, type: Bool.self)
-    try _v.visit(field: VT.DROP_PT_IND, fieldName: "DROP_PT_IND", required: false, type: Bool.self)
-    try _v.visit(field: VT.LAUNCH_TIME, fieldName: "LAUNCH_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LAUNCH_LAT, fieldName: "LAUNCH_LAT", required: false, type: Double.self)
-    try _v.visit(field: VT.LAUNCH_LON, fieldName: "LAUNCH_LON", required: false, type: Double.self)
-    try _v.visit(field: VT.AZ_CORR, fieldName: "AZ_CORR", required: false, type: Double.self)
-    try _v.visit(field: VT.BURNOUT_ALT, fieldName: "BURNOUT_ALT", required: false, type: Double.self)
-    try _v.visit(field: VT.LAUNCH_AOU_TYPE, fieldName: "LAUNCH_AOU_TYPE", required: false, type: aouReportType.self)
-    try _v.visit(field: VT.IMPACT_TIME, fieldName: "IMPACT_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.IMPACT_LAT, fieldName: "IMPACT_LAT", required: false, type: Double.self)
-    try _v.visit(field: VT.IMPACT_LON, fieldName: "IMPACT_LON", required: false, type: Double.self)
-    try _v.visit(field: VT.IMPACT_AOU_TYPE, fieldName: "IMPACT_AOU_TYPE", required: false, type: aouReportType.self)
-    try _v.visit(field: VT.VECTOR_START_TIME, fieldName: "VECTOR_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.VECTOR_STEP_SIZE, fieldName: "VECTOR_STEP_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VT.VECTOR_COMPONENTS, fieldName: "VECTOR_COMPONENTS", required: false, type: UInt8.self)
-    try _v.visit(field: VT.VECTORS, fieldName: "VECTORS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.AOU_RPT, fieldName: "AOU_RPT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.LAUNCH_AOU, fieldName: "LAUNCH_AOU", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.IMPACT_AOU, fieldName: "IMPACT_AOU", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.EVENT_ID, fieldName: "EVENT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVENT_TYPE, fieldName: "EVENT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_FROM_LAUNCH_S, fieldName: "TIME_FROM_LAUNCH_S", required: false, type: Double.self)
+    try _v.visit(field: VT.PHASE, fieldName: "PHASE", required: false, type: lamMissionPhase.self)
+    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SPEED_M_PER_S, fieldName: "SPEED_M_PER_S", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS_KG, fieldName: "MASS_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Launch-ascent constraint violation.
+public struct lamConstraintViolation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$LAM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: lamConstraintViolation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CONSTRAINT_ID: VOffset = 4
+    static let CONSTRAINT_NAME: VOffset = 6
+    static let STATUS: VOffset = 8
+    static let EPOCH: VOffset = 10
+    static let TIME_FROM_LAUNCH_S: VOffset = 12
+    static let VALUE: VOffset = 14
+    static let LIMIT: VOffset = 16
+    static let UNITS: VOffset = 18
+    static let DESCRIPTION: VOffset = 20
+  }
+
+  ///  Constraint identifier.
+  public var CONSTRAINT_ID: String? { let o = _accessor.offset(VT.CONSTRAINT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSTRAINT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTRAINT_ID) }
+  ///  Constraint name.
+  public var CONSTRAINT_NAME: String? { let o = _accessor.offset(VT.CONSTRAINT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSTRAINT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTRAINT_NAME) }
+  ///  Constraint status.
+  public var STATUS: lamConstraintStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .unknown : lamConstraintStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Epoch of closest approach or violation in ISO 8601 UTC format.
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Time from launch in seconds.
+  public var TIME_FROM_LAUNCH_S: Double { let o = _accessor.offset(VT.TIME_FROM_LAUNCH_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observed constraint value.
+  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Constraint limit.
+  public var LIMIT: Double { let o = _accessor.offset(VT.LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units for value and limit.
+  public var UNITS: String? { let o = _accessor.offset(VT.UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNITS) }
+  ///  Free-form description.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public static func startlamConstraintViolation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(CONSTRAINT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINT_ID, at: VT.CONSTRAINT_ID) }
+  public static func add(CONSTRAINT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINT_NAME, at: VT.CONSTRAINT_NAME) }
+  public static func add(STATUS: lamConstraintStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(TIME_FROM_LAUNCH_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_FROM_LAUNCH_S, def: 0.0, at: VT.TIME_FROM_LAUNCH_S) }
+  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
+  public static func add(LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIMIT, def: 0.0, at: VT.LIMIT) }
+  public static func add(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func endlamConstraintViolation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createlamConstraintViolation(
+    _ fbb: inout FlatBufferBuilder,
+    CONSTRAINT_IDOffset CONSTRAINT_ID: Offset = Offset(),
+    CONSTRAINT_NAMEOffset CONSTRAINT_NAME: Offset = Offset(),
+    STATUS: lamConstraintStatus = .unknown,
+    EPOCHOffset EPOCH: Offset = Offset(),
+    TIME_FROM_LAUNCH_S: Double = 0.0,
+    VALUE: Double = 0.0,
+    LIMIT: Double = 0.0,
+    UNITSOffset UNITS: Offset = Offset(),
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
+  ) -> Offset {
+    let __start = lamConstraintViolation.startlamConstraintViolation(&fbb)
+    lamConstraintViolation.add(CONSTRAINT_ID: CONSTRAINT_ID, &fbb)
+    lamConstraintViolation.add(CONSTRAINT_NAME: CONSTRAINT_NAME, &fbb)
+    lamConstraintViolation.add(STATUS: STATUS, &fbb)
+    lamConstraintViolation.add(EPOCH: EPOCH, &fbb)
+    lamConstraintViolation.add(TIME_FROM_LAUNCH_S: TIME_FROM_LAUNCH_S, &fbb)
+    lamConstraintViolation.add(VALUE: VALUE, &fbb)
+    lamConstraintViolation.add(LIMIT: LIMIT, &fbb)
+    lamConstraintViolation.add(UNITS: UNITS, &fbb)
+    lamConstraintViolation.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return lamConstraintViolation.endlamConstraintViolation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CONSTRAINT_ID, fieldName: "CONSTRAINT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSTRAINT_NAME, fieldName: "CONSTRAINT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: lamConstraintStatus.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_FROM_LAUNCH_S, fieldName: "TIME_FROM_LAUNCH_S", required: false, type: Double.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.LIMIT, fieldName: "LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Orbit a launch is steered to.
+public struct lamTargetOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$LAM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: lamTargetOrbit.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INCLINATION_DEG: VOffset = 4
+    static let PASS_DIRECTION: VOffset = 6
+    static let PERIAPSIS_ALTITUDE_M: VOffset = 8
+    static let APOAPSIS_ALTITUDE_M: VOffset = 10
+    static let INSERTION_TIME_FROM_LAUNCH_S: VOffset = 12
+    static let PLANE_REFERENCE: VOffset = 14
+  }
+
+  ///  Target inclination in degrees.
+  public var INCLINATION_DEG: Double { let o = _accessor.offset(VT.INCLINATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Ground-track direction of the ascent.
+  public var PASS_DIRECTION: lamPassDirection { let o = _accessor.offset(VT.PASS_DIRECTION); return o == 0 ? .unspecified : lamPassDirection(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Target periapsis altitude above the WGS-84 equatorial radius, in meters.
+  public var PERIAPSIS_ALTITUDE_M: Double { let o = _accessor.offset(VT.PERIAPSIS_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Target apoapsis altitude above the WGS-84 equatorial radius, in meters.
+  public var APOAPSIS_ALTITUDE_M: Double { let o = _accessor.offset(VT.APOAPSIS_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time from launch of orbit insertion (engine cutoff), in seconds.
+  public var INSERTION_TIME_FROM_LAUNCH_S: Double { let o = _accessor.offset(VT.INSERTION_TIME_FROM_LAUNCH_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Ephemeris of an object whose orbit plane the launch joins, in the TEME frame.
+  public var PLANE_REFERENCE: OEM? { let o = _accessor.offset(VT.PLANE_REFERENCE); return o == 0 ? nil : OEM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startlamTargetOrbit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(INCLINATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION_DEG, def: 0.0, at: VT.INCLINATION_DEG) }
+  public static func add(PASS_DIRECTION: lamPassDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PASS_DIRECTION.rawValue, def: 0, at: VT.PASS_DIRECTION) }
+  public static func add(PERIAPSIS_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIAPSIS_ALTITUDE_M, def: 0.0, at: VT.PERIAPSIS_ALTITUDE_M) }
+  public static func add(APOAPSIS_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOAPSIS_ALTITUDE_M, def: 0.0, at: VT.APOAPSIS_ALTITUDE_M) }
+  public static func add(INSERTION_TIME_FROM_LAUNCH_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INSERTION_TIME_FROM_LAUNCH_S, def: 0.0, at: VT.INSERTION_TIME_FROM_LAUNCH_S) }
+  public static func add(PLANE_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLANE_REFERENCE, at: VT.PLANE_REFERENCE) }
+  public static func endlamTargetOrbit(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createlamTargetOrbit(
+    _ fbb: inout FlatBufferBuilder,
+    INCLINATION_DEG: Double = 0.0,
+    PASS_DIRECTION: lamPassDirection = .unspecified,
+    PERIAPSIS_ALTITUDE_M: Double = 0.0,
+    APOAPSIS_ALTITUDE_M: Double = 0.0,
+    INSERTION_TIME_FROM_LAUNCH_S: Double = 0.0,
+    PLANE_REFERENCEOffset PLANE_REFERENCE: Offset = Offset()
+  ) -> Offset {
+    let __start = lamTargetOrbit.startlamTargetOrbit(&fbb)
+    lamTargetOrbit.add(INCLINATION_DEG: INCLINATION_DEG, &fbb)
+    lamTargetOrbit.add(PASS_DIRECTION: PASS_DIRECTION, &fbb)
+    lamTargetOrbit.add(PERIAPSIS_ALTITUDE_M: PERIAPSIS_ALTITUDE_M, &fbb)
+    lamTargetOrbit.add(APOAPSIS_ALTITUDE_M: APOAPSIS_ALTITUDE_M, &fbb)
+    lamTargetOrbit.add(INSERTION_TIME_FROM_LAUNCH_S: INSERTION_TIME_FROM_LAUNCH_S, &fbb)
+    lamTargetOrbit.add(PLANE_REFERENCE: PLANE_REFERENCE, &fbb)
+    return lamTargetOrbit.endlamTargetOrbit(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INCLINATION_DEG, fieldName: "INCLINATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.PASS_DIRECTION, fieldName: "PASS_DIRECTION", required: false, type: lamPassDirection.self)
+    try _v.visit(field: VT.PERIAPSIS_ALTITUDE_M, fieldName: "PERIAPSIS_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.APOAPSIS_ALTITUDE_M, fieldName: "APOAPSIS_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.INSERTION_TIME_FROM_LAUNCH_S, fieldName: "INSERTION_TIME_FROM_LAUNCH_S", required: false, type: Double.self)
+    try _v.visit(field: VT.PLANE_REFERENCE, fieldName: "PLANE_REFERENCE", required: false, type: ForwardOffset<OEM>.self)
+    _v.finish()
+  }
+}
+
+///  Orbit at insertion, measured or projected.
+public struct lamInsertionOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$LAM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: lamInsertionOrbit.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let TIME_FROM_LAUNCH_S: VOffset = 6
+    static let REF_FRAME: VOffset = 8
+    static let SEMI_MAJOR_AXIS_M: VOffset = 10
+    static let ECCENTRICITY: VOffset = 12
+    static let INCLINATION_DEG: VOffset = 14
+    static let RAAN_DEG: VOffset = 16
+    static let ARGUMENT_OF_PERIAPSIS_DEG: VOffset = 18
+    static let ARGUMENT_OF_LATITUDE_DEG: VOffset = 20
+    static let PERIAPSIS_ALTITUDE_M: VOffset = 22
+    static let APOAPSIS_ALTITUDE_M: VOffset = 24
+    static let RAAN_UNCERTAINTY_DEG: VOffset = 26
+    static let ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: VOffset = 28
+    static let PERIAPSIS_ALTITUDE_UNCERTAINTY_M: VOffset = 30
+    static let APOAPSIS_ALTITUDE_UNCERTAINTY_M: VOffset = 32
+  }
+
+  ///  Insertion epoch in ISO 8601 UTC format.
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Time from launch of insertion, in seconds.
+  public var TIME_FROM_LAUNCH_S: Double { let o = _accessor.offset(VT.TIME_FROM_LAUNCH_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Frame of the angular elements.
+  public var REF_FRAME: String? { let o = _accessor.offset(VT.REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME) }
+  ///  Osculating semi-major axis in meters.
+  public var SEMI_MAJOR_AXIS_M: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Osculating eccentricity.
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Inclination in degrees.
+  public var INCLINATION_DEG: Double { let o = _accessor.offset(VT.INCLINATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of the ascending node in degrees.
+  public var RAAN_DEG: Double { let o = _accessor.offset(VT.RAAN_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Argument of periapsis in degrees.
+  public var ARGUMENT_OF_PERIAPSIS_DEG: Double { let o = _accessor.offset(VT.ARGUMENT_OF_PERIAPSIS_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Argument of latitude at insertion in degrees.
+  public var ARGUMENT_OF_LATITUDE_DEG: Double { let o = _accessor.offset(VT.ARGUMENT_OF_LATITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Periapsis altitude above the WGS-84 equatorial radius, in meters.
+  public var PERIAPSIS_ALTITUDE_M: Double { let o = _accessor.offset(VT.PERIAPSIS_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Apoapsis altitude above the WGS-84 equatorial radius, in meters.
+  public var APOAPSIS_ALTITUDE_M: Double { let o = _accessor.offset(VT.APOAPSIS_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  One-sigma uncertainty of RAAN_DEG in degrees.
+  public var RAAN_UNCERTAINTY_DEG: Double { let o = _accessor.offset(VT.RAAN_UNCERTAINTY_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  One-sigma uncertainty of ARGUMENT_OF_LATITUDE_DEG in degrees.
+  public var ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: Double { let o = _accessor.offset(VT.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  One-sigma uncertainty of PERIAPSIS_ALTITUDE_M in meters.
+  public var PERIAPSIS_ALTITUDE_UNCERTAINTY_M: Double { let o = _accessor.offset(VT.PERIAPSIS_ALTITUDE_UNCERTAINTY_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
+  public var APOAPSIS_ALTITUDE_UNCERTAINTY_M: Double { let o = _accessor.offset(VT.APOAPSIS_ALTITUDE_UNCERTAINTY_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startlamInsertionOrbit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(TIME_FROM_LAUNCH_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_FROM_LAUNCH_S, def: 0.0, at: VT.TIME_FROM_LAUNCH_S) }
+  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VT.REF_FRAME) }
+  public static func add(SEMI_MAJOR_AXIS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS_M, def: 0.0, at: VT.SEMI_MAJOR_AXIS_M) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION_DEG, def: 0.0, at: VT.INCLINATION_DEG) }
+  public static func add(RAAN_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN_DEG, def: 0.0, at: VT.RAAN_DEG) }
+  public static func add(ARGUMENT_OF_PERIAPSIS_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARGUMENT_OF_PERIAPSIS_DEG, def: 0.0, at: VT.ARGUMENT_OF_PERIAPSIS_DEG) }
+  public static func add(ARGUMENT_OF_LATITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARGUMENT_OF_LATITUDE_DEG, def: 0.0, at: VT.ARGUMENT_OF_LATITUDE_DEG) }
+  public static func add(PERIAPSIS_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIAPSIS_ALTITUDE_M, def: 0.0, at: VT.PERIAPSIS_ALTITUDE_M) }
+  public static func add(APOAPSIS_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOAPSIS_ALTITUDE_M, def: 0.0, at: VT.APOAPSIS_ALTITUDE_M) }
+  public static func add(RAAN_UNCERTAINTY_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN_UNCERTAINTY_DEG, def: 0.0, at: VT.RAAN_UNCERTAINTY_DEG) }
+  public static func add(ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, def: 0.0, at: VT.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG) }
+  public static func add(PERIAPSIS_ALTITUDE_UNCERTAINTY_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIAPSIS_ALTITUDE_UNCERTAINTY_M, def: 0.0, at: VT.PERIAPSIS_ALTITUDE_UNCERTAINTY_M) }
+  public static func add(APOAPSIS_ALTITUDE_UNCERTAINTY_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOAPSIS_ALTITUDE_UNCERTAINTY_M, def: 0.0, at: VT.APOAPSIS_ALTITUDE_UNCERTAINTY_M) }
+  public static func endlamInsertionOrbit(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createlamInsertionOrbit(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset = Offset(),
+    TIME_FROM_LAUNCH_S: Double = 0.0,
+    REF_FRAMEOffset REF_FRAME: Offset = Offset(),
+    SEMI_MAJOR_AXIS_M: Double = 0.0,
+    ECCENTRICITY: Double = 0.0,
+    INCLINATION_DEG: Double = 0.0,
+    RAAN_DEG: Double = 0.0,
+    ARGUMENT_OF_PERIAPSIS_DEG: Double = 0.0,
+    ARGUMENT_OF_LATITUDE_DEG: Double = 0.0,
+    PERIAPSIS_ALTITUDE_M: Double = 0.0,
+    APOAPSIS_ALTITUDE_M: Double = 0.0,
+    RAAN_UNCERTAINTY_DEG: Double = 0.0,
+    ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: Double = 0.0,
+    PERIAPSIS_ALTITUDE_UNCERTAINTY_M: Double = 0.0,
+    APOAPSIS_ALTITUDE_UNCERTAINTY_M: Double = 0.0
+  ) -> Offset {
+    let __start = lamInsertionOrbit.startlamInsertionOrbit(&fbb)
+    lamInsertionOrbit.add(EPOCH: EPOCH, &fbb)
+    lamInsertionOrbit.add(TIME_FROM_LAUNCH_S: TIME_FROM_LAUNCH_S, &fbb)
+    lamInsertionOrbit.add(REF_FRAME: REF_FRAME, &fbb)
+    lamInsertionOrbit.add(SEMI_MAJOR_AXIS_M: SEMI_MAJOR_AXIS_M, &fbb)
+    lamInsertionOrbit.add(ECCENTRICITY: ECCENTRICITY, &fbb)
+    lamInsertionOrbit.add(INCLINATION_DEG: INCLINATION_DEG, &fbb)
+    lamInsertionOrbit.add(RAAN_DEG: RAAN_DEG, &fbb)
+    lamInsertionOrbit.add(ARGUMENT_OF_PERIAPSIS_DEG: ARGUMENT_OF_PERIAPSIS_DEG, &fbb)
+    lamInsertionOrbit.add(ARGUMENT_OF_LATITUDE_DEG: ARGUMENT_OF_LATITUDE_DEG, &fbb)
+    lamInsertionOrbit.add(PERIAPSIS_ALTITUDE_M: PERIAPSIS_ALTITUDE_M, &fbb)
+    lamInsertionOrbit.add(APOAPSIS_ALTITUDE_M: APOAPSIS_ALTITUDE_M, &fbb)
+    lamInsertionOrbit.add(RAAN_UNCERTAINTY_DEG: RAAN_UNCERTAINTY_DEG, &fbb)
+    lamInsertionOrbit.add(ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, &fbb)
+    lamInsertionOrbit.add(PERIAPSIS_ALTITUDE_UNCERTAINTY_M: PERIAPSIS_ALTITUDE_UNCERTAINTY_M, &fbb)
+    lamInsertionOrbit.add(APOAPSIS_ALTITUDE_UNCERTAINTY_M: APOAPSIS_ALTITUDE_UNCERTAINTY_M, &fbb)
+    return lamInsertionOrbit.endlamInsertionOrbit(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_FROM_LAUNCH_S, fieldName: "TIME_FROM_LAUNCH_S", required: false, type: Double.self)
+    try _v.visit(field: VT.REF_FRAME, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS_M, fieldName: "SEMI_MAJOR_AXIS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION_DEG, fieldName: "INCLINATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.RAAN_DEG, fieldName: "RAAN_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ARGUMENT_OF_PERIAPSIS_DEG, fieldName: "ARGUMENT_OF_PERIAPSIS_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ARGUMENT_OF_LATITUDE_DEG, fieldName: "ARGUMENT_OF_LATITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIAPSIS_ALTITUDE_M, fieldName: "PERIAPSIS_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.APOAPSIS_ALTITUDE_M, fieldName: "APOAPSIS_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.RAAN_UNCERTAINTY_DEG, fieldName: "RAAN_UNCERTAINTY_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, fieldName: "ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIAPSIS_ALTITUDE_UNCERTAINTY_M, fieldName: "PERIAPSIS_ALTITUDE_UNCERTAINTY_M", required: false, type: Double.self)
+    try _v.visit(field: VT.APOAPSIS_ALTITUDE_UNCERTAINTY_M, fieldName: "APOAPSIS_ALTITUDE_UNCERTAINTY_M", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Launch Ascent Message
+public struct LAM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$LAM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LAM.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MESSAGE_ID: VOffset = 4
+    static let CREATION_DATE: VOffset = 6
+    static let ORIGINATOR: VOffset = 8
+    static let MISSION_NAME: VOffset = 10
+    static let VEHICLE_NAME: VOffset = 12
+    static let TIME_SYSTEM: VOffset = 14
+    static let REF_FRAME: VOffset = 16
+    static let LAUNCH_EPOCH: VOffset = 18
+    static let START_TIME: VOffset = 20
+    static let STOP_TIME: VOffset = 22
+    static let STEP_SIZE: VOffset = 24
+    static let LAUNCH_DATA: VOffset = 26
+    static let ROCKET_CONFIGURATION: VOffset = 28
+    static let EVENT_RECORDS: VOffset = 30
+    static let DETECTIONS: VOffset = 32
+    static let BOOST_TRACKS: VOffset = 34
+    static let BURN_OUT_VECTORS: VOffset = 36
+    static let TRAJECTORY_OEM: VOffset = 38
+    static let TRAJECTORY_OCM: VOffset = 40
+    static let ATMOSPHERE: VOffset = 42
+    static let HYPERSONIC_CONDITIONS: VOffset = 44
+    static let PROPAGATOR_NAME: VOffset = 46
+    static let PROPAGATOR_VERSION: VOffset = 48
+    static let GUIDANCE_MODEL: VOffset = 50
+    static let THRUST_MODEL: VOffset = 52
+    static let AERODYNAMIC_MODEL: VOffset = 54
+    static let PHASE: VOffset = 56
+    static let CONSTRAINT_STATUS: VOffset = 58
+    static let TIME_FROM_LAUNCH_S: VOffset = 60
+    static let LATITUDE_DEG: VOffset = 62
+    static let LONGITUDE_DEG: VOffset = 64
+    static let ALTITUDE_M: VOffset = 66
+    static let DOWNRANGE_M: VOffset = 68
+    static let SPEED_M_PER_S: VOffset = 70
+    static let MACH: VOffset = 72
+    static let DYNAMIC_PRESSURE_PA: VOffset = 74
+    static let HEAT_FLUX_W_PER_M2: VOffset = 76
+    static let MASS_KG: VOffset = 78
+    static let THRUST_N: VOffset = 80
+    static let ACCELERATION_G: VOffset = 82
+    static let PITCH_DEG: VOffset = 84
+    static let FLIGHT_PATH_ANGLE_DEG: VOffset = 86
+    static let IIP_LATITUDE_DEG: VOffset = 88
+    static let IIP_LONGITUDE_DEG: VOffset = 90
+    static let MAX_DYNAMIC_PRESSURE_PA: VOffset = 92
+    static let MAX_DYNAMIC_PRESSURE_EPOCH: VOffset = 94
+    static let MAX_HEAT_FLUX_W_PER_M2: VOffset = 96
+    static let MAX_HEAT_FLUX_EPOCH: VOffset = 98
+    static let ORBIT_INSERTION_EPOCH: VOffset = 100
+    static let APOAPSIS_M: VOffset = 102
+    static let PERIAPSIS_M: VOffset = 104
+    static let INCLINATION_DEG: VOffset = 106
+    static let PAYLOAD_INJECTION_ERROR_M_PER_S: VOffset = 108
+    static let ASCENT_EVENTS: VOffset = 110
+    static let CONSTRAINT_VIOLATIONS: VOffset = 112
+    static let ASSUMPTIONS: VOffset = 114
+    static let COMMENT: VOffset = 116
+    static let TARGET_ORBIT: VOffset = 118
+    static let TRAJECTORY_SOURCE: VOffset = 120
+    static let SPEED_REFERENCE: VOffset = 122
+    static let INSERTION: VOffset = 124
+    static let INSTANTANEOUS_PERIAPSIS_ALTITUDE_M: VOffset = 126
+    static let INSTANTANEOUS_APOAPSIS_ALTITUDE_M: VOffset = 128
+    static let IN_PLANE_LIFTOFF_EPOCHS: VOffset = 130
+  }
+
+  ///  Producer-defined message identifier.
+  public var MESSAGE_ID: String? { let o = _accessor.offset(VT.MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_ID) }
+  ///  Message creation date in ISO 8601 UTC format.
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  ///  Creating agency, application, or service.
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  ///  Mission name.
+  public var MISSION_NAME: String? { let o = _accessor.offset(VT.MISSION_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION_NAME) }
+  ///  Vehicle name.
+  public var VEHICLE_NAME: String? { let o = _accessor.offset(VT.VEHICLE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VEHICLE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VEHICLE_NAME) }
+  ///  Time system used by all epochs.
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  ///  Reference frame for trajectory data.
+  public var REF_FRAME: String? { let o = _accessor.offset(VT.REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME) }
+  ///  Launch epoch in ISO 8601 UTC format.
+  public var LAUNCH_EPOCH: String? { let o = _accessor.offset(VT.LAUNCH_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_EPOCH) }
+  ///  Evaluation start epoch in ISO 8601 UTC format.
+  public var START_TIME: String? { let o = _accessor.offset(VT.START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_TIME) }
+  ///  Evaluation stop epoch in ISO 8601 UTC format.
+  public var STOP_TIME: String? { let o = _accessor.offset(VT.STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_TIME) }
+  ///  Uniform propagation step size in seconds.
+  public var STEP_SIZE: Double { let o = _accessor.offset(VT.STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Source launch data message.
+  public var LAUNCH_DATA: LDM? { let o = _accessor.offset(VT.LAUNCH_DATA); return o == 0 ? nil : LDM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Rocket configuration used by the simulation.
+  public var ROCKET_CONFIGURATION: ROC? { let o = _accessor.offset(VT.ROCKET_CONFIGURATION); return o == 0 ? nil : ROC(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Launch event records used as source or result context.
+  public var EVENT_RECORDS: FlatbufferVector<LNE> { return _accessor.vector(at: VT.EVENT_RECORDS, byteSize: 4) }
+  ///  Launch detection records used as source or result context.
+  public var DETECTIONS: FlatbufferVector<LND> { return _accessor.vector(at: VT.DETECTIONS, byteSize: 4) }
+  ///  Boost or missile-track style records used as source or result context.
+  public var BOOST_TRACKS: FlatbufferVector<MST> { return _accessor.vector(at: VT.BOOST_TRACKS, byteSize: 4) }
+  ///  Burnout vectors produced or consumed by the ascent simulation.
+  public var BURN_OUT_VECTORS: FlatbufferVector<BOV> { return _accessor.vector(at: VT.BURN_OUT_VECTORS, byteSize: 4) }
+  ///  Produced or consumed ephemeris.
+  public var TRAJECTORY_OEM: OEM? { let o = _accessor.offset(VT.TRAJECTORY_OEM); return o == 0 ? nil : OEM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Produced or consumed comprehensive trajectory.
+  public var TRAJECTORY_OCM: OCM? { let o = _accessor.offset(VT.TRAJECTORY_OCM); return o == 0 ? nil : OCM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Atmosphere model request used by the ascent analysis.
+  public var ATMOSPHERE: ATM? { let o = _accessor.offset(VT.ATMOSPHERE); return o == 0 ? nil : ATM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Hypersonic conditions computed along the ascent trajectory.
+  public var HYPERSONIC_CONDITIONS: HFC? { let o = _accessor.offset(VT.HYPERSONIC_CONDITIONS); return o == 0 ? nil : HFC(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Propagator module, engine, or adapter name.
+  public var PROPAGATOR_NAME: String? { let o = _accessor.offset(VT.PROPAGATOR_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_NAME) }
+  ///  Propagator module, engine, or adapter version.
+  public var PROPAGATOR_VERSION: String? { let o = _accessor.offset(VT.PROPAGATOR_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_VERSION) }
+  ///  Guidance model name.
+  public var GUIDANCE_MODEL: String? { let o = _accessor.offset(VT.GUIDANCE_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GUIDANCE_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GUIDANCE_MODEL) }
+  ///  Thrust model name.
+  public var THRUST_MODEL: String? { let o = _accessor.offset(VT.THRUST_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var THRUST_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.THRUST_MODEL) }
+  ///  Aerodynamic model name.
+  public var AERODYNAMIC_MODEL: String? { let o = _accessor.offset(VT.AERODYNAMIC_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AERODYNAMIC_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AERODYNAMIC_MODEL) }
+  ///  Current or terminal mission phase.
+  public var PHASE: lamMissionPhase { let o = _accessor.offset(VT.PHASE); return o == 0 ? .unknown : lamMissionPhase(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Aggregate constraint status.
+  public var CONSTRAINT_STATUS: lamConstraintStatus { let o = _accessor.offset(VT.CONSTRAINT_STATUS); return o == 0 ? .unknown : lamConstraintStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Time from launch samples in seconds.
+  public var TIME_FROM_LAUNCH_S: FlatbufferVector<Double> { return _accessor.vector(at: VT.TIME_FROM_LAUNCH_S, byteSize: 8) }
+  public func withUnsafePointerToTimeFromLaunchS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TIME_FROM_LAUNCH_S, body: body) }
+  ///  Geodetic latitude samples in degrees.
+  public var LATITUDE_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.LATITUDE_DEG, byteSize: 8) }
+  public func withUnsafePointerToLatitudeDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LATITUDE_DEG, body: body) }
+  ///  Geodetic longitude samples in degrees.
+  public var LONGITUDE_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.LONGITUDE_DEG, byteSize: 8) }
+  public func withUnsafePointerToLongitudeDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LONGITUDE_DEG, body: body) }
+  ///  Altitude samples in meters.
+  public var ALTITUDE_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.ALTITUDE_M, byteSize: 8) }
+  public func withUnsafePointerToAltitudeM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ALTITUDE_M, body: body) }
+  ///  Downrange distance samples in meters.
+  public var DOWNRANGE_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.DOWNRANGE_M, byteSize: 8) }
+  public func withUnsafePointerToDownrangeM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DOWNRANGE_M, body: body) }
+  ///  Speed samples in meters per second.
+  public var SPEED_M_PER_S: FlatbufferVector<Double> { return _accessor.vector(at: VT.SPEED_M_PER_S, byteSize: 8) }
+  public func withUnsafePointerToSpeedMPerS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SPEED_M_PER_S, body: body) }
+  ///  Mach number samples.
+  public var MACH: FlatbufferVector<Double> { return _accessor.vector(at: VT.MACH, byteSize: 8) }
+  public func withUnsafePointerToMach<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MACH, body: body) }
+  ///  Dynamic pressure samples in pascals.
+  public var DYNAMIC_PRESSURE_PA: FlatbufferVector<Double> { return _accessor.vector(at: VT.DYNAMIC_PRESSURE_PA, byteSize: 8) }
+  public func withUnsafePointerToDynamicPressurePa<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DYNAMIC_PRESSURE_PA, body: body) }
+  ///  Heat flux samples in watts per square meter.
+  public var HEAT_FLUX_W_PER_M2: FlatbufferVector<Double> { return _accessor.vector(at: VT.HEAT_FLUX_W_PER_M2, byteSize: 8) }
+  public func withUnsafePointerToHeatFluxWPerM2<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.HEAT_FLUX_W_PER_M2, body: body) }
+  ///  Vehicle mass samples in kilograms.
+  public var MASS_KG: FlatbufferVector<Double> { return _accessor.vector(at: VT.MASS_KG, byteSize: 8) }
+  public func withUnsafePointerToMassKg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MASS_KG, body: body) }
+  ///  Thrust samples in newtons.
+  public var THRUST_N: FlatbufferVector<Double> { return _accessor.vector(at: VT.THRUST_N, byteSize: 8) }
+  public func withUnsafePointerToThrustN<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.THRUST_N, body: body) }
+  ///  Acceleration samples in g.
+  public var ACCELERATION_G: FlatbufferVector<Double> { return _accessor.vector(at: VT.ACCELERATION_G, byteSize: 8) }
+  public func withUnsafePointerToAccelerationG<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ACCELERATION_G, body: body) }
+  ///  Pitch angle samples in degrees.
+  public var PITCH_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.PITCH_DEG, byteSize: 8) }
+  public func withUnsafePointerToPitchDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PITCH_DEG, body: body) }
+  ///  Flight path angle samples in degrees.
+  public var FLIGHT_PATH_ANGLE_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.FLIGHT_PATH_ANGLE_DEG, byteSize: 8) }
+  public func withUnsafePointerToFlightPathAngleDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FLIGHT_PATH_ANGLE_DEG, body: body) }
+  ///  Instantaneous impact point latitude samples in degrees.
+  public var IIP_LATITUDE_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.IIP_LATITUDE_DEG, byteSize: 8) }
+  public func withUnsafePointerToIipLatitudeDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.IIP_LATITUDE_DEG, body: body) }
+  ///  Instantaneous impact point longitude samples in degrees.
+  public var IIP_LONGITUDE_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.IIP_LONGITUDE_DEG, byteSize: 8) }
+  public func withUnsafePointerToIipLongitudeDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.IIP_LONGITUDE_DEG, body: body) }
+  ///  Maximum dynamic pressure in pascals.
+  public var MAX_DYNAMIC_PRESSURE_PA: Double { let o = _accessor.offset(VT.MAX_DYNAMIC_PRESSURE_PA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch of maximum dynamic pressure in ISO 8601 UTC format.
+  public var MAX_DYNAMIC_PRESSURE_EPOCH: String? { let o = _accessor.offset(VT.MAX_DYNAMIC_PRESSURE_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAX_DYNAMIC_PRESSURE_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAX_DYNAMIC_PRESSURE_EPOCH) }
+  ///  Maximum heat flux in watts per square meter.
+  public var MAX_HEAT_FLUX_W_PER_M2: Double { let o = _accessor.offset(VT.MAX_HEAT_FLUX_W_PER_M2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch of maximum heat flux in ISO 8601 UTC format.
+  public var MAX_HEAT_FLUX_EPOCH: String? { let o = _accessor.offset(VT.MAX_HEAT_FLUX_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAX_HEAT_FLUX_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAX_HEAT_FLUX_EPOCH) }
+  ///  Orbit insertion epoch in ISO 8601 UTC format.
+  public var ORBIT_INSERTION_EPOCH: String? { let o = _accessor.offset(VT.ORBIT_INSERTION_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORBIT_INSERTION_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORBIT_INSERTION_EPOCH) }
+  ///  Achieved apoapsis in meters.
+  public var APOAPSIS_M: Double { let o = _accessor.offset(VT.APOAPSIS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Achieved periapsis in meters.
+  public var PERIAPSIS_M: Double { let o = _accessor.offset(VT.PERIAPSIS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Achieved inclination in degrees.
+  public var INCLINATION_DEG: Double { let o = _accessor.offset(VT.INCLINATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Payload injection velocity error in meters per second.
+  public var PAYLOAD_INJECTION_ERROR_M_PER_S: Double { let o = _accessor.offset(VT.PAYLOAD_INJECTION_ERROR_M_PER_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Key ascent events.
+  public var ASCENT_EVENTS: FlatbufferVector<lamAscentEvent> { return _accessor.vector(at: VT.ASCENT_EVENTS, byteSize: 4) }
+  ///  Constraint warnings and violations.
+  public var CONSTRAINT_VIOLATIONS: FlatbufferVector<lamConstraintViolation> { return _accessor.vector(at: VT.CONSTRAINT_VIOLATIONS, byteSize: 4) }
+  ///  Free-form model assumptions or limitations.
+  public var ASSUMPTIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ASSUMPTIONS, byteSize: 4) }
+  ///  Additional comments.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  Orbit the launch is steered to.
+  public var TARGET_ORBIT: lamTargetOrbit? { let o = _accessor.offset(VT.TARGET_ORBIT); return o == 0 ? nil : lamTargetOrbit(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Origin of the trajectory samples.
+  public var TRAJECTORY_SOURCE: lamTrajectorySource { let o = _accessor.offset(VT.TRAJECTORY_SOURCE); return o == 0 ? .unspecified : lamTrajectorySource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Frame of SPEED_M_PER_S samples.
+  public var SPEED_REFERENCE: lamSpeedReference { let o = _accessor.offset(VT.SPEED_REFERENCE); return o == 0 ? .unspecified : lamSpeedReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Orbit at insertion.
+  public var INSERTION: lamInsertionOrbit? { let o = _accessor.offset(VT.INSERTION); return o == 0 ? nil : lamInsertionOrbit(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Periapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  public var INSTANTANEOUS_PERIAPSIS_ALTITUDE_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M, byteSize: 8) }
+  public func withUnsafePointerToInstantaneousPeriapsisAltitudeM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M, body: body) }
+  ///  Apoapsis altitude of each sample's osculating orbit above the WGS-84 equatorial radius, in meters.
+  public var INSTANTANEOUS_APOAPSIS_ALTITUDE_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.INSTANTANEOUS_APOAPSIS_ALTITUDE_M, byteSize: 8) }
+  public func withUnsafePointerToInstantaneousApoapsisAltitudeM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INSTANTANEOUS_APOAPSIS_ALTITUDE_M, body: body) }
+  ///  Liftoff epochs, ISO 8601 UTC, at which the ascent joins the TARGET_ORBIT reference plane.
+  public var IN_PLANE_LIFTOFF_EPOCHS: FlatbufferVector<String?> { return _accessor.vector(at: VT.IN_PLANE_LIFTOFF_EPOCHS, byteSize: 4) }
+  public static func startLAM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 64) }
+  public static func add(MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_ID, at: VT.MESSAGE_ID) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func add(MISSION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_NAME, at: VT.MISSION_NAME) }
+  public static func add(VEHICLE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEHICLE_NAME, at: VT.VEHICLE_NAME) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VT.REF_FRAME) }
+  public static func add(LAUNCH_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_EPOCH, at: VT.LAUNCH_EPOCH) }
+  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VT.START_TIME) }
+  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VT.STOP_TIME) }
+  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VT.STEP_SIZE) }
+  public static func add(LAUNCH_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_DATA, at: VT.LAUNCH_DATA) }
+  public static func add(ROCKET_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROCKET_CONFIGURATION, at: VT.ROCKET_CONFIGURATION) }
+  public static func addVectorOf(EVENT_RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_RECORDS, at: VT.EVENT_RECORDS) }
+  public static func addVectorOf(DETECTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTIONS, at: VT.DETECTIONS) }
+  public static func addVectorOf(BOOST_TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOOST_TRACKS, at: VT.BOOST_TRACKS) }
+  public static func addVectorOf(BURN_OUT_VECTORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BURN_OUT_VECTORS, at: VT.BURN_OUT_VECTORS) }
+  public static func add(TRAJECTORY_OEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY_OEM, at: VT.TRAJECTORY_OEM) }
+  public static func add(TRAJECTORY_OCM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY_OCM, at: VT.TRAJECTORY_OCM) }
+  public static func add(ATMOSPHERE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERE, at: VT.ATMOSPHERE) }
+  public static func add(HYPERSONIC_CONDITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HYPERSONIC_CONDITIONS, at: VT.HYPERSONIC_CONDITIONS) }
+  public static func add(PROPAGATOR_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_NAME, at: VT.PROPAGATOR_NAME) }
+  public static func add(PROPAGATOR_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_VERSION, at: VT.PROPAGATOR_VERSION) }
+  public static func add(GUIDANCE_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GUIDANCE_MODEL, at: VT.GUIDANCE_MODEL) }
+  public static func add(THRUST_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THRUST_MODEL, at: VT.THRUST_MODEL) }
+  public static func add(AERODYNAMIC_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AERODYNAMIC_MODEL, at: VT.AERODYNAMIC_MODEL) }
+  public static func add(PHASE: lamMissionPhase, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PHASE.rawValue, def: 0, at: VT.PHASE) }
+  public static func add(CONSTRAINT_STATUS: lamConstraintStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSTRAINT_STATUS.rawValue, def: 0, at: VT.CONSTRAINT_STATUS) }
+  public static func addVectorOf(TIME_FROM_LAUNCH_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_FROM_LAUNCH_S, at: VT.TIME_FROM_LAUNCH_S) }
+  public static func addVectorOf(LATITUDE_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LATITUDE_DEG, at: VT.LATITUDE_DEG) }
+  public static func addVectorOf(LONGITUDE_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONGITUDE_DEG, at: VT.LONGITUDE_DEG) }
+  public static func addVectorOf(ALTITUDE_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTITUDE_M, at: VT.ALTITUDE_M) }
+  public static func addVectorOf(DOWNRANGE_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOWNRANGE_M, at: VT.DOWNRANGE_M) }
+  public static func addVectorOf(SPEED_M_PER_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPEED_M_PER_S, at: VT.SPEED_M_PER_S) }
+  public static func addVectorOf(MACH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MACH, at: VT.MACH) }
+  public static func addVectorOf(DYNAMIC_PRESSURE_PA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DYNAMIC_PRESSURE_PA, at: VT.DYNAMIC_PRESSURE_PA) }
+  public static func addVectorOf(HEAT_FLUX_W_PER_M2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEAT_FLUX_W_PER_M2, at: VT.HEAT_FLUX_W_PER_M2) }
+  public static func addVectorOf(MASS_KG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MASS_KG, at: VT.MASS_KG) }
+  public static func addVectorOf(THRUST_N: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THRUST_N, at: VT.THRUST_N) }
+  public static func addVectorOf(ACCELERATION_G: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCELERATION_G, at: VT.ACCELERATION_G) }
+  public static func addVectorOf(PITCH_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PITCH_DEG, at: VT.PITCH_DEG) }
+  public static func addVectorOf(FLIGHT_PATH_ANGLE_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLIGHT_PATH_ANGLE_DEG, at: VT.FLIGHT_PATH_ANGLE_DEG) }
+  public static func addVectorOf(IIP_LATITUDE_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IIP_LATITUDE_DEG, at: VT.IIP_LATITUDE_DEG) }
+  public static func addVectorOf(IIP_LONGITUDE_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IIP_LONGITUDE_DEG, at: VT.IIP_LONGITUDE_DEG) }
+  public static func add(MAX_DYNAMIC_PRESSURE_PA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_DYNAMIC_PRESSURE_PA, def: 0.0, at: VT.MAX_DYNAMIC_PRESSURE_PA) }
+  public static func add(MAX_DYNAMIC_PRESSURE_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAX_DYNAMIC_PRESSURE_EPOCH, at: VT.MAX_DYNAMIC_PRESSURE_EPOCH) }
+  public static func add(MAX_HEAT_FLUX_W_PER_M2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_HEAT_FLUX_W_PER_M2, def: 0.0, at: VT.MAX_HEAT_FLUX_W_PER_M2) }
+  public static func add(MAX_HEAT_FLUX_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAX_HEAT_FLUX_EPOCH, at: VT.MAX_HEAT_FLUX_EPOCH) }
+  public static func add(ORBIT_INSERTION_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_INSERTION_EPOCH, at: VT.ORBIT_INSERTION_EPOCH) }
+  public static func add(APOAPSIS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOAPSIS_M, def: 0.0, at: VT.APOAPSIS_M) }
+  public static func add(PERIAPSIS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIAPSIS_M, def: 0.0, at: VT.PERIAPSIS_M) }
+  public static func add(INCLINATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION_DEG, def: 0.0, at: VT.INCLINATION_DEG) }
+  public static func add(PAYLOAD_INJECTION_ERROR_M_PER_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYLOAD_INJECTION_ERROR_M_PER_S, def: 0.0, at: VT.PAYLOAD_INJECTION_ERROR_M_PER_S) }
+  public static func addVectorOf(ASCENT_EVENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASCENT_EVENTS, at: VT.ASCENT_EVENTS) }
+  public static func addVectorOf(CONSTRAINT_VIOLATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINT_VIOLATIONS, at: VT.CONSTRAINT_VIOLATIONS) }
+  public static func addVectorOf(ASSUMPTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSUMPTIONS, at: VT.ASSUMPTIONS) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(TARGET_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_ORBIT, at: VT.TARGET_ORBIT) }
+  public static func add(TRAJECTORY_SOURCE: lamTrajectorySource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAJECTORY_SOURCE.rawValue, def: 0, at: VT.TRAJECTORY_SOURCE) }
+  public static func add(SPEED_REFERENCE: lamSpeedReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED_REFERENCE.rawValue, def: 0, at: VT.SPEED_REFERENCE) }
+  public static func add(INSERTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSERTION, at: VT.INSERTION) }
+  public static func addVectorOf(INSTANTANEOUS_PERIAPSIS_ALTITUDE_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANTANEOUS_PERIAPSIS_ALTITUDE_M, at: VT.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M) }
+  public static func addVectorOf(INSTANTANEOUS_APOAPSIS_ALTITUDE_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANTANEOUS_APOAPSIS_ALTITUDE_M, at: VT.INSTANTANEOUS_APOAPSIS_ALTITUDE_M) }
+  public static func addVectorOf(IN_PLANE_LIFTOFF_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IN_PLANE_LIFTOFF_EPOCHS, at: VT.IN_PLANE_LIFTOFF_EPOCHS) }
+  public static func endLAM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createLAM(
+    _ fbb: inout FlatBufferBuilder,
+    MESSAGE_IDOffset MESSAGE_ID: Offset = Offset(),
+    CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
+    ORIGINATOROffset ORIGINATOR: Offset = Offset(),
+    MISSION_NAMEOffset MISSION_NAME: Offset = Offset(),
+    VEHICLE_NAMEOffset VEHICLE_NAME: Offset = Offset(),
+    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset(),
+    REF_FRAMEOffset REF_FRAME: Offset = Offset(),
+    LAUNCH_EPOCHOffset LAUNCH_EPOCH: Offset = Offset(),
+    START_TIMEOffset START_TIME: Offset = Offset(),
+    STOP_TIMEOffset STOP_TIME: Offset = Offset(),
+    STEP_SIZE: Double = 0.0,
+    LAUNCH_DATAOffset LAUNCH_DATA: Offset = Offset(),
+    ROCKET_CONFIGURATIONOffset ROCKET_CONFIGURATION: Offset = Offset(),
+    EVENT_RECORDSVectorOffset EVENT_RECORDS: Offset = Offset(),
+    DETECTIONSVectorOffset DETECTIONS: Offset = Offset(),
+    BOOST_TRACKSVectorOffset BOOST_TRACKS: Offset = Offset(),
+    BURN_OUT_VECTORSVectorOffset BURN_OUT_VECTORS: Offset = Offset(),
+    TRAJECTORY_OEMOffset TRAJECTORY_OEM: Offset = Offset(),
+    TRAJECTORY_OCMOffset TRAJECTORY_OCM: Offset = Offset(),
+    ATMOSPHEREOffset ATMOSPHERE: Offset = Offset(),
+    HYPERSONIC_CONDITIONSOffset HYPERSONIC_CONDITIONS: Offset = Offset(),
+    PROPAGATOR_NAMEOffset PROPAGATOR_NAME: Offset = Offset(),
+    PROPAGATOR_VERSIONOffset PROPAGATOR_VERSION: Offset = Offset(),
+    GUIDANCE_MODELOffset GUIDANCE_MODEL: Offset = Offset(),
+    THRUST_MODELOffset THRUST_MODEL: Offset = Offset(),
+    AERODYNAMIC_MODELOffset AERODYNAMIC_MODEL: Offset = Offset(),
+    PHASE: lamMissionPhase = .unknown,
+    CONSTRAINT_STATUS: lamConstraintStatus = .unknown,
+    TIME_FROM_LAUNCH_SVectorOffset TIME_FROM_LAUNCH_S: Offset = Offset(),
+    LATITUDE_DEGVectorOffset LATITUDE_DEG: Offset = Offset(),
+    LONGITUDE_DEGVectorOffset LONGITUDE_DEG: Offset = Offset(),
+    ALTITUDE_MVectorOffset ALTITUDE_M: Offset = Offset(),
+    DOWNRANGE_MVectorOffset DOWNRANGE_M: Offset = Offset(),
+    SPEED_M_PER_SVectorOffset SPEED_M_PER_S: Offset = Offset(),
+    MACHVectorOffset MACH: Offset = Offset(),
+    DYNAMIC_PRESSURE_PAVectorOffset DYNAMIC_PRESSURE_PA: Offset = Offset(),
+    HEAT_FLUX_W_PER_M2VectorOffset HEAT_FLUX_W_PER_M2: Offset = Offset(),
+    MASS_KGVectorOffset MASS_KG: Offset = Offset(),
+    THRUST_NVectorOffset THRUST_N: Offset = Offset(),
+    ACCELERATION_GVectorOffset ACCELERATION_G: Offset = Offset(),
+    PITCH_DEGVectorOffset PITCH_DEG: Offset = Offset(),
+    FLIGHT_PATH_ANGLE_DEGVectorOffset FLIGHT_PATH_ANGLE_DEG: Offset = Offset(),
+    IIP_LATITUDE_DEGVectorOffset IIP_LATITUDE_DEG: Offset = Offset(),
+    IIP_LONGITUDE_DEGVectorOffset IIP_LONGITUDE_DEG: Offset = Offset(),
+    MAX_DYNAMIC_PRESSURE_PA: Double = 0.0,
+    MAX_DYNAMIC_PRESSURE_EPOCHOffset MAX_DYNAMIC_PRESSURE_EPOCH: Offset = Offset(),
+    MAX_HEAT_FLUX_W_PER_M2: Double = 0.0,
+    MAX_HEAT_FLUX_EPOCHOffset MAX_HEAT_FLUX_EPOCH: Offset = Offset(),
+    ORBIT_INSERTION_EPOCHOffset ORBIT_INSERTION_EPOCH: Offset = Offset(),
+    APOAPSIS_M: Double = 0.0,
+    PERIAPSIS_M: Double = 0.0,
+    INCLINATION_DEG: Double = 0.0,
+    PAYLOAD_INJECTION_ERROR_M_PER_S: Double = 0.0,
+    ASCENT_EVENTSVectorOffset ASCENT_EVENTS: Offset = Offset(),
+    CONSTRAINT_VIOLATIONSVectorOffset CONSTRAINT_VIOLATIONS: Offset = Offset(),
+    ASSUMPTIONSVectorOffset ASSUMPTIONS: Offset = Offset(),
+    COMMENTOffset COMMENT: Offset = Offset(),
+    TARGET_ORBITOffset TARGET_ORBIT: Offset = Offset(),
+    TRAJECTORY_SOURCE: lamTrajectorySource = .unspecified,
+    SPEED_REFERENCE: lamSpeedReference = .unspecified,
+    INSERTIONOffset INSERTION: Offset = Offset(),
+    INSTANTANEOUS_PERIAPSIS_ALTITUDE_MVectorOffset INSTANTANEOUS_PERIAPSIS_ALTITUDE_M: Offset = Offset(),
+    INSTANTANEOUS_APOAPSIS_ALTITUDE_MVectorOffset INSTANTANEOUS_APOAPSIS_ALTITUDE_M: Offset = Offset(),
+    IN_PLANE_LIFTOFF_EPOCHSVectorOffset IN_PLANE_LIFTOFF_EPOCHS: Offset = Offset()
+  ) -> Offset {
+    let __start = LAM.startLAM(&fbb)
+    LAM.add(MESSAGE_ID: MESSAGE_ID, &fbb)
+    LAM.add(CREATION_DATE: CREATION_DATE, &fbb)
+    LAM.add(ORIGINATOR: ORIGINATOR, &fbb)
+    LAM.add(MISSION_NAME: MISSION_NAME, &fbb)
+    LAM.add(VEHICLE_NAME: VEHICLE_NAME, &fbb)
+    LAM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    LAM.add(REF_FRAME: REF_FRAME, &fbb)
+    LAM.add(LAUNCH_EPOCH: LAUNCH_EPOCH, &fbb)
+    LAM.add(START_TIME: START_TIME, &fbb)
+    LAM.add(STOP_TIME: STOP_TIME, &fbb)
+    LAM.add(STEP_SIZE: STEP_SIZE, &fbb)
+    LAM.add(LAUNCH_DATA: LAUNCH_DATA, &fbb)
+    LAM.add(ROCKET_CONFIGURATION: ROCKET_CONFIGURATION, &fbb)
+    LAM.addVectorOf(EVENT_RECORDS: EVENT_RECORDS, &fbb)
+    LAM.addVectorOf(DETECTIONS: DETECTIONS, &fbb)
+    LAM.addVectorOf(BOOST_TRACKS: BOOST_TRACKS, &fbb)
+    LAM.addVectorOf(BURN_OUT_VECTORS: BURN_OUT_VECTORS, &fbb)
+    LAM.add(TRAJECTORY_OEM: TRAJECTORY_OEM, &fbb)
+    LAM.add(TRAJECTORY_OCM: TRAJECTORY_OCM, &fbb)
+    LAM.add(ATMOSPHERE: ATMOSPHERE, &fbb)
+    LAM.add(HYPERSONIC_CONDITIONS: HYPERSONIC_CONDITIONS, &fbb)
+    LAM.add(PROPAGATOR_NAME: PROPAGATOR_NAME, &fbb)
+    LAM.add(PROPAGATOR_VERSION: PROPAGATOR_VERSION, &fbb)
+    LAM.add(GUIDANCE_MODEL: GUIDANCE_MODEL, &fbb)
+    LAM.add(THRUST_MODEL: THRUST_MODEL, &fbb)
+    LAM.add(AERODYNAMIC_MODEL: AERODYNAMIC_MODEL, &fbb)
+    LAM.add(PHASE: PHASE, &fbb)
+    LAM.add(CONSTRAINT_STATUS: CONSTRAINT_STATUS, &fbb)
+    LAM.addVectorOf(TIME_FROM_LAUNCH_S: TIME_FROM_LAUNCH_S, &fbb)
+    LAM.addVectorOf(LATITUDE_DEG: LATITUDE_DEG, &fbb)
+    LAM.addVectorOf(LONGITUDE_DEG: LONGITUDE_DEG, &fbb)
+    LAM.addVectorOf(ALTITUDE_M: ALTITUDE_M, &fbb)
+    LAM.addVectorOf(DOWNRANGE_M: DOWNRANGE_M, &fbb)
+    LAM.addVectorOf(SPEED_M_PER_S: SPEED_M_PER_S, &fbb)
+    LAM.addVectorOf(MACH: MACH, &fbb)
+    LAM.addVectorOf(DYNAMIC_PRESSURE_PA: DYNAMIC_PRESSURE_PA, &fbb)
+    LAM.addVectorOf(HEAT_FLUX_W_PER_M2: HEAT_FLUX_W_PER_M2, &fbb)
+    LAM.addVectorOf(MASS_KG: MASS_KG, &fbb)
+    LAM.addVectorOf(THRUST_N: THRUST_N, &fbb)
+    LAM.addVectorOf(ACCELERATION_G: ACCELERATION_G, &fbb)
+    LAM.addVectorOf(PITCH_DEG: PITCH_DEG, &fbb)
+    LAM.addVectorOf(FLIGHT_PATH_ANGLE_DEG: FLIGHT_PATH_ANGLE_DEG, &fbb)
+    LAM.addVectorOf(IIP_LATITUDE_DEG: IIP_LATITUDE_DEG, &fbb)
+    LAM.addVectorOf(IIP_LONGITUDE_DEG: IIP_LONGITUDE_DEG, &fbb)
+    LAM.add(MAX_DYNAMIC_PRESSURE_PA: MAX_DYNAMIC_PRESSURE_PA, &fbb)
+    LAM.add(MAX_DYNAMIC_PRESSURE_EPOCH: MAX_DYNAMIC_PRESSURE_EPOCH, &fbb)
+    LAM.add(MAX_HEAT_FLUX_W_PER_M2: MAX_HEAT_FLUX_W_PER_M2, &fbb)
+    LAM.add(MAX_HEAT_FLUX_EPOCH: MAX_HEAT_FLUX_EPOCH, &fbb)
+    LAM.add(ORBIT_INSERTION_EPOCH: ORBIT_INSERTION_EPOCH, &fbb)
+    LAM.add(APOAPSIS_M: APOAPSIS_M, &fbb)
+    LAM.add(PERIAPSIS_M: PERIAPSIS_M, &fbb)
+    LAM.add(INCLINATION_DEG: INCLINATION_DEG, &fbb)
+    LAM.add(PAYLOAD_INJECTION_ERROR_M_PER_S: PAYLOAD_INJECTION_ERROR_M_PER_S, &fbb)
+    LAM.addVectorOf(ASCENT_EVENTS: ASCENT_EVENTS, &fbb)
+    LAM.addVectorOf(CONSTRAINT_VIOLATIONS: CONSTRAINT_VIOLATIONS, &fbb)
+    LAM.addVectorOf(ASSUMPTIONS: ASSUMPTIONS, &fbb)
+    LAM.add(COMMENT: COMMENT, &fbb)
+    LAM.add(TARGET_ORBIT: TARGET_ORBIT, &fbb)
+    LAM.add(TRAJECTORY_SOURCE: TRAJECTORY_SOURCE, &fbb)
+    LAM.add(SPEED_REFERENCE: SPEED_REFERENCE, &fbb)
+    LAM.add(INSERTION: INSERTION, &fbb)
+    LAM.addVectorOf(INSTANTANEOUS_PERIAPSIS_ALTITUDE_M: INSTANTANEOUS_PERIAPSIS_ALTITUDE_M, &fbb)
+    LAM.addVectorOf(INSTANTANEOUS_APOAPSIS_ALTITUDE_M: INSTANTANEOUS_APOAPSIS_ALTITUDE_M, &fbb)
+    LAM.addVectorOf(IN_PLANE_LIFTOFF_EPOCHS: IN_PLANE_LIFTOFF_EPOCHS, &fbb)
+    return LAM.endLAM(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MESSAGE_ID, fieldName: "MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MISSION_NAME, fieldName: "MISSION_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VEHICLE_NAME, fieldName: "VEHICLE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_EPOCH, fieldName: "LAUNCH_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.START_TIME, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_TIME, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STEP_SIZE, fieldName: "STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.LAUNCH_DATA, fieldName: "LAUNCH_DATA", required: false, type: ForwardOffset<LDM>.self)
+    try _v.visit(field: VT.ROCKET_CONFIGURATION, fieldName: "ROCKET_CONFIGURATION", required: false, type: ForwardOffset<ROC>.self)
+    try _v.visit(field: VT.EVENT_RECORDS, fieldName: "EVENT_RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<LNE>, LNE>>.self)
+    try _v.visit(field: VT.DETECTIONS, fieldName: "DETECTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<LND>, LND>>.self)
+    try _v.visit(field: VT.BOOST_TRACKS, fieldName: "BOOST_TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<MST>, MST>>.self)
+    try _v.visit(field: VT.BURN_OUT_VECTORS, fieldName: "BURN_OUT_VECTORS", required: false, type: ForwardOffset<Vector<ForwardOffset<BOV>, BOV>>.self)
+    try _v.visit(field: VT.TRAJECTORY_OEM, fieldName: "TRAJECTORY_OEM", required: false, type: ForwardOffset<OEM>.self)
+    try _v.visit(field: VT.TRAJECTORY_OCM, fieldName: "TRAJECTORY_OCM", required: false, type: ForwardOffset<OCM>.self)
+    try _v.visit(field: VT.ATMOSPHERE, fieldName: "ATMOSPHERE", required: false, type: ForwardOffset<ATM>.self)
+    try _v.visit(field: VT.HYPERSONIC_CONDITIONS, fieldName: "HYPERSONIC_CONDITIONS", required: false, type: ForwardOffset<HFC>.self)
+    try _v.visit(field: VT.PROPAGATOR_NAME, fieldName: "PROPAGATOR_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_VERSION, fieldName: "PROPAGATOR_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GUIDANCE_MODEL, fieldName: "GUIDANCE_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THRUST_MODEL, fieldName: "THRUST_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AERODYNAMIC_MODEL, fieldName: "AERODYNAMIC_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PHASE, fieldName: "PHASE", required: false, type: lamMissionPhase.self)
+    try _v.visit(field: VT.CONSTRAINT_STATUS, fieldName: "CONSTRAINT_STATUS", required: false, type: lamConstraintStatus.self)
+    try _v.visit(field: VT.TIME_FROM_LAUNCH_S, fieldName: "TIME_FROM_LAUNCH_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.LATITUDE_DEG, fieldName: "LATITUDE_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.LONGITUDE_DEG, fieldName: "LONGITUDE_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DOWNRANGE_M, fieldName: "DOWNRANGE_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SPEED_M_PER_S, fieldName: "SPEED_M_PER_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MACH, fieldName: "MACH", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DYNAMIC_PRESSURE_PA, fieldName: "DYNAMIC_PRESSURE_PA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.HEAT_FLUX_W_PER_M2, fieldName: "HEAT_FLUX_W_PER_M2", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MASS_KG, fieldName: "MASS_KG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.THRUST_N, fieldName: "THRUST_N", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ACCELERATION_G, fieldName: "ACCELERATION_G", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.PITCH_DEG, fieldName: "PITCH_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.FLIGHT_PATH_ANGLE_DEG, fieldName: "FLIGHT_PATH_ANGLE_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.IIP_LATITUDE_DEG, fieldName: "IIP_LATITUDE_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.IIP_LONGITUDE_DEG, fieldName: "IIP_LONGITUDE_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MAX_DYNAMIC_PRESSURE_PA, fieldName: "MAX_DYNAMIC_PRESSURE_PA", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_DYNAMIC_PRESSURE_EPOCH, fieldName: "MAX_DYNAMIC_PRESSURE_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAX_HEAT_FLUX_W_PER_M2, fieldName: "MAX_HEAT_FLUX_W_PER_M2", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_HEAT_FLUX_EPOCH, fieldName: "MAX_HEAT_FLUX_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORBIT_INSERTION_EPOCH, fieldName: "ORBIT_INSERTION_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.APOAPSIS_M, fieldName: "APOAPSIS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIAPSIS_M, fieldName: "PERIAPSIS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION_DEG, fieldName: "INCLINATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.PAYLOAD_INJECTION_ERROR_M_PER_S, fieldName: "PAYLOAD_INJECTION_ERROR_M_PER_S", required: false, type: Double.self)
+    try _v.visit(field: VT.ASCENT_EVENTS, fieldName: "ASCENT_EVENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<lamAscentEvent>, lamAscentEvent>>.self)
+    try _v.visit(field: VT.CONSTRAINT_VIOLATIONS, fieldName: "CONSTRAINT_VIOLATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<lamConstraintViolation>, lamConstraintViolation>>.self)
+    try _v.visit(field: VT.ASSUMPTIONS, fieldName: "ASSUMPTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_ORBIT, fieldName: "TARGET_ORBIT", required: false, type: ForwardOffset<lamTargetOrbit>.self)
+    try _v.visit(field: VT.TRAJECTORY_SOURCE, fieldName: "TRAJECTORY_SOURCE", required: false, type: lamTrajectorySource.self)
+    try _v.visit(field: VT.SPEED_REFERENCE, fieldName: "SPEED_REFERENCE", required: false, type: lamSpeedReference.self)
+    try _v.visit(field: VT.INSERTION, fieldName: "INSERTION", required: false, type: ForwardOffset<lamInsertionOrbit>.self)
+    try _v.visit(field: VT.INSTANTANEOUS_PERIAPSIS_ALTITUDE_M, fieldName: "INSTANTANEOUS_PERIAPSIS_ALTITUDE_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.INSTANTANEOUS_APOAPSIS_ALTITUDE_M, fieldName: "INSTANTANEOUS_APOAPSIS_ALTITUDE_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.IN_PLANE_LIFTOFF_EPOCHS, fieldName: "IN_PLANE_LIFTOFF_EPOCHS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

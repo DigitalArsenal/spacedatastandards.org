@@ -57,7 +57,7 @@ func (rcv *LCC) Table() flatbuffers.Table {
 func (rcv *LCC) OWNER() legacyCountryCode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return legacyCountryCode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return legacyCountryCode(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
@@ -67,7 +67,7 @@ func (rcv *LCC) Owner() legacyCountryCode {
 }
 
 func (rcv *LCC) MutateOWNER(n legacyCountryCode) bool {
-	return rcv._tab.MutateInt8Slot(4, int8(n))
+	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
 func (rcv *LCC) MutateOwner(n legacyCountryCode) bool {
@@ -156,7 +156,7 @@ func LCCStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
 }
 func LCCAddOWNER(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
-	builder.PrependInt8Slot(0, int8(OWNER), 0)
+	builder.PrependByteSlot(0, byte(OWNER), 0)
 }
 func LCCAddOwner(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
 	LCCAddOWNER(builder, OWNER)

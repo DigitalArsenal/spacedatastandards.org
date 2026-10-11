@@ -8,381 +8,488 @@ import Common
 
 import FlatBuffers
 
-///  Coarse spectral region a band belongs to, by effective wavelength.
+///  What a sky query asks.
 ///  Append new values only; never reorder or reuse existing values.
-public enum phbSpectralRegime: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum skqQueryKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case unspecified = 0
-  ///  Photon energy above 100 keV (wavelength below 0.0124 nm).
-  case gammaRay = 1
-  ///  10 keV to 100 keV (0.0124 nm to 0.124 nm).
-  case hardXRay = 2
-  ///  0.1 keV to 10 keV (0.124 nm to 12.4 nm).
-  case softXRay = 3
-  ///  12.4 nm to 91.2 nm.
-  case extremeUltraviolet = 4
-  ///  91.2 nm to 200 nm.
-  case farUltraviolet = 5
-  ///  200 nm to 380 nm.
-  case nearUltraviolet = 6
-  ///  380 nm to 750 nm.
-  case visible = 7
-  ///  0.75 um to 5 um.
-  case nearInfrared = 8
-  ///  5 um to 40 um.
-  case midInfrared = 9
-  ///  40 um to 350 um.
-  case farInfrared = 10
-  ///  350 um to 1 mm.
-  case submillimetre = 11
-  ///  1 mm to 10 cm (3 GHz to 300 GHz).
-  case microwave = 12
-  ///  Longer than 10 cm (below 3 GHz).
-  case radio = 13
+  ///  Place every row for the observer; answered with `$SKT` tiles.
+  case apparentPlaces = 1
+  ///  Brightness of every row in each of BAND_IDS.
+  case syntheticPhotometry = 2
+  ///  Rows within RADIUS_DEG of RA_DEG / DEC_DEG.
+  case cone = 3
+  ///  Rows inside the rectangle HALF_WIDTH_DEG x HALF_HEIGHT_DEG about the
+  ///  boresight RA_DEG / DEC_DEG, rotated by ROLL_DEG.
+  case fieldOfView = 4
+  ///  Identify DETECTIONS with no prior pointing and solve the camera attitude.
+  case identify = 5
+  ///  Rows each of TRACKS passes over.
+  case occultation = 6
+  ///  Bright rows near each of POINTINGS.
+  case brightStarExclusion = 7
+  ///  Counts after catalogue records were ingested.
+  case ingest = 8
 
-  public static var max: phbSpectralRegime { return .radio }
-  public static var min: phbSpectralRegime { return .unspecified }
+  public static var max: skqQueryKind { return .ingest }
+  public static var min: skqQueryKind { return .unspecified }
 }
 
 
-///  Calibration system a magnitude is stated in.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbMagnitudeSystem: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Zero magnitude is the flux of the standard A0 V reference star.
-  case vega = 1
-  ///  Zero magnitude is a flux density of 3631 Jy per unit frequency.
-  case ab = 2
-  ///  Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit
-  ///  wavelength.
-  case st = 3
-  ///  Instrument-specific system; ZERO_POINT_JY states the calibration.
-  case instrumental = 4
-  ///  The value is not a magnitude (a flux, a count rate, a temperature).
-  case notAMagnitude = 5
+///  A star detected by a camera: a direction in the camera frame.
+public struct SKQDetection: NativeStruct, FlatbuffersVectorInitializable, Verifiable, FlatbuffersInitializable {
 
-  public static var max: phbMagnitudeSystem { return .notAMagnitude }
-  public static var min: phbMagnitudeSystem { return .unspecified }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+
+  ///  Direction in the camera frame; any non-zero length.
+  private var _X: Double
+  private var _Y: Double
+  private var _Z: Double
+  ///  Relative brightness; larger is brighter. Orders the detections.
+  private var _BRIGHTNESS: Float32
+  private var _RESERVED: UInt32
+
+  public init(_ bb: ByteBuffer, o: Int32) {
+    self = bb.read(def: Self.self, position: Int(o))
+  }
+
+  public init(X: Double, Y: Double, Z: Double, BRIGHTNESS: Float32, RESERVED: UInt32) {
+    _X = X
+    _Y = Y
+    _Z = Z
+    _BRIGHTNESS = BRIGHTNESS
+    _RESERVED = RESERVED
+  }
+
+  public init() {
+    _X = 0.0
+    _Y = 0.0
+    _Z = 0.0
+    _BRIGHTNESS = 0.0
+    _RESERVED = 0
+  }
+
+  ///  Direction in the camera frame; any non-zero length.
+  public var X: Double { _X }
+  public var Y: Double { _Y }
+  public var Z: Double { _Z }
+  ///  Relative brightness; larger is brighter. Orders the detections.
+  public var BRIGHTNESS: Float32 { _BRIGHTNESS }
+  public var RESERVED: UInt32 { _RESERVED }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    try verifier.inBuffer(position: position, of: SKQDetection.self)
+  }
 }
 
+///  A star detected by a camera: a direction in the camera frame.
+public struct SKQDetection_Mutable: FlatBufferStruct, FlatbuffersVectorInitializable {
 
-///  Physical quantity a measurement VALUE states.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbQuantity: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Magnitude in the band's SYSTEM.
-  case magnitude = 1
-  ///  Spectral flux density per unit frequency, janskys (1e-26 W m-2 Hz-1).
-  case fluxDensityJy = 2
-  ///  Band-integrated energy flux, W m-2.
-  case energyFluxWPerM2 = 3
-  ///  Band-integrated photon flux, photons m-2 s-1.
-  case photonFluxPerM2S = 4
-  ///  Detected count rate of the stated instrument, counts s-1.
-  case countRatePerS = 5
-  ///  Brightness temperature, kelvin.
-  case brightnessTemperatureK = 6
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Struct
 
-  public static var max: phbQuantity { return .brightnessTemperatureK }
-  public static var min: phbQuantity { return .unspecified }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Struct(bb: bb, position: o) }
+
+  public var X: Double { return _accessor.readBuffer(of: Double.self, at: 0) }
+  public var Y: Double { return _accessor.readBuffer(of: Double.self, at: 8) }
+  public var Z: Double { return _accessor.readBuffer(of: Double.self, at: 16) }
+  public var BRIGHTNESS: Float32 { return _accessor.readBuffer(of: Float32.self, at: 24) }
+  public var RESERVED: UInt32 { return _accessor.readBuffer(of: UInt32.self, at: 28) }
 }
 
+///  A body's apparent path across the sky over an interval, and its disc.
+public struct SKQTrack: NativeStruct, FlatbuffersVectorInitializable, Verifiable, FlatbuffersInitializable {
 
-///  How a measurement was obtained.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbDerivation: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case unspecified = 0
-  ///  Observed in this band.
-  case measured = 1
-  ///  Converted from a measurement in another band or system by a stated
-  ///  transformation.
-  case transformed = 2
-  ///  Synthesised from a spectral energy distribution or a model atmosphere;
-  ///  never observed in this band.
-  case modelled = 3
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
 
-  public static var max: phbDerivation { return .modelled }
-  public static var min: phbDerivation { return .unspecified }
+  ///  Direction of the body's centre at the start of the interval.
+  private var _START_RA_DEG: Double
+  private var _START_DEC_DEG: Double
+  ///  Direction at the end; equal to the start for an instant.
+  private var _END_RA_DEG: Double
+  private var _END_DEC_DEG: Double
+  ///  Angular radius of the body's disc.
+  private var _RADIUS_DEG: Double
+  ///  Caller's identifier for the body, echoed in the result.
+  private var _BODY_ID: UInt32
+  private var _RESERVED: UInt32
+
+  public init(_ bb: ByteBuffer, o: Int32) {
+    self = bb.read(def: Self.self, position: Int(o))
+  }
+
+  public init(START_RA_DEG: Double, START_DEC_DEG: Double, END_RA_DEG: Double, END_DEC_DEG: Double, RADIUS_DEG: Double, BODY_ID: UInt32, RESERVED: UInt32) {
+    _START_RA_DEG = START_RA_DEG
+    _START_DEC_DEG = START_DEC_DEG
+    _END_RA_DEG = END_RA_DEG
+    _END_DEC_DEG = END_DEC_DEG
+    _RADIUS_DEG = RADIUS_DEG
+    _BODY_ID = BODY_ID
+    _RESERVED = RESERVED
+  }
+
+  public init() {
+    _START_RA_DEG = 0.0
+    _START_DEC_DEG = 0.0
+    _END_RA_DEG = 0.0
+    _END_DEC_DEG = 0.0
+    _RADIUS_DEG = 0.0
+    _BODY_ID = 0
+    _RESERVED = 0
+  }
+
+  ///  Direction of the body's centre at the start of the interval.
+  public var START_RA_DEG: Double { _START_RA_DEG }
+  public var START_DEC_DEG: Double { _START_DEC_DEG }
+  ///  Direction at the end; equal to the start for an instant.
+  public var END_RA_DEG: Double { _END_RA_DEG }
+  public var END_DEC_DEG: Double { _END_DEC_DEG }
+  ///  Angular radius of the body's disc.
+  public var RADIUS_DEG: Double { _RADIUS_DEG }
+  ///  Caller's identifier for the body, echoed in the result.
+  public var BODY_ID: UInt32 { _BODY_ID }
+  public var RESERVED: UInt32 { _RESERVED }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    try verifier.inBuffer(position: position, of: SKQTrack.self)
+  }
 }
 
+///  A body's apparent path across the sky over an interval, and its disc.
+public struct SKQTrack_Mutable: FlatBufferStruct, FlatbuffersVectorInitializable {
 
-///  Whether a measurement is a detection or a bound.
-///  Append new values only; never reorder or reuse existing values.
-public enum phbBoundKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  A detection: VALUE is the measured brightness.
-  case detection = 0
-  ///  Not detected: the source is fainter than VALUE (a flux upper limit, a
-  ///  magnitude lower bound).
-  case upperLimit = 1
-  ///  Saturated or confused: the source is at least as bright as VALUE.
-  case lowerLimit = 2
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Struct
 
-  public static var max: phbBoundKind { return .lowerLimit }
-  public static var min: phbBoundKind { return .detection }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Struct(bb: bb, position: o) }
+
+  public var START_RA_DEG: Double { return _accessor.readBuffer(of: Double.self, at: 0) }
+  public var START_DEC_DEG: Double { return _accessor.readBuffer(of: Double.self, at: 8) }
+  public var END_RA_DEG: Double { return _accessor.readBuffer(of: Double.self, at: 16) }
+  public var END_DEC_DEG: Double { return _accessor.readBuffer(of: Double.self, at: 24) }
+  public var RADIUS_DEG: Double { return _accessor.readBuffer(of: Double.self, at: 32) }
+  public var BODY_ID: UInt32 { return _accessor.readBuffer(of: UInt32.self, at: 40) }
+  public var RESERVED: UInt32 { return _accessor.readBuffer(of: UInt32.self, at: 44) }
 }
 
+///  A sensor pointing to check for bright stars.
+public struct SKQPointing: NativeStruct, FlatbuffersVectorInitializable, Verifiable, FlatbuffersInitializable {
 
-///  One source's brightness in one band.
-public struct PHBMeasurement: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+
+  private var _RA_DEG: Double
+  private var _DEC_DEG: Double
+  ///  Caller's identifier for the pointing, echoed in the result.
+  private var _POINTING_ID: UInt32
+  private var _RESERVED: UInt32
+
+  public init(_ bb: ByteBuffer, o: Int32) {
+    self = bb.read(def: Self.self, position: Int(o))
+  }
+
+  public init(RA_DEG: Double, DEC_DEG: Double, POINTING_ID: UInt32, RESERVED: UInt32) {
+    _RA_DEG = RA_DEG
+    _DEC_DEG = DEC_DEG
+    _POINTING_ID = POINTING_ID
+    _RESERVED = RESERVED
+  }
+
+  public init() {
+    _RA_DEG = 0.0
+    _DEC_DEG = 0.0
+    _POINTING_ID = 0
+    _RESERVED = 0
+  }
+
+  public var RA_DEG: Double { _RA_DEG }
+  public var DEC_DEG: Double { _DEC_DEG }
+  ///  Caller's identifier for the pointing, echoed in the result.
+  public var POINTING_ID: UInt32 { _POINTING_ID }
+  public var RESERVED: UInt32 { _RESERVED }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    try verifier.inBuffer(position: position, of: SKQPointing.self)
+  }
+}
+
+///  A sensor pointing to check for bright stars.
+public struct SKQPointing_Mutable: FlatBufferStruct, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Struct
+
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Struct(bb: bb, position: o) }
+
+  public var RA_DEG: Double { return _accessor.readBuffer(of: Double.self, at: 0) }
+  public var DEC_DEG: Double { return _accessor.readBuffer(of: Double.self, at: 8) }
+  public var POINTING_ID: UInt32 { return _accessor.readBuffer(of: UInt32.self, at: 16) }
+  public var RESERVED: UInt32 { return _accessor.readBuffer(of: UInt32.self, at: 20) }
+}
+
+///  Sky Query: one question to a star and compact-source catalogue for an observer and epoch.
+public struct SKQ: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PHB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PHBMeasurement.id, addPrefix: prefix) }
+  public static var id: String { "$SKQ" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SKQ.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let BAND_ID: VOffset = 4
-    static let SPECTRAL_REGIME: VOffset = 6
-    static let WAVELENGTH_EFF_NM: VOffset = 8
-    static let QUANTITY: VOffset = 10
-    static let MAGNITUDE_SYSTEM: VOffset = 12
-    static let VALUE: VOffset = 14
-    static let UNCERTAINTY: VOffset = 16
-    static let BOUND: VOffset = 18
-    static let DERIVATION: VOffset = 20
-    static let EPOCH_MJD: VOffset = 22
-    static let OBSERVATION_COUNT: VOffset = 24
+    static let QUERY_ID: VOffset = 4
+    static let QUERY_KIND: VOffset = 6
+    static let EPOCH_JD_TT: VOffset = 8
+    static let EPOCH_JD_TT_FRACTION: VOffset = 10
+    static let OBSERVER_ID: VOffset = 12
+    static let OBSERVER_POSITION_M: VOffset = 14
+    static let OBSERVER_VELOCITY_M_PER_S: VOffset = 16
+    static let PLACE: VOffset = 18
+    static let BAND_ID: VOffset = 20
+    static let MAG_LIMIT: VOffset = 22
+    static let MAX_RESULTS: VOffset = 24
+    static let TILE_ORDER: VOffset = 26
+    static let COLOR_ENCODING: VOffset = 28
+    static let COLOR_BLUE_BAND_ID: VOffset = 30
+    static let COLOR_RED_BAND_ID: VOffset = 32
+    static let LAYER_ID: VOffset = 34
+    static let BAND_IDS: VOffset = 36
+    static let RA_DEG: VOffset = 38
+    static let DEC_DEG: VOffset = 40
+    static let RADIUS_DEG: VOffset = 42
+    static let HALF_WIDTH_DEG: VOffset = 44
+    static let HALF_HEIGHT_DEG: VOffset = 46
+    static let ROLL_DEG: VOffset = 48
+    static let DETECTIONS: VOffset = 50
+    static let TOLERANCE_ARCSEC: VOffset = 52
+    static let MAX_FIELD_DEG: VOffset = 54
+    static let TRACKS: VOffset = 56
+    static let POINTINGS: VOffset = 58
+    static let EXCLUSION_RADIUS_DEG: VOffset = 60
+    static let MAG_THRESHOLD: VOffset = 62
   }
 
-  ///  Band identifier; resolves to a `$PHB` BAND_ID.
+  ///  Caller's identifier, echoed in the result.
+  public var QUERY_ID: String? { let o = _accessor.offset(VT.QUERY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var QUERY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.QUERY_ID) }
+  ///  What is asked.
+  public var QUERY_KIND: skqQueryKind { let o = _accessor.offset(VT.QUERY_KIND); return o == 0 ? .unspecified : skqQueryKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Whole part of the epoch, Julian Date (TT).
+  public var EPOCH_JD_TT: Double { let o = _accessor.offset(VT.EPOCH_JD_TT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fraction added to EPOCH_JD_TT, days.
+  public var EPOCH_JD_TT_FRACTION: Double { let o = _accessor.offset(VT.EPOCH_JD_TT_FRACTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Name of the observer, carried into tiles and results.
+  public var OBSERVER_ID: String? { let o = _accessor.offset(VT.OBSERVER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSERVER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVER_ID) }
+  ///  Observer's geocentric position on GCRS axes, metres; three entries.
+  public var OBSERVER_POSITION_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.OBSERVER_POSITION_M, byteSize: 8) }
+  public func withUnsafePointerToObserverPositionM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OBSERVER_POSITION_M, body: body) }
+  ///  Observer's geocentric velocity on GCRS axes, metres per second; three
+  ///  entries.
+  public var OBSERVER_VELOCITY_M_PER_S: FlatbufferVector<Double> { return _accessor.vector(at: VT.OBSERVER_VELOCITY_M_PER_S, byteSize: 8) }
+  public func withUnsafePointerToObserverVelocityMPerS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OBSERVER_VELOCITY_M_PER_S, body: body) }
+  ///  How far the reduction goes.
+  public var PLACE: sktPlaceKind { let o = _accessor.offset(VT.PLACE); return o == 0 ? .apparent : sktPlaceKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .apparent }
+  ///  Band magnitudes are stated in and limited by; resolves to a `$PHB`
+  ///  BAND_ID.
   public var BAND_ID: String? { let o = _accessor.offset(VT.BAND_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var BAND_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BAND_ID) }
-  ///  Coarse region of the band, copied from its descriptor so a consumer
-  ///  can select a mode without resolving the band.
-  public var SPECTRAL_REGIME: phbSpectralRegime { let o = _accessor.offset(VT.SPECTRAL_REGIME); return o == 0 ? .unspecified : phbSpectralRegime(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Effective wavelength of the band, nanometres (vacuum). Copied from the
-  ///  descriptor; required for synthesis when the descriptor is not at hand.
-  public var WAVELENGTH_EFF_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_EFF_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Quantity VALUE states.
-  public var QUANTITY: phbQuantity { let o = _accessor.offset(VT.QUANTITY); return o == 0 ? .magnitude : phbQuantity(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .magnitude }
-  ///  Calibration system when QUANTITY is MAGNITUDE.
-  public var MAGNITUDE_SYSTEM: phbMagnitudeSystem { let o = _accessor.offset(VT.MAGNITUDE_SYSTEM); return o == 0 ? .unspecified : phbMagnitudeSystem(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  The measurement, in QUANTITY's units.
-  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  One-sigma uncertainty of VALUE, same units.
-  public var UNCERTAINTY: Double { let o = _accessor.offset(VT.UNCERTAINTY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Detection or bound.
-  public var BOUND: phbBoundKind { let o = _accessor.offset(VT.BOUND); return o == 0 ? .detection : phbBoundKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .detection }
-  ///  How the value was obtained.
-  public var DERIVATION: phbDerivation { let o = _accessor.offset(VT.DERIVATION); return o == 0 ? .unspecified : phbDerivation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Mid-time of the observation, Modified Julian Date (TT), for sources
-  ///  whose brightness varies. Absent for a catalogue mean.
-  public var EPOCH_MJD: Double { let o = _accessor.offset(VT.EPOCH_MJD); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of observations averaged into VALUE; 0 when unstated.
-  public var OBSERVATION_COUNT: UInt32 { let o = _accessor.offset(VT.OBSERVATION_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startPHBMeasurement(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  ///  Faintest magnitude reported. Absent: no limit.
+  public var MAG_LIMIT: Float32 { let o = _accessor.offset(VT.MAG_LIMIT); return o == 0 ? .nan : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Largest number of rows reported; 0 for no cap.
+  public var MAX_RESULTS: UInt32 { let o = _accessor.offset(VT.MAX_RESULTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  APPARENT_PLACES: HEALPix order of the output tiles.
+  public var TILE_ORDER: UInt8 { let o = _accessor.offset(VT.TILE_ORDER); return o == 0 ? 3 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  APPARENT_PLACES: what each point's COLOR holds.
+  public var COLOR_ENCODING: sktColorEncoding { let o = _accessor.offset(VT.COLOR_ENCODING); return o == 0 ? .none_ : sktColorEncoding(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  APPARENT_PLACES: bands of a COLOR_INDEX colour.
+  public var COLOR_BLUE_BAND_ID: String? { let o = _accessor.offset(VT.COLOR_BLUE_BAND_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLOR_BLUE_BAND_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR_BLUE_BAND_ID) }
+  public var COLOR_RED_BAND_ID: String? { let o = _accessor.offset(VT.COLOR_RED_BAND_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLOR_RED_BAND_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR_RED_BAND_ID) }
+  ///  APPARENT_PLACES: LAYER_ID of the output tiles.
+  public var LAYER_ID: String? { let o = _accessor.offset(VT.LAYER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAYER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAYER_ID) }
+  ///  SYNTHETIC_PHOTOMETRY: bands to report.
+  public var BAND_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.BAND_IDS, byteSize: 4) }
+  ///  CONE and FIELD_OF_VIEW: centre or boresight.
+  public var RA_DEG: Double { let o = _accessor.offset(VT.RA_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DEC_DEG: Double { let o = _accessor.offset(VT.DEC_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  CONE: radius.
+  public var RADIUS_DEG: Double { let o = _accessor.offset(VT.RADIUS_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIELD_OF_VIEW: half-extent along the field's x axis.
+  public var HALF_WIDTH_DEG: Double { let o = _accessor.offset(VT.HALF_WIDTH_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIELD_OF_VIEW: half-extent along the field's y axis.
+  public var HALF_HEIGHT_DEG: Double { let o = _accessor.offset(VT.HALF_HEIGHT_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIELD_OF_VIEW: position angle of the field's +y axis, east of north.
+  public var ROLL_DEG: Double { let o = _accessor.offset(VT.ROLL_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IDENTIFY: detected stars.
+  public var DETECTIONS: FlatbufferVector<SKQDetection> { return _accessor.vector(at: VT.DETECTIONS, byteSize: 32) }
+  public var mutableDetections: FlatbufferVector<SKQDetection_Mutable> { return _accessor.vector(at: VT.DETECTIONS, byteSize: 32) }
+  public func withUnsafePointerToDetections<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DETECTIONS, body: body) }
+  ///  IDENTIFY: largest angle between a detection and its catalogue star.
+  public var TOLERANCE_ARCSEC: Double { let o = _accessor.offset(VT.TOLERANCE_ARCSEC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IDENTIFY: largest angle between two detections (the field diagonal).
+  public var MAX_FIELD_DEG: Double { let o = _accessor.offset(VT.MAX_FIELD_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OCCULTATION: bodies and their tracks.
+  public var TRACKS: FlatbufferVector<SKQTrack> { return _accessor.vector(at: VT.TRACKS, byteSize: 48) }
+  public var mutableTracks: FlatbufferVector<SKQTrack_Mutable> { return _accessor.vector(at: VT.TRACKS, byteSize: 48) }
+  public func withUnsafePointerToTracks<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TRACKS, body: body) }
+  ///  BRIGHT_STAR_EXCLUSION: pointings to check.
+  public var POINTINGS: FlatbufferVector<SKQPointing> { return _accessor.vector(at: VT.POINTINGS, byteSize: 24) }
+  public var mutablePointings: FlatbufferVector<SKQPointing_Mutable> { return _accessor.vector(at: VT.POINTINGS, byteSize: 24) }
+  public func withUnsafePointerToPointings<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POINTINGS, body: body) }
+  ///  BRIGHT_STAR_EXCLUSION: radius around each pointing.
+  public var EXCLUSION_RADIUS_DEG: Double { let o = _accessor.offset(VT.EXCLUSION_RADIUS_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  BRIGHT_STAR_EXCLUSION: rows at least this bright exclude a pointing.
+  public var MAG_THRESHOLD: Float32 { let o = _accessor.offset(VT.MAG_THRESHOLD); return o == 0 ? .nan : _accessor.readBuffer(of: Float32.self, at: o) }
+  public static func startSKQ(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 30) }
+  public static func add(QUERY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY_ID, at: VT.QUERY_ID) }
+  public static func add(QUERY_KIND: skqQueryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUERY_KIND.rawValue, def: 0, at: VT.QUERY_KIND) }
+  public static func add(EPOCH_JD_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_JD_TT, def: .nan, at: VT.EPOCH_JD_TT) }
+  public static func add(EPOCH_JD_TT_FRACTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_JD_TT_FRACTION, def: 0.0, at: VT.EPOCH_JD_TT_FRACTION) }
+  public static func add(OBSERVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_ID, at: VT.OBSERVER_ID) }
+  public static func addVectorOf(OBSERVER_POSITION_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_POSITION_M, at: VT.OBSERVER_POSITION_M) }
+  public static func addVectorOf(OBSERVER_VELOCITY_M_PER_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_VELOCITY_M_PER_S, at: VT.OBSERVER_VELOCITY_M_PER_S) }
+  public static func add(PLACE: sktPlaceKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLACE.rawValue, def: 3, at: VT.PLACE) }
   public static func add(BAND_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND_ID, at: VT.BAND_ID) }
-  public static func add(SPECTRAL_REGIME: phbSpectralRegime, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECTRAL_REGIME.rawValue, def: 0, at: VT.SPECTRAL_REGIME) }
-  public static func add(WAVELENGTH_EFF_NM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WAVELENGTH_EFF_NM, def: .nan, at: VT.WAVELENGTH_EFF_NM) }
-  public static func add(QUANTITY: phbQuantity, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUANTITY.rawValue, def: 1, at: VT.QUANTITY) }
-  public static func add(MAGNITUDE_SYSTEM: phbMagnitudeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNITUDE_SYSTEM.rawValue, def: 0, at: VT.MAGNITUDE_SYSTEM) }
-  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: .nan, at: VT.VALUE) }
-  public static func add(UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNCERTAINTY, def: .nan, at: VT.UNCERTAINTY) }
-  public static func add(BOUND: phbBoundKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUND.rawValue, def: 0, at: VT.BOUND) }
-  public static func add(DERIVATION: phbDerivation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DERIVATION.rawValue, def: 0, at: VT.DERIVATION) }
-  public static func add(EPOCH_MJD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_MJD, def: .nan, at: VT.EPOCH_MJD) }
-  public static func add(OBSERVATION_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVATION_COUNT, def: 0, at: VT.OBSERVATION_COUNT) }
-  public static func endPHBMeasurement(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPHBMeasurement(
+  public static func add(MAG_LIMIT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAG_LIMIT, def: .nan, at: VT.MAG_LIMIT) }
+  public static func add(MAX_RESULTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RESULTS, def: 0, at: VT.MAX_RESULTS) }
+  public static func add(TILE_ORDER: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILE_ORDER, def: 3, at: VT.TILE_ORDER) }
+  public static func add(COLOR_ENCODING: sktColorEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_ENCODING.rawValue, def: 0, at: VT.COLOR_ENCODING) }
+  public static func add(COLOR_BLUE_BAND_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR_BLUE_BAND_ID, at: VT.COLOR_BLUE_BAND_ID) }
+  public static func add(COLOR_RED_BAND_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR_RED_BAND_ID, at: VT.COLOR_RED_BAND_ID) }
+  public static func add(LAYER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAYER_ID, at: VT.LAYER_ID) }
+  public static func addVectorOf(BAND_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND_IDS, at: VT.BAND_IDS) }
+  public static func add(RA_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_DEG, def: .nan, at: VT.RA_DEG) }
+  public static func add(DEC_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC_DEG, def: .nan, at: VT.DEC_DEG) }
+  public static func add(RADIUS_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIUS_DEG, def: .nan, at: VT.RADIUS_DEG) }
+  public static func add(HALF_WIDTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_WIDTH_DEG, def: .nan, at: VT.HALF_WIDTH_DEG) }
+  public static func add(HALF_HEIGHT_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_HEIGHT_DEG, def: .nan, at: VT.HALF_HEIGHT_DEG) }
+  public static func add(ROLL_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLL_DEG, def: 0.0, at: VT.ROLL_DEG) }
+  public static func addVectorOf(DETECTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTIONS, at: VT.DETECTIONS) }
+  public static func startVectorOfDetections(_ size: Int, in builder: inout FlatBufferBuilder) {
+    builder.startVector(size * MemoryLayout<SKQDetection>.size, elementSize: MemoryLayout<SKQDetection>.alignment)
+  }
+  public static func add(TOLERANCE_ARCSEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE_ARCSEC, def: .nan, at: VT.TOLERANCE_ARCSEC) }
+  public static func add(MAX_FIELD_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_FIELD_DEG, def: .nan, at: VT.MAX_FIELD_DEG) }
+  public static func addVectorOf(TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS, at: VT.TRACKS) }
+  public static func startVectorOfTracks(_ size: Int, in builder: inout FlatBufferBuilder) {
+    builder.startVector(size * MemoryLayout<SKQTrack>.size, elementSize: MemoryLayout<SKQTrack>.alignment)
+  }
+  public static func addVectorOf(POINTINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTINGS, at: VT.POINTINGS) }
+  public static func startVectorOfPointings(_ size: Int, in builder: inout FlatBufferBuilder) {
+    builder.startVector(size * MemoryLayout<SKQPointing>.size, elementSize: MemoryLayout<SKQPointing>.alignment)
+  }
+  public static func add(EXCLUSION_RADIUS_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXCLUSION_RADIUS_DEG, def: .nan, at: VT.EXCLUSION_RADIUS_DEG) }
+  public static func add(MAG_THRESHOLD: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAG_THRESHOLD, def: .nan, at: VT.MAG_THRESHOLD) }
+  public static func endSKQ(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSKQ(
     _ fbb: inout FlatBufferBuilder,
+    QUERY_IDOffset QUERY_ID: Offset = Offset(),
+    QUERY_KIND: skqQueryKind = .unspecified,
+    EPOCH_JD_TT: Double = .nan,
+    EPOCH_JD_TT_FRACTION: Double = 0.0,
+    OBSERVER_IDOffset OBSERVER_ID: Offset = Offset(),
+    OBSERVER_POSITION_MVectorOffset OBSERVER_POSITION_M: Offset = Offset(),
+    OBSERVER_VELOCITY_M_PER_SVectorOffset OBSERVER_VELOCITY_M_PER_S: Offset = Offset(),
+    PLACE: sktPlaceKind = .apparent,
     BAND_IDOffset BAND_ID: Offset = Offset(),
-    SPECTRAL_REGIME: phbSpectralRegime = .unspecified,
-    WAVELENGTH_EFF_NM: Double = .nan,
-    QUANTITY: phbQuantity = .magnitude,
-    MAGNITUDE_SYSTEM: phbMagnitudeSystem = .unspecified,
-    VALUE: Double = .nan,
-    UNCERTAINTY: Double = .nan,
-    BOUND: phbBoundKind = .detection,
-    DERIVATION: phbDerivation = .unspecified,
-    EPOCH_MJD: Double = .nan,
-    OBSERVATION_COUNT: UInt32 = 0
+    MAG_LIMIT: Float32 = .nan,
+    MAX_RESULTS: UInt32 = 0,
+    TILE_ORDER: UInt8 = 3,
+    COLOR_ENCODING: sktColorEncoding = .none_,
+    COLOR_BLUE_BAND_IDOffset COLOR_BLUE_BAND_ID: Offset = Offset(),
+    COLOR_RED_BAND_IDOffset COLOR_RED_BAND_ID: Offset = Offset(),
+    LAYER_IDOffset LAYER_ID: Offset = Offset(),
+    BAND_IDSVectorOffset BAND_IDS: Offset = Offset(),
+    RA_DEG: Double = .nan,
+    DEC_DEG: Double = .nan,
+    RADIUS_DEG: Double = .nan,
+    HALF_WIDTH_DEG: Double = .nan,
+    HALF_HEIGHT_DEG: Double = .nan,
+    ROLL_DEG: Double = 0.0,
+    DETECTIONSVectorOffset DETECTIONS: Offset = Offset(),
+    TOLERANCE_ARCSEC: Double = .nan,
+    MAX_FIELD_DEG: Double = .nan,
+    TRACKSVectorOffset TRACKS: Offset = Offset(),
+    POINTINGSVectorOffset POINTINGS: Offset = Offset(),
+    EXCLUSION_RADIUS_DEG: Double = .nan,
+    MAG_THRESHOLD: Float32 = .nan
   ) -> Offset {
-    let __start = PHBMeasurement.startPHBMeasurement(&fbb)
-    PHBMeasurement.add(BAND_ID: BAND_ID, &fbb)
-    PHBMeasurement.add(SPECTRAL_REGIME: SPECTRAL_REGIME, &fbb)
-    PHBMeasurement.add(WAVELENGTH_EFF_NM: WAVELENGTH_EFF_NM, &fbb)
-    PHBMeasurement.add(QUANTITY: QUANTITY, &fbb)
-    PHBMeasurement.add(MAGNITUDE_SYSTEM: MAGNITUDE_SYSTEM, &fbb)
-    PHBMeasurement.add(VALUE: VALUE, &fbb)
-    PHBMeasurement.add(UNCERTAINTY: UNCERTAINTY, &fbb)
-    PHBMeasurement.add(BOUND: BOUND, &fbb)
-    PHBMeasurement.add(DERIVATION: DERIVATION, &fbb)
-    PHBMeasurement.add(EPOCH_MJD: EPOCH_MJD, &fbb)
-    PHBMeasurement.add(OBSERVATION_COUNT: OBSERVATION_COUNT, &fbb)
-    return PHBMeasurement.endPHBMeasurement(&fbb, start: __start)
+    let __start = SKQ.startSKQ(&fbb)
+    SKQ.add(QUERY_ID: QUERY_ID, &fbb)
+    SKQ.add(QUERY_KIND: QUERY_KIND, &fbb)
+    SKQ.add(EPOCH_JD_TT: EPOCH_JD_TT, &fbb)
+    SKQ.add(EPOCH_JD_TT_FRACTION: EPOCH_JD_TT_FRACTION, &fbb)
+    SKQ.add(OBSERVER_ID: OBSERVER_ID, &fbb)
+    SKQ.addVectorOf(OBSERVER_POSITION_M: OBSERVER_POSITION_M, &fbb)
+    SKQ.addVectorOf(OBSERVER_VELOCITY_M_PER_S: OBSERVER_VELOCITY_M_PER_S, &fbb)
+    SKQ.add(PLACE: PLACE, &fbb)
+    SKQ.add(BAND_ID: BAND_ID, &fbb)
+    SKQ.add(MAG_LIMIT: MAG_LIMIT, &fbb)
+    SKQ.add(MAX_RESULTS: MAX_RESULTS, &fbb)
+    SKQ.add(TILE_ORDER: TILE_ORDER, &fbb)
+    SKQ.add(COLOR_ENCODING: COLOR_ENCODING, &fbb)
+    SKQ.add(COLOR_BLUE_BAND_ID: COLOR_BLUE_BAND_ID, &fbb)
+    SKQ.add(COLOR_RED_BAND_ID: COLOR_RED_BAND_ID, &fbb)
+    SKQ.add(LAYER_ID: LAYER_ID, &fbb)
+    SKQ.addVectorOf(BAND_IDS: BAND_IDS, &fbb)
+    SKQ.add(RA_DEG: RA_DEG, &fbb)
+    SKQ.add(DEC_DEG: DEC_DEG, &fbb)
+    SKQ.add(RADIUS_DEG: RADIUS_DEG, &fbb)
+    SKQ.add(HALF_WIDTH_DEG: HALF_WIDTH_DEG, &fbb)
+    SKQ.add(HALF_HEIGHT_DEG: HALF_HEIGHT_DEG, &fbb)
+    SKQ.add(ROLL_DEG: ROLL_DEG, &fbb)
+    SKQ.addVectorOf(DETECTIONS: DETECTIONS, &fbb)
+    SKQ.add(TOLERANCE_ARCSEC: TOLERANCE_ARCSEC, &fbb)
+    SKQ.add(MAX_FIELD_DEG: MAX_FIELD_DEG, &fbb)
+    SKQ.addVectorOf(TRACKS: TRACKS, &fbb)
+    SKQ.addVectorOf(POINTINGS: POINTINGS, &fbb)
+    SKQ.add(EXCLUSION_RADIUS_DEG: EXCLUSION_RADIUS_DEG, &fbb)
+    SKQ.add(MAG_THRESHOLD: MAG_THRESHOLD, &fbb)
+    return SKQ.endSKQ(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.QUERY_ID, fieldName: "QUERY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QUERY_KIND, fieldName: "QUERY_KIND", required: false, type: skqQueryKind.self)
+    try _v.visit(field: VT.EPOCH_JD_TT, fieldName: "EPOCH_JD_TT", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH_JD_TT_FRACTION, fieldName: "EPOCH_JD_TT_FRACTION", required: false, type: Double.self)
+    try _v.visit(field: VT.OBSERVER_ID, fieldName: "OBSERVER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBSERVER_POSITION_M, fieldName: "OBSERVER_POSITION_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OBSERVER_VELOCITY_M_PER_S, fieldName: "OBSERVER_VELOCITY_M_PER_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.PLACE, fieldName: "PLACE", required: false, type: sktPlaceKind.self)
     try _v.visit(field: VT.BAND_ID, fieldName: "BAND_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPECTRAL_REGIME, fieldName: "SPECTRAL_REGIME", required: false, type: phbSpectralRegime.self)
-    try _v.visit(field: VT.WAVELENGTH_EFF_NM, fieldName: "WAVELENGTH_EFF_NM", required: false, type: Double.self)
-    try _v.visit(field: VT.QUANTITY, fieldName: "QUANTITY", required: false, type: phbQuantity.self)
-    try _v.visit(field: VT.MAGNITUDE_SYSTEM, fieldName: "MAGNITUDE_SYSTEM", required: false, type: phbMagnitudeSystem.self)
-    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
-    try _v.visit(field: VT.UNCERTAINTY, fieldName: "UNCERTAINTY", required: false, type: Double.self)
-    try _v.visit(field: VT.BOUND, fieldName: "BOUND", required: false, type: phbBoundKind.self)
-    try _v.visit(field: VT.DERIVATION, fieldName: "DERIVATION", required: false, type: phbDerivation.self)
-    try _v.visit(field: VT.EPOCH_MJD, fieldName: "EPOCH_MJD", required: false, type: Double.self)
-    try _v.visit(field: VT.OBSERVATION_COUNT, fieldName: "OBSERVATION_COUNT", required: false, type: UInt32.self)
-    _v.finish()
-  }
-}
-
-///  Photometric Band: one passband's place on the spectrum and its calibration.
-public struct PHB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PHB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PHB.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let BAND_ID: VOffset = 4
-    static let NAME: VOffset = 6
-    static let SYSTEM_NAME: VOffset = 8
-    static let SPECTRAL_REGIME: VOffset = 10
-    static let WAVELENGTH_EFF_NM: VOffset = 12
-    static let WAVELENGTH_MIN_NM: VOffset = 14
-    static let WAVELENGTH_MAX_NM: VOffset = 16
-    static let MAGNITUDE_SYSTEM: VOffset = 18
-    static let ZERO_POINT_JY: VOffset = 20
-    static let RESPONSE_WAVELENGTH_NM: VOffset = 22
-    static let RESPONSE: VOffset = 24
-    static let RESPONSE_IS_ENERGY: VOffset = 26
-    static let CITATION: VOffset = 28
-    static let DEFINITION_URL: VOffset = 30
-  }
-
-  ///  Stable band identifier, unique within the publishing catalogue, e.g.
-  ///  "V", "Ks", "0.5-2keV", "1.4GHz". Measurements refer to it.
-  public var BAND_ID: String! { let o = _accessor.offset(VT.BAND_ID); return _accessor.string(at: o) }
-  public var BAND_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.BAND_ID) }
-  ///  Human-readable name.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Name of the photometric system the band belongs to, as the defining
-  ///  publication states it.
-  public var SYSTEM_NAME: String? { let o = _accessor.offset(VT.SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYSTEM_NAME) }
-  ///  Coarse spectral region, by WAVELENGTH_EFF_NM.
-  public var SPECTRAL_REGIME: phbSpectralRegime { let o = _accessor.offset(VT.SPECTRAL_REGIME); return o == 0 ? .unspecified : phbSpectralRegime(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Effective (pivot) wavelength, nanometres, vacuum.
-  public var WAVELENGTH_EFF_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_EFF_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Short edge of the band at half maximum response, nanometres.
-  public var WAVELENGTH_MIN_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_MIN_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Long edge of the band at half maximum response, nanometres.
-  public var WAVELENGTH_MAX_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_MAX_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Calibration system of magnitudes stated in the band.
-  public var MAGNITUDE_SYSTEM: phbMagnitudeSystem { let o = _accessor.offset(VT.MAGNITUDE_SYSTEM); return o == 0 ? .unspecified : phbMagnitudeSystem(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Flux density at the effective wavelength of a zero-magnitude source,
-  ///  janskys.
-  public var ZERO_POINT_JY: Double { let o = _accessor.offset(VT.ZERO_POINT_JY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Wavelengths the response curve is sampled at, nanometres, ascending.
-  public var RESPONSE_WAVELENGTH_NM: FlatbufferVector<Double> { return _accessor.vector(at: VT.RESPONSE_WAVELENGTH_NM, byteSize: 8) }
-  public func withUnsafePointerToResponseWavelengthNm<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESPONSE_WAVELENGTH_NM, body: body) }
-  ///  Relative system response at each RESPONSE_WAVELENGTH_NM sample,
-  ///  peak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY.
-  public var RESPONSE: FlatbufferVector<Float32> { return _accessor.vector(at: VT.RESPONSE, byteSize: 4) }
-  public func withUnsafePointerToResponse<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESPONSE, body: body) }
-  ///  True when RESPONSE is an energy-counting response.
-  public var RESPONSE_IS_ENERGY: Bool { let o = _accessor.offset(VT.RESPONSE_IS_ENERGY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Reference to the publication that defines the band.
-  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
-  ///  URL of the band's defining document or response table.
-  public var DEFINITION_URL: String? { let o = _accessor.offset(VT.DEFINITION_URL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DEFINITION_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DEFINITION_URL) }
-  public static func startPHB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(BAND_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND_ID, at: VT.BAND_ID) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYSTEM_NAME, at: VT.SYSTEM_NAME) }
-  public static func add(SPECTRAL_REGIME: phbSpectralRegime, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECTRAL_REGIME.rawValue, def: 0, at: VT.SPECTRAL_REGIME) }
-  public static func add(WAVELENGTH_EFF_NM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WAVELENGTH_EFF_NM, def: .nan, at: VT.WAVELENGTH_EFF_NM) }
-  public static func add(WAVELENGTH_MIN_NM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WAVELENGTH_MIN_NM, def: .nan, at: VT.WAVELENGTH_MIN_NM) }
-  public static func add(WAVELENGTH_MAX_NM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WAVELENGTH_MAX_NM, def: .nan, at: VT.WAVELENGTH_MAX_NM) }
-  public static func add(MAGNITUDE_SYSTEM: phbMagnitudeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNITUDE_SYSTEM.rawValue, def: 0, at: VT.MAGNITUDE_SYSTEM) }
-  public static func add(ZERO_POINT_JY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ZERO_POINT_JY, def: .nan, at: VT.ZERO_POINT_JY) }
-  public static func addVectorOf(RESPONSE_WAVELENGTH_NM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESPONSE_WAVELENGTH_NM, at: VT.RESPONSE_WAVELENGTH_NM) }
-  public static func addVectorOf(RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESPONSE, at: VT.RESPONSE) }
-  public static func add(RESPONSE_IS_ENERGY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESPONSE_IS_ENERGY, def: false,
-   at: VT.RESPONSE_IS_ENERGY) }
-  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
-  public static func add(DEFINITION_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFINITION_URL, at: VT.DEFINITION_URL) }
-  public static func endPHB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createPHB(
-    _ fbb: inout FlatBufferBuilder,
-    BAND_IDOffset BAND_ID: Offset,
-    NAMEOffset NAME: Offset = Offset(),
-    SYSTEM_NAMEOffset SYSTEM_NAME: Offset = Offset(),
-    SPECTRAL_REGIME: phbSpectralRegime = .unspecified,
-    WAVELENGTH_EFF_NM: Double = .nan,
-    WAVELENGTH_MIN_NM: Double = .nan,
-    WAVELENGTH_MAX_NM: Double = .nan,
-    MAGNITUDE_SYSTEM: phbMagnitudeSystem = .unspecified,
-    ZERO_POINT_JY: Double = .nan,
-    RESPONSE_WAVELENGTH_NMVectorOffset RESPONSE_WAVELENGTH_NM: Offset = Offset(),
-    RESPONSEVectorOffset RESPONSE: Offset = Offset(),
-    RESPONSE_IS_ENERGY: Bool = false,
-    CITATIONOffset CITATION: Offset = Offset(),
-    DEFINITION_URLOffset DEFINITION_URL: Offset = Offset()
-  ) -> Offset {
-    let __start = PHB.startPHB(&fbb)
-    PHB.add(BAND_ID: BAND_ID, &fbb)
-    PHB.add(NAME: NAME, &fbb)
-    PHB.add(SYSTEM_NAME: SYSTEM_NAME, &fbb)
-    PHB.add(SPECTRAL_REGIME: SPECTRAL_REGIME, &fbb)
-    PHB.add(WAVELENGTH_EFF_NM: WAVELENGTH_EFF_NM, &fbb)
-    PHB.add(WAVELENGTH_MIN_NM: WAVELENGTH_MIN_NM, &fbb)
-    PHB.add(WAVELENGTH_MAX_NM: WAVELENGTH_MAX_NM, &fbb)
-    PHB.add(MAGNITUDE_SYSTEM: MAGNITUDE_SYSTEM, &fbb)
-    PHB.add(ZERO_POINT_JY: ZERO_POINT_JY, &fbb)
-    PHB.addVectorOf(RESPONSE_WAVELENGTH_NM: RESPONSE_WAVELENGTH_NM, &fbb)
-    PHB.addVectorOf(RESPONSE: RESPONSE, &fbb)
-    PHB.add(RESPONSE_IS_ENERGY: RESPONSE_IS_ENERGY, &fbb)
-    PHB.add(CITATION: CITATION, &fbb)
-    PHB.add(DEFINITION_URL: DEFINITION_URL, &fbb)
-    return PHB.endPHB(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.BAND_ID, fieldName: "BAND_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SYSTEM_NAME, fieldName: "SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPECTRAL_REGIME, fieldName: "SPECTRAL_REGIME", required: false, type: phbSpectralRegime.self)
-    try _v.visit(field: VT.WAVELENGTH_EFF_NM, fieldName: "WAVELENGTH_EFF_NM", required: false, type: Double.self)
-    try _v.visit(field: VT.WAVELENGTH_MIN_NM, fieldName: "WAVELENGTH_MIN_NM", required: false, type: Double.self)
-    try _v.visit(field: VT.WAVELENGTH_MAX_NM, fieldName: "WAVELENGTH_MAX_NM", required: false, type: Double.self)
-    try _v.visit(field: VT.MAGNITUDE_SYSTEM, fieldName: "MAGNITUDE_SYSTEM", required: false, type: phbMagnitudeSystem.self)
-    try _v.visit(field: VT.ZERO_POINT_JY, fieldName: "ZERO_POINT_JY", required: false, type: Double.self)
-    try _v.visit(field: VT.RESPONSE_WAVELENGTH_NM, fieldName: "RESPONSE_WAVELENGTH_NM", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.RESPONSE, fieldName: "RESPONSE", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
-    try _v.visit(field: VT.RESPONSE_IS_ENERGY, fieldName: "RESPONSE_IS_ENERGY", required: false, type: Bool.self)
-    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DEFINITION_URL, fieldName: "DEFINITION_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAG_LIMIT, fieldName: "MAG_LIMIT", required: false, type: Float32.self)
+    try _v.visit(field: VT.MAX_RESULTS, fieldName: "MAX_RESULTS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TILE_ORDER, fieldName: "TILE_ORDER", required: false, type: UInt8.self)
+    try _v.visit(field: VT.COLOR_ENCODING, fieldName: "COLOR_ENCODING", required: false, type: sktColorEncoding.self)
+    try _v.visit(field: VT.COLOR_BLUE_BAND_ID, fieldName: "COLOR_BLUE_BAND_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR_RED_BAND_ID, fieldName: "COLOR_RED_BAND_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAYER_ID, fieldName: "LAYER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BAND_IDS, fieldName: "BAND_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.RA_DEG, fieldName: "RA_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.DEC_DEG, fieldName: "DEC_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.RADIUS_DEG, fieldName: "RADIUS_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.HALF_WIDTH_DEG, fieldName: "HALF_WIDTH_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.HALF_HEIGHT_DEG, fieldName: "HALF_HEIGHT_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ROLL_DEG, fieldName: "ROLL_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.DETECTIONS, fieldName: "DETECTIONS", required: false, type: ForwardOffset<Vector<SKQDetection, SKQDetection>>.self)
+    try _v.visit(field: VT.TOLERANCE_ARCSEC, fieldName: "TOLERANCE_ARCSEC", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_FIELD_DEG, fieldName: "MAX_FIELD_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.TRACKS, fieldName: "TRACKS", required: false, type: ForwardOffset<Vector<SKQTrack, SKQTrack>>.self)
+    try _v.visit(field: VT.POINTINGS, fieldName: "POINTINGS", required: false, type: ForwardOffset<Vector<SKQPointing, SKQPointing>>.self)
+    try _v.visit(field: VT.EXCLUSION_RADIUS_DEG, fieldName: "EXCLUSION_RADIUS_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.MAG_THRESHOLD, fieldName: "MAG_THRESHOLD", required: false, type: Float32.self)
     _v.finish()
   }
 }

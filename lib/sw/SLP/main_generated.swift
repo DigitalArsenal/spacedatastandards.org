@@ -8,586 +8,918 @@ import Common
 
 import FlatBuffers
 
-///  Operations this record can request. Values 1-4 are the original
-///  position-only planet-centred-inertial / planet-centred-fixed / geodetic
-///  conversions and are FROZEN. Append new values only; never reorder.
-public enum frmOperationCode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case unknown = 0
-  case pciToPcpf = 1
-  case pcpfToPci = 2
-  case llaToPcpf = 3
-  case pcpfToLla = 4
-  ///  Transform a full state (position AND velocity) from SOURCE_COORDINATE_SYSTEM
-  ///  to TARGET_COORDINATE_SYSTEM at EPOCH, expressed in TARGET_REPRESENTATION.
-  case stateTransform = 5
-  ///  Return only the rotation from SOURCE_COORDINATE_SYSTEM to
-  ///  TARGET_COORDINATE_SYSTEM at EPOCH, with its time derivative and the
-  ///  angular velocity of the target axes. No state is required.
-  case frameRotation = 6
-  ///  Convert a state between element sets within ONE coordinate system.
-  case stateRepresentationConvert = 7
-
-  public static var max: frmOperationCode { return .stateRepresentationConvert }
-  public static var min: frmOperationCode { return .unknown }
-}
-
-
-///  Append new values only; never reorder or reuse existing values.
-public enum frmResultStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case ok = 0
-  case invalidInput = 1
-  case unsupportedOperation = 2
-  ///  The provider does not implement the requested axis set.
-  case unsupportedAxisType = 3
-  ///  The provider does not implement the requested element set.
-  case unsupportedStateRepresentation = 4
-  ///  The axis chain needs Earth-orientation data that was not supplied or
-  ///  does not span EPOCH. The provider MUST fail here rather than silently
-  ///  extrapolate.
-  case missingEopData = 5
-  ///  The state is at a singularity of the requested element set (for example
-  ///  e -> 0 for Keplerian). The provider MUST report this rather than
-  ///  substitute a different element set.
-  case singularElementSet = 6
-
-  public static var max: frmResultStatus { return .singularElementSet }
-  public static var min: frmResultStatus { return .ok }
-}
-
-
-///  Orbit state element sets. Append new values only; never reorder or reuse
-///  existing values.
-public enum frmStateRepresentation: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Solver Problem Definition ($SLP)
+///
+///  A portable targeting or constrained-optimization problem. The evaluator and
+///  propagator are named as ports rather than implementations: a solver may be
+///  connected to any module that supplies the requested parameter values.
+public enum slpProblemKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case unspecified = 0
-  ///  Position and velocity components, 6 elements.
-  case cartesian = 1
-  ///  SMA, ECC, INC, RAAN, AOP, TA.
-  case keplerian = 2
-  ///  RadPer, RadApo, INC, RAAN, AOP, TA.
-  case modifiedKeplerian = 3
-  ///  RMAG, RA, DEC, VMAG, azimuth, flight-path angle.
-  case sphericalAzfpa = 4
-  ///  RMAG, RA, DEC, VMAG, right ascension of velocity, declination of velocity.
-  case sphericalRadec = 5
-  ///  SMA, h, k, p, q, mean longitude.
-  case equinoctial = 6
-  ///  p, f, g, h, k, true longitude.
-  case modifiedEquinoctial = 7
-  ///  Equinoctial variant using mean motion in place of the semi-major axis.
-  case alternateEquinoctial = 8
-  ///  Delaunay canonical variables l, g, h, L, G, H.
-  case delaunay = 9
-  ///  Geodetic latitude/longitude/height with the horizon velocity triple.
-  case planetodetic = 10
-  ///  Incoming asymptote (B-plane) element set.
-  case incomingAsymptote = 11
-  ///  Outgoing asymptote (B-plane) element set.
-  case outgoingAsymptote = 12
-  ///  Brouwer-Lyddane mean elements, short-period terms only.
-  case brouwerMeanShort = 13
-  ///  Brouwer-Lyddane mean elements, short and long period terms.
-  case brouwerMeanLong = 14
+  case target = 1
+  case optimize = 2
 
-  public static var max: frmStateRepresentation { return .brouwerMeanLong }
-  public static var min: frmStateRepresentation { return .unspecified }
+  public static var max: slpProblemKind { return .optimize }
+  public static var min: slpProblemKind { return .unspecified }
 }
 
 
-public struct FRMVector3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public enum slpAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case newtonRaphson = 1
+  case broyden = 2
+  case modifiedBroyden = 3
+  case sequentialQuadraticProgramming = 4
+
+  public static var max: slpAlgorithm { return .sequentialQuadraticProgramming }
+  public static var min: slpAlgorithm { return .unspecified }
+}
+
+
+public enum slpDifferenceMode: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case forward = 1
+  case central = 2
+  case analyticStateTransitionMatrix = 3
+
+  public static var max: slpDifferenceMode { return .analyticStateTransitionMatrix }
+  public static var min: slpDifferenceMode { return .unspecified }
+}
+
+
+public enum slpObjectiveDirection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case minimize = 1
+  case maximize = 2
+
+  public static var max: slpObjectiveDirection { return .maximize }
+  public static var min: slpObjectiveDirection { return .unspecified }
+}
+
+
+public enum slpConstraintRelation: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case equal = 1
+  case lessThanOrEqual = 2
+  case greaterThanOrEqual = 3
+  case interval = 4
+
+  public static var max: slpConstraintRelation { return .interval }
+  public static var min: slpConstraintRelation { return .unspecified }
+}
+
+
+public enum slpSolveStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case converged = 1
+  case invalidProblem = 2
+  case evaluationFailed = 3
+  case singularJacobian = 4
+  case budgetExceeded = 5
+  case stalled = 6
+  case infeasible = 7
+
+  public static var max: slpSolveStatus { return .infeasible }
+  public static var min: slpSolveStatus { return .unspecified }
+}
+
+
+public struct SLPVariable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FRM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FRMVector3.id, addPrefix: prefix) }
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLPVariable.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let X: VOffset = 4
-    static let Y: VOffset = 6
-    static let Z: VOffset = 8
+    static let VARIABLE_ID: VOffset = 4
+    static let PARAMETER: VOffset = 6
+    static let PROVIDER_DEFINED_PARAMETER_NAME: VOffset = 8
+    static let INITIAL_VALUE: VOffset = 10
+    static let LOWER_BOUND: VOffset = 12
+    static let UPPER_BOUND: VOffset = 14
+    static let PERTURBATION: VOffset = 16
+    static let SCALE: VOffset = 18
   }
 
-  public var X: Double { let o = _accessor.offset(VT.X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Y: Double { let o = _accessor.offset(VT.Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Z: Double { let o = _accessor.offset(VT.Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startFRMVector3(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VT.X) }
-  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VT.Y) }
-  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VT.Z) }
-  public static func endFRMVector3(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFRMVector3(
+  public var VARIABLE_ID: String! { let o = _accessor.offset(VT.VARIABLE_ID); return _accessor.string(at: o) }
+  public var VARIABLE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VARIABLE_ID) }
+  public var PARAMETER: pceParameter { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
+  public var PROVIDER_DEFINED_PARAMETER_NAME: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_PARAMETER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_DEFINED_PARAMETER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_PARAMETER_NAME) }
+  public var INITIAL_VALUE: Double { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LOWER_BOUND: Double { let o = _accessor.offset(VT.LOWER_BOUND); return o == 0 ? -1.7976931348623157e+308 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UPPER_BOUND: Double { let o = _accessor.offset(VT.UPPER_BOUND); return o == 0 ? 1.7976931348623157e+308 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERTURBATION: Double { let o = _accessor.offset(VT.PERTURBATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSLPVariable(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(VARIABLE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIABLE_ID, at: VT.VARIABLE_ID) }
+  public static func add(PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARAMETER.rawValue, def: 0, at: VT.PARAMETER) }
+  public static func add(PROVIDER_DEFINED_PARAMETER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_PARAMETER_NAME, at: VT.PROVIDER_DEFINED_PARAMETER_NAME) }
+  public static func add(INITIAL_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0.0, at: VT.INITIAL_VALUE) }
+  public static func add(LOWER_BOUND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_BOUND, def: -1.7976931348623157e+308, at: VT.LOWER_BOUND) }
+  public static func add(UPPER_BOUND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_BOUND, def: 1.7976931348623157e+308, at: VT.UPPER_BOUND) }
+  public static func add(PERTURBATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERTURBATION, def: 0.0, at: VT.PERTURBATION) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 1.0, at: VT.SCALE) }
+  public static func endSLPVariable(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createSLPVariable(
     _ fbb: inout FlatBufferBuilder,
-    X: Double = 0.0,
-    Y: Double = 0.0,
-    Z: Double = 0.0
+    VARIABLE_IDOffset VARIABLE_ID: Offset,
+    PARAMETER: pceParameter = .unspecified,
+    PROVIDER_DEFINED_PARAMETER_NAMEOffset PROVIDER_DEFINED_PARAMETER_NAME: Offset = Offset(),
+    INITIAL_VALUE: Double = 0.0,
+    LOWER_BOUND: Double = -1.7976931348623157e+308,
+    UPPER_BOUND: Double = 1.7976931348623157e+308,
+    PERTURBATION: Double = 0.0,
+    SCALE: Double = 1.0
   ) -> Offset {
-    let __start = FRMVector3.startFRMVector3(&fbb)
-    FRMVector3.add(X: X, &fbb)
-    FRMVector3.add(Y: Y, &fbb)
-    FRMVector3.add(Z: Z, &fbb)
-    return FRMVector3.endFRMVector3(&fbb, start: __start)
+    let __start = SLPVariable.startSLPVariable(&fbb)
+    SLPVariable.add(VARIABLE_ID: VARIABLE_ID, &fbb)
+    SLPVariable.add(PARAMETER: PARAMETER, &fbb)
+    SLPVariable.add(PROVIDER_DEFINED_PARAMETER_NAME: PROVIDER_DEFINED_PARAMETER_NAME, &fbb)
+    SLPVariable.add(INITIAL_VALUE: INITIAL_VALUE, &fbb)
+    SLPVariable.add(LOWER_BOUND: LOWER_BOUND, &fbb)
+    SLPVariable.add(UPPER_BOUND: UPPER_BOUND, &fbb)
+    SLPVariable.add(PERTURBATION: PERTURBATION, &fbb)
+    SLPVariable.add(SCALE: SCALE, &fbb)
+    return SLPVariable.endSLPVariable(&fbb, start: __start)
+  }
+  public static func sortVectorOfSlpvariable(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
+    var off = offsets
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
+    return fbb.createVector(ofOffsets: off)
+  }
+  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> SLPVariable? {
+    let key = key.utf8.map { $0 }
+    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
+    var start: Int32 = 0
+    while span != 0 {
+      var middle = span / 2
+      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
+      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
+      if comp > 0 {
+        span = middle
+      } else if comp < 0 {
+        middle += 1
+        start += middle
+        span -= middle
+      } else {
+        return SLPVariable(fbb, o: tableOffset)
+      }
+    }
+    return nil
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.X, fieldName: "X", required: false, type: Double.self)
-    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: Double.self)
-    try _v.visit(field: VT.Z, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VT.VARIABLE_ID, fieldName: "VARIABLE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: pceParameter.self)
+    try _v.visit(field: VT.PROVIDER_DEFINED_PARAMETER_NAME, fieldName: "PROVIDER_DEFINED_PARAMETER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.LOWER_BOUND, fieldName: "LOWER_BOUND", required: false, type: Double.self)
+    try _v.visit(field: VT.UPPER_BOUND, fieldName: "UPPER_BOUND", required: false, type: Double.self)
+    try _v.visit(field: VT.PERTURBATION, fieldName: "PERTURBATION", required: false, type: Double.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-public struct FRMMatrix3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SLPGoal: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FRM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FRMMatrix3.id, addPrefix: prefix) }
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLPGoal.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let M11: VOffset = 4
-    static let M12: VOffset = 6
-    static let M13: VOffset = 8
-    static let M21: VOffset = 10
-    static let M22: VOffset = 12
-    static let M23: VOffset = 14
-    static let M31: VOffset = 16
-    static let M32: VOffset = 18
-    static let M33: VOffset = 20
+    static let GOAL_ID: VOffset = 4
+    static let PARAMETER: VOffset = 6
+    static let PROVIDER_DEFINED_PARAMETER_NAME: VOffset = 8
+    static let TARGET_VALUE: VOffset = 10
+    static let TOLERANCE: VOffset = 12
+    static let SCALE: VOffset = 14
   }
 
-  public var M11: Double { let o = _accessor.offset(VT.M11); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var M12: Double { let o = _accessor.offset(VT.M12); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var M13: Double { let o = _accessor.offset(VT.M13); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var M21: Double { let o = _accessor.offset(VT.M21); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var M22: Double { let o = _accessor.offset(VT.M22); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var M23: Double { let o = _accessor.offset(VT.M23); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var M31: Double { let o = _accessor.offset(VT.M31); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var M32: Double { let o = _accessor.offset(VT.M32); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var M33: Double { let o = _accessor.offset(VT.M33); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startFRMMatrix3(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(M11: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M11, def: 0.0, at: VT.M11) }
-  public static func add(M12: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M12, def: 0.0, at: VT.M12) }
-  public static func add(M13: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M13, def: 0.0, at: VT.M13) }
-  public static func add(M21: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M21, def: 0.0, at: VT.M21) }
-  public static func add(M22: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M22, def: 0.0, at: VT.M22) }
-  public static func add(M23: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M23, def: 0.0, at: VT.M23) }
-  public static func add(M31: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M31, def: 0.0, at: VT.M31) }
-  public static func add(M32: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M32, def: 0.0, at: VT.M32) }
-  public static func add(M33: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M33, def: 0.0, at: VT.M33) }
-  public static func endFRMMatrix3(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFRMMatrix3(
+  public var GOAL_ID: String! { let o = _accessor.offset(VT.GOAL_ID); return _accessor.string(at: o) }
+  public var GOAL_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.GOAL_ID) }
+  public var PARAMETER: pceParameter { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
+  public var PROVIDER_DEFINED_PARAMETER_NAME: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_PARAMETER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_DEFINED_PARAMETER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_PARAMETER_NAME) }
+  public var TARGET_VALUE: Double { let o = _accessor.offset(VT.TARGET_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOLERANCE: Double { let o = _accessor.offset(VT.TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSLPGoal(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(GOAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GOAL_ID, at: VT.GOAL_ID) }
+  public static func add(PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARAMETER.rawValue, def: 0, at: VT.PARAMETER) }
+  public static func add(PROVIDER_DEFINED_PARAMETER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_PARAMETER_NAME, at: VT.PROVIDER_DEFINED_PARAMETER_NAME) }
+  public static func add(TARGET_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_VALUE, def: 0.0, at: VT.TARGET_VALUE) }
+  public static func add(TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE, def: 0.0, at: VT.TOLERANCE) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 1.0, at: VT.SCALE) }
+  public static func endSLPGoal(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createSLPGoal(
     _ fbb: inout FlatBufferBuilder,
-    M11: Double = 0.0,
-    M12: Double = 0.0,
-    M13: Double = 0.0,
-    M21: Double = 0.0,
-    M22: Double = 0.0,
-    M23: Double = 0.0,
-    M31: Double = 0.0,
-    M32: Double = 0.0,
-    M33: Double = 0.0
+    GOAL_IDOffset GOAL_ID: Offset,
+    PARAMETER: pceParameter = .unspecified,
+    PROVIDER_DEFINED_PARAMETER_NAMEOffset PROVIDER_DEFINED_PARAMETER_NAME: Offset = Offset(),
+    TARGET_VALUE: Double = 0.0,
+    TOLERANCE: Double = 0.0,
+    SCALE: Double = 1.0
   ) -> Offset {
-    let __start = FRMMatrix3.startFRMMatrix3(&fbb)
-    FRMMatrix3.add(M11: M11, &fbb)
-    FRMMatrix3.add(M12: M12, &fbb)
-    FRMMatrix3.add(M13: M13, &fbb)
-    FRMMatrix3.add(M21: M21, &fbb)
-    FRMMatrix3.add(M22: M22, &fbb)
-    FRMMatrix3.add(M23: M23, &fbb)
-    FRMMatrix3.add(M31: M31, &fbb)
-    FRMMatrix3.add(M32: M32, &fbb)
-    FRMMatrix3.add(M33: M33, &fbb)
-    return FRMMatrix3.endFRMMatrix3(&fbb, start: __start)
+    let __start = SLPGoal.startSLPGoal(&fbb)
+    SLPGoal.add(GOAL_ID: GOAL_ID, &fbb)
+    SLPGoal.add(PARAMETER: PARAMETER, &fbb)
+    SLPGoal.add(PROVIDER_DEFINED_PARAMETER_NAME: PROVIDER_DEFINED_PARAMETER_NAME, &fbb)
+    SLPGoal.add(TARGET_VALUE: TARGET_VALUE, &fbb)
+    SLPGoal.add(TOLERANCE: TOLERANCE, &fbb)
+    SLPGoal.add(SCALE: SCALE, &fbb)
+    return SLPGoal.endSLPGoal(&fbb, start: __start)
+  }
+  public static func sortVectorOfSlpgoal(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
+    var off = offsets
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
+    return fbb.createVector(ofOffsets: off)
+  }
+  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> SLPGoal? {
+    let key = key.utf8.map { $0 }
+    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
+    var start: Int32 = 0
+    while span != 0 {
+      var middle = span / 2
+      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
+      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
+      if comp > 0 {
+        span = middle
+      } else if comp < 0 {
+        middle += 1
+        start += middle
+        span -= middle
+      } else {
+        return SLPGoal(fbb, o: tableOffset)
+      }
+    }
+    return nil
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.M11, fieldName: "M11", required: false, type: Double.self)
-    try _v.visit(field: VT.M12, fieldName: "M12", required: false, type: Double.self)
-    try _v.visit(field: VT.M13, fieldName: "M13", required: false, type: Double.self)
-    try _v.visit(field: VT.M21, fieldName: "M21", required: false, type: Double.self)
-    try _v.visit(field: VT.M22, fieldName: "M22", required: false, type: Double.self)
-    try _v.visit(field: VT.M23, fieldName: "M23", required: false, type: Double.self)
-    try _v.visit(field: VT.M31, fieldName: "M31", required: false, type: Double.self)
-    try _v.visit(field: VT.M32, fieldName: "M32", required: false, type: Double.self)
-    try _v.visit(field: VT.M33, fieldName: "M33", required: false, type: Double.self)
+    try _v.visit(field: VT.GOAL_ID, fieldName: "GOAL_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: pceParameter.self)
+    try _v.visit(field: VT.PROVIDER_DEFINED_PARAMETER_NAME, fieldName: "PROVIDER_DEFINED_PARAMETER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_VALUE, fieldName: "TARGET_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.TOLERANCE, fieldName: "TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-///  A state in a named element set at a named epoch. ELEMENTS is the element
-///  set's own 6 values in the order documented on frmStateRepresentation.
-///  POSITION and VELOCITY are the Cartesian projection of the same state and
-///  are populated when REPRESENTATION is CARTESIAN or when the provider can
-///  supply them; a consumer MUST NOT infer velocity from POSITION alone.
-public struct FRMStateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SLPObjective: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FRM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FRMStateVector.id, addPrefix: prefix) }
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLPObjective.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let REPRESENTATION: VOffset = 4
-    static let ELEMENTS: VOffset = 6
-    static let POSITION: VOffset = 8
-    static let VELOCITY: VOffset = 10
-    static let COORDINATE_SYSTEM_NAME: VOffset = 12
-    static let EPOCH: VOffset = 14
-    static let EPOCH_TIME_SYSTEM: VOffset = 16
-    static let GRAVITATIONAL_PARAMETER: VOffset = 18
+    static let OBJECTIVE_ID: VOffset = 4
+    static let PARAMETER: VOffset = 6
+    static let PROVIDER_DEFINED_PARAMETER_NAME: VOffset = 8
+    static let DIRECTION: VOffset = 10
+    static let SCALE: VOffset = 12
   }
 
-  public var REPRESENTATION: frmStateRepresentation { let o = _accessor.offset(VT.REPRESENTATION); return o == 0 ? .unspecified : frmStateRepresentation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  The 6 element values of REPRESENTATION, SI units and radians.
-  public var ELEMENTS: FlatbufferVector<Double> { return _accessor.vector(at: VT.ELEMENTS, byteSize: 8) }
-  public func withUnsafePointerToElements<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ELEMENTS, body: body) }
-  ///  Cartesian position, metres.
-  public var POSITION: FRMVector3? { let o = _accessor.offset(VT.POSITION); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Cartesian velocity, metres per second.
-  public var VELOCITY: FRMVector3? { let o = _accessor.offset(VT.VELOCITY); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Name of the coordinate system these elements are expressed in; resolves
-  ///  against RFMCoordinateSystem.NAME.
-  public var COORDINATE_SYSTEM_NAME: String? { let o = _accessor.offset(VT.COORDINATE_SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COORDINATE_SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COORDINATE_SYSTEM_NAME) }
-  ///  Epoch of this state, ISO 8601.
-  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
-  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
-  public var EPOCH_TIME_SYSTEM: String? { let o = _accessor.offset(VT.EPOCH_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TIME_SYSTEM) }
-  ///  Gravitational parameter, m^3/s^2, of the origin body when the element
-  ///  set requires one. Absent means the provider's default for the origin.
-  public var GRAVITATIONAL_PARAMETER: Double { let o = _accessor.offset(VT.GRAVITATIONAL_PARAMETER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startFRMStateVector(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(REPRESENTATION: frmStateRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPRESENTATION.rawValue, def: 0, at: VT.REPRESENTATION) }
-  public static func addVectorOf(ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEMENTS, at: VT.ELEMENTS) }
-  public static func add(POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION, at: VT.POSITION) }
-  public static func add(VELOCITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VELOCITY, at: VT.VELOCITY) }
-  public static func add(COORDINATE_SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATE_SYSTEM_NAME, at: VT.COORDINATE_SYSTEM_NAME) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
-  public static func add(EPOCH_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME_SYSTEM, at: VT.EPOCH_TIME_SYSTEM) }
-  public static func add(GRAVITATIONAL_PARAMETER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITATIONAL_PARAMETER, def: 0.0, at: VT.GRAVITATIONAL_PARAMETER) }
-  public static func endFRMStateVector(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFRMStateVector(
+  public var OBJECTIVE_ID: String! { let o = _accessor.offset(VT.OBJECTIVE_ID); return _accessor.string(at: o) }
+  public var OBJECTIVE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.OBJECTIVE_ID) }
+  public var PARAMETER: pceParameter { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
+  public var PROVIDER_DEFINED_PARAMETER_NAME: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_PARAMETER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_DEFINED_PARAMETER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_PARAMETER_NAME) }
+  public var DIRECTION: slpObjectiveDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .unspecified : slpObjectiveDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSLPObjective(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(OBJECTIVE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECTIVE_ID, at: VT.OBJECTIVE_ID) }
+  public static func add(PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARAMETER.rawValue, def: 0, at: VT.PARAMETER) }
+  public static func add(PROVIDER_DEFINED_PARAMETER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_PARAMETER_NAME, at: VT.PROVIDER_DEFINED_PARAMETER_NAME) }
+  public static func add(DIRECTION: slpObjectiveDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 1.0, at: VT.SCALE) }
+  public static func endSLPObjective(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createSLPObjective(
     _ fbb: inout FlatBufferBuilder,
-    REPRESENTATION: frmStateRepresentation = .unspecified,
-    ELEMENTSVectorOffset ELEMENTS: Offset = Offset(),
-    POSITIONOffset POSITION: Offset = Offset(),
-    VELOCITYOffset VELOCITY: Offset = Offset(),
-    COORDINATE_SYSTEM_NAMEOffset COORDINATE_SYSTEM_NAME: Offset = Offset(),
-    EPOCHOffset EPOCH: Offset = Offset(),
-    EPOCH_TIME_SYSTEMOffset EPOCH_TIME_SYSTEM: Offset = Offset(),
-    GRAVITATIONAL_PARAMETER: Double = 0.0
+    OBJECTIVE_IDOffset OBJECTIVE_ID: Offset,
+    PARAMETER: pceParameter = .unspecified,
+    PROVIDER_DEFINED_PARAMETER_NAMEOffset PROVIDER_DEFINED_PARAMETER_NAME: Offset = Offset(),
+    DIRECTION: slpObjectiveDirection = .unspecified,
+    SCALE: Double = 1.0
   ) -> Offset {
-    let __start = FRMStateVector.startFRMStateVector(&fbb)
-    FRMStateVector.add(REPRESENTATION: REPRESENTATION, &fbb)
-    FRMStateVector.addVectorOf(ELEMENTS: ELEMENTS, &fbb)
-    FRMStateVector.add(POSITION: POSITION, &fbb)
-    FRMStateVector.add(VELOCITY: VELOCITY, &fbb)
-    FRMStateVector.add(COORDINATE_SYSTEM_NAME: COORDINATE_SYSTEM_NAME, &fbb)
-    FRMStateVector.add(EPOCH: EPOCH, &fbb)
-    FRMStateVector.add(EPOCH_TIME_SYSTEM: EPOCH_TIME_SYSTEM, &fbb)
-    FRMStateVector.add(GRAVITATIONAL_PARAMETER: GRAVITATIONAL_PARAMETER, &fbb)
-    return FRMStateVector.endFRMStateVector(&fbb, start: __start)
+    let __start = SLPObjective.startSLPObjective(&fbb)
+    SLPObjective.add(OBJECTIVE_ID: OBJECTIVE_ID, &fbb)
+    SLPObjective.add(PARAMETER: PARAMETER, &fbb)
+    SLPObjective.add(PROVIDER_DEFINED_PARAMETER_NAME: PROVIDER_DEFINED_PARAMETER_NAME, &fbb)
+    SLPObjective.add(DIRECTION: DIRECTION, &fbb)
+    SLPObjective.add(SCALE: SCALE, &fbb)
+    return SLPObjective.endSLPObjective(&fbb, start: __start)
+  }
+  public static func sortVectorOfSlpobjective(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
+    var off = offsets
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
+    return fbb.createVector(ofOffsets: off)
+  }
+  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> SLPObjective? {
+    let key = key.utf8.map { $0 }
+    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
+    var start: Int32 = 0
+    while span != 0 {
+      var middle = span / 2
+      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
+      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
+      if comp > 0 {
+        span = middle
+      } else if comp < 0 {
+        middle += 1
+        start += middle
+        span -= middle
+      } else {
+        return SLPObjective(fbb, o: tableOffset)
+      }
+    }
+    return nil
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.REPRESENTATION, fieldName: "REPRESENTATION", required: false, type: frmStateRepresentation.self)
-    try _v.visit(field: VT.ELEMENTS, fieldName: "ELEMENTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.POSITION, fieldName: "POSITION", required: false, type: ForwardOffset<FRMVector3>.self)
-    try _v.visit(field: VT.VELOCITY, fieldName: "VELOCITY", required: false, type: ForwardOffset<FRMVector3>.self)
-    try _v.visit(field: VT.COORDINATE_SYSTEM_NAME, fieldName: "COORDINATE_SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EPOCH_TIME_SYSTEM, fieldName: "EPOCH_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GRAVITATIONAL_PARAMETER, fieldName: "GRAVITATIONAL_PARAMETER", required: false, type: Double.self)
+    try _v.visit(field: VT.OBJECTIVE_ID, fieldName: "OBJECTIVE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: pceParameter.self)
+    try _v.visit(field: VT.PROVIDER_DEFINED_PARAMETER_NAME, fieldName: "PROVIDER_DEFINED_PARAMETER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: slpObjectiveDirection.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-public struct FRMFrameTransformRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SLPNonlinearConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FRM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FRMFrameTransformRequest.id, addPrefix: prefix) }
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLPNonlinearConstraint.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let OPERATION: VOffset = 4
-    static let POSITION: VOffset = 6
-    static let TRANSFORM_DCM: VOffset = 8
-    static let EQUATORIAL_RADIUS_M: VOffset = 10
-    static let POLAR_RADIUS_M: VOffset = 12
-    static let TRACE_ID: VOffset = 14
-    static let SOURCE_COORDINATE_SYSTEM: VOffset = 16
-    static let TARGET_COORDINATE_SYSTEM: VOffset = 18
-    static let SOURCE_STATE: VOffset = 20
-    static let TARGET_REPRESENTATION: VOffset = 22
-    static let EPOCH: VOffset = 24
-    static let EPOCH_TIME_SYSTEM: VOffset = 26
-    static let EOP_DATA_SET_CID: VOffset = 28
+    static let CONSTRAINT_ID: VOffset = 4
+    static let PARAMETER: VOffset = 6
+    static let PROVIDER_DEFINED_PARAMETER_NAME: VOffset = 8
+    static let RELATION: VOffset = 10
+    static let LOWER_BOUND: VOffset = 12
+    static let UPPER_BOUND: VOffset = 14
+    static let TOLERANCE: VOffset = 16
+    static let SCALE: VOffset = 18
   }
 
-  public var OPERATION: frmOperationCode { let o = _accessor.offset(VT.OPERATION); return o == 0 ? .unknown : frmOperationCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
-  public var POSITION: FRMVector3? { let o = _accessor.offset(VT.POSITION); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var TRANSFORM_DCM: FRMMatrix3? { let o = _accessor.offset(VT.TRANSFORM_DCM); return o == 0 ? nil : FRMMatrix3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var EQUATORIAL_RADIUS_M: Double { let o = _accessor.offset(VT.EQUATORIAL_RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POLAR_RADIUS_M: Double { let o = _accessor.offset(VT.POLAR_RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  ///  Coordinate system the request's state is expressed in.
-  public var SOURCE_COORDINATE_SYSTEM: RFMCoordinateSystem? { let o = _accessor.offset(VT.SOURCE_COORDINATE_SYSTEM); return o == 0 ? nil : RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Coordinate system the result is required in.
-  public var TARGET_COORDINATE_SYSTEM: RFMCoordinateSystem? { let o = _accessor.offset(VT.TARGET_COORDINATE_SYSTEM); return o == 0 ? nil : RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  The full input state, carrying velocity as well as position. POSITION
-  ///  above is position-only and remains the input for operations 1-4.
-  public var SOURCE_STATE: FRMStateVector? { let o = _accessor.offset(VT.SOURCE_STATE); return o == 0 ? nil : FRMStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Element set the result must be expressed in.
-  public var TARGET_REPRESENTATION: frmStateRepresentation { let o = _accessor.offset(VT.TARGET_REPRESENTATION); return o == 0 ? .unspecified : frmStateRepresentation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Epoch the transform is evaluated at, ISO 8601. Required for every
-  ///  time-dependent axis chain.
-  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
-  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
-  public var EPOCH_TIME_SYSTEM: String? { let o = _accessor.offset(VT.EPOCH_TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TIME_SYSTEM) }
-  ///  Content identifier of the Earth-orientation data set the caller requires
-  ///  the provider to use. A provider that cannot honour it returns
-  ///  MISSING_EOP_DATA rather than substituting another table.
-  public var EOP_DATA_SET_CID: String? { let o = _accessor.offset(VT.EOP_DATA_SET_CID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EOP_DATA_SET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_DATA_SET_CID) }
-  public static func startFRMFrameTransformRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(OPERATION: frmOperationCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATION.rawValue, def: 0, at: VT.OPERATION) }
-  public static func add(POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION, at: VT.POSITION) }
-  public static func add(TRANSFORM_DCM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSFORM_DCM, at: VT.TRANSFORM_DCM) }
-  public static func add(EQUATORIAL_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EQUATORIAL_RADIUS_M, def: 0.0, at: VT.EQUATORIAL_RADIUS_M) }
-  public static func add(POLAR_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_RADIUS_M, def: 0.0, at: VT.POLAR_RADIUS_M) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func add(SOURCE_COORDINATE_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_COORDINATE_SYSTEM, at: VT.SOURCE_COORDINATE_SYSTEM) }
-  public static func add(TARGET_COORDINATE_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_COORDINATE_SYSTEM, at: VT.TARGET_COORDINATE_SYSTEM) }
-  public static func add(SOURCE_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_STATE, at: VT.SOURCE_STATE) }
-  public static func add(TARGET_REPRESENTATION: frmStateRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_REPRESENTATION.rawValue, def: 0, at: VT.TARGET_REPRESENTATION) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
-  public static func add(EPOCH_TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME_SYSTEM, at: VT.EPOCH_TIME_SYSTEM) }
-  public static func add(EOP_DATA_SET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_DATA_SET_CID, at: VT.EOP_DATA_SET_CID) }
-  public static func endFRMFrameTransformRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFRMFrameTransformRequest(
+  public var CONSTRAINT_ID: String! { let o = _accessor.offset(VT.CONSTRAINT_ID); return _accessor.string(at: o) }
+  public var CONSTRAINT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CONSTRAINT_ID) }
+  public var PARAMETER: pceParameter { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
+  public var PROVIDER_DEFINED_PARAMETER_NAME: String? { let o = _accessor.offset(VT.PROVIDER_DEFINED_PARAMETER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_DEFINED_PARAMETER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_DEFINED_PARAMETER_NAME) }
+  public var RELATION: slpConstraintRelation { let o = _accessor.offset(VT.RELATION); return o == 0 ? .unspecified : slpConstraintRelation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var LOWER_BOUND: Double { let o = _accessor.offset(VT.LOWER_BOUND); return o == 0 ? -1.7976931348623157e+308 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UPPER_BOUND: Double { let o = _accessor.offset(VT.UPPER_BOUND); return o == 0 ? 1.7976931348623157e+308 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOLERANCE: Double { let o = _accessor.offset(VT.TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSLPNonlinearConstraint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(CONSTRAINT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINT_ID, at: VT.CONSTRAINT_ID) }
+  public static func add(PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARAMETER.rawValue, def: 0, at: VT.PARAMETER) }
+  public static func add(PROVIDER_DEFINED_PARAMETER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_PARAMETER_NAME, at: VT.PROVIDER_DEFINED_PARAMETER_NAME) }
+  public static func add(RELATION: slpConstraintRelation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATION.rawValue, def: 0, at: VT.RELATION) }
+  public static func add(LOWER_BOUND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_BOUND, def: -1.7976931348623157e+308, at: VT.LOWER_BOUND) }
+  public static func add(UPPER_BOUND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_BOUND, def: 1.7976931348623157e+308, at: VT.UPPER_BOUND) }
+  public static func add(TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE, def: 0.0, at: VT.TOLERANCE) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 1.0, at: VT.SCALE) }
+  public static func endSLPNonlinearConstraint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createSLPNonlinearConstraint(
     _ fbb: inout FlatBufferBuilder,
-    OPERATION: frmOperationCode = .unknown,
-    POSITIONOffset POSITION: Offset = Offset(),
-    TRANSFORM_DCMOffset TRANSFORM_DCM: Offset = Offset(),
-    EQUATORIAL_RADIUS_M: Double = 0.0,
-    POLAR_RADIUS_M: Double = 0.0,
-    TRACE_IDOffset TRACE_ID: Offset = Offset(),
-    SOURCE_COORDINATE_SYSTEMOffset SOURCE_COORDINATE_SYSTEM: Offset = Offset(),
-    TARGET_COORDINATE_SYSTEMOffset TARGET_COORDINATE_SYSTEM: Offset = Offset(),
-    SOURCE_STATEOffset SOURCE_STATE: Offset = Offset(),
-    TARGET_REPRESENTATION: frmStateRepresentation = .unspecified,
-    EPOCHOffset EPOCH: Offset = Offset(),
-    EPOCH_TIME_SYSTEMOffset EPOCH_TIME_SYSTEM: Offset = Offset(),
-    EOP_DATA_SET_CIDOffset EOP_DATA_SET_CID: Offset = Offset()
+    CONSTRAINT_IDOffset CONSTRAINT_ID: Offset,
+    PARAMETER: pceParameter = .unspecified,
+    PROVIDER_DEFINED_PARAMETER_NAMEOffset PROVIDER_DEFINED_PARAMETER_NAME: Offset = Offset(),
+    RELATION: slpConstraintRelation = .unspecified,
+    LOWER_BOUND: Double = -1.7976931348623157e+308,
+    UPPER_BOUND: Double = 1.7976931348623157e+308,
+    TOLERANCE: Double = 0.0,
+    SCALE: Double = 1.0
   ) -> Offset {
-    let __start = FRMFrameTransformRequest.startFRMFrameTransformRequest(&fbb)
-    FRMFrameTransformRequest.add(OPERATION: OPERATION, &fbb)
-    FRMFrameTransformRequest.add(POSITION: POSITION, &fbb)
-    FRMFrameTransformRequest.add(TRANSFORM_DCM: TRANSFORM_DCM, &fbb)
-    FRMFrameTransformRequest.add(EQUATORIAL_RADIUS_M: EQUATORIAL_RADIUS_M, &fbb)
-    FRMFrameTransformRequest.add(POLAR_RADIUS_M: POLAR_RADIUS_M, &fbb)
-    FRMFrameTransformRequest.add(TRACE_ID: TRACE_ID, &fbb)
-    FRMFrameTransformRequest.add(SOURCE_COORDINATE_SYSTEM: SOURCE_COORDINATE_SYSTEM, &fbb)
-    FRMFrameTransformRequest.add(TARGET_COORDINATE_SYSTEM: TARGET_COORDINATE_SYSTEM, &fbb)
-    FRMFrameTransformRequest.add(SOURCE_STATE: SOURCE_STATE, &fbb)
-    FRMFrameTransformRequest.add(TARGET_REPRESENTATION: TARGET_REPRESENTATION, &fbb)
-    FRMFrameTransformRequest.add(EPOCH: EPOCH, &fbb)
-    FRMFrameTransformRequest.add(EPOCH_TIME_SYSTEM: EPOCH_TIME_SYSTEM, &fbb)
-    FRMFrameTransformRequest.add(EOP_DATA_SET_CID: EOP_DATA_SET_CID, &fbb)
-    return FRMFrameTransformRequest.endFRMFrameTransformRequest(&fbb, start: __start)
+    let __start = SLPNonlinearConstraint.startSLPNonlinearConstraint(&fbb)
+    SLPNonlinearConstraint.add(CONSTRAINT_ID: CONSTRAINT_ID, &fbb)
+    SLPNonlinearConstraint.add(PARAMETER: PARAMETER, &fbb)
+    SLPNonlinearConstraint.add(PROVIDER_DEFINED_PARAMETER_NAME: PROVIDER_DEFINED_PARAMETER_NAME, &fbb)
+    SLPNonlinearConstraint.add(RELATION: RELATION, &fbb)
+    SLPNonlinearConstraint.add(LOWER_BOUND: LOWER_BOUND, &fbb)
+    SLPNonlinearConstraint.add(UPPER_BOUND: UPPER_BOUND, &fbb)
+    SLPNonlinearConstraint.add(TOLERANCE: TOLERANCE, &fbb)
+    SLPNonlinearConstraint.add(SCALE: SCALE, &fbb)
+    return SLPNonlinearConstraint.endSLPNonlinearConstraint(&fbb, start: __start)
+  }
+  public static func sortVectorOfSlpnonlinearConstraint(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
+    var off = offsets
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
+    return fbb.createVector(ofOffsets: off)
+  }
+  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> SLPNonlinearConstraint? {
+    let key = key.utf8.map { $0 }
+    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
+    var start: Int32 = 0
+    while span != 0 {
+      var middle = span / 2
+      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
+      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
+      if comp > 0 {
+        span = middle
+      } else if comp < 0 {
+        middle += 1
+        start += middle
+        span -= middle
+      } else {
+        return SLPNonlinearConstraint(fbb, o: tableOffset)
+      }
+    }
+    return nil
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.OPERATION, fieldName: "OPERATION", required: false, type: frmOperationCode.self)
-    try _v.visit(field: VT.POSITION, fieldName: "POSITION", required: false, type: ForwardOffset<FRMVector3>.self)
-    try _v.visit(field: VT.TRANSFORM_DCM, fieldName: "TRANSFORM_DCM", required: false, type: ForwardOffset<FRMMatrix3>.self)
-    try _v.visit(field: VT.EQUATORIAL_RADIUS_M, fieldName: "EQUATORIAL_RADIUS_M", required: false, type: Double.self)
-    try _v.visit(field: VT.POLAR_RADIUS_M, fieldName: "POLAR_RADIUS_M", required: false, type: Double.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SOURCE_COORDINATE_SYSTEM, fieldName: "SOURCE_COORDINATE_SYSTEM", required: false, type: ForwardOffset<RFMCoordinateSystem>.self)
-    try _v.visit(field: VT.TARGET_COORDINATE_SYSTEM, fieldName: "TARGET_COORDINATE_SYSTEM", required: false, type: ForwardOffset<RFMCoordinateSystem>.self)
-    try _v.visit(field: VT.SOURCE_STATE, fieldName: "SOURCE_STATE", required: false, type: ForwardOffset<FRMStateVector>.self)
-    try _v.visit(field: VT.TARGET_REPRESENTATION, fieldName: "TARGET_REPRESENTATION", required: false, type: frmStateRepresentation.self)
-    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EPOCH_TIME_SYSTEM, fieldName: "EPOCH_TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EOP_DATA_SET_CID, fieldName: "EOP_DATA_SET_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSTRAINT_ID, fieldName: "CONSTRAINT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: pceParameter.self)
+    try _v.visit(field: VT.PROVIDER_DEFINED_PARAMETER_NAME, fieldName: "PROVIDER_DEFINED_PARAMETER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RELATION, fieldName: "RELATION", required: false, type: slpConstraintRelation.self)
+    try _v.visit(field: VT.LOWER_BOUND, fieldName: "LOWER_BOUND", required: false, type: Double.self)
+    try _v.visit(field: VT.UPPER_BOUND, fieldName: "UPPER_BOUND", required: false, type: Double.self)
+    try _v.visit(field: VT.TOLERANCE, fieldName: "TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-public struct FRMFrameTransformResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SLPSolverSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FRM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FRMFrameTransformResult.id, addPrefix: prefix) }
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLPSolverSettings.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ALGORITHM: VOffset = 4
+    static let DIFFERENCE_MODE: VOffset = 6
+    static let MAXIMUM_ITERATIONS: VOffset = 8
+    static let MAXIMUM_EVALUATIONS: VOffset = 10
+    static let RESIDUAL_TOLERANCE: VOffset = 12
+    static let STEP_TOLERANCE: VOffset = 14
+    static let OBJECTIVE_TOLERANCE: VOffset = 16
+    static let CONSTRAINT_TOLERANCE: VOffset = 18
+    static let KKT_TOLERANCE: VOffset = 20
+  }
+
+  public var ALGORITHM: slpAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .unspecified : slpAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var DIFFERENCE_MODE: slpDifferenceMode { let o = _accessor.offset(VT.DIFFERENCE_MODE); return o == 0 ? .unspecified : slpDifferenceMode(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var MAXIMUM_ITERATIONS: UInt32 { let o = _accessor.offset(VT.MAXIMUM_ITERATIONS); return o == 0 ? 50 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MAXIMUM_EVALUATIONS: UInt32 { let o = _accessor.offset(VT.MAXIMUM_EVALUATIONS); return o == 0 ? 1000 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var RESIDUAL_TOLERANCE: Double { let o = _accessor.offset(VT.RESIDUAL_TOLERANCE); return o == 0 ? 1e-9 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STEP_TOLERANCE: Double { let o = _accessor.offset(VT.STEP_TOLERANCE); return o == 0 ? 1e-12 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OBJECTIVE_TOLERANCE: Double { let o = _accessor.offset(VT.OBJECTIVE_TOLERANCE); return o == 0 ? 1e-10 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CONSTRAINT_TOLERANCE: Double { let o = _accessor.offset(VT.CONSTRAINT_TOLERANCE); return o == 0 ? 1e-8 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var KKT_TOLERANCE: Double { let o = _accessor.offset(VT.KKT_TOLERANCE); return o == 0 ? 1e-6 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSLPSolverSettings(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(ALGORITHM: slpAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
+  public static func add(DIFFERENCE_MODE: slpDifferenceMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIFFERENCE_MODE.rawValue, def: 0, at: VT.DIFFERENCE_MODE) }
+  public static func add(MAXIMUM_ITERATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_ITERATIONS, def: 50, at: VT.MAXIMUM_ITERATIONS) }
+  public static func add(MAXIMUM_EVALUATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_EVALUATIONS, def: 1000, at: VT.MAXIMUM_EVALUATIONS) }
+  public static func add(RESIDUAL_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESIDUAL_TOLERANCE, def: 1e-9, at: VT.RESIDUAL_TOLERANCE) }
+  public static func add(STEP_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_TOLERANCE, def: 1e-12, at: VT.STEP_TOLERANCE) }
+  public static func add(OBJECTIVE_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECTIVE_TOLERANCE, def: 1e-10, at: VT.OBJECTIVE_TOLERANCE) }
+  public static func add(CONSTRAINT_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSTRAINT_TOLERANCE, def: 1e-8, at: VT.CONSTRAINT_TOLERANCE) }
+  public static func add(KKT_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KKT_TOLERANCE, def: 1e-6, at: VT.KKT_TOLERANCE) }
+  public static func endSLPSolverSettings(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSLPSolverSettings(
+    _ fbb: inout FlatBufferBuilder,
+    ALGORITHM: slpAlgorithm = .unspecified,
+    DIFFERENCE_MODE: slpDifferenceMode = .unspecified,
+    MAXIMUM_ITERATIONS: UInt32 = 50,
+    MAXIMUM_EVALUATIONS: UInt32 = 1000,
+    RESIDUAL_TOLERANCE: Double = 1e-9,
+    STEP_TOLERANCE: Double = 1e-12,
+    OBJECTIVE_TOLERANCE: Double = 1e-10,
+    CONSTRAINT_TOLERANCE: Double = 1e-8,
+    KKT_TOLERANCE: Double = 1e-6
+  ) -> Offset {
+    let __start = SLPSolverSettings.startSLPSolverSettings(&fbb)
+    SLPSolverSettings.add(ALGORITHM: ALGORITHM, &fbb)
+    SLPSolverSettings.add(DIFFERENCE_MODE: DIFFERENCE_MODE, &fbb)
+    SLPSolverSettings.add(MAXIMUM_ITERATIONS: MAXIMUM_ITERATIONS, &fbb)
+    SLPSolverSettings.add(MAXIMUM_EVALUATIONS: MAXIMUM_EVALUATIONS, &fbb)
+    SLPSolverSettings.add(RESIDUAL_TOLERANCE: RESIDUAL_TOLERANCE, &fbb)
+    SLPSolverSettings.add(STEP_TOLERANCE: STEP_TOLERANCE, &fbb)
+    SLPSolverSettings.add(OBJECTIVE_TOLERANCE: OBJECTIVE_TOLERANCE, &fbb)
+    SLPSolverSettings.add(CONSTRAINT_TOLERANCE: CONSTRAINT_TOLERANCE, &fbb)
+    SLPSolverSettings.add(KKT_TOLERANCE: KKT_TOLERANCE, &fbb)
+    return SLPSolverSettings.endSLPSolverSettings(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: slpAlgorithm.self)
+    try _v.visit(field: VT.DIFFERENCE_MODE, fieldName: "DIFFERENCE_MODE", required: false, type: slpDifferenceMode.self)
+    try _v.visit(field: VT.MAXIMUM_ITERATIONS, fieldName: "MAXIMUM_ITERATIONS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MAXIMUM_EVALUATIONS, fieldName: "MAXIMUM_EVALUATIONS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.RESIDUAL_TOLERANCE, fieldName: "RESIDUAL_TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.STEP_TOLERANCE, fieldName: "STEP_TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.OBJECTIVE_TOLERANCE, fieldName: "OBJECTIVE_TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.CONSTRAINT_TOLERANCE, fieldName: "CONSTRAINT_TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.KKT_TOLERANCE, fieldName: "KKT_TOLERANCE", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct SLPIteration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLPIteration.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ITERATION: VOffset = 4
+    static let VARIABLES: VOffset = 6
+    static let VALUES: VOffset = 8
+    static let RESIDUAL_NORM: VOffset = 10
+    static let OBJECTIVE_VALUE: VOffset = 12
+    static let MAXIMUM_CONSTRAINT_VIOLATION: VOffset = 14
+    static let JACOBIAN_CONDITION_ESTIMATE: VOffset = 16
+    static let KKT_RESIDUAL: VOffset = 18
+    static let EVALUATION_COUNT: VOffset = 20
+  }
+
+  public var ITERATION: UInt32 { let o = _accessor.offset(VT.ITERATION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var VARIABLES: FlatbufferVector<Double> { return _accessor.vector(at: VT.VARIABLES, byteSize: 8) }
+  public func withUnsafePointerToVariables<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VARIABLES, body: body) }
+  public var VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.VALUES, byteSize: 8) }
+  public func withUnsafePointerToValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VALUES, body: body) }
+  public var RESIDUAL_NORM: Double { let o = _accessor.offset(VT.RESIDUAL_NORM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OBJECTIVE_VALUE: Double { let o = _accessor.offset(VT.OBJECTIVE_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAXIMUM_CONSTRAINT_VIOLATION: Double { let o = _accessor.offset(VT.MAXIMUM_CONSTRAINT_VIOLATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var JACOBIAN_CONDITION_ESTIMATE: Double { let o = _accessor.offset(VT.JACOBIAN_CONDITION_ESTIMATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var KKT_RESIDUAL: Double { let o = _accessor.offset(VT.KKT_RESIDUAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EVALUATION_COUNT: UInt32 { let o = _accessor.offset(VT.EVALUATION_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startSLPIteration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(ITERATION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITERATION, def: 0, at: VT.ITERATION) }
+  public static func addVectorOf(VARIABLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIABLES, at: VT.VARIABLES) }
+  public static func addVectorOf(VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUES, at: VT.VALUES) }
+  public static func add(RESIDUAL_NORM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESIDUAL_NORM, def: 0.0, at: VT.RESIDUAL_NORM) }
+  public static func add(OBJECTIVE_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECTIVE_VALUE, def: 0.0, at: VT.OBJECTIVE_VALUE) }
+  public static func add(MAXIMUM_CONSTRAINT_VIOLATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_CONSTRAINT_VIOLATION, def: 0.0, at: VT.MAXIMUM_CONSTRAINT_VIOLATION) }
+  public static func add(JACOBIAN_CONDITION_ESTIMATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JACOBIAN_CONDITION_ESTIMATE, def: 0.0, at: VT.JACOBIAN_CONDITION_ESTIMATE) }
+  public static func add(KKT_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KKT_RESIDUAL, def: 0.0, at: VT.KKT_RESIDUAL) }
+  public static func add(EVALUATION_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVALUATION_COUNT, def: 0, at: VT.EVALUATION_COUNT) }
+  public static func endSLPIteration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSLPIteration(
+    _ fbb: inout FlatBufferBuilder,
+    ITERATION: UInt32 = 0,
+    VARIABLESVectorOffset VARIABLES: Offset = Offset(),
+    VALUESVectorOffset VALUES: Offset = Offset(),
+    RESIDUAL_NORM: Double = 0.0,
+    OBJECTIVE_VALUE: Double = 0.0,
+    MAXIMUM_CONSTRAINT_VIOLATION: Double = 0.0,
+    JACOBIAN_CONDITION_ESTIMATE: Double = 0.0,
+    KKT_RESIDUAL: Double = 0.0,
+    EVALUATION_COUNT: UInt32 = 0
+  ) -> Offset {
+    let __start = SLPIteration.startSLPIteration(&fbb)
+    SLPIteration.add(ITERATION: ITERATION, &fbb)
+    SLPIteration.addVectorOf(VARIABLES: VARIABLES, &fbb)
+    SLPIteration.addVectorOf(VALUES: VALUES, &fbb)
+    SLPIteration.add(RESIDUAL_NORM: RESIDUAL_NORM, &fbb)
+    SLPIteration.add(OBJECTIVE_VALUE: OBJECTIVE_VALUE, &fbb)
+    SLPIteration.add(MAXIMUM_CONSTRAINT_VIOLATION: MAXIMUM_CONSTRAINT_VIOLATION, &fbb)
+    SLPIteration.add(JACOBIAN_CONDITION_ESTIMATE: JACOBIAN_CONDITION_ESTIMATE, &fbb)
+    SLPIteration.add(KKT_RESIDUAL: KKT_RESIDUAL, &fbb)
+    SLPIteration.add(EVALUATION_COUNT: EVALUATION_COUNT, &fbb)
+    return SLPIteration.endSLPIteration(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ITERATION, fieldName: "ITERATION", required: false, type: UInt32.self)
+    try _v.visit(field: VT.VARIABLES, fieldName: "VARIABLES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.VALUES, fieldName: "VALUES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.RESIDUAL_NORM, fieldName: "RESIDUAL_NORM", required: false, type: Double.self)
+    try _v.visit(field: VT.OBJECTIVE_VALUE, fieldName: "OBJECTIVE_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_CONSTRAINT_VIOLATION, fieldName: "MAXIMUM_CONSTRAINT_VIOLATION", required: false, type: Double.self)
+    try _v.visit(field: VT.JACOBIAN_CONDITION_ESTIMATE, fieldName: "JACOBIAN_CONDITION_ESTIMATE", required: false, type: Double.self)
+    try _v.visit(field: VT.KKT_RESIDUAL, fieldName: "KKT_RESIDUAL", required: false, type: Double.self)
+    try _v.visit(field: VT.EVALUATION_COUNT, fieldName: "EVALUATION_COUNT", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+public struct SLPSolverReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLPSolverReport.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let STATUS: VOffset = 4
-    static let ERROR_MESSAGE: VOffset = 6
-    static let POSITION: VOffset = 8
-    static let TRACE_ID: VOffset = 10
-    static let TARGET_STATE: VOffset = 12
-    static let ROTATION_DCM: VOffset = 14
-    static let ROTATION_DCM_RATE: VOffset = 16
-    static let ANGULAR_VELOCITY_RAD_S: VOffset = 18
-    static let EOP_DATA_SET_EPOCH: VOffset = 20
-    static let EOP_DATA_SET_CID: VOffset = 22
+    static let MESSAGE: VOffset = 6
+    static let ITERATIONS: VOffset = 8
+    static let FINAL_VARIABLES: VOffset = 10
+    static let FINAL_VALUES: VOffset = 12
+    static let OBJECTIVE_VALUE: VOffset = 14
+    static let RESIDUAL_NORM: VOffset = 16
+    static let MAXIMUM_CONSTRAINT_VIOLATION: VOffset = 18
+    static let KKT_RESIDUAL: VOffset = 20
+    static let EVALUATION_COUNT: VOffset = 22
   }
 
-  public var STATUS: frmResultStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : frmResultStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ok }
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  public var POSITION: FRMVector3? { let o = _accessor.offset(VT.POSITION); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  ///  The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
-  ///  TARGET_REPRESENTATION.
-  public var TARGET_STATE: FRMStateVector? { let o = _accessor.offset(VT.TARGET_STATE); return o == 0 ? nil : FRMStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Rotation from the source axes to the target axes at EPOCH.
-  public var ROTATION_DCM: FRMMatrix3? { let o = _accessor.offset(VT.ROTATION_DCM); return o == 0 ? nil : FRMMatrix3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time derivative of ROTATION_DCM, per second. Required for a velocity
-  ///  transform between relatively rotating axis sets.
-  public var ROTATION_DCM_RATE: FRMMatrix3? { let o = _accessor.offset(VT.ROTATION_DCM_RATE); return o == 0 ? nil : FRMMatrix3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Angular velocity of the target axes with respect to the source axes,
-  ///  radians per second, expressed in the source axes.
-  public var ANGULAR_VELOCITY_RAD_S: FRMVector3? { let o = _accessor.offset(VT.ANGULAR_VELOCITY_RAD_S); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Epoch of the Earth-orientation data set actually used, ISO 8601.
-  public var EOP_DATA_SET_EPOCH: String? { let o = _accessor.offset(VT.EOP_DATA_SET_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EOP_DATA_SET_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_DATA_SET_EPOCH) }
-  ///  Content identifier of the Earth-orientation data set actually used.
-  public var EOP_DATA_SET_CID: String? { let o = _accessor.offset(VT.EOP_DATA_SET_CID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EOP_DATA_SET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_DATA_SET_CID) }
-  public static func startFRMFrameTransformResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(STATUS: frmResultStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
-  public static func add(POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION, at: VT.POSITION) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func add(TARGET_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_STATE, at: VT.TARGET_STATE) }
-  public static func add(ROTATION_DCM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROTATION_DCM, at: VT.ROTATION_DCM) }
-  public static func add(ROTATION_DCM_RATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROTATION_DCM_RATE, at: VT.ROTATION_DCM_RATE) }
-  public static func add(ANGULAR_VELOCITY_RAD_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANGULAR_VELOCITY_RAD_S, at: VT.ANGULAR_VELOCITY_RAD_S) }
-  public static func add(EOP_DATA_SET_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_DATA_SET_EPOCH, at: VT.EOP_DATA_SET_EPOCH) }
-  public static func add(EOP_DATA_SET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_DATA_SET_CID, at: VT.EOP_DATA_SET_CID) }
-  public static func endFRMFrameTransformResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFRMFrameTransformResult(
+  public var STATUS: slpSolveStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .unspecified : slpSolveStatus(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var MESSAGE: String? { let o = _accessor.offset(VT.MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE) }
+  public var ITERATIONS: FlatbufferVector<SLPIteration> { return _accessor.vector(at: VT.ITERATIONS, byteSize: 4) }
+  public var FINAL_VARIABLES: FlatbufferVector<Double> { return _accessor.vector(at: VT.FINAL_VARIABLES, byteSize: 8) }
+  public func withUnsafePointerToFinalVariables<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FINAL_VARIABLES, body: body) }
+  public var FINAL_VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.FINAL_VALUES, byteSize: 8) }
+  public func withUnsafePointerToFinalValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FINAL_VALUES, body: body) }
+  public var OBJECTIVE_VALUE: Double { let o = _accessor.offset(VT.OBJECTIVE_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RESIDUAL_NORM: Double { let o = _accessor.offset(VT.RESIDUAL_NORM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAXIMUM_CONSTRAINT_VIOLATION: Double { let o = _accessor.offset(VT.MAXIMUM_CONSTRAINT_VIOLATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var KKT_RESIDUAL: Double { let o = _accessor.offset(VT.KKT_RESIDUAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EVALUATION_COUNT: UInt32 { let o = _accessor.offset(VT.EVALUATION_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startSLPSolverReport(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(STATUS: slpSolveStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func add(MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE, at: VT.MESSAGE) }
+  public static func addVectorOf(ITERATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ITERATIONS, at: VT.ITERATIONS) }
+  public static func addVectorOf(FINAL_VARIABLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FINAL_VARIABLES, at: VT.FINAL_VARIABLES) }
+  public static func addVectorOf(FINAL_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FINAL_VALUES, at: VT.FINAL_VALUES) }
+  public static func add(OBJECTIVE_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECTIVE_VALUE, def: 0.0, at: VT.OBJECTIVE_VALUE) }
+  public static func add(RESIDUAL_NORM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESIDUAL_NORM, def: 0.0, at: VT.RESIDUAL_NORM) }
+  public static func add(MAXIMUM_CONSTRAINT_VIOLATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_CONSTRAINT_VIOLATION, def: 0.0, at: VT.MAXIMUM_CONSTRAINT_VIOLATION) }
+  public static func add(KKT_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KKT_RESIDUAL, def: 0.0, at: VT.KKT_RESIDUAL) }
+  public static func add(EVALUATION_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVALUATION_COUNT, def: 0, at: VT.EVALUATION_COUNT) }
+  public static func endSLPSolverReport(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSLPSolverReport(
     _ fbb: inout FlatBufferBuilder,
-    STATUS: frmResultStatus = .ok,
-    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
-    POSITIONOffset POSITION: Offset = Offset(),
-    TRACE_IDOffset TRACE_ID: Offset = Offset(),
-    TARGET_STATEOffset TARGET_STATE: Offset = Offset(),
-    ROTATION_DCMOffset ROTATION_DCM: Offset = Offset(),
-    ROTATION_DCM_RATEOffset ROTATION_DCM_RATE: Offset = Offset(),
-    ANGULAR_VELOCITY_RAD_SOffset ANGULAR_VELOCITY_RAD_S: Offset = Offset(),
-    EOP_DATA_SET_EPOCHOffset EOP_DATA_SET_EPOCH: Offset = Offset(),
-    EOP_DATA_SET_CIDOffset EOP_DATA_SET_CID: Offset = Offset()
+    STATUS: slpSolveStatus = .unspecified,
+    MESSAGEOffset MESSAGE: Offset = Offset(),
+    ITERATIONSVectorOffset ITERATIONS: Offset = Offset(),
+    FINAL_VARIABLESVectorOffset FINAL_VARIABLES: Offset = Offset(),
+    FINAL_VALUESVectorOffset FINAL_VALUES: Offset = Offset(),
+    OBJECTIVE_VALUE: Double = 0.0,
+    RESIDUAL_NORM: Double = 0.0,
+    MAXIMUM_CONSTRAINT_VIOLATION: Double = 0.0,
+    KKT_RESIDUAL: Double = 0.0,
+    EVALUATION_COUNT: UInt32 = 0
   ) -> Offset {
-    let __start = FRMFrameTransformResult.startFRMFrameTransformResult(&fbb)
-    FRMFrameTransformResult.add(STATUS: STATUS, &fbb)
-    FRMFrameTransformResult.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
-    FRMFrameTransformResult.add(POSITION: POSITION, &fbb)
-    FRMFrameTransformResult.add(TRACE_ID: TRACE_ID, &fbb)
-    FRMFrameTransformResult.add(TARGET_STATE: TARGET_STATE, &fbb)
-    FRMFrameTransformResult.add(ROTATION_DCM: ROTATION_DCM, &fbb)
-    FRMFrameTransformResult.add(ROTATION_DCM_RATE: ROTATION_DCM_RATE, &fbb)
-    FRMFrameTransformResult.add(ANGULAR_VELOCITY_RAD_S: ANGULAR_VELOCITY_RAD_S, &fbb)
-    FRMFrameTransformResult.add(EOP_DATA_SET_EPOCH: EOP_DATA_SET_EPOCH, &fbb)
-    FRMFrameTransformResult.add(EOP_DATA_SET_CID: EOP_DATA_SET_CID, &fbb)
-    return FRMFrameTransformResult.endFRMFrameTransformResult(&fbb, start: __start)
+    let __start = SLPSolverReport.startSLPSolverReport(&fbb)
+    SLPSolverReport.add(STATUS: STATUS, &fbb)
+    SLPSolverReport.add(MESSAGE: MESSAGE, &fbb)
+    SLPSolverReport.addVectorOf(ITERATIONS: ITERATIONS, &fbb)
+    SLPSolverReport.addVectorOf(FINAL_VARIABLES: FINAL_VARIABLES, &fbb)
+    SLPSolverReport.addVectorOf(FINAL_VALUES: FINAL_VALUES, &fbb)
+    SLPSolverReport.add(OBJECTIVE_VALUE: OBJECTIVE_VALUE, &fbb)
+    SLPSolverReport.add(RESIDUAL_NORM: RESIDUAL_NORM, &fbb)
+    SLPSolverReport.add(MAXIMUM_CONSTRAINT_VIOLATION: MAXIMUM_CONSTRAINT_VIOLATION, &fbb)
+    SLPSolverReport.add(KKT_RESIDUAL: KKT_RESIDUAL, &fbb)
+    SLPSolverReport.add(EVALUATION_COUNT: EVALUATION_COUNT, &fbb)
+    return SLPSolverReport.endSLPSolverReport(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: frmResultStatus.self)
-    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.POSITION, fieldName: "POSITION", required: false, type: ForwardOffset<FRMVector3>.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TARGET_STATE, fieldName: "TARGET_STATE", required: false, type: ForwardOffset<FRMStateVector>.self)
-    try _v.visit(field: VT.ROTATION_DCM, fieldName: "ROTATION_DCM", required: false, type: ForwardOffset<FRMMatrix3>.self)
-    try _v.visit(field: VT.ROTATION_DCM_RATE, fieldName: "ROTATION_DCM_RATE", required: false, type: ForwardOffset<FRMMatrix3>.self)
-    try _v.visit(field: VT.ANGULAR_VELOCITY_RAD_S, fieldName: "ANGULAR_VELOCITY_RAD_S", required: false, type: ForwardOffset<FRMVector3>.self)
-    try _v.visit(field: VT.EOP_DATA_SET_EPOCH, fieldName: "EOP_DATA_SET_EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.EOP_DATA_SET_CID, fieldName: "EOP_DATA_SET_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: slpSolveStatus.self)
+    try _v.visit(field: VT.MESSAGE, fieldName: "MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ITERATIONS, fieldName: "ITERATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<SLPIteration>, SLPIteration>>.self)
+    try _v.visit(field: VT.FINAL_VARIABLES, fieldName: "FINAL_VARIABLES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.FINAL_VALUES, fieldName: "FINAL_VALUES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OBJECTIVE_VALUE, fieldName: "OBJECTIVE_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.RESIDUAL_NORM, fieldName: "RESIDUAL_NORM", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_CONSTRAINT_VIOLATION, fieldName: "MAXIMUM_CONSTRAINT_VIOLATION", required: false, type: Double.self)
+    try _v.visit(field: VT.KKT_RESIDUAL, fieldName: "KKT_RESIDUAL", required: false, type: Double.self)
+    try _v.visit(field: VT.EVALUATION_COUNT, fieldName: "EVALUATION_COUNT", required: false, type: UInt32.self)
     _v.finish()
   }
 }
 
-public struct FRM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SLPAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FRM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FRM.id, addPrefix: prefix) }
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLPAttestation.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let FRAME_TRANSFORM_REQUEST: VOffset = 4
-    static let FRAME_TRANSFORM_RESULT: VOffset = 6
+    static let SIGNING_PUBLIC_KEY: VOffset = 4
+    static let SIGNED_AT: VOffset = 6
+    static let SIGNATURE: VOffset = 8
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 10
   }
 
-  public var FRAME_TRANSFORM_REQUEST: FRMFrameTransformRequest? { let o = _accessor.offset(VT.FRAME_TRANSFORM_REQUEST); return o == 0 ? nil : FRMFrameTransformRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var FRAME_TRANSFORM_RESULT: FRMFrameTransformResult? { let o = _accessor.offset(VT.FRAME_TRANSFORM_RESULT); return o == 0 ? nil : FRMFrameTransformResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startFRM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(FRAME_TRANSFORM_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FRAME_TRANSFORM_REQUEST, at: VT.FRAME_TRANSFORM_REQUEST) }
-  public static func add(FRAME_TRANSFORM_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FRAME_TRANSFORM_RESULT, at: VT.FRAME_TRANSFORM_RESULT) }
-  public static func endFRM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFRM(
+  ///  Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters.
+  public var SIGNING_PUBLIC_KEY: String! { let o = _accessor.offset(VT.SIGNING_PUBLIC_KEY); return _accessor.string(at: o) }
+  public var SIGNING_PUBLIC_KEYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SIGNING_PUBLIC_KEY) }
+  public var SIGNED_AT: String? { let o = _accessor.offset(VT.SIGNED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNED_AT) }
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both signature
+  ///  payloads zeroed while preserving their vectors and offsets.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  ///  Ed25519 signature over canonical JSON in IDL field order and capitalization,
+  ///  with both signature fields omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  public static func startSLPAttestation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(SIGNING_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNING_PUBLIC_KEY, at: VT.SIGNING_PUBLIC_KEY) }
+  public static func add(SIGNED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNED_AT, at: VT.SIGNED_AT) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
+  public static func endSLPAttestation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8, 10]); return end }
+  public static func createSLPAttestation(
     _ fbb: inout FlatBufferBuilder,
-    FRAME_TRANSFORM_REQUESTOffset FRAME_TRANSFORM_REQUEST: Offset = Offset(),
-    FRAME_TRANSFORM_RESULTOffset FRAME_TRANSFORM_RESULT: Offset = Offset()
+    SIGNING_PUBLIC_KEYOffset SIGNING_PUBLIC_KEY: Offset,
+    SIGNED_ATOffset SIGNED_AT: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset,
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset
   ) -> Offset {
-    let __start = FRM.startFRM(&fbb)
-    FRM.add(FRAME_TRANSFORM_REQUEST: FRAME_TRANSFORM_REQUEST, &fbb)
-    FRM.add(FRAME_TRANSFORM_RESULT: FRAME_TRANSFORM_RESULT, &fbb)
-    return FRM.endFRM(&fbb, start: __start)
+    let __start = SLPAttestation.startSLPAttestation(&fbb)
+    SLPAttestation.add(SIGNING_PUBLIC_KEY: SIGNING_PUBLIC_KEY, &fbb)
+    SLPAttestation.add(SIGNED_AT: SIGNED_AT, &fbb)
+    SLPAttestation.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    SLPAttestation.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
+    return SLPAttestation.endSLPAttestation(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.FRAME_TRANSFORM_REQUEST, fieldName: "FRAME_TRANSFORM_REQUEST", required: false, type: ForwardOffset<FRMFrameTransformRequest>.self)
-    try _v.visit(field: VT.FRAME_TRANSFORM_RESULT, fieldName: "FRAME_TRANSFORM_RESULT", required: false, type: ForwardOffset<FRMFrameTransformResult>.self)
+    try _v.visit(field: VT.SIGNING_PUBLIC_KEY, fieldName: "SIGNING_PUBLIC_KEY", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNED_AT, fieldName: "SIGNED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    _v.finish()
+  }
+}
+
+public struct SLP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SLP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SLP.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PROBLEM_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let KIND: VOffset = 8
+    static let PROPAGATOR_PORT_ID: VOffset = 10
+    static let OBJECTIVE_EVALUATOR_PORT_ID: VOffset = 12
+    static let VARIABLES: VOffset = 14
+    static let GOALS: VOffset = 16
+    static let OBJECTIVE: VOffset = 18
+    static let CONSTRAINTS: VOffset = 20
+    static let SETTINGS: VOffset = 22
+    static let REPORT: VOffset = 24
+    static let CREATED_AT: VOffset = 26
+    static let ATTESTATION: VOffset = 28
+  }
+
+  public var PROBLEM_ID: String! { let o = _accessor.offset(VT.PROBLEM_ID); return _accessor.string(at: o) }
+  public var PROBLEM_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PROBLEM_ID) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var KIND: slpProblemKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : slpProblemKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var PROPAGATOR_PORT_ID: String! { let o = _accessor.offset(VT.PROPAGATOR_PORT_ID); return _accessor.string(at: o) }
+  public var PROPAGATOR_PORT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PROPAGATOR_PORT_ID) }
+  public var OBJECTIVE_EVALUATOR_PORT_ID: String? { let o = _accessor.offset(VT.OBJECTIVE_EVALUATOR_PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECTIVE_EVALUATOR_PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECTIVE_EVALUATOR_PORT_ID) }
+  public var VARIABLES: FlatbufferVector<SLPVariable> { return _accessor.vector(at: VT.VARIABLES, byteSize: 4) }
+  public func VARIABLESBy(key: String) -> SLPVariable? { let o = _accessor.offset(VT.VARIABLES); return o == 0 ? nil : SLPVariable.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
+  public var GOALS: FlatbufferVector<SLPGoal> { return _accessor.vector(at: VT.GOALS, byteSize: 4) }
+  public func GOALSBy(key: String) -> SLPGoal? { let o = _accessor.offset(VT.GOALS); return o == 0 ? nil : SLPGoal.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
+  public var OBJECTIVE: SLPObjective? { let o = _accessor.offset(VT.OBJECTIVE); return o == 0 ? nil : SLPObjective(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CONSTRAINTS: FlatbufferVector<SLPNonlinearConstraint> { return _accessor.vector(at: VT.CONSTRAINTS, byteSize: 4) }
+  public func CONSTRAINTSBy(key: String) -> SLPNonlinearConstraint? { let o = _accessor.offset(VT.CONSTRAINTS); return o == 0 ? nil : SLPNonlinearConstraint.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
+  public var SETTINGS: SLPSolverSettings? { let o = _accessor.offset(VT.SETTINGS); return o == 0 ? nil : SLPSolverSettings(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var REPORT: SLPSolverReport? { let o = _accessor.offset(VT.REPORT); return o == 0 ? nil : SLPSolverReport(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CREATED_AT: String? { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATED_AT) }
+  public var ATTESTATION: SLPAttestation! { let o = _accessor.offset(VT.ATTESTATION); return SLPAttestation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSLP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(PROBLEM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROBLEM_ID, at: VT.PROBLEM_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(KIND: slpProblemKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(PROPAGATOR_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_PORT_ID, at: VT.PROPAGATOR_PORT_ID) }
+  public static func add(OBJECTIVE_EVALUATOR_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECTIVE_EVALUATOR_PORT_ID, at: VT.OBJECTIVE_EVALUATOR_PORT_ID) }
+  public static func addVectorOf(VARIABLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIABLES, at: VT.VARIABLES) }
+  public static func addVectorOf(GOALS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GOALS, at: VT.GOALS) }
+  public static func add(OBJECTIVE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECTIVE, at: VT.OBJECTIVE) }
+  public static func addVectorOf(CONSTRAINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINTS, at: VT.CONSTRAINTS) }
+  public static func add(SETTINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SETTINGS, at: VT.SETTINGS) }
+  public static func add(REPORT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPORT, at: VT.REPORT) }
+  public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VT.CREATED_AT) }
+  public static func add(ATTESTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTESTATION, at: VT.ATTESTATION) }
+  public static func endSLP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10, 28]); return end }
+  public static func createSLP(
+    _ fbb: inout FlatBufferBuilder,
+    PROBLEM_IDOffset PROBLEM_ID: Offset,
+    NAMEOffset NAME: Offset = Offset(),
+    KIND: slpProblemKind = .unspecified,
+    PROPAGATOR_PORT_IDOffset PROPAGATOR_PORT_ID: Offset,
+    OBJECTIVE_EVALUATOR_PORT_IDOffset OBJECTIVE_EVALUATOR_PORT_ID: Offset = Offset(),
+    VARIABLESVectorOffset VARIABLES: Offset = Offset(),
+    GOALSVectorOffset GOALS: Offset = Offset(),
+    OBJECTIVEOffset OBJECTIVE: Offset = Offset(),
+    CONSTRAINTSVectorOffset CONSTRAINTS: Offset = Offset(),
+    SETTINGSOffset SETTINGS: Offset = Offset(),
+    REPORTOffset REPORT: Offset = Offset(),
+    CREATED_ATOffset CREATED_AT: Offset = Offset(),
+    ATTESTATIONOffset ATTESTATION: Offset
+  ) -> Offset {
+    let __start = SLP.startSLP(&fbb)
+    SLP.add(PROBLEM_ID: PROBLEM_ID, &fbb)
+    SLP.add(NAME: NAME, &fbb)
+    SLP.add(KIND: KIND, &fbb)
+    SLP.add(PROPAGATOR_PORT_ID: PROPAGATOR_PORT_ID, &fbb)
+    SLP.add(OBJECTIVE_EVALUATOR_PORT_ID: OBJECTIVE_EVALUATOR_PORT_ID, &fbb)
+    SLP.addVectorOf(VARIABLES: VARIABLES, &fbb)
+    SLP.addVectorOf(GOALS: GOALS, &fbb)
+    SLP.add(OBJECTIVE: OBJECTIVE, &fbb)
+    SLP.addVectorOf(CONSTRAINTS: CONSTRAINTS, &fbb)
+    SLP.add(SETTINGS: SETTINGS, &fbb)
+    SLP.add(REPORT: REPORT, &fbb)
+    SLP.add(CREATED_AT: CREATED_AT, &fbb)
+    SLP.add(ATTESTATION: ATTESTATION, &fbb)
+    return SLP.endSLP(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PROBLEM_ID, fieldName: "PROBLEM_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: slpProblemKind.self)
+    try _v.visit(field: VT.PROPAGATOR_PORT_ID, fieldName: "PROPAGATOR_PORT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECTIVE_EVALUATOR_PORT_ID, fieldName: "OBJECTIVE_EVALUATOR_PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VARIABLES, fieldName: "VARIABLES", required: false, type: ForwardOffset<Vector<ForwardOffset<SLPVariable>, SLPVariable>>.self)
+    try _v.visit(field: VT.GOALS, fieldName: "GOALS", required: false, type: ForwardOffset<Vector<ForwardOffset<SLPGoal>, SLPGoal>>.self)
+    try _v.visit(field: VT.OBJECTIVE, fieldName: "OBJECTIVE", required: false, type: ForwardOffset<SLPObjective>.self)
+    try _v.visit(field: VT.CONSTRAINTS, fieldName: "CONSTRAINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<SLPNonlinearConstraint>, SLPNonlinearConstraint>>.self)
+    try _v.visit(field: VT.SETTINGS, fieldName: "SETTINGS", required: false, type: ForwardOffset<SLPSolverSettings>.self)
+    try _v.visit(field: VT.REPORT, fieldName: "REPORT", required: false, type: ForwardOffset<SLPSolverReport>.self)
+    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATTESTATION, fieldName: "ATTESTATION", required: true, type: ForwardOffset<SLPAttestation>.self)
     _v.finish()
   }
 }

@@ -8,540 +8,1086 @@ import Common
 
 import FlatBuffers
 
-///  Different types of polarization in EMT
-public enum PolarizationType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Enumeration for data collection methods
+public enum CollectMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case linear = 0
-  case circular = 1
-  case elliptical = 2
-  case unpolarized = 3
+  case sidereal = 0
+  case rateTrack = 1
+  case fixedStare = 2
+  case other = 3
 
-  public static var max: PolarizationType { return .unpolarized }
-  public static var min: PolarizationType { return .linear }
+  public static var max: CollectMethod { return .other }
+  public static var min: CollectMethod { return .sidereal }
 }
 
 
-///  Simple polarization types
-public enum SimplePolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum ObservationPosition: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case vertical = 0
-  case horizontal = 1
-  case leftHandCircular = 2
-  case rightHandCircular = 3
+  case fence = 0
+  case first = 1
+  case in_ = 2
+  case last = 3
+  case single = 4
 
-  public static var max: SimplePolarization { return .rightHandCircular }
-  public static var min: SimplePolarization { return .vertical }
+  public static var max: ObservationPosition { return .single }
+  public static var min: ObservationPosition { return .fence }
 }
 
 
-///  Enum for the mode of data (real, simulated, synthetic)
-public enum DataMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Data collected during an exercise scenario.
-  case exercise = 0
-  ///  Data collected from real-world observations.
-  case real = 1
-  ///  Data generated through simulation.
-  case simulated = 2
-  ///  Data collected for testing purposes.
-  case test = 3
-
-  public static var max: DataMode { return .test }
-  public static var min: DataMode { return .exercise }
-}
-
-
-public enum DeviceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Basic or undefined sensor type
-  case unknown = 0
-  ///  General optical sensors
-  case optical = 1
-  ///  Detects infrared radiation
-  case infraredSensor = 2
-  ///  Sensitive to ultraviolet light
-  case ultravioletSensor = 3
-  ///  For X-ray detection
-  case xRaySensor = 4
-  ///  For gamma-ray detection
-  case gammaRaySensor = 5
-  ///  Basic radar systems
-  case radar = 6
-  ///  Advanced radar with phased array technology
-  case phasedArrayRadar = 7
-  ///  For high-resolution imaging
-  case syntheticApertureRadar = 8
-  ///  For astronomical observations using bistatic setup
-  case bistaticRadioTelescope = 9
-  ///  For radio astronomy
-  case radioTelescope = 10
-  ///  For atmospheric studies
-  case atmosphericSensor = 11
-  ///  For observing space weather phenomena
-  case spaceWeatherSensor = 12
-  ///  General environmental monitoring
-  case environmentalSensor = 13
-  ///  For measuring seismic activities
-  case seismicSensor = 14
-  ///  For gravity measurements
-  case gravimetricSensor = 15
-  ///  For magnetic field detection
-  case magneticSensor = 16
-  ///  For electromagnetic field analysis
-  case electromagneticSensor = 17
-  ///  For temperature and heat detection
-  case thermalSensor = 18
-  ///  For detecting chemicals and substances
-  case chemicalSensor = 19
-  ///  For biological research and detection
-  case biologicalSensor = 20
-  ///  For detecting ionizing radiation
-  case radiationSensor = 21
-  ///  For detecting subatomic particles
-  case particleDetector = 22
-  ///  Light Detection and Ranging
-  case lidar = 23
-  ///  Sound Navigation and Ranging
-  case sonar = 24
-  ///  General telescopes for astronomical observations
-  case telescope = 25
-  ///  For spectral analysis
-  case spectroscopicSensor = 26
-  ///  For measuring light intensity
-  case photometricSensor = 27
-  ///  For analyzing polarization of light
-  case polarimetricSensor = 28
-  ///  For detailed imaging using interference
-  case interferometricSensor = 29
-  ///  Capturing image data at multiple wavelengths
-  case multispectralSensor = 30
-  ///  Advanced imaging across many spectral bands
-  case hyperspectralSensor = 31
-  ///  For Global Positioning System reception
-  case gpsReceiver = 32
-  ///  Standard radio communication device
-  case radioCommunications = 33
-  ///  Advanced laser communication system
-  case laserCommunications = 34
-  ///  Satellite communication system
-  case satelliteCommunications = 35
-  ///  Device for laser-based experiments and measurements
-  case laserInstrument = 36
-  ///  Radio frequency analysis and measurement device
-  case rfAnalyzer = 37
-  ///  Device for ionospheric research
-  case ionosphericSensor = 38
-  ///  Device for laser-based imaging
-  case laserImaging = 39
-  ///  Advanced optical telescope
-  case opticalTelescope = 40
-  ///  Device for high-resolution optical observations
-  case highResolutionOptical = 41
-  case radio = 42
-  ///  Microwave communication device
-  case microwaveTransmitter = 43
-  ///  Device for radio frequency monitoring
-  case rfMonitor = 44
-  ///  High-frequency radio communication device
-  case hfRadioCommunications = 45
-
-  public static var max: DeviceType { return .hfRadioCommunications }
-  public static var min: DeviceType { return .unknown }
-}
-
-
-///  Frequency range with lower and upper limits
-public struct FrequencyRange: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Electro-Optical Observation
+public struct EOO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$IDM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FrequencyRange.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let LOWER: VOffset = 4
-    static let UPPER: VOffset = 6
-  }
-
-  ///  Lower frequency in MHz
-  public var LOWER: Double { let o = _accessor.offset(VT.LOWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Upper frequency in MHz
-  public var UPPER: Double { let o = _accessor.offset(VT.UPPER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startFrequencyRange(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(LOWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER, def: 0.0, at: VT.LOWER) }
-  public static func add(UPPER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER, def: 0.0, at: VT.UPPER) }
-  public static func endFrequencyRange(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFrequencyRange(
-    _ fbb: inout FlatBufferBuilder,
-    LOWER: Double = 0.0,
-    UPPER: Double = 0.0
-  ) -> Offset {
-    let __start = FrequencyRange.startFrequencyRange(&fbb)
-    FrequencyRange.add(LOWER: LOWER, &fbb)
-    FrequencyRange.add(UPPER: UPPER, &fbb)
-    return FrequencyRange.endFrequencyRange(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.LOWER, fieldName: "LOWER", required: false, type: Double.self)
-    try _v.visit(field: VT.UPPER, fieldName: "UPPER", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
-///  Stokes parameters, representing different aspects of polarization
-public struct StokesParameters: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$IDM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: StokesParameters.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let I: VOffset = 4
-    static let Q: VOffset = 6
-    static let U: VOffset = 8
-    static let V: VOffset = 10
-  }
-
-  ///  Intensity
-  public var I: Double { let o = _accessor.offset(VT.I); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Linear polarization
-  public var Q: Double { let o = _accessor.offset(VT.Q); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Another linear polarization, orthogonal to Q
-  public var U: Double { let o = _accessor.offset(VT.U); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Circular polarization
-  public var V: Double { let o = _accessor.offset(VT.V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startStokesParameters(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(I: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: I, def: 0.0, at: VT.I) }
-  public static func add(Q: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q, def: 0.0, at: VT.Q) }
-  public static func add(U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: U, def: 0.0, at: VT.U) }
-  public static func add(V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: V, def: 0.0, at: VT.V) }
-  public static func endStokesParameters(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createStokesParameters(
-    _ fbb: inout FlatBufferBuilder,
-    I: Double = 0.0,
-    Q: Double = 0.0,
-    U: Double = 0.0,
-    V: Double = 0.0
-  ) -> Offset {
-    let __start = StokesParameters.startStokesParameters(&fbb)
-    StokesParameters.add(I: I, &fbb)
-    StokesParameters.add(Q: Q, &fbb)
-    StokesParameters.add(U: U, &fbb)
-    StokesParameters.add(V: V, &fbb)
-    return StokesParameters.endStokesParameters(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.I, fieldName: "I", required: false, type: Double.self)
-    try _v.visit(field: VT.Q, fieldName: "Q", required: false, type: Double.self)
-    try _v.visit(field: VT.U, fieldName: "U", required: false, type: Double.self)
-    try _v.visit(field: VT.V, fieldName: "V", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
-///  Table representing a frequency band with a name and frequency range
-public struct Band: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$IDM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Band.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let NAME: VOffset = 4
-    static let FREQUENCY_RANGE: VOffset = 6
-  }
-
-  ///  Name of the band
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Frequency range of the band
-  public var FREQUENCY_RANGE: FrequencyRange? { let o = _accessor.offset(VT.FREQUENCY_RANGE); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startBand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(FREQUENCY_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FREQUENCY_RANGE, at: VT.FREQUENCY_RANGE) }
-  public static func endBand(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createBand(
-    _ fbb: inout FlatBufferBuilder,
-    NAMEOffset NAME: Offset = Offset(),
-    FREQUENCY_RANGEOffset FREQUENCY_RANGE: Offset = Offset()
-  ) -> Offset {
-    let __start = Band.startBand(&fbb)
-    Band.add(NAME: NAME, &fbb)
-    Band.add(FREQUENCY_RANGE: FREQUENCY_RANGE, &fbb)
-    return Band.endBand(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FREQUENCY_RANGE, fieldName: "FREQUENCY_RANGE", required: false, type: ForwardOffset<FrequencyRange>.self)
-    _v.finish()
-  }
-}
-
-///  Integrated Device Message
-public struct IDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$IDM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IDM.id, addPrefix: prefix) }
+  public static var id: String { "$EOO" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EOO.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let ID: VOffset = 4
-    static let NAME: VOffset = 6
-    static let DATA_MODE: VOffset = 8
-    static let UPLINK: VOffset = 10
-    static let DOWNLINK: VOffset = 12
-    static let BEACON: VOffset = 14
-    static let BAND: VOffset = 16
-    static let POLARIZATION_TYPE: VOffset = 18
-    static let SIMPLE_POLARIZATION: VOffset = 20
-    static let STOKES_PARAMETERS: VOffset = 22
-    static let POWER_REQUIRED: VOffset = 24
-    static let POWER_TYPE: VOffset = 26
-    static let TRANSMIT: VOffset = 28
-    static let RECEIVE: VOffset = 30
-    static let SENSOR_TYPE: VOffset = 32
-    static let SOURCE: VOffset = 34
-    static let LAST_OB_TIME: VOffset = 36
-    static let LOWER_LEFT_ELEVATION_LIMIT: VOffset = 38
-    static let UPPER_LEFT_AZIMUTH_LIMIT: VOffset = 40
-    static let LOWER_RIGHT_ELEVATION_LIMIT: VOffset = 42
-    static let LOWER_LEFT_AZIMUTH_LIMIT: VOffset = 44
-    static let UPPER_RIGHT_ELEVATION_LIMIT: VOffset = 46
-    static let UPPER_RIGHT_AZIMUTH_LIMIT: VOffset = 48
-    static let LOWER_RIGHT_AZIMUTH_LIMIT: VOffset = 50
-    static let UPPER_LEFT_ELEVATION_LIMIT: VOffset = 52
-    static let RIGHT_GEO_BELT_LIMIT: VOffset = 54
-    static let LEFT_GEO_BELT_LIMIT: VOffset = 56
-    static let MAGNITUDE_LIMIT: VOffset = 58
-    static let TASKABLE: VOffset = 60
+    static let CLASSIFICATION: VOffset = 6
+    static let OB_TIME: VOffset = 8
+    static let CORR_QUALITY: VOffset = 10
+    static let ID_ON_ORBIT: VOffset = 12
+    static let SENSOR_ID: VOffset = 14
+    static let COLLECT_METHOD: VOffset = 16
+    static let NORAD_CAT_ID: VOffset = 18
+    static let TASK_ID: VOffset = 20
+    static let TRANSACTION_ID: VOffset = 22
+    static let IMAGE_SET_ID: VOffset = 24
+    static let IMAGE_SET_LENGTH: VOffset = 26
+    static let SEQUENCE_ID: VOffset = 28
+    static let OB_POSITION: VOffset = 30
+    static let ORIG_OBJECT_ID: VOffset = 32
+    static let ORIG_SENSOR_ID: VOffset = 34
+    static let UCT: VOffset = 36
+    static let AZIMUTH: VOffset = 38
+    static let AZIMUTH_UNC: VOffset = 40
+    static let AZIMUTH_BIAS: VOffset = 42
+    static let AZIMUTH_RATE: VOffset = 44
+    static let ELEVATION: VOffset = 46
+    static let ELEVATION_UNC: VOffset = 48
+    static let ELEVATION_BIAS: VOffset = 50
+    static let ELEVATION_RATE: VOffset = 52
+    static let RANGE: VOffset = 54
+    static let RANGE_UNC: VOffset = 56
+    static let RANGE_BIAS: VOffset = 58
+    static let RANGE_RATE: VOffset = 60
+    static let RANGE_RATE_UNC: VOffset = 62
+    static let RA: VOffset = 64
+    static let RA_RATE: VOffset = 66
+    static let RA_UNC: VOffset = 68
+    static let RA_BIAS: VOffset = 70
+    static let DECLINATION: VOffset = 72
+    static let DECLINATION_RATE: VOffset = 74
+    static let DECLINATION_UNC: VOffset = 76
+    static let DECLINATION_BIAS: VOffset = 78
+    static let LOSX: VOffset = 80
+    static let LOSY: VOffset = 82
+    static let LOSZ: VOffset = 84
+    static let LOS_UNC: VOffset = 86
+    static let LOSXVEL: VOffset = 88
+    static let LOSYVEL: VOffset = 90
+    static let LOSZVEL: VOffset = 92
+    static let SENLAT: VOffset = 94
+    static let SENLON: VOffset = 96
+    static let SENALT: VOffset = 98
+    static let SENX: VOffset = 100
+    static let SENY: VOffset = 102
+    static let SENZ: VOffset = 104
+    static let FOV_COUNT: VOffset = 106
+    static let FOV_COUNT_UCTS: VOffset = 108
+    static let EXP_DURATION: VOffset = 110
+    static let ZEROPTD: VOffset = 112
+    static let NET_OBJ_SIG: VOffset = 114
+    static let NET_OBJ_SIG_UNC: VOffset = 116
+    static let MAG: VOffset = 118
+    static let MAG_UNC: VOffset = 120
+    static let MAG_NORM_RANGE: VOffset = 122
+    static let GEOLAT: VOffset = 124
+    static let GEOLON: VOffset = 126
+    static let GEOALT: VOffset = 128
+    static let GEORANGE: VOffset = 130
+    static let SKY_BKGRND: VOffset = 132
+    static let PRIMARY_EXTINCTION: VOffset = 134
+    static let PRIMARY_EXTINCTION_UNC: VOffset = 136
+    static let SOLAR_PHASE_ANGLE: VOffset = 138
+    static let SOLAR_EQ_PHASE_ANGLE: VOffset = 140
+    static let SOLAR_DEC_ANGLE: VOffset = 142
+    static let SHUTTER_DELAY: VOffset = 144
+    static let TIMING_BIAS: VOffset = 146
+    static let RAW_FILE_URI: VOffset = 148
+    static let INTENSITY: VOffset = 150
+    static let BG_INTENSITY: VOffset = 152
+    static let DESCRIPTOR: VOffset = 154
+    static let SOURCE: VOffset = 156
+    static let ORIGIN: VOffset = 158
+    static let DATA_MODE: VOffset = 160
+    static let CREATED_AT: VOffset = 162
+    static let CREATED_BY: VOffset = 164
+    static let REFERENCE_FRAME: VOffset = 166
+    static let SEN_REFERENCE_FRAME: VOffset = 168
+    static let UMBRA: VOffset = 170
+    static let PENUMBRA: VOffset = 172
+    static let ORIG_NETWORK: VOffset = 174
+    static let SOURCE_DL: VOffset = 176
+    static let TYPE: VOffset = 178
+    static let AZIMUTH_MEASURED: VOffset = 180
+    static let ELEVATION_MEASURED: VOffset = 182
+    static let RANGE_MEASURED: VOffset = 184
+    static let RANGERATE_MEASURED: VOffset = 186
+    static let RA_MEASURED: VOffset = 188
+    static let DECLINATION_MEASURED: VOffset = 190
+    static let NIIRS: VOffset = 192
+    static let METERS_PER_PIXEL: VOffset = 194
+    static let IMAGE_SNR: VOffset = 196
+    static let IMAGE_BIT_DEPTH: VOffset = 198
+    static let IMAGE_WIDTH: VOffset = 200
+    static let IMAGE_HEIGHT: VOffset = 202
+    static let IMAGE_COMPRESSION: VOffset = 204
+    static let IMAGE_COMPRESSION_RATIO: VOffset = 206
+    static let PROCESSED_IMAGE_URI: VOffset = 208
+    static let IMAGE_AUTO_ENHANCED: VOffset = 210
+    static let MULTI_FRAME_STACKED: VOffset = 212
+    static let SYNTHETIC_TRACKING_USED: VOffset = 214
+    static let IMAGE_SHARPNESS: VOffset = 216
+    static let IMAGE_NOISE_STDDEV: VOffset = 218
+    static let IMAGE_CONTRAST: VOffset = 220
+    static let IMAGE_DYNAMIC_RANGE: VOffset = 222
+    static let IMAGE_ENTROPY: VOffset = 224
+    static let BACKGROUND_UNIFORMITY: VOffset = 226
+    static let BACKGROUND_MEAN_LEVEL: VOffset = 228
+    static let SATURATED_PIXEL_PERCENT: VOffset = 230
+    static let DEAD_PIXEL_PERCENT: VOffset = 232
+    static let PSF_FWHM: VOffset = 234
+    static let CLOUD_COVER_PERCENT: VOffset = 236
+    static let CLOUD_DETECTION_CONFIDENCE: VOffset = 238
+    static let HAZE_PERCENT: VOffset = 240
+    static let AEROSOL_OPTICAL_THICKNESS: VOffset = 242
+    static let WATER_VAPOR_CONTENT: VOffset = 244
+    static let SUN_ELEVATION: VOffset = 246
+    static let SUN_AZIMUTH: VOffset = 248
+    static let VIEW_ZENITH_ANGLE: VOffset = 250
+    static let VIEW_AZIMUTH_ANGLE: VOffset = 252
+    static let OFF_NADIR_ANGLE: VOffset = 254
+    static let SWATH_WIDTH_KM: VOffset = 256
+    static let MEAN_TERRAIN_ELEVATION: VOffset = 258
+    static let TERRAIN_ELEVATION_STDDEV: VOffset = 260
+    static let SHADOW_COVER_PERCENT: VOffset = 262
+    static let SUNGLINT_PRESENT: VOffset = 264
+    static let SUNGLINT_PERCENT: VOffset = 266
+    static let SNOW_ICE_COVER_PERCENT: VOffset = 268
+    static let VALID_DATA_AREA_KM2: VOffset = 270
+    static let CORR_MAHALANOBIS_SQ: VOffset = 272
+    static let CORR_DOF: VOffset = 274
+    static let CORR_GATE: VOffset = 276
+    static let CORR_P_VALUE: VOffset = 278
+    static let CORR_AMBIGUOUS: VOffset = 280
   }
 
-  ///  Unique identifier for the EMT
+  ///  Unique identifier of the record.
   public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
-  ///  Name of the EMT
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Mode of the data (real, simulated, synthetic)
-  public var DATA_MODE: DataMode { let o = _accessor.offset(VT.DATA_MODE); return o == 0 ? .exercise : DataMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .exercise }
-  ///  Uplink frequency range
-  public var UPLINK: FrequencyRange? { let o = _accessor.offset(VT.UPLINK); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Downlink frequency range
-  public var DOWNLINK: FrequencyRange? { let o = _accessor.offset(VT.DOWNLINK); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Beacon frequency range
-  public var BEACON: FrequencyRange? { let o = _accessor.offset(VT.BEACON); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Bands associated with the EMT
-  public var BAND: FlatbufferVector<Band> { return _accessor.vector(at: VT.BAND, byteSize: 4) }
-  ///  Type of polarization used
-  public var POLARIZATION_TYPE: PolarizationType { let o = _accessor.offset(VT.POLARIZATION_TYPE); return o == 0 ? .linear : PolarizationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .linear }
-  ///  Simple polarization configuration
-  public var SIMPLE_POLARIZATION: SimplePolarization { let o = _accessor.offset(VT.SIMPLE_POLARIZATION); return o == 0 ? .vertical : SimplePolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .vertical }
-  ///  Stokes parameters for polarization characterization
-  public var STOKES_PARAMETERS: StokesParameters? { let o = _accessor.offset(VT.STOKES_PARAMETERS); return o == 0 ? nil : StokesParameters(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Power required in Watts
-  public var POWER_REQUIRED: Double { let o = _accessor.offset(VT.POWER_REQUIRED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Type of power (eg. AC or DC)
-  public var POWER_TYPE: String? { let o = _accessor.offset(VT.POWER_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POWER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POWER_TYPE) }
-  ///  Indicates if the EMT can transmit
-  public var TRANSMIT: Bool { let o = _accessor.offset(VT.TRANSMIT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Indicates if the EMT can receive
-  public var RECEIVE: Bool { let o = _accessor.offset(VT.RECEIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Type of the sensor
-  public var SENSOR_TYPE: DeviceType { let o = _accessor.offset(VT.SENSOR_TYPE); return o == 0 ? .unknown : DeviceType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
-  ///  Source of the data
+  ///  Classification marking of the data in IC/CAPCO Portion-marked format.
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
+  ///  Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
+  public var OB_TIME: String? { let o = _accessor.offset(VT.OB_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_TIME) }
+  ///  Correlation score of the observation when compared to a known orbit state.
+  public var CORR_QUALITY: Float32 { let o = _accessor.offset(VT.CORR_QUALITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Server will auto-populate with SAT_NO if available.
+  public var ID_ON_ORBIT: String? { let o = _accessor.offset(VT.ID_ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ON_ORBIT) }
+  ///  Unique ID of the sensor. Must have a corresponding sensor record on the server.
+  public var SENSOR_ID: String? { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SENSOR_ID) }
+  ///  Accepted Collection Method
+  public var COLLECT_METHOD: CollectMethod { let o = _accessor.offset(VT.COLLECT_METHOD); return o == 0 ? .sidereal : CollectMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sidereal }
+  ///  18SDS satellite number. Only list if correlated against the 18SDS catalog.
+  public var NORAD_CAT_ID: Int32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Identifier for the collectRequest message if the collection was in response to tasking.
+  public var TASK_ID: String? { let o = _accessor.offset(VT.TASK_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TASK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TASK_ID) }
+  ///  Optional identifier to track a transaction.
+  public var TRANSACTION_ID: String? { let o = _accessor.offset(VT.TRANSACTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSACTION_ID) }
+  ///  The user-defined set ID of a sequence of images.
+  public var IMAGE_SET_ID: String? { let o = _accessor.offset(VT.IMAGE_SET_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGE_SET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMAGE_SET_ID) }
+  ///  The number of images in an image set.
+  public var IMAGE_SET_LENGTH: Int32 { let o = _accessor.offset(VT.IMAGE_SET_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  The sequence ID of an image within an image set.
+  public var SEQUENCE_ID: Int32 { let o = _accessor.offset(VT.SEQUENCE_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+  public var OB_POSITION: ObservationPosition { let o = _accessor.offset(VT.OB_POSITION); return o == 0 ? .fence : ObservationPosition(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fence }
+  ///  Provider maintained ID. May not be consistent with 18SDS SAT_NO.
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
+  ///  Sensor ID.
+  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID) }
+  ///  Required if correlation is attempted. Indicates whether correlation succeeded.
+  public var UCT: Bool { let o = _accessor.offset(VT.UCT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Line of sight azimuth angle in degrees and topocentric frame.
+  public var AZIMUTH: Float32 { let o = _accessor.offset(VT.AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  One sigma uncertainty in the line of sight azimuth angle, in degrees.
+  public var AZIMUTH_UNC: Float32 { let o = _accessor.offset(VT.AZIMUTH_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sensor line of sight azimuth angle bias in degrees.
+  public var AZIMUTH_BIAS: Float32 { let o = _accessor.offset(VT.AZIMUTH_BIAS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Rate of change of the line of sight azimuth in degrees per second.
+  public var AZIMUTH_RATE: Float32 { let o = _accessor.offset(VT.AZIMUTH_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Line of sight elevation in degrees and topocentric frame.
+  public var ELEVATION: Float32 { let o = _accessor.offset(VT.ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  One sigma uncertainty in the line of sight elevation angle, in degrees.
+  public var ELEVATION_UNC: Float32 { let o = _accessor.offset(VT.ELEVATION_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sensor line of sight elevation bias in degrees.
+  public var ELEVATION_BIAS: Float32 { let o = _accessor.offset(VT.ELEVATION_BIAS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Rate of change of the line of sight elevation in degrees per second.
+  public var ELEVATION_RATE: Float32 { let o = _accessor.offset(VT.ELEVATION_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Line of sight range in km. Reported value should include all applicable corrections.
+  public var RANGE: Float32 { let o = _accessor.offset(VT.RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  One sigma uncertainty in the line of sight range, in km.
+  public var RANGE_UNC: Float32 { let o = _accessor.offset(VT.RANGE_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sensor line of sight range bias in km.
+  public var RANGE_BIAS: Float32 { let o = _accessor.offset(VT.RANGE_BIAS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Range rate in km/s. Reported value should include all applicable corrections.
+  public var RANGE_RATE: Float32 { let o = _accessor.offset(VT.RANGE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  One sigma uncertainty in the line of sight range rate, in km/sec.
+  public var RANGE_RATE_UNC: Float32 { let o = _accessor.offset(VT.RANGE_RATE_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Right ascension in degrees. Required metric reporting field for EO observations.
+  public var RA: Float32 { let o = _accessor.offset(VT.RA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Line of sight right ascension rate of change, in degrees/sec.
+  public var RA_RATE: Float32 { let o = _accessor.offset(VT.RA_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  One sigma uncertainty in the line of sight right ascension angle, in degrees.
+  public var RA_UNC: Float32 { let o = _accessor.offset(VT.RA_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sensor line of sight right ascension bias in degrees.
+  public var RA_BIAS: Float32 { let o = _accessor.offset(VT.RA_BIAS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Declination in degrees. Required metric reporting field for EO observations.
+  public var DECLINATION: Float32 { let o = _accessor.offset(VT.DECLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Line of sight declination rate of change, in degrees/sec.
+  public var DECLINATION_RATE: Float32 { let o = _accessor.offset(VT.DECLINATION_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  One sigma uncertainty in the line of sight declination angle, in degrees.
+  public var DECLINATION_UNC: Float32 { let o = _accessor.offset(VT.DECLINATION_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sensor line of sight declination angle bias in degrees.
+  public var DECLINATION_BIAS: Float32 { let o = _accessor.offset(VT.DECLINATION_BIAS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  public var LOSX: Float32 { let o = _accessor.offset(VT.LOSX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  public var LOSY: Float32 { let o = _accessor.offset(VT.LOSY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  public var LOSZ: Float32 { let o = _accessor.offset(VT.LOSZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  One sigma uncertainty in the line-of-sight direction vector components.
+  public var LOS_UNC: Float32 { let o = _accessor.offset(VT.LOS_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  X-component of the velocity vector along the line of sight, in km/s.
+  public var LOSXVEL: Float32 { let o = _accessor.offset(VT.LOSXVEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Y-component of the velocity vector along the line of sight, in km/s.
+  public var LOSYVEL: Float32 { let o = _accessor.offset(VT.LOSYVEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Z-component of the velocity vector along the line of sight, in km/s.
+  public var LOSZVEL: Float32 { let o = _accessor.offset(VT.LOSZVEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  WGS-84 latitude in decimal degrees at the time of the observation.
+  public var SENLAT: Float32 { let o = _accessor.offset(VT.SENLAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  WGS-84 longitude in decimal degrees at the time of the observation.
+  public var SENLON: Float32 { let o = _accessor.offset(VT.SENLON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
+  public var SENALT: Float32 { let o = _accessor.offset(VT.SENALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Cartesian X position in km at the time of the observation.
+  public var SENX: Float32 { let o = _accessor.offset(VT.SENX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Cartesian Y position in km at the time of the observation.
+  public var SENY: Float32 { let o = _accessor.offset(VT.SENY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Cartesian Z position in km at the time of the observation.
+  public var SENZ: Float32 { let o = _accessor.offset(VT.SENZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Total number of satellites in the field of view.
+  public var FOV_COUNT: Int32 { let o = _accessor.offset(VT.FOV_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Number of uncorrelated satellites in the field of view (JCO).
+  public var FOV_COUNT_UCTS: Int32 { let o = _accessor.offset(VT.FOV_COUNT_UCTS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+  ///  the exposure duration should be the total integration time. This field is highly recommended / required if the
+  ///  observations are going to be used for photometric processing.
+  public var EXP_DURATION: Float32 { let o = _accessor.offset(VT.EXP_DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
+  public var ZEROPTD: Float32 { let o = _accessor.offset(VT.ZEROPTD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Net object signature = counts / EXP_DURATION.
+  public var NET_OBJ_SIG: Float32 { let o = _accessor.offset(VT.NET_OBJ_SIG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Net object signature uncertainty = counts uncertainty / EXP_DURATION.
+  public var NET_OBJ_SIG_UNC: Float32 { let o = _accessor.offset(VT.NET_OBJ_SIG_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Measure of observed brightness calibrated against the Gaia G-band.
+  public var MAG: Float32 { let o = _accessor.offset(VT.MAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Uncertainty of the observed brightness.
+  public var MAG_UNC: Float32 { let o = _accessor.offset(VT.MAG_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  [Definition needed].
+  public var MAG_NORM_RANGE: Float32 { let o = _accessor.offset(VT.MAG_NORM_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
+  ///  and corresponding viewing geometry. It must NOT be computed from the orbit state.
+  public var GEOLAT: Float32 { let o = _accessor.offset(VT.GEOLAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
+  ///  and viewing geometry. It must NOT be computed from the orbit state.
+  public var GEOLON: Float32 { let o = _accessor.offset(VT.GEOLON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
+  public var GEOALT: Float32 { let o = _accessor.offset(VT.GEOALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
+  public var GEORANGE: Float32 { let o = _accessor.offset(VT.GEORANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
+  ///  empty part of the night sky.
+  public var SKY_BKGRND: Float32 { let o = _accessor.offset(VT.SKY_BKGRND); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+  ///  to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+  ///  describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
+  ///  object and the observer.
+  public var PRIMARY_EXTINCTION: Float32 { let o = _accessor.offset(VT.PRIMARY_EXTINCTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Primary Extinction Coefficient Uncertainty, in Magnitudes.
+  public var PRIMARY_EXTINCTION_UNC: Float32 { let o = _accessor.offset(VT.PRIMARY_EXTINCTION_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
+  ///  calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
+  public var SOLAR_PHASE_ANGLE: Float32 { let o = _accessor.offset(VT.SOLAR_PHASE_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+  ///  onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
+  ///  and positive when opening (after the opposition).
+  public var SOLAR_EQ_PHASE_ANGLE: Float32 { let o = _accessor.offset(VT.SOLAR_EQ_PHASE_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Angle from the sun to the equatorial plane.
+  public var SOLAR_DEC_ANGLE: Float32 { let o = _accessor.offset(VT.SOLAR_DEC_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Shutter delay in seconds.
+  public var SHUTTER_DELAY: Float32 { let o = _accessor.offset(VT.SHUTTER_DELAY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sensor timing bias in seconds.
+  public var TIMING_BIAS: Float32 { let o = _accessor.offset(VT.TIMING_BIAS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Optional URI location in the document repository of the raw file parsed by the system to produce this record.
+  public var RAW_FILE_URI: String? { let o = _accessor.offset(VT.RAW_FILE_URI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RAW_FILE_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RAW_FILE_URI) }
+  ///  Intensity of the target for IR observations, in kw/sr/em.
+  public var INTENSITY: Float32 { let o = _accessor.offset(VT.INTENSITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Background intensity for IR observations, in kw/sr/um.
+  public var BG_INTENSITY: Float32 { let o = _accessor.offset(VT.BG_INTENSITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Optional source-provided and searchable metadata or descriptor of the data.
+  public var DESCRIPTOR: String? { let o = _accessor.offset(VT.DESCRIPTOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTOR) }
+  ///  Source of the data.
   public var SOURCE: String? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE) }
-  ///  Timestamp of the last observation
-  public var LAST_OB_TIME: String? { let o = _accessor.offset(VT.LAST_OB_TIME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAST_OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_OB_TIME) }
-  ///  Lower left elevation limit
-  public var LOWER_LEFT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VT.LOWER_LEFT_ELEVATION_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Upper left azimuth limit
-  public var UPPER_LEFT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VT.UPPER_LEFT_AZIMUTH_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Lower right elevation limit
-  public var LOWER_RIGHT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VT.LOWER_RIGHT_ELEVATION_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Lower left azimuth limit
-  public var LOWER_LEFT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VT.LOWER_LEFT_AZIMUTH_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Upper right elevation limit
-  public var UPPER_RIGHT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VT.UPPER_RIGHT_ELEVATION_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Upper right azimuth limit
-  public var UPPER_RIGHT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VT.UPPER_RIGHT_AZIMUTH_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Lower right azimuth limit
-  public var LOWER_RIGHT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VT.LOWER_RIGHT_AZIMUTH_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Upper left elevation limit
-  public var UPPER_LEFT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VT.UPPER_LEFT_ELEVATION_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Right geostationary belt limit
-  public var RIGHT_GEO_BELT_LIMIT: Double { let o = _accessor.offset(VT.RIGHT_GEO_BELT_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Left geostationary belt limit
-  public var LEFT_GEO_BELT_LIMIT: Double { let o = _accessor.offset(VT.LEFT_GEO_BELT_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Magnitude limit of the sensor
-  public var MAGNITUDE_LIMIT: Double { let o = _accessor.offset(VT.MAGNITUDE_LIMIT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Indicates if the site is taskable
-  public var TASKABLE: Bool { let o = _accessor.offset(VT.TASKABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startIDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
+  ///  Originating system or organization which produced the data, if different from the source.
+  ///  The origin may be different than the source if the source was a mediating system which forwarded
+  ///  the data on behalf of the origin system. If null, the source may be assumed to be the origin.
+  public var ORIGIN: String? { let o = _accessor.offset(VT.ORIGIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGIN) }
+  ///  Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+  public var DATA_MODE: DataMode { let o = _accessor.offset(VT.DATA_MODE); return o == 0 ? .exercise : DataMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .exercise }
+  ///  Time the row was created in the database, auto-populated by the system.
+  public var CREATED_AT: String? { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATED_AT) }
+  ///  Application user who created the row in the database, auto-populated by the system.
+  public var CREATED_BY: String? { let o = _accessor.offset(VT.CREATED_BY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATED_BYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATED_BY) }
+  ///  EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
+  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+  ///  unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
+  ///  Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
+  public var SEN_REFERENCE_FRAME: RFM? { let o = _accessor.offset(VT.SEN_REFERENCE_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Boolean indicating that the target object was in umbral eclipse at the time of this observation.
+  public var UMBRA: Bool { let o = _accessor.offset(VT.UMBRA); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+  ///  This field is highly recommended if the observations will be used for photometric processing.
+  public var PENUMBRA: Bool { let o = _accessor.offset(VT.PENUMBRA); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  The originating source network on which this record was created, auto-populated by the system.
+  public var ORIG_NETWORK: String? { let o = _accessor.offset(VT.ORIG_NETWORK); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_NETWORKSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_NETWORK) }
+  ///  The source from which this record was received.
+  public var SOURCE_DL: String? { let o = _accessor.offset(VT.SOURCE_DL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_DLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_DL) }
+  ///  Device Type
+  public var TYPE: DeviceType { let o = _accessor.offset(VT.TYPE); return o == 0 ? .unknown : DeviceType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  True if measured, false if computed. Required if azimuth is reported.
+  public var AZIMUTH_MEASURED: Bool { let o = _accessor.offset(VT.AZIMUTH_MEASURED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if elevation is reported.
+  public var ELEVATION_MEASURED: Bool { let o = _accessor.offset(VT.ELEVATION_MEASURED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if range is reported.
+  public var RANGE_MEASURED: Bool { let o = _accessor.offset(VT.RANGE_MEASURED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if range-rate is reported.
+  public var RANGERATE_MEASURED: Bool { let o = _accessor.offset(VT.RANGERATE_MEASURED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if right ascension is reported.
+  public var RA_MEASURED: Bool { let o = _accessor.offset(VT.RA_MEASURED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if declination is reported.
+  public var DECLINATION_MEASURED: Bool { let o = _accessor.offset(VT.DECLINATION_MEASURED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+  public var NIIRS: Float32 { let o = _accessor.offset(VT.NIIRS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Ground sample distance in meters per pixel.
+  public var METERS_PER_PIXEL: Float32 { let o = _accessor.offset(VT.METERS_PER_PIXEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+  public var IMAGE_SNR: Float32 { let o = _accessor.offset(VT.IMAGE_SNR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Bit depth of the image (e.g., 8, 12, 16).
+  public var IMAGE_BIT_DEPTH: Int32 { let o = _accessor.offset(VT.IMAGE_BIT_DEPTH); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Width of the image in pixels.
+  public var IMAGE_WIDTH: Int32 { let o = _accessor.offset(VT.IMAGE_WIDTH); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Height of the image in pixels.
+  public var IMAGE_HEIGHT: Int32 { let o = _accessor.offset(VT.IMAGE_HEIGHT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+  public var IMAGE_COMPRESSION: String? { let o = _accessor.offset(VT.IMAGE_COMPRESSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGE_COMPRESSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMAGE_COMPRESSION) }
+  ///  Compression ratio used (original size / compressed size), if applicable.
+  public var IMAGE_COMPRESSION_RATIO: Float32 { let o = _accessor.offset(VT.IMAGE_COMPRESSION_RATIO); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  URI to the processed image used for this observation.
+  public var PROCESSED_IMAGE_URI: String? { let o = _accessor.offset(VT.PROCESSED_IMAGE_URI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROCESSED_IMAGE_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROCESSED_IMAGE_URI) }
+  ///  Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+  public var IMAGE_AUTO_ENHANCED: Bool { let o = _accessor.offset(VT.IMAGE_AUTO_ENHANCED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if the observation was taken with multiple frames stacked into one image.
+  public var MULTI_FRAME_STACKED: Bool { let o = _accessor.offset(VT.MULTI_FRAME_STACKED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if synthetic tracking was used to create the image.
+  public var SYNTHETIC_TRACKING_USED: Bool { let o = _accessor.offset(VT.SYNTHETIC_TRACKING_USED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+  public var IMAGE_SHARPNESS: Float32 { let o = _accessor.offset(VT.IMAGE_SHARPNESS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Noise level of the image, estimated via pixel intensity variance in background regions.
+  public var IMAGE_NOISE_STDDEV: Float32 { let o = _accessor.offset(VT.IMAGE_NOISE_STDDEV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Contrast metric of the image, such as Michelson contrast or RMS contrast.
+  public var IMAGE_CONTRAST: Float32 { let o = _accessor.offset(VT.IMAGE_CONTRAST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+  public var IMAGE_DYNAMIC_RANGE: Float32 { let o = _accessor.offset(VT.IMAGE_DYNAMIC_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+  public var IMAGE_ENTROPY: Float32 { let o = _accessor.offset(VT.IMAGE_ENTROPY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+  public var BACKGROUND_UNIFORMITY: Float32 { let o = _accessor.offset(VT.BACKGROUND_UNIFORMITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Mean background level, computed from non-object regions in pixel units.
+  public var BACKGROUND_MEAN_LEVEL: Float32 { let o = _accessor.offset(VT.BACKGROUND_MEAN_LEVEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Percentage of saturated pixels in the image. Indicates overexposure when high.
+  public var SATURATED_PIXEL_PERCENT: Float32 { let o = _accessor.offset(VT.SATURATED_PIXEL_PERCENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+  public var DEAD_PIXEL_PERCENT: Float32 { let o = _accessor.offset(VT.DEAD_PIXEL_PERCENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+  public var PSF_FWHM: Float32 { let o = _accessor.offset(VT.PSF_FWHM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+  public var CLOUD_COVER_PERCENT: Float32 { let o = _accessor.offset(VT.CLOUD_COVER_PERCENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+  public var CLOUD_DETECTION_CONFIDENCE: Float32 { let o = _accessor.offset(VT.CLOUD_DETECTION_CONFIDENCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+  public var HAZE_PERCENT: Float32 { let o = _accessor.offset(VT.HAZE_PERCENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+  public var AEROSOL_OPTICAL_THICKNESS: Float32 { let o = _accessor.offset(VT.AEROSOL_OPTICAL_THICKNESS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+  public var WATER_VAPOR_CONTENT: Float32 { let o = _accessor.offset(VT.WATER_VAPOR_CONTENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sun elevation angle at the time of image capture, in degrees above the horizon.
+  public var SUN_ELEVATION: Float32 { let o = _accessor.offset(VT.SUN_ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sun azimuth angle at the time of image capture, in degrees from true north.
+  public var SUN_AZIMUTH: Float32 { let o = _accessor.offset(VT.SUN_AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+  public var VIEW_ZENITH_ANGLE: Float32 { let o = _accessor.offset(VT.VIEW_ZENITH_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  View azimuth angle (direction of sensor relative to north), in degrees.
+  public var VIEW_AZIMUTH_ANGLE: Float32 { let o = _accessor.offset(VT.VIEW_AZIMUTH_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Off-nadir angle of the sensor at the time of image capture, in degrees.
+  public var OFF_NADIR_ANGLE: Float32 { let o = _accessor.offset(VT.OFF_NADIR_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Ground coverage width of the image swath in kilometers.
+  public var SWATH_WIDTH_KM: Float32 { let o = _accessor.offset(VT.SWATH_WIDTH_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Mean terrain elevation in the image footprint, in meters above sea level.
+  public var MEAN_TERRAIN_ELEVATION: Float32 { let o = _accessor.offset(VT.MEAN_TERRAIN_ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Standard deviation of terrain elevation in the image footprint, in meters.
+  public var TERRAIN_ELEVATION_STDDEV: Float32 { let o = _accessor.offset(VT.TERRAIN_ELEVATION_STDDEV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+  public var SHADOW_COVER_PERCENT: Float32 { let o = _accessor.offset(VT.SHADOW_COVER_PERCENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+  public var SUNGLINT_PRESENT: Bool { let o = _accessor.offset(VT.SUNGLINT_PRESENT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Percentage of image affected by sunglint.
+  public var SUNGLINT_PERCENT: Float32 { let o = _accessor.offset(VT.SUNGLINT_PERCENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated percentage of snow or ice coverage in the image footprint.
+  public var SNOW_ICE_COVER_PERCENT: Float32 { let o = _accessor.offset(VT.SNOW_ICE_COVER_PERCENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+  public var VALID_DATA_AREA_KM2: Float32 { let o = _accessor.offset(VT.VALID_DATA_AREA_KM2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Association: squared Mahalanobis distance of the observation's
+  ///  innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  public var CORR_MAHALANOBIS_SQ: Double { let o = _accessor.offset(VT.CORR_MAHALANOBIS_SQ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: degrees of freedom of d^2 (measurement dimension).
+  public var CORR_DOF: UInt8 { let o = _accessor.offset(VT.CORR_DOF); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Association: the chi-square gate d^2 was tested against.
+  public var CORR_GATE: Double { let o = _accessor.offset(VT.CORR_GATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: p-value of d^2, Q(dof/2, d^2/2).
+  public var CORR_P_VALUE: Double { let o = _accessor.offset(VT.CORR_P_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: true when the assignment was ambiguous.
+  public var CORR_AMBIGUOUS: Bool { let o = _accessor.offset(VT.CORR_AMBIGUOUS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startEOO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 139) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(DATA_MODE: DataMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_MODE.rawValue, def: 0, at: VT.DATA_MODE) }
-  public static func add(UPLINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPLINK, at: VT.UPLINK) }
-  public static func add(DOWNLINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOWNLINK, at: VT.DOWNLINK) }
-  public static func add(BEACON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEACON, at: VT.BEACON) }
-  public static func addVectorOf(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VT.BAND) }
-  public static func add(POLARIZATION_TYPE: PolarizationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION_TYPE.rawValue, def: 0, at: VT.POLARIZATION_TYPE) }
-  public static func add(SIMPLE_POLARIZATION: SimplePolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIMPLE_POLARIZATION.rawValue, def: 0, at: VT.SIMPLE_POLARIZATION) }
-  public static func add(STOKES_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOKES_PARAMETERS, at: VT.STOKES_PARAMETERS) }
-  public static func add(POWER_REQUIRED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_REQUIRED, def: 0.0, at: VT.POWER_REQUIRED) }
-  public static func add(POWER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POWER_TYPE, at: VT.POWER_TYPE) }
-  public static func add(TRANSMIT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMIT, def: false,
-   at: VT.TRANSMIT) }
-  public static func add(RECEIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECEIVE, def: false,
-   at: VT.RECEIVE) }
-  public static func add(SENSOR_TYPE: DeviceType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_TYPE.rawValue, def: 0, at: VT.SENSOR_TYPE) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
+  public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VT.OB_TIME) }
+  public static func add(CORR_QUALITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_QUALITY, def: 0.0, at: VT.CORR_QUALITY) }
+  public static func add(ID_ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT, at: VT.ID_ON_ORBIT) }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
+  public static func add(COLLECT_METHOD: CollectMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLLECT_METHOD.rawValue, def: 0, at: VT.COLLECT_METHOD) }
+  public static func add(NORAD_CAT_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(TASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_ID, at: VT.TASK_ID) }
+  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VT.TRANSACTION_ID) }
+  public static func add(IMAGE_SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_SET_ID, at: VT.IMAGE_SET_ID) }
+  public static func add(IMAGE_SET_LENGTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_SET_LENGTH, def: 0, at: VT.IMAGE_SET_LENGTH) }
+  public static func add(SEQUENCE_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_ID, def: 0, at: VT.SEQUENCE_ID) }
+  public static func add(OB_POSITION: ObservationPosition, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OB_POSITION.rawValue, def: 0, at: VT.OB_POSITION) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VT.ORIG_SENSOR_ID) }
+  public static func add(UCT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UCT, def: false,
+   at: VT.UCT) }
+  public static func add(AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH, def: 0.0, at: VT.AZIMUTH) }
+  public static func add(AZIMUTH_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_UNC, def: 0.0, at: VT.AZIMUTH_UNC) }
+  public static func add(AZIMUTH_BIAS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_BIAS, def: 0.0, at: VT.AZIMUTH_BIAS) }
+  public static func add(AZIMUTH_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_RATE, def: 0.0, at: VT.AZIMUTH_RATE) }
+  public static func add(ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VT.ELEVATION) }
+  public static func add(ELEVATION_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_UNC, def: 0.0, at: VT.ELEVATION_UNC) }
+  public static func add(ELEVATION_BIAS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_BIAS, def: 0.0, at: VT.ELEVATION_BIAS) }
+  public static func add(ELEVATION_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_RATE, def: 0.0, at: VT.ELEVATION_RATE) }
+  public static func add(RANGE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VT.RANGE) }
+  public static func add(RANGE_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_UNC, def: 0.0, at: VT.RANGE_UNC) }
+  public static func add(RANGE_BIAS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_BIAS, def: 0.0, at: VT.RANGE_BIAS) }
+  public static func add(RANGE_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RATE, def: 0.0, at: VT.RANGE_RATE) }
+  public static func add(RANGE_RATE_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RATE_UNC, def: 0.0, at: VT.RANGE_RATE_UNC) }
+  public static func add(RA: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VT.RA) }
+  public static func add(RA_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_RATE, def: 0.0, at: VT.RA_RATE) }
+  public static func add(RA_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_UNC, def: 0.0, at: VT.RA_UNC) }
+  public static func add(RA_BIAS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_BIAS, def: 0.0, at: VT.RA_BIAS) }
+  public static func add(DECLINATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECLINATION, def: 0.0, at: VT.DECLINATION) }
+  public static func add(DECLINATION_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECLINATION_RATE, def: 0.0, at: VT.DECLINATION_RATE) }
+  public static func add(DECLINATION_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECLINATION_UNC, def: 0.0, at: VT.DECLINATION_UNC) }
+  public static func add(DECLINATION_BIAS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECLINATION_BIAS, def: 0.0, at: VT.DECLINATION_BIAS) }
+  public static func add(LOSX: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSX, def: 0.0, at: VT.LOSX) }
+  public static func add(LOSY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSY, def: 0.0, at: VT.LOSY) }
+  public static func add(LOSZ: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSZ, def: 0.0, at: VT.LOSZ) }
+  public static func add(LOS_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOS_UNC, def: 0.0, at: VT.LOS_UNC) }
+  public static func add(LOSXVEL: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSXVEL, def: 0.0, at: VT.LOSXVEL) }
+  public static func add(LOSYVEL: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSYVEL, def: 0.0, at: VT.LOSYVEL) }
+  public static func add(LOSZVEL: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSZVEL, def: 0.0, at: VT.LOSZVEL) }
+  public static func add(SENLAT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT, def: 0.0, at: VT.SENLAT) }
+  public static func add(SENLON: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON, def: 0.0, at: VT.SENLON) }
+  public static func add(SENALT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENALT, def: 0.0, at: VT.SENALT) }
+  public static func add(SENX: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENX, def: 0.0, at: VT.SENX) }
+  public static func add(SENY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENY, def: 0.0, at: VT.SENY) }
+  public static func add(SENZ: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENZ, def: 0.0, at: VT.SENZ) }
+  public static func add(FOV_COUNT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_COUNT, def: 0, at: VT.FOV_COUNT) }
+  public static func add(FOV_COUNT_UCTS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_COUNT_UCTS, def: 0, at: VT.FOV_COUNT_UCTS) }
+  public static func add(EXP_DURATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXP_DURATION, def: 0.0, at: VT.EXP_DURATION) }
+  public static func add(ZEROPTD: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ZEROPTD, def: 0.0, at: VT.ZEROPTD) }
+  public static func add(NET_OBJ_SIG: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NET_OBJ_SIG, def: 0.0, at: VT.NET_OBJ_SIG) }
+  public static func add(NET_OBJ_SIG_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NET_OBJ_SIG_UNC, def: 0.0, at: VT.NET_OBJ_SIG_UNC) }
+  public static func add(MAG: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAG, def: 0.0, at: VT.MAG) }
+  public static func add(MAG_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAG_UNC, def: 0.0, at: VT.MAG_UNC) }
+  public static func add(MAG_NORM_RANGE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAG_NORM_RANGE, def: 0.0, at: VT.MAG_NORM_RANGE) }
+  public static func add(GEOLAT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOLAT, def: 0.0, at: VT.GEOLAT) }
+  public static func add(GEOLON: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOLON, def: 0.0, at: VT.GEOLON) }
+  public static func add(GEOALT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOALT, def: 0.0, at: VT.GEOALT) }
+  public static func add(GEORANGE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEORANGE, def: 0.0, at: VT.GEORANGE) }
+  public static func add(SKY_BKGRND: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SKY_BKGRND, def: 0.0, at: VT.SKY_BKGRND) }
+  public static func add(PRIMARY_EXTINCTION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_EXTINCTION, def: 0.0, at: VT.PRIMARY_EXTINCTION) }
+  public static func add(PRIMARY_EXTINCTION_UNC: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_EXTINCTION_UNC, def: 0.0, at: VT.PRIMARY_EXTINCTION_UNC) }
+  public static func add(SOLAR_PHASE_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_PHASE_ANGLE, def: 0.0, at: VT.SOLAR_PHASE_ANGLE) }
+  public static func add(SOLAR_EQ_PHASE_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_EQ_PHASE_ANGLE, def: 0.0, at: VT.SOLAR_EQ_PHASE_ANGLE) }
+  public static func add(SOLAR_DEC_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_DEC_ANGLE, def: 0.0, at: VT.SOLAR_DEC_ANGLE) }
+  public static func add(SHUTTER_DELAY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHUTTER_DELAY, def: 0.0, at: VT.SHUTTER_DELAY) }
+  public static func add(TIMING_BIAS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMING_BIAS, def: 0.0, at: VT.TIMING_BIAS) }
+  public static func add(RAW_FILE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_FILE_URI, at: VT.RAW_FILE_URI) }
+  public static func add(INTENSITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTENSITY, def: 0.0, at: VT.INTENSITY) }
+  public static func add(BG_INTENSITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BG_INTENSITY, def: 0.0, at: VT.BG_INTENSITY) }
+  public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VT.DESCRIPTOR) }
   public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(LAST_OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_TIME, at: VT.LAST_OB_TIME) }
-  public static func add(LOWER_LEFT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_LEFT_ELEVATION_LIMIT, def: 0.0, at: VT.LOWER_LEFT_ELEVATION_LIMIT) }
-  public static func add(UPPER_LEFT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_LEFT_AZIMUTH_LIMIT, def: 0.0, at: VT.UPPER_LEFT_AZIMUTH_LIMIT) }
-  public static func add(LOWER_RIGHT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_RIGHT_ELEVATION_LIMIT, def: 0.0, at: VT.LOWER_RIGHT_ELEVATION_LIMIT) }
-  public static func add(LOWER_LEFT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_LEFT_AZIMUTH_LIMIT, def: 0.0, at: VT.LOWER_LEFT_AZIMUTH_LIMIT) }
-  public static func add(UPPER_RIGHT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_RIGHT_ELEVATION_LIMIT, def: 0.0, at: VT.UPPER_RIGHT_ELEVATION_LIMIT) }
-  public static func add(UPPER_RIGHT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_RIGHT_AZIMUTH_LIMIT, def: 0.0, at: VT.UPPER_RIGHT_AZIMUTH_LIMIT) }
-  public static func add(LOWER_RIGHT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_RIGHT_AZIMUTH_LIMIT, def: 0.0, at: VT.LOWER_RIGHT_AZIMUTH_LIMIT) }
-  public static func add(UPPER_LEFT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_LEFT_ELEVATION_LIMIT, def: 0.0, at: VT.UPPER_LEFT_ELEVATION_LIMIT) }
-  public static func add(RIGHT_GEO_BELT_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RIGHT_GEO_BELT_LIMIT, def: 0.0, at: VT.RIGHT_GEO_BELT_LIMIT) }
-  public static func add(LEFT_GEO_BELT_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEFT_GEO_BELT_LIMIT, def: 0.0, at: VT.LEFT_GEO_BELT_LIMIT) }
-  public static func add(MAGNITUDE_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNITUDE_LIMIT, def: 0.0, at: VT.MAGNITUDE_LIMIT) }
-  public static func add(TASKABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TASKABLE, def: false,
-   at: VT.TASKABLE) }
-  public static func endIDM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createIDM(
+  public static func add(ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN, at: VT.ORIGIN) }
+  public static func add(DATA_MODE: DataMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_MODE.rawValue, def: 0, at: VT.DATA_MODE) }
+  public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VT.CREATED_AT) }
+  public static func add(CREATED_BY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_BY, at: VT.CREATED_BY) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VT.REFERENCE_FRAME) }
+  public static func add(SEN_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_REFERENCE_FRAME, at: VT.SEN_REFERENCE_FRAME) }
+  public static func add(UMBRA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UMBRA, def: false,
+   at: VT.UMBRA) }
+  public static func add(PENUMBRA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PENUMBRA, def: false,
+   at: VT.PENUMBRA) }
+  public static func add(ORIG_NETWORK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_NETWORK, at: VT.ORIG_NETWORK) }
+  public static func add(SOURCE_DL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_DL, at: VT.SOURCE_DL) }
+  public static func add(TYPE: DeviceType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VT.TYPE) }
+  public static func add(AZIMUTH_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_MEASURED, def: false,
+   at: VT.AZIMUTH_MEASURED) }
+  public static func add(ELEVATION_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_MEASURED, def: false,
+   at: VT.ELEVATION_MEASURED) }
+  public static func add(RANGE_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_MEASURED, def: false,
+   at: VT.RANGE_MEASURED) }
+  public static func add(RANGERATE_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGERATE_MEASURED, def: false,
+   at: VT.RANGERATE_MEASURED) }
+  public static func add(RA_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_MEASURED, def: false,
+   at: VT.RA_MEASURED) }
+  public static func add(DECLINATION_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECLINATION_MEASURED, def: false,
+   at: VT.DECLINATION_MEASURED) }
+  public static func add(NIIRS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NIIRS, def: 0.0, at: VT.NIIRS) }
+  public static func add(METERS_PER_PIXEL: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METERS_PER_PIXEL, def: 0.0, at: VT.METERS_PER_PIXEL) }
+  public static func add(IMAGE_SNR: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_SNR, def: 0.0, at: VT.IMAGE_SNR) }
+  public static func add(IMAGE_BIT_DEPTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_BIT_DEPTH, def: 0, at: VT.IMAGE_BIT_DEPTH) }
+  public static func add(IMAGE_WIDTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_WIDTH, def: 0, at: VT.IMAGE_WIDTH) }
+  public static func add(IMAGE_HEIGHT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_HEIGHT, def: 0, at: VT.IMAGE_HEIGHT) }
+  public static func add(IMAGE_COMPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_COMPRESSION, at: VT.IMAGE_COMPRESSION) }
+  public static func add(IMAGE_COMPRESSION_RATIO: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_COMPRESSION_RATIO, def: 0.0, at: VT.IMAGE_COMPRESSION_RATIO) }
+  public static func add(PROCESSED_IMAGE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESSED_IMAGE_URI, at: VT.PROCESSED_IMAGE_URI) }
+  public static func add(IMAGE_AUTO_ENHANCED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_AUTO_ENHANCED, def: false,
+   at: VT.IMAGE_AUTO_ENHANCED) }
+  public static func add(MULTI_FRAME_STACKED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MULTI_FRAME_STACKED, def: false,
+   at: VT.MULTI_FRAME_STACKED) }
+  public static func add(SYNTHETIC_TRACKING_USED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYNTHETIC_TRACKING_USED, def: false,
+   at: VT.SYNTHETIC_TRACKING_USED) }
+  public static func add(IMAGE_SHARPNESS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_SHARPNESS, def: 0.0, at: VT.IMAGE_SHARPNESS) }
+  public static func add(IMAGE_NOISE_STDDEV: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_NOISE_STDDEV, def: 0.0, at: VT.IMAGE_NOISE_STDDEV) }
+  public static func add(IMAGE_CONTRAST: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_CONTRAST, def: 0.0, at: VT.IMAGE_CONTRAST) }
+  public static func add(IMAGE_DYNAMIC_RANGE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_DYNAMIC_RANGE, def: 0.0, at: VT.IMAGE_DYNAMIC_RANGE) }
+  public static func add(IMAGE_ENTROPY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_ENTROPY, def: 0.0, at: VT.IMAGE_ENTROPY) }
+  public static func add(BACKGROUND_UNIFORMITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND_UNIFORMITY, def: 0.0, at: VT.BACKGROUND_UNIFORMITY) }
+  public static func add(BACKGROUND_MEAN_LEVEL: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND_MEAN_LEVEL, def: 0.0, at: VT.BACKGROUND_MEAN_LEVEL) }
+  public static func add(SATURATED_PIXEL_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SATURATED_PIXEL_PERCENT, def: 0.0, at: VT.SATURATED_PIXEL_PERCENT) }
+  public static func add(DEAD_PIXEL_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEAD_PIXEL_PERCENT, def: 0.0, at: VT.DEAD_PIXEL_PERCENT) }
+  public static func add(PSF_FWHM: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PSF_FWHM, def: 0.0, at: VT.PSF_FWHM) }
+  public static func add(CLOUD_COVER_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOUD_COVER_PERCENT, def: 0.0, at: VT.CLOUD_COVER_PERCENT) }
+  public static func add(CLOUD_DETECTION_CONFIDENCE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOUD_DETECTION_CONFIDENCE, def: 0.0, at: VT.CLOUD_DETECTION_CONFIDENCE) }
+  public static func add(HAZE_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAZE_PERCENT, def: 0.0, at: VT.HAZE_PERCENT) }
+  public static func add(AEROSOL_OPTICAL_THICKNESS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AEROSOL_OPTICAL_THICKNESS, def: 0.0, at: VT.AEROSOL_OPTICAL_THICKNESS) }
+  public static func add(WATER_VAPOR_CONTENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WATER_VAPOR_CONTENT, def: 0.0, at: VT.WATER_VAPOR_CONTENT) }
+  public static func add(SUN_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUN_ELEVATION, def: 0.0, at: VT.SUN_ELEVATION) }
+  public static func add(SUN_AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUN_AZIMUTH, def: 0.0, at: VT.SUN_AZIMUTH) }
+  public static func add(VIEW_ZENITH_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_ZENITH_ANGLE, def: 0.0, at: VT.VIEW_ZENITH_ANGLE) }
+  public static func add(VIEW_AZIMUTH_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_AZIMUTH_ANGLE, def: 0.0, at: VT.VIEW_AZIMUTH_ANGLE) }
+  public static func add(OFF_NADIR_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFF_NADIR_ANGLE, def: 0.0, at: VT.OFF_NADIR_ANGLE) }
+  public static func add(SWATH_WIDTH_KM: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SWATH_WIDTH_KM, def: 0.0, at: VT.SWATH_WIDTH_KM) }
+  public static func add(MEAN_TERRAIN_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_TERRAIN_ELEVATION, def: 0.0, at: VT.MEAN_TERRAIN_ELEVATION) }
+  public static func add(TERRAIN_ELEVATION_STDDEV: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TERRAIN_ELEVATION_STDDEV, def: 0.0, at: VT.TERRAIN_ELEVATION_STDDEV) }
+  public static func add(SHADOW_COVER_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADOW_COVER_PERCENT, def: 0.0, at: VT.SHADOW_COVER_PERCENT) }
+  public static func add(SUNGLINT_PRESENT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUNGLINT_PRESENT, def: false,
+   at: VT.SUNGLINT_PRESENT) }
+  public static func add(SUNGLINT_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUNGLINT_PERCENT, def: 0.0, at: VT.SUNGLINT_PERCENT) }
+  public static func add(SNOW_ICE_COVER_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNOW_ICE_COVER_PERCENT, def: 0.0, at: VT.SNOW_ICE_COVER_PERCENT) }
+  public static func add(VALID_DATA_AREA_KM2: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_DATA_AREA_KM2, def: 0.0, at: VT.VALID_DATA_AREA_KM2) }
+  public static func add(CORR_MAHALANOBIS_SQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_MAHALANOBIS_SQ, def: 0.0, at: VT.CORR_MAHALANOBIS_SQ) }
+  public static func add(CORR_DOF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_DOF, def: 0, at: VT.CORR_DOF) }
+  public static func add(CORR_GATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_GATE, def: 0.0, at: VT.CORR_GATE) }
+  public static func add(CORR_P_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_P_VALUE, def: 0.0, at: VT.CORR_P_VALUE) }
+  public static func add(CORR_AMBIGUOUS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_AMBIGUOUS, def: false,
+   at: VT.CORR_AMBIGUOUS) }
+  public static func endEOO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEOO(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
-    NAMEOffset NAME: Offset = Offset(),
-    DATA_MODE: DataMode = .exercise,
-    UPLINKOffset UPLINK: Offset = Offset(),
-    DOWNLINKOffset DOWNLINK: Offset = Offset(),
-    BEACONOffset BEACON: Offset = Offset(),
-    BANDVectorOffset BAND: Offset = Offset(),
-    POLARIZATION_TYPE: PolarizationType = .linear,
-    SIMPLE_POLARIZATION: SimplePolarization = .vertical,
-    STOKES_PARAMETERSOffset STOKES_PARAMETERS: Offset = Offset(),
-    POWER_REQUIRED: Double = 0.0,
-    POWER_TYPEOffset POWER_TYPE: Offset = Offset(),
-    TRANSMIT: Bool = false,
-    RECEIVE: Bool = false,
-    SENSOR_TYPE: DeviceType = .unknown,
+    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
+    OB_TIMEOffset OB_TIME: Offset = Offset(),
+    CORR_QUALITY: Float32 = 0.0,
+    ID_ON_ORBITOffset ID_ON_ORBIT: Offset = Offset(),
+    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
+    COLLECT_METHOD: CollectMethod = .sidereal,
+    NORAD_CAT_ID: Int32 = 0,
+    TASK_IDOffset TASK_ID: Offset = Offset(),
+    TRANSACTION_IDOffset TRANSACTION_ID: Offset = Offset(),
+    IMAGE_SET_IDOffset IMAGE_SET_ID: Offset = Offset(),
+    IMAGE_SET_LENGTH: Int32 = 0,
+    SEQUENCE_ID: Int32 = 0,
+    OB_POSITION: ObservationPosition = .fence,
+    ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
+    ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
+    UCT: Bool = false,
+    AZIMUTH: Float32 = 0.0,
+    AZIMUTH_UNC: Float32 = 0.0,
+    AZIMUTH_BIAS: Float32 = 0.0,
+    AZIMUTH_RATE: Float32 = 0.0,
+    ELEVATION: Float32 = 0.0,
+    ELEVATION_UNC: Float32 = 0.0,
+    ELEVATION_BIAS: Float32 = 0.0,
+    ELEVATION_RATE: Float32 = 0.0,
+    RANGE: Float32 = 0.0,
+    RANGE_UNC: Float32 = 0.0,
+    RANGE_BIAS: Float32 = 0.0,
+    RANGE_RATE: Float32 = 0.0,
+    RANGE_RATE_UNC: Float32 = 0.0,
+    RA: Float32 = 0.0,
+    RA_RATE: Float32 = 0.0,
+    RA_UNC: Float32 = 0.0,
+    RA_BIAS: Float32 = 0.0,
+    DECLINATION: Float32 = 0.0,
+    DECLINATION_RATE: Float32 = 0.0,
+    DECLINATION_UNC: Float32 = 0.0,
+    DECLINATION_BIAS: Float32 = 0.0,
+    LOSX: Float32 = 0.0,
+    LOSY: Float32 = 0.0,
+    LOSZ: Float32 = 0.0,
+    LOS_UNC: Float32 = 0.0,
+    LOSXVEL: Float32 = 0.0,
+    LOSYVEL: Float32 = 0.0,
+    LOSZVEL: Float32 = 0.0,
+    SENLAT: Float32 = 0.0,
+    SENLON: Float32 = 0.0,
+    SENALT: Float32 = 0.0,
+    SENX: Float32 = 0.0,
+    SENY: Float32 = 0.0,
+    SENZ: Float32 = 0.0,
+    FOV_COUNT: Int32 = 0,
+    FOV_COUNT_UCTS: Int32 = 0,
+    EXP_DURATION: Float32 = 0.0,
+    ZEROPTD: Float32 = 0.0,
+    NET_OBJ_SIG: Float32 = 0.0,
+    NET_OBJ_SIG_UNC: Float32 = 0.0,
+    MAG: Float32 = 0.0,
+    MAG_UNC: Float32 = 0.0,
+    MAG_NORM_RANGE: Float32 = 0.0,
+    GEOLAT: Float32 = 0.0,
+    GEOLON: Float32 = 0.0,
+    GEOALT: Float32 = 0.0,
+    GEORANGE: Float32 = 0.0,
+    SKY_BKGRND: Float32 = 0.0,
+    PRIMARY_EXTINCTION: Float32 = 0.0,
+    PRIMARY_EXTINCTION_UNC: Float32 = 0.0,
+    SOLAR_PHASE_ANGLE: Float32 = 0.0,
+    SOLAR_EQ_PHASE_ANGLE: Float32 = 0.0,
+    SOLAR_DEC_ANGLE: Float32 = 0.0,
+    SHUTTER_DELAY: Float32 = 0.0,
+    TIMING_BIAS: Float32 = 0.0,
+    RAW_FILE_URIOffset RAW_FILE_URI: Offset = Offset(),
+    INTENSITY: Float32 = 0.0,
+    BG_INTENSITY: Float32 = 0.0,
+    DESCRIPTOROffset DESCRIPTOR: Offset = Offset(),
     SOURCEOffset SOURCE: Offset = Offset(),
-    LAST_OB_TIMEOffset LAST_OB_TIME: Offset = Offset(),
-    LOWER_LEFT_ELEVATION_LIMIT: Double = 0.0,
-    UPPER_LEFT_AZIMUTH_LIMIT: Double = 0.0,
-    LOWER_RIGHT_ELEVATION_LIMIT: Double = 0.0,
-    LOWER_LEFT_AZIMUTH_LIMIT: Double = 0.0,
-    UPPER_RIGHT_ELEVATION_LIMIT: Double = 0.0,
-    UPPER_RIGHT_AZIMUTH_LIMIT: Double = 0.0,
-    LOWER_RIGHT_AZIMUTH_LIMIT: Double = 0.0,
-    UPPER_LEFT_ELEVATION_LIMIT: Double = 0.0,
-    RIGHT_GEO_BELT_LIMIT: Double = 0.0,
-    LEFT_GEO_BELT_LIMIT: Double = 0.0,
-    MAGNITUDE_LIMIT: Double = 0.0,
-    TASKABLE: Bool = false
+    ORIGINOffset ORIGIN: Offset = Offset(),
+    DATA_MODE: DataMode = .exercise,
+    CREATED_ATOffset CREATED_AT: Offset = Offset(),
+    CREATED_BYOffset CREATED_BY: Offset = Offset(),
+    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
+    SEN_REFERENCE_FRAMEOffset SEN_REFERENCE_FRAME: Offset = Offset(),
+    UMBRA: Bool = false,
+    PENUMBRA: Bool = false,
+    ORIG_NETWORKOffset ORIG_NETWORK: Offset = Offset(),
+    SOURCE_DLOffset SOURCE_DL: Offset = Offset(),
+    TYPE: DeviceType = .unknown,
+    AZIMUTH_MEASURED: Bool = false,
+    ELEVATION_MEASURED: Bool = false,
+    RANGE_MEASURED: Bool = false,
+    RANGERATE_MEASURED: Bool = false,
+    RA_MEASURED: Bool = false,
+    DECLINATION_MEASURED: Bool = false,
+    NIIRS: Float32 = 0.0,
+    METERS_PER_PIXEL: Float32 = 0.0,
+    IMAGE_SNR: Float32 = 0.0,
+    IMAGE_BIT_DEPTH: Int32 = 0,
+    IMAGE_WIDTH: Int32 = 0,
+    IMAGE_HEIGHT: Int32 = 0,
+    IMAGE_COMPRESSIONOffset IMAGE_COMPRESSION: Offset = Offset(),
+    IMAGE_COMPRESSION_RATIO: Float32 = 0.0,
+    PROCESSED_IMAGE_URIOffset PROCESSED_IMAGE_URI: Offset = Offset(),
+    IMAGE_AUTO_ENHANCED: Bool = false,
+    MULTI_FRAME_STACKED: Bool = false,
+    SYNTHETIC_TRACKING_USED: Bool = false,
+    IMAGE_SHARPNESS: Float32 = 0.0,
+    IMAGE_NOISE_STDDEV: Float32 = 0.0,
+    IMAGE_CONTRAST: Float32 = 0.0,
+    IMAGE_DYNAMIC_RANGE: Float32 = 0.0,
+    IMAGE_ENTROPY: Float32 = 0.0,
+    BACKGROUND_UNIFORMITY: Float32 = 0.0,
+    BACKGROUND_MEAN_LEVEL: Float32 = 0.0,
+    SATURATED_PIXEL_PERCENT: Float32 = 0.0,
+    DEAD_PIXEL_PERCENT: Float32 = 0.0,
+    PSF_FWHM: Float32 = 0.0,
+    CLOUD_COVER_PERCENT: Float32 = 0.0,
+    CLOUD_DETECTION_CONFIDENCE: Float32 = 0.0,
+    HAZE_PERCENT: Float32 = 0.0,
+    AEROSOL_OPTICAL_THICKNESS: Float32 = 0.0,
+    WATER_VAPOR_CONTENT: Float32 = 0.0,
+    SUN_ELEVATION: Float32 = 0.0,
+    SUN_AZIMUTH: Float32 = 0.0,
+    VIEW_ZENITH_ANGLE: Float32 = 0.0,
+    VIEW_AZIMUTH_ANGLE: Float32 = 0.0,
+    OFF_NADIR_ANGLE: Float32 = 0.0,
+    SWATH_WIDTH_KM: Float32 = 0.0,
+    MEAN_TERRAIN_ELEVATION: Float32 = 0.0,
+    TERRAIN_ELEVATION_STDDEV: Float32 = 0.0,
+    SHADOW_COVER_PERCENT: Float32 = 0.0,
+    SUNGLINT_PRESENT: Bool = false,
+    SUNGLINT_PERCENT: Float32 = 0.0,
+    SNOW_ICE_COVER_PERCENT: Float32 = 0.0,
+    VALID_DATA_AREA_KM2: Float32 = 0.0,
+    CORR_MAHALANOBIS_SQ: Double = 0.0,
+    CORR_DOF: UInt8 = 0,
+    CORR_GATE: Double = 0.0,
+    CORR_P_VALUE: Double = 0.0,
+    CORR_AMBIGUOUS: Bool = false
   ) -> Offset {
-    let __start = IDM.startIDM(&fbb)
-    IDM.add(ID: ID, &fbb)
-    IDM.add(NAME: NAME, &fbb)
-    IDM.add(DATA_MODE: DATA_MODE, &fbb)
-    IDM.add(UPLINK: UPLINK, &fbb)
-    IDM.add(DOWNLINK: DOWNLINK, &fbb)
-    IDM.add(BEACON: BEACON, &fbb)
-    IDM.addVectorOf(BAND: BAND, &fbb)
-    IDM.add(POLARIZATION_TYPE: POLARIZATION_TYPE, &fbb)
-    IDM.add(SIMPLE_POLARIZATION: SIMPLE_POLARIZATION, &fbb)
-    IDM.add(STOKES_PARAMETERS: STOKES_PARAMETERS, &fbb)
-    IDM.add(POWER_REQUIRED: POWER_REQUIRED, &fbb)
-    IDM.add(POWER_TYPE: POWER_TYPE, &fbb)
-    IDM.add(TRANSMIT: TRANSMIT, &fbb)
-    IDM.add(RECEIVE: RECEIVE, &fbb)
-    IDM.add(SENSOR_TYPE: SENSOR_TYPE, &fbb)
-    IDM.add(SOURCE: SOURCE, &fbb)
-    IDM.add(LAST_OB_TIME: LAST_OB_TIME, &fbb)
-    IDM.add(LOWER_LEFT_ELEVATION_LIMIT: LOWER_LEFT_ELEVATION_LIMIT, &fbb)
-    IDM.add(UPPER_LEFT_AZIMUTH_LIMIT: UPPER_LEFT_AZIMUTH_LIMIT, &fbb)
-    IDM.add(LOWER_RIGHT_ELEVATION_LIMIT: LOWER_RIGHT_ELEVATION_LIMIT, &fbb)
-    IDM.add(LOWER_LEFT_AZIMUTH_LIMIT: LOWER_LEFT_AZIMUTH_LIMIT, &fbb)
-    IDM.add(UPPER_RIGHT_ELEVATION_LIMIT: UPPER_RIGHT_ELEVATION_LIMIT, &fbb)
-    IDM.add(UPPER_RIGHT_AZIMUTH_LIMIT: UPPER_RIGHT_AZIMUTH_LIMIT, &fbb)
-    IDM.add(LOWER_RIGHT_AZIMUTH_LIMIT: LOWER_RIGHT_AZIMUTH_LIMIT, &fbb)
-    IDM.add(UPPER_LEFT_ELEVATION_LIMIT: UPPER_LEFT_ELEVATION_LIMIT, &fbb)
-    IDM.add(RIGHT_GEO_BELT_LIMIT: RIGHT_GEO_BELT_LIMIT, &fbb)
-    IDM.add(LEFT_GEO_BELT_LIMIT: LEFT_GEO_BELT_LIMIT, &fbb)
-    IDM.add(MAGNITUDE_LIMIT: MAGNITUDE_LIMIT, &fbb)
-    IDM.add(TASKABLE: TASKABLE, &fbb)
-    return IDM.endIDM(&fbb, start: __start)
+    let __start = EOO.startEOO(&fbb)
+    EOO.add(ID: ID, &fbb)
+    EOO.add(CLASSIFICATION: CLASSIFICATION, &fbb)
+    EOO.add(OB_TIME: OB_TIME, &fbb)
+    EOO.add(CORR_QUALITY: CORR_QUALITY, &fbb)
+    EOO.add(ID_ON_ORBIT: ID_ON_ORBIT, &fbb)
+    EOO.add(SENSOR_ID: SENSOR_ID, &fbb)
+    EOO.add(COLLECT_METHOD: COLLECT_METHOD, &fbb)
+    EOO.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    EOO.add(TASK_ID: TASK_ID, &fbb)
+    EOO.add(TRANSACTION_ID: TRANSACTION_ID, &fbb)
+    EOO.add(IMAGE_SET_ID: IMAGE_SET_ID, &fbb)
+    EOO.add(IMAGE_SET_LENGTH: IMAGE_SET_LENGTH, &fbb)
+    EOO.add(SEQUENCE_ID: SEQUENCE_ID, &fbb)
+    EOO.add(OB_POSITION: OB_POSITION, &fbb)
+    EOO.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
+    EOO.add(ORIG_SENSOR_ID: ORIG_SENSOR_ID, &fbb)
+    EOO.add(UCT: UCT, &fbb)
+    EOO.add(AZIMUTH: AZIMUTH, &fbb)
+    EOO.add(AZIMUTH_UNC: AZIMUTH_UNC, &fbb)
+    EOO.add(AZIMUTH_BIAS: AZIMUTH_BIAS, &fbb)
+    EOO.add(AZIMUTH_RATE: AZIMUTH_RATE, &fbb)
+    EOO.add(ELEVATION: ELEVATION, &fbb)
+    EOO.add(ELEVATION_UNC: ELEVATION_UNC, &fbb)
+    EOO.add(ELEVATION_BIAS: ELEVATION_BIAS, &fbb)
+    EOO.add(ELEVATION_RATE: ELEVATION_RATE, &fbb)
+    EOO.add(RANGE: RANGE, &fbb)
+    EOO.add(RANGE_UNC: RANGE_UNC, &fbb)
+    EOO.add(RANGE_BIAS: RANGE_BIAS, &fbb)
+    EOO.add(RANGE_RATE: RANGE_RATE, &fbb)
+    EOO.add(RANGE_RATE_UNC: RANGE_RATE_UNC, &fbb)
+    EOO.add(RA: RA, &fbb)
+    EOO.add(RA_RATE: RA_RATE, &fbb)
+    EOO.add(RA_UNC: RA_UNC, &fbb)
+    EOO.add(RA_BIAS: RA_BIAS, &fbb)
+    EOO.add(DECLINATION: DECLINATION, &fbb)
+    EOO.add(DECLINATION_RATE: DECLINATION_RATE, &fbb)
+    EOO.add(DECLINATION_UNC: DECLINATION_UNC, &fbb)
+    EOO.add(DECLINATION_BIAS: DECLINATION_BIAS, &fbb)
+    EOO.add(LOSX: LOSX, &fbb)
+    EOO.add(LOSY: LOSY, &fbb)
+    EOO.add(LOSZ: LOSZ, &fbb)
+    EOO.add(LOS_UNC: LOS_UNC, &fbb)
+    EOO.add(LOSXVEL: LOSXVEL, &fbb)
+    EOO.add(LOSYVEL: LOSYVEL, &fbb)
+    EOO.add(LOSZVEL: LOSZVEL, &fbb)
+    EOO.add(SENLAT: SENLAT, &fbb)
+    EOO.add(SENLON: SENLON, &fbb)
+    EOO.add(SENALT: SENALT, &fbb)
+    EOO.add(SENX: SENX, &fbb)
+    EOO.add(SENY: SENY, &fbb)
+    EOO.add(SENZ: SENZ, &fbb)
+    EOO.add(FOV_COUNT: FOV_COUNT, &fbb)
+    EOO.add(FOV_COUNT_UCTS: FOV_COUNT_UCTS, &fbb)
+    EOO.add(EXP_DURATION: EXP_DURATION, &fbb)
+    EOO.add(ZEROPTD: ZEROPTD, &fbb)
+    EOO.add(NET_OBJ_SIG: NET_OBJ_SIG, &fbb)
+    EOO.add(NET_OBJ_SIG_UNC: NET_OBJ_SIG_UNC, &fbb)
+    EOO.add(MAG: MAG, &fbb)
+    EOO.add(MAG_UNC: MAG_UNC, &fbb)
+    EOO.add(MAG_NORM_RANGE: MAG_NORM_RANGE, &fbb)
+    EOO.add(GEOLAT: GEOLAT, &fbb)
+    EOO.add(GEOLON: GEOLON, &fbb)
+    EOO.add(GEOALT: GEOALT, &fbb)
+    EOO.add(GEORANGE: GEORANGE, &fbb)
+    EOO.add(SKY_BKGRND: SKY_BKGRND, &fbb)
+    EOO.add(PRIMARY_EXTINCTION: PRIMARY_EXTINCTION, &fbb)
+    EOO.add(PRIMARY_EXTINCTION_UNC: PRIMARY_EXTINCTION_UNC, &fbb)
+    EOO.add(SOLAR_PHASE_ANGLE: SOLAR_PHASE_ANGLE, &fbb)
+    EOO.add(SOLAR_EQ_PHASE_ANGLE: SOLAR_EQ_PHASE_ANGLE, &fbb)
+    EOO.add(SOLAR_DEC_ANGLE: SOLAR_DEC_ANGLE, &fbb)
+    EOO.add(SHUTTER_DELAY: SHUTTER_DELAY, &fbb)
+    EOO.add(TIMING_BIAS: TIMING_BIAS, &fbb)
+    EOO.add(RAW_FILE_URI: RAW_FILE_URI, &fbb)
+    EOO.add(INTENSITY: INTENSITY, &fbb)
+    EOO.add(BG_INTENSITY: BG_INTENSITY, &fbb)
+    EOO.add(DESCRIPTOR: DESCRIPTOR, &fbb)
+    EOO.add(SOURCE: SOURCE, &fbb)
+    EOO.add(ORIGIN: ORIGIN, &fbb)
+    EOO.add(DATA_MODE: DATA_MODE, &fbb)
+    EOO.add(CREATED_AT: CREATED_AT, &fbb)
+    EOO.add(CREATED_BY: CREATED_BY, &fbb)
+    EOO.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
+    EOO.add(SEN_REFERENCE_FRAME: SEN_REFERENCE_FRAME, &fbb)
+    EOO.add(UMBRA: UMBRA, &fbb)
+    EOO.add(PENUMBRA: PENUMBRA, &fbb)
+    EOO.add(ORIG_NETWORK: ORIG_NETWORK, &fbb)
+    EOO.add(SOURCE_DL: SOURCE_DL, &fbb)
+    EOO.add(TYPE: TYPE, &fbb)
+    EOO.add(AZIMUTH_MEASURED: AZIMUTH_MEASURED, &fbb)
+    EOO.add(ELEVATION_MEASURED: ELEVATION_MEASURED, &fbb)
+    EOO.add(RANGE_MEASURED: RANGE_MEASURED, &fbb)
+    EOO.add(RANGERATE_MEASURED: RANGERATE_MEASURED, &fbb)
+    EOO.add(RA_MEASURED: RA_MEASURED, &fbb)
+    EOO.add(DECLINATION_MEASURED: DECLINATION_MEASURED, &fbb)
+    EOO.add(NIIRS: NIIRS, &fbb)
+    EOO.add(METERS_PER_PIXEL: METERS_PER_PIXEL, &fbb)
+    EOO.add(IMAGE_SNR: IMAGE_SNR, &fbb)
+    EOO.add(IMAGE_BIT_DEPTH: IMAGE_BIT_DEPTH, &fbb)
+    EOO.add(IMAGE_WIDTH: IMAGE_WIDTH, &fbb)
+    EOO.add(IMAGE_HEIGHT: IMAGE_HEIGHT, &fbb)
+    EOO.add(IMAGE_COMPRESSION: IMAGE_COMPRESSION, &fbb)
+    EOO.add(IMAGE_COMPRESSION_RATIO: IMAGE_COMPRESSION_RATIO, &fbb)
+    EOO.add(PROCESSED_IMAGE_URI: PROCESSED_IMAGE_URI, &fbb)
+    EOO.add(IMAGE_AUTO_ENHANCED: IMAGE_AUTO_ENHANCED, &fbb)
+    EOO.add(MULTI_FRAME_STACKED: MULTI_FRAME_STACKED, &fbb)
+    EOO.add(SYNTHETIC_TRACKING_USED: SYNTHETIC_TRACKING_USED, &fbb)
+    EOO.add(IMAGE_SHARPNESS: IMAGE_SHARPNESS, &fbb)
+    EOO.add(IMAGE_NOISE_STDDEV: IMAGE_NOISE_STDDEV, &fbb)
+    EOO.add(IMAGE_CONTRAST: IMAGE_CONTRAST, &fbb)
+    EOO.add(IMAGE_DYNAMIC_RANGE: IMAGE_DYNAMIC_RANGE, &fbb)
+    EOO.add(IMAGE_ENTROPY: IMAGE_ENTROPY, &fbb)
+    EOO.add(BACKGROUND_UNIFORMITY: BACKGROUND_UNIFORMITY, &fbb)
+    EOO.add(BACKGROUND_MEAN_LEVEL: BACKGROUND_MEAN_LEVEL, &fbb)
+    EOO.add(SATURATED_PIXEL_PERCENT: SATURATED_PIXEL_PERCENT, &fbb)
+    EOO.add(DEAD_PIXEL_PERCENT: DEAD_PIXEL_PERCENT, &fbb)
+    EOO.add(PSF_FWHM: PSF_FWHM, &fbb)
+    EOO.add(CLOUD_COVER_PERCENT: CLOUD_COVER_PERCENT, &fbb)
+    EOO.add(CLOUD_DETECTION_CONFIDENCE: CLOUD_DETECTION_CONFIDENCE, &fbb)
+    EOO.add(HAZE_PERCENT: HAZE_PERCENT, &fbb)
+    EOO.add(AEROSOL_OPTICAL_THICKNESS: AEROSOL_OPTICAL_THICKNESS, &fbb)
+    EOO.add(WATER_VAPOR_CONTENT: WATER_VAPOR_CONTENT, &fbb)
+    EOO.add(SUN_ELEVATION: SUN_ELEVATION, &fbb)
+    EOO.add(SUN_AZIMUTH: SUN_AZIMUTH, &fbb)
+    EOO.add(VIEW_ZENITH_ANGLE: VIEW_ZENITH_ANGLE, &fbb)
+    EOO.add(VIEW_AZIMUTH_ANGLE: VIEW_AZIMUTH_ANGLE, &fbb)
+    EOO.add(OFF_NADIR_ANGLE: OFF_NADIR_ANGLE, &fbb)
+    EOO.add(SWATH_WIDTH_KM: SWATH_WIDTH_KM, &fbb)
+    EOO.add(MEAN_TERRAIN_ELEVATION: MEAN_TERRAIN_ELEVATION, &fbb)
+    EOO.add(TERRAIN_ELEVATION_STDDEV: TERRAIN_ELEVATION_STDDEV, &fbb)
+    EOO.add(SHADOW_COVER_PERCENT: SHADOW_COVER_PERCENT, &fbb)
+    EOO.add(SUNGLINT_PRESENT: SUNGLINT_PRESENT, &fbb)
+    EOO.add(SUNGLINT_PERCENT: SUNGLINT_PERCENT, &fbb)
+    EOO.add(SNOW_ICE_COVER_PERCENT: SNOW_ICE_COVER_PERCENT, &fbb)
+    EOO.add(VALID_DATA_AREA_KM2: VALID_DATA_AREA_KM2, &fbb)
+    EOO.add(CORR_MAHALANOBIS_SQ: CORR_MAHALANOBIS_SQ, &fbb)
+    EOO.add(CORR_DOF: CORR_DOF, &fbb)
+    EOO.add(CORR_GATE: CORR_GATE, &fbb)
+    EOO.add(CORR_P_VALUE: CORR_P_VALUE, &fbb)
+    EOO.add(CORR_AMBIGUOUS: CORR_AMBIGUOUS, &fbb)
+    return EOO.endEOO(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DATA_MODE, fieldName: "DATA_MODE", required: false, type: DataMode.self)
-    try _v.visit(field: VT.UPLINK, fieldName: "UPLINK", required: false, type: ForwardOffset<FrequencyRange>.self)
-    try _v.visit(field: VT.DOWNLINK, fieldName: "DOWNLINK", required: false, type: ForwardOffset<FrequencyRange>.self)
-    try _v.visit(field: VT.BEACON, fieldName: "BEACON", required: false, type: ForwardOffset<FrequencyRange>.self)
-    try _v.visit(field: VT.BAND, fieldName: "BAND", required: false, type: ForwardOffset<Vector<ForwardOffset<Band>, Band>>.self)
-    try _v.visit(field: VT.POLARIZATION_TYPE, fieldName: "POLARIZATION_TYPE", required: false, type: PolarizationType.self)
-    try _v.visit(field: VT.SIMPLE_POLARIZATION, fieldName: "SIMPLE_POLARIZATION", required: false, type: SimplePolarization.self)
-    try _v.visit(field: VT.STOKES_PARAMETERS, fieldName: "STOKES_PARAMETERS", required: false, type: ForwardOffset<StokesParameters>.self)
-    try _v.visit(field: VT.POWER_REQUIRED, fieldName: "POWER_REQUIRED", required: false, type: Double.self)
-    try _v.visit(field: VT.POWER_TYPE, fieldName: "POWER_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRANSMIT, fieldName: "TRANSMIT", required: false, type: Bool.self)
-    try _v.visit(field: VT.RECEIVE, fieldName: "RECEIVE", required: false, type: Bool.self)
-    try _v.visit(field: VT.SENSOR_TYPE, fieldName: "SENSOR_TYPE", required: false, type: DeviceType.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_TIME, fieldName: "OB_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CORR_QUALITY, fieldName: "CORR_QUALITY", required: false, type: Float32.self)
+    try _v.visit(field: VT.ID_ON_ORBIT, fieldName: "ID_ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SENSOR_ID, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLECT_METHOD, fieldName: "COLLECT_METHOD", required: false, type: CollectMethod.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.TASK_ID, fieldName: "TASK_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSACTION_ID, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMAGE_SET_ID, fieldName: "IMAGE_SET_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMAGE_SET_LENGTH, fieldName: "IMAGE_SET_LENGTH", required: false, type: Int32.self)
+    try _v.visit(field: VT.SEQUENCE_ID, fieldName: "SEQUENCE_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.OB_POSITION, fieldName: "OB_POSITION", required: false, type: ObservationPosition.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_SENSOR_ID, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UCT, fieldName: "UCT", required: false, type: Bool.self)
+    try _v.visit(field: VT.AZIMUTH, fieldName: "AZIMUTH", required: false, type: Float32.self)
+    try _v.visit(field: VT.AZIMUTH_UNC, fieldName: "AZIMUTH_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.AZIMUTH_BIAS, fieldName: "AZIMUTH_BIAS", required: false, type: Float32.self)
+    try _v.visit(field: VT.AZIMUTH_RATE, fieldName: "AZIMUTH_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.ELEVATION, fieldName: "ELEVATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.ELEVATION_UNC, fieldName: "ELEVATION_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.ELEVATION_BIAS, fieldName: "ELEVATION_BIAS", required: false, type: Float32.self)
+    try _v.visit(field: VT.ELEVATION_RATE, fieldName: "ELEVATION_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.RANGE, fieldName: "RANGE", required: false, type: Float32.self)
+    try _v.visit(field: VT.RANGE_UNC, fieldName: "RANGE_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.RANGE_BIAS, fieldName: "RANGE_BIAS", required: false, type: Float32.self)
+    try _v.visit(field: VT.RANGE_RATE, fieldName: "RANGE_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.RANGE_RATE_UNC, fieldName: "RANGE_RATE_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.RA, fieldName: "RA", required: false, type: Float32.self)
+    try _v.visit(field: VT.RA_RATE, fieldName: "RA_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.RA_UNC, fieldName: "RA_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.RA_BIAS, fieldName: "RA_BIAS", required: false, type: Float32.self)
+    try _v.visit(field: VT.DECLINATION, fieldName: "DECLINATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.DECLINATION_RATE, fieldName: "DECLINATION_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.DECLINATION_UNC, fieldName: "DECLINATION_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.DECLINATION_BIAS, fieldName: "DECLINATION_BIAS", required: false, type: Float32.self)
+    try _v.visit(field: VT.LOSX, fieldName: "LOSX", required: false, type: Float32.self)
+    try _v.visit(field: VT.LOSY, fieldName: "LOSY", required: false, type: Float32.self)
+    try _v.visit(field: VT.LOSZ, fieldName: "LOSZ", required: false, type: Float32.self)
+    try _v.visit(field: VT.LOS_UNC, fieldName: "LOS_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.LOSXVEL, fieldName: "LOSXVEL", required: false, type: Float32.self)
+    try _v.visit(field: VT.LOSYVEL, fieldName: "LOSYVEL", required: false, type: Float32.self)
+    try _v.visit(field: VT.LOSZVEL, fieldName: "LOSZVEL", required: false, type: Float32.self)
+    try _v.visit(field: VT.SENLAT, fieldName: "SENLAT", required: false, type: Float32.self)
+    try _v.visit(field: VT.SENLON, fieldName: "SENLON", required: false, type: Float32.self)
+    try _v.visit(field: VT.SENALT, fieldName: "SENALT", required: false, type: Float32.self)
+    try _v.visit(field: VT.SENX, fieldName: "SENX", required: false, type: Float32.self)
+    try _v.visit(field: VT.SENY, fieldName: "SENY", required: false, type: Float32.self)
+    try _v.visit(field: VT.SENZ, fieldName: "SENZ", required: false, type: Float32.self)
+    try _v.visit(field: VT.FOV_COUNT, fieldName: "FOV_COUNT", required: false, type: Int32.self)
+    try _v.visit(field: VT.FOV_COUNT_UCTS, fieldName: "FOV_COUNT_UCTS", required: false, type: Int32.self)
+    try _v.visit(field: VT.EXP_DURATION, fieldName: "EXP_DURATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.ZEROPTD, fieldName: "ZEROPTD", required: false, type: Float32.self)
+    try _v.visit(field: VT.NET_OBJ_SIG, fieldName: "NET_OBJ_SIG", required: false, type: Float32.self)
+    try _v.visit(field: VT.NET_OBJ_SIG_UNC, fieldName: "NET_OBJ_SIG_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.MAG, fieldName: "MAG", required: false, type: Float32.self)
+    try _v.visit(field: VT.MAG_UNC, fieldName: "MAG_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.MAG_NORM_RANGE, fieldName: "MAG_NORM_RANGE", required: false, type: Float32.self)
+    try _v.visit(field: VT.GEOLAT, fieldName: "GEOLAT", required: false, type: Float32.self)
+    try _v.visit(field: VT.GEOLON, fieldName: "GEOLON", required: false, type: Float32.self)
+    try _v.visit(field: VT.GEOALT, fieldName: "GEOALT", required: false, type: Float32.self)
+    try _v.visit(field: VT.GEORANGE, fieldName: "GEORANGE", required: false, type: Float32.self)
+    try _v.visit(field: VT.SKY_BKGRND, fieldName: "SKY_BKGRND", required: false, type: Float32.self)
+    try _v.visit(field: VT.PRIMARY_EXTINCTION, fieldName: "PRIMARY_EXTINCTION", required: false, type: Float32.self)
+    try _v.visit(field: VT.PRIMARY_EXTINCTION_UNC, fieldName: "PRIMARY_EXTINCTION_UNC", required: false, type: Float32.self)
+    try _v.visit(field: VT.SOLAR_PHASE_ANGLE, fieldName: "SOLAR_PHASE_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VT.SOLAR_EQ_PHASE_ANGLE, fieldName: "SOLAR_EQ_PHASE_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VT.SOLAR_DEC_ANGLE, fieldName: "SOLAR_DEC_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VT.SHUTTER_DELAY, fieldName: "SHUTTER_DELAY", required: false, type: Float32.self)
+    try _v.visit(field: VT.TIMING_BIAS, fieldName: "TIMING_BIAS", required: false, type: Float32.self)
+    try _v.visit(field: VT.RAW_FILE_URI, fieldName: "RAW_FILE_URI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTENSITY, fieldName: "INTENSITY", required: false, type: Float32.self)
+    try _v.visit(field: VT.BG_INTENSITY, fieldName: "BG_INTENSITY", required: false, type: Float32.self)
+    try _v.visit(field: VT.DESCRIPTOR, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LAST_OB_TIME, fieldName: "LAST_OB_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LOWER_LEFT_ELEVATION_LIMIT, fieldName: "LOWER_LEFT_ELEVATION_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.UPPER_LEFT_AZIMUTH_LIMIT, fieldName: "UPPER_LEFT_AZIMUTH_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.LOWER_RIGHT_ELEVATION_LIMIT, fieldName: "LOWER_RIGHT_ELEVATION_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.LOWER_LEFT_AZIMUTH_LIMIT, fieldName: "LOWER_LEFT_AZIMUTH_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.UPPER_RIGHT_ELEVATION_LIMIT, fieldName: "UPPER_RIGHT_ELEVATION_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.UPPER_RIGHT_AZIMUTH_LIMIT, fieldName: "UPPER_RIGHT_AZIMUTH_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.LOWER_RIGHT_AZIMUTH_LIMIT, fieldName: "LOWER_RIGHT_AZIMUTH_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.UPPER_LEFT_ELEVATION_LIMIT, fieldName: "UPPER_LEFT_ELEVATION_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.RIGHT_GEO_BELT_LIMIT, fieldName: "RIGHT_GEO_BELT_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.LEFT_GEO_BELT_LIMIT, fieldName: "LEFT_GEO_BELT_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.MAGNITUDE_LIMIT, fieldName: "MAGNITUDE_LIMIT", required: false, type: Double.self)
-    try _v.visit(field: VT.TASKABLE, fieldName: "TASKABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ORIGIN, fieldName: "ORIGIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_MODE, fieldName: "DATA_MODE", required: false, type: DataMode.self)
+    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATED_BY, fieldName: "CREATED_BY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFERENCE_FRAME, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.SEN_REFERENCE_FRAME, fieldName: "SEN_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.UMBRA, fieldName: "UMBRA", required: false, type: Bool.self)
+    try _v.visit(field: VT.PENUMBRA, fieldName: "PENUMBRA", required: false, type: Bool.self)
+    try _v.visit(field: VT.ORIG_NETWORK, fieldName: "ORIG_NETWORK", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_DL, fieldName: "SOURCE_DL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: DeviceType.self)
+    try _v.visit(field: VT.AZIMUTH_MEASURED, fieldName: "AZIMUTH_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VT.ELEVATION_MEASURED, fieldName: "ELEVATION_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VT.RANGE_MEASURED, fieldName: "RANGE_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VT.RANGERATE_MEASURED, fieldName: "RANGERATE_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VT.RA_MEASURED, fieldName: "RA_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VT.DECLINATION_MEASURED, fieldName: "DECLINATION_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VT.NIIRS, fieldName: "NIIRS", required: false, type: Float32.self)
+    try _v.visit(field: VT.METERS_PER_PIXEL, fieldName: "METERS_PER_PIXEL", required: false, type: Float32.self)
+    try _v.visit(field: VT.IMAGE_SNR, fieldName: "IMAGE_SNR", required: false, type: Float32.self)
+    try _v.visit(field: VT.IMAGE_BIT_DEPTH, fieldName: "IMAGE_BIT_DEPTH", required: false, type: Int32.self)
+    try _v.visit(field: VT.IMAGE_WIDTH, fieldName: "IMAGE_WIDTH", required: false, type: Int32.self)
+    try _v.visit(field: VT.IMAGE_HEIGHT, fieldName: "IMAGE_HEIGHT", required: false, type: Int32.self)
+    try _v.visit(field: VT.IMAGE_COMPRESSION, fieldName: "IMAGE_COMPRESSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMAGE_COMPRESSION_RATIO, fieldName: "IMAGE_COMPRESSION_RATIO", required: false, type: Float32.self)
+    try _v.visit(field: VT.PROCESSED_IMAGE_URI, fieldName: "PROCESSED_IMAGE_URI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMAGE_AUTO_ENHANCED, fieldName: "IMAGE_AUTO_ENHANCED", required: false, type: Bool.self)
+    try _v.visit(field: VT.MULTI_FRAME_STACKED, fieldName: "MULTI_FRAME_STACKED", required: false, type: Bool.self)
+    try _v.visit(field: VT.SYNTHETIC_TRACKING_USED, fieldName: "SYNTHETIC_TRACKING_USED", required: false, type: Bool.self)
+    try _v.visit(field: VT.IMAGE_SHARPNESS, fieldName: "IMAGE_SHARPNESS", required: false, type: Float32.self)
+    try _v.visit(field: VT.IMAGE_NOISE_STDDEV, fieldName: "IMAGE_NOISE_STDDEV", required: false, type: Float32.self)
+    try _v.visit(field: VT.IMAGE_CONTRAST, fieldName: "IMAGE_CONTRAST", required: false, type: Float32.self)
+    try _v.visit(field: VT.IMAGE_DYNAMIC_RANGE, fieldName: "IMAGE_DYNAMIC_RANGE", required: false, type: Float32.self)
+    try _v.visit(field: VT.IMAGE_ENTROPY, fieldName: "IMAGE_ENTROPY", required: false, type: Float32.self)
+    try _v.visit(field: VT.BACKGROUND_UNIFORMITY, fieldName: "BACKGROUND_UNIFORMITY", required: false, type: Float32.self)
+    try _v.visit(field: VT.BACKGROUND_MEAN_LEVEL, fieldName: "BACKGROUND_MEAN_LEVEL", required: false, type: Float32.self)
+    try _v.visit(field: VT.SATURATED_PIXEL_PERCENT, fieldName: "SATURATED_PIXEL_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.DEAD_PIXEL_PERCENT, fieldName: "DEAD_PIXEL_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.PSF_FWHM, fieldName: "PSF_FWHM", required: false, type: Float32.self)
+    try _v.visit(field: VT.CLOUD_COVER_PERCENT, fieldName: "CLOUD_COVER_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.CLOUD_DETECTION_CONFIDENCE, fieldName: "CLOUD_DETECTION_CONFIDENCE", required: false, type: Float32.self)
+    try _v.visit(field: VT.HAZE_PERCENT, fieldName: "HAZE_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.AEROSOL_OPTICAL_THICKNESS, fieldName: "AEROSOL_OPTICAL_THICKNESS", required: false, type: Float32.self)
+    try _v.visit(field: VT.WATER_VAPOR_CONTENT, fieldName: "WATER_VAPOR_CONTENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.SUN_ELEVATION, fieldName: "SUN_ELEVATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.SUN_AZIMUTH, fieldName: "SUN_AZIMUTH", required: false, type: Float32.self)
+    try _v.visit(field: VT.VIEW_ZENITH_ANGLE, fieldName: "VIEW_ZENITH_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VT.VIEW_AZIMUTH_ANGLE, fieldName: "VIEW_AZIMUTH_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VT.OFF_NADIR_ANGLE, fieldName: "OFF_NADIR_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VT.SWATH_WIDTH_KM, fieldName: "SWATH_WIDTH_KM", required: false, type: Float32.self)
+    try _v.visit(field: VT.MEAN_TERRAIN_ELEVATION, fieldName: "MEAN_TERRAIN_ELEVATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.TERRAIN_ELEVATION_STDDEV, fieldName: "TERRAIN_ELEVATION_STDDEV", required: false, type: Float32.self)
+    try _v.visit(field: VT.SHADOW_COVER_PERCENT, fieldName: "SHADOW_COVER_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.SUNGLINT_PRESENT, fieldName: "SUNGLINT_PRESENT", required: false, type: Bool.self)
+    try _v.visit(field: VT.SUNGLINT_PERCENT, fieldName: "SUNGLINT_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.SNOW_ICE_COVER_PERCENT, fieldName: "SNOW_ICE_COVER_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.VALID_DATA_AREA_KM2, fieldName: "VALID_DATA_AREA_KM2", required: false, type: Float32.self)
+    try _v.visit(field: VT.CORR_MAHALANOBIS_SQ, fieldName: "CORR_MAHALANOBIS_SQ", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_DOF, fieldName: "CORR_DOF", required: false, type: UInt8.self)
+    try _v.visit(field: VT.CORR_GATE, fieldName: "CORR_GATE", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_P_VALUE, fieldName: "CORR_P_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_AMBIGUOUS, fieldName: "CORR_AMBIGUOUS", required: false, type: Bool.self)
     _v.finish()
   }
 }

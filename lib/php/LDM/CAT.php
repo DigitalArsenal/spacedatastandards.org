@@ -87,12 +87,12 @@ class CAT extends Table
 
     /// Ownership, typically country or company
     /**
-     * @return sbyte
+     * @return byte
      */
     public function getOWNER()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \legacyCountryCode::AB;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \legacyCountryCode::AB;
     }
 
     /// Launch Date [year-month-day] (ISO 8601)
@@ -294,22 +294,52 @@ class CAT extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The products an integrating catalog selected for the object as of
+    /// PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+    /// the same source and epoch where there is one. The object's maneuvers are
+    /// its $MNV stream, not references here.
+    /**
+     * @returnVectorOffset
+     */
+    public function getPRODUCTS($j)
+    {
+        $o = $this->__offset(56);
+        $obj = new CATProduct();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPRODUCTSLength()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
+    public function getPRODUCTS_AS_OF()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCAT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(26);
+        $builder->StartObject(28);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CAT
      */
-    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID, $CATALOG_URI, $CATALOG_OBJECT_ID)
+    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID, $CATALOG_URI, $CATALOG_OBJECT_ID, $PRODUCTS, $PRODUCTS_AS_OF)
     {
-        $builder->startObject(26);
+        $builder->startObject(28);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
@@ -336,6 +366,8 @@ class CAT extends Table
         self::addBUS_ID($builder, $BUS_ID);
         self::addCATALOG_URI($builder, $CATALOG_URI);
         self::addCATALOG_OBJECT_ID($builder, $CATALOG_OBJECT_ID);
+        self::addPRODUCTS($builder, $PRODUCTS);
+        self::addPRODUCTS_AS_OF($builder, $PRODUCTS_AS_OF);
         $o = $builder->endObject();
         return $o;
     }
@@ -392,12 +424,12 @@ class CAT extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param byte
      * @return void
      */
     public static function addOWNER(FlatBufferBuilder $builder, $OWNER)
     {
-        $builder->addSbyteX(5, $OWNER, 0);
+        $builder->addByteX(5, $OWNER, 0);
     }
 
     /**
@@ -622,6 +654,50 @@ class CAT extends Table
     public static function addCATALOG_OBJECT_ID(FlatBufferBuilder $builder, $CATALOG_OBJECT_ID)
     {
         $builder->addOffsetX(25, $CATALOG_OBJECT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPRODUCTS(FlatBufferBuilder $builder, $PRODUCTS)
+    {
+        $builder->addOffsetX(26, $PRODUCTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPRODUCTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPRODUCTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPRODUCTS_AS_OF(FlatBufferBuilder $builder, $PRODUCTS_AS_OF)
+    {
+        $builder->addOffsetX(27, $PRODUCTS_AS_OF, 0);
     }
 
     /**

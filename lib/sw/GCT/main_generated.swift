@@ -8,872 +8,1190 @@ import Common
 
 import FlatBuffers
 
-///  Weather Forecast Field (WXF)
-///  Description
-///  One two-dimensional slice of a weather forecast: a single variable, at a
-///  single vertical level, for a single ensemble member (or a statistic over
-///  the ensemble), valid at a single time, on a regular latitude-longitude
-///  grid. A producer such as a global ensemble forecast model initialised on a
-///  fixed cadence emits one WXF per (variable, level, member, lead) at each
-///  initialisation; a consumer selects by INIT_TIME_MS / LEAD_HOURS / VARIABLE /
-///  LEVEL_KIND / MEMBER_KIND and reads the cells. Fields of up to 1,048,576
-///  cells carry their samples inline in VALUES; larger fields are split into
-///  tiles (TILE_INDEX / TILE_COUNT, each with its own GRID) or reference a
-///  content-addressed chunk through CHUNK_CID. Every epoch is Unix
-///  milliseconds UTC. A forecast is a model output, never an official warning.
-///  Class of model that produced the field. Names a capability class, never a
-///  producer. Append new values only; never reorder or reuse existing values.
-public enum wxfModelClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Quadtree the tile keys are stated in. ORDINALS ARE WIRE VALUES; new
+///  schemes are APPENDED ONLY.
+public enum gctTilingScheme: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
+  ///  Two root tiles, geographic (equirectangular) subdivision as described
+  ///  in the header. The scheme CesiumJS terrain and imagery use.
+  case geographicQuadtree = 0
+
+  public static var max: gctTilingScheme { return .geographicQuadtree }
+  public static var min: gctTilingScheme { return .geographicQuadtree }
+}
+
+
+///  How a tile relates to its children. ORDINALS ARE WIRE VALUES; new kinds
+///  are APPENDED ONLY.
+public enum gctRefinement: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  The children replace the parent: draw one or the other, never both.
+  ///  The only refinement a mass-conserving mixture needs.
+  case replace = 0
+  ///  The children add to the parent. Reserved; a producer MUST NOT publish
+  ///  it until a consumer contract for additive mixtures is defined.
+  case add = 1
+
+  public static var max: gctRefinement { return .add }
+  public static var min: gctRefinement { return .replace }
+}
+
+
+///  Physical quantity a Gaussian's amplitude measures. ORDINALS ARE WIRE
+///  VALUES; new quantities are APPENDED ONLY.
+public enum gctFieldQuantity: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Not stated. A consumer MUST refuse the tile.
   case unspecified = 0
-  ///  Machine-learned global ensemble forecast model.
-  case machinelearnedglobalensemble = 1
-  ///  Physics-based numerical global ensemble forecast model.
-  case numericalglobalensemble = 2
-  ///  Physics-based numerical global deterministic forecast model.
-  case numericalglobaldeterministic = 3
-  ///  Limited-area numerical forecast model.
-  case numericalregional = 4
-  ///  Retrospective analysis produced by assimilating observations.
-  case reanalysis = 5
-  ///  Objective analysis at the initialisation time (lead 0).
-  case analysis = 6
-  ///  A class not covered above; MODEL_ID identifies the producer's model.
-  case other = 7
-  ///  Empirical climatological model evaluated at VALID_TIME_MS from
-  ///  geophysical indices, with no forecast run (pair with TIME_BASIS
-  ///  ValidTimeOnly).
-  case empiricalclimatology = 8
+  ///  Visible-light extinction coefficient of cloud condensate (liquid and
+  ///  ice), 1/m at the Gaussian's centre.
+  case cloudExtinction = 1
+  ///  Extinction coefficient of volcanic ash, 1/m.
+  case volcanicAshExtinction = 2
+  ///  Extinction coefficient of smoke, 1/m.
+  case smokeExtinction = 3
+  ///  Extinction coefficient of mineral dust, 1/m.
+  case dustExtinction = 4
+  ///  Cloud condensate mixing ratio, kg/kg.
+  case condensateMixingRatio = 5
+  ///  A quantity this enum cannot express; FIELD_QUANTITY_NAME names it.
+  case other = 99
 
-  public static var max: wxfModelClass { return .empiricalclimatology }
-  public static var min: wxfModelClass { return .unspecified }
+  public static var max: gctFieldQuantity { return .other }
+  public static var min: gctFieldQuantity { return .unspecified }
 }
 
 
-///  Which realisation of an ensemble the field represents. Append new values
-///  only; never reorder or reuse existing values.
-public enum wxfMemberKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Meteorological genus of a variant, where the producer classified it.
+///  ORDINALS ARE WIRE VALUES; new genera are APPENDED ONLY.
+public enum gctCloudGenus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  One perturbed ensemble member; MEMBER_INDEX selects it.
-  case member = 0
-  ///  The unperturbed control member.
-  case control = 1
-  ///  A single deterministic run (no ensemble).
-  case deterministic = 2
-  ///  Ensemble arithmetic mean.
-  case mean = 3
-  ///  Ensemble median.
-  case median = 4
-  ///  Ensemble standard deviation.
-  case standarddeviation = 5
-  ///  Ensemble minimum.
-  case minimum = 6
-  ///  Ensemble maximum.
-  case maximum = 7
-  ///  Ensemble percentile; PERCENTILE holds the rank in [0, 100].
-  case percentile = 8
-  ///  Probability that the variable exceeds THRESHOLD_VALUE, in [0, 1].
-  case probabilityabovethreshold = 9
-  ///  Probability that the variable falls below THRESHOLD_VALUE, in [0, 1].
-  case probabilitybelowthreshold = 10
-  ///  The source does not identify a member or ensemble statistic. A blended
-  ///  point-forecast product must not be labelled as one deterministic run.
-  case unspecified = 11
-
-  public static var max: wxfMemberKind { return .unspecified }
-  public static var min: wxfMemberKind { return .member }
-}
-
-
-///  Meteorological variable carried by the field. Append new values only;
-///  never reorder or reuse existing values. Units are fixed per value and
-///  repeated in UNITS.
-public enum wxfVariable: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  VARIABLE_NAME carries the producer's own variable name.
+  ///  Not classified.
   case unspecified = 0
-  ///  Air temperature at 2 m above ground, kelvin.
-  case temperature2m = 1
-  ///  Dew-point temperature at 2 m above ground, kelvin.
-  case dewpointtemperature2m = 2
-  ///  Eastward wind component at 10 m above ground, m/s.
-  case windu10m = 3
-  ///  Northward wind component at 10 m above ground, m/s.
-  case windv10m = 4
-  ///  Wind speed at 10 m above ground, m/s.
-  case windspeed10m = 5
-  ///  Eastward wind component at 100 m above ground, m/s.
-  case windu100m = 6
-  ///  Northward wind component at 100 m above ground, m/s.
-  case windv100m = 7
-  ///  Wind speed at 100 m above ground, m/s.
-  case windspeed100m = 8
-  ///  Mean sea-level pressure, pascal.
-  case meansealevelpressure = 9
-  ///  Sea-surface temperature, kelvin.
-  case seasurfacetemperature = 10
-  ///  Total cloud cover fraction, [0, 1].
-  case totalcloudcover = 11
-  ///  High-cloud cover fraction, [0, 1].
-  case highcloudcover = 12
-  ///  Medium-cloud cover fraction, [0, 1].
-  case mediumcloudcover = 13
-  ///  Low-cloud cover fraction, [0, 1].
-  case lowcloudcover = 14
-  ///  Surface downward shortwave radiation accumulated over
-  ///  ACCUMULATION_HOURS, J/m^2.
-  case surfacesolarradiationdownwards = 15
-  ///  Total-sky direct shortwave radiation at the surface accumulated over
-  ///  ACCUMULATION_HOURS, J/m^2.
-  case totalskydirectsolarradiationatsurface = 16
-  ///  Total precipitation accumulated over ACCUMULATION_HOURS, metres of
-  ///  water equivalent.
-  case totalprecipitation = 17
-  ///  Total precipitation trained against a satellite-blended precipitation
-  ///  analysis, accumulated over ACCUMULATION_HOURS, metres of water
-  ///  equivalent.
-  case totalprecipitationsatelliteblended = 18
-  ///  Experimental total precipitation product, accumulated over
-  ///  ACCUMULATION_HOURS, metres of water equivalent.
-  case totalprecipitationexperimental = 19
-  ///  Geopotential on a pressure level, m^2/s^2.
-  case geopotential = 20
-  ///  Air temperature on a pressure level, kelvin.
-  case temperature = 21
-  ///  Specific humidity on a pressure level, kg/kg.
-  case specifichumidity = 22
-  ///  Eastward wind component on a pressure level, m/s.
-  case windu = 23
-  ///  Northward wind component on a pressure level, m/s.
-  case windv = 24
-  ///  Vertical velocity on a pressure level, Pa/s.
-  case verticalvelocity = 25
-  ///  Precipitation rate, kg/(m^2 s).
-  case precipitationrate = 26
-  ///  Relative humidity, [0, 1].
-  case relativehumidity = 27
-  ///  Total column water vapour, kg/m^2.
-  case totalcolumnwatervapour = 28
-  ///  Surface pressure, pascal.
-  case surfacepressure = 29
-  ///  Geopotential height, geopotential metres (gpm): the height a producer
-  ///  such as GFS publishes on pressure levels and at the tropopause. Distinct
-  ///  from Geopotential (m^2/s^2); a consumer never relabels one as the other.
-  case geopotentialheight = 30
-  ///  Brightness temperature a radiometer channel measured, kelvin: the
-  ///  temperature of a black body emitting the observed radiance at
-  ///  CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere.
-  case brightnesstemperature = 31
-  ///  Top-of-atmosphere bidirectional reflectance factor of a solar channel
-  ///  at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian
-  ///  surface under the same illumination), not corrected for the solar
-  ///  zenith angle unless VARIABLE_NAME says so. Missing at night.
-  case reflectance = 32
-  ///  Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably
-  ///  clear, 2 probably cloudy, 3 cloudy. Units "1". A cell resampled from
-  ///  several source pixels carries their mean, so fractional values are
-  ///  the average category, not a new class.
-  case cloudmask = 33
-  ///  Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid
-  ///  water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units
-  ///  "1". Resampled cells carry the category of the source pixel nearest the
-  ///  cell centre.
-  case cloudphase = 34
-  ///  Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless.
-  case cloudopticaldepth = 35
-  ///  Cloud-top effective particle radius, micrometres (units "um").
-  case cloudeffectiveradius = 36
-  ///  Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
-  case cloudemissivity = 37
+  ///  Cumulus humilis: fair-weather cumulus, wider than deep.
+  case cumulusHumilis = 1
+  ///  Cumulus mediocris.
+  case cumulusMediocris = 2
+  ///  Cumulus congestus: towering cumulus.
+  case cumulusCongestus = 3
+  ///  Cumulonimbus, with or without an anvil.
+  case cumulonimbus = 4
+  ///  Stratocumulus deck.
+  case stratocumulus = 5
+  ///  Stratus.
+  case stratus = 6
+  ///  Altocumulus / altostratus mid-level bank.
+  case altocumulus = 7
+  ///  Cirrus / cirrostratus sheet.
+  case cirrus = 8
+  ///  Nimbostratus.
+  case nimbostratus = 9
+  ///  The merged mixture of a whole tile, not one cloud.
+  case tileMixture = 10
 
-  public static var max: wxfVariable { return .cloudemissivity }
-  public static var min: wxfVariable { return .unspecified }
+  public static var max: gctCloudGenus { return .tileMixture }
+  public static var min: gctCloudGenus { return .unspecified }
 }
 
 
-///  Vertical coordinate of the field. Append new values only; never reorder or
-///  reuse existing values.
-public enum wxfLevelKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  How a level was produced from the field. ORDINALS ARE WIRE VALUES; new
+///  derivations are APPENDED ONLY.
+public enum gctLevelDerivation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Earth's surface; LEVEL_VALUE is unused.
-  case surface = 0
-  ///  Fixed height above ground; LEVEL_VALUE in metres.
-  case heightaboveground = 1
-  ///  Isobaric level; LEVEL_VALUE in pascal.
-  case pressurelevel = 2
-  ///  Mean sea level; LEVEL_VALUE is unused.
-  case meansealevel = 3
-  ///  Whole atmospheric column; LEVEL_VALUE is unused.
-  case entireatmosphere = 4
-  ///  Top of atmosphere; LEVEL_VALUE is unused.
-  case topofatmosphere = 5
-  ///  The producer's diagnosed tropopause; LEVEL_VALUE is unused. Its height is
-  ///  a GeopotentialHeight field at this level, never implied by a pressure.
-  case tropopause = 6
-  ///  Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
-  ///  For fields defined at altitude rather than on pressure levels (for
-  ///  example the upper atmosphere).
-  case heightaboveellipsoid = 7
-  ///  The top of the cloud a satellite retrieval saw in each cell; the level
-  ///  varies from cell to cell and LEVEL_VALUE is unused. The height itself
-  ///  is a GeopotentialHeight field at this level (a Temperature field gives
-  ///  the cloud-top temperature), never implied by the level.
-  case cloudtop = 8
+  ///  Not stated.
+  case unspecified = 0
+  ///  Sampled directly from the source field or authored at this cell.
+  case authored = 1
+  ///  Mass-conserving merge of the finer level on a regular grid of cell
+  ///  MERGE_CELL_M, silhouette preserved.
+  case gridMerge = 2
+  ///  Mass-conserving k-means merge of the finer level into
+  ///  GAUSSIAN_COUNT clusters.
+  case clusterMerge = 3
+  ///  Fitted to a voxel or observational field by optimisation.
+  case fitted = 4
 
-  public static var max: wxfLevelKind { return .cloudtop }
-  public static var min: wxfLevelKind { return .surface }
+  public static var max: gctLevelDerivation { return .fitted }
+  public static var min: gctLevelDerivation { return .unspecified }
 }
 
 
-///  Temporal character of the value in each cell. Append new values only;
-///  never reorder or reuse existing values.
-public enum wxfTemporalKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Where a level's samples live. ORDINALS ARE WIRE VALUES; new encodings
+///  are APPENDED ONLY.
+public enum gctSampleEncoding: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Value at VALID_TIME_MS.
-  case instantaneous = 0
-  ///  Sum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
-  case accumulated = 1
-  ///  Mean over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
-  case averaged = 2
-  ///  Maximum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
-  case maximum = 3
-  ///  Minimum over the ACCUMULATION_HOURS ending at VALID_TIME_MS.
-  case minimum = 4
+  ///  Samples are inline in the level's vectors.
+  case inlineFloat32 = 0
+  ///  Samples are a content-addressed chunk named by the level's CHUNK_CID
+  ///  whose layout is the aligned-binary twin's section layout for the
+  ///  level; the level's vectors are absent.
+  case contentAddressedChunk = 1
 
-  public static var max: wxfTemporalKind { return .minimum }
-  public static var min: wxfTemporalKind { return .instantaneous }
+  public static var max: gctSampleEncoding { return .contentAddressedChunk }
+  public static var min: gctSampleEncoding { return .inlineFloat32 }
 }
 
 
-///  Horizontal grid geometry. Append new values only; never reorder or reuse
-///  existing values.
-public enum wxfGridKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Where a whole variant lives. ORDINALS ARE WIRE VALUES; new scopes are
+///  APPENDED ONLY.
+public enum gctVariantScope: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Regular latitude-longitude grid with constant DLAT / DLON.
-  case regularlatlon = 0
+  ///  The variant's levels are carried in this tile.
+  case inline = 0
+  ///  The variant is a shared library entry named by VARIANT_CID; its levels
+  ///  are absent here and identical wherever the same CID appears, so a
+  ///  consumer keeps one copy however many tiles reference it.
+  case sharedLibrary = 1
 
-  public static var max: wxfGridKind { return .regularlatlon }
-  public static var min: wxfGridKind { return .regularlatlon }
+  public static var max: gctVariantScope { return .sharedLibrary }
+  public static var min: gctVariantScope { return .inline }
 }
 
 
-///  Where the cell samples live. Append new values only; never reorder or
-///  reuse existing values.
-public enum wxfValuesEncoding: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Samples are inline in VALUES (NLAT * NLON <= 1,048,576 cells).
-  case inlinefloat32 = 0
-  ///  Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE /
-  ///  CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
-  case contentaddressedchunk = 1
-  ///  Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value =
-  ///  ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell.
-  ///  Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are
-  ///  decoded values.
-  case inlinequantizeduint16 = 2
-  ///  Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value =
-  ///  ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same
-  ///  cell limit and order as InlineFloat32.
-  case inlinequantizeduint8 = 3
-  ///  Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8
-  ///  (CHUNK_DTYPE "uint16" or "uint8"; value = ADD_OFFSET + SCALE_FACTOR *
-  ///  code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as
-  ///  a chunk encoded by CHUNK_CODECS. Same cell limit and order as
-  ///  InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length.
-  case inlineencodedchunk = 4
-
-  public static var max: wxfValuesEncoding { return .inlineencodedchunk }
-  public static var min: wxfValuesEncoding { return .inlinefloat32 }
-}
-
-
-///  Licence class of the data at RETRIEVED_AT, following the split a producer
-///  applies between real-time and historical output. Append new values only;
-///  never reorder or reuse existing values.
-public enum wxfLicenseClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Real-time or future-valid data offered under an experimental real-time
-  ///  terms-of-use; not an official warning; redistribution limited per
-  ///  LICENSE_URL.
-  case realtimeexperimental = 0
-  ///  Data older than the producer's real-time window, offered under an open
-  ///  attribution licence named by LICENSE_URL.
-  case historical = 1
-  ///  Data of any valid time offered under an open attribution licence named
-  ///  by LICENSE_URL. Unlike Historical, this makes no claim about age or a
-  ///  producer's real-time window. API access terms can be more restrictive
-  ///  than the licence on the resulting data and must be checked separately.
-  case openattribution = 2
-
-  public static var max: wxfLicenseClass { return .openattribution }
-  public static var min: wxfLicenseClass { return .realtimeexperimental }
-}
-
-
-///  Which forecast times the source actually publishes. Append new values
-///  only; never reorder or reuse existing values.
-public enum wxfTimeBasis: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  INIT_TIME_MS names a run; VALID_TIME_MS = INIT_TIME_MS + LEAD_HOURS *
-  ///  3,600,000. This is the existing WXF convention.
-  case initialization = 0
-  ///  Only VALID_TIME_MS is known. The source may blend runs or omit their
-  ///  initialization times. INIT_TIME_MS, LEAD_HOURS and HORIZON_HOURS MUST
-  ///  be omitted; their zero defaults do not mean a run in 1970, zero lead,
-  ///  or zero horizon. RETRIEVED_AT is not a substitute for initialization.
-  case validtimeonly = 1
-
-  public static var max: wxfTimeBasis { return .validtimeonly }
-  public static var min: wxfTimeBasis { return .initialization }
-}
-
-
-///  Regular grid the samples are laid out on. Samples are row-major with
-///  latitude as the outer index: cell (i, j) for 0 <= i < NLAT, 0 <= j < NLON
-///  sits at VALUES[i * NLON + j] and is centred at
-///  (LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north
-///  to south. Longitudes are in [-180, 180) or [0, 360) exactly as the
-///  producer publishes them; a consumer normalises.
-public struct WXFGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One level of detail of one variant: a Gaussian mixture in the variant's
+///  own frame (metres, origin at the variant's reference point, Z up, base of
+///  the cloud near Z = 0). Levels are ordered finest first. Every per-Gaussian
+///  vector holds exactly 4 * GAUSSIAN_COUNT float32 values — one RGBA texel
+///  per Gaussian — in the same Gaussian order.
+public struct GCTLevel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$WXF" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: WXFGrid.id, addPrefix: prefix) }
+  public static var id: String { "$GCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: GCTLevel.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let KIND: VOffset = 4
-    static let LAT0: VOffset = 6
-    static let LON0: VOffset = 8
-    static let DLAT: VOffset = 10
-    static let DLON: VOffset = 12
-    static let NLAT: VOffset = 14
-    static let NLON: VOffset = 16
-    static let PERIODIC_LON: VOffset = 18
+    static let GAUSSIAN_COUNT: VOffset = 4
+    static let MERGE_CELL_M: VOffset = 6
+    static let DERIVATION: VOffset = 8
+    static let ENCODING: VOffset = 10
+    static let CHUNK_CID: VOffset = 12
+    static let CHUNK_BYTE_LENGTH: VOffset = 14
+    static let CENTERS: VOffset = 16
+    static let SIGMAS: VOffset = 18
+    static let BOUNDARY: VOffset = 20
+    static let FINE_NORMAL: VOffset = 22
+    static let OPTICAL_DEPTH_POS: VOffset = 24
+    static let OPTICAL_DEPTH_NEG: VOffset = 26
   }
 
-  ///  Grid geometry.
-  public var KIND: wxfGridKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .regularlatlon : wxfGridKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .regularlatlon }
-  ///  Latitude of the first row's cell centre, degrees north.
-  public var LAT0: Double { let o = _accessor.offset(VT.LAT0); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Longitude of the first column's cell centre, degrees east.
-  public var LON0: Double { let o = _accessor.offset(VT.LON0); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Latitude step between rows, degrees (signed).
-  public var DLAT: Double { let o = _accessor.offset(VT.DLAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Longitude step between columns, degrees (signed).
-  public var DLON: Double { let o = _accessor.offset(VT.DLON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of rows (latitudes).
-  public var NLAT: UInt32 { let o = _accessor.offset(VT.NLAT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Number of columns (longitudes).
-  public var NLON: UInt32 { let o = _accessor.offset(VT.NLON); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Whether the last column wraps to the first (global grid).
-  public var PERIODIC_LON: Bool { let o = _accessor.offset(VT.PERIODIC_LON); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startWXFGrid(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(KIND: wxfGridKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
-  public static func add(LAT0: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT0, def: 0.0, at: VT.LAT0) }
-  public static func add(LON0: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LON0, def: 0.0, at: VT.LON0) }
-  public static func add(DLAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DLAT, def: 0.0, at: VT.DLAT) }
-  public static func add(DLON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DLON, def: 0.0, at: VT.DLON) }
-  public static func add(NLAT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NLAT, def: 0, at: VT.NLAT) }
-  public static func add(NLON: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NLON, def: 0, at: VT.NLON) }
-  public static func add(PERIODIC_LON: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIODIC_LON, def: false,
-   at: VT.PERIODIC_LON) }
-  public static func endWXFGrid(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createWXFGrid(
+  ///  Number of Gaussians in this level.
+  public var GAUSSIAN_COUNT: UInt32 { let o = _accessor.offset(VT.GAUSSIAN_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  The cell this level was merged on, metres: the level's geometric error
+  ///  in the variant frame. Multiply by the instance scale in use.
+  public var MERGE_CELL_M: Float32 { let o = _accessor.offset(VT.MERGE_CELL_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  How this level was produced.
+  public var DERIVATION: gctLevelDerivation { let o = _accessor.offset(VT.DERIVATION); return o == 0 ? .unspecified : gctLevelDerivation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Where the samples live.
+  public var ENCODING: gctSampleEncoding { let o = _accessor.offset(VT.ENCODING); return o == 0 ? .inlineFloat32 : gctSampleEncoding(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .inlineFloat32 }
+  ///  Content identifier of the chunk when ENCODING is
+  ///  CONTENT_ADDRESSED_CHUNK.
+  public var CHUNK_CID: String? { let o = _accessor.offset(VT.CHUNK_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHUNK_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHUNK_CID) }
+  ///  Encoded chunk length in bytes when ENCODING is CONTENT_ADDRESSED_CHUNK.
+  public var CHUNK_BYTE_LENGTH: UInt64 { let o = _accessor.offset(VT.CHUNK_BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Per Gaussian: x, y, z of the centre, metres in the variant frame; w =
+  ///  amplitude in AMPLITUDE_UNITS at the centre.
+  public var CENTERS: FlatbufferVector<Float32> { return _accessor.vector(at: VT.CENTERS, byteSize: 4) }
+  public func withUnsafePointerToCenters<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CENTERS, body: body) }
+  ///  Per Gaussian: standard deviation along the variant frame's x, y, z
+  ///  axes, metres (axis-aligned; the instance yaw rotates the frame); w = a
+  ///  per-Gaussian seed in [0, 1) for stochastic shading, 0 when unused.
+  public var SIGMAS: FlatbufferVector<Float32> { return _accessor.vector(at: VT.SIGMAS, byteSize: 4) }
+  public func withUnsafePointerToSigmas<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGMAS, body: body) }
+  ///  OPTIONAL. Per Gaussian: x, y, z of the field's boundary normal at the
+  ///  centre (unit vector scaled by a boundary weight in [0, 1]: 0 deep
+  ///  inside, 1 at a crisp condensation interface); w = the local coarse
+  ///  density in [0, 1]. Absent when not computed.
+  public var BOUNDARY: FlatbufferVector<Float32> { return _accessor.vector(at: VT.BOUNDARY, byteSize: 4) }
+  public func withUnsafePointerToBoundary<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BOUNDARY, body: body) }
+  ///  OPTIONAL. Per Gaussian: x, y, z of a finer-scale surface normal that
+  ///  adds relief to BOUNDARY; w unused (0). Absent when not computed.
+  public var FINE_NORMAL: FlatbufferVector<Float32> { return _accessor.vector(at: VT.FINE_NORMAL, byteSize: 4) }
+  public func withUnsafePointerToFineNormal<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FINE_NORMAL, body: body) }
+  ///  OPTIONAL. Per Gaussian: optical depth of the field from the centre
+  ///  outward along +x, +y, +z (dimensionless); w unused (0). Absent when
+  ///  not computed.
+  public var OPTICAL_DEPTH_POS: FlatbufferVector<Float32> { return _accessor.vector(at: VT.OPTICAL_DEPTH_POS, byteSize: 4) }
+  public func withUnsafePointerToOpticalDepthPos<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OPTICAL_DEPTH_POS, body: body) }
+  ///  OPTIONAL. Per Gaussian: optical depth along -x, -y, -z; w unused (0).
+  ///  Absent when not computed.
+  public var OPTICAL_DEPTH_NEG: FlatbufferVector<Float32> { return _accessor.vector(at: VT.OPTICAL_DEPTH_NEG, byteSize: 4) }
+  public func withUnsafePointerToOpticalDepthNeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OPTICAL_DEPTH_NEG, body: body) }
+  public static func startGCTLevel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(GAUSSIAN_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAUSSIAN_COUNT, def: 0, at: VT.GAUSSIAN_COUNT) }
+  public static func add(MERGE_CELL_M: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MERGE_CELL_M, def: 0.0, at: VT.MERGE_CELL_M) }
+  public static func add(DERIVATION: gctLevelDerivation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DERIVATION.rawValue, def: 0, at: VT.DERIVATION) }
+  public static func add(ENCODING: gctSampleEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VT.ENCODING) }
+  public static func add(CHUNK_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHUNK_CID, at: VT.CHUNK_CID) }
+  public static func add(CHUNK_BYTE_LENGTH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHUNK_BYTE_LENGTH, def: 0, at: VT.CHUNK_BYTE_LENGTH) }
+  public static func addVectorOf(CENTERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTERS, at: VT.CENTERS) }
+  public static func addVectorOf(SIGMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGMAS, at: VT.SIGMAS) }
+  public static func addVectorOf(BOUNDARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOUNDARY, at: VT.BOUNDARY) }
+  public static func addVectorOf(FINE_NORMAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FINE_NORMAL, at: VT.FINE_NORMAL) }
+  public static func addVectorOf(OPTICAL_DEPTH_POS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPTICAL_DEPTH_POS, at: VT.OPTICAL_DEPTH_POS) }
+  public static func addVectorOf(OPTICAL_DEPTH_NEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPTICAL_DEPTH_NEG, at: VT.OPTICAL_DEPTH_NEG) }
+  public static func endGCTLevel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createGCTLevel(
     _ fbb: inout FlatBufferBuilder,
-    KIND: wxfGridKind = .regularlatlon,
-    LAT0: Double = 0.0,
-    LON0: Double = 0.0,
-    DLAT: Double = 0.0,
-    DLON: Double = 0.0,
-    NLAT: UInt32 = 0,
-    NLON: UInt32 = 0,
-    PERIODIC_LON: Bool = false
+    GAUSSIAN_COUNT: UInt32 = 0,
+    MERGE_CELL_M: Float32 = 0.0,
+    DERIVATION: gctLevelDerivation = .unspecified,
+    ENCODING: gctSampleEncoding = .inlineFloat32,
+    CHUNK_CIDOffset CHUNK_CID: Offset = Offset(),
+    CHUNK_BYTE_LENGTH: UInt64 = 0,
+    CENTERSVectorOffset CENTERS: Offset = Offset(),
+    SIGMASVectorOffset SIGMAS: Offset = Offset(),
+    BOUNDARYVectorOffset BOUNDARY: Offset = Offset(),
+    FINE_NORMALVectorOffset FINE_NORMAL: Offset = Offset(),
+    OPTICAL_DEPTH_POSVectorOffset OPTICAL_DEPTH_POS: Offset = Offset(),
+    OPTICAL_DEPTH_NEGVectorOffset OPTICAL_DEPTH_NEG: Offset = Offset()
   ) -> Offset {
-    let __start = WXFGrid.startWXFGrid(&fbb)
-    WXFGrid.add(KIND: KIND, &fbb)
-    WXFGrid.add(LAT0: LAT0, &fbb)
-    WXFGrid.add(LON0: LON0, &fbb)
-    WXFGrid.add(DLAT: DLAT, &fbb)
-    WXFGrid.add(DLON: DLON, &fbb)
-    WXFGrid.add(NLAT: NLAT, &fbb)
-    WXFGrid.add(NLON: NLON, &fbb)
-    WXFGrid.add(PERIODIC_LON: PERIODIC_LON, &fbb)
-    return WXFGrid.endWXFGrid(&fbb, start: __start)
+    let __start = GCTLevel.startGCTLevel(&fbb)
+    GCTLevel.add(GAUSSIAN_COUNT: GAUSSIAN_COUNT, &fbb)
+    GCTLevel.add(MERGE_CELL_M: MERGE_CELL_M, &fbb)
+    GCTLevel.add(DERIVATION: DERIVATION, &fbb)
+    GCTLevel.add(ENCODING: ENCODING, &fbb)
+    GCTLevel.add(CHUNK_CID: CHUNK_CID, &fbb)
+    GCTLevel.add(CHUNK_BYTE_LENGTH: CHUNK_BYTE_LENGTH, &fbb)
+    GCTLevel.addVectorOf(CENTERS: CENTERS, &fbb)
+    GCTLevel.addVectorOf(SIGMAS: SIGMAS, &fbb)
+    GCTLevel.addVectorOf(BOUNDARY: BOUNDARY, &fbb)
+    GCTLevel.addVectorOf(FINE_NORMAL: FINE_NORMAL, &fbb)
+    GCTLevel.addVectorOf(OPTICAL_DEPTH_POS: OPTICAL_DEPTH_POS, &fbb)
+    GCTLevel.addVectorOf(OPTICAL_DEPTH_NEG: OPTICAL_DEPTH_NEG, &fbb)
+    return GCTLevel.endGCTLevel(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: wxfGridKind.self)
-    try _v.visit(field: VT.LAT0, fieldName: "LAT0", required: false, type: Double.self)
-    try _v.visit(field: VT.LON0, fieldName: "LON0", required: false, type: Double.self)
-    try _v.visit(field: VT.DLAT, fieldName: "DLAT", required: false, type: Double.self)
-    try _v.visit(field: VT.DLON, fieldName: "DLON", required: false, type: Double.self)
-    try _v.visit(field: VT.NLAT, fieldName: "NLAT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.NLON, fieldName: "NLON", required: false, type: UInt32.self)
-    try _v.visit(field: VT.PERIODIC_LON, fieldName: "PERIODIC_LON", required: false, type: Bool.self)
+    try _v.visit(field: VT.GAUSSIAN_COUNT, fieldName: "GAUSSIAN_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MERGE_CELL_M, fieldName: "MERGE_CELL_M", required: false, type: Float32.self)
+    try _v.visit(field: VT.DERIVATION, fieldName: "DERIVATION", required: false, type: gctLevelDerivation.self)
+    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: gctSampleEncoding.self)
+    try _v.visit(field: VT.CHUNK_CID, fieldName: "CHUNK_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHUNK_BYTE_LENGTH, fieldName: "CHUNK_BYTE_LENGTH", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CENTERS, fieldName: "CENTERS", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.SIGMAS, fieldName: "SIGMAS", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.BOUNDARY, fieldName: "BOUNDARY", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.FINE_NORMAL, fieldName: "FINE_NORMAL", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.OPTICAL_DEPTH_POS, fieldName: "OPTICAL_DEPTH_POS", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.OPTICAL_DEPTH_NEG, fieldName: "OPTICAL_DEPTH_NEG", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
     _v.finish()
   }
 }
 
-///  Weather Forecast Field - One variable, level, member and valid time on a
-///  regular grid.
-public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  A signed distance field of a variant's surface (the isosurface of the
+///  mixture at DENSITY_THRESHOLD), on a cube of N^3 voxels over the variant's
+///  bounds, stored as bytes: distance / DISTANCE_SCALE_M, negative inside,
+///  clamped to [-128, 127]. Optional; a consumer without it sphere-traces
+///  nothing and lights the variant from an atlas instead.
+public struct GCTDistanceField: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$WXF" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: WXF.id, addPrefix: prefix) }
+  public static var id: String { "$GCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: GCTDistanceField.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let N: VOffset = 4
+    static let ORIGIN_M: VOffset = 6
+    static let SPAN_M: VOffset = 8
+    static let DISTANCE_SCALE_M: VOffset = 10
+    static let DENSITY_THRESHOLD: VOffset = 12
+    static let MEAN_AMPLITUDE: VOffset = 14
+    static let DATA: VOffset = 16
+    static let CHUNK_CID: VOffset = 18
+  }
+
+  ///  Voxels per axis.
+  public var N: UInt16 { let o = _accessor.offset(VT.N); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Origin of voxel (0, 0, 0) in the variant frame, metres (3 values).
+  public var ORIGIN_M: FlatbufferVector<Float32> { return _accessor.vector(at: VT.ORIGIN_M, byteSize: 4) }
+  public func withUnsafePointerToOriginM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ORIGIN_M, body: body) }
+  ///  Extent of the cube along each axis, metres (3 values).
+  public var SPAN_M: FlatbufferVector<Float32> { return _accessor.vector(at: VT.SPAN_M, byteSize: 4) }
+  public func withUnsafePointerToSpanM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SPAN_M, body: body) }
+  ///  Metres per byte step of DATA.
+  public var DISTANCE_SCALE_M: Float32 { let o = _accessor.offset(VT.DISTANCE_SCALE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Density threshold, in AMPLITUDE_UNITS, that defines the surface.
+  public var DENSITY_THRESHOLD: Float32 { let o = _accessor.offset(VT.DENSITY_THRESHOLD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Mean amplitude over the occupied volume, AMPLITUDE_UNITS.
+  public var MEAN_AMPLITUDE: Float32 { let o = _accessor.offset(VT.MEAN_AMPLITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  N^3 signed bytes, x fastest, then y, then z. Absent when the field
+  ///  travels as the chunk named by CHUNK_CID.
+  public var DATA: FlatbufferVector<Int8> { return _accessor.vector(at: VT.DATA, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DATA, body: body) }
+  ///  Content identifier of the field when DATA is absent.
+  public var CHUNK_CID: String? { let o = _accessor.offset(VT.CHUNK_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHUNK_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHUNK_CID) }
+  public static func startGCTDistanceField(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(N: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: N, def: 0, at: VT.N) }
+  public static func addVectorOf(ORIGIN_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN_M, at: VT.ORIGIN_M) }
+  public static func addVectorOf(SPAN_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPAN_M, at: VT.SPAN_M) }
+  public static func add(DISTANCE_SCALE_M: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_SCALE_M, def: 0.0, at: VT.DISTANCE_SCALE_M) }
+  public static func add(DENSITY_THRESHOLD: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_THRESHOLD, def: 0.0, at: VT.DENSITY_THRESHOLD) }
+  public static func add(MEAN_AMPLITUDE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_AMPLITUDE, def: 0.0, at: VT.MEAN_AMPLITUDE) }
+  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
+  public static func add(CHUNK_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHUNK_CID, at: VT.CHUNK_CID) }
+  public static func endGCTDistanceField(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createGCTDistanceField(
+    _ fbb: inout FlatBufferBuilder,
+    N: UInt16 = 0,
+    ORIGIN_MVectorOffset ORIGIN_M: Offset = Offset(),
+    SPAN_MVectorOffset SPAN_M: Offset = Offset(),
+    DISTANCE_SCALE_M: Float32 = 0.0,
+    DENSITY_THRESHOLD: Float32 = 0.0,
+    MEAN_AMPLITUDE: Float32 = 0.0,
+    DATAVectorOffset DATA: Offset = Offset(),
+    CHUNK_CIDOffset CHUNK_CID: Offset = Offset()
+  ) -> Offset {
+    let __start = GCTDistanceField.startGCTDistanceField(&fbb)
+    GCTDistanceField.add(N: N, &fbb)
+    GCTDistanceField.addVectorOf(ORIGIN_M: ORIGIN_M, &fbb)
+    GCTDistanceField.addVectorOf(SPAN_M: SPAN_M, &fbb)
+    GCTDistanceField.add(DISTANCE_SCALE_M: DISTANCE_SCALE_M, &fbb)
+    GCTDistanceField.add(DENSITY_THRESHOLD: DENSITY_THRESHOLD, &fbb)
+    GCTDistanceField.add(MEAN_AMPLITUDE: MEAN_AMPLITUDE, &fbb)
+    GCTDistanceField.addVectorOf(DATA: DATA, &fbb)
+    GCTDistanceField.add(CHUNK_CID: CHUNK_CID, &fbb)
+    return GCTDistanceField.endGCTDistanceField(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.N, fieldName: "N", required: false, type: UInt16.self)
+    try _v.visit(field: VT.ORIGIN_M, fieldName: "ORIGIN_M", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.SPAN_M, fieldName: "SPAN_M", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.DISTANCE_SCALE_M, fieldName: "DISTANCE_SCALE_M", required: false, type: Float32.self)
+    try _v.visit(field: VT.DENSITY_THRESHOLD, fieldName: "DENSITY_THRESHOLD", required: false, type: Float32.self)
+    try _v.visit(field: VT.MEAN_AMPLITUDE, fieldName: "MEAN_AMPLITUDE", required: false, type: Float32.self)
+    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<Int8, Int8>>.self)
+    try _v.visit(field: VT.CHUNK_CID, fieldName: "CHUNK_CID", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  A baked density volume of a variant on the same cube as its distance
+///  field, for ray marching: N^3 samples of amplitude in AMPLITUDE_UNITS,
+///  float16, x fastest. Optional.
+public struct GCTDensityVolume: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$GCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: GCTDensityVolume.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let N: VOffset = 4
+    static let ORIGIN_M: VOffset = 6
+    static let SPAN_M: VOffset = 8
+    static let DATA: VOffset = 10
+    static let CHUNK_CID: VOffset = 12
+  }
+
+  ///  Voxels per axis.
+  public var N: UInt16 { let o = _accessor.offset(VT.N); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Origin of voxel (0, 0, 0) in the variant frame, metres (3 values).
+  public var ORIGIN_M: FlatbufferVector<Float32> { return _accessor.vector(at: VT.ORIGIN_M, byteSize: 4) }
+  public func withUnsafePointerToOriginM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ORIGIN_M, body: body) }
+  ///  Extent of the cube along each axis, metres (3 values).
+  public var SPAN_M: FlatbufferVector<Float32> { return _accessor.vector(at: VT.SPAN_M, byteSize: 4) }
+  public func withUnsafePointerToSpanM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SPAN_M, body: body) }
+  ///  N^3 IEEE 754 half-precision samples as their 16-bit patterns, x
+  ///  fastest, then y, then z. Absent when the volume travels as the chunk
+  ///  named by CHUNK_CID.
+  public var DATA: FlatbufferVector<UInt16> { return _accessor.vector(at: VT.DATA, byteSize: 2) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DATA, body: body) }
+  ///  Content identifier of the volume when DATA is absent.
+  public var CHUNK_CID: String? { let o = _accessor.offset(VT.CHUNK_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHUNK_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHUNK_CID) }
+  public static func startGCTDensityVolume(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(N: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: N, def: 0, at: VT.N) }
+  public static func addVectorOf(ORIGIN_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN_M, at: VT.ORIGIN_M) }
+  public static func addVectorOf(SPAN_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPAN_M, at: VT.SPAN_M) }
+  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
+  public static func add(CHUNK_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHUNK_CID, at: VT.CHUNK_CID) }
+  public static func endGCTDensityVolume(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createGCTDensityVolume(
+    _ fbb: inout FlatBufferBuilder,
+    N: UInt16 = 0,
+    ORIGIN_MVectorOffset ORIGIN_M: Offset = Offset(),
+    SPAN_MVectorOffset SPAN_M: Offset = Offset(),
+    DATAVectorOffset DATA: Offset = Offset(),
+    CHUNK_CIDOffset CHUNK_CID: Offset = Offset()
+  ) -> Offset {
+    let __start = GCTDensityVolume.startGCTDensityVolume(&fbb)
+    GCTDensityVolume.add(N: N, &fbb)
+    GCTDensityVolume.addVectorOf(ORIGIN_M: ORIGIN_M, &fbb)
+    GCTDensityVolume.addVectorOf(SPAN_M: SPAN_M, &fbb)
+    GCTDensityVolume.addVectorOf(DATA: DATA, &fbb)
+    GCTDensityVolume.add(CHUNK_CID: CHUNK_CID, &fbb)
+    return GCTDensityVolume.endGCTDensityVolume(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.N, fieldName: "N", required: false, type: UInt16.self)
+    try _v.visit(field: VT.ORIGIN_M, fieldName: "ORIGIN_M", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.SPAN_M, fieldName: "SPAN_M", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt16, UInt16>>.self)
+    try _v.visit(field: VT.CHUNK_CID, fieldName: "CHUNK_CID", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  One variant: one cloud (or one tile's merged mixture) as a chain of
+///  levels of detail in its own frame. Instances place variants in the tile.
+public struct GCTVariant: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$GCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: GCTVariant.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let VARIANT_ID: VOffset = 4
+    static let SCOPE: VOffset = 6
+    static let VARIANT_CID: VOffset = 8
+    static let GENUS: VOffset = 10
+    static let LEVELS: VOffset = 12
+    static let BOUNDS_MIN_M: VOffset = 14
+    static let BOUNDS_MAX_M: VOffset = 16
+    static let MASS: VOffset = 18
+    static let DISTANCE_FIELD: VOffset = 20
+    static let DENSITY_VOLUME: VOffset = 22
+    static let AUTHORING_SEED: VOffset = 24
+  }
+
+  ///  Producer-stable identifier of the variant within FIELD_ID.
+  public var VARIANT_ID: String! { let o = _accessor.offset(VT.VARIANT_ID); return _accessor.string(at: o) }
+  public var VARIANT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VARIANT_ID) }
+  ///  Where the levels live.
+  public var SCOPE: gctVariantScope { let o = _accessor.offset(VT.SCOPE); return o == 0 ? .inline : gctVariantScope(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .inline }
+  ///  Content identifier of the variant's levels when SCOPE is
+  ///  SHARED_LIBRARY. Two references with equal VARIANT_CID are the same
+  ///  bytes.
+  public var VARIANT_CID: String? { let o = _accessor.offset(VT.VARIANT_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VARIANT_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VARIANT_CID) }
+  ///  Genus, where classified.
+  public var GENUS: gctCloudGenus { let o = _accessor.offset(VT.GENUS); return o == 0 ? .unspecified : gctCloudGenus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Levels of detail, finest first, each conserving the mass of the one
+  ///  before it. Absent when SCOPE is SHARED_LIBRARY.
+  public var LEVELS: FlatbufferVector<GCTLevel> { return _accessor.vector(at: VT.LEVELS, byteSize: 4) }
+  ///  Axis-aligned bounds of the finest level's support in the variant
+  ///  frame, metres: min x, y, z (3 values).
+  public var BOUNDS_MIN_M: FlatbufferVector<Float32> { return _accessor.vector(at: VT.BOUNDS_MIN_M, byteSize: 4) }
+  public func withUnsafePointerToBoundsMinM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BOUNDS_MIN_M, body: body) }
+  ///  Axis-aligned bounds, max x, y, z (3 values).
+  public var BOUNDS_MAX_M: FlatbufferVector<Float32> { return _accessor.vector(at: VT.BOUNDS_MAX_M, byteSize: 4) }
+  public func withUnsafePointerToBoundsMaxM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BOUNDS_MAX_M, body: body) }
+  ///  Total mass of the finest level: the integral of amplitude over space,
+  ///  AMPLITUDE_UNITS times cubic metres. Every level MUST match it within
+  ///  MASS_TOLERANCE.
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Signed distance field of the surface. Optional.
+  public var DISTANCE_FIELD: GCTDistanceField? { let o = _accessor.offset(VT.DISTANCE_FIELD); return o == 0 ? nil : GCTDistanceField(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Baked density volume for ray marching. Optional.
+  public var DENSITY_VOLUME: GCTDensityVolume? { let o = _accessor.offset(VT.DENSITY_VOLUME); return o == 0 ? nil : GCTDensityVolume(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Seed the producer authored the variant from, for reproducibility.
+  public var AUTHORING_SEED: UInt32 { let o = _accessor.offset(VT.AUTHORING_SEED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startGCTVariant(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT_ID, at: VT.VARIANT_ID) }
+  public static func add(SCOPE: gctVariantScope, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCOPE.rawValue, def: 0, at: VT.SCOPE) }
+  public static func add(VARIANT_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT_CID, at: VT.VARIANT_CID) }
+  public static func add(GENUS: gctCloudGenus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GENUS.rawValue, def: 0, at: VT.GENUS) }
+  public static func addVectorOf(LEVELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEVELS, at: VT.LEVELS) }
+  public static func addVectorOf(BOUNDS_MIN_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOUNDS_MIN_M, at: VT.BOUNDS_MIN_M) }
+  public static func addVectorOf(BOUNDS_MAX_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOUNDS_MAX_M, at: VT.BOUNDS_MAX_M) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(DISTANCE_FIELD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISTANCE_FIELD, at: VT.DISTANCE_FIELD) }
+  public static func add(DENSITY_VOLUME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DENSITY_VOLUME, at: VT.DENSITY_VOLUME) }
+  public static func add(AUTHORING_SEED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AUTHORING_SEED, def: 0, at: VT.AUTHORING_SEED) }
+  public static func endGCTVariant(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createGCTVariant(
+    _ fbb: inout FlatBufferBuilder,
+    VARIANT_IDOffset VARIANT_ID: Offset,
+    SCOPE: gctVariantScope = .inline,
+    VARIANT_CIDOffset VARIANT_CID: Offset = Offset(),
+    GENUS: gctCloudGenus = .unspecified,
+    LEVELSVectorOffset LEVELS: Offset = Offset(),
+    BOUNDS_MIN_MVectorOffset BOUNDS_MIN_M: Offset = Offset(),
+    BOUNDS_MAX_MVectorOffset BOUNDS_MAX_M: Offset = Offset(),
+    MASS: Double = 0.0,
+    DISTANCE_FIELDOffset DISTANCE_FIELD: Offset = Offset(),
+    DENSITY_VOLUMEOffset DENSITY_VOLUME: Offset = Offset(),
+    AUTHORING_SEED: UInt32 = 0
+  ) -> Offset {
+    let __start = GCTVariant.startGCTVariant(&fbb)
+    GCTVariant.add(VARIANT_ID: VARIANT_ID, &fbb)
+    GCTVariant.add(SCOPE: SCOPE, &fbb)
+    GCTVariant.add(VARIANT_CID: VARIANT_CID, &fbb)
+    GCTVariant.add(GENUS: GENUS, &fbb)
+    GCTVariant.addVectorOf(LEVELS: LEVELS, &fbb)
+    GCTVariant.addVectorOf(BOUNDS_MIN_M: BOUNDS_MIN_M, &fbb)
+    GCTVariant.addVectorOf(BOUNDS_MAX_M: BOUNDS_MAX_M, &fbb)
+    GCTVariant.add(MASS: MASS, &fbb)
+    GCTVariant.add(DISTANCE_FIELD: DISTANCE_FIELD, &fbb)
+    GCTVariant.add(DENSITY_VOLUME: DENSITY_VOLUME, &fbb)
+    GCTVariant.add(AUTHORING_SEED: AUTHORING_SEED, &fbb)
+    return GCTVariant.endGCTVariant(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.VARIANT_ID, fieldName: "VARIANT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCOPE, fieldName: "SCOPE", required: false, type: gctVariantScope.self)
+    try _v.visit(field: VT.VARIANT_CID, fieldName: "VARIANT_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GENUS, fieldName: "GENUS", required: false, type: gctCloudGenus.self)
+    try _v.visit(field: VT.LEVELS, fieldName: "LEVELS", required: false, type: ForwardOffset<Vector<ForwardOffset<GCTLevel>, GCTLevel>>.self)
+    try _v.visit(field: VT.BOUNDS_MIN_M, fieldName: "BOUNDS_MIN_M", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.BOUNDS_MAX_M, fieldName: "BOUNDS_MAX_M", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_FIELD, fieldName: "DISTANCE_FIELD", required: false, type: ForwardOffset<GCTDistanceField>.self)
+    try _v.visit(field: VT.DENSITY_VOLUME, fieldName: "DENSITY_VOLUME", required: false, type: ForwardOffset<GCTDensityVolume>.self)
+    try _v.visit(field: VT.AUTHORING_SEED, fieldName: "AUTHORING_SEED", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  One placement of a variant in the tile frame. The transform applied to a
+///  variant-frame point p is: scale by (SCALE_X, SCALE_Y, SCALE_Z), mirror per
+///  SYMMETRY, rotate by YAW_RAD about +Z, translate by (X_M, Y_M, Z_M). The
+///  aligned-binary INSTANCES section carries these fields in this order as
+///  float32.
+public struct GCTInstance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$GCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: GCTInstance.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let VARIANT: VOffset = 4
+    static let X_M: VOffset = 6
+    static let Y_M: VOffset = 8
+    static let Z_M: VOffset = 10
+    static let SCALE_X: VOffset = 12
+    static let SCALE_Y: VOffset = 14
+    static let SCALE_Z: VOffset = 16
+    static let YAW_RAD: VOffset = 18
+    static let SYMMETRY: VOffset = 20
+    static let EROSION: VOffset = 22
+    static let CLOUD_ID: VOffset = 24
+    static let CLUSTER_ID: VOffset = 26
+    static let SHAPE_ERROR_M: VOffset = 28
+    static let WIDTH_M: VOffset = 30
+  }
+
+  ///  Index into GCT.VARIANTS.
+  public var VARIANT: UInt32 { let o = _accessor.offset(VT.VARIANT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Position of the variant's origin in the tile frame, metres east.
+  public var X_M: Float32 { let o = _accessor.offset(VT.X_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Metres north.
+  public var Y_M: Float32 { let o = _accessor.offset(VT.Y_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Metres up (above the tile's ENU origin).
+  public var Z_M: Float32 { let o = _accessor.offset(VT.Z_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Scale along the variant frame's axes; 1 is the variant as authored.
+  public var SCALE_X: Float32 { let o = _accessor.offset(VT.SCALE_X); return o == 0 ? 1.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var SCALE_Y: Float32 { let o = _accessor.offset(VT.SCALE_Y); return o == 0 ? 1.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var SCALE_Z: Float32 { let o = _accessor.offset(VT.SCALE_Z); return o == 0 ? 1.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Rotation about +Z, radians, counter-clockwise from east.
+  public var YAW_RAD: Float32 { let o = _accessor.offset(VT.YAW_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  One of eight axis mirror symmetries applied before the yaw: bit 0
+  ///  mirrors x, bit 1 mirrors y, bit 2 swaps x and y.
+  public var SYMMETRY: UInt8 { let o = _accessor.offset(VT.SYMMETRY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Strength of the consumer's per-instance erosion and warp in [0, 1] (0:
+  ///  the variant exactly as authored). Values above 2 select a shared deck
+  ///  gap field with hole fraction VALUE - 2, per the producer's convention
+  ///  stated in PRODUCER_NOTES.
+  public var EROSION: Float32 { let o = _accessor.offset(VT.EROSION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Producer-stable identity of the cloud this instance belongs to, equal
+  ///  across tiles, levels and valid times while the cloud persists — the
+  ///  key a consumer fades and tracks by. 0 means unstated.
+  public var CLOUD_ID: UInt64 { let o = _accessor.offset(VT.CLOUD_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Cluster the instance belongs to (a chain of cumulus, a tower), for
+  ///  grouping; 0 means none.
+  public var CLUSTER_ID: UInt32 { let o = _accessor.offset(VT.CLUSTER_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Shape error, metres: the silhouette distance between this placement
+  ///  and the cloud it stands in for. 0 means the instance IS the cloud (a
+  ///  unique variant); a class stand-in placed for a chain of five cumulus
+  ///  carries half the member spacing. A consumer that refines below the
+  ///  shape error requests the unique variant.
+  public var SHAPE_ERROR_M: Float32 { let o = _accessor.offset(VT.SHAPE_ERROR_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Width of the cloud as placed, metres, for size-dependent decisions.
+  public var WIDTH_M: Float32 { let o = _accessor.offset(VT.WIDTH_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public static func startGCTInstance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func add(VARIANT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIANT, def: 0, at: VT.VARIANT) }
+  public static func add(X_M: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_M, def: 0.0, at: VT.X_M) }
+  public static func add(Y_M: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_M, def: 0.0, at: VT.Y_M) }
+  public static func add(Z_M: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_M, def: 0.0, at: VT.Z_M) }
+  public static func add(SCALE_X: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_X, def: 1.0, at: VT.SCALE_X) }
+  public static func add(SCALE_Y: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_Y, def: 1.0, at: VT.SCALE_Y) }
+  public static func add(SCALE_Z: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_Z, def: 1.0, at: VT.SCALE_Z) }
+  public static func add(YAW_RAD: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: YAW_RAD, def: 0.0, at: VT.YAW_RAD) }
+  public static func add(SYMMETRY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYMMETRY, def: 0, at: VT.SYMMETRY) }
+  public static func add(EROSION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EROSION, def: 0.0, at: VT.EROSION) }
+  public static func add(CLOUD_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOUD_ID, def: 0, at: VT.CLOUD_ID) }
+  public static func add(CLUSTER_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLUSTER_ID, def: 0, at: VT.CLUSTER_ID) }
+  public static func add(SHAPE_ERROR_M: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHAPE_ERROR_M, def: 0.0, at: VT.SHAPE_ERROR_M) }
+  public static func add(WIDTH_M: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH_M, def: 0.0, at: VT.WIDTH_M) }
+  public static func endGCTInstance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createGCTInstance(
+    _ fbb: inout FlatBufferBuilder,
+    VARIANT: UInt32 = 0,
+    X_M: Float32 = 0.0,
+    Y_M: Float32 = 0.0,
+    Z_M: Float32 = 0.0,
+    SCALE_X: Float32 = 1.0,
+    SCALE_Y: Float32 = 1.0,
+    SCALE_Z: Float32 = 1.0,
+    YAW_RAD: Float32 = 0.0,
+    SYMMETRY: UInt8 = 0,
+    EROSION: Float32 = 0.0,
+    CLOUD_ID: UInt64 = 0,
+    CLUSTER_ID: UInt32 = 0,
+    SHAPE_ERROR_M: Float32 = 0.0,
+    WIDTH_M: Float32 = 0.0
+  ) -> Offset {
+    let __start = GCTInstance.startGCTInstance(&fbb)
+    GCTInstance.add(VARIANT: VARIANT, &fbb)
+    GCTInstance.add(X_M: X_M, &fbb)
+    GCTInstance.add(Y_M: Y_M, &fbb)
+    GCTInstance.add(Z_M: Z_M, &fbb)
+    GCTInstance.add(SCALE_X: SCALE_X, &fbb)
+    GCTInstance.add(SCALE_Y: SCALE_Y, &fbb)
+    GCTInstance.add(SCALE_Z: SCALE_Z, &fbb)
+    GCTInstance.add(YAW_RAD: YAW_RAD, &fbb)
+    GCTInstance.add(SYMMETRY: SYMMETRY, &fbb)
+    GCTInstance.add(EROSION: EROSION, &fbb)
+    GCTInstance.add(CLOUD_ID: CLOUD_ID, &fbb)
+    GCTInstance.add(CLUSTER_ID: CLUSTER_ID, &fbb)
+    GCTInstance.add(SHAPE_ERROR_M: SHAPE_ERROR_M, &fbb)
+    GCTInstance.add(WIDTH_M: WIDTH_M, &fbb)
+    return GCTInstance.endGCTInstance(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.VARIANT, fieldName: "VARIANT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.X_M, fieldName: "X_M", required: false, type: Float32.self)
+    try _v.visit(field: VT.Y_M, fieldName: "Y_M", required: false, type: Float32.self)
+    try _v.visit(field: VT.Z_M, fieldName: "Z_M", required: false, type: Float32.self)
+    try _v.visit(field: VT.SCALE_X, fieldName: "SCALE_X", required: false, type: Float32.self)
+    try _v.visit(field: VT.SCALE_Y, fieldName: "SCALE_Y", required: false, type: Float32.self)
+    try _v.visit(field: VT.SCALE_Z, fieldName: "SCALE_Z", required: false, type: Float32.self)
+    try _v.visit(field: VT.YAW_RAD, fieldName: "YAW_RAD", required: false, type: Float32.self)
+    try _v.visit(field: VT.SYMMETRY, fieldName: "SYMMETRY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.EROSION, fieldName: "EROSION", required: false, type: Float32.self)
+    try _v.visit(field: VT.CLOUD_ID, fieldName: "CLOUD_ID", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CLUSTER_ID, fieldName: "CLUSTER_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SHAPE_ERROR_M, fieldName: "SHAPE_ERROR_M", required: false, type: Float32.self)
+    try _v.visit(field: VT.WIDTH_M, fieldName: "WIDTH_M", required: false, type: Float32.self)
+    _v.finish()
+  }
+}
+
+///  The producer's reduction of the source fields to this tile's rectangle:
+///  what a coarse tile draws as a continuous sheet before any Gaussian is
+///  resolved. Samples are row-major with latitude as the outer index, cell
+///  (i, j) centred at (LAT0_RAD + i * DLAT_RAD, LON0_RAD + j * DLON_RAD).
+public struct GCTCoverGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$GCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: GCTCoverGrid.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let LAT0_RAD: VOffset = 4
+    static let LON0_RAD: VOffset = 6
+    static let DLAT_RAD: VOffset = 8
+    static let DLON_RAD: VOffset = 10
+    static let NLAT: VOffset = 12
+    static let NLON: VOffset = 14
+    static let LOW_COVER: VOffset = 16
+    static let MEDIUM_COVER: VOffset = 18
+    static let HIGH_COVER: VOffset = 20
+    static let BASE_HEIGHT_M: VOffset = 22
+    static let TOP_HEIGHT_M: VOffset = 24
+    static let COLUMN_OPTICAL_DEPTH: VOffset = 26
+  }
+
+  ///  Latitude of the first row's cell centre, radians.
+  public var LAT0_RAD: Double { let o = _accessor.offset(VT.LAT0_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Longitude of the first column's cell centre, radians.
+  public var LON0_RAD: Double { let o = _accessor.offset(VT.LON0_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Latitude step between rows, radians (signed).
+  public var DLAT_RAD: Double { let o = _accessor.offset(VT.DLAT_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Longitude step between columns, radians (signed).
+  public var DLON_RAD: Double { let o = _accessor.offset(VT.DLON_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of rows.
+  public var NLAT: UInt32 { let o = _accessor.offset(VT.NLAT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of columns.
+  public var NLON: UInt32 { let o = _accessor.offset(VT.NLON); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Low-cloud cover fraction per cell, [0, 1]. NaN marks a missing cell.
+  public var LOW_COVER: FlatbufferVector<Float32> { return _accessor.vector(at: VT.LOW_COVER, byteSize: 4) }
+  public func withUnsafePointerToLowCover<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LOW_COVER, body: body) }
+  ///  Medium-cloud cover fraction per cell, [0, 1]. Absent when unstated.
+  public var MEDIUM_COVER: FlatbufferVector<Float32> { return _accessor.vector(at: VT.MEDIUM_COVER, byteSize: 4) }
+  public func withUnsafePointerToMediumCover<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MEDIUM_COVER, body: body) }
+  ///  High-cloud cover fraction per cell, [0, 1]. Absent when unstated.
+  public var HIGH_COVER: FlatbufferVector<Float32> { return _accessor.vector(at: VT.HIGH_COVER, byteSize: 4) }
+  public func withUnsafePointerToHighCover<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.HIGH_COVER, body: body) }
+  ///  Height of the low-cloud base per cell, metres above the ellipsoid
+  ///  (the lifting condensation level over the ground height).
+  public var BASE_HEIGHT_M: FlatbufferVector<Float32> { return _accessor.vector(at: VT.BASE_HEIGHT_M, byteSize: 4) }
+  public func withUnsafePointerToBaseHeightM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BASE_HEIGHT_M, body: body) }
+  ///  Height of the low-cloud top per cell, metres above the ellipsoid.
+  public var TOP_HEIGHT_M: FlatbufferVector<Float32> { return _accessor.vector(at: VT.TOP_HEIGHT_M, byteSize: 4) }
+  public func withUnsafePointerToTopHeightM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TOP_HEIGHT_M, body: body) }
+  ///  Column optical depth per cell of the whole tile content along the
+  ///  vertical, dimensionless. Absent when unstated.
+  public var COLUMN_OPTICAL_DEPTH: FlatbufferVector<Float32> { return _accessor.vector(at: VT.COLUMN_OPTICAL_DEPTH, byteSize: 4) }
+  public func withUnsafePointerToColumnOpticalDepth<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COLUMN_OPTICAL_DEPTH, body: body) }
+  public static func startGCTCoverGrid(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(LAT0_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT0_RAD, def: 0.0, at: VT.LAT0_RAD) }
+  public static func add(LON0_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LON0_RAD, def: 0.0, at: VT.LON0_RAD) }
+  public static func add(DLAT_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DLAT_RAD, def: 0.0, at: VT.DLAT_RAD) }
+  public static func add(DLON_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DLON_RAD, def: 0.0, at: VT.DLON_RAD) }
+  public static func add(NLAT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NLAT, def: 0, at: VT.NLAT) }
+  public static func add(NLON: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NLON, def: 0, at: VT.NLON) }
+  public static func addVectorOf(LOW_COVER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOW_COVER, at: VT.LOW_COVER) }
+  public static func addVectorOf(MEDIUM_COVER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEDIUM_COVER, at: VT.MEDIUM_COVER) }
+  public static func addVectorOf(HIGH_COVER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HIGH_COVER, at: VT.HIGH_COVER) }
+  public static func addVectorOf(BASE_HEIGHT_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BASE_HEIGHT_M, at: VT.BASE_HEIGHT_M) }
+  public static func addVectorOf(TOP_HEIGHT_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOP_HEIGHT_M, at: VT.TOP_HEIGHT_M) }
+  public static func addVectorOf(COLUMN_OPTICAL_DEPTH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLUMN_OPTICAL_DEPTH, at: VT.COLUMN_OPTICAL_DEPTH) }
+  public static func endGCTCoverGrid(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createGCTCoverGrid(
+    _ fbb: inout FlatBufferBuilder,
+    LAT0_RAD: Double = 0.0,
+    LON0_RAD: Double = 0.0,
+    DLAT_RAD: Double = 0.0,
+    DLON_RAD: Double = 0.0,
+    NLAT: UInt32 = 0,
+    NLON: UInt32 = 0,
+    LOW_COVERVectorOffset LOW_COVER: Offset = Offset(),
+    MEDIUM_COVERVectorOffset MEDIUM_COVER: Offset = Offset(),
+    HIGH_COVERVectorOffset HIGH_COVER: Offset = Offset(),
+    BASE_HEIGHT_MVectorOffset BASE_HEIGHT_M: Offset = Offset(),
+    TOP_HEIGHT_MVectorOffset TOP_HEIGHT_M: Offset = Offset(),
+    COLUMN_OPTICAL_DEPTHVectorOffset COLUMN_OPTICAL_DEPTH: Offset = Offset()
+  ) -> Offset {
+    let __start = GCTCoverGrid.startGCTCoverGrid(&fbb)
+    GCTCoverGrid.add(LAT0_RAD: LAT0_RAD, &fbb)
+    GCTCoverGrid.add(LON0_RAD: LON0_RAD, &fbb)
+    GCTCoverGrid.add(DLAT_RAD: DLAT_RAD, &fbb)
+    GCTCoverGrid.add(DLON_RAD: DLON_RAD, &fbb)
+    GCTCoverGrid.add(NLAT: NLAT, &fbb)
+    GCTCoverGrid.add(NLON: NLON, &fbb)
+    GCTCoverGrid.addVectorOf(LOW_COVER: LOW_COVER, &fbb)
+    GCTCoverGrid.addVectorOf(MEDIUM_COVER: MEDIUM_COVER, &fbb)
+    GCTCoverGrid.addVectorOf(HIGH_COVER: HIGH_COVER, &fbb)
+    GCTCoverGrid.addVectorOf(BASE_HEIGHT_M: BASE_HEIGHT_M, &fbb)
+    GCTCoverGrid.addVectorOf(TOP_HEIGHT_M: TOP_HEIGHT_M, &fbb)
+    GCTCoverGrid.addVectorOf(COLUMN_OPTICAL_DEPTH: COLUMN_OPTICAL_DEPTH, &fbb)
+    return GCTCoverGrid.endGCTCoverGrid(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.LAT0_RAD, fieldName: "LAT0_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.LON0_RAD, fieldName: "LON0_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.DLAT_RAD, fieldName: "DLAT_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.DLON_RAD, fieldName: "DLON_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.NLAT, fieldName: "NLAT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.NLON, fieldName: "NLON", required: false, type: UInt32.self)
+    try _v.visit(field: VT.LOW_COVER, fieldName: "LOW_COVER", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.MEDIUM_COVER, fieldName: "MEDIUM_COVER", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.HIGH_COVER, fieldName: "HIGH_COVER", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.BASE_HEIGHT_M, fieldName: "BASE_HEIGHT_M", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.TOP_HEIGHT_M, fieldName: "TOP_HEIGHT_M", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.COLUMN_OPTICAL_DEPTH, fieldName: "COLUMN_OPTICAL_DEPTH", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    _v.finish()
+  }
+}
+
+///  Gaussian Cloud Tile: one quadtree tile of a volumetric field as a mass-conserving Gaussian mixture, rendering-ready, for one valid time.
+public struct GCT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$GCT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: GCT.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let FIELD_ID: VOffset = 4
-    static let MODEL_CLASS: VOffset = 6
-    static let MODEL_ID: VOffset = 8
-    static let MODEL_VERSION: VOffset = 10
-    static let INIT_TIME_MS: VOffset = 12
-    static let LEAD_HOURS: VOffset = 14
-    static let VALID_TIME_MS: VOffset = 16
-    static let HORIZON_HOURS: VOffset = 18
-    static let MEMBER_KIND: VOffset = 20
-    static let MEMBER_INDEX: VOffset = 22
-    static let ENSEMBLE_SIZE: VOffset = 24
-    static let PERCENTILE: VOffset = 26
-    static let THRESHOLD_VALUE: VOffset = 28
-    static let VARIABLE: VOffset = 30
-    static let VARIABLE_NAME: VOffset = 32
-    static let UNITS: VOffset = 34
-    static let LEVEL_KIND: VOffset = 36
-    static let LEVEL_VALUE: VOffset = 38
-    static let TEMPORAL_KIND: VOffset = 40
-    static let ACCUMULATION_HOURS: VOffset = 42
-    static let GRID: VOffset = 44
-    static let TILE_INDEX: VOffset = 46
-    static let TILE_COUNT: VOffset = 48
-    static let VALUES_ENCODING: VOffset = 50
-    static let VALUES: VOffset = 52
-    static let CHUNK_CID: VOffset = 54
-    static let CHUNK_DTYPE: VOffset = 56
-    static let CHUNK_CODECS: VOffset = 58
-    static let CHUNK_BYTE_LENGTH: VOffset = 60
-    static let VALUE_MIN: VOffset = 62
-    static let VALUE_MAX: VOffset = 64
-    static let MISSING_COUNT: VOffset = 66
-    static let ORIGIN_ID: VOffset = 68
-    static let DATASET_ID: VOffset = 70
-    static let SOURCE_URL: VOffset = 72
-    static let RETRIEVED_AT: VOffset = 74
-    static let LICENSE_CLASS: VOffset = 76
-    static let LICENSE_URL: VOffset = 78
-    static let CITATION: VOffset = 80
-    static let PRODUCER_PEER_ID: VOffset = 82
-    static let TIME_BASIS: VOffset = 84
-    static let QUANTIZED_U16: VOffset = 86
-    static let QUANTIZED_U8: VOffset = 88
-    static let SCALE_FACTOR: VOffset = 90
-    static let ADD_OFFSET: VOffset = 92
-    static let SENSOR_ID: VOffset = 94
-    static let CHANNEL_WAVELENGTH_UM: VOffset = 96
-    static let PLATFORM_LONGITUDE_DEG: VOffset = 98
-    static let PLATFORM_LATITUDE_DEG: VOffset = 100
-    static let PLATFORM_HEIGHT_M: VOffset = 102
-    static let SCAN_END_TIME_MS: VOffset = 104
+    static let TILING: VOffset = 6
+    static let LEVEL: VOffset = 8
+    static let X: VOffset = 10
+    static let Y: VOffset = 12
+    static let CHILD_MASK: VOffset = 14
+    static let MAX_LEVEL: VOffset = 16
+    static let REFINE: VOffset = 18
+    static let GEOMETRIC_ERROR_M: VOffset = 20
+    static let WEST_RAD: VOffset = 22
+    static let SOUTH_RAD: VOffset = 24
+    static let EAST_RAD: VOffset = 26
+    static let NORTH_RAD: VOffset = 28
+    static let MIN_HEIGHT_M: VOffset = 30
+    static let MAX_HEIGHT_M: VOffset = 32
+    static let ORIGIN_LON_RAD: VOffset = 34
+    static let ORIGIN_LAT_RAD: VOffset = 36
+    static let ORIGIN_HEIGHT_M: VOffset = 38
+    static let ENU_TO_ECEF: VOffset = 40
+    static let FIELD_QUANTITY: VOffset = 42
+    static let FIELD_QUANTITY_NAME: VOffset = 44
+    static let AMPLITUDE_UNITS: VOffset = 46
+    static let MASS_TOLERANCE: VOffset = 48
+    static let VARIANTS: VOffset = 50
+    static let INSTANCES: VOffset = 52
+    static let COVER: VOffset = 54
+    static let VALID_TIME_MS: VOffset = 56
+    static let INIT_TIME_MS: VOffset = 58
+    static let LEAD_HOURS: VOffset = 60
+    static let TIME_BASIS: VOffset = 62
+    static let MODEL_CLASS: VOffset = 64
+    static let MODEL_ID: VOffset = 66
+    static let SOURCE_FIELD_IDS: VOffset = 68
+    static let PRODUCER_PEER_ID: VOffset = 70
+    static let PRODUCER_VERSION: VOffset = 72
+    static let PRODUCER_NOTES: VOffset = 74
+    static let PRODUCED_AT_MS: VOffset = 76
+    static let AUTHORING_SEED: VOffset = 78
+    static let LICENSE_CLASS: VOffset = 80
+    static let LICENSE_URL: VOffset = 82
+    static let CITATION: VOffset = 84
   }
 
-  ///  Stable identifier of the whole field this record belongs to; equal
-  ///  across all tiles of one (producer, init, member, variable, level, lead).
+  ///  Stable identifier of the whole tiled field this tile belongs to; equal
+  ///  across all tiles and levels of one (producer, source fields, valid
+  ///  time, geometric-error ladder).
   public var FIELD_ID: String! { let o = _accessor.offset(VT.FIELD_ID); return _accessor.string(at: o) }
   public var FIELD_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.FIELD_ID) }
-  ///  Class of the producing model.
-  public var MODEL_CLASS: wxfModelClass { let o = _accessor.offset(VT.MODEL_CLASS); return o == 0 ? .unspecified : wxfModelClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Producer-defined model identifier.
-  public var MODEL_ID: String? { let o = _accessor.offset(VT.MODEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_ID) }
-  ///  Producer-defined model version.
-  public var MODEL_VERSION: String? { let o = _accessor.offset(VT.MODEL_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODEL_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_VERSION) }
-  ///  Initialisation (analysis) time of the run, Unix milliseconds UTC.
-  ///  Present only for TIME_BASIS Initialization.
+  ///  Quadtree the keys are stated in.
+  public var TILING: gctTilingScheme { let o = _accessor.offset(VT.TILING); return o == 0 ? .geographicQuadtree : gctTilingScheme(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .geographicQuadtree }
+  ///  Tile level; 0 is a root.
+  public var LEVEL: UInt8 { let o = _accessor.offset(VT.LEVEL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Tile column, eastward from longitude -180.
+  public var X: UInt32 { let o = _accessor.offset(VT.X); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Tile row, southward from latitude +90.
+  public var Y: UInt32 { let o = _accessor.offset(VT.Y); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Which of the four children exist (bits 0..3 as defined in the header).
+  ///  0 on a leaf. A child that does not exist has no content anywhere
+  ///  beneath it — clear sky is never traversed.
+  public var CHILD_MASK: UInt8 { let o = _accessor.offset(VT.CHILD_MASK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Deepest level with content under this tile, when the producer knows
+  ///  it; 255 when unstated.
+  public var MAX_LEVEL: UInt8 { let o = _accessor.offset(VT.MAX_LEVEL); return o == 0 ? 255 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  How the tile relates to its children.
+  public var REFINE: gctRefinement { let o = _accessor.offset(VT.REFINE); return o == 0 ? .replace : gctRefinement(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .replace }
+  ///  The cell the tile's content was merged on, metres: its geometric
+  ///  error. Children carry a smaller value than their parent.
+  public var GEOMETRIC_ERROR_M: Float32 { let o = _accessor.offset(VT.GEOMETRIC_ERROR_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Bounding region of the content and every descendant's content, which
+  ///  may exceed the nominal tile rectangle. Radians, WGS84.
+  public var WEST_RAD: Double { let o = _accessor.offset(VT.WEST_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOUTH_RAD: Double { let o = _accessor.offset(VT.SOUTH_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EAST_RAD: Double { let o = _accessor.offset(VT.EAST_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NORTH_RAD: Double { let o = _accessor.offset(VT.NORTH_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lowest point of the region, metres above the WGS84 ellipsoid.
+  public var MIN_HEIGHT_M: Double { let o = _accessor.offset(VT.MIN_HEIGHT_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Highest point of the region, metres above the WGS84 ellipsoid.
+  public var MAX_HEIGHT_M: Double { let o = _accessor.offset(VT.MAX_HEIGHT_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The tile's east-north-up frame: geodetic origin, radians and metres
+  ///  above the WGS84 ellipsoid. Instances and variants are stated in this
+  ///  frame.
+  public var ORIGIN_LON_RAD: Double { let o = _accessor.offset(VT.ORIGIN_LON_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIGIN_LAT_RAD: Double { let o = _accessor.offset(VT.ORIGIN_LAT_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIGIN_HEIGHT_M: Double { let o = _accessor.offset(VT.ORIGIN_HEIGHT_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Column-major 4x4 transform taking tile-frame points (metres) to WGS84
+  ///  Earth-centred Earth-fixed metres. Exactly 16 entries. Its rigid
+  ///  inverse takes ECEF points into the tile frame.
+  public var ENU_TO_ECEF: FlatbufferVector<Double> { return _accessor.vector(at: VT.ENU_TO_ECEF, byteSize: 8) }
+  public func withUnsafePointerToEnuToEcef<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENU_TO_ECEF, body: body) }
+  ///  Physical quantity every Gaussian amplitude measures.
+  public var FIELD_QUANTITY: gctFieldQuantity { let o = _accessor.offset(VT.FIELD_QUANTITY); return o == 0 ? .unspecified : gctFieldQuantity(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Producer's name for the quantity; required when FIELD_QUANTITY is
+  ///  OTHER.
+  public var FIELD_QUANTITY_NAME: String? { let o = _accessor.offset(VT.FIELD_QUANTITY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FIELD_QUANTITY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FIELD_QUANTITY_NAME) }
+  ///  Units of every amplitude, UCUM or CF style (e.g. "m-1", "kg kg-1").
+  public var AMPLITUDE_UNITS: String! { let o = _accessor.offset(VT.AMPLITUDE_UNITS); return _accessor.string(at: o) }
+  public var AMPLITUDE_UNITSSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.AMPLITUDE_UNITS) }
+  ///  Relative tolerance on mass conservation between any two levels of a
+  ///  variant and between a tile and its children, e.g. 0.01.
+  public var MASS_TOLERANCE: Float32 { let o = _accessor.offset(VT.MASS_TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Variants placed in this tile.
+  public var VARIANTS: FlatbufferVector<GCTVariant> { return _accessor.vector(at: VT.VARIANTS, byteSize: 4) }
+  ///  Placements of the variants in the tile frame.
+  public var INSTANCES: FlatbufferVector<GCTInstance> { return _accessor.vector(at: VT.INSTANCES, byteSize: 4) }
+  ///  The producer's reduction of the source fields to this tile, present on
+  ///  tiles whose GEOMETRIC_ERROR_M exceeds the cloud layer's thickness (the
+  ///  sheet a consumer draws before the Gaussians resolve) and optional
+  ///  elsewhere.
+  public var COVER: GCTCoverGrid? { let o = _accessor.offset(VT.COVER); return o == 0 ? nil : GCTCoverGrid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Time the field is valid at, Unix milliseconds UTC.
+  public var VALID_TIME_MS: UInt64 { let o = _accessor.offset(VT.VALID_TIME_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Initialisation time of the run the source fields came from, Unix
+  ///  milliseconds UTC. Present only for TIME_BASIS Initialization.
   public var INIT_TIME_MS: UInt64 { let o = _accessor.offset(VT.INIT_TIME_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
   ///  Initialization.
   public var LEAD_HOURS: Float32 { let o = _accessor.offset(VT.LEAD_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Time the field is valid at, Unix milliseconds UTC
-  ///  (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
-  public var VALID_TIME_MS: UInt64 { let o = _accessor.offset(VT.VALID_TIME_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-  ///  cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
-  public var HORIZON_HOURS: UInt16 { let o = _accessor.offset(VT.HORIZON_HOURS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Ensemble realisation or statistic the field represents.
-  public var MEMBER_KIND: wxfMemberKind { let o = _accessor.offset(VT.MEMBER_KIND); return o == 0 ? .member : wxfMemberKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .member }
-  ///  Zero-based member index when MEMBER_KIND is Member.
-  public var MEMBER_INDEX: UInt16 { let o = _accessor.offset(VT.MEMBER_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Number of members in the ensemble the run produced.
-  public var ENSEMBLE_SIZE: UInt16 { let o = _accessor.offset(VT.ENSEMBLE_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Percentile rank in [0, 100] when MEMBER_KIND is Percentile.
-  public var PERCENTILE: Float32 { let o = _accessor.offset(VT.PERCENTILE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Threshold in UNITS when MEMBER_KIND is a probability kind.
-  public var THRESHOLD_VALUE: Float32 { let o = _accessor.offset(VT.THRESHOLD_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Variable carried by the field.
-  public var VARIABLE: wxfVariable { let o = _accessor.offset(VT.VARIABLE); return o == 0 ? .unspecified : wxfVariable(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Producer's native variable name (always set; authoritative when
-  ///  VARIABLE is Unspecified).
-  public var VARIABLE_NAME: String? { let o = _accessor.offset(VT.VARIABLE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VARIABLE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VARIABLE_NAME) }
-  ///  Units of every cell value, UCUM or CF style (e.g. "K", "m s-1", "Pa",
-  ///  "1").
-  public var UNITS: String? { let o = _accessor.offset(VT.UNITS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNITS) }
-  ///  Vertical coordinate kind.
-  public var LEVEL_KIND: wxfLevelKind { let o = _accessor.offset(VT.LEVEL_KIND); return o == 0 ? .surface : wxfLevelKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .surface }
-  ///  Vertical coordinate value in the unit fixed by LEVEL_KIND.
-  public var LEVEL_VALUE: Float32 { let o = _accessor.offset(VT.LEVEL_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Temporal character of each cell value.
-  public var TEMPORAL_KIND: wxfTemporalKind { let o = _accessor.offset(VT.TEMPORAL_KIND); return o == 0 ? .instantaneous : wxfTemporalKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .instantaneous }
-  ///  Accumulation or averaging window ending at VALID_TIME_MS, hours; 0 for
-  ///  Instantaneous.
-  public var ACCUMULATION_HOURS: Float32 { let o = _accessor.offset(VT.ACCUMULATION_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Grid geometry of this record's samples (of this tile when tiled).
-  public var GRID: WXFGrid! { let o = _accessor.offset(VT.GRID); return WXFGrid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Zero-based tile index within FIELD_ID; 0 for an untiled field.
-  public var TILE_INDEX: UInt32 { let o = _accessor.offset(VT.TILE_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Number of tiles FIELD_ID was split into; 1 for an untiled field.
-  public var TILE_COUNT: UInt32 { let o = _accessor.offset(VT.TILE_COUNT); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Where the samples live.
-  public var VALUES_ENCODING: wxfValuesEncoding { let o = _accessor.offset(VT.VALUES_ENCODING); return o == 0 ? .inlinefloat32 : wxfValuesEncoding(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .inlinefloat32 }
-  ///  Inline samples, GRID.NLAT * GRID.NLON float32 cells in row-major order;
-  ///  NaN marks a missing cell. Present only when VALUES_ENCODING is
-  ///  InlineFloat32 and the cell count is at most 1,048,576.
-  public var VALUES: FlatbufferVector<Float32> { return _accessor.vector(at: VT.VALUES, byteSize: 4) }
-  public func withUnsafePointerToValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VALUES, body: body) }
-  ///  Content identifier of the sample chunk when VALUES_ENCODING is
-  ///  ContentAddressedChunk.
-  public var CHUNK_CID: String? { let o = _accessor.offset(VT.CHUNK_CID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CHUNK_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHUNK_CID) }
-  ///  Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
-  ///  for InlineEncodedChunk).
-  public var CHUNK_DTYPE: String? { let o = _accessor.offset(VT.CHUNK_DTYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CHUNK_DTYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHUNK_DTYPE) }
-  ///  Codec chain applied to the chunk, outermost last (e.g. "bytes",
-  ///  "zstd"). For InlineEncodedChunk, applied in order to the codes in the
-  ///  order of VALUES (little-endian elements):
-  ///    "delta"   each element less the one before it, the first kept,
-  ///              wrapping in the element type;
-  ///    "zigzag"  each element read as signed in its type and mapped to
-  ///              unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
-  ///    "shuffle" the elements' bytes grouped by significance, every
-  ///              element's least significant byte first.
-  ///  Decoding applies the inverses from the last back.
-  public var CHUNK_CODECS: FlatbufferVector<String?> { return _accessor.vector(at: VT.CHUNK_CODECS, byteSize: 4) }
-  ///  Encoded chunk length in bytes.
-  public var CHUNK_BYTE_LENGTH: UInt64 { let o = _accessor.offset(VT.CHUNK_BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Minimum sample over the field (after decoding); statistics for display
-  ///  scaling without touching the chunk.
-  public var VALUE_MIN: Float32 { let o = _accessor.offset(VT.VALUE_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Maximum sample over the field (after decoding).
-  public var VALUE_MAX: Float32 { let o = _accessor.offset(VT.VALUE_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Number of cells with a missing value.
-  public var MISSING_COUNT: UInt32 { let o = _accessor.offset(VT.MISSING_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Upstream publisher the field was retrieved from, as a host name or
-  ///  stable identifier.
-  public var ORIGIN_ID: String? { let o = _accessor.offset(VT.ORIGIN_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIGIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGIN_ID) }
-  ///  Stable dataset identifier within the origin (e.g. a bucket, collection
-  ///  or table name).
-  public var DATASET_ID: String? { let o = _accessor.offset(VT.DATASET_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DATASET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATASET_ID) }
-  ///  Upstream URL or object path the field was retrieved from.
-  public var SOURCE_URL: String? { let o = _accessor.offset(VT.SOURCE_URL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_URL) }
-  ///  Unix milliseconds UTC when the field was retrieved from the origin.
-  public var RETRIEVED_AT: UInt64 { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Licence class applicable at RETRIEVED_AT.
-  public var LICENSE_CLASS: wxfLicenseClass { let o = _accessor.offset(VT.LICENSE_CLASS); return o == 0 ? .realtimeexperimental : wxfLicenseClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .realtimeexperimental }
-  ///  URL of the licence or terms the field is offered under.
-  public var LICENSE_URL: String? { let o = _accessor.offset(VT.LICENSE_URL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LICENSE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE_URL) }
-  ///  Citation the upstream publisher asks for.
-  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
-  ///  Peer identifier of the node that ingested and published this record.
+  ///  Which times the source publishes; governs INIT_TIME_MS and LEAD_HOURS.
+  public var TIME_BASIS: wxfTimeBasis { let o = _accessor.offset(VT.TIME_BASIS); return o == 0 ? .initialization : wxfTimeBasis(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .initialization }
+  ///  Class of the model that produced the source fields.
+  public var MODEL_CLASS: wxfModelClass { let o = _accessor.offset(VT.MODEL_CLASS); return o == 0 ? .unspecified : wxfModelClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Producer-defined identifier of the source model.
+  public var MODEL_ID: String? { let o = _accessor.offset(VT.MODEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_ID) }
+  ///  FIELD_ID of every `$WXF` (or other source record) the tile was derived
+  ///  from, including ones that contributed nothing, so a consumer can tell
+  ///  "not consulted" from "consulted and empty".
+  public var SOURCE_FIELD_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SOURCE_FIELD_IDS, byteSize: 4) }
+  ///  Peer identifier of the node that produced and published this tile.
   public var PRODUCER_PEER_ID: String? { let o = _accessor.offset(VT.PRODUCER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var PRODUCER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_PEER_ID) }
-  ///  Times published by the source; governs whether initialization, lead
-  ///  and horizon are meaningful. The default preserves existing records.
-  public var TIME_BASIS: wxfTimeBasis { let o = _accessor.offset(VT.TIME_BASIS); return o == 0 ? .initialization : wxfTimeBasis(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .initialization }
-  ///  Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
-  ///  GRID.NLAT * GRID.NLON in the order of VALUES.
-  public var QUANTIZED_U16: FlatbufferVector<UInt16> { return _accessor.vector(at: VT.QUANTIZED_U16, byteSize: 2) }
-  public func withUnsafePointerToQuantizedU16<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.QUANTIZED_U16, body: body) }
-  ///  Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
-  ///  encoded chunk when it is InlineEncodedChunk.
-  public var QUANTIZED_U8: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.QUANTIZED_U8, byteSize: 1) }
-  public func withUnsafePointerToQuantizedU8<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.QUANTIZED_U8, body: body) }
-  ///  Scale applied to a quantized code, in UNITS per code step.
-  public var SCALE_FACTOR: Double { let o = _accessor.offset(VT.SCALE_FACTOR); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Offset added after scaling a quantized code, in UNITS.
-  public var ADD_OFFSET: Double { let o = _accessor.offset(VT.ADD_OFFSET); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Instrument that observed the field: the platform and instrument
-  ///  designation its operator publishes. Absent for model output.
-  public var SENSOR_ID: String? { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SENSOR_ID) }
-  ///  Central wavelength of the channel the field was measured or retrieved
-  ///  at, micrometres; 0 when not a single channel.
-  public var CHANNEL_WAVELENGTH_UM: Float32 { let o = _accessor.offset(VT.CHANNEL_WAVELENGTH_UM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Geodetic longitude of the observing platform, degrees east (the
-  ///  sub-satellite point of a geostationary imager), for viewing-geometry
-  ///  and parallax corrections. NaN when unstated.
-  public var PLATFORM_LONGITUDE_DEG: Double { let o = _accessor.offset(VT.PLATFORM_LONGITUDE_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Geodetic latitude of the observing platform, degrees north. NaN when
-  ///  unstated.
-  public var PLATFORM_LATITUDE_DEG: Double { let o = _accessor.offset(VT.PLATFORM_LATITUDE_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Height of the observing platform above the WGS84 ellipsoid, metres.
-  ///  NaN when unstated.
-  public var PLATFORM_HEIGHT_M: Double { let o = _accessor.offset(VT.PLATFORM_HEIGHT_M); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  End of the observation's scan, Unix milliseconds UTC, when the samples
-  ///  were taken over an interval; VALID_TIME_MS is then the scan start.
-  ///  0 when unstated.
-  public var SCAN_END_TIME_MS: UInt64 { let o = _accessor.offset(VT.SCAN_END_TIME_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startWXF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 51) }
+  ///  Producer software and version that authored the Gaussians, e.g.
+  ///  "orbpro-gaussian-clouds 0.13.0".
+  public var PRODUCER_VERSION: String? { let o = _accessor.offset(VT.PRODUCER_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCER_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_VERSION) }
+  ///  Producer conventions a consumer needs and this schema does not fix
+  ///  (the EROSION deck convention, the erosion and warp fields' definition).
+  public var PRODUCER_NOTES: String? { let o = _accessor.offset(VT.PRODUCER_NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCER_NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_NOTES) }
+  ///  Unix milliseconds UTC when the tile was produced.
+  public var PRODUCED_AT_MS: UInt64 { let o = _accessor.offset(VT.PRODUCED_AT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Seed the placement and authoring were derived from; with the source
+  ///  fields it reproduces the tile.
+  public var AUTHORING_SEED: UInt32 { let o = _accessor.offset(VT.AUTHORING_SEED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Licence class applicable to the derived tile at PRODUCED_AT_MS.
+  public var LICENSE_CLASS: wxfLicenseClass { let o = _accessor.offset(VT.LICENSE_CLASS); return o == 0 ? .realtimeexperimental : wxfLicenseClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .realtimeexperimental }
+  ///  URL of the licence or terms the tile is offered under.
+  public var LICENSE_URL: String? { let o = _accessor.offset(VT.LICENSE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE_URL) }
+  ///  Citation the upstream publishers ask for.
+  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
+  public static func startGCT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 41) }
   public static func add(FIELD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_ID, at: VT.FIELD_ID) }
-  public static func add(MODEL_CLASS: wxfModelClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_CLASS.rawValue, def: 0, at: VT.MODEL_CLASS) }
-  public static func add(MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_ID, at: VT.MODEL_ID) }
-  public static func add(MODEL_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_VERSION, at: VT.MODEL_VERSION) }
+  public static func add(TILING: gctTilingScheme, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILING.rawValue, def: 0, at: VT.TILING) }
+  public static func add(LEVEL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEVEL, def: 0, at: VT.LEVEL) }
+  public static func add(X: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0, at: VT.X) }
+  public static func add(Y: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0, at: VT.Y) }
+  public static func add(CHILD_MASK: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHILD_MASK, def: 0, at: VT.CHILD_MASK) }
+  public static func add(MAX_LEVEL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_LEVEL, def: 255, at: VT.MAX_LEVEL) }
+  public static func add(REFINE: gctRefinement, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFINE.rawValue, def: 0, at: VT.REFINE) }
+  public static func add(GEOMETRIC_ERROR_M: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOMETRIC_ERROR_M, def: 0.0, at: VT.GEOMETRIC_ERROR_M) }
+  public static func add(WEST_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEST_RAD, def: 0.0, at: VT.WEST_RAD) }
+  public static func add(SOUTH_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOUTH_RAD, def: 0.0, at: VT.SOUTH_RAD) }
+  public static func add(EAST_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EAST_RAD, def: 0.0, at: VT.EAST_RAD) }
+  public static func add(NORTH_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORTH_RAD, def: 0.0, at: VT.NORTH_RAD) }
+  public static func add(MIN_HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_HEIGHT_M, def: 0.0, at: VT.MIN_HEIGHT_M) }
+  public static func add(MAX_HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_HEIGHT_M, def: 0.0, at: VT.MAX_HEIGHT_M) }
+  public static func add(ORIGIN_LON_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIGIN_LON_RAD, def: 0.0, at: VT.ORIGIN_LON_RAD) }
+  public static func add(ORIGIN_LAT_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIGIN_LAT_RAD, def: 0.0, at: VT.ORIGIN_LAT_RAD) }
+  public static func add(ORIGIN_HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIGIN_HEIGHT_M, def: 0.0, at: VT.ORIGIN_HEIGHT_M) }
+  public static func addVectorOf(ENU_TO_ECEF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENU_TO_ECEF, at: VT.ENU_TO_ECEF) }
+  public static func add(FIELD_QUANTITY: gctFieldQuantity, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIELD_QUANTITY.rawValue, def: 0, at: VT.FIELD_QUANTITY) }
+  public static func add(FIELD_QUANTITY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_QUANTITY_NAME, at: VT.FIELD_QUANTITY_NAME) }
+  public static func add(AMPLITUDE_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AMPLITUDE_UNITS, at: VT.AMPLITUDE_UNITS) }
+  public static func add(MASS_TOLERANCE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS_TOLERANCE, def: 0.0, at: VT.MASS_TOLERANCE) }
+  public static func addVectorOf(VARIANTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANTS, at: VT.VARIANTS) }
+  public static func addVectorOf(INSTANCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCES, at: VT.INSTANCES) }
+  public static func add(COVER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVER, at: VT.COVER) }
+  public static func add(VALID_TIME_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_TIME_MS, def: 0, at: VT.VALID_TIME_MS) }
   public static func add(INIT_TIME_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INIT_TIME_MS, def: 0, at: VT.INIT_TIME_MS) }
   public static func add(LEAD_HOURS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEAD_HOURS, def: 0.0, at: VT.LEAD_HOURS) }
-  public static func add(VALID_TIME_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_TIME_MS, def: 0, at: VT.VALID_TIME_MS) }
-  public static func add(HORIZON_HOURS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HORIZON_HOURS, def: 0, at: VT.HORIZON_HOURS) }
-  public static func add(MEMBER_KIND: wxfMemberKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEMBER_KIND.rawValue, def: 0, at: VT.MEMBER_KIND) }
-  public static func add(MEMBER_INDEX: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEMBER_INDEX, def: 0, at: VT.MEMBER_INDEX) }
-  public static func add(ENSEMBLE_SIZE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENSEMBLE_SIZE, def: 0, at: VT.ENSEMBLE_SIZE) }
-  public static func add(PERCENTILE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERCENTILE, def: 0.0, at: VT.PERCENTILE) }
-  public static func add(THRESHOLD_VALUE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_VALUE, def: 0.0, at: VT.THRESHOLD_VALUE) }
-  public static func add(VARIABLE: wxfVariable, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIABLE.rawValue, def: 0, at: VT.VARIABLE) }
-  public static func add(VARIABLE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIABLE_NAME, at: VT.VARIABLE_NAME) }
-  public static func add(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
-  public static func add(LEVEL_KIND: wxfLevelKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEVEL_KIND.rawValue, def: 0, at: VT.LEVEL_KIND) }
-  public static func add(LEVEL_VALUE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEVEL_VALUE, def: 0.0, at: VT.LEVEL_VALUE) }
-  public static func add(TEMPORAL_KIND: wxfTemporalKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPORAL_KIND.rawValue, def: 0, at: VT.TEMPORAL_KIND) }
-  public static func add(ACCUMULATION_HOURS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCUMULATION_HOURS, def: 0.0, at: VT.ACCUMULATION_HOURS) }
-  public static func add(GRID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRID, at: VT.GRID) }
-  public static func add(TILE_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILE_INDEX, def: 0, at: VT.TILE_INDEX) }
-  public static func add(TILE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILE_COUNT, def: 1, at: VT.TILE_COUNT) }
-  public static func add(VALUES_ENCODING: wxfValuesEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUES_ENCODING.rawValue, def: 0, at: VT.VALUES_ENCODING) }
-  public static func addVectorOf(VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUES, at: VT.VALUES) }
-  public static func add(CHUNK_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHUNK_CID, at: VT.CHUNK_CID) }
-  public static func add(CHUNK_DTYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHUNK_DTYPE, at: VT.CHUNK_DTYPE) }
-  public static func addVectorOf(CHUNK_CODECS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHUNK_CODECS, at: VT.CHUNK_CODECS) }
-  public static func add(CHUNK_BYTE_LENGTH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHUNK_BYTE_LENGTH, def: 0, at: VT.CHUNK_BYTE_LENGTH) }
-  public static func add(VALUE_MIN: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE_MIN, def: 0.0, at: VT.VALUE_MIN) }
-  public static func add(VALUE_MAX: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE_MAX, def: 0.0, at: VT.VALUE_MAX) }
-  public static func add(MISSING_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISSING_COUNT, def: 0, at: VT.MISSING_COUNT) }
-  public static func add(ORIGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN_ID, at: VT.ORIGIN_ID) }
-  public static func add(DATASET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_ID, at: VT.DATASET_ID) }
-  public static func add(SOURCE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_URL, at: VT.SOURCE_URL) }
-  public static func add(RETRIEVED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RETRIEVED_AT, def: 0, at: VT.RETRIEVED_AT) }
+  public static func add(TIME_BASIS: wxfTimeBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_BASIS.rawValue, def: 0, at: VT.TIME_BASIS) }
+  public static func add(MODEL_CLASS: wxfModelClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_CLASS.rawValue, def: 0, at: VT.MODEL_CLASS) }
+  public static func add(MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_ID, at: VT.MODEL_ID) }
+  public static func addVectorOf(SOURCE_FIELD_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_FIELD_IDS, at: VT.SOURCE_FIELD_IDS) }
+  public static func add(PRODUCER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_PEER_ID, at: VT.PRODUCER_PEER_ID) }
+  public static func add(PRODUCER_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_VERSION, at: VT.PRODUCER_VERSION) }
+  public static func add(PRODUCER_NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_NOTES, at: VT.PRODUCER_NOTES) }
+  public static func add(PRODUCED_AT_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRODUCED_AT_MS, def: 0, at: VT.PRODUCED_AT_MS) }
+  public static func add(AUTHORING_SEED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AUTHORING_SEED, def: 0, at: VT.AUTHORING_SEED) }
   public static func add(LICENSE_CLASS: wxfLicenseClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LICENSE_CLASS.rawValue, def: 0, at: VT.LICENSE_CLASS) }
   public static func add(LICENSE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_URL, at: VT.LICENSE_URL) }
   public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
-  public static func add(PRODUCER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_PEER_ID, at: VT.PRODUCER_PEER_ID) }
-  public static func add(TIME_BASIS: wxfTimeBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_BASIS.rawValue, def: 0, at: VT.TIME_BASIS) }
-  public static func addVectorOf(QUANTIZED_U16: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUANTIZED_U16, at: VT.QUANTIZED_U16) }
-  public static func addVectorOf(QUANTIZED_U8: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUANTIZED_U8, at: VT.QUANTIZED_U8) }
-  public static func add(SCALE_FACTOR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_FACTOR, def: 1.0, at: VT.SCALE_FACTOR) }
-  public static func add(ADD_OFFSET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADD_OFFSET, def: 0.0, at: VT.ADD_OFFSET) }
-  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
-  public static func add(CHANNEL_WAVELENGTH_UM: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHANNEL_WAVELENGTH_UM, def: 0.0, at: VT.CHANNEL_WAVELENGTH_UM) }
-  public static func add(PLATFORM_LONGITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLATFORM_LONGITUDE_DEG, def: .nan, at: VT.PLATFORM_LONGITUDE_DEG) }
-  public static func add(PLATFORM_LATITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLATFORM_LATITUDE_DEG, def: .nan, at: VT.PLATFORM_LATITUDE_DEG) }
-  public static func add(PLATFORM_HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLATFORM_HEIGHT_M, def: .nan, at: VT.PLATFORM_HEIGHT_M) }
-  public static func add(SCAN_END_TIME_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCAN_END_TIME_MS, def: 0, at: VT.SCAN_END_TIME_MS) }
-  public static func endWXF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 44]); return end }
-  public static func createWXF(
+  public static func endGCT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 46]); return end }
+  public static func createGCT(
     _ fbb: inout FlatBufferBuilder,
     FIELD_IDOffset FIELD_ID: Offset,
-    MODEL_CLASS: wxfModelClass = .unspecified,
-    MODEL_IDOffset MODEL_ID: Offset = Offset(),
-    MODEL_VERSIONOffset MODEL_VERSION: Offset = Offset(),
+    TILING: gctTilingScheme = .geographicQuadtree,
+    LEVEL: UInt8 = 0,
+    X: UInt32 = 0,
+    Y: UInt32 = 0,
+    CHILD_MASK: UInt8 = 0,
+    MAX_LEVEL: UInt8 = 255,
+    REFINE: gctRefinement = .replace,
+    GEOMETRIC_ERROR_M: Float32 = 0.0,
+    WEST_RAD: Double = 0.0,
+    SOUTH_RAD: Double = 0.0,
+    EAST_RAD: Double = 0.0,
+    NORTH_RAD: Double = 0.0,
+    MIN_HEIGHT_M: Double = 0.0,
+    MAX_HEIGHT_M: Double = 0.0,
+    ORIGIN_LON_RAD: Double = 0.0,
+    ORIGIN_LAT_RAD: Double = 0.0,
+    ORIGIN_HEIGHT_M: Double = 0.0,
+    ENU_TO_ECEFVectorOffset ENU_TO_ECEF: Offset = Offset(),
+    FIELD_QUANTITY: gctFieldQuantity = .unspecified,
+    FIELD_QUANTITY_NAMEOffset FIELD_QUANTITY_NAME: Offset = Offset(),
+    AMPLITUDE_UNITSOffset AMPLITUDE_UNITS: Offset,
+    MASS_TOLERANCE: Float32 = 0.0,
+    VARIANTSVectorOffset VARIANTS: Offset = Offset(),
+    INSTANCESVectorOffset INSTANCES: Offset = Offset(),
+    COVEROffset COVER: Offset = Offset(),
+    VALID_TIME_MS: UInt64 = 0,
     INIT_TIME_MS: UInt64 = 0,
     LEAD_HOURS: Float32 = 0.0,
-    VALID_TIME_MS: UInt64 = 0,
-    HORIZON_HOURS: UInt16 = 0,
-    MEMBER_KIND: wxfMemberKind = .member,
-    MEMBER_INDEX: UInt16 = 0,
-    ENSEMBLE_SIZE: UInt16 = 0,
-    PERCENTILE: Float32 = 0.0,
-    THRESHOLD_VALUE: Float32 = 0.0,
-    VARIABLE: wxfVariable = .unspecified,
-    VARIABLE_NAMEOffset VARIABLE_NAME: Offset = Offset(),
-    UNITSOffset UNITS: Offset = Offset(),
-    LEVEL_KIND: wxfLevelKind = .surface,
-    LEVEL_VALUE: Float32 = 0.0,
-    TEMPORAL_KIND: wxfTemporalKind = .instantaneous,
-    ACCUMULATION_HOURS: Float32 = 0.0,
-    GRIDOffset GRID: Offset,
-    TILE_INDEX: UInt32 = 0,
-    TILE_COUNT: UInt32 = 1,
-    VALUES_ENCODING: wxfValuesEncoding = .inlinefloat32,
-    VALUESVectorOffset VALUES: Offset = Offset(),
-    CHUNK_CIDOffset CHUNK_CID: Offset = Offset(),
-    CHUNK_DTYPEOffset CHUNK_DTYPE: Offset = Offset(),
-    CHUNK_CODECSVectorOffset CHUNK_CODECS: Offset = Offset(),
-    CHUNK_BYTE_LENGTH: UInt64 = 0,
-    VALUE_MIN: Float32 = 0.0,
-    VALUE_MAX: Float32 = 0.0,
-    MISSING_COUNT: UInt32 = 0,
-    ORIGIN_IDOffset ORIGIN_ID: Offset = Offset(),
-    DATASET_IDOffset DATASET_ID: Offset = Offset(),
-    SOURCE_URLOffset SOURCE_URL: Offset = Offset(),
-    RETRIEVED_AT: UInt64 = 0,
+    TIME_BASIS: wxfTimeBasis = .initialization,
+    MODEL_CLASS: wxfModelClass = .unspecified,
+    MODEL_IDOffset MODEL_ID: Offset = Offset(),
+    SOURCE_FIELD_IDSVectorOffset SOURCE_FIELD_IDS: Offset = Offset(),
+    PRODUCER_PEER_IDOffset PRODUCER_PEER_ID: Offset = Offset(),
+    PRODUCER_VERSIONOffset PRODUCER_VERSION: Offset = Offset(),
+    PRODUCER_NOTESOffset PRODUCER_NOTES: Offset = Offset(),
+    PRODUCED_AT_MS: UInt64 = 0,
+    AUTHORING_SEED: UInt32 = 0,
     LICENSE_CLASS: wxfLicenseClass = .realtimeexperimental,
     LICENSE_URLOffset LICENSE_URL: Offset = Offset(),
-    CITATIONOffset CITATION: Offset = Offset(),
-    PRODUCER_PEER_IDOffset PRODUCER_PEER_ID: Offset = Offset(),
-    TIME_BASIS: wxfTimeBasis = .initialization,
-    QUANTIZED_U16VectorOffset QUANTIZED_U16: Offset = Offset(),
-    QUANTIZED_U8VectorOffset QUANTIZED_U8: Offset = Offset(),
-    SCALE_FACTOR: Double = 1.0,
-    ADD_OFFSET: Double = 0.0,
-    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
-    CHANNEL_WAVELENGTH_UM: Float32 = 0.0,
-    PLATFORM_LONGITUDE_DEG: Double = .nan,
-    PLATFORM_LATITUDE_DEG: Double = .nan,
-    PLATFORM_HEIGHT_M: Double = .nan,
-    SCAN_END_TIME_MS: UInt64 = 0
+    CITATIONOffset CITATION: Offset = Offset()
   ) -> Offset {
-    let __start = WXF.startWXF(&fbb)
-    WXF.add(FIELD_ID: FIELD_ID, &fbb)
-    WXF.add(MODEL_CLASS: MODEL_CLASS, &fbb)
-    WXF.add(MODEL_ID: MODEL_ID, &fbb)
-    WXF.add(MODEL_VERSION: MODEL_VERSION, &fbb)
-    WXF.add(INIT_TIME_MS: INIT_TIME_MS, &fbb)
-    WXF.add(LEAD_HOURS: LEAD_HOURS, &fbb)
-    WXF.add(VALID_TIME_MS: VALID_TIME_MS, &fbb)
-    WXF.add(HORIZON_HOURS: HORIZON_HOURS, &fbb)
-    WXF.add(MEMBER_KIND: MEMBER_KIND, &fbb)
-    WXF.add(MEMBER_INDEX: MEMBER_INDEX, &fbb)
-    WXF.add(ENSEMBLE_SIZE: ENSEMBLE_SIZE, &fbb)
-    WXF.add(PERCENTILE: PERCENTILE, &fbb)
-    WXF.add(THRESHOLD_VALUE: THRESHOLD_VALUE, &fbb)
-    WXF.add(VARIABLE: VARIABLE, &fbb)
-    WXF.add(VARIABLE_NAME: VARIABLE_NAME, &fbb)
-    WXF.add(UNITS: UNITS, &fbb)
-    WXF.add(LEVEL_KIND: LEVEL_KIND, &fbb)
-    WXF.add(LEVEL_VALUE: LEVEL_VALUE, &fbb)
-    WXF.add(TEMPORAL_KIND: TEMPORAL_KIND, &fbb)
-    WXF.add(ACCUMULATION_HOURS: ACCUMULATION_HOURS, &fbb)
-    WXF.add(GRID: GRID, &fbb)
-    WXF.add(TILE_INDEX: TILE_INDEX, &fbb)
-    WXF.add(TILE_COUNT: TILE_COUNT, &fbb)
-    WXF.add(VALUES_ENCODING: VALUES_ENCODING, &fbb)
-    WXF.addVectorOf(VALUES: VALUES, &fbb)
-    WXF.add(CHUNK_CID: CHUNK_CID, &fbb)
-    WXF.add(CHUNK_DTYPE: CHUNK_DTYPE, &fbb)
-    WXF.addVectorOf(CHUNK_CODECS: CHUNK_CODECS, &fbb)
-    WXF.add(CHUNK_BYTE_LENGTH: CHUNK_BYTE_LENGTH, &fbb)
-    WXF.add(VALUE_MIN: VALUE_MIN, &fbb)
-    WXF.add(VALUE_MAX: VALUE_MAX, &fbb)
-    WXF.add(MISSING_COUNT: MISSING_COUNT, &fbb)
-    WXF.add(ORIGIN_ID: ORIGIN_ID, &fbb)
-    WXF.add(DATASET_ID: DATASET_ID, &fbb)
-    WXF.add(SOURCE_URL: SOURCE_URL, &fbb)
-    WXF.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
-    WXF.add(LICENSE_CLASS: LICENSE_CLASS, &fbb)
-    WXF.add(LICENSE_URL: LICENSE_URL, &fbb)
-    WXF.add(CITATION: CITATION, &fbb)
-    WXF.add(PRODUCER_PEER_ID: PRODUCER_PEER_ID, &fbb)
-    WXF.add(TIME_BASIS: TIME_BASIS, &fbb)
-    WXF.addVectorOf(QUANTIZED_U16: QUANTIZED_U16, &fbb)
-    WXF.addVectorOf(QUANTIZED_U8: QUANTIZED_U8, &fbb)
-    WXF.add(SCALE_FACTOR: SCALE_FACTOR, &fbb)
-    WXF.add(ADD_OFFSET: ADD_OFFSET, &fbb)
-    WXF.add(SENSOR_ID: SENSOR_ID, &fbb)
-    WXF.add(CHANNEL_WAVELENGTH_UM: CHANNEL_WAVELENGTH_UM, &fbb)
-    WXF.add(PLATFORM_LONGITUDE_DEG: PLATFORM_LONGITUDE_DEG, &fbb)
-    WXF.add(PLATFORM_LATITUDE_DEG: PLATFORM_LATITUDE_DEG, &fbb)
-    WXF.add(PLATFORM_HEIGHT_M: PLATFORM_HEIGHT_M, &fbb)
-    WXF.add(SCAN_END_TIME_MS: SCAN_END_TIME_MS, &fbb)
-    return WXF.endWXF(&fbb, start: __start)
+    let __start = GCT.startGCT(&fbb)
+    GCT.add(FIELD_ID: FIELD_ID, &fbb)
+    GCT.add(TILING: TILING, &fbb)
+    GCT.add(LEVEL: LEVEL, &fbb)
+    GCT.add(X: X, &fbb)
+    GCT.add(Y: Y, &fbb)
+    GCT.add(CHILD_MASK: CHILD_MASK, &fbb)
+    GCT.add(MAX_LEVEL: MAX_LEVEL, &fbb)
+    GCT.add(REFINE: REFINE, &fbb)
+    GCT.add(GEOMETRIC_ERROR_M: GEOMETRIC_ERROR_M, &fbb)
+    GCT.add(WEST_RAD: WEST_RAD, &fbb)
+    GCT.add(SOUTH_RAD: SOUTH_RAD, &fbb)
+    GCT.add(EAST_RAD: EAST_RAD, &fbb)
+    GCT.add(NORTH_RAD: NORTH_RAD, &fbb)
+    GCT.add(MIN_HEIGHT_M: MIN_HEIGHT_M, &fbb)
+    GCT.add(MAX_HEIGHT_M: MAX_HEIGHT_M, &fbb)
+    GCT.add(ORIGIN_LON_RAD: ORIGIN_LON_RAD, &fbb)
+    GCT.add(ORIGIN_LAT_RAD: ORIGIN_LAT_RAD, &fbb)
+    GCT.add(ORIGIN_HEIGHT_M: ORIGIN_HEIGHT_M, &fbb)
+    GCT.addVectorOf(ENU_TO_ECEF: ENU_TO_ECEF, &fbb)
+    GCT.add(FIELD_QUANTITY: FIELD_QUANTITY, &fbb)
+    GCT.add(FIELD_QUANTITY_NAME: FIELD_QUANTITY_NAME, &fbb)
+    GCT.add(AMPLITUDE_UNITS: AMPLITUDE_UNITS, &fbb)
+    GCT.add(MASS_TOLERANCE: MASS_TOLERANCE, &fbb)
+    GCT.addVectorOf(VARIANTS: VARIANTS, &fbb)
+    GCT.addVectorOf(INSTANCES: INSTANCES, &fbb)
+    GCT.add(COVER: COVER, &fbb)
+    GCT.add(VALID_TIME_MS: VALID_TIME_MS, &fbb)
+    GCT.add(INIT_TIME_MS: INIT_TIME_MS, &fbb)
+    GCT.add(LEAD_HOURS: LEAD_HOURS, &fbb)
+    GCT.add(TIME_BASIS: TIME_BASIS, &fbb)
+    GCT.add(MODEL_CLASS: MODEL_CLASS, &fbb)
+    GCT.add(MODEL_ID: MODEL_ID, &fbb)
+    GCT.addVectorOf(SOURCE_FIELD_IDS: SOURCE_FIELD_IDS, &fbb)
+    GCT.add(PRODUCER_PEER_ID: PRODUCER_PEER_ID, &fbb)
+    GCT.add(PRODUCER_VERSION: PRODUCER_VERSION, &fbb)
+    GCT.add(PRODUCER_NOTES: PRODUCER_NOTES, &fbb)
+    GCT.add(PRODUCED_AT_MS: PRODUCED_AT_MS, &fbb)
+    GCT.add(AUTHORING_SEED: AUTHORING_SEED, &fbb)
+    GCT.add(LICENSE_CLASS: LICENSE_CLASS, &fbb)
+    GCT.add(LICENSE_URL: LICENSE_URL, &fbb)
+    GCT.add(CITATION: CITATION, &fbb)
+    return GCT.endGCT(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.FIELD_ID, fieldName: "FIELD_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MODEL_CLASS, fieldName: "MODEL_CLASS", required: false, type: wxfModelClass.self)
-    try _v.visit(field: VT.MODEL_ID, fieldName: "MODEL_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MODEL_VERSION, fieldName: "MODEL_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TILING, fieldName: "TILING", required: false, type: gctTilingScheme.self)
+    try _v.visit(field: VT.LEVEL, fieldName: "LEVEL", required: false, type: UInt8.self)
+    try _v.visit(field: VT.X, fieldName: "X", required: false, type: UInt32.self)
+    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CHILD_MASK, fieldName: "CHILD_MASK", required: false, type: UInt8.self)
+    try _v.visit(field: VT.MAX_LEVEL, fieldName: "MAX_LEVEL", required: false, type: UInt8.self)
+    try _v.visit(field: VT.REFINE, fieldName: "REFINE", required: false, type: gctRefinement.self)
+    try _v.visit(field: VT.GEOMETRIC_ERROR_M, fieldName: "GEOMETRIC_ERROR_M", required: false, type: Float32.self)
+    try _v.visit(field: VT.WEST_RAD, fieldName: "WEST_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.SOUTH_RAD, fieldName: "SOUTH_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.EAST_RAD, fieldName: "EAST_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.NORTH_RAD, fieldName: "NORTH_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_HEIGHT_M, fieldName: "MIN_HEIGHT_M", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_HEIGHT_M, fieldName: "MAX_HEIGHT_M", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIGIN_LON_RAD, fieldName: "ORIGIN_LON_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIGIN_LAT_RAD, fieldName: "ORIGIN_LAT_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIGIN_HEIGHT_M, fieldName: "ORIGIN_HEIGHT_M", required: false, type: Double.self)
+    try _v.visit(field: VT.ENU_TO_ECEF, fieldName: "ENU_TO_ECEF", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.FIELD_QUANTITY, fieldName: "FIELD_QUANTITY", required: false, type: gctFieldQuantity.self)
+    try _v.visit(field: VT.FIELD_QUANTITY_NAME, fieldName: "FIELD_QUANTITY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AMPLITUDE_UNITS, fieldName: "AMPLITUDE_UNITS", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MASS_TOLERANCE, fieldName: "MASS_TOLERANCE", required: false, type: Float32.self)
+    try _v.visit(field: VT.VARIANTS, fieldName: "VARIANTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GCTVariant>, GCTVariant>>.self)
+    try _v.visit(field: VT.INSTANCES, fieldName: "INSTANCES", required: false, type: ForwardOffset<Vector<ForwardOffset<GCTInstance>, GCTInstance>>.self)
+    try _v.visit(field: VT.COVER, fieldName: "COVER", required: false, type: ForwardOffset<GCTCoverGrid>.self)
+    try _v.visit(field: VT.VALID_TIME_MS, fieldName: "VALID_TIME_MS", required: false, type: UInt64.self)
     try _v.visit(field: VT.INIT_TIME_MS, fieldName: "INIT_TIME_MS", required: false, type: UInt64.self)
     try _v.visit(field: VT.LEAD_HOURS, fieldName: "LEAD_HOURS", required: false, type: Float32.self)
-    try _v.visit(field: VT.VALID_TIME_MS, fieldName: "VALID_TIME_MS", required: false, type: UInt64.self)
-    try _v.visit(field: VT.HORIZON_HOURS, fieldName: "HORIZON_HOURS", required: false, type: UInt16.self)
-    try _v.visit(field: VT.MEMBER_KIND, fieldName: "MEMBER_KIND", required: false, type: wxfMemberKind.self)
-    try _v.visit(field: VT.MEMBER_INDEX, fieldName: "MEMBER_INDEX", required: false, type: UInt16.self)
-    try _v.visit(field: VT.ENSEMBLE_SIZE, fieldName: "ENSEMBLE_SIZE", required: false, type: UInt16.self)
-    try _v.visit(field: VT.PERCENTILE, fieldName: "PERCENTILE", required: false, type: Float32.self)
-    try _v.visit(field: VT.THRESHOLD_VALUE, fieldName: "THRESHOLD_VALUE", required: false, type: Float32.self)
-    try _v.visit(field: VT.VARIABLE, fieldName: "VARIABLE", required: false, type: wxfVariable.self)
-    try _v.visit(field: VT.VARIABLE_NAME, fieldName: "VARIABLE_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LEVEL_KIND, fieldName: "LEVEL_KIND", required: false, type: wxfLevelKind.self)
-    try _v.visit(field: VT.LEVEL_VALUE, fieldName: "LEVEL_VALUE", required: false, type: Float32.self)
-    try _v.visit(field: VT.TEMPORAL_KIND, fieldName: "TEMPORAL_KIND", required: false, type: wxfTemporalKind.self)
-    try _v.visit(field: VT.ACCUMULATION_HOURS, fieldName: "ACCUMULATION_HOURS", required: false, type: Float32.self)
-    try _v.visit(field: VT.GRID, fieldName: "GRID", required: true, type: ForwardOffset<WXFGrid>.self)
-    try _v.visit(field: VT.TILE_INDEX, fieldName: "TILE_INDEX", required: false, type: UInt32.self)
-    try _v.visit(field: VT.TILE_COUNT, fieldName: "TILE_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.VALUES_ENCODING, fieldName: "VALUES_ENCODING", required: false, type: wxfValuesEncoding.self)
-    try _v.visit(field: VT.VALUES, fieldName: "VALUES", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
-    try _v.visit(field: VT.CHUNK_CID, fieldName: "CHUNK_CID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CHUNK_DTYPE, fieldName: "CHUNK_DTYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CHUNK_CODECS, fieldName: "CHUNK_CODECS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.CHUNK_BYTE_LENGTH, fieldName: "CHUNK_BYTE_LENGTH", required: false, type: UInt64.self)
-    try _v.visit(field: VT.VALUE_MIN, fieldName: "VALUE_MIN", required: false, type: Float32.self)
-    try _v.visit(field: VT.VALUE_MAX, fieldName: "VALUE_MAX", required: false, type: Float32.self)
-    try _v.visit(field: VT.MISSING_COUNT, fieldName: "MISSING_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.ORIGIN_ID, fieldName: "ORIGIN_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DATASET_ID, fieldName: "DATASET_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SOURCE_URL, fieldName: "SOURCE_URL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TIME_BASIS, fieldName: "TIME_BASIS", required: false, type: wxfTimeBasis.self)
+    try _v.visit(field: VT.MODEL_CLASS, fieldName: "MODEL_CLASS", required: false, type: wxfModelClass.self)
+    try _v.visit(field: VT.MODEL_ID, fieldName: "MODEL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_FIELD_IDS, fieldName: "SOURCE_FIELD_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.PRODUCER_PEER_ID, fieldName: "PRODUCER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRODUCER_VERSION, fieldName: "PRODUCER_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRODUCER_NOTES, fieldName: "PRODUCER_NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRODUCED_AT_MS, fieldName: "PRODUCED_AT_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.AUTHORING_SEED, fieldName: "AUTHORING_SEED", required: false, type: UInt32.self)
     try _v.visit(field: VT.LICENSE_CLASS, fieldName: "LICENSE_CLASS", required: false, type: wxfLicenseClass.self)
     try _v.visit(field: VT.LICENSE_URL, fieldName: "LICENSE_URL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PRODUCER_PEER_ID, fieldName: "PRODUCER_PEER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TIME_BASIS, fieldName: "TIME_BASIS", required: false, type: wxfTimeBasis.self)
-    try _v.visit(field: VT.QUANTIZED_U16, fieldName: "QUANTIZED_U16", required: false, type: ForwardOffset<Vector<UInt16, UInt16>>.self)
-    try _v.visit(field: VT.QUANTIZED_U8, fieldName: "QUANTIZED_U8", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.SCALE_FACTOR, fieldName: "SCALE_FACTOR", required: false, type: Double.self)
-    try _v.visit(field: VT.ADD_OFFSET, fieldName: "ADD_OFFSET", required: false, type: Double.self)
-    try _v.visit(field: VT.SENSOR_ID, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CHANNEL_WAVELENGTH_UM, fieldName: "CHANNEL_WAVELENGTH_UM", required: false, type: Float32.self)
-    try _v.visit(field: VT.PLATFORM_LONGITUDE_DEG, fieldName: "PLATFORM_LONGITUDE_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.PLATFORM_LATITUDE_DEG, fieldName: "PLATFORM_LATITUDE_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.PLATFORM_HEIGHT_M, fieldName: "PLATFORM_HEIGHT_M", required: false, type: Double.self)
-    try _v.visit(field: VT.SCAN_END_TIME_MS, fieldName: "SCAN_END_TIME_MS", required: false, type: UInt64.self)
     _v.finish()
   }
 }

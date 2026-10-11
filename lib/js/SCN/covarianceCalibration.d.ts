@@ -1,0 +1,20 @@
+/**
+ * Whether a covariance's coverage was measured against independent reference
+ * states: the share of reference errors inside its confidence regions matched
+ * what the covariance claims, for the regime and prediction age it covers.
+ */
+export declare enum covarianceCalibration {
+    /**
+     * Calibration not stated
+     */
+    Unspecified = 0,
+    /**
+     * Not measured against independent reference states, or measured and failed
+     */
+    Uncalibrated = 1,
+    /**
+     * Measured against independent reference states and passed
+     */
+    Calibrated = 2
+}
+//# sourceMappingURL=covarianceCalibration.d.ts.map

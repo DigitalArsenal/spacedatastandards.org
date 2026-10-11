@@ -8,246 +8,982 @@ import Common
 
 import FlatBuffers
 
-public enum linkCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Role a referenced payload plays for one capture.
+public enum iqcPayloadRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case uplink = 0
-  case downlink = 1
-  case crosslink = 2
-  case interSatellite = 3
-  case groundToGround = 4
-  case relay = 5
+  ///  The raw baseband sample stream itself (SigMF `.sigmf-data`).
+  case data = 0
+  ///  The upstream metadata document the record was normalized FROM
+  ///  (SigMF `.sigmf-meta`).
+  case metadata = 1
+  ///  A container holding both (SigMF `.sigmf` tar archive, zip, tarball).
+  case archive = 2
+  ///  A rendered spectrogram, waterfall, audio demod or thumbnail.
+  case preview = 3
+  ///  A companion file the source publishes that is none of the above.
+  case other = 4
 
-  public static var max: linkCategory { return .relay }
-  public static var min: linkCategory { return .uplink }
+  public static var max: iqcPayloadRole { return .other }
+  public static var min: iqcPayloadRole { return .data }
 }
 
 
-public enum linkCondition: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Where a capture's bytes physically live right now.
+public enum iqcCustody: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case established = 0
-  case degraded = 1
-  case interrupted = 2
-  case planned = 3
-  case terminated = 4
-  case unknown = 5
+  ///  Bytes stay upstream. This record is a pointer and nothing more. This is
+  ///  the DEFAULT and the correct value for every multi-gigabyte archive.
+  case upstreamOnly = 0
+  ///  This SDN deliberately pinned the bytes; CID is populated and resolvable.
+  case pinned = 1
+  ///  The bytes were pinned and have since been unpinned. CID is retained for
+  ///  audit; it may no longer resolve.
+  case unpinned = 2
 
-  public static var max: linkCondition { return .unknown }
-  public static var min: linkCondition { return .established }
+  public static var max: iqcCustody { return .unpinned }
+  public static var min: iqcCustody { return .upstreamOnly }
 }
 
 
-///  Link Status
-public struct LKS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Geodetic position of the receiver at capture time.
+///
+///  A separate table because latitude/longitude 0,0 is a VALID coordinate: an
+///  absent GEOLOCATION means "the source published no position", which a
+///  zero-defaulted scalar pair could never express.
+public struct IQCGeolocation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$LKS" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LKS.id, addPrefix: prefix) }
+  public static var id: String { "$IQC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IQCGeolocation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let LATITUDE_DEG: VOffset = 4
+    static let LONGITUDE_DEG: VOffset = 6
+    static let ALTITUDE_M: VOffset = 8
+    static let UNCERTAINTY_M: VOffset = 10
+    static let METHOD: VOffset = 12
+  }
+
+  ///  Geodetic latitude, degrees, WGS-84, positive north.
+  public var LATITUDE_DEG: Double { let o = _accessor.offset(VT.LATITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Geodetic longitude, degrees, WGS-84, positive east.
+  public var LONGITUDE_DEG: Double { let o = _accessor.offset(VT.LONGITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Height above the WGS-84 ellipsoid, metres. Absent in most SigMF
+  ///  recordings; SigMF `core:geolocation` is a GeoJSON Point whose third
+  ///  ordinate is optional.
+  public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Reported position uncertainty, metres, when the source states one.
+  public var UNCERTAINTY_M: Double { let o = _accessor.offset(VT.UNCERTAINTY_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  How the position was obtained, verbatim from the source (e.g. "GPS",
+  ///  "station registry", "author-supplied"). Never inferred.
+  public var METHOD: String? { let o = _accessor.offset(VT.METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.METHOD) }
+  public static func startIQCGeolocation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(LATITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE_DEG, def: 0.0, at: VT.LATITUDE_DEG) }
+  public static func add(LONGITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_DEG, def: 0.0, at: VT.LONGITUDE_DEG) }
+  public static func add(ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_M, def: 0.0, at: VT.ALTITUDE_M) }
+  public static func add(UNCERTAINTY_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNCERTAINTY_M, def: 0.0, at: VT.UNCERTAINTY_M) }
+  public static func add(METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD, at: VT.METHOD) }
+  public static func endIQCGeolocation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIQCGeolocation(
+    _ fbb: inout FlatBufferBuilder,
+    LATITUDE_DEG: Double = 0.0,
+    LONGITUDE_DEG: Double = 0.0,
+    ALTITUDE_M: Double = 0.0,
+    UNCERTAINTY_M: Double = 0.0,
+    METHODOffset METHOD: Offset = Offset()
+  ) -> Offset {
+    let __start = IQCGeolocation.startIQCGeolocation(&fbb)
+    IQCGeolocation.add(LATITUDE_DEG: LATITUDE_DEG, &fbb)
+    IQCGeolocation.add(LONGITUDE_DEG: LONGITUDE_DEG, &fbb)
+    IQCGeolocation.add(ALTITUDE_M: ALTITUDE_M, &fbb)
+    IQCGeolocation.add(UNCERTAINTY_M: UNCERTAINTY_M, &fbb)
+    IQCGeolocation.add(METHOD: METHOD, &fbb)
+    return IQCGeolocation.endIQCGeolocation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.LATITUDE_DEG, fieldName: "LATITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE_DEG, fieldName: "LONGITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.UNCERTAINTY_M, fieldName: "UNCERTAINTY_M", required: false, type: Double.self)
+    try _v.visit(field: VT.METHOD, fieldName: "METHOD", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Receive chain that produced the samples.
+///
+///  Every field is a verbatim string. SigMF `core:hw` is free text and the
+///  non-SigMF archives publish nothing more structured; splitting free text
+///  into a manufacturer and a model by guessing is a defect.
+public struct IQCHardware: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IQC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IQCHardware.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let DESCRIPTION: VOffset = 4
+    static let MANUFACTURER: VOffset = 6
+    static let MODEL: VOffset = 8
+    static let ANTENNA: VOffset = 10
+    static let RECORDER: VOffset = 12
+  }
+
+  ///  SigMF `core:hw` verbatim, or the source's equivalent free-text
+  ///  description of the receive chain.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  Receiver manufacturer, only when the source names it as its own field.
+  public var MANUFACTURER: String? { let o = _accessor.offset(VT.MANUFACTURER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MANUFACTURERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MANUFACTURER) }
+  ///  Receiver model, only when the source names it as its own field.
+  public var MODEL: String? { let o = _accessor.offset(VT.MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL) }
+  ///  Antenna description, only when the source names it as its own field.
+  public var ANTENNA: String? { let o = _accessor.offset(VT.ANTENNA); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ANTENNASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ANTENNA) }
+  ///  SigMF `core:recorder` — the SOFTWARE that wrote the recording.
+  public var RECORDER: String? { let o = _accessor.offset(VT.RECORDER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECORDERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECORDER) }
+  public static func startIQCHardware(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(MANUFACTURER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANUFACTURER, at: VT.MANUFACTURER) }
+  public static func add(MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL, at: VT.MODEL) }
+  public static func add(ANTENNA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNA, at: VT.ANTENNA) }
+  public static func add(RECORDER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDER, at: VT.RECORDER) }
+  public static func endIQCHardware(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIQCHardware(
+    _ fbb: inout FlatBufferBuilder,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    MANUFACTUREROffset MANUFACTURER: Offset = Offset(),
+    MODELOffset MODEL: Offset = Offset(),
+    ANTENNAOffset ANTENNA: Offset = Offset(),
+    RECORDEROffset RECORDER: Offset = Offset()
+  ) -> Offset {
+    let __start = IQCHardware.startIQCHardware(&fbb)
+    IQCHardware.add(DESCRIPTION: DESCRIPTION, &fbb)
+    IQCHardware.add(MANUFACTURER: MANUFACTURER, &fbb)
+    IQCHardware.add(MODEL: MODEL, &fbb)
+    IQCHardware.add(ANTENNA: ANTENNA, &fbb)
+    IQCHardware.add(RECORDER: RECORDER, &fbb)
+    return IQCHardware.endIQCHardware(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MANUFACTURER, fieldName: "MANUFACTURER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODEL, fieldName: "MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANTENNA, fieldName: "ANTENNA", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECORDER, fieldName: "RECORDER", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  One SigMF capture segment: the point in the sample stream at which the
+///  listed tuning took effect. A retuned or frequency-hopped recording has
+///  several; a single-tune recording has one.
+public struct IQCSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IQC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IQCSegment.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SAMPLE_START: VOffset = 4
+    static let GLOBAL_INDEX: VOffset = 6
+    static let HEADER_BYTES: VOffset = 8
+    static let CENTER_FREQ_HZ: VOffset = 10
+    static let DATETIME: VOffset = 12
+  }
+
+  ///  SigMF `core:sample_start` — index of the first sample of this segment.
+  public var SAMPLE_START: UInt64 { let o = _accessor.offset(VT.SAMPLE_START); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  SigMF `core:global_index` — index of this sample in the receiver's
+  ///  free-running sample counter.
+  public var GLOBAL_INDEX: UInt64 { let o = _accessor.offset(VT.GLOBAL_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  SigMF `core:header_bytes` — bytes preceding this segment in the data
+  ///  file.
+  public var HEADER_BYTES: UInt64 { let o = _accessor.offset(VT.HEADER_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  SigMF `core:frequency` — centre frequency of this segment, HERTZ.
+  public var CENTER_FREQ_HZ: Double { let o = _accessor.offset(VT.CENTER_FREQ_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SigMF `core:datetime` — ISO 8601 UTC timestamp of SAMPLE_START.
+  public var DATETIME: String? { let o = _accessor.offset(VT.DATETIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATETIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATETIME) }
+  public static func startIQCSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(SAMPLE_START: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_START, def: 0, at: VT.SAMPLE_START) }
+  public static func add(GLOBAL_INDEX: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GLOBAL_INDEX, def: 0, at: VT.GLOBAL_INDEX) }
+  public static func add(HEADER_BYTES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADER_BYTES, def: 0, at: VT.HEADER_BYTES) }
+  public static func add(CENTER_FREQ_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_FREQ_HZ, def: 0.0, at: VT.CENTER_FREQ_HZ) }
+  public static func add(DATETIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATETIME, at: VT.DATETIME) }
+  public static func endIQCSegment(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIQCSegment(
+    _ fbb: inout FlatBufferBuilder,
+    SAMPLE_START: UInt64 = 0,
+    GLOBAL_INDEX: UInt64 = 0,
+    HEADER_BYTES: UInt64 = 0,
+    CENTER_FREQ_HZ: Double = 0.0,
+    DATETIMEOffset DATETIME: Offset = Offset()
+  ) -> Offset {
+    let __start = IQCSegment.startIQCSegment(&fbb)
+    IQCSegment.add(SAMPLE_START: SAMPLE_START, &fbb)
+    IQCSegment.add(GLOBAL_INDEX: GLOBAL_INDEX, &fbb)
+    IQCSegment.add(HEADER_BYTES: HEADER_BYTES, &fbb)
+    IQCSegment.add(CENTER_FREQ_HZ: CENTER_FREQ_HZ, &fbb)
+    IQCSegment.add(DATETIME: DATETIME, &fbb)
+    return IQCSegment.endIQCSegment(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SAMPLE_START, fieldName: "SAMPLE_START", required: false, type: UInt64.self)
+    try _v.visit(field: VT.GLOBAL_INDEX, fieldName: "GLOBAL_INDEX", required: false, type: UInt64.self)
+    try _v.visit(field: VT.HEADER_BYTES, fieldName: "HEADER_BYTES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CENTER_FREQ_HZ, fieldName: "CENTER_FREQ_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.DATETIME, fieldName: "DATETIME", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  One labelled region of the capture in time and frequency.
+public struct IQCAnnotation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IQC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IQCAnnotation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SAMPLE_START: VOffset = 4
+    static let SAMPLE_COUNT: VOffset = 6
+    static let FREQ_LOWER_EDGE_HZ: VOffset = 8
+    static let FREQ_UPPER_EDGE_HZ: VOffset = 10
+    static let LABEL: VOffset = 12
+    static let COMMENT: VOffset = 14
+    static let GENERATOR: VOffset = 16
+    static let UUID: VOffset = 18
+  }
+
+  ///  SigMF `core:sample_start` — first sample of the annotated region.
+  public var SAMPLE_START: UInt64 { let o = _accessor.offset(VT.SAMPLE_START); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  SigMF `core:sample_count` — length of the annotated region in samples.
+  public var SAMPLE_COUNT: UInt64 { let o = _accessor.offset(VT.SAMPLE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  SigMF `core:freq_lower_edge` — lower edge of the annotated band, HERTZ.
+  public var FREQ_LOWER_EDGE_HZ: Double { let o = _accessor.offset(VT.FREQ_LOWER_EDGE_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SigMF `core:freq_upper_edge` — upper edge of the annotated band, HERTZ.
+  public var FREQ_UPPER_EDGE_HZ: Double { let o = _accessor.offset(VT.FREQ_UPPER_EDGE_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SigMF `core:label` — the short human label ("LoRa", "ADS-B", "AIS").
+  public var LABEL: String? { let o = _accessor.offset(VT.LABEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LABEL) }
+  ///  SigMF `core:comment` — free-text note.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  SigMF `core:generator` — the tool or person that produced the
+  ///  annotation. An annotation asserted by an automatic classifier and one
+  ///  asserted by a human are not interchangeable evidence; this field is how
+  ///  a consumer tells them apart.
+  public var GENERATOR: String? { let o = _accessor.offset(VT.GENERATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GENERATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GENERATOR) }
+  ///  SigMF `core:uuid` — the annotation's own identifier, when present.
+  public var UUID: String? { let o = _accessor.offset(VT.UUID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UUIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UUID) }
+  public static func startIQCAnnotation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(SAMPLE_START: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_START, def: 0, at: VT.SAMPLE_START) }
+  public static func add(SAMPLE_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_COUNT, def: 0, at: VT.SAMPLE_COUNT) }
+  public static func add(FREQ_LOWER_EDGE_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_LOWER_EDGE_HZ, def: 0.0, at: VT.FREQ_LOWER_EDGE_HZ) }
+  public static func add(FREQ_UPPER_EDGE_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_UPPER_EDGE_HZ, def: 0.0, at: VT.FREQ_UPPER_EDGE_HZ) }
+  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VT.LABEL) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(GENERATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GENERATOR, at: VT.GENERATOR) }
+  public static func add(UUID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UUID, at: VT.UUID) }
+  public static func endIQCAnnotation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIQCAnnotation(
+    _ fbb: inout FlatBufferBuilder,
+    SAMPLE_START: UInt64 = 0,
+    SAMPLE_COUNT: UInt64 = 0,
+    FREQ_LOWER_EDGE_HZ: Double = 0.0,
+    FREQ_UPPER_EDGE_HZ: Double = 0.0,
+    LABELOffset LABEL: Offset = Offset(),
+    COMMENTOffset COMMENT: Offset = Offset(),
+    GENERATOROffset GENERATOR: Offset = Offset(),
+    UUIDOffset UUID: Offset = Offset()
+  ) -> Offset {
+    let __start = IQCAnnotation.startIQCAnnotation(&fbb)
+    IQCAnnotation.add(SAMPLE_START: SAMPLE_START, &fbb)
+    IQCAnnotation.add(SAMPLE_COUNT: SAMPLE_COUNT, &fbb)
+    IQCAnnotation.add(FREQ_LOWER_EDGE_HZ: FREQ_LOWER_EDGE_HZ, &fbb)
+    IQCAnnotation.add(FREQ_UPPER_EDGE_HZ: FREQ_UPPER_EDGE_HZ, &fbb)
+    IQCAnnotation.add(LABEL: LABEL, &fbb)
+    IQCAnnotation.add(COMMENT: COMMENT, &fbb)
+    IQCAnnotation.add(GENERATOR: GENERATOR, &fbb)
+    IQCAnnotation.add(UUID: UUID, &fbb)
+    return IQCAnnotation.endIQCAnnotation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SAMPLE_START, fieldName: "SAMPLE_START", required: false, type: UInt64.self)
+    try _v.visit(field: VT.SAMPLE_COUNT, fieldName: "SAMPLE_COUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.FREQ_LOWER_EDGE_HZ, fieldName: "FREQ_LOWER_EDGE_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQ_UPPER_EDGE_HZ, fieldName: "FREQ_UPPER_EDGE_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.LABEL, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GENERATOR, fieldName: "GENERATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UUID, fieldName: "UUID", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  A SigMF extension namespace the upstream metadata declares.
+public struct IQCExtension: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IQC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IQCExtension.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let VERSION: VOffset = 6
+    static let IS_OPTIONAL: VOffset = 8
+  }
+
+  ///  Extension namespace name.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Extension version.
+  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
+  ///  True when the extension is declared optional for interpretation.
+  public var IS_OPTIONAL: Bool { let o = _accessor.offset(VT.IS_OPTIONAL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startIQCExtension(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(IS_OPTIONAL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_OPTIONAL, def: false,
+   at: VT.IS_OPTIONAL) }
+  public static func endIQCExtension(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIQCExtension(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    VERSIONOffset VERSION: Offset = Offset(),
+    IS_OPTIONAL: Bool = false
+  ) -> Offset {
+    let __start = IQCExtension.startIQCExtension(&fbb)
+    IQCExtension.add(NAME: NAME, &fbb)
+    IQCExtension.add(VERSION: VERSION, &fbb)
+    IQCExtension.add(IS_OPTIONAL: IS_OPTIONAL, &fbb)
+    return IQCExtension.endIQCExtension(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IS_OPTIONAL, fieldName: "IS_OPTIONAL", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  A retrievable file belonging to this capture.
+///
+///  The record NEVER carries sample bytes. It carries where they are, how big
+///  they are, and what they hash to, so a consumer can decide for itself
+///  whether to fetch 400 kB or 127 GB.
+public struct IQCPayloadRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IQC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IQCPayloadRef.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ROLE: VOffset = 4
+    static let URL: VOffset = 6
+    static let FILE_NAME: VOffset = 8
+    static let MEDIA_TYPE: VOffset = 10
+    static let BYTE_LENGTH: VOffset = 12
+    static let BYTE_SHA256: VOffset = 14
+    static let BYTE_SHA512: VOffset = 16
+    static let CID: VOffset = 18
+    static let MULTIFORMAT_ADDRESS: VOffset = 20
+    static let CUSTODY: VOffset = 22
+    static let RETRIEVED_AT: VOffset = 24
+  }
+
+  ///  What this file is.
+  public var ROLE: iqcPayloadRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .other : iqcPayloadRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .other }
+  ///  Upstream retrieval URL, verbatim.
+  public var URL: String? { let o = _accessor.offset(VT.URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.URL) }
+  ///  File name as the source publishes it.
+  public var FILE_NAME: String? { let o = _accessor.offset(VT.FILE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_NAME) }
+  ///  IANA media type when the source declares one.
+  public var MEDIA_TYPE: String? { let o = _accessor.offset(VT.MEDIA_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MEDIA_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MEDIA_TYPE) }
+  ///  Byte length. 0 means the source did not publish a size — it never means
+  ///  an empty file.
+  public var BYTE_LENGTH: UInt64 { let o = _accessor.offset(VT.BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  SHA-256 of the exact bytes, lowercase hex. Populated only when computed
+  ///  or published; never guessed.
+  public var BYTE_SHA256: String? { let o = _accessor.offset(VT.BYTE_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BYTE_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BYTE_SHA256) }
+  ///  SHA-512 of the exact bytes, lowercase hex. SigMF `core:sha512` is a
+  ///  SHA-512 over the dataset file, so it is carried in its own field rather
+  ///  than converted or discarded.
+  public var BYTE_SHA512: String? { let o = _accessor.offset(VT.BYTE_SHA512); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BYTE_SHA512SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BYTE_SHA512) }
+  ///  IPFS CIDv1 when, and only when, this SDN pinned the bytes.
+  public var CID: String? { let o = _accessor.offset(VT.CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CID) }
+  ///  Multiformat address, usually /ipfs/{CID}.
+  public var MULTIFORMAT_ADDRESS: String? { let o = _accessor.offset(VT.MULTIFORMAT_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MULTIFORMAT_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MULTIFORMAT_ADDRESS) }
+  ///  Custody of these bytes.
+  public var CUSTODY: iqcCustody { let o = _accessor.offset(VT.CUSTODY); return o == 0 ? .upstreamOnly : iqcCustody(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .upstreamOnly }
+  ///  ISO 8601 UTC time at which URL was last confirmed retrievable.
+  public var RETRIEVED_AT: String? { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RETRIEVED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RETRIEVED_AT) }
+  public static func startIQCPayloadRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(ROLE: iqcPayloadRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 4, at: VT.ROLE) }
+  public static func add(URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: URL, at: VT.URL) }
+  public static func add(FILE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_NAME, at: VT.FILE_NAME) }
+  public static func add(MEDIA_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEDIA_TYPE, at: VT.MEDIA_TYPE) }
+  public static func add(BYTE_LENGTH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_LENGTH, def: 0, at: VT.BYTE_LENGTH) }
+  public static func add(BYTE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BYTE_SHA256, at: VT.BYTE_SHA256) }
+  public static func add(BYTE_SHA512: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BYTE_SHA512, at: VT.BYTE_SHA512) }
+  public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
+  public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VT.MULTIFORMAT_ADDRESS) }
+  public static func add(CUSTODY: iqcCustody, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CUSTODY.rawValue, def: 0, at: VT.CUSTODY) }
+  public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
+  public static func endIQCPayloadRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIQCPayloadRef(
+    _ fbb: inout FlatBufferBuilder,
+    ROLE: iqcPayloadRole = .other,
+    URLOffset URL: Offset = Offset(),
+    FILE_NAMEOffset FILE_NAME: Offset = Offset(),
+    MEDIA_TYPEOffset MEDIA_TYPE: Offset = Offset(),
+    BYTE_LENGTH: UInt64 = 0,
+    BYTE_SHA256Offset BYTE_SHA256: Offset = Offset(),
+    BYTE_SHA512Offset BYTE_SHA512: Offset = Offset(),
+    CIDOffset CID: Offset = Offset(),
+    MULTIFORMAT_ADDRESSOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
+    CUSTODY: iqcCustody = .upstreamOnly,
+    RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset()
+  ) -> Offset {
+    let __start = IQCPayloadRef.startIQCPayloadRef(&fbb)
+    IQCPayloadRef.add(ROLE: ROLE, &fbb)
+    IQCPayloadRef.add(URL: URL, &fbb)
+    IQCPayloadRef.add(FILE_NAME: FILE_NAME, &fbb)
+    IQCPayloadRef.add(MEDIA_TYPE: MEDIA_TYPE, &fbb)
+    IQCPayloadRef.add(BYTE_LENGTH: BYTE_LENGTH, &fbb)
+    IQCPayloadRef.add(BYTE_SHA256: BYTE_SHA256, &fbb)
+    IQCPayloadRef.add(BYTE_SHA512: BYTE_SHA512, &fbb)
+    IQCPayloadRef.add(CID: CID, &fbb)
+    IQCPayloadRef.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
+    IQCPayloadRef.add(CUSTODY: CUSTODY, &fbb)
+    IQCPayloadRef.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
+    return IQCPayloadRef.endIQCPayloadRef(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: iqcPayloadRole.self)
+    try _v.visit(field: VT.URL, fieldName: "URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_NAME, fieldName: "FILE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEDIA_TYPE, fieldName: "MEDIA_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BYTE_LENGTH, fieldName: "BYTE_LENGTH", required: false, type: UInt64.self)
+    try _v.visit(field: VT.BYTE_SHA256, fieldName: "BYTE_SHA256", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BYTE_SHA512, fieldName: "BYTE_SHA512", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CID, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MULTIFORMAT_ADDRESS, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CUSTODY, fieldName: "CUSTODY", required: false, type: iqcCustody.self)
+    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  RF IQ Capture Metadata.
+///
+///  The description of ONE raw, un-demodulated complex-baseband recording held
+///  in a public archive — a hosted IQ-capture repository, a crowdsourced
+///  signal-identification catalog, an institutional dataset repository, an
+///  SDR project's capture database, a general-purpose research data archive —
+///  normalized onto the SigMF v1 core namespace, which is the only metadata
+///  vocabulary these archive classes share.
+///
+///  $IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable
+///  and verifiable without anyone mirroring its payload: the samples stay where
+///  their publisher put them and `PAYLOADS` says where that is, how large it
+///  is, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture
+///  decision for small high-value recordings, never a default.
+///
+///  UNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and
+///  sample rate in HERTZ, so every frequency and rate field here is `_HZ` and
+///  carries the Hz value unconverted. This standard deliberately does NOT
+///  follow $RFB's MHz convention — silently rescaling a SigMF value on ingest
+///  is the exact defect the suffix exists to prevent. A consumer joining $IQC
+///  to $RFB divides by 1e6 at the join, explicitly.
+///
+///  LICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.
+///  It does not mean public domain, it does not mean permissive, and it does
+///  not authorize redistribution. Crowdsourced catalogs and hosted repositories
+///  both carry third-party recordings, so licence is per RECORDING, never per
+///  archive.
+///
+///  Division of labour: $RFO = a sensor's astrometric/RF observation of a
+///  tracked object (azimuth, elevation, range); $RFE = the parametric emitter
+///  description; $RFB = the emitter's band specification in MHz; $IQC = the
+///  archived baseband recording itself. $DPM remains the manifest under which
+///  THIS network publishes a shard of $IQC records; it does not describe an
+///  upstream third party's capture.
+public struct IQC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IQC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IQC.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let ID: VOffset = 4
-    static let ID_ON_ORBIT1: VOffset = 6
-    static let SAT_NO1: VOffset = 8
-    static let ID_ON_ORBIT2: VOffset = 10
-    static let SAT_NO2: VOffset = 12
-    static let CONSTELLATION: VOffset = 14
-    static let LINK_NAME: VOffset = 16
-    static let LINK_TYPE: VOffset = 18
-    static let LINK_STATE: VOffset = 20
-    static let BAND: VOffset = 22
-    static let LINK_START_TIME: VOffset = 24
-    static let LINK_STOP_TIME: VOffset = 26
-    static let ID_BEAM1: VOffset = 28
-    static let END_POINT1_NAME: VOffset = 30
-    static let END_POINT1_LAT: VOffset = 32
-    static let END_POINT1_LON: VOffset = 34
-    static let ID_BEAM2: VOffset = 36
-    static let END_POINT2_NAME: VOffset = 38
-    static let END_POINT2_LAT: VOffset = 40
-    static let END_POINT2_LON: VOffset = 42
-    static let DATA_RATE1_TO2: VOffset = 44
-    static let DATA_RATE2_TO1: VOffset = 46
-    static let SYS_CAP: VOffset = 48
-    static let OPS_CAP: VOffset = 50
+    static let CAPTURE_ID: VOffset = 6
+    static let SOURCE_NAME: VOffset = 8
+    static let SOURCE_URL: VOffset = 10
+    static let SOURCE_RECORD_ID: VOffset = 12
+    static let SOURCE_SHA256: VOffset = 14
+    static let RETRIEVED_AT: VOffset = 16
+    static let TITLE: VOffset = 18
+    static let DESCRIPTION: VOffset = 20
+    static let AUTHOR: VOffset = 22
+    static let SIGMF_VERSION: VOffset = 24
+    static let COLLECTION: VOffset = 26
+    static let EXTENSIONS: VOffset = 28
+    static let DATATYPE: VOffset = 30
+    static let SAMPLE_RATE_HZ: VOffset = 32
+    static let NUM_CHANNELS: VOffset = 34
+    static let CENTER_FREQ_HZ: VOffset = 36
+    static let FREQ_LOWER_EDGE_HZ: VOffset = 38
+    static let FREQ_UPPER_EDGE_HZ: VOffset = 40
+    static let SAMPLE_COUNT: VOffset = 42
+    static let DURATION_SECONDS: VOffset = 44
+    static let SAMPLE_OFFSET: VOffset = 46
+    static let METADATA_ONLY: VOffset = 48
+    static let TRAILING_BYTES: VOffset = 50
+    static let CAPTURE_START: VOffset = 52
+    static let CAPTURE_STOP: VOffset = 54
+    static let SEGMENTS: VOffset = 56
+    static let ANNOTATIONS: VOffset = 58
+    static let LABELS: VOffset = 60
+    static let GEOLOCATION: VOffset = 62
+    static let HARDWARE: VOffset = 64
+    static let SIGNAL_NAME: VOffset = 66
+    static let MODULATION: VOffset = 68
+    static let BAND: VOffset = 70
+    static let NORAD_CAT_ID: VOffset = 72
+    static let OBJECT_ID: VOffset = 74
+    static let EMITTER_ID: VOffset = 76
+    static let RFB_ID: VOffset = 78
+    static let LICENSE: VOffset = 80
+    static let LICENSE_URL: VOffset = 82
+    static let ATTRIBUTION: VOffset = 84
+    static let META_DOI: VOffset = 86
+    static let DATA_DOI: VOffset = 88
+    static let PAYLOADS: VOffset = 90
+    static let CREATED_AT: VOffset = 92
+    static let UPDATED_AT: VOffset = 94
+    static let SUPERSEDES_IQC_CID: VOffset = 96
   }
 
-  ///  Unique identifier
+  ///  Stable identifier for this record.
   public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
-  ///  First endpoint on-orbit identifier
-  public var ID_ON_ORBIT1: String? { let o = _accessor.offset(VT.ID_ON_ORBIT1); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_ON_ORBIT1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ON_ORBIT1) }
-  ///  First endpoint satellite catalog number
-  public var SAT_NO1: UInt32 { let o = _accessor.offset(VT.SAT_NO1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Second endpoint on-orbit identifier
-  public var ID_ON_ORBIT2: String? { let o = _accessor.offset(VT.ID_ON_ORBIT2); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_ON_ORBIT2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ON_ORBIT2) }
-  ///  Second endpoint satellite catalog number
-  public var SAT_NO2: UInt32 { let o = _accessor.offset(VT.SAT_NO2); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Constellation name
-  public var CONSTELLATION: String? { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTELLATION) }
-  ///  Link name or identifier
-  public var LINK_NAME: String? { let o = _accessor.offset(VT.LINK_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_NAME) }
-  ///  Link type
-  public var LINK_TYPE: linkCategory { let o = _accessor.offset(VT.LINK_TYPE); return o == 0 ? .uplink : linkCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .uplink }
-  ///  Link state
-  public var LINK_STATE: linkCondition { let o = _accessor.offset(VT.LINK_STATE); return o == 0 ? .established : linkCondition(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .established }
-  ///  RF band
-  public var BAND: String? { let o = _accessor.offset(VT.BAND); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BAND) }
-  ///  Link start time (ISO 8601)
-  public var LINK_START_TIME: String? { let o = _accessor.offset(VT.LINK_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_START_TIME) }
-  ///  Link stop time (ISO 8601)
-  public var LINK_STOP_TIME: String? { let o = _accessor.offset(VT.LINK_STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_STOP_TIME) }
-  ///  First endpoint beam identifier
-  public var ID_BEAM1: String? { let o = _accessor.offset(VT.ID_BEAM1); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_BEAM1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_BEAM1) }
-  ///  First endpoint name
-  public var END_POINT1_NAME: String? { let o = _accessor.offset(VT.END_POINT1_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var END_POINT1_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END_POINT1_NAME) }
-  ///  First endpoint latitude (degrees)
-  public var END_POINT1_LAT: Double { let o = _accessor.offset(VT.END_POINT1_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  First endpoint longitude (degrees)
-  public var END_POINT1_LON: Double { let o = _accessor.offset(VT.END_POINT1_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Second endpoint beam identifier
-  public var ID_BEAM2: String? { let o = _accessor.offset(VT.ID_BEAM2); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_BEAM2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_BEAM2) }
-  ///  Second endpoint name
-  public var END_POINT2_NAME: String? { let o = _accessor.offset(VT.END_POINT2_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var END_POINT2_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END_POINT2_NAME) }
-  ///  Second endpoint latitude (degrees)
-  public var END_POINT2_LAT: Double { let o = _accessor.offset(VT.END_POINT2_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Second endpoint longitude (degrees)
-  public var END_POINT2_LON: Double { let o = _accessor.offset(VT.END_POINT2_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Data rate from endpoint 1 to 2 (Mbps)
-  public var DATA_RATE1_TO2: Double { let o = _accessor.offset(VT.DATA_RATE1_TO2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Data rate from endpoint 2 to 1 (Mbps)
-  public var DATA_RATE2_TO1: Double { let o = _accessor.offset(VT.DATA_RATE2_TO1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  System capability status
-  public var SYS_CAP: String? { let o = _accessor.offset(VT.SYS_CAP); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYS_CAPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYS_CAP) }
-  ///  Operational capability status
-  public var OPS_CAP: String? { let o = _accessor.offset(VT.OPS_CAP); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OPS_CAPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPS_CAP) }
-  public static func startLKS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
+  ///  The upstream archive's own identifier for this capture, verbatim.
+  public var CAPTURE_ID: String? { let o = _accessor.offset(VT.CAPTURE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CAPTURE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CAPTURE_ID) }
+  ///  Name of the archive that publishes the capture, carried verbatim as that
+  ///  archive states it. A string rather than an enum so a new archive lane
+  ///  never requires a schema release.
+  public var SOURCE_NAME: String? { let o = _accessor.offset(VT.SOURCE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_NAME) }
+  ///  Landing page for the capture at the source.
+  public var SOURCE_URL: String? { let o = _accessor.offset(VT.SOURCE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_URL) }
+  ///  Identifier of the source record this was normalized from, when the
+  ///  source exposes one distinct from CAPTURE_ID.
+  public var SOURCE_RECORD_ID: String? { let o = _accessor.offset(VT.SOURCE_RECORD_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_RECORD_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_RECORD_ID) }
+  ///  SHA-256 of the raw upstream metadata bytes that produced this record,
+  ///  lowercase hex. Makes the normalization auditable.
+  public var SOURCE_SHA256: String? { let o = _accessor.offset(VT.SOURCE_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_SHA256) }
+  ///  ISO 8601 UTC time the source metadata was retrieved.
+  public var RETRIEVED_AT: String? { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RETRIEVED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RETRIEVED_AT) }
+  ///  Human title of the capture.
+  public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
+  ///  SigMF `core:description`.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  SigMF `core:author`.
+  public var AUTHOR: String? { let o = _accessor.offset(VT.AUTHOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AUTHORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AUTHOR) }
+  ///  SigMF `core:version` — the SigMF specification version the upstream
+  ///  metadata declares. Empty for captures normalized from a non-SigMF
+  ///  source; that emptiness is itself informative.
+  public var SIGMF_VERSION: String? { let o = _accessor.offset(VT.SIGMF_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGMF_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGMF_VERSION) }
+  ///  SigMF `core:collection` — identifier of the collection this recording
+  ///  belongs to.
+  public var COLLECTION: String? { let o = _accessor.offset(VT.COLLECTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLLECTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLLECTION) }
+  ///  SigMF `core:extensions`.
+  public var EXTENSIONS: FlatbufferVector<IQCExtension> { return _accessor.vector(at: VT.EXTENSIONS, byteSize: 4) }
+  ///  SigMF `core:datatype` VERBATIM, e.g. "cf32_le", "ci16_le", "ru8". Never
+  ///  re-spelled, never normalized to another vocabulary. A consumer that
+  ///  cannot parse the token MUST refuse the samples rather than assume a
+  ///  layout.
+  public var DATATYPE: String? { let o = _accessor.offset(VT.DATATYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATATYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATATYPE) }
+  ///  SigMF `core:sample_rate`, HERTZ (complex samples per second).
+  public var SAMPLE_RATE_HZ: Double { let o = _accessor.offset(VT.SAMPLE_RATE_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SigMF `core:num_channels`. 0 means unstated; 1 is the SigMF default and
+  ///  MUST be written explicitly when known.
+  public var NUM_CHANNELS: UInt32 { let o = _accessor.offset(VT.NUM_CHANNELS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Centre frequency of the FIRST capture segment, HERTZ, copied here for
+  ///  indexing. `SEGMENTS` is normative whenever it is present.
+  public var CENTER_FREQ_HZ: Double { let o = _accessor.offset(VT.CENTER_FREQ_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lowest occupied frequency across the recording, HERTZ, when the source
+  ///  states it or its annotations bound it.
+  public var FREQ_LOWER_EDGE_HZ: Double { let o = _accessor.offset(VT.FREQ_LOWER_EDGE_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Highest occupied frequency across the recording, HERTZ.
+  public var FREQ_UPPER_EDGE_HZ: Double { let o = _accessor.offset(VT.FREQ_UPPER_EDGE_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Total complex samples in the recording. 0 means unstated — it is NOT to
+  ///  be back-computed from BYTE_LENGTH unless DATATYPE and any header bytes
+  ///  are both known.
+  public var SAMPLE_COUNT: UInt64 { let o = _accessor.offset(VT.SAMPLE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Recording length in seconds, when stated or exactly derivable from
+  ///  SAMPLE_COUNT and SAMPLE_RATE_HZ.
+  public var DURATION_SECONDS: Double { let o = _accessor.offset(VT.DURATION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SigMF `core:offset` — index of the first sample in the recording's own
+  ///  numbering.
+  public var SAMPLE_OFFSET: UInt64 { let o = _accessor.offset(VT.SAMPLE_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  SigMF `core:metadata_only` — true when no dataset file accompanies the
+  ///  metadata.
+  public var METADATA_ONLY: Bool { let o = _accessor.offset(VT.METADATA_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  SigMF `core:trailing_bytes` — non-sample bytes at the end of the data
+  ///  file.
+  public var TRAILING_BYTES: UInt64 { let o = _accessor.offset(VT.TRAILING_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  ISO 8601 UTC start of the recording (the first segment's
+  ///  `core:datetime`).
+  public var CAPTURE_START: String? { let o = _accessor.offset(VT.CAPTURE_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CAPTURE_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CAPTURE_START) }
+  ///  ISO 8601 UTC end of the recording, when stated or exactly derivable.
+  public var CAPTURE_STOP: String? { let o = _accessor.offset(VT.CAPTURE_STOP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CAPTURE_STOPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CAPTURE_STOP) }
+  ///  Per-segment tuning history.
+  public var SEGMENTS: FlatbufferVector<IQCSegment> { return _accessor.vector(at: VT.SEGMENTS, byteSize: 4) }
+  ///  Labelled time/frequency regions.
+  public var ANNOTATIONS: FlatbufferVector<IQCAnnotation> { return _accessor.vector(at: VT.ANNOTATIONS, byteSize: 4) }
+  ///  Archive-level tags, categories or keywords, carried verbatim in whatever
+  ///  vocabulary the publishing archive uses.
+  public var LABELS: FlatbufferVector<String?> { return _accessor.vector(at: VT.LABELS, byteSize: 4) }
+  ///  Receiver position. Absent when the source published none.
+  public var GEOLOCATION: IQCGeolocation? { let o = _accessor.offset(VT.GEOLOCATION); return o == 0 ? nil : IQCGeolocation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Receive chain.
+  public var HARDWARE: IQCHardware? { let o = _accessor.offset(VT.HARDWARE); return o == 0 ? nil : IQCHardware(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Signal designation the source states, verbatim ("LoRa", "DVB-S2",
+  ///  "ADS-B", "VOR"). Not an enum: these archives catalogue the whole radio
+  ///  world, and $RFE's `signalModulation` is a radar-emitter vocabulary that
+  ///  would force every civil waveform into UNKNOWN.
+  public var SIGNAL_NAME: String? { let o = _accessor.offset(VT.SIGNAL_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNAL_NAME) }
+  ///  Modulation the source states, verbatim. Never inferred from the samples.
+  public var MODULATION: String? { let o = _accessor.offset(VT.MODULATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULATION) }
+  ///  Band designation the source states. Shares $RFB's `rfBandDesignation`, so
+  ///  an HF or VHF capture is designated identically on both records.
+  public var BAND: rfBandDesignation { let o = _accessor.offset(VT.BAND); return o == 0 ? .other : rfBandDesignation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .other }
+  ///  NORAD catalogue number of the transmitting spacecraft when the capture
+  ///  is of a known space object. Joins to $CAT.NORAD_CAT_ID. 0 when unbound.
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator of the transmitting spacecraft, when known.
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  ///  $RFE.ID of the emitter this capture is of, when identified.
+  public var EMITTER_ID: String? { let o = _accessor.offset(VT.EMITTER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EMITTER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EMITTER_ID) }
+  ///  $RFB.ID of the band specification this capture exercises, when
+  ///  identified.
+  public var RFB_ID: String? { let o = _accessor.offset(VT.RFB_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFB_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFB_ID) }
+  ///  SPDX identifier when the source states one, otherwise the source's
+  ///  licence name verbatim. EMPTY MEANS UNKNOWN TERMS — never public domain.
+  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
+  ///  URL of the licence text the source points at.
+  public var LICENSE_URL: String? { let o = _accessor.offset(VT.LICENSE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE_URL) }
+  ///  Attribution/citation string the licence requires this record and any
+  ///  derived product to carry downstream.
+  public var ATTRIBUTION: String? { let o = _accessor.offset(VT.ATTRIBUTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATTRIBUTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATTRIBUTION) }
+  ///  SigMF `core:meta_doi` — DOI of the metadata.
+  public var META_DOI: String? { let o = _accessor.offset(VT.META_DOI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var META_DOISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.META_DOI) }
+  ///  SigMF `core:data_doi` — DOI of the dataset.
+  public var DATA_DOI: String? { let o = _accessor.offset(VT.DATA_DOI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATA_DOISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATA_DOI) }
+  ///  Retrievable files for this capture.
+  public var PAYLOADS: FlatbufferVector<IQCPayloadRef> { return _accessor.vector(at: VT.PAYLOADS, byteSize: 4) }
+  ///  ISO 8601 UTC creation time of this record.
+  public var CREATED_AT: String? { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATED_AT) }
+  ///  ISO 8601 UTC last-update time of this record.
+  public var UPDATED_AT: String? { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UPDATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATED_AT) }
+  ///  CID of the $IQC this record replaces, when the upstream capture's
+  ///  metadata changed.
+  public var SUPERSEDES_IQC_CID: String? { let o = _accessor.offset(VT.SUPERSEDES_IQC_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SUPERSEDES_IQC_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SUPERSEDES_IQC_CID) }
+  public static func startIQC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 47) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(ID_ON_ORBIT1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT1, at: VT.ID_ON_ORBIT1) }
-  public static func add(SAT_NO1: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO1, def: 0, at: VT.SAT_NO1) }
-  public static func add(ID_ON_ORBIT2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT2, at: VT.ID_ON_ORBIT2) }
-  public static func add(SAT_NO2: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO2, def: 0, at: VT.SAT_NO2) }
-  public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VT.CONSTELLATION) }
-  public static func add(LINK_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_NAME, at: VT.LINK_NAME) }
-  public static func add(LINK_TYPE: linkCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_TYPE.rawValue, def: 0, at: VT.LINK_TYPE) }
-  public static func add(LINK_STATE: linkCondition, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_STATE.rawValue, def: 0, at: VT.LINK_STATE) }
-  public static func add(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VT.BAND) }
-  public static func add(LINK_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_START_TIME, at: VT.LINK_START_TIME) }
-  public static func add(LINK_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_STOP_TIME, at: VT.LINK_STOP_TIME) }
-  public static func add(ID_BEAM1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BEAM1, at: VT.ID_BEAM1) }
-  public static func add(END_POINT1_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_POINT1_NAME, at: VT.END_POINT1_NAME) }
-  public static func add(END_POINT1_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT1_LAT, def: 0.0, at: VT.END_POINT1_LAT) }
-  public static func add(END_POINT1_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT1_LON, def: 0.0, at: VT.END_POINT1_LON) }
-  public static func add(ID_BEAM2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BEAM2, at: VT.ID_BEAM2) }
-  public static func add(END_POINT2_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_POINT2_NAME, at: VT.END_POINT2_NAME) }
-  public static func add(END_POINT2_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT2_LAT, def: 0.0, at: VT.END_POINT2_LAT) }
-  public static func add(END_POINT2_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT2_LON, def: 0.0, at: VT.END_POINT2_LON) }
-  public static func add(DATA_RATE1_TO2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE1_TO2, def: 0.0, at: VT.DATA_RATE1_TO2) }
-  public static func add(DATA_RATE2_TO1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE2_TO1, def: 0.0, at: VT.DATA_RATE2_TO1) }
-  public static func add(SYS_CAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYS_CAP, at: VT.SYS_CAP) }
-  public static func add(OPS_CAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPS_CAP, at: VT.OPS_CAP) }
-  public static func endLKS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createLKS(
+  public static func add(CAPTURE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPTURE_ID, at: VT.CAPTURE_ID) }
+  public static func add(SOURCE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_NAME, at: VT.SOURCE_NAME) }
+  public static func add(SOURCE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_URL, at: VT.SOURCE_URL) }
+  public static func add(SOURCE_RECORD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_RECORD_ID, at: VT.SOURCE_RECORD_ID) }
+  public static func add(SOURCE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_SHA256, at: VT.SOURCE_SHA256) }
+  public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
+  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(AUTHOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR, at: VT.AUTHOR) }
+  public static func add(SIGMF_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGMF_VERSION, at: VT.SIGMF_VERSION) }
+  public static func add(COLLECTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLECTION, at: VT.COLLECTION) }
+  public static func addVectorOf(EXTENSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTENSIONS, at: VT.EXTENSIONS) }
+  public static func add(DATATYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATATYPE, at: VT.DATATYPE) }
+  public static func add(SAMPLE_RATE_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_RATE_HZ, def: 0.0, at: VT.SAMPLE_RATE_HZ) }
+  public static func add(NUM_CHANNELS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_CHANNELS, def: 0, at: VT.NUM_CHANNELS) }
+  public static func add(CENTER_FREQ_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_FREQ_HZ, def: 0.0, at: VT.CENTER_FREQ_HZ) }
+  public static func add(FREQ_LOWER_EDGE_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_LOWER_EDGE_HZ, def: 0.0, at: VT.FREQ_LOWER_EDGE_HZ) }
+  public static func add(FREQ_UPPER_EDGE_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_UPPER_EDGE_HZ, def: 0.0, at: VT.FREQ_UPPER_EDGE_HZ) }
+  public static func add(SAMPLE_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_COUNT, def: 0, at: VT.SAMPLE_COUNT) }
+  public static func add(DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_SECONDS, def: 0.0, at: VT.DURATION_SECONDS) }
+  public static func add(SAMPLE_OFFSET: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_OFFSET, def: 0, at: VT.SAMPLE_OFFSET) }
+  public static func add(METADATA_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METADATA_ONLY, def: false,
+   at: VT.METADATA_ONLY) }
+  public static func add(TRAILING_BYTES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAILING_BYTES, def: 0, at: VT.TRAILING_BYTES) }
+  public static func add(CAPTURE_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPTURE_START, at: VT.CAPTURE_START) }
+  public static func add(CAPTURE_STOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPTURE_STOP, at: VT.CAPTURE_STOP) }
+  public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
+  public static func addVectorOf(ANNOTATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANNOTATIONS, at: VT.ANNOTATIONS) }
+  public static func addVectorOf(LABELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABELS, at: VT.LABELS) }
+  public static func add(GEOLOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOLOCATION, at: VT.GEOLOCATION) }
+  public static func add(HARDWARE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HARDWARE, at: VT.HARDWARE) }
+  public static func add(SIGNAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNAL_NAME, at: VT.SIGNAL_NAME) }
+  public static func add(MODULATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULATION, at: VT.MODULATION) }
+  public static func add(BAND: rfBandDesignation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BAND.rawValue, def: 12, at: VT.BAND) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(EMITTER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMITTER_ID, at: VT.EMITTER_ID) }
+  public static func add(RFB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFB_ID, at: VT.RFB_ID) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(LICENSE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_URL, at: VT.LICENSE_URL) }
+  public static func add(ATTRIBUTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTRIBUTION, at: VT.ATTRIBUTION) }
+  public static func add(META_DOI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_DOI, at: VT.META_DOI) }
+  public static func add(DATA_DOI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_DOI, at: VT.DATA_DOI) }
+  public static func addVectorOf(PAYLOADS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOADS, at: VT.PAYLOADS) }
+  public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VT.CREATED_AT) }
+  public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
+  public static func add(SUPERSEDES_IQC_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUPERSEDES_IQC_CID, at: VT.SUPERSEDES_IQC_CID) }
+  public static func endIQC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIQC(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
-    ID_ON_ORBIT1Offset ID_ON_ORBIT1: Offset = Offset(),
-    SAT_NO1: UInt32 = 0,
-    ID_ON_ORBIT2Offset ID_ON_ORBIT2: Offset = Offset(),
-    SAT_NO2: UInt32 = 0,
-    CONSTELLATIONOffset CONSTELLATION: Offset = Offset(),
-    LINK_NAMEOffset LINK_NAME: Offset = Offset(),
-    LINK_TYPE: linkCategory = .uplink,
-    LINK_STATE: linkCondition = .established,
-    BANDOffset BAND: Offset = Offset(),
-    LINK_START_TIMEOffset LINK_START_TIME: Offset = Offset(),
-    LINK_STOP_TIMEOffset LINK_STOP_TIME: Offset = Offset(),
-    ID_BEAM1Offset ID_BEAM1: Offset = Offset(),
-    END_POINT1_NAMEOffset END_POINT1_NAME: Offset = Offset(),
-    END_POINT1_LAT: Double = 0.0,
-    END_POINT1_LON: Double = 0.0,
-    ID_BEAM2Offset ID_BEAM2: Offset = Offset(),
-    END_POINT2_NAMEOffset END_POINT2_NAME: Offset = Offset(),
-    END_POINT2_LAT: Double = 0.0,
-    END_POINT2_LON: Double = 0.0,
-    DATA_RATE1_TO2: Double = 0.0,
-    DATA_RATE2_TO1: Double = 0.0,
-    SYS_CAPOffset SYS_CAP: Offset = Offset(),
-    OPS_CAPOffset OPS_CAP: Offset = Offset()
+    CAPTURE_IDOffset CAPTURE_ID: Offset = Offset(),
+    SOURCE_NAMEOffset SOURCE_NAME: Offset = Offset(),
+    SOURCE_URLOffset SOURCE_URL: Offset = Offset(),
+    SOURCE_RECORD_IDOffset SOURCE_RECORD_ID: Offset = Offset(),
+    SOURCE_SHA256Offset SOURCE_SHA256: Offset = Offset(),
+    RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset(),
+    TITLEOffset TITLE: Offset = Offset(),
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    AUTHOROffset AUTHOR: Offset = Offset(),
+    SIGMF_VERSIONOffset SIGMF_VERSION: Offset = Offset(),
+    COLLECTIONOffset COLLECTION: Offset = Offset(),
+    EXTENSIONSVectorOffset EXTENSIONS: Offset = Offset(),
+    DATATYPEOffset DATATYPE: Offset = Offset(),
+    SAMPLE_RATE_HZ: Double = 0.0,
+    NUM_CHANNELS: UInt32 = 0,
+    CENTER_FREQ_HZ: Double = 0.0,
+    FREQ_LOWER_EDGE_HZ: Double = 0.0,
+    FREQ_UPPER_EDGE_HZ: Double = 0.0,
+    SAMPLE_COUNT: UInt64 = 0,
+    DURATION_SECONDS: Double = 0.0,
+    SAMPLE_OFFSET: UInt64 = 0,
+    METADATA_ONLY: Bool = false,
+    TRAILING_BYTES: UInt64 = 0,
+    CAPTURE_STARTOffset CAPTURE_START: Offset = Offset(),
+    CAPTURE_STOPOffset CAPTURE_STOP: Offset = Offset(),
+    SEGMENTSVectorOffset SEGMENTS: Offset = Offset(),
+    ANNOTATIONSVectorOffset ANNOTATIONS: Offset = Offset(),
+    LABELSVectorOffset LABELS: Offset = Offset(),
+    GEOLOCATIONOffset GEOLOCATION: Offset = Offset(),
+    HARDWAREOffset HARDWARE: Offset = Offset(),
+    SIGNAL_NAMEOffset SIGNAL_NAME: Offset = Offset(),
+    MODULATIONOffset MODULATION: Offset = Offset(),
+    BAND: rfBandDesignation = .other,
+    NORAD_CAT_ID: UInt32 = 0,
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    EMITTER_IDOffset EMITTER_ID: Offset = Offset(),
+    RFB_IDOffset RFB_ID: Offset = Offset(),
+    LICENSEOffset LICENSE: Offset = Offset(),
+    LICENSE_URLOffset LICENSE_URL: Offset = Offset(),
+    ATTRIBUTIONOffset ATTRIBUTION: Offset = Offset(),
+    META_DOIOffset META_DOI: Offset = Offset(),
+    DATA_DOIOffset DATA_DOI: Offset = Offset(),
+    PAYLOADSVectorOffset PAYLOADS: Offset = Offset(),
+    CREATED_ATOffset CREATED_AT: Offset = Offset(),
+    UPDATED_ATOffset UPDATED_AT: Offset = Offset(),
+    SUPERSEDES_IQC_CIDOffset SUPERSEDES_IQC_CID: Offset = Offset()
   ) -> Offset {
-    let __start = LKS.startLKS(&fbb)
-    LKS.add(ID: ID, &fbb)
-    LKS.add(ID_ON_ORBIT1: ID_ON_ORBIT1, &fbb)
-    LKS.add(SAT_NO1: SAT_NO1, &fbb)
-    LKS.add(ID_ON_ORBIT2: ID_ON_ORBIT2, &fbb)
-    LKS.add(SAT_NO2: SAT_NO2, &fbb)
-    LKS.add(CONSTELLATION: CONSTELLATION, &fbb)
-    LKS.add(LINK_NAME: LINK_NAME, &fbb)
-    LKS.add(LINK_TYPE: LINK_TYPE, &fbb)
-    LKS.add(LINK_STATE: LINK_STATE, &fbb)
-    LKS.add(BAND: BAND, &fbb)
-    LKS.add(LINK_START_TIME: LINK_START_TIME, &fbb)
-    LKS.add(LINK_STOP_TIME: LINK_STOP_TIME, &fbb)
-    LKS.add(ID_BEAM1: ID_BEAM1, &fbb)
-    LKS.add(END_POINT1_NAME: END_POINT1_NAME, &fbb)
-    LKS.add(END_POINT1_LAT: END_POINT1_LAT, &fbb)
-    LKS.add(END_POINT1_LON: END_POINT1_LON, &fbb)
-    LKS.add(ID_BEAM2: ID_BEAM2, &fbb)
-    LKS.add(END_POINT2_NAME: END_POINT2_NAME, &fbb)
-    LKS.add(END_POINT2_LAT: END_POINT2_LAT, &fbb)
-    LKS.add(END_POINT2_LON: END_POINT2_LON, &fbb)
-    LKS.add(DATA_RATE1_TO2: DATA_RATE1_TO2, &fbb)
-    LKS.add(DATA_RATE2_TO1: DATA_RATE2_TO1, &fbb)
-    LKS.add(SYS_CAP: SYS_CAP, &fbb)
-    LKS.add(OPS_CAP: OPS_CAP, &fbb)
-    return LKS.endLKS(&fbb, start: __start)
+    let __start = IQC.startIQC(&fbb)
+    IQC.add(ID: ID, &fbb)
+    IQC.add(CAPTURE_ID: CAPTURE_ID, &fbb)
+    IQC.add(SOURCE_NAME: SOURCE_NAME, &fbb)
+    IQC.add(SOURCE_URL: SOURCE_URL, &fbb)
+    IQC.add(SOURCE_RECORD_ID: SOURCE_RECORD_ID, &fbb)
+    IQC.add(SOURCE_SHA256: SOURCE_SHA256, &fbb)
+    IQC.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
+    IQC.add(TITLE: TITLE, &fbb)
+    IQC.add(DESCRIPTION: DESCRIPTION, &fbb)
+    IQC.add(AUTHOR: AUTHOR, &fbb)
+    IQC.add(SIGMF_VERSION: SIGMF_VERSION, &fbb)
+    IQC.add(COLLECTION: COLLECTION, &fbb)
+    IQC.addVectorOf(EXTENSIONS: EXTENSIONS, &fbb)
+    IQC.add(DATATYPE: DATATYPE, &fbb)
+    IQC.add(SAMPLE_RATE_HZ: SAMPLE_RATE_HZ, &fbb)
+    IQC.add(NUM_CHANNELS: NUM_CHANNELS, &fbb)
+    IQC.add(CENTER_FREQ_HZ: CENTER_FREQ_HZ, &fbb)
+    IQC.add(FREQ_LOWER_EDGE_HZ: FREQ_LOWER_EDGE_HZ, &fbb)
+    IQC.add(FREQ_UPPER_EDGE_HZ: FREQ_UPPER_EDGE_HZ, &fbb)
+    IQC.add(SAMPLE_COUNT: SAMPLE_COUNT, &fbb)
+    IQC.add(DURATION_SECONDS: DURATION_SECONDS, &fbb)
+    IQC.add(SAMPLE_OFFSET: SAMPLE_OFFSET, &fbb)
+    IQC.add(METADATA_ONLY: METADATA_ONLY, &fbb)
+    IQC.add(TRAILING_BYTES: TRAILING_BYTES, &fbb)
+    IQC.add(CAPTURE_START: CAPTURE_START, &fbb)
+    IQC.add(CAPTURE_STOP: CAPTURE_STOP, &fbb)
+    IQC.addVectorOf(SEGMENTS: SEGMENTS, &fbb)
+    IQC.addVectorOf(ANNOTATIONS: ANNOTATIONS, &fbb)
+    IQC.addVectorOf(LABELS: LABELS, &fbb)
+    IQC.add(GEOLOCATION: GEOLOCATION, &fbb)
+    IQC.add(HARDWARE: HARDWARE, &fbb)
+    IQC.add(SIGNAL_NAME: SIGNAL_NAME, &fbb)
+    IQC.add(MODULATION: MODULATION, &fbb)
+    IQC.add(BAND: BAND, &fbb)
+    IQC.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    IQC.add(OBJECT_ID: OBJECT_ID, &fbb)
+    IQC.add(EMITTER_ID: EMITTER_ID, &fbb)
+    IQC.add(RFB_ID: RFB_ID, &fbb)
+    IQC.add(LICENSE: LICENSE, &fbb)
+    IQC.add(LICENSE_URL: LICENSE_URL, &fbb)
+    IQC.add(ATTRIBUTION: ATTRIBUTION, &fbb)
+    IQC.add(META_DOI: META_DOI, &fbb)
+    IQC.add(DATA_DOI: DATA_DOI, &fbb)
+    IQC.addVectorOf(PAYLOADS: PAYLOADS, &fbb)
+    IQC.add(CREATED_AT: CREATED_AT, &fbb)
+    IQC.add(UPDATED_AT: UPDATED_AT, &fbb)
+    IQC.add(SUPERSEDES_IQC_CID: SUPERSEDES_IQC_CID, &fbb)
+    return IQC.endIQC(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ID_ON_ORBIT1, fieldName: "ID_ON_ORBIT1", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SAT_NO1, fieldName: "SAT_NO1", required: false, type: UInt32.self)
-    try _v.visit(field: VT.ID_ON_ORBIT2, fieldName: "ID_ON_ORBIT2", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SAT_NO2, fieldName: "SAT_NO2", required: false, type: UInt32.self)
-    try _v.visit(field: VT.CONSTELLATION, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LINK_NAME, fieldName: "LINK_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LINK_TYPE, fieldName: "LINK_TYPE", required: false, type: linkCategory.self)
-    try _v.visit(field: VT.LINK_STATE, fieldName: "LINK_STATE", required: false, type: linkCondition.self)
-    try _v.visit(field: VT.BAND, fieldName: "BAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LINK_START_TIME, fieldName: "LINK_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LINK_STOP_TIME, fieldName: "LINK_STOP_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ID_BEAM1, fieldName: "ID_BEAM1", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.END_POINT1_NAME, fieldName: "END_POINT1_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.END_POINT1_LAT, fieldName: "END_POINT1_LAT", required: false, type: Double.self)
-    try _v.visit(field: VT.END_POINT1_LON, fieldName: "END_POINT1_LON", required: false, type: Double.self)
-    try _v.visit(field: VT.ID_BEAM2, fieldName: "ID_BEAM2", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.END_POINT2_NAME, fieldName: "END_POINT2_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.END_POINT2_LAT, fieldName: "END_POINT2_LAT", required: false, type: Double.self)
-    try _v.visit(field: VT.END_POINT2_LON, fieldName: "END_POINT2_LON", required: false, type: Double.self)
-    try _v.visit(field: VT.DATA_RATE1_TO2, fieldName: "DATA_RATE1_TO2", required: false, type: Double.self)
-    try _v.visit(field: VT.DATA_RATE2_TO1, fieldName: "DATA_RATE2_TO1", required: false, type: Double.self)
-    try _v.visit(field: VT.SYS_CAP, fieldName: "SYS_CAP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OPS_CAP, fieldName: "OPS_CAP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CAPTURE_ID, fieldName: "CAPTURE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_NAME, fieldName: "SOURCE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_URL, fieldName: "SOURCE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_RECORD_ID, fieldName: "SOURCE_RECORD_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_SHA256, fieldName: "SOURCE_SHA256", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AUTHOR, fieldName: "AUTHOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGMF_VERSION, fieldName: "SIGMF_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLECTION, fieldName: "COLLECTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTENSIONS, fieldName: "EXTENSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<IQCExtension>, IQCExtension>>.self)
+    try _v.visit(field: VT.DATATYPE, fieldName: "DATATYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAMPLE_RATE_HZ, fieldName: "SAMPLE_RATE_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.NUM_CHANNELS, fieldName: "NUM_CHANNELS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CENTER_FREQ_HZ, fieldName: "CENTER_FREQ_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQ_LOWER_EDGE_HZ, fieldName: "FREQ_LOWER_EDGE_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQ_UPPER_EDGE_HZ, fieldName: "FREQ_UPPER_EDGE_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.SAMPLE_COUNT, fieldName: "SAMPLE_COUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.DURATION_SECONDS, fieldName: "DURATION_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.SAMPLE_OFFSET, fieldName: "SAMPLE_OFFSET", required: false, type: UInt64.self)
+    try _v.visit(field: VT.METADATA_ONLY, fieldName: "METADATA_ONLY", required: false, type: Bool.self)
+    try _v.visit(field: VT.TRAILING_BYTES, fieldName: "TRAILING_BYTES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CAPTURE_START, fieldName: "CAPTURE_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CAPTURE_STOP, fieldName: "CAPTURE_STOP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEGMENTS, fieldName: "SEGMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<IQCSegment>, IQCSegment>>.self)
+    try _v.visit(field: VT.ANNOTATIONS, fieldName: "ANNOTATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<IQCAnnotation>, IQCAnnotation>>.self)
+    try _v.visit(field: VT.LABELS, fieldName: "LABELS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.GEOLOCATION, fieldName: "GEOLOCATION", required: false, type: ForwardOffset<IQCGeolocation>.self)
+    try _v.visit(field: VT.HARDWARE, fieldName: "HARDWARE", required: false, type: ForwardOffset<IQCHardware>.self)
+    try _v.visit(field: VT.SIGNAL_NAME, fieldName: "SIGNAL_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULATION, fieldName: "MODULATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BAND, fieldName: "BAND", required: false, type: rfBandDesignation.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EMITTER_ID, fieldName: "EMITTER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFB_ID, fieldName: "RFB_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE_URL, fieldName: "LICENSE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATTRIBUTION, fieldName: "ATTRIBUTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.META_DOI, fieldName: "META_DOI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_DOI, fieldName: "DATA_DOI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAYLOADS, fieldName: "PAYLOADS", required: false, type: ForwardOffset<Vector<ForwardOffset<IQCPayloadRef>, IQCPayloadRef>>.self)
+    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUPERSEDES_IQC_CID, fieldName: "SUPERSEDES_IQC_CID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

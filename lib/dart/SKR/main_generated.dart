@@ -5,415 +5,166 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Coarse spectral region a band belongs to, by effective wavelength.
+///  Outcome of a sky query.
 ///  Append new values only; never reorder or reuse existing values.
-enum phbSpectralRegime {
-  UNSPECIFIED(0),
-  GAMMA_RAY(1),
-  HARD_X_RAY(2),
-  SOFT_X_RAY(3),
-  EXTREME_ULTRAVIOLET(4),
-  FAR_ULTRAVIOLET(5),
-  NEAR_ULTRAVIOLET(6),
-  VISIBLE(7),
-  NEAR_INFRARED(8),
-  MID_INFRARED(9),
-  FAR_INFRARED(10),
-  SUBMILLIMETRE(11),
-  MICROWAVE(12),
-  RADIO(13);
+enum skrStatus {
+  OK(0),
+  UNSOLVED(1),
+  TOO_FEW_DETECTIONS(2),
+  NO_CATALOG(3),
+  BAD_REQUEST(4);
 
   final int value;
-  const phbSpectralRegime(this.value);
+  const skrStatus(this.value);
 
-  factory phbSpectralRegime.fromValue(int value) {
+  factory skrStatus.fromValue(int value) {
     switch (value) {
-      case 0: return phbSpectralRegime.UNSPECIFIED;
-      case 1: return phbSpectralRegime.GAMMA_RAY;
-      case 2: return phbSpectralRegime.HARD_X_RAY;
-      case 3: return phbSpectralRegime.SOFT_X_RAY;
-      case 4: return phbSpectralRegime.EXTREME_ULTRAVIOLET;
-      case 5: return phbSpectralRegime.FAR_ULTRAVIOLET;
-      case 6: return phbSpectralRegime.NEAR_ULTRAVIOLET;
-      case 7: return phbSpectralRegime.VISIBLE;
-      case 8: return phbSpectralRegime.NEAR_INFRARED;
-      case 9: return phbSpectralRegime.MID_INFRARED;
-      case 10: return phbSpectralRegime.FAR_INFRARED;
-      case 11: return phbSpectralRegime.SUBMILLIMETRE;
-      case 12: return phbSpectralRegime.MICROWAVE;
-      case 13: return phbSpectralRegime.RADIO;
+      case 0: return skrStatus.OK;
+      case 1: return skrStatus.UNSOLVED;
+      case 2: return skrStatus.TOO_FEW_DETECTIONS;
+      case 3: return skrStatus.NO_CATALOG;
+      case 4: return skrStatus.BAD_REQUEST;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static phbSpectralRegime? _createOrNull(int? value) =>
-      value == null ? null : phbSpectralRegime.fromValue(value);
+  static skrStatus? _createOrNull(int? value) =>
+      value == null ? null : skrStatus.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 13;
-  static const fb.Reader<phbSpectralRegime> reader = _phbSpectralRegimeReader();
+  static const int maxValue = 4;
+  static const fb.Reader<skrStatus> reader = _skrStatusReader();
 }
 
-class _phbSpectralRegimeReader extends fb.Reader<phbSpectralRegime> {
-  const _phbSpectralRegimeReader();
+class _skrStatusReader extends fb.Reader<skrStatus> {
+  const _skrStatusReader();
 
   @override
   int get size => 1;
 
   @override
-  phbSpectralRegime read(fb.BufferContext bc, int offset) =>
-      phbSpectralRegime.fromValue(const fb.Uint8Reader().read(bc, offset));
+  skrStatus read(fb.BufferContext bc, int offset) =>
+      skrStatus.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Calibration system a magnitude is stated in.
-///  Append new values only; never reorder or reuse existing values.
-enum phbMagnitudeSystem {
-  UNSPECIFIED(0),
-  VEGA(1),
-  AB(2),
-  ST(3),
-  INSTRUMENTAL(4),
-  NOT_A_MAGNITUDE(5);
+///  A row that answers a CONE or FIELD_OF_VIEW query.
+class SKRHit {
+  SKRHit._(this._bc, this._bcOffset);
 
-  final int value;
-  const phbMagnitudeSystem(this.value);
-
-  factory phbMagnitudeSystem.fromValue(int value) {
-    switch (value) {
-      case 0: return phbMagnitudeSystem.UNSPECIFIED;
-      case 1: return phbMagnitudeSystem.VEGA;
-      case 2: return phbMagnitudeSystem.AB;
-      case 3: return phbMagnitudeSystem.ST;
-      case 4: return phbMagnitudeSystem.INSTRUMENTAL;
-      case 5: return phbMagnitudeSystem.NOT_A_MAGNITUDE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static phbMagnitudeSystem? _createOrNull(int? value) =>
-      value == null ? null : phbMagnitudeSystem.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<phbMagnitudeSystem> reader = _phbMagnitudeSystemReader();
-}
-
-class _phbMagnitudeSystemReader extends fb.Reader<phbMagnitudeSystem> {
-  const _phbMagnitudeSystemReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  phbMagnitudeSystem read(fb.BufferContext bc, int offset) =>
-      phbMagnitudeSystem.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Physical quantity a measurement VALUE states.
-///  Append new values only; never reorder or reuse existing values.
-enum phbQuantity {
-  UNSPECIFIED(0),
-  MAGNITUDE(1),
-  FLUX_DENSITY_JY(2),
-  ENERGY_FLUX_W_PER_M2(3),
-  PHOTON_FLUX_PER_M2_S(4),
-  COUNT_RATE_PER_S(5),
-  BRIGHTNESS_TEMPERATURE_K(6);
-
-  final int value;
-  const phbQuantity(this.value);
-
-  factory phbQuantity.fromValue(int value) {
-    switch (value) {
-      case 0: return phbQuantity.UNSPECIFIED;
-      case 1: return phbQuantity.MAGNITUDE;
-      case 2: return phbQuantity.FLUX_DENSITY_JY;
-      case 3: return phbQuantity.ENERGY_FLUX_W_PER_M2;
-      case 4: return phbQuantity.PHOTON_FLUX_PER_M2_S;
-      case 5: return phbQuantity.COUNT_RATE_PER_S;
-      case 6: return phbQuantity.BRIGHTNESS_TEMPERATURE_K;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static phbQuantity? _createOrNull(int? value) =>
-      value == null ? null : phbQuantity.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 6;
-  static const fb.Reader<phbQuantity> reader = _phbQuantityReader();
-}
-
-class _phbQuantityReader extends fb.Reader<phbQuantity> {
-  const _phbQuantityReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  phbQuantity read(fb.BufferContext bc, int offset) =>
-      phbQuantity.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  How a measurement was obtained.
-///  Append new values only; never reorder or reuse existing values.
-enum phbDerivation {
-  UNSPECIFIED(0),
-  MEASURED(1),
-  TRANSFORMED(2),
-  MODELLED(3);
-
-  final int value;
-  const phbDerivation(this.value);
-
-  factory phbDerivation.fromValue(int value) {
-    switch (value) {
-      case 0: return phbDerivation.UNSPECIFIED;
-      case 1: return phbDerivation.MEASURED;
-      case 2: return phbDerivation.TRANSFORMED;
-      case 3: return phbDerivation.MODELLED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static phbDerivation? _createOrNull(int? value) =>
-      value == null ? null : phbDerivation.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<phbDerivation> reader = _phbDerivationReader();
-}
-
-class _phbDerivationReader extends fb.Reader<phbDerivation> {
-  const _phbDerivationReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  phbDerivation read(fb.BufferContext bc, int offset) =>
-      phbDerivation.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Whether a measurement is a detection or a bound.
-///  Append new values only; never reorder or reuse existing values.
-enum phbBoundKind {
-  DETECTION(0),
-  UPPER_LIMIT(1),
-  LOWER_LIMIT(2);
-
-  final int value;
-  const phbBoundKind(this.value);
-
-  factory phbBoundKind.fromValue(int value) {
-    switch (value) {
-      case 0: return phbBoundKind.DETECTION;
-      case 1: return phbBoundKind.UPPER_LIMIT;
-      case 2: return phbBoundKind.LOWER_LIMIT;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static phbBoundKind? _createOrNull(int? value) =>
-      value == null ? null : phbBoundKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<phbBoundKind> reader = _phbBoundKindReader();
-}
-
-class _phbBoundKindReader extends fb.Reader<phbBoundKind> {
-  const _phbBoundKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  phbBoundKind read(fb.BufferContext bc, int offset) =>
-      phbBoundKind.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  One source's brightness in one band.
-class PHBMeasurement {
-  PHBMeasurement._(this._bc, this._bcOffset);
-  factory PHBMeasurement(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PHBMeasurement> reader = _PHBMeasurementReader();
+  static const fb.Reader<SKRHit> reader = _SKRHitReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Band identifier; resolves to a `$PHB` BAND_ID.
-  String? get BAND_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get bandId => BAND_ID;
-  ///  Coarse region of the band, copied from its descriptor so a consumer
-  ///  can select a mode without resolving the band.
-  phbSpectralRegime get SPECTRAL_REGIME => phbSpectralRegime.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  phbSpectralRegime get spectralRegime => SPECTRAL_REGIME;
-  ///  Effective wavelength of the band, nanometres (vacuum). Copied from the
-  ///  descriptor; required for synthesis when the descriptor is not at hand.
-  double get WAVELENGTH_EFF_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, double.nan);
-  double get wavelengthEffNm => WAVELENGTH_EFF_NM;
-  ///  Quantity VALUE states.
-  phbQuantity get QUANTITY => phbQuantity.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 1));
-  ///  Calibration system when QUANTITY is MAGNITUDE.
-  phbMagnitudeSystem get MAGNITUDE_SYSTEM => phbMagnitudeSystem.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  phbMagnitudeSystem get magnitudeSystem => MAGNITUDE_SYSTEM;
-  ///  The measurement, in QUANTITY's units.
-  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
-  ///  One-sigma uncertainty of VALUE, same units.
-  double get UNCERTAINTY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, double.nan);
-  ///  Detection or bound.
-  phbBoundKind get BOUND => phbBoundKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  ///  How the value was obtained.
-  phbDerivation get DERIVATION => phbDerivation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  ///  Mid-time of the observation, Modified Julian Date (TT), for sources
-  ///  whose brightness varies. Absent for a catalogue mean.
-  double get EPOCH_MJD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, double.nan);
-  double get epochMjd => EPOCH_MJD;
-  ///  Number of observations averaged into VALUE; 0 when unstated.
-  int get OBSERVATION_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  int get observationCount => OBSERVATION_COUNT;
+  int get ROW => const fb.Uint32Reader().read(_bc, _bcOffset + 0);
+  ///  SKTPoint FLAGS bits for the row.
+  int get FLAGS => const fb.Uint32Reader().read(_bc, _bcOffset + 4);
+  double get RA_DEG => const fb.Float64Reader().read(_bc, _bcOffset + 8);
+  double get raDeg => RA_DEG;
+  double get DEC_DEG => const fb.Float64Reader().read(_bc, _bcOffset + 16);
+  double get decDeg => DEC_DEG;
+  ///  Angle from the centre or boresight.
+  double get SEPARATION_DEG => const fb.Float64Reader().read(_bc, _bcOffset + 24);
+  double get separationDeg => SEPARATION_DEG;
+  ///  Field coordinates: angles along the field's x and y axes (the
+  ///  standard coordinates of a cone query). NaN behind the tangent plane.
+  double get FIELD_X_DEG => const fb.Float64Reader().read(_bc, _bcOffset + 32);
+  double get fieldXDeg => FIELD_X_DEG;
+  double get FIELD_Y_DEG => const fb.Float64Reader().read(_bc, _bcOffset + 40);
+  double get fieldYDeg => FIELD_Y_DEG;
+  ///  Magnitude in the query's band; NaN when unknown.
+  double get MAG => const fb.Float32Reader().read(_bc, _bcOffset + 48);
+  int get RESERVED => const fb.Uint32Reader().read(_bc, _bcOffset + 52);
 
   @override
   String toString() {
-    return 'PHBMeasurement{bandId: ${bandId}, spectralRegime: ${spectralRegime}, wavelengthEffNm: ${wavelengthEffNm}, QUANTITY: ${QUANTITY}, magnitudeSystem: ${magnitudeSystem}, VALUE: ${VALUE}, UNCERTAINTY: ${UNCERTAINTY}, BOUND: ${BOUND}, DERIVATION: ${DERIVATION}, epochMjd: ${epochMjd}, observationCount: ${observationCount}}';
+    return 'SKRHit{ROW: ${ROW}, FLAGS: ${FLAGS}, raDeg: ${raDeg}, decDeg: ${decDeg}, separationDeg: ${separationDeg}, fieldXDeg: ${fieldXDeg}, fieldYDeg: ${fieldYDeg}, MAG: ${MAG}, RESERVED: ${RESERVED}}';
   }
 }
 
-class _PHBMeasurementReader extends fb.TableReader<PHBMeasurement> {
-  const _PHBMeasurementReader();
+class _SKRHitReader extends fb.StructReader<SKRHit> {
+  const _SKRHitReader();
 
   @override
-  PHBMeasurement createObject(fb.BufferContext bc, int offset) =>
-    PHBMeasurement._(bc, offset);
+  int get size => 56;
+
+  @override
+  SKRHit createObject(fb.BufferContext bc, int offset) =>
+    SKRHit._(bc, offset);
 }
 
-class PHBMeasurementBuilder {
-  PHBMeasurementBuilder(this.fbBuilder);
+class SKRHitBuilder {
+  SKRHitBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
-  void begin() {
-    fbBuilder.startTable(11);
-  }
-
-  int addBandIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addSpectralRegime(phbSpectralRegime? SPECTRAL_REGIME) {
-    fbBuilder.addUint8(1, SPECTRAL_REGIME?.value);
-    return fbBuilder.offset;
-  }
-  int addWavelengthEffNm(double? WAVELENGTH_EFF_NM) {
-    fbBuilder.addFloat64(2, WAVELENGTH_EFF_NM);
-    return fbBuilder.offset;
-  }
-  int addQuantity(phbQuantity? QUANTITY) {
-    fbBuilder.addUint8(3, QUANTITY?.value);
-    return fbBuilder.offset;
-  }
-  int addMagnitudeSystem(phbMagnitudeSystem? MAGNITUDE_SYSTEM) {
-    fbBuilder.addUint8(4, MAGNITUDE_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addValue(double? VALUE) {
-    fbBuilder.addFloat64(5, VALUE);
-    return fbBuilder.offset;
-  }
-  int addUncertainty(double? UNCERTAINTY) {
-    fbBuilder.addFloat64(6, UNCERTAINTY);
-    return fbBuilder.offset;
-  }
-  int addBound(phbBoundKind? BOUND) {
-    fbBuilder.addUint8(7, BOUND?.value);
-    return fbBuilder.offset;
-  }
-  int addDerivation(phbDerivation? DERIVATION) {
-    fbBuilder.addUint8(8, DERIVATION?.value);
-    return fbBuilder.offset;
-  }
-  int addEpochMjd(double? EPOCH_MJD) {
-    fbBuilder.addFloat64(9, EPOCH_MJD);
-    return fbBuilder.offset;
-  }
-  int addObservationCount(int? OBSERVATION_COUNT) {
-    fbBuilder.addUint32(10, OBSERVATION_COUNT);
+  int finish(int ROW, int FLAGS, double RA_DEG, double DEC_DEG, double SEPARATION_DEG, double FIELD_X_DEG, double FIELD_Y_DEG, double MAG, int RESERVED) {
+    fbBuilder.putUint32(RESERVED);
+    fbBuilder.putFloat32(MAG);
+    fbBuilder.putFloat64(FIELD_Y_DEG);
+    fbBuilder.putFloat64(FIELD_X_DEG);
+    fbBuilder.putFloat64(SEPARATION_DEG);
+    fbBuilder.putFloat64(DEC_DEG);
+    fbBuilder.putFloat64(RA_DEG);
+    fbBuilder.putUint32(FLAGS);
+    fbBuilder.putUint32(ROW);
     return fbBuilder.offset;
   }
 
-  int finish() {
-    return fbBuilder.endTable();
-  }
 }
 
-class PHBMeasurementObjectBuilder extends fb.ObjectBuilder {
-  final String? _BAND_ID;
-  final phbSpectralRegime? _SPECTRAL_REGIME;
-  final double? _WAVELENGTH_EFF_NM;
-  final phbQuantity? _QUANTITY;
-  final phbMagnitudeSystem? _MAGNITUDE_SYSTEM;
-  final double? _VALUE;
-  final double? _UNCERTAINTY;
-  final phbBoundKind? _BOUND;
-  final phbDerivation? _DERIVATION;
-  final double? _EPOCH_MJD;
-  final int? _OBSERVATION_COUNT;
+class SKRHitObjectBuilder extends fb.ObjectBuilder {
+  final int _ROW;
+  final int _FLAGS;
+  final double _RA_DEG;
+  final double _DEC_DEG;
+  final double _SEPARATION_DEG;
+  final double _FIELD_X_DEG;
+  final double _FIELD_Y_DEG;
+  final double _MAG;
+  final int _RESERVED;
 
-  PHBMeasurementObjectBuilder({
-    String? BAND_ID,
-    String? bandId,
-    phbSpectralRegime? SPECTRAL_REGIME,
-    phbSpectralRegime? spectralRegime,
-    double? WAVELENGTH_EFF_NM,
-    double? wavelengthEffNm,
-    phbQuantity? QUANTITY,
-    phbMagnitudeSystem? MAGNITUDE_SYSTEM,
-    phbMagnitudeSystem? magnitudeSystem,
-    double? VALUE,
-    double? UNCERTAINTY,
-    phbBoundKind? BOUND,
-    phbDerivation? DERIVATION,
-    double? EPOCH_MJD,
-    double? epochMjd,
-    int? OBSERVATION_COUNT,
-    int? observationCount,
+  SKRHitObjectBuilder({
+    required int ROW,
+    required int FLAGS,
+    double RA_DEG,
+    double? raDeg,
+    double DEC_DEG,
+    double? decDeg,
+    double SEPARATION_DEG,
+    double? separationDeg,
+    double FIELD_X_DEG,
+    double? fieldXDeg,
+    double FIELD_Y_DEG,
+    double? fieldYDeg,
+    required double MAG,
+    required int RESERVED,
   })
-      : _BAND_ID = bandId ?? BAND_ID,
-        _SPECTRAL_REGIME = spectralRegime ?? SPECTRAL_REGIME,
-        _WAVELENGTH_EFF_NM = wavelengthEffNm ?? WAVELENGTH_EFF_NM,
-        _QUANTITY = QUANTITY,
-        _MAGNITUDE_SYSTEM = magnitudeSystem ?? MAGNITUDE_SYSTEM,
-        _VALUE = VALUE,
-        _UNCERTAINTY = UNCERTAINTY,
-        _BOUND = BOUND,
-        _DERIVATION = DERIVATION,
-        _EPOCH_MJD = epochMjd ?? EPOCH_MJD,
-        _OBSERVATION_COUNT = observationCount ?? OBSERVATION_COUNT;
+      : _ROW = ROW,
+        _FLAGS = FLAGS,
+        _RA_DEG = raDeg ?? RA_DEG,
+        _DEC_DEG = decDeg ?? DEC_DEG,
+        _SEPARATION_DEG = separationDeg ?? SEPARATION_DEG,
+        _FIELD_X_DEG = fieldXDeg ?? FIELD_X_DEG,
+        _FIELD_Y_DEG = fieldYDeg ?? FIELD_Y_DEG,
+        _MAG = MAG,
+        _RESERVED = RESERVED;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? BAND_IDOffset = _BAND_ID == null ? null
-        : fbBuilder.writeString(_BAND_ID!);
-    fbBuilder.startTable(11);
-    fbBuilder.addOffset(0, BAND_IDOffset);
-    fbBuilder.addUint8(1, _SPECTRAL_REGIME?.value);
-    fbBuilder.addFloat64(2, _WAVELENGTH_EFF_NM);
-    fbBuilder.addUint8(3, _QUANTITY?.value);
-    fbBuilder.addUint8(4, _MAGNITUDE_SYSTEM?.value);
-    fbBuilder.addFloat64(5, _VALUE);
-    fbBuilder.addFloat64(6, _UNCERTAINTY);
-    fbBuilder.addUint8(7, _BOUND?.value);
-    fbBuilder.addUint8(8, _DERIVATION?.value);
-    fbBuilder.addFloat64(9, _EPOCH_MJD);
-    fbBuilder.addUint32(10, _OBSERVATION_COUNT);
-    return fbBuilder.endTable();
+    fbBuilder.putUint32(_RESERVED);
+    fbBuilder.putFloat32(_MAG);
+    fbBuilder.putFloat64(_FIELD_Y_DEG);
+    fbBuilder.putFloat64(_FIELD_X_DEG);
+    fbBuilder.putFloat64(_SEPARATION_DEG);
+    fbBuilder.putFloat64(_DEC_DEG);
+    fbBuilder.putFloat64(_RA_DEG);
+    fbBuilder.putUint32(_FLAGS);
+    fbBuilder.putUint32(_ROW);
+    return fbBuilder.offset;
   }
 
   /// Convenience method to serialize to byte list.
@@ -424,140 +175,414 @@ class PHBMeasurementObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Photometric Band: one passband's place on the spectrum and its calibration.
-class PHB {
-  PHB._(this._bc, this._bcOffset);
-  factory PHB(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
+///  A row a body's disc passes over.
+class SKROccultation {
+  SKROccultation._(this._bc, this._bcOffset);
 
-  static const fb.Reader<PHB> reader = _PHBReader();
+  static const fb.Reader<SKROccultation> reader = _SKROccultationReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Stable band identifier, unique within the publishing catalogue, e.g.
-  ///  "V", "Ks", "0.5-2keV", "1.4GHz". Measurements refer to it.
-  String? get BAND_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get bandId => BAND_ID;
-  ///  Human-readable name.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Name of the photometric system the band belongs to, as the defining
-  ///  publication states it.
-  String? get SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get systemName => SYSTEM_NAME;
-  ///  Coarse spectral region, by WAVELENGTH_EFF_NM.
-  phbSpectralRegime get SPECTRAL_REGIME => phbSpectralRegime.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  phbSpectralRegime get spectralRegime => SPECTRAL_REGIME;
-  ///  Effective (pivot) wavelength, nanometres, vacuum.
-  double get WAVELENGTH_EFF_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
-  double get wavelengthEffNm => WAVELENGTH_EFF_NM;
-  ///  Short edge of the band at half maximum response, nanometres.
-  double get WAVELENGTH_MIN_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
-  double get wavelengthMinNm => WAVELENGTH_MIN_NM;
-  ///  Long edge of the band at half maximum response, nanometres.
-  double get WAVELENGTH_MAX_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, double.nan);
-  double get wavelengthMaxNm => WAVELENGTH_MAX_NM;
-  ///  Calibration system of magnitudes stated in the band.
-  phbMagnitudeSystem get MAGNITUDE_SYSTEM => phbMagnitudeSystem.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  phbMagnitudeSystem get magnitudeSystem => MAGNITUDE_SYSTEM;
-  ///  Flux density at the effective wavelength of a zero-magnitude source,
-  ///  janskys.
-  double get ZERO_POINT_JY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, double.nan);
-  double get zeroPointJy => ZERO_POINT_JY;
-  ///  Wavelengths the response curve is sampled at, nanometres, ascending.
-  List<double>? get RESPONSE_WAVELENGTH_NM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
-  List<double>? get responseWavelengthNm => RESPONSE_WAVELENGTH_NM;
-  ///  Relative system response at each RESPONSE_WAVELENGTH_NM sample,
-  ///  peak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY.
-  List<double>? get RESPONSE => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 24);
-  ///  True when RESPONSE is an energy-counting response.
-  bool get RESPONSE_IS_ENERGY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
-  bool get responseIsEnergy => RESPONSE_IS_ENERGY;
-  ///  Reference to the publication that defines the band.
-  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  ///  URL of the band's defining document or response table.
-  String? get DEFINITION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get definitionUrl => DEFINITION_URL;
+  int get BODY_ID => const fb.Uint32Reader().read(_bc, _bcOffset + 0);
+  int get bodyId => BODY_ID;
+  int get ROW => const fb.Uint32Reader().read(_bc, _bcOffset + 4);
+  ///  Closest approach of the body's centre to the row.
+  double get MIN_SEPARATION_DEG => const fb.Float64Reader().read(_bc, _bcOffset + 8);
+  double get minSeparationDeg => MIN_SEPARATION_DEG;
+  ///  Where along the track the closest approach falls, from 0 (start) to 1
+  ///  (end).
+  double get TRACK_FRACTION => const fb.Float64Reader().read(_bc, _bcOffset + 16);
+  double get trackFraction => TRACK_FRACTION;
+  double get MAG => const fb.Float32Reader().read(_bc, _bcOffset + 24);
+  int get RESERVED => const fb.Uint32Reader().read(_bc, _bcOffset + 28);
 
   @override
   String toString() {
-    return 'PHB{bandId: ${bandId}, NAME: ${NAME}, systemName: ${systemName}, spectralRegime: ${spectralRegime}, wavelengthEffNm: ${wavelengthEffNm}, wavelengthMinNm: ${wavelengthMinNm}, wavelengthMaxNm: ${wavelengthMaxNm}, magnitudeSystem: ${magnitudeSystem}, zeroPointJy: ${zeroPointJy}, responseWavelengthNm: ${responseWavelengthNm}, RESPONSE: ${RESPONSE}, responseIsEnergy: ${responseIsEnergy}, CITATION: ${CITATION}, definitionUrl: ${definitionUrl}}';
+    return 'SKROccultation{bodyId: ${bodyId}, ROW: ${ROW}, minSeparationDeg: ${minSeparationDeg}, trackFraction: ${trackFraction}, MAG: ${MAG}, RESERVED: ${RESERVED}}';
   }
 }
 
-class _PHBReader extends fb.TableReader<PHB> {
-  const _PHBReader();
+class _SKROccultationReader extends fb.StructReader<SKROccultation> {
+  const _SKROccultationReader();
 
   @override
-  PHB createObject(fb.BufferContext bc, int offset) =>
-    PHB._(bc, offset);
+  int get size => 32;
+
+  @override
+  SKROccultation createObject(fb.BufferContext bc, int offset) =>
+    SKROccultation._(bc, offset);
 }
 
-class PHBBuilder {
-  PHBBuilder(this.fbBuilder);
+class SKROccultationBuilder {
+  SKROccultationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  int finish(int BODY_ID, int ROW, double MIN_SEPARATION_DEG, double TRACK_FRACTION, double MAG, int RESERVED) {
+    fbBuilder.putUint32(RESERVED);
+    fbBuilder.putFloat32(MAG);
+    fbBuilder.putFloat64(TRACK_FRACTION);
+    fbBuilder.putFloat64(MIN_SEPARATION_DEG);
+    fbBuilder.putUint32(ROW);
+    fbBuilder.putUint32(BODY_ID);
+    return fbBuilder.offset;
+  }
+
+}
+
+class SKROccultationObjectBuilder extends fb.ObjectBuilder {
+  final int _BODY_ID;
+  final int _ROW;
+  final double _MIN_SEPARATION_DEG;
+  final double _TRACK_FRACTION;
+  final double _MAG;
+  final int _RESERVED;
+
+  SKROccultationObjectBuilder({
+    int BODY_ID,
+    int? bodyId,
+    required int ROW,
+    double MIN_SEPARATION_DEG,
+    double? minSeparationDeg,
+    double TRACK_FRACTION,
+    double? trackFraction,
+    required double MAG,
+    required int RESERVED,
+  })
+      : _BODY_ID = bodyId ?? BODY_ID,
+        _ROW = ROW,
+        _MIN_SEPARATION_DEG = minSeparationDeg ?? MIN_SEPARATION_DEG,
+        _TRACK_FRACTION = trackFraction ?? TRACK_FRACTION,
+        _MAG = MAG,
+        _RESERVED = RESERVED;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.putUint32(_RESERVED);
+    fbBuilder.putFloat32(_MAG);
+    fbBuilder.putFloat64(_TRACK_FRACTION);
+    fbBuilder.putFloat64(_MIN_SEPARATION_DEG);
+    fbBuilder.putUint32(_ROW);
+    fbBuilder.putUint32(_BODY_ID);
+    return fbBuilder.offset;
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Bright rows near one pointing.
+class SKRExclusion {
+  SKRExclusion._(this._bc, this._bcOffset);
+
+  static const fb.Reader<SKRExclusion> reader = _SKRExclusionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get POINTING_ID => const fb.Uint32Reader().read(_bc, _bcOffset + 0);
+  int get pointingId => POINTING_ID;
+  ///  Rows within the radius at least as bright as the threshold.
+  int get VIOLATING_COUNT => const fb.Uint32Reader().read(_bc, _bcOffset + 4);
+  int get violatingCount => VIOLATING_COUNT;
+  ///  The brightest of them; 4294967295 when there are none.
+  int get BRIGHTEST_ROW => const fb.Uint32Reader().read(_bc, _bcOffset + 8);
+  int get brightestRow => BRIGHTEST_ROW;
+  int get RESERVED => const fb.Uint32Reader().read(_bc, _bcOffset + 12);
+  double get BRIGHTEST_SEPARATION_DEG => const fb.Float64Reader().read(_bc, _bcOffset + 16);
+  double get brightestSeparationDeg => BRIGHTEST_SEPARATION_DEG;
+  double get BRIGHTEST_MAG => const fb.Float32Reader().read(_bc, _bcOffset + 24);
+  double get brightestMag => BRIGHTEST_MAG;
+  int get RESERVED2 => const fb.Uint32Reader().read(_bc, _bcOffset + 28);
+
+  @override
+  String toString() {
+    return 'SKRExclusion{pointingId: ${pointingId}, violatingCount: ${violatingCount}, brightestRow: ${brightestRow}, RESERVED: ${RESERVED}, brightestSeparationDeg: ${brightestSeparationDeg}, brightestMag: ${brightestMag}, RESERVED2: ${RESERVED2}}';
+  }
+}
+
+class _SKRExclusionReader extends fb.StructReader<SKRExclusion> {
+  const _SKRExclusionReader();
+
+  @override
+  int get size => 32;
+
+  @override
+  SKRExclusion createObject(fb.BufferContext bc, int offset) =>
+    SKRExclusion._(bc, offset);
+}
+
+class SKRExclusionBuilder {
+  SKRExclusionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  int finish(int POINTING_ID, int VIOLATING_COUNT, int BRIGHTEST_ROW, int RESERVED, double BRIGHTEST_SEPARATION_DEG, double BRIGHTEST_MAG, int RESERVED2) {
+    fbBuilder.putUint32(RESERVED2);
+    fbBuilder.putFloat32(BRIGHTEST_MAG);
+    fbBuilder.putFloat64(BRIGHTEST_SEPARATION_DEG);
+    fbBuilder.putUint32(RESERVED);
+    fbBuilder.putUint32(BRIGHTEST_ROW);
+    fbBuilder.putUint32(VIOLATING_COUNT);
+    fbBuilder.putUint32(POINTING_ID);
+    return fbBuilder.offset;
+  }
+
+}
+
+class SKRExclusionObjectBuilder extends fb.ObjectBuilder {
+  final int _POINTING_ID;
+  final int _VIOLATING_COUNT;
+  final int _BRIGHTEST_ROW;
+  final int _RESERVED;
+  final double _BRIGHTEST_SEPARATION_DEG;
+  final double _BRIGHTEST_MAG;
+  final int _RESERVED2;
+
+  SKRExclusionObjectBuilder({
+    int POINTING_ID,
+    int? pointingId,
+    int VIOLATING_COUNT,
+    int? violatingCount,
+    int BRIGHTEST_ROW,
+    int? brightestRow,
+    required int RESERVED,
+    double BRIGHTEST_SEPARATION_DEG,
+    double? brightestSeparationDeg,
+    double BRIGHTEST_MAG,
+    double? brightestMag,
+    required int RESERVED2,
+  })
+      : _POINTING_ID = pointingId ?? POINTING_ID,
+        _VIOLATING_COUNT = violatingCount ?? VIOLATING_COUNT,
+        _BRIGHTEST_ROW = brightestRow ?? BRIGHTEST_ROW,
+        _RESERVED = RESERVED,
+        _BRIGHTEST_SEPARATION_DEG = brightestSeparationDeg ?? BRIGHTEST_SEPARATION_DEG,
+        _BRIGHTEST_MAG = brightestMag ?? BRIGHTEST_MAG,
+        _RESERVED2 = RESERVED2;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.putUint32(_RESERVED2);
+    fbBuilder.putFloat32(_BRIGHTEST_MAG);
+    fbBuilder.putFloat64(_BRIGHTEST_SEPARATION_DEG);
+    fbBuilder.putUint32(_RESERVED);
+    fbBuilder.putUint32(_BRIGHTEST_ROW);
+    fbBuilder.putUint32(_VIOLATING_COUNT);
+    fbBuilder.putUint32(_POINTING_ID);
+    return fbBuilder.offset;
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Sky Query Result: the answer to one `$SKQ`.
+class SKR {
+  SKR._(this._bc, this._bcOffset);
+  factory SKR(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SKR> reader = _SKRReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  QUERY_ID of the query answered.
+  String? get QUERY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get queryId => QUERY_ID;
+  skqQueryKind get QUERY_KIND => skqQueryKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  skqQueryKind get queryKind => QUERY_KIND;
+  skrStatus get STATUS => skrStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Why a query failed.
+  String? get MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Epoch and reduction the answer is for, copied from the query.
+  double get EPOCH_JD_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
+  double get epochJdTt => EPOCH_JD_TT;
+  double get EPOCH_JD_TT_FRACTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get epochJdTtFraction => EPOCH_JD_TT_FRACTION;
+  sktPlaceKind get PLACE => sktPlaceKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 3));
+  ///  Catalogue rows held.
+  int get ROW_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get rowCount => ROW_COUNT;
+  ///  INGEST: rows added by the ingest answered.
+  int get ROWS_ADDED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get rowsAdded => ROWS_ADDED;
+  ///  INGEST: records refused by verification.
+  int get REJECTED_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get rejectedCount => REJECTED_COUNT;
+  ///  Band descriptors held.
+  int get BAND_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get bandCount => BAND_COUNT;
+  ///  CONE and FIELD_OF_VIEW: rows matched before MAX_RESULTS applied.
+  int get MATCHED_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get matchedCount => MATCHED_COUNT;
+  List<SKRHit>? get HITS => const fb.ListReader<SKRHit>(SKRHit.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  SYNTHETIC_PHOTOMETRY: bands of the table's columns.
+  List<String>? get BAND_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
+  List<String>? get bandIds => BAND_IDS;
+  ///  SYNTHETIC_PHOTOMETRY: ROW_COUNT x BAND_IDS magnitudes, row-major.
+  List<double>? get MAGNITUDES => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 32);
+  ///  SYNTHETIC_PHOTOMETRY: how each magnitude was obtained, same layout.
+  List<phbDerivation>? get DERIVATIONS => const fb.ListReader<phbDerivation>(phbDerivation.reader).vTableGetNullable(_bc, _bcOffset, 34);
+  ///  IDENTIFY: detections matched.
+  int get MATCHED_DETECTIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  int get matchedDetections => MATCHED_DETECTIONS;
+  ///  IDENTIFY: camera-to-GCRS rotation, nine entries, row-major.
+  List<double>? get ROTATION => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 38);
+  ///  IDENTIFY: the same rotation as (w, x, y, z).
+  List<double>? get QUATERNION => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 40);
+  ///  IDENTIFY: RMS angle between matched detections and their rows.
+  double get RESIDUAL_RMS_ARCSEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, double.nan);
+  double get residualRmsArcsec => RESIDUAL_RMS_ARCSEC;
+  ///  IDENTIFY: direction of the camera's +z axis.
+  double get BORESIGHT_RA_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, double.nan);
+  double get boresightRaDeg => BORESIGHT_RA_DEG;
+  double get BORESIGHT_DEC_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, double.nan);
+  double get boresightDecDeg => BORESIGHT_DEC_DEG;
+  ///  IDENTIFY: row matched to each detection, in detection order;
+  ///  4294967295 when unmatched.
+  List<int>? get MATCHED_ROWS => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 48);
+  List<int>? get matchedRows => MATCHED_ROWS;
+  ///  OCCULTATION: rows passed over.
+  List<SKROccultation>? get OCCULTATIONS => const fb.ListReader<SKROccultation>(SKROccultation.reader).vTableGetNullable(_bc, _bcOffset, 50);
+  ///  BRIGHT_STAR_EXCLUSION: one verdict per pointing.
+  List<SKRExclusion>? get EXCLUSIONS => const fb.ListReader<SKRExclusion>(SKRExclusion.reader).vTableGetNullable(_bc, _bcOffset, 52);
+
+  @override
+  String toString() {
+    return 'SKR{queryId: ${queryId}, queryKind: ${queryKind}, STATUS: ${STATUS}, MESSAGE: ${MESSAGE}, epochJdTt: ${epochJdTt}, epochJdTtFraction: ${epochJdTtFraction}, PLACE: ${PLACE}, rowCount: ${rowCount}, rowsAdded: ${rowsAdded}, rejectedCount: ${rejectedCount}, bandCount: ${bandCount}, matchedCount: ${matchedCount}, HITS: ${HITS}, bandIds: ${bandIds}, MAGNITUDES: ${MAGNITUDES}, DERIVATIONS: ${DERIVATIONS}, matchedDetections: ${matchedDetections}, ROTATION: ${ROTATION}, QUATERNION: ${QUATERNION}, residualRmsArcsec: ${residualRmsArcsec}, boresightRaDeg: ${boresightRaDeg}, boresightDecDeg: ${boresightDecDeg}, matchedRows: ${matchedRows}, OCCULTATIONS: ${OCCULTATIONS}, EXCLUSIONS: ${EXCLUSIONS}}';
+  }
+}
+
+class _SKRReader extends fb.TableReader<SKR> {
+  const _SKRReader();
+
+  @override
+  SKR createObject(fb.BufferContext bc, int offset) =>
+    SKR._(bc, offset);
+}
+
+class SKRBuilder {
+  SKRBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(25);
   }
 
-  int addBandIdOffset(int? offset) {
+  int addQueryIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addQueryKind(skqQueryKind? QUERY_KIND) {
+    fbBuilder.addUint8(1, QUERY_KIND?.value);
     return fbBuilder.offset;
   }
-  int addSystemNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addStatus(skrStatus? STATUS) {
+    fbBuilder.addUint8(2, STATUS?.value);
     return fbBuilder.offset;
   }
-  int addSpectralRegime(phbSpectralRegime? SPECTRAL_REGIME) {
-    fbBuilder.addUint8(3, SPECTRAL_REGIME?.value);
+  int addMessageOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addWavelengthEffNm(double? WAVELENGTH_EFF_NM) {
-    fbBuilder.addFloat64(4, WAVELENGTH_EFF_NM);
+  int addEpochJdTt(double? EPOCH_JD_TT) {
+    fbBuilder.addFloat64(4, EPOCH_JD_TT);
     return fbBuilder.offset;
   }
-  int addWavelengthMinNm(double? WAVELENGTH_MIN_NM) {
-    fbBuilder.addFloat64(5, WAVELENGTH_MIN_NM);
+  int addEpochJdTtFraction(double? EPOCH_JD_TT_FRACTION) {
+    fbBuilder.addFloat64(5, EPOCH_JD_TT_FRACTION);
     return fbBuilder.offset;
   }
-  int addWavelengthMaxNm(double? WAVELENGTH_MAX_NM) {
-    fbBuilder.addFloat64(6, WAVELENGTH_MAX_NM);
+  int addPlace(sktPlaceKind? PLACE) {
+    fbBuilder.addUint8(6, PLACE?.value);
     return fbBuilder.offset;
   }
-  int addMagnitudeSystem(phbMagnitudeSystem? MAGNITUDE_SYSTEM) {
-    fbBuilder.addUint8(7, MAGNITUDE_SYSTEM?.value);
+  int addRowCount(int? ROW_COUNT) {
+    fbBuilder.addUint32(7, ROW_COUNT);
     return fbBuilder.offset;
   }
-  int addZeroPointJy(double? ZERO_POINT_JY) {
-    fbBuilder.addFloat64(8, ZERO_POINT_JY);
+  int addRowsAdded(int? ROWS_ADDED) {
+    fbBuilder.addUint32(8, ROWS_ADDED);
     return fbBuilder.offset;
   }
-  int addResponseWavelengthNmOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addRejectedCount(int? REJECTED_COUNT) {
+    fbBuilder.addUint32(9, REJECTED_COUNT);
     return fbBuilder.offset;
   }
-  int addResponseOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+  int addBandCount(int? BAND_COUNT) {
+    fbBuilder.addUint32(10, BAND_COUNT);
     return fbBuilder.offset;
   }
-  int addResponseIsEnergy(bool? RESPONSE_IS_ENERGY) {
-    fbBuilder.addBool(11, RESPONSE_IS_ENERGY);
+  int addMatchedCount(int? MATCHED_COUNT) {
+    fbBuilder.addUint32(11, MATCHED_COUNT);
     return fbBuilder.offset;
   }
-  int addCitationOffset(int? offset) {
+  int addHitsOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addDefinitionUrlOffset(int? offset) {
+  int addBandIdsOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addMagnitudesOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addDerivationsOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addMatchedDetections(int? MATCHED_DETECTIONS) {
+    fbBuilder.addUint32(16, MATCHED_DETECTIONS);
+    return fbBuilder.offset;
+  }
+  int addRotationOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addQuaternionOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addResidualRmsArcsec(double? RESIDUAL_RMS_ARCSEC) {
+    fbBuilder.addFloat64(19, RESIDUAL_RMS_ARCSEC);
+    return fbBuilder.offset;
+  }
+  int addBoresightRaDeg(double? BORESIGHT_RA_DEG) {
+    fbBuilder.addFloat64(20, BORESIGHT_RA_DEG);
+    return fbBuilder.offset;
+  }
+  int addBoresightDecDeg(double? BORESIGHT_DEC_DEG) {
+    fbBuilder.addFloat64(21, BORESIGHT_DEC_DEG);
+    return fbBuilder.offset;
+  }
+  int addMatchedRowsOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addOccultationsOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addExclusionsOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
     return fbBuilder.offset;
   }
 
@@ -566,96 +591,152 @@ class PHBBuilder {
   }
 }
 
-class PHBObjectBuilder extends fb.ObjectBuilder {
-  final String? _BAND_ID;
-  final String? _NAME;
-  final String? _SYSTEM_NAME;
-  final phbSpectralRegime? _SPECTRAL_REGIME;
-  final double? _WAVELENGTH_EFF_NM;
-  final double? _WAVELENGTH_MIN_NM;
-  final double? _WAVELENGTH_MAX_NM;
-  final phbMagnitudeSystem? _MAGNITUDE_SYSTEM;
-  final double? _ZERO_POINT_JY;
-  final List<double>? _RESPONSE_WAVELENGTH_NM;
-  final List<double>? _RESPONSE;
-  final bool? _RESPONSE_IS_ENERGY;
-  final String? _CITATION;
-  final String? _DEFINITION_URL;
+class SKRObjectBuilder extends fb.ObjectBuilder {
+  final String? _QUERY_ID;
+  final skqQueryKind? _QUERY_KIND;
+  final skrStatus? _STATUS;
+  final String? _MESSAGE;
+  final double? _EPOCH_JD_TT;
+  final double? _EPOCH_JD_TT_FRACTION;
+  final sktPlaceKind? _PLACE;
+  final int? _ROW_COUNT;
+  final int? _ROWS_ADDED;
+  final int? _REJECTED_COUNT;
+  final int? _BAND_COUNT;
+  final int? _MATCHED_COUNT;
+  final List<SKRHitObjectBuilder>? _HITS;
+  final List<String>? _BAND_IDS;
+  final List<double>? _MAGNITUDES;
+  final List<phbDerivation>? _DERIVATIONS;
+  final int? _MATCHED_DETECTIONS;
+  final List<double>? _ROTATION;
+  final List<double>? _QUATERNION;
+  final double? _RESIDUAL_RMS_ARCSEC;
+  final double? _BORESIGHT_RA_DEG;
+  final double? _BORESIGHT_DEC_DEG;
+  final List<int>? _MATCHED_ROWS;
+  final List<SKROccultationObjectBuilder>? _OCCULTATIONS;
+  final List<SKRExclusionObjectBuilder>? _EXCLUSIONS;
 
-  PHBObjectBuilder({
-    String? BAND_ID,
-    String? bandId,
-    String? NAME,
-    String? SYSTEM_NAME,
-    String? systemName,
-    phbSpectralRegime? SPECTRAL_REGIME,
-    phbSpectralRegime? spectralRegime,
-    double? WAVELENGTH_EFF_NM,
-    double? wavelengthEffNm,
-    double? WAVELENGTH_MIN_NM,
-    double? wavelengthMinNm,
-    double? WAVELENGTH_MAX_NM,
-    double? wavelengthMaxNm,
-    phbMagnitudeSystem? MAGNITUDE_SYSTEM,
-    phbMagnitudeSystem? magnitudeSystem,
-    double? ZERO_POINT_JY,
-    double? zeroPointJy,
-    List<double>? RESPONSE_WAVELENGTH_NM,
-    List<double>? responseWavelengthNm,
-    List<double>? RESPONSE,
-    bool? RESPONSE_IS_ENERGY,
-    bool? responseIsEnergy,
-    String? CITATION,
-    String? DEFINITION_URL,
-    String? definitionUrl,
+  SKRObjectBuilder({
+    String? QUERY_ID,
+    String? queryId,
+    skqQueryKind? QUERY_KIND,
+    skqQueryKind? queryKind,
+    skrStatus? STATUS,
+    String? MESSAGE,
+    double? EPOCH_JD_TT,
+    double? epochJdTt,
+    double? EPOCH_JD_TT_FRACTION,
+    double? epochJdTtFraction,
+    sktPlaceKind? PLACE,
+    int? ROW_COUNT,
+    int? rowCount,
+    int? ROWS_ADDED,
+    int? rowsAdded,
+    int? REJECTED_COUNT,
+    int? rejectedCount,
+    int? BAND_COUNT,
+    int? bandCount,
+    int? MATCHED_COUNT,
+    int? matchedCount,
+    List<SKRHitObjectBuilder>? HITS,
+    List<String>? BAND_IDS,
+    List<String>? bandIds,
+    List<double>? MAGNITUDES,
+    List<phbDerivation>? DERIVATIONS,
+    int? MATCHED_DETECTIONS,
+    int? matchedDetections,
+    List<double>? ROTATION,
+    List<double>? QUATERNION,
+    double? RESIDUAL_RMS_ARCSEC,
+    double? residualRmsArcsec,
+    double? BORESIGHT_RA_DEG,
+    double? boresightRaDeg,
+    double? BORESIGHT_DEC_DEG,
+    double? boresightDecDeg,
+    List<int>? MATCHED_ROWS,
+    List<int>? matchedRows,
+    List<SKROccultationObjectBuilder>? OCCULTATIONS,
+    List<SKRExclusionObjectBuilder>? EXCLUSIONS,
   })
-      : _BAND_ID = bandId ?? BAND_ID,
-        _NAME = NAME,
-        _SYSTEM_NAME = systemName ?? SYSTEM_NAME,
-        _SPECTRAL_REGIME = spectralRegime ?? SPECTRAL_REGIME,
-        _WAVELENGTH_EFF_NM = wavelengthEffNm ?? WAVELENGTH_EFF_NM,
-        _WAVELENGTH_MIN_NM = wavelengthMinNm ?? WAVELENGTH_MIN_NM,
-        _WAVELENGTH_MAX_NM = wavelengthMaxNm ?? WAVELENGTH_MAX_NM,
-        _MAGNITUDE_SYSTEM = magnitudeSystem ?? MAGNITUDE_SYSTEM,
-        _ZERO_POINT_JY = zeroPointJy ?? ZERO_POINT_JY,
-        _RESPONSE_WAVELENGTH_NM = responseWavelengthNm ?? RESPONSE_WAVELENGTH_NM,
-        _RESPONSE = RESPONSE,
-        _RESPONSE_IS_ENERGY = responseIsEnergy ?? RESPONSE_IS_ENERGY,
-        _CITATION = CITATION,
-        _DEFINITION_URL = definitionUrl ?? DEFINITION_URL;
+      : _QUERY_ID = queryId ?? QUERY_ID,
+        _QUERY_KIND = queryKind ?? QUERY_KIND,
+        _STATUS = STATUS,
+        _MESSAGE = MESSAGE,
+        _EPOCH_JD_TT = epochJdTt ?? EPOCH_JD_TT,
+        _EPOCH_JD_TT_FRACTION = epochJdTtFraction ?? EPOCH_JD_TT_FRACTION,
+        _PLACE = PLACE,
+        _ROW_COUNT = rowCount ?? ROW_COUNT,
+        _ROWS_ADDED = rowsAdded ?? ROWS_ADDED,
+        _REJECTED_COUNT = rejectedCount ?? REJECTED_COUNT,
+        _BAND_COUNT = bandCount ?? BAND_COUNT,
+        _MATCHED_COUNT = matchedCount ?? MATCHED_COUNT,
+        _HITS = HITS,
+        _BAND_IDS = bandIds ?? BAND_IDS,
+        _MAGNITUDES = MAGNITUDES,
+        _DERIVATIONS = DERIVATIONS,
+        _MATCHED_DETECTIONS = matchedDetections ?? MATCHED_DETECTIONS,
+        _ROTATION = ROTATION,
+        _QUATERNION = QUATERNION,
+        _RESIDUAL_RMS_ARCSEC = residualRmsArcsec ?? RESIDUAL_RMS_ARCSEC,
+        _BORESIGHT_RA_DEG = boresightRaDeg ?? BORESIGHT_RA_DEG,
+        _BORESIGHT_DEC_DEG = boresightDecDeg ?? BORESIGHT_DEC_DEG,
+        _MATCHED_ROWS = matchedRows ?? MATCHED_ROWS,
+        _OCCULTATIONS = OCCULTATIONS,
+        _EXCLUSIONS = EXCLUSIONS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? BAND_IDOffset = _BAND_ID == null ? null
-        : fbBuilder.writeString(_BAND_ID!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SYSTEM_NAMEOffset = _SYSTEM_NAME == null ? null
-        : fbBuilder.writeString(_SYSTEM_NAME!);
-    final int? RESPONSE_WAVELENGTH_NMOffset = _RESPONSE_WAVELENGTH_NM == null ? null
-        : fbBuilder.writeListFloat64(_RESPONSE_WAVELENGTH_NM!);
-    final int? RESPONSEOffset = _RESPONSE == null ? null
-        : fbBuilder.writeListFloat32(_RESPONSE!);
-    final int? CITATIONOffset = _CITATION == null ? null
-        : fbBuilder.writeString(_CITATION!);
-    final int? DEFINITION_URLOffset = _DEFINITION_URL == null ? null
-        : fbBuilder.writeString(_DEFINITION_URL!);
-    fbBuilder.startTable(14);
-    fbBuilder.addOffset(0, BAND_IDOffset);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, SYSTEM_NAMEOffset);
-    fbBuilder.addUint8(3, _SPECTRAL_REGIME?.value);
-    fbBuilder.addFloat64(4, _WAVELENGTH_EFF_NM);
-    fbBuilder.addFloat64(5, _WAVELENGTH_MIN_NM);
-    fbBuilder.addFloat64(6, _WAVELENGTH_MAX_NM);
-    fbBuilder.addUint8(7, _MAGNITUDE_SYSTEM?.value);
-    fbBuilder.addFloat64(8, _ZERO_POINT_JY);
-    fbBuilder.addOffset(9, RESPONSE_WAVELENGTH_NMOffset);
-    fbBuilder.addOffset(10, RESPONSEOffset);
-    fbBuilder.addBool(11, _RESPONSE_IS_ENERGY);
-    fbBuilder.addOffset(12, CITATIONOffset);
-    fbBuilder.addOffset(13, DEFINITION_URLOffset);
+    final int? QUERY_IDOffset = _QUERY_ID == null ? null
+        : fbBuilder.writeString(_QUERY_ID!);
+    final int? MESSAGEOffset = _MESSAGE == null ? null
+        : fbBuilder.writeString(_MESSAGE!);
+    final int? HITSOffset = _HITS == null ? null
+        : fbBuilder.writeListOfStructs(_HITS!);
+    final int? BAND_IDSOffset = _BAND_IDS == null ? null
+        : fbBuilder.writeList(_BAND_IDS!.map(fbBuilder.writeString).toList());
+    final int? MAGNITUDESOffset = _MAGNITUDES == null ? null
+        : fbBuilder.writeListFloat32(_MAGNITUDES!);
+    final int? DERIVATIONSOffset = _DERIVATIONS == null ? null
+        : fbBuilder.writeListUint8(_DERIVATIONS!.map((f) => f.value).toList());
+    final int? ROTATIONOffset = _ROTATION == null ? null
+        : fbBuilder.writeListFloat64(_ROTATION!);
+    final int? QUATERNIONOffset = _QUATERNION == null ? null
+        : fbBuilder.writeListFloat64(_QUATERNION!);
+    final int? MATCHED_ROWSOffset = _MATCHED_ROWS == null ? null
+        : fbBuilder.writeListUint32(_MATCHED_ROWS!);
+    final int? OCCULTATIONSOffset = _OCCULTATIONS == null ? null
+        : fbBuilder.writeListOfStructs(_OCCULTATIONS!);
+    final int? EXCLUSIONSOffset = _EXCLUSIONS == null ? null
+        : fbBuilder.writeListOfStructs(_EXCLUSIONS!);
+    fbBuilder.startTable(25);
+    fbBuilder.addOffset(0, QUERY_IDOffset);
+    fbBuilder.addUint8(1, _QUERY_KIND?.value);
+    fbBuilder.addUint8(2, _STATUS?.value);
+    fbBuilder.addOffset(3, MESSAGEOffset);
+    fbBuilder.addFloat64(4, _EPOCH_JD_TT);
+    fbBuilder.addFloat64(5, _EPOCH_JD_TT_FRACTION);
+    fbBuilder.addUint8(6, _PLACE?.value);
+    fbBuilder.addUint32(7, _ROW_COUNT);
+    fbBuilder.addUint32(8, _ROWS_ADDED);
+    fbBuilder.addUint32(9, _REJECTED_COUNT);
+    fbBuilder.addUint32(10, _BAND_COUNT);
+    fbBuilder.addUint32(11, _MATCHED_COUNT);
+    fbBuilder.addOffset(12, HITSOffset);
+    fbBuilder.addOffset(13, BAND_IDSOffset);
+    fbBuilder.addOffset(14, MAGNITUDESOffset);
+    fbBuilder.addOffset(15, DERIVATIONSOffset);
+    fbBuilder.addUint32(16, _MATCHED_DETECTIONS);
+    fbBuilder.addOffset(17, ROTATIONOffset);
+    fbBuilder.addOffset(18, QUATERNIONOffset);
+    fbBuilder.addFloat64(19, _RESIDUAL_RMS_ARCSEC);
+    fbBuilder.addFloat64(20, _BORESIGHT_RA_DEG);
+    fbBuilder.addFloat64(21, _BORESIGHT_DEC_DEG);
+    fbBuilder.addOffset(22, MATCHED_ROWSOffset);
+    fbBuilder.addOffset(23, OCCULTATIONSOffset);
+    fbBuilder.addOffset(24, EXCLUSIONSOffset);
     return fbBuilder.endTable();
   }
 

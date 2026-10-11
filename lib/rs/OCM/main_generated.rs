@@ -8,6 +8,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -276,111 +278,6 @@ impl<'a> ::flatbuffers::Verifiable for estimatorCategory {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for estimatorCategory {}
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_COVARIANCE_CALIBRATION: i8 = 0;
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_COVARIANCE_CALIBRATION: i8 = 2;
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_COVARIANCE_CALIBRATION: [covarianceCalibration; 3] = [
-    covarianceCalibration::Unspecified,
-    covarianceCalibration::Uncalibrated,
-    covarianceCalibration::Calibrated,
-];
-
-/// Whether a covariance's coverage was measured against independent reference
-/// states: the share of reference errors inside its confidence regions matched
-/// what the covariance claims, for the regime and prediction age it covers.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct covarianceCalibration(pub i8);
-
-#[allow(non_upper_case_globals)]
-impl covarianceCalibration {
-    /// Calibration not stated
-    pub const Unspecified: Self = Self(0);
-    /// Not measured against independent reference states, or measured and failed
-    pub const Uncalibrated: Self = Self(1);
-    /// Measured against independent reference states and passed
-    pub const Calibrated: Self = Self(2);
-
-    pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 2;
-    pub const ENUM_VALUES: &'static [Self] = &[
-        Self::Unspecified,
-        Self::Uncalibrated,
-        Self::Calibrated,
-    ];
-
-    /// Returns the variant's name or "" if unknown.
-    pub fn variant_name(self) -> Option<&'static str> {
-        match self {
-            Self::Unspecified => Some("Unspecified"),
-            Self::Uncalibrated => Some("Uncalibrated"),
-            Self::Calibrated => Some("Calibrated"),
-            _ => None,
-        }
-    }
-}
-
-impl ::core::fmt::Debug for covarianceCalibration {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-        if let Some(name) = self.variant_name() {
-            f.write_str(name)
-        } else {
-            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-        }
-    }
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for covarianceCalibration {
-    type Inner = Self;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-        Self(b)
-    }
-}
-
-impl ::flatbuffers::Push for covarianceCalibration {
-    type Output = covarianceCalibration;
-
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for covarianceCalibration {
-    type Scalar = i8;
-
-    #[inline]
-    fn to_little_endian(self) -> i8 {
-        self.0.to_le()
-    }
-
-    #[inline]
-    #[allow(clippy::wrong_self_convention)]
-    fn from_little_endian(v: i8) -> Self {
-        let b = i8::from_le(v);
-        Self(b)
-    }
-}
-
-impl<'a> ::flatbuffers::Verifiable for covarianceCalibration {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        i8::run_verifier(v, pos)
-    }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for covarianceCalibration {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_COVARIANCE_ORDERING: i8 = 0;
@@ -8986,6 +8883,7 @@ impl<'a> OCMCovarianceBlock<'a> {
     pub const VT_COV_ORDERING: ::flatbuffers::VOffsetT = 28;
     pub const VT_COV_UNITS: ::flatbuffers::VOffsetT = 30;
     pub const VT_LINES: ::flatbuffers::VOffsetT = 32;
+    pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 34;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -9001,6 +8899,7 @@ impl<'a> OCMCovarianceBlock<'a> {
         builder.add_COV_CONFIDENCE(args.COV_CONFIDENCE);
         builder.add_COV_SCALE_MAX(args.COV_SCALE_MAX);
         builder.add_COV_SCALE_MIN(args.COV_SCALE_MIN);
+        if let Some(x) = args.COV_REALISM { builder.add_COV_REALISM(x); }
         if let Some(x) = args.LINES { builder.add_LINES(x); }
         if let Some(x) = args.COV_UNITS { builder.add_COV_UNITS(x); }
         if let Some(x) = args.COV_TYPE { builder.add_COV_TYPE(x); }
@@ -9054,6 +8953,9 @@ impl<'a> OCMCovarianceBlock<'a> {
         let LINES = self.LINES().map(|x| {
             x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
         });
+        let COV_REALISM = self.COV_REALISM().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         OCMCovarianceBlockT {
             COMMENT,
             COV_ID,
@@ -9070,6 +8972,7 @@ impl<'a> OCMCovarianceBlock<'a> {
             COV_ORDERING,
             COV_UNITS,
             LINES,
+            COV_REALISM,
         }
     }
 
@@ -9207,6 +9110,16 @@ impl<'a> OCMCovarianceBlock<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCMCovarianceBlock::VT_LINES, None)}
     }
+
+    /// Realism of the block's covariance: one entry per line of LINES, in order,
+    /// or one entry for every line.
+    #[inline]
+    pub fn COV_REALISM(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR>>>>(OCMCovarianceBlock::VT_COV_REALISM, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCMCovarianceBlock<'_> {
@@ -9230,6 +9143,7 @@ impl ::flatbuffers::Verifiable for OCMCovarianceBlock<'_> {
             .visit_field::<covarianceOrdering>("COV_ORDERING", Self::VT_COV_ORDERING, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_UNITS", Self::VT_COV_UNITS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("LINES", Self::VT_LINES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CVR>>>>("COV_REALISM", Self::VT_COV_REALISM, false)?
             .finish();
         Ok(())
     }
@@ -9251,6 +9165,7 @@ pub struct OCMCovarianceBlockArgs<'a> {
     pub COV_ORDERING: covarianceOrdering,
     pub COV_UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub COV_REALISM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR<'a>>>>>,
 }
 
 impl<'a> Default for OCMCovarianceBlockArgs<'a> {
@@ -9272,6 +9187,7 @@ impl<'a> Default for OCMCovarianceBlockArgs<'a> {
             COV_ORDERING: covarianceOrdering::LTM,
             COV_UNITS: None,
             LINES: None,
+            COV_REALISM: None,
         }
     }
 }
@@ -9358,6 +9274,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMCovarianceBlockBuilder<'a,
     }
 
     #[inline]
+    pub fn add_COV_REALISM(&mut self, COV_REALISM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CVR<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_REALISM, COV_REALISM);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMCovarianceBlockBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMCovarianceBlockBuilder {
@@ -9391,6 +9312,7 @@ impl ::core::fmt::Debug for OCMCovarianceBlock<'_> {
         ds.field("COV_ORDERING", &self.COV_ORDERING());
         ds.field("COV_UNITS", &self.COV_UNITS());
         ds.field("LINES", &self.LINES());
+        ds.field("COV_REALISM", &self.COV_REALISM());
         ds.finish()
     }
 }
@@ -9413,6 +9335,7 @@ pub struct OCMCovarianceBlockT {
     pub COV_ORDERING: covarianceOrdering,
     pub COV_UNITS: Option<alloc::string::String>,
     pub LINES: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub COV_REALISM: Option<alloc::vec::Vec<CVRT>>,
 }
 
 impl Default for OCMCovarianceBlockT {
@@ -9433,6 +9356,7 @@ impl Default for OCMCovarianceBlockT {
             COV_ORDERING: covarianceOrdering::LTM,
             COV_UNITS: None,
             LINES: None,
+            COV_REALISM: None,
         }
     }
 }
@@ -9479,6 +9403,9 @@ impl OCMCovarianceBlockT {
         let LINES = self.LINES.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
         });
+        let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         OCMCovarianceBlock::create(_fbb, &OCMCovarianceBlockArgs{
             COMMENT,
             COV_ID,
@@ -9495,6 +9422,7 @@ impl OCMCovarianceBlockT {
             COV_ORDERING,
             COV_UNITS,
             LINES,
+            COV_REALISM,
         })
     }
 }
@@ -9719,6 +9647,8 @@ impl<'a> OCM<'a> {
     pub const VT_COV_UNITS: ::flatbuffers::VOffsetT = 60;
     pub const VT_TRAJECTORY_BLOCKS: ::flatbuffers::VOffsetT = 62;
     pub const VT_COVARIANCE_BLOCKS: ::flatbuffers::VOffsetT = 64;
+    pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 66;
+    pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 68;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -9732,6 +9662,8 @@ impl<'a> OCM<'a> {
     ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
         let mut builder = OCMBuilder::new(_fbb);
         builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+        if let Some(x) = args.COV_REALISM { builder.add_COV_REALISM(x); }
+        if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.COVARIANCE_BLOCKS { builder.add_COVARIANCE_BLOCKS(x); }
         if let Some(x) = args.TRAJECTORY_BLOCKS { builder.add_TRAJECTORY_BLOCKS(x); }
         if let Some(x) = args.COV_UNITS { builder.add_COV_UNITS(x); }
@@ -9845,6 +9777,12 @@ impl<'a> OCM<'a> {
         let COVARIANCE_BLOCKS = self.COVARIANCE_BLOCKS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let PROVENANCE = self.PROVENANCE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let COV_REALISM = self.COV_REALISM().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         OCMT {
             HEADER,
             METADATA,
@@ -9877,6 +9815,8 @@ impl<'a> OCM<'a> {
             COV_UNITS,
             TRAJECTORY_BLOCKS,
             COVARIANCE_BLOCKS,
+            PROVENANCE,
+            COV_REALISM,
         }
     }
 
@@ -10094,7 +10034,7 @@ impl<'a> OCM<'a> {
     }
 
     /// Whether COVARIANCE_DATA's coverage was measured against independent
-    /// reference states.
+    /// reference states: Calibrated only when every COV_REALISM entry is.
     #[inline]
     pub fn COV_CALIBRATION(&self) -> covarianceCalibration {
         // Safety:
@@ -10196,6 +10136,25 @@ impl<'a> OCM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock>>>>(OCM::VT_COVARIANCE_BLOCKS, None)}
     }
+
+    /// Where the message's data comes from and the terms it travels under.
+    #[inline]
+    pub fn PROVENANCE(&self) -> Option<PVN<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PVN>>(OCM::VT_PROVENANCE, None)}
+    }
+
+    /// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+    /// STATE_DATA epochs, or one entry for every epoch.
+    #[inline]
+    pub fn COV_REALISM(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR>>>>(OCM::VT_COV_REALISM, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCM<'_> {
@@ -10235,6 +10194,8 @@ impl ::flatbuffers::Verifiable for OCM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COV_UNITS", Self::VT_COV_UNITS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMTrajectoryBlock>>>>("TRAJECTORY_BLOCKS", Self::VT_TRAJECTORY_BLOCKS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock>>>>("COVARIANCE_BLOCKS", Self::VT_COVARIANCE_BLOCKS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PVN>>("PROVENANCE", Self::VT_PROVENANCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CVR>>>>("COV_REALISM", Self::VT_COV_REALISM, false)?
             .finish();
         Ok(())
     }
@@ -10272,6 +10233,8 @@ pub struct OCMArgs<'a> {
     pub COV_UNITS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub TRAJECTORY_BLOCKS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMTrajectoryBlock<'a>>>>>,
     pub COVARIANCE_BLOCKS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock<'a>>>>>,
+    pub PROVENANCE: Option<::flatbuffers::WIPOffset<PVN<'a>>>,
+    pub COV_REALISM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR<'a>>>>>,
 }
 
 impl<'a> Default for OCMArgs<'a> {
@@ -10309,6 +10272,8 @@ impl<'a> Default for OCMArgs<'a> {
             COV_UNITS: None,
             TRAJECTORY_BLOCKS: None,
             COVARIANCE_BLOCKS: None,
+            PROVENANCE: None,
+            COV_REALISM: None,
         }
     }
 }
@@ -10475,6 +10440,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PROVENANCE(&mut self, PROVENANCE: ::flatbuffers::WIPOffset<PVN<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PVN>>(OCM::VT_PROVENANCE, PROVENANCE);
+    }
+
+    #[inline]
+    pub fn add_COV_REALISM(&mut self, COV_REALISM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CVR<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_COV_REALISM, COV_REALISM);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMBuilder {
@@ -10524,6 +10499,8 @@ impl ::core::fmt::Debug for OCM<'_> {
         ds.field("COV_UNITS", &self.COV_UNITS());
         ds.field("TRAJECTORY_BLOCKS", &self.TRAJECTORY_BLOCKS());
         ds.field("COVARIANCE_BLOCKS", &self.COVARIANCE_BLOCKS());
+        ds.field("PROVENANCE", &self.PROVENANCE());
+        ds.field("COV_REALISM", &self.COV_REALISM());
         ds.finish()
     }
 }
@@ -10562,6 +10539,8 @@ pub struct OCMT {
     pub COV_UNITS: Option<alloc::vec::Vec<alloc::string::String>>,
     pub TRAJECTORY_BLOCKS: Option<alloc::vec::Vec<OCMTrajectoryBlockT>>,
     pub COVARIANCE_BLOCKS: Option<alloc::vec::Vec<OCMCovarianceBlockT>>,
+    pub PROVENANCE: Option<alloc::boxed::Box<PVNT>>,
+    pub COV_REALISM: Option<alloc::vec::Vec<CVRT>>,
 }
 
 impl Default for OCMT {
@@ -10598,6 +10577,8 @@ impl Default for OCMT {
             COV_UNITS: None,
             TRAJECTORY_BLOCKS: None,
             COVARIANCE_BLOCKS: None,
+            PROVENANCE: None,
+            COV_REALISM: None,
         }
     }
 }
@@ -10686,6 +10667,12 @@ impl OCMT {
         let COVARIANCE_BLOCKS = self.COVARIANCE_BLOCKS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let PROVENANCE = self.PROVENANCE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         OCM::create(_fbb, &OCMArgs{
             HEADER,
             METADATA,
@@ -10718,6 +10705,8 @@ impl OCMT {
             COV_UNITS,
             TRAJECTORY_BLOCKS,
             COVARIANCE_BLOCKS,
+            PROVENANCE,
+            COV_REALISM,
         })
     }
 }

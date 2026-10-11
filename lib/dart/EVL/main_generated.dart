@@ -7,1698 +7,413 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
-///  Which kind of object owns a parameter. A parameter is meaningless without
-///  its owner: the same symbol evaluated on a space object and on a thruster
-///  are different quantities. Append new values only; never reorder or reuse
-///  existing values.
-enum pceOwnerClass {
+///  What kind of event is being located. Every class is one instance of the
+///  same pair: an event function of time, and a refined root. Append new values
+///  only; never reorder or reuse existing values.
+enum evlLocatorClass {
   UNSPECIFIED(0),
-  SPACE_OBJECT(1),
-  SPACE_POINT(2),
-  GROUND_SITE(3),
-  THRUSTER(4),
-  FUEL_TANK(5),
-  IMPULSIVE_BURN(6),
-  FINITE_BURN(7),
-  POWER_SYSTEM(8),
-  ATTITUDE_SYSTEM(9),
-  SOLVER(10),
-  OBJECT_GROUP(11);
+  ECLIPSE(1),
+  CONTACT(2),
+  INTRUSION(3),
+  APSIDES(4),
+  NODE_CROSSING(5),
+  PARAMETER_CONDITION(6);
 
   final int value;
-  const pceOwnerClass(this.value);
+  const evlLocatorClass(this.value);
 
-  factory pceOwnerClass.fromValue(int value) {
+  factory evlLocatorClass.fromValue(int value) {
     switch (value) {
-      case 0: return pceOwnerClass.UNSPECIFIED;
-      case 1: return pceOwnerClass.SPACE_OBJECT;
-      case 2: return pceOwnerClass.SPACE_POINT;
-      case 3: return pceOwnerClass.GROUND_SITE;
-      case 4: return pceOwnerClass.THRUSTER;
-      case 5: return pceOwnerClass.FUEL_TANK;
-      case 6: return pceOwnerClass.IMPULSIVE_BURN;
-      case 7: return pceOwnerClass.FINITE_BURN;
-      case 8: return pceOwnerClass.POWER_SYSTEM;
-      case 9: return pceOwnerClass.ATTITUDE_SYSTEM;
-      case 10: return pceOwnerClass.SOLVER;
-      case 11: return pceOwnerClass.OBJECT_GROUP;
+      case 0: return evlLocatorClass.UNSPECIFIED;
+      case 1: return evlLocatorClass.ECLIPSE;
+      case 2: return evlLocatorClass.CONTACT;
+      case 3: return evlLocatorClass.INTRUSION;
+      case 4: return evlLocatorClass.APSIDES;
+      case 5: return evlLocatorClass.NODE_CROSSING;
+      case 6: return evlLocatorClass.PARAMETER_CONDITION;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static pceOwnerClass? _createOrNull(int? value) =>
-      value == null ? null : pceOwnerClass.fromValue(value);
+  static evlLocatorClass? _createOrNull(int? value) =>
+      value == null ? null : evlLocatorClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 11;
-  static const fb.Reader<pceOwnerClass> reader = _pceOwnerClassReader();
+  static const int maxValue = 6;
+  static const fb.Reader<evlLocatorClass> reader = _evlLocatorClassReader();
 }
 
-class _pceOwnerClassReader extends fb.Reader<pceOwnerClass> {
-  const _pceOwnerClassReader();
+class _evlLocatorClassReader extends fb.Reader<evlLocatorClass> {
+  const _evlLocatorClassReader();
 
   @override
   int get size => 1;
 
   @override
-  pceOwnerClass read(fb.BufferContext bc, int offset) =>
-      pceOwnerClass.fromValue(const fb.Uint8Reader().read(bc, offset));
+  evlLocatorClass read(fb.BufferContext bc, int offset) =>
+      evlLocatorClass.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  The shape of a parameter's value. Append new values only.
-enum pceDataType {
+///  What was found. Append new values only.
+enum evlEventType {
   UNSPECIFIED(0),
-  REAL_SCALAR(1),
-  REAL_VECTOR(2),
-  REAL_MATRIX(3),
-  INTEGER_SCALAR(4),
-  STRING(5),
-  EPOCH(6),
-  BOOLEAN(7);
+  UMBRA(1),
+  PENUMBRA(2),
+  ANTUMBRA(3),
+  RISE(4),
+  SET(5),
+  ENTRY(6),
+  EXIT(7),
+  APOAPSIS(8),
+  PERIAPSIS(9),
+  ASCENDING_NODE(10),
+  DESCENDING_NODE(11),
+  CONDITION_SATISFIED(12);
 
   final int value;
-  const pceDataType(this.value);
+  const evlEventType(this.value);
 
-  factory pceDataType.fromValue(int value) {
+  factory evlEventType.fromValue(int value) {
     switch (value) {
-      case 0: return pceDataType.UNSPECIFIED;
-      case 1: return pceDataType.REAL_SCALAR;
-      case 2: return pceDataType.REAL_VECTOR;
-      case 3: return pceDataType.REAL_MATRIX;
-      case 4: return pceDataType.INTEGER_SCALAR;
-      case 5: return pceDataType.STRING;
-      case 6: return pceDataType.EPOCH;
-      case 7: return pceDataType.BOOLEAN;
+      case 0: return evlEventType.UNSPECIFIED;
+      case 1: return evlEventType.UMBRA;
+      case 2: return evlEventType.PENUMBRA;
+      case 3: return evlEventType.ANTUMBRA;
+      case 4: return evlEventType.RISE;
+      case 5: return evlEventType.SET;
+      case 6: return evlEventType.ENTRY;
+      case 7: return evlEventType.EXIT;
+      case 8: return evlEventType.APOAPSIS;
+      case 9: return evlEventType.PERIAPSIS;
+      case 10: return evlEventType.ASCENDING_NODE;
+      case 11: return evlEventType.DESCENDING_NODE;
+      case 12: return evlEventType.CONDITION_SATISFIED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static pceDataType? _createOrNull(int? value) =>
-      value == null ? null : pceDataType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 7;
-  static const fb.Reader<pceDataType> reader = _pceDataTypeReader();
-}
-
-class _pceDataTypeReader extends fb.Reader<pceDataType> {
-  const _pceDataTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  pceDataType read(fb.BufferContext bc, int offset) =>
-      pceDataType.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  SI unit of a parameter value. The catalog is SI: metres, radians, seconds,
-///  kilograms. A provider MUST NOT publish degrees or kilometres under these
-///  members. PROVIDER_DEFINED holds a reserved high value so new SI units
-///  append contiguously without disturbing it. Append new values only.
-enum pceUnit {
-  UNSPECIFIED(0),
-  DIMENSIONLESS(1),
-  METRE(2),
-  METRE_PER_SECOND(3),
-  METRE_PER_SECOND_SQUARED(4),
-  METRE_SQUARED(5),
-  METRE_SQUARED_PER_SECOND(6),
-  METRE_SQUARED_PER_SECOND_SQUARED(7),
-  METRE_CUBED(8),
-  RADIAN(9),
-  RADIAN_PER_SECOND(10),
-  SECOND(11),
-  DAY(12),
-  KILOGRAM(13),
-  KILOGRAM_PER_SECOND(14),
-  KILOGRAM_PER_METRE_CUBED(15),
-  KILOGRAM_METRE_SQUARED(16),
-  NEWTON(17),
-  NEWTON_METRE(18),
-  WATT(19),
-  PASCAL(20),
-  KELVIN(21),
-  METRE_SQUARED_PER_KILOGRAM(22),
-  PROVIDER_DEFINED(100);
-
-  final int value;
-  const pceUnit(this.value);
-
-  factory pceUnit.fromValue(int value) {
-    switch (value) {
-      case 0: return pceUnit.UNSPECIFIED;
-      case 1: return pceUnit.DIMENSIONLESS;
-      case 2: return pceUnit.METRE;
-      case 3: return pceUnit.METRE_PER_SECOND;
-      case 4: return pceUnit.METRE_PER_SECOND_SQUARED;
-      case 5: return pceUnit.METRE_SQUARED;
-      case 6: return pceUnit.METRE_SQUARED_PER_SECOND;
-      case 7: return pceUnit.METRE_SQUARED_PER_SECOND_SQUARED;
-      case 8: return pceUnit.METRE_CUBED;
-      case 9: return pceUnit.RADIAN;
-      case 10: return pceUnit.RADIAN_PER_SECOND;
-      case 11: return pceUnit.SECOND;
-      case 12: return pceUnit.DAY;
-      case 13: return pceUnit.KILOGRAM;
-      case 14: return pceUnit.KILOGRAM_PER_SECOND;
-      case 15: return pceUnit.KILOGRAM_PER_METRE_CUBED;
-      case 16: return pceUnit.KILOGRAM_METRE_SQUARED;
-      case 17: return pceUnit.NEWTON;
-      case 18: return pceUnit.NEWTON_METRE;
-      case 19: return pceUnit.WATT;
-      case 20: return pceUnit.PASCAL;
-      case 21: return pceUnit.KELVIN;
-      case 22: return pceUnit.METRE_SQUARED_PER_KILOGRAM;
-      case 100: return pceUnit.PROVIDER_DEFINED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static pceUnit? _createOrNull(int? value) =>
-      value == null ? null : pceUnit.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 100;
-  static const fb.Reader<pceUnit> reader = _pceUnitReader();
-}
-
-class _pceUnitReader extends fb.Reader<pceUnit> {
-  const _pceUnitReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  pceUnit read(fb.BufferContext bc, int offset) =>
-      pceUnit.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  What geometric context a parameter needs before it has a value. This states
-///  the REQUIREMENT; the specific axis set and origin, when the parameter is
-///  only defined for one, are named by REQUIRED_AXIS_TYPE and
-///  REQUIRED_ORIGIN_KIND on the descriptor. Append new values only.
-enum pceFrameDependency {
-  UNSPECIFIED(0),
-  FRAME_INDEPENDENT(1),
-  COORDINATE_SYSTEM_DEPENDENT(2),
-  CENTRAL_BODY_DEPENDENT(3),
-  SURFACE_SITE_DEPENDENT(4),
-  SECOND_OBJECT_DEPENDENT(5);
-
-  final int value;
-  const pceFrameDependency(this.value);
-
-  factory pceFrameDependency.fromValue(int value) {
-    switch (value) {
-      case 0: return pceFrameDependency.UNSPECIFIED;
-      case 1: return pceFrameDependency.FRAME_INDEPENDENT;
-      case 2: return pceFrameDependency.COORDINATE_SYSTEM_DEPENDENT;
-      case 3: return pceFrameDependency.CENTRAL_BODY_DEPENDENT;
-      case 4: return pceFrameDependency.SURFACE_SITE_DEPENDENT;
-      case 5: return pceFrameDependency.SECOND_OBJECT_DEPENDENT;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static pceFrameDependency? _createOrNull(int? value) =>
-      value == null ? null : pceFrameDependency.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<pceFrameDependency> reader = _pceFrameDependencyReader();
-}
-
-class _pceFrameDependencyReader extends fb.Reader<pceFrameDependency> {
-  const _pceFrameDependencyReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  pceFrameDependency read(fb.BufferContext bc, int offset) =>
-      pceFrameDependency.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Whether a named parameter can actually be evaluated by the publisher of
-///  this catalog. A name is DECLARED so that a consumer can resolve, report and
-///  refuse it deterministically; declaring it is not a claim that it computes.
-///  Append new values only.
-enum pceAvailability {
-  UNSPECIFIED(0),
-  IMPLEMENTED(1),
-  DECLARED_UNAVAILABLE(2),
-  DEPRECATED(3);
-
-  final int value;
-  const pceAvailability(this.value);
-
-  factory pceAvailability.fromValue(int value) {
-    switch (value) {
-      case 0: return pceAvailability.UNSPECIFIED;
-      case 1: return pceAvailability.IMPLEMENTED;
-      case 2: return pceAvailability.DECLARED_UNAVAILABLE;
-      case 3: return pceAvailability.DEPRECATED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static pceAvailability? _createOrNull(int? value) =>
-      value == null ? null : pceAvailability.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<pceAvailability> reader = _pceAvailabilityReader();
-}
-
-class _pceAvailabilityReader extends fb.Reader<pceAvailability> {
-  const _pceAvailabilityReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  pceAvailability read(fb.BufferContext bc, int offset) =>
-      pceAvailability.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Outcome of one parameter evaluation or one propagate-to-condition run.
-///  0 is UNSPECIFIED so an unset byte never decodes as success. Append new
-///  values only.
-enum pceResultStatus {
-  UNSPECIFIED(0),
-  OK(1),
-  INVALID_INPUT(2),
-  UNKNOWN_PARAMETER(3),
-  NOT_IMPLEMENTED(4),
-  MISSING_DEPENDENCY(5),
-  MISSING_OWNER_OBJECT(6),
-  MISSING_EOP_DATA(7),
-  SINGULAR_AT_STATE(8),
-  OUT_OF_DOMAIN(9),
-  GOAL_NOT_ATTAINED(10),
-  ROOT_REFINEMENT_FAILED(11),
-  BUDGET_EXCEEDED(12);
-
-  final int value;
-  const pceResultStatus(this.value);
-
-  factory pceResultStatus.fromValue(int value) {
-    switch (value) {
-      case 0: return pceResultStatus.UNSPECIFIED;
-      case 1: return pceResultStatus.OK;
-      case 2: return pceResultStatus.INVALID_INPUT;
-      case 3: return pceResultStatus.UNKNOWN_PARAMETER;
-      case 4: return pceResultStatus.NOT_IMPLEMENTED;
-      case 5: return pceResultStatus.MISSING_DEPENDENCY;
-      case 6: return pceResultStatus.MISSING_OWNER_OBJECT;
-      case 7: return pceResultStatus.MISSING_EOP_DATA;
-      case 8: return pceResultStatus.SINGULAR_AT_STATE;
-      case 9: return pceResultStatus.OUT_OF_DOMAIN;
-      case 10: return pceResultStatus.GOAL_NOT_ATTAINED;
-      case 11: return pceResultStatus.ROOT_REFINEMENT_FAILED;
-      case 12: return pceResultStatus.BUDGET_EXCEEDED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static pceResultStatus? _createOrNull(int? value) =>
-      value == null ? null : pceResultStatus.fromValue(value);
+  static evlEventType? _createOrNull(int? value) =>
+      value == null ? null : evlEventType.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 12;
-  static const fb.Reader<pceResultStatus> reader = _pceResultStatusReader();
+  static const fb.Reader<evlEventType> reader = _evlEventTypeReader();
 }
 
-class _pceResultStatusReader extends fb.Reader<pceResultStatus> {
-  const _pceResultStatusReader();
+class _evlEventTypeReader extends fb.Reader<evlEventType> {
+  const _evlEventTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  pceResultStatus read(fb.BufferContext bc, int offset) =>
-      pceResultStatus.fromValue(const fb.Uint8Reader().read(bc, offset));
+  evlEventType read(fb.BufferContext bc, int offset) =>
+      evlEventType.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Which crossing of the goal value satisfies a condition. Append new values
-///  only.
-enum pceConditionDirection {
+///  Geometry used to decide whether the target is illuminated. Append new
+///  values only.
+enum evlShadowModel {
   UNSPECIFIED(0),
-  ANY_CROSSING(1),
-  INCREASING(2),
-  DECREASING(3);
+  CYLINDRICAL(1),
+  CONICAL(2),
+  DUAL_CONE(3);
 
   final int value;
-  const pceConditionDirection(this.value);
+  const evlShadowModel(this.value);
 
-  factory pceConditionDirection.fromValue(int value) {
+  factory evlShadowModel.fromValue(int value) {
     switch (value) {
-      case 0: return pceConditionDirection.UNSPECIFIED;
-      case 1: return pceConditionDirection.ANY_CROSSING;
-      case 2: return pceConditionDirection.INCREASING;
-      case 3: return pceConditionDirection.DECREASING;
+      case 0: return evlShadowModel.UNSPECIFIED;
+      case 1: return evlShadowModel.CYLINDRICAL;
+      case 2: return evlShadowModel.CONICAL;
+      case 3: return evlShadowModel.DUAL_CONE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static pceConditionDirection? _createOrNull(int? value) =>
-      value == null ? null : pceConditionDirection.fromValue(value);
+  static evlShadowModel? _createOrNull(int? value) =>
+      value == null ? null : evlShadowModel.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<pceConditionDirection> reader = _pceConditionDirectionReader();
+  static const fb.Reader<evlShadowModel> reader = _evlShadowModelReader();
 }
 
-class _pceConditionDirectionReader extends fb.Reader<pceConditionDirection> {
-  const _pceConditionDirectionReader();
+class _evlShadowModelReader extends fb.Reader<evlShadowModel> {
+  const _evlShadowModelReader();
 
   @override
   int get size => 1;
 
   @override
-  pceConditionDirection read(fb.BufferContext bc, int offset) =>
-      pceConditionDirection.fromValue(const fb.Uint8Reader().read(bc, offset));
+  evlShadowModel read(fb.BufferContext bc, int offset) =>
+      evlShadowModel.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Direction of time for a propagate-to-condition run. Append new values only.
-enum pcePropagationDirection {
+///  Whether the geometry is evaluated at the observed instant or corrected for
+///  signal travel. Append new values only.
+enum evlAberrationCorrection {
   UNSPECIFIED(0),
-  FORWARD(1),
-  BACKWARD(2);
+  NO_CORRECTION(1),
+  LIGHT_TIME(2),
+  LIGHT_TIME_AND_STELLAR_ABERRATION(3);
 
   final int value;
-  const pcePropagationDirection(this.value);
+  const evlAberrationCorrection(this.value);
 
-  factory pcePropagationDirection.fromValue(int value) {
+  factory evlAberrationCorrection.fromValue(int value) {
     switch (value) {
-      case 0: return pcePropagationDirection.UNSPECIFIED;
-      case 1: return pcePropagationDirection.FORWARD;
-      case 2: return pcePropagationDirection.BACKWARD;
+      case 0: return evlAberrationCorrection.UNSPECIFIED;
+      case 1: return evlAberrationCorrection.NO_CORRECTION;
+      case 2: return evlAberrationCorrection.LIGHT_TIME;
+      case 3: return evlAberrationCorrection.LIGHT_TIME_AND_STELLAR_ABERRATION;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static pcePropagationDirection? _createOrNull(int? value) =>
-      value == null ? null : pcePropagationDirection.fromValue(value);
+  static evlAberrationCorrection? _createOrNull(int? value) =>
+      value == null ? null : evlAberrationCorrection.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<pcePropagationDirection> reader = _pcePropagationDirectionReader();
+  static const int maxValue = 3;
+  static const fb.Reader<evlAberrationCorrection> reader = _evlAberrationCorrectionReader();
 }
 
-class _pcePropagationDirectionReader extends fb.Reader<pcePropagationDirection> {
-  const _pcePropagationDirectionReader();
+class _evlAberrationCorrectionReader extends fb.Reader<evlAberrationCorrection> {
+  const _evlAberrationCorrectionReader();
 
   @override
   int get size => 1;
 
   @override
-  pcePropagationDirection read(fb.BufferContext bc, int offset) =>
-      pcePropagationDirection.fromValue(const fb.Uint8Reader().read(bc, offset));
+  evlAberrationCorrection read(fb.BufferContext bc, int offset) =>
+      evlAberrationCorrection.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  The ratified roster of named calculation parameters.
-///
-///  A member's NAME is the machine key; there is deliberately no second text
-///  spelling of it on the wire, so a catalog and a request can never disagree
-///  about what was asked for. Values are allocated in family blocks and a new
-///  member is added at the END of its family's reserved range: an existing
-///  member's value is NEVER changed, because it is written into every stored
-///  catalog, request, report and event sample. A parameter outside this roster
-///  is carried as PROVIDER_DEFINED with PROVIDER_DEFINED_NAME set.
-///
-///  Angles are radians, lengths metres, durations seconds, masses kilograms.
-///  Declaring a member here is not a claim that any provider computes it;
-///  PCEParameterDescriptor.AVAILABILITY carries that fact per publisher.
-enum pceParameter {
+///  Boundary of a sensor acceptance volume. Append new values only.
+enum evlFieldOfViewShape {
   UNSPECIFIED(0),
-  POSITION_X(1),
-  POSITION_Y(2),
-  POSITION_Z(3),
-  VELOCITY_X(4),
-  VELOCITY_Y(5),
-  VELOCITY_Z(6),
-  POSITION_MAGNITUDE(7),
-  VELOCITY_MAGNITUDE(8),
-  RIGHT_ASCENSION(9),
-  DECLINATION(10),
-  VELOCITY_RIGHT_ASCENSION(11),
-  VELOCITY_DECLINATION(12),
-  FLIGHT_PATH_ANGLE(13),
-  AZIMUTH_ANGLE(14),
-  HORIZONTAL_FLIGHT_PATH_ANGLE(15),
-  RADIAL_VELOCITY(16),
-  ANGULAR_MOMENTUM_MAGNITUDE(17),
-  ANGULAR_MOMENTUM_X(18),
-  ANGULAR_MOMENTUM_Y(19),
-  ANGULAR_MOMENTUM_Z(20),
-  SEMI_MAJOR_AXIS(30),
-  ECCENTRICITY(31),
-  INCLINATION(32),
-  RIGHT_ASCENSION_OF_ASCENDING_NODE(33),
-  ARGUMENT_OF_PERIAPSIS(34),
-  TRUE_ANOMALY(35),
-  MEAN_ANOMALY(36),
-  ECCENTRIC_ANOMALY(37),
-  HYPERBOLIC_ANOMALY(38),
-  RADIUS_OF_PERIAPSIS(39),
-  RADIUS_OF_APOAPSIS(40),
-  ALTITUDE_OF_PERIAPSIS(41),
-  ALTITUDE_OF_APOAPSIS(42),
-  SEMILATUS_RECTUM(43),
-  ORBIT_PERIOD(44),
-  MEAN_MOTION(45),
-  SPECIFIC_ORBITAL_ENERGY(46),
-  CHARACTERISTIC_ENERGY(47),
-  VELOCITY_AT_PERIAPSIS(48),
-  VELOCITY_AT_APOAPSIS(49),
-  ARGUMENT_OF_LATITUDE(50),
-  TRUE_LONGITUDE(51),
-  MEAN_LONGITUDE(52),
-  BETA_ANGLE(53),
-  ECCENTRICITY_VECTOR_X(54),
-  ECCENTRICITY_VECTOR_Y(55),
-  ECCENTRICITY_VECTOR_Z(56),
-  SEMI_MINOR_AXIS(57),
-  EQUINOCTIAL_H(70),
-  EQUINOCTIAL_K(71),
-  EQUINOCTIAL_P(72),
-  EQUINOCTIAL_Q(73),
-  EQUINOCTIAL_MEAN_LONGITUDE(74),
-  MODIFIED_EQUINOCTIAL_F(75),
-  MODIFIED_EQUINOCTIAL_G(76),
-  MODIFIED_EQUINOCTIAL_H(77),
-  MODIFIED_EQUINOCTIAL_K(78),
-  MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE(79),
-  MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM(80),
-  ALTERNATE_EQUINOCTIAL_P(81),
-  ALTERNATE_EQUINOCTIAL_Q(82),
-  ALTERNATE_EQUINOCTIAL_MEAN_MOTION(83),
-  DELAUNAY_MEAN_ANOMALY(90),
-  DELAUNAY_ARGUMENT_OF_PERIAPSIS(91),
-  DELAUNAY_ASCENDING_NODE(92),
-  DELAUNAY_ACTION_TOTAL(93),
-  DELAUNAY_ACTION_ANGULAR_MOMENTUM(94),
-  DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM(95),
-  GEODETIC_LATITUDE(100),
-  GEODETIC_LONGITUDE(101),
-  GEODETIC_ALTITUDE(102),
-  GEOCENTRIC_LATITUDE(103),
-  PLANETODETIC_RADIUS_MAGNITUDE(104),
-  PLANETODETIC_VELOCITY_MAGNITUDE(105),
-  PLANETODETIC_AZIMUTH(106),
-  PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE(107),
-  LOCAL_SIDEREAL_TIME(108),
-  PRIME_MERIDIAN_HOUR_ANGLE(109),
-  B_DOT_T(120),
-  B_DOT_R(121),
-  B_VECTOR_MAGNITUDE(122),
-  B_VECTOR_ANGLE(123),
-  DECLINATION_OF_DEPARTURE_ASYMPTOTE(124),
-  RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE(125),
-  INCOMING_RADIUS_OF_PERIAPSIS(126),
-  INCOMING_CHARACTERISTIC_ENERGY(127),
-  INCOMING_ASYMPTOTE_RIGHT_ASCENSION(128),
-  INCOMING_ASYMPTOTE_DECLINATION(129),
-  INCOMING_B_VECTOR_AZIMUTH(130),
-  OUTGOING_RADIUS_OF_PERIAPSIS(131),
-  OUTGOING_CHARACTERISTIC_ENERGY(132),
-  OUTGOING_ASYMPTOTE_RIGHT_ASCENSION(133),
-  OUTGOING_ASYMPTOTE_DECLINATION(134),
-  OUTGOING_B_VECTOR_AZIMUTH(135),
-  HYPERBOLIC_EXCESS_VELOCITY(136),
-  BROUWER_SHORT_SEMI_MAJOR_AXIS(140),
-  BROUWER_SHORT_ECCENTRICITY(141),
-  BROUWER_SHORT_INCLINATION(142),
-  BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE(143),
-  BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS(144),
-  BROUWER_SHORT_MEAN_ANOMALY(145),
-  BROUWER_LONG_SEMI_MAJOR_AXIS(146),
-  BROUWER_LONG_ECCENTRICITY(147),
-  BROUWER_LONG_INCLINATION(148),
-  BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE(149),
-  BROUWER_LONG_ARGUMENT_OF_PERIAPSIS(150),
-  BROUWER_LONG_MEAN_ANOMALY(151),
-  ORBIT_STATE_TRANSITION_MATRIX(160),
-  ORBIT_STATE_TRANSITION_MATRIX_A(161),
-  ORBIT_STATE_TRANSITION_MATRIX_B(162),
-  ORBIT_STATE_TRANSITION_MATRIX_C(163),
-  ORBIT_STATE_TRANSITION_MATRIX_D(164),
-  ORBIT_ERROR_COVARIANCE_MATRIX(165),
-  EPOCH_A1_GREGORIAN(180),
-  EPOCH_A1_MODIFIED_JULIAN(181),
-  EPOCH_TAI_GREGORIAN(182),
-  EPOCH_TAI_MODIFIED_JULIAN(183),
-  EPOCH_TT_GREGORIAN(184),
-  EPOCH_TT_MODIFIED_JULIAN(185),
-  EPOCH_TDB_GREGORIAN(186),
-  EPOCH_TDB_MODIFIED_JULIAN(187),
-  EPOCH_UTC_GREGORIAN(188),
-  EPOCH_UTC_MODIFIED_JULIAN(189),
-  EPOCH_UT1_GREGORIAN(190),
-  EPOCH_UT1_MODIFIED_JULIAN(191),
-  EPOCH_GPS_GREGORIAN(192),
-  EPOCH_GPS_MODIFIED_JULIAN(193),
-  ELAPSED_DAYS(194),
-  ELAPSED_SECONDS(195),
-  DRY_MASS(220),
-  TOTAL_MASS(221),
-  DRAG_COEFFICIENT(222),
-  DRAG_AREA(223),
-  REFLECTIVITY_COEFFICIENT(224),
-  SOLAR_RADIATION_PRESSURE_AREA(225),
-  ATMOSPHERIC_DENSITY_SCALE_FACTOR(226),
-  DRAG_SCALE_FACTOR(227),
-  SOLAR_RADIATION_PRESSURE_SCALE_FACTOR(228),
-  BALLISTIC_COEFFICIENT(229),
-  AREA_TO_MASS_RATIO(230),
-  CENTER_OF_MASS_X(231),
-  CENTER_OF_MASS_Y(232),
-  CENTER_OF_MASS_Z(233),
-  MOMENT_OF_INERTIA_MATRIX(234),
-  ATTITUDE_QUATERNION_1(250),
-  ATTITUDE_QUATERNION_2(251),
-  ATTITUDE_QUATERNION_3(252),
-  ATTITUDE_QUATERNION_4(253),
-  ATTITUDE_DIRECTION_COSINE_MATRIX(254),
-  EULER_ANGLE_1(255),
-  EULER_ANGLE_2(256),
-  EULER_ANGLE_3(257),
-  EULER_ANGLE_RATE_1(258),
-  EULER_ANGLE_RATE_2(259),
-  EULER_ANGLE_RATE_3(260),
-  MODIFIED_RODRIGUES_PARAMETER_1(261),
-  MODIFIED_RODRIGUES_PARAMETER_2(262),
-  MODIFIED_RODRIGUES_PARAMETER_3(263),
-  ANGULAR_VELOCITY_X(264),
-  ANGULAR_VELOCITY_Y(265),
-  ANGULAR_VELOCITY_Z(266),
-  EULER_AXIS_X(267),
-  EULER_AXIS_Y(268),
-  EULER_AXIS_Z(269),
-  PRINCIPAL_ROTATION_ANGLE(270),
-  TANK_FUEL_MASS(300),
-  TANK_PRESSURE(301),
-  TANK_TEMPERATURE(302),
-  TANK_REFERENCE_TEMPERATURE(303),
-  TANK_VOLUME(304),
-  TANK_FUEL_DENSITY(305),
-  THRUSTER_DUTY_CYCLE(320),
-  THRUSTER_THRUST_SCALE_FACTOR(321),
-  THRUSTER_GRAVITATIONAL_ACCELERATION(322),
-  THRUSTER_MIXTURE_RATIO(323),
-  THRUSTER_SPECIFIC_IMPULSE(324),
-  THRUSTER_THRUST_MAGNITUDE(325),
-  THRUSTER_MASS_FLOW_RATE(326),
-  THRUSTER_DIRECTION_X(327),
-  THRUSTER_DIRECTION_Y(328),
-  THRUSTER_DIRECTION_Z(329),
-  THRUSTER_THRUST_COEFFICIENTS(330),
-  THRUSTER_IMPULSE_COEFFICIENTS(331),
-  IMPULSIVE_BURN_ELEMENT_1(370),
-  IMPULSIVE_BURN_ELEMENT_2(371),
-  IMPULSIVE_BURN_ELEMENT_3(372),
-  IMPULSIVE_BURN_DELTA_V_MAGNITUDE(373),
-  IMPULSIVE_BURN_MASS_CONSUMED(374),
-  FINITE_BURN_THRUST_MAGNITUDE(390),
-  FINITE_BURN_MASS_FLOW_RATE(391),
-  FINITE_BURN_THRUST_X(392),
-  FINITE_BURN_THRUST_Y(393),
-  FINITE_BURN_THRUST_Z(394),
-  FINITE_BURN_ACCELERATION_MAGNITUDE(395),
-  FINITE_BURN_MASS_CONSUMED(396),
-  TOTAL_POWER_AVAILABLE(410),
-  REQUIRED_BUS_POWER(411),
-  THRUST_POWER_AVAILABLE(412),
-  GENERATED_POWER(413),
-  TOTAL_TORQUE_X(430),
-  TOTAL_TORQUE_Y(431),
-  TOTAL_TORQUE_Z(432),
-  TOTAL_TORQUE_MAGNITUDE(433),
-  SOLVER_STATUS(450),
-  SOLVER_ITERATION_COUNT(451),
-  SOLVER_OBJECTIVE_VALUE(452),
-  SOLVER_MAXIMUM_CONSTRAINT_VIOLATION(453),
-  RELATIVE_RANGE(470),
-  RELATIVE_RANGE_RATE(471),
-  RELATIVE_POSITION_X(472),
-  RELATIVE_POSITION_Y(473),
-  RELATIVE_POSITION_Z(474),
-  RELATIVE_VELOCITY_X(475),
-  RELATIVE_VELOCITY_Y(476),
-  RELATIVE_VELOCITY_Z(477),
-  TOPOCENTRIC_AZIMUTH(478),
-  TOPOCENTRIC_ELEVATION(479),
-  ANGULAR_SEPARATION(480),
-  SOLAR_PHASE_ANGLE(481),
-  LOCAL_SOLAR_ELEVATION_ANGLE(482),
-  ILLUMINATION_FRACTION(483),
-  LIGHT_TIME_DELAY(484),
-  PROVIDER_DEFINED(65535);
+  CONIC(1),
+  RECTANGULAR(2),
+  CUSTOM_MASK(3);
 
   final int value;
-  const pceParameter(this.value);
+  const evlFieldOfViewShape(this.value);
 
-  factory pceParameter.fromValue(int value) {
+  factory evlFieldOfViewShape.fromValue(int value) {
     switch (value) {
-      case 0: return pceParameter.UNSPECIFIED;
-      case 1: return pceParameter.POSITION_X;
-      case 2: return pceParameter.POSITION_Y;
-      case 3: return pceParameter.POSITION_Z;
-      case 4: return pceParameter.VELOCITY_X;
-      case 5: return pceParameter.VELOCITY_Y;
-      case 6: return pceParameter.VELOCITY_Z;
-      case 7: return pceParameter.POSITION_MAGNITUDE;
-      case 8: return pceParameter.VELOCITY_MAGNITUDE;
-      case 9: return pceParameter.RIGHT_ASCENSION;
-      case 10: return pceParameter.DECLINATION;
-      case 11: return pceParameter.VELOCITY_RIGHT_ASCENSION;
-      case 12: return pceParameter.VELOCITY_DECLINATION;
-      case 13: return pceParameter.FLIGHT_PATH_ANGLE;
-      case 14: return pceParameter.AZIMUTH_ANGLE;
-      case 15: return pceParameter.HORIZONTAL_FLIGHT_PATH_ANGLE;
-      case 16: return pceParameter.RADIAL_VELOCITY;
-      case 17: return pceParameter.ANGULAR_MOMENTUM_MAGNITUDE;
-      case 18: return pceParameter.ANGULAR_MOMENTUM_X;
-      case 19: return pceParameter.ANGULAR_MOMENTUM_Y;
-      case 20: return pceParameter.ANGULAR_MOMENTUM_Z;
-      case 30: return pceParameter.SEMI_MAJOR_AXIS;
-      case 31: return pceParameter.ECCENTRICITY;
-      case 32: return pceParameter.INCLINATION;
-      case 33: return pceParameter.RIGHT_ASCENSION_OF_ASCENDING_NODE;
-      case 34: return pceParameter.ARGUMENT_OF_PERIAPSIS;
-      case 35: return pceParameter.TRUE_ANOMALY;
-      case 36: return pceParameter.MEAN_ANOMALY;
-      case 37: return pceParameter.ECCENTRIC_ANOMALY;
-      case 38: return pceParameter.HYPERBOLIC_ANOMALY;
-      case 39: return pceParameter.RADIUS_OF_PERIAPSIS;
-      case 40: return pceParameter.RADIUS_OF_APOAPSIS;
-      case 41: return pceParameter.ALTITUDE_OF_PERIAPSIS;
-      case 42: return pceParameter.ALTITUDE_OF_APOAPSIS;
-      case 43: return pceParameter.SEMILATUS_RECTUM;
-      case 44: return pceParameter.ORBIT_PERIOD;
-      case 45: return pceParameter.MEAN_MOTION;
-      case 46: return pceParameter.SPECIFIC_ORBITAL_ENERGY;
-      case 47: return pceParameter.CHARACTERISTIC_ENERGY;
-      case 48: return pceParameter.VELOCITY_AT_PERIAPSIS;
-      case 49: return pceParameter.VELOCITY_AT_APOAPSIS;
-      case 50: return pceParameter.ARGUMENT_OF_LATITUDE;
-      case 51: return pceParameter.TRUE_LONGITUDE;
-      case 52: return pceParameter.MEAN_LONGITUDE;
-      case 53: return pceParameter.BETA_ANGLE;
-      case 54: return pceParameter.ECCENTRICITY_VECTOR_X;
-      case 55: return pceParameter.ECCENTRICITY_VECTOR_Y;
-      case 56: return pceParameter.ECCENTRICITY_VECTOR_Z;
-      case 57: return pceParameter.SEMI_MINOR_AXIS;
-      case 70: return pceParameter.EQUINOCTIAL_H;
-      case 71: return pceParameter.EQUINOCTIAL_K;
-      case 72: return pceParameter.EQUINOCTIAL_P;
-      case 73: return pceParameter.EQUINOCTIAL_Q;
-      case 74: return pceParameter.EQUINOCTIAL_MEAN_LONGITUDE;
-      case 75: return pceParameter.MODIFIED_EQUINOCTIAL_F;
-      case 76: return pceParameter.MODIFIED_EQUINOCTIAL_G;
-      case 77: return pceParameter.MODIFIED_EQUINOCTIAL_H;
-      case 78: return pceParameter.MODIFIED_EQUINOCTIAL_K;
-      case 79: return pceParameter.MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE;
-      case 80: return pceParameter.MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM;
-      case 81: return pceParameter.ALTERNATE_EQUINOCTIAL_P;
-      case 82: return pceParameter.ALTERNATE_EQUINOCTIAL_Q;
-      case 83: return pceParameter.ALTERNATE_EQUINOCTIAL_MEAN_MOTION;
-      case 90: return pceParameter.DELAUNAY_MEAN_ANOMALY;
-      case 91: return pceParameter.DELAUNAY_ARGUMENT_OF_PERIAPSIS;
-      case 92: return pceParameter.DELAUNAY_ASCENDING_NODE;
-      case 93: return pceParameter.DELAUNAY_ACTION_TOTAL;
-      case 94: return pceParameter.DELAUNAY_ACTION_ANGULAR_MOMENTUM;
-      case 95: return pceParameter.DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM;
-      case 100: return pceParameter.GEODETIC_LATITUDE;
-      case 101: return pceParameter.GEODETIC_LONGITUDE;
-      case 102: return pceParameter.GEODETIC_ALTITUDE;
-      case 103: return pceParameter.GEOCENTRIC_LATITUDE;
-      case 104: return pceParameter.PLANETODETIC_RADIUS_MAGNITUDE;
-      case 105: return pceParameter.PLANETODETIC_VELOCITY_MAGNITUDE;
-      case 106: return pceParameter.PLANETODETIC_AZIMUTH;
-      case 107: return pceParameter.PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE;
-      case 108: return pceParameter.LOCAL_SIDEREAL_TIME;
-      case 109: return pceParameter.PRIME_MERIDIAN_HOUR_ANGLE;
-      case 120: return pceParameter.B_DOT_T;
-      case 121: return pceParameter.B_DOT_R;
-      case 122: return pceParameter.B_VECTOR_MAGNITUDE;
-      case 123: return pceParameter.B_VECTOR_ANGLE;
-      case 124: return pceParameter.DECLINATION_OF_DEPARTURE_ASYMPTOTE;
-      case 125: return pceParameter.RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE;
-      case 126: return pceParameter.INCOMING_RADIUS_OF_PERIAPSIS;
-      case 127: return pceParameter.INCOMING_CHARACTERISTIC_ENERGY;
-      case 128: return pceParameter.INCOMING_ASYMPTOTE_RIGHT_ASCENSION;
-      case 129: return pceParameter.INCOMING_ASYMPTOTE_DECLINATION;
-      case 130: return pceParameter.INCOMING_B_VECTOR_AZIMUTH;
-      case 131: return pceParameter.OUTGOING_RADIUS_OF_PERIAPSIS;
-      case 132: return pceParameter.OUTGOING_CHARACTERISTIC_ENERGY;
-      case 133: return pceParameter.OUTGOING_ASYMPTOTE_RIGHT_ASCENSION;
-      case 134: return pceParameter.OUTGOING_ASYMPTOTE_DECLINATION;
-      case 135: return pceParameter.OUTGOING_B_VECTOR_AZIMUTH;
-      case 136: return pceParameter.HYPERBOLIC_EXCESS_VELOCITY;
-      case 140: return pceParameter.BROUWER_SHORT_SEMI_MAJOR_AXIS;
-      case 141: return pceParameter.BROUWER_SHORT_ECCENTRICITY;
-      case 142: return pceParameter.BROUWER_SHORT_INCLINATION;
-      case 143: return pceParameter.BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE;
-      case 144: return pceParameter.BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS;
-      case 145: return pceParameter.BROUWER_SHORT_MEAN_ANOMALY;
-      case 146: return pceParameter.BROUWER_LONG_SEMI_MAJOR_AXIS;
-      case 147: return pceParameter.BROUWER_LONG_ECCENTRICITY;
-      case 148: return pceParameter.BROUWER_LONG_INCLINATION;
-      case 149: return pceParameter.BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE;
-      case 150: return pceParameter.BROUWER_LONG_ARGUMENT_OF_PERIAPSIS;
-      case 151: return pceParameter.BROUWER_LONG_MEAN_ANOMALY;
-      case 160: return pceParameter.ORBIT_STATE_TRANSITION_MATRIX;
-      case 161: return pceParameter.ORBIT_STATE_TRANSITION_MATRIX_A;
-      case 162: return pceParameter.ORBIT_STATE_TRANSITION_MATRIX_B;
-      case 163: return pceParameter.ORBIT_STATE_TRANSITION_MATRIX_C;
-      case 164: return pceParameter.ORBIT_STATE_TRANSITION_MATRIX_D;
-      case 165: return pceParameter.ORBIT_ERROR_COVARIANCE_MATRIX;
-      case 180: return pceParameter.EPOCH_A1_GREGORIAN;
-      case 181: return pceParameter.EPOCH_A1_MODIFIED_JULIAN;
-      case 182: return pceParameter.EPOCH_TAI_GREGORIAN;
-      case 183: return pceParameter.EPOCH_TAI_MODIFIED_JULIAN;
-      case 184: return pceParameter.EPOCH_TT_GREGORIAN;
-      case 185: return pceParameter.EPOCH_TT_MODIFIED_JULIAN;
-      case 186: return pceParameter.EPOCH_TDB_GREGORIAN;
-      case 187: return pceParameter.EPOCH_TDB_MODIFIED_JULIAN;
-      case 188: return pceParameter.EPOCH_UTC_GREGORIAN;
-      case 189: return pceParameter.EPOCH_UTC_MODIFIED_JULIAN;
-      case 190: return pceParameter.EPOCH_UT1_GREGORIAN;
-      case 191: return pceParameter.EPOCH_UT1_MODIFIED_JULIAN;
-      case 192: return pceParameter.EPOCH_GPS_GREGORIAN;
-      case 193: return pceParameter.EPOCH_GPS_MODIFIED_JULIAN;
-      case 194: return pceParameter.ELAPSED_DAYS;
-      case 195: return pceParameter.ELAPSED_SECONDS;
-      case 220: return pceParameter.DRY_MASS;
-      case 221: return pceParameter.TOTAL_MASS;
-      case 222: return pceParameter.DRAG_COEFFICIENT;
-      case 223: return pceParameter.DRAG_AREA;
-      case 224: return pceParameter.REFLECTIVITY_COEFFICIENT;
-      case 225: return pceParameter.SOLAR_RADIATION_PRESSURE_AREA;
-      case 226: return pceParameter.ATMOSPHERIC_DENSITY_SCALE_FACTOR;
-      case 227: return pceParameter.DRAG_SCALE_FACTOR;
-      case 228: return pceParameter.SOLAR_RADIATION_PRESSURE_SCALE_FACTOR;
-      case 229: return pceParameter.BALLISTIC_COEFFICIENT;
-      case 230: return pceParameter.AREA_TO_MASS_RATIO;
-      case 231: return pceParameter.CENTER_OF_MASS_X;
-      case 232: return pceParameter.CENTER_OF_MASS_Y;
-      case 233: return pceParameter.CENTER_OF_MASS_Z;
-      case 234: return pceParameter.MOMENT_OF_INERTIA_MATRIX;
-      case 250: return pceParameter.ATTITUDE_QUATERNION_1;
-      case 251: return pceParameter.ATTITUDE_QUATERNION_2;
-      case 252: return pceParameter.ATTITUDE_QUATERNION_3;
-      case 253: return pceParameter.ATTITUDE_QUATERNION_4;
-      case 254: return pceParameter.ATTITUDE_DIRECTION_COSINE_MATRIX;
-      case 255: return pceParameter.EULER_ANGLE_1;
-      case 256: return pceParameter.EULER_ANGLE_2;
-      case 257: return pceParameter.EULER_ANGLE_3;
-      case 258: return pceParameter.EULER_ANGLE_RATE_1;
-      case 259: return pceParameter.EULER_ANGLE_RATE_2;
-      case 260: return pceParameter.EULER_ANGLE_RATE_3;
-      case 261: return pceParameter.MODIFIED_RODRIGUES_PARAMETER_1;
-      case 262: return pceParameter.MODIFIED_RODRIGUES_PARAMETER_2;
-      case 263: return pceParameter.MODIFIED_RODRIGUES_PARAMETER_3;
-      case 264: return pceParameter.ANGULAR_VELOCITY_X;
-      case 265: return pceParameter.ANGULAR_VELOCITY_Y;
-      case 266: return pceParameter.ANGULAR_VELOCITY_Z;
-      case 267: return pceParameter.EULER_AXIS_X;
-      case 268: return pceParameter.EULER_AXIS_Y;
-      case 269: return pceParameter.EULER_AXIS_Z;
-      case 270: return pceParameter.PRINCIPAL_ROTATION_ANGLE;
-      case 300: return pceParameter.TANK_FUEL_MASS;
-      case 301: return pceParameter.TANK_PRESSURE;
-      case 302: return pceParameter.TANK_TEMPERATURE;
-      case 303: return pceParameter.TANK_REFERENCE_TEMPERATURE;
-      case 304: return pceParameter.TANK_VOLUME;
-      case 305: return pceParameter.TANK_FUEL_DENSITY;
-      case 320: return pceParameter.THRUSTER_DUTY_CYCLE;
-      case 321: return pceParameter.THRUSTER_THRUST_SCALE_FACTOR;
-      case 322: return pceParameter.THRUSTER_GRAVITATIONAL_ACCELERATION;
-      case 323: return pceParameter.THRUSTER_MIXTURE_RATIO;
-      case 324: return pceParameter.THRUSTER_SPECIFIC_IMPULSE;
-      case 325: return pceParameter.THRUSTER_THRUST_MAGNITUDE;
-      case 326: return pceParameter.THRUSTER_MASS_FLOW_RATE;
-      case 327: return pceParameter.THRUSTER_DIRECTION_X;
-      case 328: return pceParameter.THRUSTER_DIRECTION_Y;
-      case 329: return pceParameter.THRUSTER_DIRECTION_Z;
-      case 330: return pceParameter.THRUSTER_THRUST_COEFFICIENTS;
-      case 331: return pceParameter.THRUSTER_IMPULSE_COEFFICIENTS;
-      case 370: return pceParameter.IMPULSIVE_BURN_ELEMENT_1;
-      case 371: return pceParameter.IMPULSIVE_BURN_ELEMENT_2;
-      case 372: return pceParameter.IMPULSIVE_BURN_ELEMENT_3;
-      case 373: return pceParameter.IMPULSIVE_BURN_DELTA_V_MAGNITUDE;
-      case 374: return pceParameter.IMPULSIVE_BURN_MASS_CONSUMED;
-      case 390: return pceParameter.FINITE_BURN_THRUST_MAGNITUDE;
-      case 391: return pceParameter.FINITE_BURN_MASS_FLOW_RATE;
-      case 392: return pceParameter.FINITE_BURN_THRUST_X;
-      case 393: return pceParameter.FINITE_BURN_THRUST_Y;
-      case 394: return pceParameter.FINITE_BURN_THRUST_Z;
-      case 395: return pceParameter.FINITE_BURN_ACCELERATION_MAGNITUDE;
-      case 396: return pceParameter.FINITE_BURN_MASS_CONSUMED;
-      case 410: return pceParameter.TOTAL_POWER_AVAILABLE;
-      case 411: return pceParameter.REQUIRED_BUS_POWER;
-      case 412: return pceParameter.THRUST_POWER_AVAILABLE;
-      case 413: return pceParameter.GENERATED_POWER;
-      case 430: return pceParameter.TOTAL_TORQUE_X;
-      case 431: return pceParameter.TOTAL_TORQUE_Y;
-      case 432: return pceParameter.TOTAL_TORQUE_Z;
-      case 433: return pceParameter.TOTAL_TORQUE_MAGNITUDE;
-      case 450: return pceParameter.SOLVER_STATUS;
-      case 451: return pceParameter.SOLVER_ITERATION_COUNT;
-      case 452: return pceParameter.SOLVER_OBJECTIVE_VALUE;
-      case 453: return pceParameter.SOLVER_MAXIMUM_CONSTRAINT_VIOLATION;
-      case 470: return pceParameter.RELATIVE_RANGE;
-      case 471: return pceParameter.RELATIVE_RANGE_RATE;
-      case 472: return pceParameter.RELATIVE_POSITION_X;
-      case 473: return pceParameter.RELATIVE_POSITION_Y;
-      case 474: return pceParameter.RELATIVE_POSITION_Z;
-      case 475: return pceParameter.RELATIVE_VELOCITY_X;
-      case 476: return pceParameter.RELATIVE_VELOCITY_Y;
-      case 477: return pceParameter.RELATIVE_VELOCITY_Z;
-      case 478: return pceParameter.TOPOCENTRIC_AZIMUTH;
-      case 479: return pceParameter.TOPOCENTRIC_ELEVATION;
-      case 480: return pceParameter.ANGULAR_SEPARATION;
-      case 481: return pceParameter.SOLAR_PHASE_ANGLE;
-      case 482: return pceParameter.LOCAL_SOLAR_ELEVATION_ANGLE;
-      case 483: return pceParameter.ILLUMINATION_FRACTION;
-      case 484: return pceParameter.LIGHT_TIME_DELAY;
-      case 65535: return pceParameter.PROVIDER_DEFINED;
+      case 0: return evlFieldOfViewShape.UNSPECIFIED;
+      case 1: return evlFieldOfViewShape.CONIC;
+      case 2: return evlFieldOfViewShape.RECTANGULAR;
+      case 3: return evlFieldOfViewShape.CUSTOM_MASK;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static pceParameter? _createOrNull(int? value) =>
-      value == null ? null : pceParameter.fromValue(value);
+  static evlFieldOfViewShape? _createOrNull(int? value) =>
+      value == null ? null : evlFieldOfViewShape.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 65535;
-  static const fb.Reader<pceParameter> reader = _pceParameterReader();
+  static const int maxValue = 3;
+  static const fb.Reader<evlFieldOfViewShape> reader = _evlFieldOfViewShapeReader();
 }
 
-class _pceParameterReader extends fb.Reader<pceParameter> {
-  const _pceParameterReader();
+class _evlFieldOfViewShapeReader extends fb.Reader<evlFieldOfViewShape> {
+  const _evlFieldOfViewShapeReader();
 
   @override
-  int get size => 2;
+  int get size => 1;
 
   @override
-  pceParameter read(fb.BufferContext bc, int offset) =>
-      pceParameter.fromValue(const fb.Uint16Reader().read(bc, offset));
+  evlFieldOfViewShape read(fb.BufferContext bc, int offset) =>
+      evlFieldOfViewShape.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  A reference to one parameter, with the dependencies that make it evaluable.
-///  This is what a request, a stopping condition and a report column all name.
-class PCEParameterRef {
-  PCEParameterRef._(this._bc, this._bcOffset);
-  factory PCEParameterRef(List<int> bytes) {
+///  Which instant inside an event a sample belongs to. Append new values only.
+enum evlSamplePoint {
+  UNSPECIFIED(0),
+  EVENT_START(1),
+  EVENT_STOP(2),
+  EVENT_EXTREMUM(3),
+  INTERIOR(4);
+
+  final int value;
+  const evlSamplePoint(this.value);
+
+  factory evlSamplePoint.fromValue(int value) {
+    switch (value) {
+      case 0: return evlSamplePoint.UNSPECIFIED;
+      case 1: return evlSamplePoint.EVENT_START;
+      case 2: return evlSamplePoint.EVENT_STOP;
+      case 3: return evlSamplePoint.EVENT_EXTREMUM;
+      case 4: return evlSamplePoint.INTERIOR;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static evlSamplePoint? _createOrNull(int? value) =>
+      value == null ? null : evlSamplePoint.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<evlSamplePoint> reader = _evlSamplePointReader();
+}
+
+class _evlSamplePointReader extends fb.Reader<evlSamplePoint> {
+  const _evlSamplePointReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  evlSamplePoint read(fb.BufferContext bc, int offset) =>
+      evlSamplePoint.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Outcome of a location run. 0 is UNSPECIFIED so an unset byte never decodes
+///  as success. An empty event list with STATUS OK is a complete answer: no
+///  events occurred. Append new values only.
+enum evlResultStatus {
+  UNSPECIFIED(0),
+  OK(1),
+  INVALID_INPUT(2),
+  UNSUPPORTED_LOCATOR_CLASS(3),
+  MISSING_CONFIGURATION(4),
+  MISSING_EPHEMERIS(5),
+  MISSING_EOP_DATA(6),
+  PARAMETER_UNAVAILABLE(7),
+  ROOT_REFINEMENT_FAILED(8),
+  BUDGET_EXCEEDED(9);
+
+  final int value;
+  const evlResultStatus(this.value);
+
+  factory evlResultStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return evlResultStatus.UNSPECIFIED;
+      case 1: return evlResultStatus.OK;
+      case 2: return evlResultStatus.INVALID_INPUT;
+      case 3: return evlResultStatus.UNSUPPORTED_LOCATOR_CLASS;
+      case 4: return evlResultStatus.MISSING_CONFIGURATION;
+      case 5: return evlResultStatus.MISSING_EPHEMERIS;
+      case 6: return evlResultStatus.MISSING_EOP_DATA;
+      case 7: return evlResultStatus.PARAMETER_UNAVAILABLE;
+      case 8: return evlResultStatus.ROOT_REFINEMENT_FAILED;
+      case 9: return evlResultStatus.BUDGET_EXCEEDED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static evlResultStatus? _createOrNull(int? value) =>
+      value == null ? null : evlResultStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 9;
+  static const fb.Reader<evlResultStatus> reader = _evlResultStatusReader();
+}
+
+class _evlResultStatusReader extends fb.Reader<evlResultStatus> {
+  const _evlResultStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  evlResultStatus read(fb.BufferContext bc, int offset) =>
+      evlResultStatus.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Configuration for ECLIPSE.
+class EVLEclipseConfiguration {
+  EVLEclipseConfiguration._(this._bc, this._bcOffset);
+  factory EVLEclipseConfiguration(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PCEParameterRef> reader = _PCEParameterRefReader();
+  static const fb.Reader<EVLEclipseConfiguration> reader = _EVLEclipseConfigurationReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Roster member, or PROVIDER_DEFINED.
-  pceParameter get PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  REQUIRED when PARAMETER is PROVIDER_DEFINED, absent otherwise.
-  String? get PROVIDER_DEFINED_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get providerDefinedName => PROVIDER_DEFINED_NAME;
-  ///  Component of a vector or matrix parameter, zero-based and row-major.
-  ///  Negative selects the whole value.
-  int get ELEMENT_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, -1);
-  int get elementIndex => ELEMENT_INDEX;
-  ///  Coordinate system this evaluation is expressed in; resolves against
-  ///  RFMCoordinateSystem.NAME in PCEEvaluationContext.COORDINATE_SYSTEMS.
-  ///  Absent means the context default.
-  String? get COORDINATE_SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get coordinateSystemName => COORDINATE_SYSTEM_NAME;
-  ///  Ephemeris body code of the central body, when the parameter is
-  ///  CENTRAL_BODY_DEPENDENT and the context default is not wanted.
-  int get CENTRAL_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get centralBodyId => CENTRAL_BODY_ID;
-  ///  Site the parameter is evaluated from, when it is SURFACE_SITE_DEPENDENT.
-  String? get SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get siteId => SITE_ID;
-  ///  Second object, when the parameter is SECOND_OBJECT_DEPENDENT.
-  String? get SECOND_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get secondObjectId => SECOND_OBJECT_ID;
-  ///  Owning object, when the request evaluates more than one.
-  String? get OWNER_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get ownerObjectId => OWNER_OBJECT_ID;
-  ///  Owning hardware item, when the owner class is THRUSTER, FUEL_TANK or a
-  ///  burn.
-  String? get OWNER_HARDWARE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get ownerHardwareName => OWNER_HARDWARE_NAME;
-  ///  Time system for an EPOCH-typed parameter, named by the $TIM
-  ///  timingStandard member name. Absent means the context default.
-  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get timeSystem => TIME_SYSTEM;
-
-  @override
-  String toString() {
-    return 'PCEParameterRef{PARAMETER: ${PARAMETER}, providerDefinedName: ${providerDefinedName}, elementIndex: ${elementIndex}, coordinateSystemName: ${coordinateSystemName}, centralBodyId: ${centralBodyId}, siteId: ${siteId}, secondObjectId: ${secondObjectId}, ownerObjectId: ${ownerObjectId}, ownerHardwareName: ${ownerHardwareName}, timeSystem: ${timeSystem}}';
-  }
-}
-
-class _PCEParameterRefReader extends fb.TableReader<PCEParameterRef> {
-  const _PCEParameterRefReader();
-
-  @override
-  PCEParameterRef createObject(fb.BufferContext bc, int offset) =>
-    PCEParameterRef._(bc, offset);
-}
-
-class PCEParameterRefBuilder {
-  PCEParameterRefBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(10);
-  }
-
-  int addParameter(pceParameter? PARAMETER) {
-    fbBuilder.addUint16(0, PARAMETER?.value);
-    return fbBuilder.offset;
-  }
-  int addProviderDefinedNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addElementIndex(int? ELEMENT_INDEX) {
-    fbBuilder.addInt32(2, ELEMENT_INDEX);
-    return fbBuilder.offset;
-  }
-  int addCoordinateSystemNameOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addCentralBodyId(int? CENTRAL_BODY_ID) {
-    fbBuilder.addInt32(4, CENTRAL_BODY_ID);
-    return fbBuilder.offset;
-  }
-  int addSiteIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addSecondObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addOwnerObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addOwnerHardwareNameOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addTimeSystemOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PCEParameterRefObjectBuilder extends fb.ObjectBuilder {
-  final pceParameter? _PARAMETER;
-  final String? _PROVIDER_DEFINED_NAME;
-  final int? _ELEMENT_INDEX;
-  final String? _COORDINATE_SYSTEM_NAME;
-  final int? _CENTRAL_BODY_ID;
-  final String? _SITE_ID;
-  final String? _SECOND_OBJECT_ID;
-  final String? _OWNER_OBJECT_ID;
-  final String? _OWNER_HARDWARE_NAME;
-  final String? _TIME_SYSTEM;
-
-  PCEParameterRefObjectBuilder({
-    pceParameter? PARAMETER,
-    String? PROVIDER_DEFINED_NAME,
-    String? providerDefinedName,
-    int? ELEMENT_INDEX,
-    int? elementIndex,
-    String? COORDINATE_SYSTEM_NAME,
-    String? coordinateSystemName,
-    int? CENTRAL_BODY_ID,
-    int? centralBodyId,
-    String? SITE_ID,
-    String? siteId,
-    String? SECOND_OBJECT_ID,
-    String? secondObjectId,
-    String? OWNER_OBJECT_ID,
-    String? ownerObjectId,
-    String? OWNER_HARDWARE_NAME,
-    String? ownerHardwareName,
-    String? TIME_SYSTEM,
-    String? timeSystem,
-  })
-      : _PARAMETER = PARAMETER,
-        _PROVIDER_DEFINED_NAME = providerDefinedName ?? PROVIDER_DEFINED_NAME,
-        _ELEMENT_INDEX = elementIndex ?? ELEMENT_INDEX,
-        _COORDINATE_SYSTEM_NAME = coordinateSystemName ?? COORDINATE_SYSTEM_NAME,
-        _CENTRAL_BODY_ID = centralBodyId ?? CENTRAL_BODY_ID,
-        _SITE_ID = siteId ?? SITE_ID,
-        _SECOND_OBJECT_ID = secondObjectId ?? SECOND_OBJECT_ID,
-        _OWNER_OBJECT_ID = ownerObjectId ?? OWNER_OBJECT_ID,
-        _OWNER_HARDWARE_NAME = ownerHardwareName ?? OWNER_HARDWARE_NAME,
-        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PROVIDER_DEFINED_NAMEOffset = _PROVIDER_DEFINED_NAME == null ? null
-        : fbBuilder.writeString(_PROVIDER_DEFINED_NAME!);
-    final int? COORDINATE_SYSTEM_NAMEOffset = _COORDINATE_SYSTEM_NAME == null ? null
-        : fbBuilder.writeString(_COORDINATE_SYSTEM_NAME!);
-    final int? SITE_IDOffset = _SITE_ID == null ? null
-        : fbBuilder.writeString(_SITE_ID!);
-    final int? SECOND_OBJECT_IDOffset = _SECOND_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_SECOND_OBJECT_ID!);
-    final int? OWNER_OBJECT_IDOffset = _OWNER_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_OWNER_OBJECT_ID!);
-    final int? OWNER_HARDWARE_NAMEOffset = _OWNER_HARDWARE_NAME == null ? null
-        : fbBuilder.writeString(_OWNER_HARDWARE_NAME!);
-    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
-        : fbBuilder.writeString(_TIME_SYSTEM!);
-    fbBuilder.startTable(10);
-    fbBuilder.addUint16(0, _PARAMETER?.value);
-    fbBuilder.addOffset(1, PROVIDER_DEFINED_NAMEOffset);
-    fbBuilder.addInt32(2, _ELEMENT_INDEX);
-    fbBuilder.addOffset(3, COORDINATE_SYSTEM_NAMEOffset);
-    fbBuilder.addInt32(4, _CENTRAL_BODY_ID);
-    fbBuilder.addOffset(5, SITE_IDOffset);
-    fbBuilder.addOffset(6, SECOND_OBJECT_IDOffset);
-    fbBuilder.addOffset(7, OWNER_OBJECT_IDOffset);
-    fbBuilder.addOffset(8, OWNER_HARDWARE_NAMEOffset);
-    fbBuilder.addOffset(9, TIME_SYSTEMOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One roster entry as a named publisher implements it. The catalog is the
-///  authority a consumer resolves a name through BEFORE it asks for a value.
-class PCEParameterDescriptor {
-  PCEParameterDescriptor._(this._bc, this._bcOffset);
-  factory PCEParameterDescriptor(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PCEParameterDescriptor> reader = _PCEParameterDescriptorReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  pceParameter get PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  REQUIRED when PARAMETER is PROVIDER_DEFINED, absent otherwise.
-  String? get PROVIDER_DEFINED_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get providerDefinedName => PROVIDER_DEFINED_NAME;
-  pceOwnerClass get OWNER_CLASS => pceOwnerClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  pceOwnerClass get ownerClass => OWNER_CLASS;
-  pceDataType get DATA_TYPE => pceDataType.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  pceDataType get dataType => DATA_TYPE;
-  pceUnit get UNIT => pceUnit.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  ///  REQUIRED when UNIT is PROVIDER_DEFINED, absent otherwise.
-  String? get PROVIDER_DEFINED_UNIT_SYMBOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get providerDefinedUnitSymbol => PROVIDER_DEFINED_UNIT_SYMBOL;
-  ///  Number of values for REAL_VECTOR, and rows times columns for
-  ///  REAL_MATRIX. Absent or 1 for a scalar.
-  int get ELEMENT_COUNT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get elementCount => ELEMENT_COUNT;
-  ///  Matrix shape, REQUIRED when DATA_TYPE is REAL_MATRIX.
-  int get ROW_COUNT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get rowCount => ROW_COUNT;
-  int get COLUMN_COUNT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get columnCount => COLUMN_COUNT;
-  pceFrameDependency get FRAME_DEPENDENCY => pceFrameDependency.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 22, 0));
-  pceFrameDependency get frameDependency => FRAME_DEPENDENCY;
-  ///  The one axis set this parameter is defined for, when it is defined for
-  ///  only one: planetodetic quantities require BODY_FIXED. UNSPECIFIED means
-  ///  any axis set the request names.
-  rfmAxisType get REQUIRED_AXIS_TYPE => rfmAxisType.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 24, 0));
-  rfmAxisType get requiredAxisType => REQUIRED_AXIS_TYPE;
-  ///  The one origin kind this parameter is defined for, when it is defined
-  ///  for only one. UNSPECIFIED means any origin the request names.
-  rfmOriginKind get REQUIRED_ORIGIN_KIND => rfmOriginKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 26, 0));
-  rfmOriginKind get requiredOriginKind => REQUIRED_ORIGIN_KIND;
-  ///  The value changes with the time system it is asked for, independently of
-  ///  the frame.
-  bool get TIME_SYSTEM_DEPENDENT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
-  bool get timeSystemDependent => TIME_SYSTEM_DEPENDENT;
-  ///  The element set this parameter is a member of, when it is a member of
-  ///  one; UNSPECIFIED for a derived scalar that belongs to no set.
-  frmStateRepresentation get STATE_REPRESENTATION => frmStateRepresentation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 30, 0));
-  frmStateRepresentation get stateRepresentation => STATE_REPRESENTATION;
-  pceAvailability get AVAILABILITY => pceAvailability.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 32, 0));
-  ///  REQUIRED when AVAILABILITY is DECLARED_UNAVAILABLE: what is missing,
-  ///  stated as a capability, so a consumer can report the refusal.
-  String? get UNAVAILABLE_REASON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  String? get unavailableReason => UNAVAILABLE_REASON;
-  ///  REQUIRED when AVAILABILITY is DEPRECATED: the parameter to migrate to.
-  pceParameter get SUPERSEDED_BY => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 36, 0));
-  pceParameter get supersededBy => SUPERSEDED_BY;
-  ///  The publisher can bracket and refine a root of this parameter, so it may
-  ///  be used as a stopping condition or a generic event function. A parameter
-  ///  that is not continuous in time MUST declare false.
-  bool get SUPPORTS_STOPPING_CONDITION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 38, false);
-  bool get supportsStoppingCondition => SUPPORTS_STOPPING_CONDITION;
-  ///  The parameter can be written as well as read, so it may be a targeting
-  ///  variable.
-  bool get IS_SETTABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
-  bool get isSettable => IS_SETTABLE;
-  ///  The value wraps: a goal crossing must be tested modulo the cycle.
-  bool get IS_CYCLIC => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
-  bool get isCyclic => IS_CYCLIC;
-  ///  Inclusive lower and exclusive upper bound of the cycle, REQUIRED when
-  ///  IS_CYCLIC is true.
-  double get CYCLE_LOWER_BOUND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get cycleLowerBound => CYCLE_LOWER_BOUND;
-  double get CYCLE_UPPER_BOUND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get cycleUpperBound => CYCLE_UPPER_BOUND;
-  ///  One sentence, capability language, no product or organization names.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
-
-  @override
-  String toString() {
-    return 'PCEParameterDescriptor{PARAMETER: ${PARAMETER}, providerDefinedName: ${providerDefinedName}, ownerClass: ${ownerClass}, dataType: ${dataType}, UNIT: ${UNIT}, providerDefinedUnitSymbol: ${providerDefinedUnitSymbol}, elementCount: ${elementCount}, rowCount: ${rowCount}, columnCount: ${columnCount}, frameDependency: ${frameDependency}, requiredAxisType: ${requiredAxisType}, requiredOriginKind: ${requiredOriginKind}, timeSystemDependent: ${timeSystemDependent}, stateRepresentation: ${stateRepresentation}, AVAILABILITY: ${AVAILABILITY}, unavailableReason: ${unavailableReason}, supersededBy: ${supersededBy}, supportsStoppingCondition: ${supportsStoppingCondition}, isSettable: ${isSettable}, isCyclic: ${isCyclic}, cycleLowerBound: ${cycleLowerBound}, cycleUpperBound: ${cycleUpperBound}, DESCRIPTION: ${DESCRIPTION}}';
-  }
-}
-
-class _PCEParameterDescriptorReader extends fb.TableReader<PCEParameterDescriptor> {
-  const _PCEParameterDescriptorReader();
-
-  @override
-  PCEParameterDescriptor createObject(fb.BufferContext bc, int offset) =>
-    PCEParameterDescriptor._(bc, offset);
-}
-
-class PCEParameterDescriptorBuilder {
-  PCEParameterDescriptorBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(23);
-  }
-
-  int addParameter(pceParameter? PARAMETER) {
-    fbBuilder.addUint16(0, PARAMETER?.value);
-    return fbBuilder.offset;
-  }
-  int addProviderDefinedNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addOwnerClass(pceOwnerClass? OWNER_CLASS) {
-    fbBuilder.addUint8(2, OWNER_CLASS?.value);
-    return fbBuilder.offset;
-  }
-  int addDataType(pceDataType? DATA_TYPE) {
-    fbBuilder.addUint8(3, DATA_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addUnit(pceUnit? UNIT) {
-    fbBuilder.addUint8(4, UNIT?.value);
-    return fbBuilder.offset;
-  }
-  int addProviderDefinedUnitSymbolOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addElementCount(int? ELEMENT_COUNT) {
-    fbBuilder.addInt32(6, ELEMENT_COUNT);
-    return fbBuilder.offset;
-  }
-  int addRowCount(int? ROW_COUNT) {
-    fbBuilder.addInt32(7, ROW_COUNT);
-    return fbBuilder.offset;
-  }
-  int addColumnCount(int? COLUMN_COUNT) {
-    fbBuilder.addInt32(8, COLUMN_COUNT);
-    return fbBuilder.offset;
-  }
-  int addFrameDependency(pceFrameDependency? FRAME_DEPENDENCY) {
-    fbBuilder.addUint8(9, FRAME_DEPENDENCY?.value);
-    return fbBuilder.offset;
-  }
-  int addRequiredAxisType(rfmAxisType? REQUIRED_AXIS_TYPE) {
-    fbBuilder.addUint8(10, REQUIRED_AXIS_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addRequiredOriginKind(rfmOriginKind? REQUIRED_ORIGIN_KIND) {
-    fbBuilder.addUint8(11, REQUIRED_ORIGIN_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addTimeSystemDependent(bool? TIME_SYSTEM_DEPENDENT) {
-    fbBuilder.addBool(12, TIME_SYSTEM_DEPENDENT);
-    return fbBuilder.offset;
-  }
-  int addStateRepresentation(frmStateRepresentation? STATE_REPRESENTATION) {
-    fbBuilder.addUint8(13, STATE_REPRESENTATION?.value);
-    return fbBuilder.offset;
-  }
-  int addAvailability(pceAvailability? AVAILABILITY) {
-    fbBuilder.addUint8(14, AVAILABILITY?.value);
-    return fbBuilder.offset;
-  }
-  int addUnavailableReasonOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addSupersededBy(pceParameter? SUPERSEDED_BY) {
-    fbBuilder.addUint16(16, SUPERSEDED_BY?.value);
-    return fbBuilder.offset;
-  }
-  int addSupportsStoppingCondition(bool? SUPPORTS_STOPPING_CONDITION) {
-    fbBuilder.addBool(17, SUPPORTS_STOPPING_CONDITION);
-    return fbBuilder.offset;
-  }
-  int addIsSettable(bool? IS_SETTABLE) {
-    fbBuilder.addBool(18, IS_SETTABLE);
-    return fbBuilder.offset;
-  }
-  int addIsCyclic(bool? IS_CYCLIC) {
-    fbBuilder.addBool(19, IS_CYCLIC);
-    return fbBuilder.offset;
-  }
-  int addCycleLowerBound(double? CYCLE_LOWER_BOUND) {
-    fbBuilder.addFloat64(20, CYCLE_LOWER_BOUND);
-    return fbBuilder.offset;
-  }
-  int addCycleUpperBound(double? CYCLE_UPPER_BOUND) {
-    fbBuilder.addFloat64(21, CYCLE_UPPER_BOUND);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(22, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PCEParameterDescriptorObjectBuilder extends fb.ObjectBuilder {
-  final pceParameter? _PARAMETER;
-  final String? _PROVIDER_DEFINED_NAME;
-  final pceOwnerClass? _OWNER_CLASS;
-  final pceDataType? _DATA_TYPE;
-  final pceUnit? _UNIT;
-  final String? _PROVIDER_DEFINED_UNIT_SYMBOL;
-  final int? _ELEMENT_COUNT;
-  final int? _ROW_COUNT;
-  final int? _COLUMN_COUNT;
-  final pceFrameDependency? _FRAME_DEPENDENCY;
-  final rfmAxisType? _REQUIRED_AXIS_TYPE;
-  final rfmOriginKind? _REQUIRED_ORIGIN_KIND;
-  final bool? _TIME_SYSTEM_DEPENDENT;
-  final frmStateRepresentation? _STATE_REPRESENTATION;
-  final pceAvailability? _AVAILABILITY;
-  final String? _UNAVAILABLE_REASON;
-  final pceParameter? _SUPERSEDED_BY;
-  final bool? _SUPPORTS_STOPPING_CONDITION;
-  final bool? _IS_SETTABLE;
-  final bool? _IS_CYCLIC;
-  final double? _CYCLE_LOWER_BOUND;
-  final double? _CYCLE_UPPER_BOUND;
-  final String? _DESCRIPTION;
-
-  PCEParameterDescriptorObjectBuilder({
-    pceParameter? PARAMETER,
-    String? PROVIDER_DEFINED_NAME,
-    String? providerDefinedName,
-    pceOwnerClass? OWNER_CLASS,
-    pceOwnerClass? ownerClass,
-    pceDataType? DATA_TYPE,
-    pceDataType? dataType,
-    pceUnit? UNIT,
-    String? PROVIDER_DEFINED_UNIT_SYMBOL,
-    String? providerDefinedUnitSymbol,
-    int? ELEMENT_COUNT,
-    int? elementCount,
-    int? ROW_COUNT,
-    int? rowCount,
-    int? COLUMN_COUNT,
-    int? columnCount,
-    pceFrameDependency? FRAME_DEPENDENCY,
-    pceFrameDependency? frameDependency,
-    rfmAxisType? REQUIRED_AXIS_TYPE,
-    rfmAxisType? requiredAxisType,
-    rfmOriginKind? REQUIRED_ORIGIN_KIND,
-    rfmOriginKind? requiredOriginKind,
-    bool? TIME_SYSTEM_DEPENDENT,
-    bool? timeSystemDependent,
-    frmStateRepresentation? STATE_REPRESENTATION,
-    frmStateRepresentation? stateRepresentation,
-    pceAvailability? AVAILABILITY,
-    String? UNAVAILABLE_REASON,
-    String? unavailableReason,
-    pceParameter? SUPERSEDED_BY,
-    pceParameter? supersededBy,
-    bool? SUPPORTS_STOPPING_CONDITION,
-    bool? supportsStoppingCondition,
-    bool? IS_SETTABLE,
-    bool? isSettable,
-    bool? IS_CYCLIC,
-    bool? isCyclic,
-    double? CYCLE_LOWER_BOUND,
-    double? cycleLowerBound,
-    double? CYCLE_UPPER_BOUND,
-    double? cycleUpperBound,
-    String? DESCRIPTION,
-  })
-      : _PARAMETER = PARAMETER,
-        _PROVIDER_DEFINED_NAME = providerDefinedName ?? PROVIDER_DEFINED_NAME,
-        _OWNER_CLASS = ownerClass ?? OWNER_CLASS,
-        _DATA_TYPE = dataType ?? DATA_TYPE,
-        _UNIT = UNIT,
-        _PROVIDER_DEFINED_UNIT_SYMBOL = providerDefinedUnitSymbol ?? PROVIDER_DEFINED_UNIT_SYMBOL,
-        _ELEMENT_COUNT = elementCount ?? ELEMENT_COUNT,
-        _ROW_COUNT = rowCount ?? ROW_COUNT,
-        _COLUMN_COUNT = columnCount ?? COLUMN_COUNT,
-        _FRAME_DEPENDENCY = frameDependency ?? FRAME_DEPENDENCY,
-        _REQUIRED_AXIS_TYPE = requiredAxisType ?? REQUIRED_AXIS_TYPE,
-        _REQUIRED_ORIGIN_KIND = requiredOriginKind ?? REQUIRED_ORIGIN_KIND,
-        _TIME_SYSTEM_DEPENDENT = timeSystemDependent ?? TIME_SYSTEM_DEPENDENT,
-        _STATE_REPRESENTATION = stateRepresentation ?? STATE_REPRESENTATION,
-        _AVAILABILITY = AVAILABILITY,
-        _UNAVAILABLE_REASON = unavailableReason ?? UNAVAILABLE_REASON,
-        _SUPERSEDED_BY = supersededBy ?? SUPERSEDED_BY,
-        _SUPPORTS_STOPPING_CONDITION = supportsStoppingCondition ?? SUPPORTS_STOPPING_CONDITION,
-        _IS_SETTABLE = isSettable ?? IS_SETTABLE,
-        _IS_CYCLIC = isCyclic ?? IS_CYCLIC,
-        _CYCLE_LOWER_BOUND = cycleLowerBound ?? CYCLE_LOWER_BOUND,
-        _CYCLE_UPPER_BOUND = cycleUpperBound ?? CYCLE_UPPER_BOUND,
-        _DESCRIPTION = DESCRIPTION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PROVIDER_DEFINED_NAMEOffset = _PROVIDER_DEFINED_NAME == null ? null
-        : fbBuilder.writeString(_PROVIDER_DEFINED_NAME!);
-    final int? PROVIDER_DEFINED_UNIT_SYMBOLOffset = _PROVIDER_DEFINED_UNIT_SYMBOL == null ? null
-        : fbBuilder.writeString(_PROVIDER_DEFINED_UNIT_SYMBOL!);
-    final int? UNAVAILABLE_REASONOffset = _UNAVAILABLE_REASON == null ? null
-        : fbBuilder.writeString(_UNAVAILABLE_REASON!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    fbBuilder.startTable(23);
-    fbBuilder.addUint16(0, _PARAMETER?.value);
-    fbBuilder.addOffset(1, PROVIDER_DEFINED_NAMEOffset);
-    fbBuilder.addUint8(2, _OWNER_CLASS?.value);
-    fbBuilder.addUint8(3, _DATA_TYPE?.value);
-    fbBuilder.addUint8(4, _UNIT?.value);
-    fbBuilder.addOffset(5, PROVIDER_DEFINED_UNIT_SYMBOLOffset);
-    fbBuilder.addInt32(6, _ELEMENT_COUNT);
-    fbBuilder.addInt32(7, _ROW_COUNT);
-    fbBuilder.addInt32(8, _COLUMN_COUNT);
-    fbBuilder.addUint8(9, _FRAME_DEPENDENCY?.value);
-    fbBuilder.addUint8(10, _REQUIRED_AXIS_TYPE?.value);
-    fbBuilder.addUint8(11, _REQUIRED_ORIGIN_KIND?.value);
-    fbBuilder.addBool(12, _TIME_SYSTEM_DEPENDENT);
-    fbBuilder.addUint8(13, _STATE_REPRESENTATION?.value);
-    fbBuilder.addUint8(14, _AVAILABILITY?.value);
-    fbBuilder.addOffset(15, UNAVAILABLE_REASONOffset);
-    fbBuilder.addUint16(16, _SUPERSEDED_BY?.value);
-    fbBuilder.addBool(17, _SUPPORTS_STOPPING_CONDITION);
-    fbBuilder.addBool(18, _IS_SETTABLE);
-    fbBuilder.addBool(19, _IS_CYCLIC);
-    fbBuilder.addFloat64(20, _CYCLE_LOWER_BOUND);
-    fbBuilder.addFloat64(21, _CYCLE_UPPER_BOUND);
-    fbBuilder.addOffset(22, DESCRIPTIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  The roster a named publisher offers, resolved as a whole. A consumer
-///  caches this and resolves every later name against it.
-class PCEParameterCatalog {
-  PCEParameterCatalog._(this._bc, this._bcOffset);
-  factory PCEParameterCatalog(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PCEParameterCatalog> reader = _PCEParameterCatalogReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Identifier of the catalog itself.
-  String? get CATALOG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get catalogId => CATALOG_ID;
-  ///  Identifier of the publisher that evaluates these parameters.
-  String? get PROVIDER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get providerId => PROVIDER_ID;
-  ///  ISO 8601 instant this catalog was published.
-  String? get PUBLISHED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get publishedAt => PUBLISHED_AT;
-  List<PCEParameterDescriptor>? get ENTRIES => const fb.ListReader<PCEParameterDescriptor>(PCEParameterDescriptor.reader).vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'PCEParameterCatalog{catalogId: ${catalogId}, providerId: ${providerId}, publishedAt: ${publishedAt}, ENTRIES: ${ENTRIES}}';
-  }
-}
-
-class _PCEParameterCatalogReader extends fb.TableReader<PCEParameterCatalog> {
-  const _PCEParameterCatalogReader();
-
-  @override
-  PCEParameterCatalog createObject(fb.BufferContext bc, int offset) =>
-    PCEParameterCatalog._(bc, offset);
-}
-
-class PCEParameterCatalogBuilder {
-  PCEParameterCatalogBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCatalogIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addProviderIdOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addPublishedAtOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addEntriesOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PCEParameterCatalogObjectBuilder extends fb.ObjectBuilder {
-  final String? _CATALOG_ID;
-  final String? _PROVIDER_ID;
-  final String? _PUBLISHED_AT;
-  final List<PCEParameterDescriptorObjectBuilder>? _ENTRIES;
-
-  PCEParameterCatalogObjectBuilder({
-    String? CATALOG_ID,
-    String? catalogId,
-    String? PROVIDER_ID,
-    String? providerId,
-    String? PUBLISHED_AT,
-    String? publishedAt,
-    List<PCEParameterDescriptorObjectBuilder>? ENTRIES,
-  })
-      : _CATALOG_ID = catalogId ?? CATALOG_ID,
-        _PROVIDER_ID = providerId ?? PROVIDER_ID,
-        _PUBLISHED_AT = publishedAt ?? PUBLISHED_AT,
-        _ENTRIES = ENTRIES;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CATALOG_IDOffset = _CATALOG_ID == null ? null
-        : fbBuilder.writeString(_CATALOG_ID!);
-    final int? PROVIDER_IDOffset = _PROVIDER_ID == null ? null
-        : fbBuilder.writeString(_PROVIDER_ID!);
-    final int? PUBLISHED_ATOffset = _PUBLISHED_AT == null ? null
-        : fbBuilder.writeString(_PUBLISHED_AT!);
-    final int? ENTRIESOffset = _ENTRIES == null ? null
-        : fbBuilder.writeList(_ENTRIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, CATALOG_IDOffset);
-    fbBuilder.addOffset(1, PROVIDER_IDOffset);
-    fbBuilder.addOffset(2, PUBLISHED_ATOffset);
-    fbBuilder.addOffset(3, ENTRIESOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Everything an evaluation needs besides the state itself.
-class PCEEvaluationContext {
-  PCEEvaluationContext._(this._bc, this._bcOffset);
-  factory PCEEvaluationContext(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PCEEvaluationContext> reader = _PCEEvaluationContextReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  pceOwnerClass get OWNER_CLASS => pceOwnerClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  pceOwnerClass get ownerClass => OWNER_CLASS;
-  ///  Identifier of the object the parameters are evaluated on.
-  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get objectId => OBJECT_ID;
-  ///  Hardware item, when the owner class names one.
-  String? get HARDWARE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get hardwareName => HARDWARE_NAME;
-  ///  Ephemeris body code of the default central body.
-  int get CENTRAL_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get centralBodyId => CENTRAL_BODY_ID;
-  ///  Gravitational parameter of the central body, m^3/s^2. Absent means the
-  ///  provider's own value for CENTRAL_BODY_ID.
-  double get GRAVITATIONAL_PARAMETER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get gravitationalParameter => GRAVITATIONAL_PARAMETER;
-  ///  Shape of the central body, REQUIRED for planetodetic parameters.
-  double get EQUATORIAL_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get equatorialRadiusM => EQUATORIAL_RADIUS_M;
-  double get FLATTENING => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  ///  Fully specified coordinate systems, each named through
-  ///  RFMCoordinateSystem.NAME.
-  List<RFMCoordinateSystem>? get COORDINATE_SYSTEMS => const fb.ListReader<RFMCoordinateSystem>(RFMCoordinateSystem.reader).vTableGetNullable(_bc, _bcOffset, 18);
-  List<RFMCoordinateSystem>? get coordinateSystems => COORDINATE_SYSTEMS;
-  ///  Which of COORDINATE_SYSTEMS a parameter reference falls back to.
-  String? get DEFAULT_COORDINATE_SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get defaultCoordinateSystemName => DEFAULT_COORDINATE_SYSTEM_NAME;
-  ///  Time system a parameter reference falls back to, named by the $TIM
-  ///  timingStandard member name.
-  String? get DEFAULT_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get defaultTimeSystem => DEFAULT_TIME_SYSTEM;
-  ///  Zero of ELAPSED_DAYS and ELAPSED_SECONDS, ISO 8601.
-  String? get REFERENCE_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get referenceEpoch => REFERENCE_EPOCH;
-  ///  Content identifier of the Earth-orientation data set the caller requires.
-  ///  A provider that cannot honour it returns MISSING_EOP_DATA rather than
-  ///  substituting another table.
-  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get eopDataSetCid => EOP_DATA_SET_CID;
-  ///  Ephemeris body code of the illuminating body for lighting parameters.
-  int get ILLUMINATING_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  ///  Ephemeris body codes of the bodies allowed to occult, in the order they
+  ///  are tested. More than one is normal.
+  List<int>? get OCCULTING_BODY_IDS => const fb.ListReader<int>(fb.Int32Reader()).vTableGetNullable(_bc, _bcOffset, 4);
+  List<int>? get occultingBodyIds => OCCULTING_BODY_IDS;
+  ///  Ephemeris body code of the illuminating body.
+  int get ILLUMINATING_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
   int get illuminatingBodyId => ILLUMINATING_BODY_ID;
+  evlShadowModel get SHADOW_MODEL => evlShadowModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  evlShadowModel get shadowModel => SHADOW_MODEL;
+  ///  Which shadow regions to report. A model that cannot distinguish a region
+  ///  MUST refuse the request rather than fold it into a neighbour.
+  bool get REPORT_UMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, true);
+  bool get reportUmbra => REPORT_UMBRA;
+  bool get REPORT_PENUMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, true);
+  bool get reportPenumbra => REPORT_PENUMBRA;
+  bool get REPORT_ANTUMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, true);
+  bool get reportAntumbra => REPORT_ANTUMBRA;
+  ///  Events shorter than this are not reported. 0 reports every event.
+  double get MINIMUM_DURATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get minimumDurationSeconds => MINIMUM_DURATION_SECONDS;
+  ///  Correct the illuminating-body direction for signal travel time.
+  evlAberrationCorrection get ABERRATION_CORRECTION => evlAberrationCorrection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  evlAberrationCorrection get aberrationCorrection => ABERRATION_CORRECTION;
 
   @override
   String toString() {
-    return 'PCEEvaluationContext{ownerClass: ${ownerClass}, objectId: ${objectId}, hardwareName: ${hardwareName}, centralBodyId: ${centralBodyId}, gravitationalParameter: ${gravitationalParameter}, equatorialRadiusM: ${equatorialRadiusM}, FLATTENING: ${FLATTENING}, coordinateSystems: ${coordinateSystems}, defaultCoordinateSystemName: ${defaultCoordinateSystemName}, defaultTimeSystem: ${defaultTimeSystem}, referenceEpoch: ${referenceEpoch}, eopDataSetCid: ${eopDataSetCid}, illuminatingBodyId: ${illuminatingBodyId}}';
+    return 'EVLEclipseConfiguration{occultingBodyIds: ${occultingBodyIds}, illuminatingBodyId: ${illuminatingBodyId}, shadowModel: ${shadowModel}, reportUmbra: ${reportUmbra}, reportPenumbra: ${reportPenumbra}, reportAntumbra: ${reportAntumbra}, minimumDurationSeconds: ${minimumDurationSeconds}, aberrationCorrection: ${aberrationCorrection}}';
   }
 }
 
-class _PCEEvaluationContextReader extends fb.TableReader<PCEEvaluationContext> {
-  const _PCEEvaluationContextReader();
+class _EVLEclipseConfigurationReader extends fb.TableReader<EVLEclipseConfiguration> {
+  const _EVLEclipseConfigurationReader();
 
   @override
-  PCEEvaluationContext createObject(fb.BufferContext bc, int offset) =>
-    PCEEvaluationContext._(bc, offset);
+  EVLEclipseConfiguration createObject(fb.BufferContext bc, int offset) =>
+    EVLEclipseConfiguration._(bc, offset);
 }
 
-class PCEEvaluationContextBuilder {
-  PCEEvaluationContextBuilder(this.fbBuilder);
+class EVLEclipseConfigurationBuilder {
+  EVLEclipseConfigurationBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(8);
   }
 
-  int addOwnerClass(pceOwnerClass? OWNER_CLASS) {
-    fbBuilder.addUint8(0, OWNER_CLASS?.value);
-    return fbBuilder.offset;
-  }
-  int addObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addHardwareNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addCentralBodyId(int? CENTRAL_BODY_ID) {
-    fbBuilder.addInt32(3, CENTRAL_BODY_ID);
-    return fbBuilder.offset;
-  }
-  int addGravitationalParameter(double? GRAVITATIONAL_PARAMETER) {
-    fbBuilder.addFloat64(4, GRAVITATIONAL_PARAMETER);
-    return fbBuilder.offset;
-  }
-  int addEquatorialRadiusM(double? EQUATORIAL_RADIUS_M) {
-    fbBuilder.addFloat64(5, EQUATORIAL_RADIUS_M);
-    return fbBuilder.offset;
-  }
-  int addFlattening(double? FLATTENING) {
-    fbBuilder.addFloat64(6, FLATTENING);
-    return fbBuilder.offset;
-  }
-  int addCoordinateSystemsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addDefaultCoordinateSystemNameOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addDefaultTimeSystemOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addReferenceEpochOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addEopDataSetCidOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
+  int addOccultingBodyIdsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
   int addIlluminatingBodyId(int? ILLUMINATING_BODY_ID) {
-    fbBuilder.addInt32(12, ILLUMINATING_BODY_ID);
+    fbBuilder.addInt32(1, ILLUMINATING_BODY_ID);
+    return fbBuilder.offset;
+  }
+  int addShadowModel(evlShadowModel? SHADOW_MODEL) {
+    fbBuilder.addUint8(2, SHADOW_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addReportUmbra(bool? REPORT_UMBRA) {
+    fbBuilder.addBool(3, REPORT_UMBRA);
+    return fbBuilder.offset;
+  }
+  int addReportPenumbra(bool? REPORT_PENUMBRA) {
+    fbBuilder.addBool(4, REPORT_PENUMBRA);
+    return fbBuilder.offset;
+  }
+  int addReportAntumbra(bool? REPORT_ANTUMBRA) {
+    fbBuilder.addBool(5, REPORT_ANTUMBRA);
+    return fbBuilder.offset;
+  }
+  int addMinimumDurationSeconds(double? MINIMUM_DURATION_SECONDS) {
+    fbBuilder.addFloat64(6, MINIMUM_DURATION_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addAberrationCorrection(evlAberrationCorrection? ABERRATION_CORRECTION) {
+    fbBuilder.addUint8(7, ABERRATION_CORRECTION?.value);
     return fbBuilder.offset;
   }
 
@@ -1707,93 +422,57 @@ class PCEEvaluationContextBuilder {
   }
 }
 
-class PCEEvaluationContextObjectBuilder extends fb.ObjectBuilder {
-  final pceOwnerClass? _OWNER_CLASS;
-  final String? _OBJECT_ID;
-  final String? _HARDWARE_NAME;
-  final int? _CENTRAL_BODY_ID;
-  final double? _GRAVITATIONAL_PARAMETER;
-  final double? _EQUATORIAL_RADIUS_M;
-  final double? _FLATTENING;
-  final List<RFMCoordinateSystemObjectBuilder>? _COORDINATE_SYSTEMS;
-  final String? _DEFAULT_COORDINATE_SYSTEM_NAME;
-  final String? _DEFAULT_TIME_SYSTEM;
-  final String? _REFERENCE_EPOCH;
-  final String? _EOP_DATA_SET_CID;
+class EVLEclipseConfigurationObjectBuilder extends fb.ObjectBuilder {
+  final List<int>? _OCCULTING_BODY_IDS;
   final int? _ILLUMINATING_BODY_ID;
+  final evlShadowModel? _SHADOW_MODEL;
+  final bool? _REPORT_UMBRA;
+  final bool? _REPORT_PENUMBRA;
+  final bool? _REPORT_ANTUMBRA;
+  final double? _MINIMUM_DURATION_SECONDS;
+  final evlAberrationCorrection? _ABERRATION_CORRECTION;
 
-  PCEEvaluationContextObjectBuilder({
-    pceOwnerClass? OWNER_CLASS,
-    pceOwnerClass? ownerClass,
-    String? OBJECT_ID,
-    String? objectId,
-    String? HARDWARE_NAME,
-    String? hardwareName,
-    int? CENTRAL_BODY_ID,
-    int? centralBodyId,
-    double? GRAVITATIONAL_PARAMETER,
-    double? gravitationalParameter,
-    double? EQUATORIAL_RADIUS_M,
-    double? equatorialRadiusM,
-    double? FLATTENING,
-    List<RFMCoordinateSystemObjectBuilder>? COORDINATE_SYSTEMS,
-    List<RFMCoordinateSystemObjectBuilder>? coordinateSystems,
-    String? DEFAULT_COORDINATE_SYSTEM_NAME,
-    String? defaultCoordinateSystemName,
-    String? DEFAULT_TIME_SYSTEM,
-    String? defaultTimeSystem,
-    String? REFERENCE_EPOCH,
-    String? referenceEpoch,
-    String? EOP_DATA_SET_CID,
-    String? eopDataSetCid,
+  EVLEclipseConfigurationObjectBuilder({
+    List<int>? OCCULTING_BODY_IDS,
+    List<int>? occultingBodyIds,
     int? ILLUMINATING_BODY_ID,
     int? illuminatingBodyId,
+    evlShadowModel? SHADOW_MODEL,
+    evlShadowModel? shadowModel,
+    bool? REPORT_UMBRA,
+    bool? reportUmbra,
+    bool? REPORT_PENUMBRA,
+    bool? reportPenumbra,
+    bool? REPORT_ANTUMBRA,
+    bool? reportAntumbra,
+    double? MINIMUM_DURATION_SECONDS,
+    double? minimumDurationSeconds,
+    evlAberrationCorrection? ABERRATION_CORRECTION,
+    evlAberrationCorrection? aberrationCorrection,
   })
-      : _OWNER_CLASS = ownerClass ?? OWNER_CLASS,
-        _OBJECT_ID = objectId ?? OBJECT_ID,
-        _HARDWARE_NAME = hardwareName ?? HARDWARE_NAME,
-        _CENTRAL_BODY_ID = centralBodyId ?? CENTRAL_BODY_ID,
-        _GRAVITATIONAL_PARAMETER = gravitationalParameter ?? GRAVITATIONAL_PARAMETER,
-        _EQUATORIAL_RADIUS_M = equatorialRadiusM ?? EQUATORIAL_RADIUS_M,
-        _FLATTENING = FLATTENING,
-        _COORDINATE_SYSTEMS = coordinateSystems ?? COORDINATE_SYSTEMS,
-        _DEFAULT_COORDINATE_SYSTEM_NAME = defaultCoordinateSystemName ?? DEFAULT_COORDINATE_SYSTEM_NAME,
-        _DEFAULT_TIME_SYSTEM = defaultTimeSystem ?? DEFAULT_TIME_SYSTEM,
-        _REFERENCE_EPOCH = referenceEpoch ?? REFERENCE_EPOCH,
-        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID,
-        _ILLUMINATING_BODY_ID = illuminatingBodyId ?? ILLUMINATING_BODY_ID;
+      : _OCCULTING_BODY_IDS = occultingBodyIds ?? OCCULTING_BODY_IDS,
+        _ILLUMINATING_BODY_ID = illuminatingBodyId ?? ILLUMINATING_BODY_ID,
+        _SHADOW_MODEL = shadowModel ?? SHADOW_MODEL,
+        _REPORT_UMBRA = reportUmbra ?? REPORT_UMBRA,
+        _REPORT_PENUMBRA = reportPenumbra ?? REPORT_PENUMBRA,
+        _REPORT_ANTUMBRA = reportAntumbra ?? REPORT_ANTUMBRA,
+        _MINIMUM_DURATION_SECONDS = minimumDurationSeconds ?? MINIMUM_DURATION_SECONDS,
+        _ABERRATION_CORRECTION = aberrationCorrection ?? ABERRATION_CORRECTION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
-        : fbBuilder.writeString(_OBJECT_ID!);
-    final int? HARDWARE_NAMEOffset = _HARDWARE_NAME == null ? null
-        : fbBuilder.writeString(_HARDWARE_NAME!);
-    final int? COORDINATE_SYSTEMSOffset = _COORDINATE_SYSTEMS == null ? null
-        : fbBuilder.writeList(_COORDINATE_SYSTEMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? DEFAULT_COORDINATE_SYSTEM_NAMEOffset = _DEFAULT_COORDINATE_SYSTEM_NAME == null ? null
-        : fbBuilder.writeString(_DEFAULT_COORDINATE_SYSTEM_NAME!);
-    final int? DEFAULT_TIME_SYSTEMOffset = _DEFAULT_TIME_SYSTEM == null ? null
-        : fbBuilder.writeString(_DEFAULT_TIME_SYSTEM!);
-    final int? REFERENCE_EPOCHOffset = _REFERENCE_EPOCH == null ? null
-        : fbBuilder.writeString(_REFERENCE_EPOCH!);
-    final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
-        : fbBuilder.writeString(_EOP_DATA_SET_CID!);
-    fbBuilder.startTable(13);
-    fbBuilder.addUint8(0, _OWNER_CLASS?.value);
-    fbBuilder.addOffset(1, OBJECT_IDOffset);
-    fbBuilder.addOffset(2, HARDWARE_NAMEOffset);
-    fbBuilder.addInt32(3, _CENTRAL_BODY_ID);
-    fbBuilder.addFloat64(4, _GRAVITATIONAL_PARAMETER);
-    fbBuilder.addFloat64(5, _EQUATORIAL_RADIUS_M);
-    fbBuilder.addFloat64(6, _FLATTENING);
-    fbBuilder.addOffset(7, COORDINATE_SYSTEMSOffset);
-    fbBuilder.addOffset(8, DEFAULT_COORDINATE_SYSTEM_NAMEOffset);
-    fbBuilder.addOffset(9, DEFAULT_TIME_SYSTEMOffset);
-    fbBuilder.addOffset(10, REFERENCE_EPOCHOffset);
-    fbBuilder.addOffset(11, EOP_DATA_SET_CIDOffset);
-    fbBuilder.addInt32(12, _ILLUMINATING_BODY_ID);
+    final int? OCCULTING_BODY_IDSOffset = _OCCULTING_BODY_IDS == null ? null
+        : fbBuilder.writeListInt32(_OCCULTING_BODY_IDS!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, OCCULTING_BODY_IDSOffset);
+    fbBuilder.addInt32(1, _ILLUMINATING_BODY_ID);
+    fbBuilder.addUint8(2, _SHADOW_MODEL?.value);
+    fbBuilder.addBool(3, _REPORT_UMBRA);
+    fbBuilder.addBool(4, _REPORT_PENUMBRA);
+    fbBuilder.addBool(5, _REPORT_ANTUMBRA);
+    fbBuilder.addFloat64(6, _MINIMUM_DURATION_SECONDS);
+    fbBuilder.addUint8(7, _ABERRATION_CORRECTION?.value);
     return fbBuilder.endTable();
   }
 
@@ -1805,216 +484,91 @@ class PCEEvaluationContextObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Evaluate these parameters on these states. One state is a point query; a
-///  run of states is a report or a plot series, and carries the same shape.
-class PCEEvaluationRequest {
-  PCEEvaluationRequest._(this._bc, this._bcOffset);
-  factory PCEEvaluationRequest(List<int> bytes) {
+///  Configuration for CONTACT.
+class EVLContactConfiguration {
+  EVLContactConfiguration._(this._bc, this._bcOffset);
+  factory EVLContactConfiguration(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PCEEvaluationRequest> reader = _PCEEvaluationRequestReader();
+  static const fb.Reader<EVLContactConfiguration> reader = _EVLContactConfigurationReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  PCEEvaluationContext? get CONTEXT => PCEEvaluationContext.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  List<PCEParameterRef>? get PARAMETERS => const fb.ListReader<PCEParameterRef>(PCEParameterRef.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  ///  States to evaluate at, in chronological order. Each carries its own
-  ///  epoch and coordinate system name.
-  List<FRMStateVector>? get STATES => const fb.ListReader<FRMStateVector>(FRMStateVector.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get traceId => TRACE_ID;
+  ///  The observing point, normally a GROUND_SITE origin.
+  RFMOrigin? get OBSERVER => RFMOrigin.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Identifier of the observing site or sensor; resolves against $SEN.ID
+  ///  when the observer is an instrumented site.
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get sensorId => SENSOR_ID;
+  ///  Elevation the target must exceed, radians, when no mask is supplied.
+  double get MINIMUM_ELEVATION_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get minimumElevationRad => MINIMUM_ELEVATION_RAD;
+  ///  Horizon mask as azimuth and minimum-elevation pairs, radians, in
+  ///  ascending azimuth: [az0, el0, az1, el1, ...]. Present, it supersedes
+  ///  MINIMUM_ELEVATION_RAD. An odd length is INVALID_INPUT.
+  List<double>? get AZIMUTH_ELEVATION_MASK_RAD => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<double>? get azimuthElevationMaskRad => AZIMUTH_ELEVATION_MASK_RAD;
+  ///  Bodies allowed to block the line of sight.
+  List<int>? get OCCULTING_BODY_IDS => const fb.ListReader<int>(fb.Int32Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get occultingBodyIds => OCCULTING_BODY_IDS;
+  evlAberrationCorrection get ABERRATION_CORRECTION => evlAberrationCorrection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  evlAberrationCorrection get aberrationCorrection => ABERRATION_CORRECTION;
+  ///  Events shorter than this are not reported.
+  double get MINIMUM_DURATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get minimumDurationSeconds => MINIMUM_DURATION_SECONDS;
 
   @override
   String toString() {
-    return 'PCEEvaluationRequest{CONTEXT: ${CONTEXT}, PARAMETERS: ${PARAMETERS}, STATES: ${STATES}, traceId: ${traceId}}';
+    return 'EVLContactConfiguration{OBSERVER: ${OBSERVER}, sensorId: ${sensorId}, minimumElevationRad: ${minimumElevationRad}, azimuthElevationMaskRad: ${azimuthElevationMaskRad}, occultingBodyIds: ${occultingBodyIds}, aberrationCorrection: ${aberrationCorrection}, minimumDurationSeconds: ${minimumDurationSeconds}}';
   }
 }
 
-class _PCEEvaluationRequestReader extends fb.TableReader<PCEEvaluationRequest> {
-  const _PCEEvaluationRequestReader();
+class _EVLContactConfigurationReader extends fb.TableReader<EVLContactConfiguration> {
+  const _EVLContactConfigurationReader();
 
   @override
-  PCEEvaluationRequest createObject(fb.BufferContext bc, int offset) =>
-    PCEEvaluationRequest._(bc, offset);
+  EVLContactConfiguration createObject(fb.BufferContext bc, int offset) =>
+    EVLContactConfiguration._(bc, offset);
 }
 
-class PCEEvaluationRequestBuilder {
-  PCEEvaluationRequestBuilder(this.fbBuilder);
+class EVLContactConfigurationBuilder {
+  EVLContactConfigurationBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(7);
   }
 
-  int addContextOffset(int? offset) {
+  int addObserverOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addParametersOffset(int? offset) {
+  int addSensorIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addStatesOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addMinimumElevationRad(double? MINIMUM_ELEVATION_RAD) {
+    fbBuilder.addFloat64(2, MINIMUM_ELEVATION_RAD);
     return fbBuilder.offset;
   }
-  int addTraceIdOffset(int? offset) {
+  int addAzimuthElevationMaskRadOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PCEEvaluationRequestObjectBuilder extends fb.ObjectBuilder {
-  final PCEEvaluationContextObjectBuilder? _CONTEXT;
-  final List<PCEParameterRefObjectBuilder>? _PARAMETERS;
-  final List<FRMStateVectorObjectBuilder>? _STATES;
-  final String? _TRACE_ID;
-
-  PCEEvaluationRequestObjectBuilder({
-    PCEEvaluationContextObjectBuilder? CONTEXT,
-    List<PCEParameterRefObjectBuilder>? PARAMETERS,
-    List<FRMStateVectorObjectBuilder>? STATES,
-    String? TRACE_ID,
-    String? traceId,
-  })
-      : _CONTEXT = CONTEXT,
-        _PARAMETERS = PARAMETERS,
-        _STATES = STATES,
-        _TRACE_ID = traceId ?? TRACE_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CONTEXTOffset = _CONTEXT?.getOrCreateOffset(fbBuilder);
-    final int? PARAMETERSOffset = _PARAMETERS == null ? null
-        : fbBuilder.writeList(_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? STATESOffset = _STATES == null ? null
-        : fbBuilder.writeList(_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, CONTEXTOffset);
-    fbBuilder.addOffset(1, PARAMETERSOffset);
-    fbBuilder.addOffset(2, STATESOffset);
-    fbBuilder.addOffset(3, TRACE_IDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  One parameter's value at one state. STATUS is per value: a request never
-///  fails as a whole because one name is unavailable.
-class PCEParameterValue {
-  PCEParameterValue._(this._bc, this._bcOffset);
-  factory PCEParameterValue(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PCEParameterValue> reader = _PCEParameterValueReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  pceParameter get PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  REQUIRED when PARAMETER is PROVIDER_DEFINED.
-  String? get PROVIDER_DEFINED_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get providerDefinedName => PROVIDER_DEFINED_NAME;
-  pceResultStatus get STATUS => pceResultStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  Scalar, integer or boolean value. Absent for vector and matrix types.
-  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  Vector or matrix values, row-major. Absent for scalar types; a scalar is
-  ///  NEVER also written here.
-  List<double>? get VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Matrix shape, REQUIRED when the descriptor's DATA_TYPE is REAL_MATRIX.
-  int get ROW_COUNT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get rowCount => ROW_COUNT;
-  int get COLUMN_COUNT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get columnCount => COLUMN_COUNT;
-  ///  Text or ISO 8601 epoch value.
-  String? get STRING_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get stringValue => STRING_VALUE;
-  ///  Unit the value is expressed in, restating the descriptor so a value is
-  ///  self-describing when it travels without its catalog.
-  pceUnit get UNIT => pceUnit.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  ///  Why STATUS is not OK, in capability language.
-  String? get MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-
-  @override
-  String toString() {
-    return 'PCEParameterValue{PARAMETER: ${PARAMETER}, providerDefinedName: ${providerDefinedName}, STATUS: ${STATUS}, VALUE: ${VALUE}, VALUES: ${VALUES}, rowCount: ${rowCount}, columnCount: ${columnCount}, stringValue: ${stringValue}, UNIT: ${UNIT}, MESSAGE: ${MESSAGE}}';
-  }
-}
-
-class _PCEParameterValueReader extends fb.TableReader<PCEParameterValue> {
-  const _PCEParameterValueReader();
-
-  @override
-  PCEParameterValue createObject(fb.BufferContext bc, int offset) =>
-    PCEParameterValue._(bc, offset);
-}
-
-class PCEParameterValueBuilder {
-  PCEParameterValueBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(10);
-  }
-
-  int addParameter(pceParameter? PARAMETER) {
-    fbBuilder.addUint16(0, PARAMETER?.value);
-    return fbBuilder.offset;
-  }
-  int addProviderDefinedNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addStatus(pceResultStatus? STATUS) {
-    fbBuilder.addUint8(2, STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addValue(double? VALUE) {
-    fbBuilder.addFloat64(3, VALUE);
-    return fbBuilder.offset;
-  }
-  int addValuesOffset(int? offset) {
+  int addOccultingBodyIdsOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addRowCount(int? ROW_COUNT) {
-    fbBuilder.addInt32(5, ROW_COUNT);
+  int addAberrationCorrection(evlAberrationCorrection? ABERRATION_CORRECTION) {
+    fbBuilder.addUint8(5, ABERRATION_CORRECTION?.value);
     return fbBuilder.offset;
   }
-  int addColumnCount(int? COLUMN_COUNT) {
-    fbBuilder.addInt32(6, COLUMN_COUNT);
-    return fbBuilder.offset;
-  }
-  int addStringValueOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addUnit(pceUnit? UNIT) {
-    fbBuilder.addUint8(8, UNIT?.value);
-    return fbBuilder.offset;
-  }
-  int addMessageOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addMinimumDurationSeconds(double? MINIMUM_DURATION_SECONDS) {
+    fbBuilder.addFloat64(6, MINIMUM_DURATION_SECONDS);
     return fbBuilder.offset;
   }
 
@@ -2023,67 +577,56 @@ class PCEParameterValueBuilder {
   }
 }
 
-class PCEParameterValueObjectBuilder extends fb.ObjectBuilder {
-  final pceParameter? _PARAMETER;
-  final String? _PROVIDER_DEFINED_NAME;
-  final pceResultStatus? _STATUS;
-  final double? _VALUE;
-  final List<double>? _VALUES;
-  final int? _ROW_COUNT;
-  final int? _COLUMN_COUNT;
-  final String? _STRING_VALUE;
-  final pceUnit? _UNIT;
-  final String? _MESSAGE;
+class EVLContactConfigurationObjectBuilder extends fb.ObjectBuilder {
+  final RFMOriginObjectBuilder? _OBSERVER;
+  final String? _SENSOR_ID;
+  final double? _MINIMUM_ELEVATION_RAD;
+  final List<double>? _AZIMUTH_ELEVATION_MASK_RAD;
+  final List<int>? _OCCULTING_BODY_IDS;
+  final evlAberrationCorrection? _ABERRATION_CORRECTION;
+  final double? _MINIMUM_DURATION_SECONDS;
 
-  PCEParameterValueObjectBuilder({
-    pceParameter? PARAMETER,
-    String? PROVIDER_DEFINED_NAME,
-    String? providerDefinedName,
-    pceResultStatus? STATUS,
-    double? VALUE,
-    List<double>? VALUES,
-    int? ROW_COUNT,
-    int? rowCount,
-    int? COLUMN_COUNT,
-    int? columnCount,
-    String? STRING_VALUE,
-    String? stringValue,
-    pceUnit? UNIT,
-    String? MESSAGE,
+  EVLContactConfigurationObjectBuilder({
+    RFMOriginObjectBuilder? OBSERVER,
+    String? SENSOR_ID,
+    String? sensorId,
+    double? MINIMUM_ELEVATION_RAD,
+    double? minimumElevationRad,
+    List<double>? AZIMUTH_ELEVATION_MASK_RAD,
+    List<double>? azimuthElevationMaskRad,
+    List<int>? OCCULTING_BODY_IDS,
+    List<int>? occultingBodyIds,
+    evlAberrationCorrection? ABERRATION_CORRECTION,
+    evlAberrationCorrection? aberrationCorrection,
+    double? MINIMUM_DURATION_SECONDS,
+    double? minimumDurationSeconds,
   })
-      : _PARAMETER = PARAMETER,
-        _PROVIDER_DEFINED_NAME = providerDefinedName ?? PROVIDER_DEFINED_NAME,
-        _STATUS = STATUS,
-        _VALUE = VALUE,
-        _VALUES = VALUES,
-        _ROW_COUNT = rowCount ?? ROW_COUNT,
-        _COLUMN_COUNT = columnCount ?? COLUMN_COUNT,
-        _STRING_VALUE = stringValue ?? STRING_VALUE,
-        _UNIT = UNIT,
-        _MESSAGE = MESSAGE;
+      : _OBSERVER = OBSERVER,
+        _SENSOR_ID = sensorId ?? SENSOR_ID,
+        _MINIMUM_ELEVATION_RAD = minimumElevationRad ?? MINIMUM_ELEVATION_RAD,
+        _AZIMUTH_ELEVATION_MASK_RAD = azimuthElevationMaskRad ?? AZIMUTH_ELEVATION_MASK_RAD,
+        _OCCULTING_BODY_IDS = occultingBodyIds ?? OCCULTING_BODY_IDS,
+        _ABERRATION_CORRECTION = aberrationCorrection ?? ABERRATION_CORRECTION,
+        _MINIMUM_DURATION_SECONDS = minimumDurationSeconds ?? MINIMUM_DURATION_SECONDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? PROVIDER_DEFINED_NAMEOffset = _PROVIDER_DEFINED_NAME == null ? null
-        : fbBuilder.writeString(_PROVIDER_DEFINED_NAME!);
-    final int? VALUESOffset = _VALUES == null ? null
-        : fbBuilder.writeListFloat64(_VALUES!);
-    final int? STRING_VALUEOffset = _STRING_VALUE == null ? null
-        : fbBuilder.writeString(_STRING_VALUE!);
-    final int? MESSAGEOffset = _MESSAGE == null ? null
-        : fbBuilder.writeString(_MESSAGE!);
-    fbBuilder.startTable(10);
-    fbBuilder.addUint16(0, _PARAMETER?.value);
-    fbBuilder.addOffset(1, PROVIDER_DEFINED_NAMEOffset);
-    fbBuilder.addUint8(2, _STATUS?.value);
-    fbBuilder.addFloat64(3, _VALUE);
-    fbBuilder.addOffset(4, VALUESOffset);
-    fbBuilder.addInt32(5, _ROW_COUNT);
-    fbBuilder.addInt32(6, _COLUMN_COUNT);
-    fbBuilder.addOffset(7, STRING_VALUEOffset);
-    fbBuilder.addUint8(8, _UNIT?.value);
-    fbBuilder.addOffset(9, MESSAGEOffset);
+    final int? OBSERVEROffset = _OBSERVER?.getOrCreateOffset(fbBuilder);
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
+    final int? AZIMUTH_ELEVATION_MASK_RADOffset = _AZIMUTH_ELEVATION_MASK_RAD == null ? null
+        : fbBuilder.writeListFloat64(_AZIMUTH_ELEVATION_MASK_RAD!);
+    final int? OCCULTING_BODY_IDSOffset = _OCCULTING_BODY_IDS == null ? null
+        : fbBuilder.writeListInt32(_OCCULTING_BODY_IDS!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, OBSERVEROffset);
+    fbBuilder.addOffset(1, SENSOR_IDOffset);
+    fbBuilder.addFloat64(2, _MINIMUM_ELEVATION_RAD);
+    fbBuilder.addOffset(3, AZIMUTH_ELEVATION_MASK_RADOffset);
+    fbBuilder.addOffset(4, OCCULTING_BODY_IDSOffset);
+    fbBuilder.addUint8(5, _ABERRATION_CORRECTION?.value);
+    fbBuilder.addFloat64(6, _MINIMUM_DURATION_SECONDS);
     return fbBuilder.endTable();
   }
 
@@ -2095,520 +638,213 @@ class PCEParameterValueObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  The evaluated parameters at ONE epoch.
-class PCEParameterSample {
-  PCEParameterSample._(this._bc, this._bcOffset);
-  factory PCEParameterSample(List<int> bytes) {
+///  Configuration for INTRUSION.
+class EVLIntrusionConfiguration {
+  EVLIntrusionConfiguration._(this._bc, this._bcOffset);
+  factory EVLIntrusionConfiguration(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PCEParameterSample> reader = _PCEParameterSampleReader();
+  static const fb.Reader<EVLIntrusionConfiguration> reader = _EVLIntrusionConfigurationReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Epoch of this sample, ISO 8601.
-  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
-  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
-  List<PCEParameterValue>? get PARAMETER_VALUES => const fb.ListReader<PCEParameterValue>(PCEParameterValue.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  List<PCEParameterValue>? get parameterValues => PARAMETER_VALUES;
+  ///  Identifier of the sensor whose field of view is tested; resolves against
+  ///  $SEN.ID. The sensor's site data is NOT restated here.
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get sensorId => SENSOR_ID;
+  evlFieldOfViewShape get FIELD_OF_VIEW_SHAPE => evlFieldOfViewShape.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  evlFieldOfViewShape get fieldOfViewShape => FIELD_OF_VIEW_SHAPE;
+  ///  Boresight direction, expressed in BORESIGHT_COORDINATE_SYSTEM_NAME.
+  FRMVector3? get BORESIGHT => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Coordinate system BORESIGHT is expressed in; resolves against
+  ///  RFMCoordinateSystem.NAME on the request context.
+  String? get BORESIGHT_COORDINATE_SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get boresightCoordinateSystemName => BORESIGHT_COORDINATE_SYSTEM_NAME;
+  ///  Half-angle of a CONIC field of view, radians.
+  double get CONE_HALF_ANGLE_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get coneHalfAngleRad => CONE_HALF_ANGLE_RAD;
+  ///  Half-angles of a RECTANGULAR field of view about the boresight, radians.
+  double get RECTANGULAR_HALF_ANGLE_X_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get rectangularHalfAngleXRad => RECTANGULAR_HALF_ANGLE_X_RAD;
+  double get RECTANGULAR_HALF_ANGLE_Y_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get rectangularHalfAngleYRad => RECTANGULAR_HALF_ANGLE_Y_RAD;
+  ///  Boundary of a CUSTOM_MASK field of view as clock and cone angle pairs
+  ///  about the boresight, radians: [clock0, cone0, clock1, cone1, ...]. An
+  ///  odd length is INVALID_INPUT.
+  List<double>? get CUSTOM_MASK_RAD => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get customMaskRad => CUSTOM_MASK_RAD;
+  ///  Ephemeris body codes of the bodies tested for intrusion.
+  List<int>? get INTRUDING_BODY_IDS => const fb.ListReader<int>(fb.Int32Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<int>? get intrudingBodyIds => INTRUDING_BODY_IDS;
+  ///  Identifiers of the tracked objects tested for intrusion.
+  List<String>? get INTRUDING_OBJECT_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<String>? get intrudingObjectIds => INTRUDING_OBJECT_IDS;
+  ///  Test the intruder's apparent disc rather than its centre, so an event
+  ///  begins when the limb enters the field of view.
+  bool get USE_APPARENT_BODY_RADIUS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get useApparentBodyRadius => USE_APPARENT_BODY_RADIUS;
+  double get MINIMUM_DURATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get minimumDurationSeconds => MINIMUM_DURATION_SECONDS;
 
   @override
   String toString() {
-    return 'PCEParameterSample{EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, parameterValues: ${parameterValues}}';
+    return 'EVLIntrusionConfiguration{sensorId: ${sensorId}, fieldOfViewShape: ${fieldOfViewShape}, BORESIGHT: ${BORESIGHT}, boresightCoordinateSystemName: ${boresightCoordinateSystemName}, coneHalfAngleRad: ${coneHalfAngleRad}, rectangularHalfAngleXRad: ${rectangularHalfAngleXRad}, rectangularHalfAngleYRad: ${rectangularHalfAngleYRad}, customMaskRad: ${customMaskRad}, intrudingBodyIds: ${intrudingBodyIds}, intrudingObjectIds: ${intrudingObjectIds}, useApparentBodyRadius: ${useApparentBodyRadius}, minimumDurationSeconds: ${minimumDurationSeconds}}';
   }
 }
 
-class _PCEParameterSampleReader extends fb.TableReader<PCEParameterSample> {
-  const _PCEParameterSampleReader();
+class _EVLIntrusionConfigurationReader extends fb.TableReader<EVLIntrusionConfiguration> {
+  const _EVLIntrusionConfigurationReader();
 
   @override
-  PCEParameterSample createObject(fb.BufferContext bc, int offset) =>
-    PCEParameterSample._(bc, offset);
+  EVLIntrusionConfiguration createObject(fb.BufferContext bc, int offset) =>
+    EVLIntrusionConfiguration._(bc, offset);
 }
 
-class PCEParameterSampleBuilder {
-  PCEParameterSampleBuilder(this.fbBuilder);
+class EVLIntrusionConfigurationBuilder {
+  EVLIntrusionConfigurationBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(12);
   }
 
-  int addEpochOffset(int? offset) {
+  int addSensorIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addEpochTimeSystemOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addFieldOfViewShape(evlFieldOfViewShape? FIELD_OF_VIEW_SHAPE) {
+    fbBuilder.addUint8(1, FIELD_OF_VIEW_SHAPE?.value);
     return fbBuilder.offset;
   }
-  int addParameterValuesOffset(int? offset) {
+  int addBoresightOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PCEParameterSampleObjectBuilder extends fb.ObjectBuilder {
-  final String? _EPOCH;
-  final String? _EPOCH_TIME_SYSTEM;
-  final List<PCEParameterValueObjectBuilder>? _PARAMETER_VALUES;
-
-  PCEParameterSampleObjectBuilder({
-    String? EPOCH,
-    String? EPOCH_TIME_SYSTEM,
-    String? epochTimeSystem,
-    List<PCEParameterValueObjectBuilder>? PARAMETER_VALUES,
-    List<PCEParameterValueObjectBuilder>? parameterValues,
-  })
-      : _EPOCH = EPOCH,
-        _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
-        _PARAMETER_VALUES = parameterValues ?? PARAMETER_VALUES;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? EPOCHOffset = _EPOCH == null ? null
-        : fbBuilder.writeString(_EPOCH!);
-    final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
-        : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
-    final int? PARAMETER_VALUESOffset = _PARAMETER_VALUES == null ? null
-        : fbBuilder.writeList(_PARAMETER_VALUES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, EPOCHOffset);
-    fbBuilder.addOffset(1, EPOCH_TIME_SYSTEMOffset);
-    fbBuilder.addOffset(2, PARAMETER_VALUESOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class PCEEvaluationResult {
-  PCEEvaluationResult._(this._bc, this._bcOffset);
-  factory PCEEvaluationResult(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PCEEvaluationResult> reader = _PCEEvaluationResultReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  pceResultStatus get STATUS => pceResultStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get errorMessage => ERROR_MESSAGE;
-  ///  One sample per requested state, in the requested order.
-  List<PCEParameterSample>? get SAMPLES => const fb.ListReader<PCEParameterSample>(PCEParameterSample.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Content identifier of the Earth-orientation data set actually used.
-  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get eopDataSetCid => EOP_DATA_SET_CID;
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get traceId => TRACE_ID;
-
-  @override
-  String toString() {
-    return 'PCEEvaluationResult{STATUS: ${STATUS}, errorMessage: ${errorMessage}, SAMPLES: ${SAMPLES}, eopDataSetCid: ${eopDataSetCid}, traceId: ${traceId}}';
-  }
-}
-
-class _PCEEvaluationResultReader extends fb.TableReader<PCEEvaluationResult> {
-  const _PCEEvaluationResultReader();
-
-  @override
-  PCEEvaluationResult createObject(fb.BufferContext bc, int offset) =>
-    PCEEvaluationResult._(bc, offset);
-}
-
-class PCEEvaluationResultBuilder {
-  PCEEvaluationResultBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addStatus(pceResultStatus? STATUS) {
-    fbBuilder.addUint8(0, STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addErrorMessageOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addSamplesOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addEopDataSetCidOffset(int? offset) {
+  int addBoresightCoordinateSystemNameOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addConeHalfAngleRad(double? CONE_HALF_ANGLE_RAD) {
+    fbBuilder.addFloat64(4, CONE_HALF_ANGLE_RAD);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PCEEvaluationResultObjectBuilder extends fb.ObjectBuilder {
-  final pceResultStatus? _STATUS;
-  final String? _ERROR_MESSAGE;
-  final List<PCEParameterSampleObjectBuilder>? _SAMPLES;
-  final String? _EOP_DATA_SET_CID;
-  final String? _TRACE_ID;
-
-  PCEEvaluationResultObjectBuilder({
-    pceResultStatus? STATUS,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
-    List<PCEParameterSampleObjectBuilder>? SAMPLES,
-    String? EOP_DATA_SET_CID,
-    String? eopDataSetCid,
-    String? TRACE_ID,
-    String? traceId,
-  })
-      : _STATUS = STATUS,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
-        _SAMPLES = SAMPLES,
-        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID,
-        _TRACE_ID = traceId ?? TRACE_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    final int? SAMPLESOffset = _SAMPLES == null ? null
-        : fbBuilder.writeList(_SAMPLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
-        : fbBuilder.writeString(_EOP_DATA_SET_CID!);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(5);
-    fbBuilder.addUint8(0, _STATUS?.value);
-    fbBuilder.addOffset(1, ERROR_MESSAGEOffset);
-    fbBuilder.addOffset(2, SAMPLESOffset);
-    fbBuilder.addOffset(3, EOP_DATA_SET_CIDOffset);
-    fbBuilder.addOffset(4, TRACE_IDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  A predicate on a named parameter: the parameter attains GOAL_VALUE, in
-///  DIRECTION, for the OCCURRENCE-th time. This is the ONE spelling of a
-///  stopping condition and of a generic event function; $EVL references it
-///  rather than minting a second one.
-class PCEParameterCondition {
-  PCEParameterCondition._(this._bc, this._bcOffset);
-  factory PCEParameterCondition(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PCEParameterCondition> reader = _PCEParameterConditionReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  PCEParameterRef? get PARAMETER => PCEParameterRef.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Value the parameter must attain, in the parameter's own SI unit.
-  double get GOAL_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get goalValue => GOAL_VALUE;
-  pceConditionDirection get DIRECTION => pceConditionDirection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  Convergence bar on the parameter value at the reported epoch, in the
-  ///  parameter's own unit. A provider that cannot meet it returns
-  ///  ROOT_REFINEMENT_FAILED rather than reporting an unconverged root.
-  double get GOAL_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get goalTolerance => GOAL_TOLERANCE;
-  ///  Which attainment satisfies the condition, one-based. 0 and 1 both mean
-  ///  the first.
-  int get OCCURRENCE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 1);
-
-  @override
-  String toString() {
-    return 'PCEParameterCondition{PARAMETER: ${PARAMETER}, goalValue: ${goalValue}, DIRECTION: ${DIRECTION}, goalTolerance: ${goalTolerance}, OCCURRENCE: ${OCCURRENCE}}';
-  }
-}
-
-class _PCEParameterConditionReader extends fb.TableReader<PCEParameterCondition> {
-  const _PCEParameterConditionReader();
-
-  @override
-  PCEParameterCondition createObject(fb.BufferContext bc, int offset) =>
-    PCEParameterCondition._(bc, offset);
-}
-
-class PCEParameterConditionBuilder {
-  PCEParameterConditionBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addParameterOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addRectangularHalfAngleXRad(double? RECTANGULAR_HALF_ANGLE_X_RAD) {
+    fbBuilder.addFloat64(5, RECTANGULAR_HALF_ANGLE_X_RAD);
     return fbBuilder.offset;
   }
-  int addGoalValue(double? GOAL_VALUE) {
-    fbBuilder.addFloat64(1, GOAL_VALUE);
+  int addRectangularHalfAngleYRad(double? RECTANGULAR_HALF_ANGLE_Y_RAD) {
+    fbBuilder.addFloat64(6, RECTANGULAR_HALF_ANGLE_Y_RAD);
     return fbBuilder.offset;
   }
-  int addDirection(pceConditionDirection? DIRECTION) {
-    fbBuilder.addUint8(2, DIRECTION?.value);
-    return fbBuilder.offset;
-  }
-  int addGoalTolerance(double? GOAL_TOLERANCE) {
-    fbBuilder.addFloat64(3, GOAL_TOLERANCE);
-    return fbBuilder.offset;
-  }
-  int addOccurrence(int? OCCURRENCE) {
-    fbBuilder.addUint32(4, OCCURRENCE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PCEParameterConditionObjectBuilder extends fb.ObjectBuilder {
-  final PCEParameterRefObjectBuilder? _PARAMETER;
-  final double? _GOAL_VALUE;
-  final pceConditionDirection? _DIRECTION;
-  final double? _GOAL_TOLERANCE;
-  final int? _OCCURRENCE;
-
-  PCEParameterConditionObjectBuilder({
-    PCEParameterRefObjectBuilder? PARAMETER,
-    double? GOAL_VALUE,
-    double? goalValue,
-    pceConditionDirection? DIRECTION,
-    double? GOAL_TOLERANCE,
-    double? goalTolerance,
-    int? OCCURRENCE,
-  })
-      : _PARAMETER = PARAMETER,
-        _GOAL_VALUE = goalValue ?? GOAL_VALUE,
-        _DIRECTION = DIRECTION,
-        _GOAL_TOLERANCE = goalTolerance ?? GOAL_TOLERANCE,
-        _OCCURRENCE = OCCURRENCE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETEROffset = _PARAMETER?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, PARAMETEROffset);
-    fbBuilder.addFloat64(1, _GOAL_VALUE);
-    fbBuilder.addUint8(2, _DIRECTION?.value);
-    fbBuilder.addFloat64(3, _GOAL_TOLERANCE);
-    fbBuilder.addUint32(4, _OCCURRENCE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Propagate until a condition is attained. The propagator itself is NOT named
-///  here: it is a port the caller supplies, per the pluggable-propagation law.
-///  This record carries only the condition, the interval and the tolerances.
-class PCEStopRequest {
-  PCEStopRequest._(this._bc, this._bcOffset);
-  factory PCEStopRequest(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PCEStopRequest> reader = _PCEStopRequestReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  PCEEvaluationContext? get CONTEXT => PCEEvaluationContext.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  State the propagation starts from.
-  FRMStateVector? get INITIAL_STATE => FRMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  FRMStateVector? get initialState => INITIAL_STATE;
-  ///  Conditions evaluated together; the run stops at whichever is attained
-  ///  first in time.
-  List<PCEParameterCondition>? get CONDITIONS => const fb.ListReader<PCEParameterCondition>(PCEParameterCondition.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  pcePropagationDirection get DIRECTION => pcePropagationDirection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 1));
-  ///  Upper bound on the propagated interval. Reaching it without attaining a
-  ///  condition is GOAL_NOT_ATTAINED, never a silent stop.
-  double get MAXIMUM_ELAPSED_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get maximumElapsedSeconds => MAXIMUM_ELAPSED_SECONDS;
-  ///  Convergence bar on the stop epoch. The same scenario run at different
-  ///  step sizes MUST land inside this bar.
-  double get EPOCH_TOLERANCE_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get epochToleranceSeconds => EPOCH_TOLERANCE_SECONDS;
-  ///  Objects propagated in step with the owner and reported at the same stop
-  ///  epoch.
-  List<String>? get SYNCHRONIZED_OBJECT_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 16);
-  List<String>? get synchronizedObjectIds => SYNCHRONIZED_OBJECT_IDS;
-  ///  Parameters to evaluate at the stop epoch, beyond the condition itself.
-  List<PCEParameterRef>? get REPORT_PARAMETERS => const fb.ListReader<PCEParameterRef>(PCEParameterRef.reader).vTableGetNullable(_bc, _bcOffset, 18);
-  List<PCEParameterRef>? get reportParameters => REPORT_PARAMETERS;
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get traceId => TRACE_ID;
-
-  @override
-  String toString() {
-    return 'PCEStopRequest{CONTEXT: ${CONTEXT}, initialState: ${initialState}, CONDITIONS: ${CONDITIONS}, DIRECTION: ${DIRECTION}, maximumElapsedSeconds: ${maximumElapsedSeconds}, epochToleranceSeconds: ${epochToleranceSeconds}, synchronizedObjectIds: ${synchronizedObjectIds}, reportParameters: ${reportParameters}, traceId: ${traceId}}';
-  }
-}
-
-class _PCEStopRequestReader extends fb.TableReader<PCEStopRequest> {
-  const _PCEStopRequestReader();
-
-  @override
-  PCEStopRequest createObject(fb.BufferContext bc, int offset) =>
-    PCEStopRequest._(bc, offset);
-}
-
-class PCEStopRequestBuilder {
-  PCEStopRequestBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(9);
-  }
-
-  int addContextOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialStateOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addConditionsOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDirection(pcePropagationDirection? DIRECTION) {
-    fbBuilder.addUint8(3, DIRECTION?.value);
-    return fbBuilder.offset;
-  }
-  int addMaximumElapsedSeconds(double? MAXIMUM_ELAPSED_SECONDS) {
-    fbBuilder.addFloat64(4, MAXIMUM_ELAPSED_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addEpochToleranceSeconds(double? EPOCH_TOLERANCE_SECONDS) {
-    fbBuilder.addFloat64(5, EPOCH_TOLERANCE_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addSynchronizedObjectIdsOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addReportParametersOffset(int? offset) {
+  int addCustomMaskRadOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addTraceIdOffset(int? offset) {
+  int addIntrudingBodyIdsOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
+  int addIntrudingObjectIdsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addUseApparentBodyRadius(bool? USE_APPARENT_BODY_RADIUS) {
+    fbBuilder.addBool(10, USE_APPARENT_BODY_RADIUS);
+    return fbBuilder.offset;
+  }
+  int addMinimumDurationSeconds(double? MINIMUM_DURATION_SECONDS) {
+    fbBuilder.addFloat64(11, MINIMUM_DURATION_SECONDS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
   }
 }
 
-class PCEStopRequestObjectBuilder extends fb.ObjectBuilder {
-  final PCEEvaluationContextObjectBuilder? _CONTEXT;
-  final FRMStateVectorObjectBuilder? _INITIAL_STATE;
-  final List<PCEParameterConditionObjectBuilder>? _CONDITIONS;
-  final pcePropagationDirection? _DIRECTION;
-  final double? _MAXIMUM_ELAPSED_SECONDS;
-  final double? _EPOCH_TOLERANCE_SECONDS;
-  final List<String>? _SYNCHRONIZED_OBJECT_IDS;
-  final List<PCEParameterRefObjectBuilder>? _REPORT_PARAMETERS;
-  final String? _TRACE_ID;
+class EVLIntrusionConfigurationObjectBuilder extends fb.ObjectBuilder {
+  final String? _SENSOR_ID;
+  final evlFieldOfViewShape? _FIELD_OF_VIEW_SHAPE;
+  final FRMVector3ObjectBuilder? _BORESIGHT;
+  final String? _BORESIGHT_COORDINATE_SYSTEM_NAME;
+  final double? _CONE_HALF_ANGLE_RAD;
+  final double? _RECTANGULAR_HALF_ANGLE_X_RAD;
+  final double? _RECTANGULAR_HALF_ANGLE_Y_RAD;
+  final List<double>? _CUSTOM_MASK_RAD;
+  final List<int>? _INTRUDING_BODY_IDS;
+  final List<String>? _INTRUDING_OBJECT_IDS;
+  final bool? _USE_APPARENT_BODY_RADIUS;
+  final double? _MINIMUM_DURATION_SECONDS;
 
-  PCEStopRequestObjectBuilder({
-    PCEEvaluationContextObjectBuilder? CONTEXT,
-    FRMStateVectorObjectBuilder? INITIAL_STATE,
-    FRMStateVectorObjectBuilder? initialState,
-    List<PCEParameterConditionObjectBuilder>? CONDITIONS,
-    pcePropagationDirection? DIRECTION,
-    double? MAXIMUM_ELAPSED_SECONDS,
-    double? maximumElapsedSeconds,
-    double? EPOCH_TOLERANCE_SECONDS,
-    double? epochToleranceSeconds,
-    List<String>? SYNCHRONIZED_OBJECT_IDS,
-    List<String>? synchronizedObjectIds,
-    List<PCEParameterRefObjectBuilder>? REPORT_PARAMETERS,
-    List<PCEParameterRefObjectBuilder>? reportParameters,
-    String? TRACE_ID,
-    String? traceId,
+  EVLIntrusionConfigurationObjectBuilder({
+    String? SENSOR_ID,
+    String? sensorId,
+    evlFieldOfViewShape? FIELD_OF_VIEW_SHAPE,
+    evlFieldOfViewShape? fieldOfViewShape,
+    FRMVector3ObjectBuilder? BORESIGHT,
+    String? BORESIGHT_COORDINATE_SYSTEM_NAME,
+    String? boresightCoordinateSystemName,
+    double? CONE_HALF_ANGLE_RAD,
+    double? coneHalfAngleRad,
+    double? RECTANGULAR_HALF_ANGLE_X_RAD,
+    double? rectangularHalfAngleXRad,
+    double? RECTANGULAR_HALF_ANGLE_Y_RAD,
+    double? rectangularHalfAngleYRad,
+    List<double>? CUSTOM_MASK_RAD,
+    List<double>? customMaskRad,
+    List<int>? INTRUDING_BODY_IDS,
+    List<int>? intrudingBodyIds,
+    List<String>? INTRUDING_OBJECT_IDS,
+    List<String>? intrudingObjectIds,
+    bool? USE_APPARENT_BODY_RADIUS,
+    bool? useApparentBodyRadius,
+    double? MINIMUM_DURATION_SECONDS,
+    double? minimumDurationSeconds,
   })
-      : _CONTEXT = CONTEXT,
-        _INITIAL_STATE = initialState ?? INITIAL_STATE,
-        _CONDITIONS = CONDITIONS,
-        _DIRECTION = DIRECTION,
-        _MAXIMUM_ELAPSED_SECONDS = maximumElapsedSeconds ?? MAXIMUM_ELAPSED_SECONDS,
-        _EPOCH_TOLERANCE_SECONDS = epochToleranceSeconds ?? EPOCH_TOLERANCE_SECONDS,
-        _SYNCHRONIZED_OBJECT_IDS = synchronizedObjectIds ?? SYNCHRONIZED_OBJECT_IDS,
-        _REPORT_PARAMETERS = reportParameters ?? REPORT_PARAMETERS,
-        _TRACE_ID = traceId ?? TRACE_ID;
+      : _SENSOR_ID = sensorId ?? SENSOR_ID,
+        _FIELD_OF_VIEW_SHAPE = fieldOfViewShape ?? FIELD_OF_VIEW_SHAPE,
+        _BORESIGHT = BORESIGHT,
+        _BORESIGHT_COORDINATE_SYSTEM_NAME = boresightCoordinateSystemName ?? BORESIGHT_COORDINATE_SYSTEM_NAME,
+        _CONE_HALF_ANGLE_RAD = coneHalfAngleRad ?? CONE_HALF_ANGLE_RAD,
+        _RECTANGULAR_HALF_ANGLE_X_RAD = rectangularHalfAngleXRad ?? RECTANGULAR_HALF_ANGLE_X_RAD,
+        _RECTANGULAR_HALF_ANGLE_Y_RAD = rectangularHalfAngleYRad ?? RECTANGULAR_HALF_ANGLE_Y_RAD,
+        _CUSTOM_MASK_RAD = customMaskRad ?? CUSTOM_MASK_RAD,
+        _INTRUDING_BODY_IDS = intrudingBodyIds ?? INTRUDING_BODY_IDS,
+        _INTRUDING_OBJECT_IDS = intrudingObjectIds ?? INTRUDING_OBJECT_IDS,
+        _USE_APPARENT_BODY_RADIUS = useApparentBodyRadius ?? USE_APPARENT_BODY_RADIUS,
+        _MINIMUM_DURATION_SECONDS = minimumDurationSeconds ?? MINIMUM_DURATION_SECONDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? CONTEXTOffset = _CONTEXT?.getOrCreateOffset(fbBuilder);
-    final int? INITIAL_STATEOffset = _INITIAL_STATE?.getOrCreateOffset(fbBuilder);
-    final int? CONDITIONSOffset = _CONDITIONS == null ? null
-        : fbBuilder.writeList(_CONDITIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? SYNCHRONIZED_OBJECT_IDSOffset = _SYNCHRONIZED_OBJECT_IDS == null ? null
-        : fbBuilder.writeList(_SYNCHRONIZED_OBJECT_IDS!.map(fbBuilder.writeString).toList());
-    final int? REPORT_PARAMETERSOffset = _REPORT_PARAMETERS == null ? null
-        : fbBuilder.writeList(_REPORT_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(9);
-    fbBuilder.addOffset(0, CONTEXTOffset);
-    fbBuilder.addOffset(1, INITIAL_STATEOffset);
-    fbBuilder.addOffset(2, CONDITIONSOffset);
-    fbBuilder.addUint8(3, _DIRECTION?.value);
-    fbBuilder.addFloat64(4, _MAXIMUM_ELAPSED_SECONDS);
-    fbBuilder.addFloat64(5, _EPOCH_TOLERANCE_SECONDS);
-    fbBuilder.addOffset(6, SYNCHRONIZED_OBJECT_IDSOffset);
-    fbBuilder.addOffset(7, REPORT_PARAMETERSOffset);
-    fbBuilder.addOffset(8, TRACE_IDOffset);
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
+    final int? BORESIGHTOffset = _BORESIGHT?.getOrCreateOffset(fbBuilder);
+    final int? BORESIGHT_COORDINATE_SYSTEM_NAMEOffset = _BORESIGHT_COORDINATE_SYSTEM_NAME == null ? null
+        : fbBuilder.writeString(_BORESIGHT_COORDINATE_SYSTEM_NAME!);
+    final int? CUSTOM_MASK_RADOffset = _CUSTOM_MASK_RAD == null ? null
+        : fbBuilder.writeListFloat64(_CUSTOM_MASK_RAD!);
+    final int? INTRUDING_BODY_IDSOffset = _INTRUDING_BODY_IDS == null ? null
+        : fbBuilder.writeListInt32(_INTRUDING_BODY_IDS!);
+    final int? INTRUDING_OBJECT_IDSOffset = _INTRUDING_OBJECT_IDS == null ? null
+        : fbBuilder.writeList(_INTRUDING_OBJECT_IDS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, SENSOR_IDOffset);
+    fbBuilder.addUint8(1, _FIELD_OF_VIEW_SHAPE?.value);
+    fbBuilder.addOffset(2, BORESIGHTOffset);
+    fbBuilder.addOffset(3, BORESIGHT_COORDINATE_SYSTEM_NAMEOffset);
+    fbBuilder.addFloat64(4, _CONE_HALF_ANGLE_RAD);
+    fbBuilder.addFloat64(5, _RECTANGULAR_HALF_ANGLE_X_RAD);
+    fbBuilder.addFloat64(6, _RECTANGULAR_HALF_ANGLE_Y_RAD);
+    fbBuilder.addOffset(7, CUSTOM_MASK_RADOffset);
+    fbBuilder.addOffset(8, INTRUDING_BODY_IDSOffset);
+    fbBuilder.addOffset(9, INTRUDING_OBJECT_IDSOffset);
+    fbBuilder.addBool(10, _USE_APPARENT_BODY_RADIUS);
+    fbBuilder.addFloat64(11, _MINIMUM_DURATION_SECONDS);
     return fbBuilder.endTable();
   }
 
@@ -2620,74 +856,463 @@ class PCEStopRequestObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Where a propagate-to-condition run actually landed.
-class PCEStopReport {
-  PCEStopReport._(this._bc, this._bcOffset);
-  factory PCEStopReport(List<int> bytes) {
+///  Configuration for APSIDES.
+class EVLApsidesConfiguration {
+  EVLApsidesConfiguration._(this._bc, this._bcOffset);
+  factory EVLApsidesConfiguration(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PCEStopReport> reader = _PCEStopReportReader();
+  static const fb.Reader<EVLApsidesConfiguration> reader = _EVLApsidesConfigurationReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  pceResultStatus get STATUS => pceResultStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get errorMessage => ERROR_MESSAGE;
-  ///  Index into PCEStopRequest.CONDITIONS of the condition that stopped the
-  ///  run; negative when none did.
-  int get ATTAINED_CONDITION_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, -1);
-  int get attainedConditionIndex => ATTAINED_CONDITION_INDEX;
-  ///  Which attainment this was, one-based.
-  int get ATTAINED_OCCURRENCE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get attainedOccurrence => ATTAINED_OCCURRENCE;
-  ///  Epoch the run stopped at, ISO 8601.
-  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
-  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
-  ///  Seconds of propagated time from the initial state to EPOCH; negative for
-  ///  a BACKWARD run.
-  double get ELAPSED_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get elapsedSeconds => ELAPSED_SECONDS;
-  ///  State at EPOCH.
-  FRMStateVector? get STATE => FRMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Value the condition parameter actually had at EPOCH.
-  double get ACHIEVED_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get achievedValue => ACHIEVED_VALUE;
-  ///  ACHIEVED_VALUE minus GOAL_VALUE, in the parameter's own unit. This is
-  ///  the residual a consumer gates on; it is NOT assumed to be zero.
-  double get GOAL_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get goalResidual => GOAL_RESIDUAL;
-  ///  States of SYNCHRONIZED_OBJECT_IDS at the same epoch, in that order.
-  List<FRMStateVector>? get SYNCHRONIZED_STATES => const fb.ListReader<FRMStateVector>(FRMStateVector.reader).vTableGetNullable(_bc, _bcOffset, 24);
-  List<FRMStateVector>? get synchronizedStates => SYNCHRONIZED_STATES;
-  ///  Parameters evaluated at the stop epoch.
-  PCEParameterSample? get SAMPLE => PCEParameterSample.reader.vTableGetNullable(_bc, _bcOffset, 26);
-  ///  Root-refinement work actually done, for the step-independence evidence.
-  int get FUNCTION_EVALUATION_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
-  int get functionEvaluationCount => FUNCTION_EVALUATION_COUNT;
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get traceId => TRACE_ID;
+  ///  Ephemeris body code the radius is measured from. The apsis is the root
+  ///  of the RADIAL_VELOCITY parameter about this body, NOT an extremum of
+  ///  geodetic height; the two differ by tens of degrees of true anomaly on an
+  ///  oblate body.
+  int get CENTRAL_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get centralBodyId => CENTRAL_BODY_ID;
+  bool get REPORT_APOAPSIS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, true);
+  bool get reportApoapsis => REPORT_APOAPSIS;
+  bool get REPORT_PERIAPSIS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, true);
+  bool get reportPeriapsis => REPORT_PERIAPSIS;
 
   @override
   String toString() {
-    return 'PCEStopReport{STATUS: ${STATUS}, errorMessage: ${errorMessage}, attainedConditionIndex: ${attainedConditionIndex}, attainedOccurrence: ${attainedOccurrence}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, elapsedSeconds: ${elapsedSeconds}, STATE: ${STATE}, achievedValue: ${achievedValue}, goalResidual: ${goalResidual}, synchronizedStates: ${synchronizedStates}, SAMPLE: ${SAMPLE}, functionEvaluationCount: ${functionEvaluationCount}, traceId: ${traceId}}';
+    return 'EVLApsidesConfiguration{centralBodyId: ${centralBodyId}, reportApoapsis: ${reportApoapsis}, reportPeriapsis: ${reportPeriapsis}}';
   }
 }
 
-class _PCEStopReportReader extends fb.TableReader<PCEStopReport> {
-  const _PCEStopReportReader();
+class _EVLApsidesConfigurationReader extends fb.TableReader<EVLApsidesConfiguration> {
+  const _EVLApsidesConfigurationReader();
 
   @override
-  PCEStopReport createObject(fb.BufferContext bc, int offset) =>
-    PCEStopReport._(bc, offset);
+  EVLApsidesConfiguration createObject(fb.BufferContext bc, int offset) =>
+    EVLApsidesConfiguration._(bc, offset);
 }
 
-class PCEStopReportBuilder {
-  PCEStopReportBuilder(this.fbBuilder);
+class EVLApsidesConfigurationBuilder {
+  EVLApsidesConfigurationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addCentralBodyId(int? CENTRAL_BODY_ID) {
+    fbBuilder.addInt32(0, CENTRAL_BODY_ID);
+    return fbBuilder.offset;
+  }
+  int addReportApoapsis(bool? REPORT_APOAPSIS) {
+    fbBuilder.addBool(1, REPORT_APOAPSIS);
+    return fbBuilder.offset;
+  }
+  int addReportPeriapsis(bool? REPORT_PERIAPSIS) {
+    fbBuilder.addBool(2, REPORT_PERIAPSIS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EVLApsidesConfigurationObjectBuilder extends fb.ObjectBuilder {
+  final int? _CENTRAL_BODY_ID;
+  final bool? _REPORT_APOAPSIS;
+  final bool? _REPORT_PERIAPSIS;
+
+  EVLApsidesConfigurationObjectBuilder({
+    int? CENTRAL_BODY_ID,
+    int? centralBodyId,
+    bool? REPORT_APOAPSIS,
+    bool? reportApoapsis,
+    bool? REPORT_PERIAPSIS,
+    bool? reportPeriapsis,
+  })
+      : _CENTRAL_BODY_ID = centralBodyId ?? CENTRAL_BODY_ID,
+        _REPORT_APOAPSIS = reportApoapsis ?? REPORT_APOAPSIS,
+        _REPORT_PERIAPSIS = reportPeriapsis ?? REPORT_PERIAPSIS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addInt32(0, _CENTRAL_BODY_ID);
+    fbBuilder.addBool(1, _REPORT_APOAPSIS);
+    fbBuilder.addBool(2, _REPORT_PERIAPSIS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Configuration for NODE_CROSSING.
+class EVLNodeCrossingConfiguration {
+  EVLNodeCrossingConfiguration._(this._bc, this._bcOffset);
+  factory EVLNodeCrossingConfiguration(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EVLNodeCrossingConfiguration> reader = _EVLNodeCrossingConfigurationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Coordinate system whose reference plane defines the node line; resolves
+  ///  against RFMCoordinateSystem.NAME on the request context.
+  String? get REFERENCE_COORDINATE_SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get referenceCoordinateSystemName => REFERENCE_COORDINATE_SYSTEM_NAME;
+  bool get REPORT_ASCENDING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, true);
+  bool get reportAscending => REPORT_ASCENDING;
+  bool get REPORT_DESCENDING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, true);
+  bool get reportDescending => REPORT_DESCENDING;
+
+  @override
+  String toString() {
+    return 'EVLNodeCrossingConfiguration{referenceCoordinateSystemName: ${referenceCoordinateSystemName}, reportAscending: ${reportAscending}, reportDescending: ${reportDescending}}';
+  }
+}
+
+class _EVLNodeCrossingConfigurationReader extends fb.TableReader<EVLNodeCrossingConfiguration> {
+  const _EVLNodeCrossingConfigurationReader();
+
+  @override
+  EVLNodeCrossingConfiguration createObject(fb.BufferContext bc, int offset) =>
+    EVLNodeCrossingConfiguration._(bc, offset);
+}
+
+class EVLNodeCrossingConfigurationBuilder {
+  EVLNodeCrossingConfigurationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addReferenceCoordinateSystemNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addReportAscending(bool? REPORT_ASCENDING) {
+    fbBuilder.addBool(1, REPORT_ASCENDING);
+    return fbBuilder.offset;
+  }
+  int addReportDescending(bool? REPORT_DESCENDING) {
+    fbBuilder.addBool(2, REPORT_DESCENDING);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EVLNodeCrossingConfigurationObjectBuilder extends fb.ObjectBuilder {
+  final String? _REFERENCE_COORDINATE_SYSTEM_NAME;
+  final bool? _REPORT_ASCENDING;
+  final bool? _REPORT_DESCENDING;
+
+  EVLNodeCrossingConfigurationObjectBuilder({
+    String? REFERENCE_COORDINATE_SYSTEM_NAME,
+    String? referenceCoordinateSystemName,
+    bool? REPORT_ASCENDING,
+    bool? reportAscending,
+    bool? REPORT_DESCENDING,
+    bool? reportDescending,
+  })
+      : _REFERENCE_COORDINATE_SYSTEM_NAME = referenceCoordinateSystemName ?? REFERENCE_COORDINATE_SYSTEM_NAME,
+        _REPORT_ASCENDING = reportAscending ?? REPORT_ASCENDING,
+        _REPORT_DESCENDING = reportDescending ?? REPORT_DESCENDING;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REFERENCE_COORDINATE_SYSTEM_NAMEOffset = _REFERENCE_COORDINATE_SYSTEM_NAME == null ? null
+        : fbBuilder.writeString(_REFERENCE_COORDINATE_SYSTEM_NAME!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, REFERENCE_COORDINATE_SYSTEM_NAMEOffset);
+    fbBuilder.addBool(1, _REPORT_ASCENDING);
+    fbBuilder.addBool(2, _REPORT_DESCENDING);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Configuration for PARAMETER_CONDITION, the generic locator.
+class EVLParameterConditionConfiguration {
+  EVLParameterConditionConfiguration._(this._bc, this._bcOffset);
+  factory EVLParameterConditionConfiguration(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EVLParameterConditionConfiguration> reader = _EVLParameterConditionConfigurationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Conditions on $PCE catalog parameters. The predicate vocabulary is
+  ///  PCEParameterCondition and is NOT restated here.
+  List<PCEParameterCondition>? get CONDITIONS => const fb.ListReader<PCEParameterCondition>(PCEParameterCondition.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  True reports the interval BETWEEN a satisfying crossing and the next
+  ///  unsatisfying one; false reports each crossing as an instantaneous event
+  ///  with equal start and stop epochs.
+  bool get REPORT_AS_INTERVAL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, true);
+  bool get reportAsInterval => REPORT_AS_INTERVAL;
+  double get MINIMUM_DURATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get minimumDurationSeconds => MINIMUM_DURATION_SECONDS;
+
+  @override
+  String toString() {
+    return 'EVLParameterConditionConfiguration{CONDITIONS: ${CONDITIONS}, reportAsInterval: ${reportAsInterval}, minimumDurationSeconds: ${minimumDurationSeconds}}';
+  }
+}
+
+class _EVLParameterConditionConfigurationReader extends fb.TableReader<EVLParameterConditionConfiguration> {
+  const _EVLParameterConditionConfigurationReader();
+
+  @override
+  EVLParameterConditionConfiguration createObject(fb.BufferContext bc, int offset) =>
+    EVLParameterConditionConfiguration._(bc, offset);
+}
+
+class EVLParameterConditionConfigurationBuilder {
+  EVLParameterConditionConfigurationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addConditionsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addReportAsInterval(bool? REPORT_AS_INTERVAL) {
+    fbBuilder.addBool(1, REPORT_AS_INTERVAL);
+    return fbBuilder.offset;
+  }
+  int addMinimumDurationSeconds(double? MINIMUM_DURATION_SECONDS) {
+    fbBuilder.addFloat64(2, MINIMUM_DURATION_SECONDS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EVLParameterConditionConfigurationObjectBuilder extends fb.ObjectBuilder {
+  final List<PCEParameterConditionObjectBuilder>? _CONDITIONS;
+  final bool? _REPORT_AS_INTERVAL;
+  final double? _MINIMUM_DURATION_SECONDS;
+
+  EVLParameterConditionConfigurationObjectBuilder({
+    List<PCEParameterConditionObjectBuilder>? CONDITIONS,
+    bool? REPORT_AS_INTERVAL,
+    bool? reportAsInterval,
+    double? MINIMUM_DURATION_SECONDS,
+    double? minimumDurationSeconds,
+  })
+      : _CONDITIONS = CONDITIONS,
+        _REPORT_AS_INTERVAL = reportAsInterval ?? REPORT_AS_INTERVAL,
+        _MINIMUM_DURATION_SECONDS = minimumDurationSeconds ?? MINIMUM_DURATION_SECONDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CONDITIONSOffset = _CONDITIONS == null ? null
+        : fbBuilder.writeList(_CONDITIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, CONDITIONSOffset);
+    fbBuilder.addBool(1, _REPORT_AS_INTERVAL);
+    fbBuilder.addFloat64(2, _MINIMUM_DURATION_SECONDS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Parameter values captured at one instant inside an event.
+class EVLEventSample {
+  EVLEventSample._(this._bc, this._bcOffset);
+  factory EVLEventSample(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EVLEventSample> reader = _EVLEventSampleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  evlSamplePoint get POINT => evlSamplePoint.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  PCEParameterSample? get SAMPLE => PCEParameterSample.reader.vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'EVLEventSample{POINT: ${POINT}, SAMPLE: ${SAMPLE}}';
+  }
+}
+
+class _EVLEventSampleReader extends fb.TableReader<EVLEventSample> {
+  const _EVLEventSampleReader();
+
+  @override
+  EVLEventSample createObject(fb.BufferContext bc, int offset) =>
+    EVLEventSample._(bc, offset);
+}
+
+class EVLEventSampleBuilder {
+  EVLEventSampleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addPoint(evlSamplePoint? POINT) {
+    fbBuilder.addUint8(0, POINT?.value);
+    return fbBuilder.offset;
+  }
+  int addSampleOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EVLEventSampleObjectBuilder extends fb.ObjectBuilder {
+  final evlSamplePoint? _POINT;
+  final PCEParameterSampleObjectBuilder? _SAMPLE;
+
+  EVLEventSampleObjectBuilder({
+    evlSamplePoint? POINT,
+    PCEParameterSampleObjectBuilder? SAMPLE,
+  })
+      : _POINT = POINT,
+        _SAMPLE = SAMPLE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SAMPLEOffset = _SAMPLE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addUint8(0, _POINT?.value);
+    fbBuilder.addOffset(1, SAMPLEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One located event. An instantaneous event has STOP_EPOCH equal to
+///  START_EPOCH and DURATION_SECONDS equal to 0.
+class EVLEvent {
+  EVLEvent._(this._bc, this._bcOffset);
+  factory EVLEvent(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EVLEvent> reader = _EVLEventReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  evlEventType get EVENT_TYPE => evlEventType.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  evlEventType get eventType => EVENT_TYPE;
+  ///  Entry epoch, ISO 8601.
+  String? get START_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get startEpoch => START_EPOCH;
+  ///  Exit epoch, ISO 8601.
+  String? get STOP_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get stopEpoch => STOP_EPOCH;
+  ///  Time system of the epochs, named by the $TIM timingStandard member name.
+  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
+  ///  STOP_EPOCH minus START_EPOCH in seconds. Carried because it is the
+  ///  reported quantity of an event report and MUST agree with the epochs.
+  double get DURATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get durationSeconds => DURATION_SECONDS;
+  ///  The object the event happened to.
+  String? get TARGET_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get targetObjectId => TARGET_OBJECT_ID;
+  ///  Ephemeris body code of the body that occulted or intruded, when one did.
+  int get OCCULTING_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get occultingBodyId => OCCULTING_BODY_ID;
+  ///  Identifier of the observing site or sensor, when the class has one.
+  String? get OBSERVER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get observerId => OBSERVER_ID;
+  ///  Identifier of the observed body or object, when the class has one.
+  String? get OBSERVED_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get observedObjectId => OBSERVED_OBJECT_ID;
+  ///  Epoch of the event's extremum, ISO 8601: deepest obscuration, peak
+  ///  elevation, closest approach. Absent when the class has no extremum.
+  String? get EXTREMUM_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get extremumEpoch => EXTREMUM_EPOCH;
+  ///  Value at EXTREMUM_EPOCH, in the unit of EXTREMUM_PARAMETER.
+  double get EXTREMUM_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get extremumValue => EXTREMUM_VALUE;
+  ///  Which catalog parameter EXTREMUM_VALUE is a value of.
+  pceParameter get EXTREMUM_PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 26, 0));
+  pceParameter get extremumParameter => EXTREMUM_PARAMETER;
+  ///  Index into EVLEventLocationRequest.PARAMETER_CONDITION_CONFIGURATION's
+  ///  CONDITIONS for a generic event; negative for every other class.
+  int get CONDITION_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 28, -1);
+  int get conditionIndex => CONDITION_INDEX;
+  ///  Requested parameters, evaluated at the instants of this event.
+  List<EVLEventSample>? get SAMPLES => const fb.ListReader<EVLEventSample>(EVLEventSample.reader).vTableGetNullable(_bc, _bcOffset, 30);
+
+  @override
+  String toString() {
+    return 'EVLEvent{eventType: ${eventType}, startEpoch: ${startEpoch}, stopEpoch: ${stopEpoch}, epochTimeSystem: ${epochTimeSystem}, durationSeconds: ${durationSeconds}, targetObjectId: ${targetObjectId}, occultingBodyId: ${occultingBodyId}, observerId: ${observerId}, observedObjectId: ${observedObjectId}, extremumEpoch: ${extremumEpoch}, extremumValue: ${extremumValue}, extremumParameter: ${extremumParameter}, conditionIndex: ${conditionIndex}, SAMPLES: ${SAMPLES}}';
+  }
+}
+
+class _EVLEventReader extends fb.TableReader<EVLEvent> {
+  const _EVLEventReader();
+
+  @override
+  EVLEvent createObject(fb.BufferContext bc, int offset) =>
+    EVLEvent._(bc, offset);
+}
+
+class EVLEventBuilder {
+  EVLEventBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -2695,59 +1320,59 @@ class PCEStopReportBuilder {
     fbBuilder.startTable(14);
   }
 
-  int addStatus(pceResultStatus? STATUS) {
-    fbBuilder.addUint8(0, STATUS?.value);
+  int addEventType(evlEventType? EVENT_TYPE) {
+    fbBuilder.addUint8(0, EVENT_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addErrorMessageOffset(int? offset) {
+  int addStartEpochOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addAttainedConditionIndex(int? ATTAINED_CONDITION_INDEX) {
-    fbBuilder.addInt32(2, ATTAINED_CONDITION_INDEX);
-    return fbBuilder.offset;
-  }
-  int addAttainedOccurrence(int? ATTAINED_OCCURRENCE) {
-    fbBuilder.addUint32(3, ATTAINED_OCCURRENCE);
-    return fbBuilder.offset;
-  }
-  int addEpochOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addStopEpochOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
   int addEpochTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDurationSeconds(double? DURATION_SECONDS) {
+    fbBuilder.addFloat64(4, DURATION_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addTargetObjectIdOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addElapsedSeconds(double? ELAPSED_SECONDS) {
-    fbBuilder.addFloat64(6, ELAPSED_SECONDS);
+  int addOccultingBodyId(int? OCCULTING_BODY_ID) {
+    fbBuilder.addInt32(6, OCCULTING_BODY_ID);
     return fbBuilder.offset;
   }
-  int addStateOffset(int? offset) {
+  int addObserverIdOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addAchievedValue(double? ACHIEVED_VALUE) {
-    fbBuilder.addFloat64(8, ACHIEVED_VALUE);
+  int addObservedObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addGoalResidual(double? GOAL_RESIDUAL) {
-    fbBuilder.addFloat64(9, GOAL_RESIDUAL);
+  int addExtremumEpochOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addSynchronizedStatesOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+  int addExtremumValue(double? EXTREMUM_VALUE) {
+    fbBuilder.addFloat64(10, EXTREMUM_VALUE);
     return fbBuilder.offset;
   }
-  int addSampleOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
+  int addExtremumParameter(pceParameter? EXTREMUM_PARAMETER) {
+    fbBuilder.addUint16(11, EXTREMUM_PARAMETER?.value);
     return fbBuilder.offset;
   }
-  int addFunctionEvaluationCount(int? FUNCTION_EVALUATION_COUNT) {
-    fbBuilder.addUint32(12, FUNCTION_EVALUATION_COUNT);
+  int addConditionIndex(int? CONDITION_INDEX) {
+    fbBuilder.addInt32(12, CONDITION_INDEX);
     return fbBuilder.offset;
   }
-  int addTraceIdOffset(int? offset) {
+  int addSamplesOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
@@ -2757,93 +1382,100 @@ class PCEStopReportBuilder {
   }
 }
 
-class PCEStopReportObjectBuilder extends fb.ObjectBuilder {
-  final pceResultStatus? _STATUS;
-  final String? _ERROR_MESSAGE;
-  final int? _ATTAINED_CONDITION_INDEX;
-  final int? _ATTAINED_OCCURRENCE;
-  final String? _EPOCH;
+class EVLEventObjectBuilder extends fb.ObjectBuilder {
+  final evlEventType? _EVENT_TYPE;
+  final String? _START_EPOCH;
+  final String? _STOP_EPOCH;
   final String? _EPOCH_TIME_SYSTEM;
-  final double? _ELAPSED_SECONDS;
-  final FRMStateVectorObjectBuilder? _STATE;
-  final double? _ACHIEVED_VALUE;
-  final double? _GOAL_RESIDUAL;
-  final List<FRMStateVectorObjectBuilder>? _SYNCHRONIZED_STATES;
-  final PCEParameterSampleObjectBuilder? _SAMPLE;
-  final int? _FUNCTION_EVALUATION_COUNT;
-  final String? _TRACE_ID;
+  final double? _DURATION_SECONDS;
+  final String? _TARGET_OBJECT_ID;
+  final int? _OCCULTING_BODY_ID;
+  final String? _OBSERVER_ID;
+  final String? _OBSERVED_OBJECT_ID;
+  final String? _EXTREMUM_EPOCH;
+  final double? _EXTREMUM_VALUE;
+  final pceParameter? _EXTREMUM_PARAMETER;
+  final int? _CONDITION_INDEX;
+  final List<EVLEventSampleObjectBuilder>? _SAMPLES;
 
-  PCEStopReportObjectBuilder({
-    pceResultStatus? STATUS,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
-    int? ATTAINED_CONDITION_INDEX,
-    int? attainedConditionIndex,
-    int? ATTAINED_OCCURRENCE,
-    int? attainedOccurrence,
-    String? EPOCH,
+  EVLEventObjectBuilder({
+    evlEventType? EVENT_TYPE,
+    evlEventType? eventType,
+    String? START_EPOCH,
+    String? startEpoch,
+    String? STOP_EPOCH,
+    String? stopEpoch,
     String? EPOCH_TIME_SYSTEM,
     String? epochTimeSystem,
-    double? ELAPSED_SECONDS,
-    double? elapsedSeconds,
-    FRMStateVectorObjectBuilder? STATE,
-    double? ACHIEVED_VALUE,
-    double? achievedValue,
-    double? GOAL_RESIDUAL,
-    double? goalResidual,
-    List<FRMStateVectorObjectBuilder>? SYNCHRONIZED_STATES,
-    List<FRMStateVectorObjectBuilder>? synchronizedStates,
-    PCEParameterSampleObjectBuilder? SAMPLE,
-    int? FUNCTION_EVALUATION_COUNT,
-    int? functionEvaluationCount,
-    String? TRACE_ID,
-    String? traceId,
+    double? DURATION_SECONDS,
+    double? durationSeconds,
+    String? TARGET_OBJECT_ID,
+    String? targetObjectId,
+    int? OCCULTING_BODY_ID,
+    int? occultingBodyId,
+    String? OBSERVER_ID,
+    String? observerId,
+    String? OBSERVED_OBJECT_ID,
+    String? observedObjectId,
+    String? EXTREMUM_EPOCH,
+    String? extremumEpoch,
+    double? EXTREMUM_VALUE,
+    double? extremumValue,
+    pceParameter? EXTREMUM_PARAMETER,
+    pceParameter? extremumParameter,
+    int? CONDITION_INDEX,
+    int? conditionIndex,
+    List<EVLEventSampleObjectBuilder>? SAMPLES,
   })
-      : _STATUS = STATUS,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
-        _ATTAINED_CONDITION_INDEX = attainedConditionIndex ?? ATTAINED_CONDITION_INDEX,
-        _ATTAINED_OCCURRENCE = attainedOccurrence ?? ATTAINED_OCCURRENCE,
-        _EPOCH = EPOCH,
+      : _EVENT_TYPE = eventType ?? EVENT_TYPE,
+        _START_EPOCH = startEpoch ?? START_EPOCH,
+        _STOP_EPOCH = stopEpoch ?? STOP_EPOCH,
         _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
-        _ELAPSED_SECONDS = elapsedSeconds ?? ELAPSED_SECONDS,
-        _STATE = STATE,
-        _ACHIEVED_VALUE = achievedValue ?? ACHIEVED_VALUE,
-        _GOAL_RESIDUAL = goalResidual ?? GOAL_RESIDUAL,
-        _SYNCHRONIZED_STATES = synchronizedStates ?? SYNCHRONIZED_STATES,
-        _SAMPLE = SAMPLE,
-        _FUNCTION_EVALUATION_COUNT = functionEvaluationCount ?? FUNCTION_EVALUATION_COUNT,
-        _TRACE_ID = traceId ?? TRACE_ID;
+        _DURATION_SECONDS = durationSeconds ?? DURATION_SECONDS,
+        _TARGET_OBJECT_ID = targetObjectId ?? TARGET_OBJECT_ID,
+        _OCCULTING_BODY_ID = occultingBodyId ?? OCCULTING_BODY_ID,
+        _OBSERVER_ID = observerId ?? OBSERVER_ID,
+        _OBSERVED_OBJECT_ID = observedObjectId ?? OBSERVED_OBJECT_ID,
+        _EXTREMUM_EPOCH = extremumEpoch ?? EXTREMUM_EPOCH,
+        _EXTREMUM_VALUE = extremumValue ?? EXTREMUM_VALUE,
+        _EXTREMUM_PARAMETER = extremumParameter ?? EXTREMUM_PARAMETER,
+        _CONDITION_INDEX = conditionIndex ?? CONDITION_INDEX,
+        _SAMPLES = SAMPLES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    final int? EPOCHOffset = _EPOCH == null ? null
-        : fbBuilder.writeString(_EPOCH!);
+    final int? START_EPOCHOffset = _START_EPOCH == null ? null
+        : fbBuilder.writeString(_START_EPOCH!);
+    final int? STOP_EPOCHOffset = _STOP_EPOCH == null ? null
+        : fbBuilder.writeString(_STOP_EPOCH!);
     final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
         : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
-    final int? STATEOffset = _STATE?.getOrCreateOffset(fbBuilder);
-    final int? SYNCHRONIZED_STATESOffset = _SYNCHRONIZED_STATES == null ? null
-        : fbBuilder.writeList(_SYNCHRONIZED_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? SAMPLEOffset = _SAMPLE?.getOrCreateOffset(fbBuilder);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
+    final int? TARGET_OBJECT_IDOffset = _TARGET_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_TARGET_OBJECT_ID!);
+    final int? OBSERVER_IDOffset = _OBSERVER_ID == null ? null
+        : fbBuilder.writeString(_OBSERVER_ID!);
+    final int? OBSERVED_OBJECT_IDOffset = _OBSERVED_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBSERVED_OBJECT_ID!);
+    final int? EXTREMUM_EPOCHOffset = _EXTREMUM_EPOCH == null ? null
+        : fbBuilder.writeString(_EXTREMUM_EPOCH!);
+    final int? SAMPLESOffset = _SAMPLES == null ? null
+        : fbBuilder.writeList(_SAMPLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     fbBuilder.startTable(14);
-    fbBuilder.addUint8(0, _STATUS?.value);
-    fbBuilder.addOffset(1, ERROR_MESSAGEOffset);
-    fbBuilder.addInt32(2, _ATTAINED_CONDITION_INDEX);
-    fbBuilder.addUint32(3, _ATTAINED_OCCURRENCE);
-    fbBuilder.addOffset(4, EPOCHOffset);
-    fbBuilder.addOffset(5, EPOCH_TIME_SYSTEMOffset);
-    fbBuilder.addFloat64(6, _ELAPSED_SECONDS);
-    fbBuilder.addOffset(7, STATEOffset);
-    fbBuilder.addFloat64(8, _ACHIEVED_VALUE);
-    fbBuilder.addFloat64(9, _GOAL_RESIDUAL);
-    fbBuilder.addOffset(10, SYNCHRONIZED_STATESOffset);
-    fbBuilder.addOffset(11, SAMPLEOffset);
-    fbBuilder.addUint32(12, _FUNCTION_EVALUATION_COUNT);
-    fbBuilder.addOffset(13, TRACE_IDOffset);
+    fbBuilder.addUint8(0, _EVENT_TYPE?.value);
+    fbBuilder.addOffset(1, START_EPOCHOffset);
+    fbBuilder.addOffset(2, STOP_EPOCHOffset);
+    fbBuilder.addOffset(3, EPOCH_TIME_SYSTEMOffset);
+    fbBuilder.addFloat64(4, _DURATION_SECONDS);
+    fbBuilder.addOffset(5, TARGET_OBJECT_IDOffset);
+    fbBuilder.addInt32(6, _OCCULTING_BODY_ID);
+    fbBuilder.addOffset(7, OBSERVER_IDOffset);
+    fbBuilder.addOffset(8, OBSERVED_OBJECT_IDOffset);
+    fbBuilder.addOffset(9, EXTREMUM_EPOCHOffset);
+    fbBuilder.addFloat64(10, _EXTREMUM_VALUE);
+    fbBuilder.addUint16(11, _EXTREMUM_PARAMETER?.value);
+    fbBuilder.addInt32(12, _CONDITION_INDEX);
+    fbBuilder.addOffset(13, SAMPLESOffset);
     return fbBuilder.endTable();
   }
 
@@ -2855,83 +1487,158 @@ class PCEStopReportObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Parameter Catalog and Evaluation
-///
-///  The named calculation parameters an analysis resolves through: their owner
-///  class, unit, data type, frame dependency and per-publisher availability
-///  (CATALOG), a request and result for evaluating named parameters on states
-///  at epochs in a stated coordinate system (EVALUATION_REQUEST /
-///  EVALUATION_RESULT), and propagate-to-condition, which is a predicate on one
-///  of those same names rather than a vocabulary of its own (STOP_REQUEST /
-///  STOP_REPORT). Stopping conditions, targeting goals, report columns and plot
-///  series all resolve names here, so a name means one thing everywhere.
-///
-///  Angles are radians, lengths metres, durations seconds, masses kilograms.
-///  A buffer carries the members its exchange needs; a catalog publication and
-///  an evaluation exchange are both complete $PCE records.
-class PCE {
-  PCE._(this._bc, this._bcOffset);
-  factory PCE(List<int> bytes) {
+///  Locate events of one class over one interval.
+class EVLEventLocationRequest {
+  EVLEventLocationRequest._(this._bc, this._bcOffset);
+  factory EVLEventLocationRequest(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PCE> reader = _PCEReader();
+  static const fb.Reader<EVLEventLocationRequest> reader = _EVLEventLocationRequestReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  PCEParameterCatalog? get CATALOG => PCEParameterCatalog.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  PCEEvaluationRequest? get EVALUATION_REQUEST => PCEEvaluationRequest.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  PCEEvaluationRequest? get evaluationRequest => EVALUATION_REQUEST;
-  PCEEvaluationResult? get EVALUATION_RESULT => PCEEvaluationResult.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  PCEEvaluationResult? get evaluationResult => EVALUATION_RESULT;
-  PCEStopRequest? get STOP_REQUEST => PCEStopRequest.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  PCEStopRequest? get stopRequest => STOP_REQUEST;
-  PCEStopReport? get STOP_REPORT => PCEStopReport.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  PCEStopReport? get stopReport => STOP_REPORT;
+  evlLocatorClass get LOCATOR_CLASS => evlLocatorClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  evlLocatorClass get locatorClass => LOCATOR_CLASS;
+  ///  Object the events are located for.
+  String? get TARGET_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get targetObjectId => TARGET_OBJECT_ID;
+  ///  Bodies, coordinate systems, epoch reference and Earth-orientation data
+  ///  set the geometry is evaluated in. The state source itself is a port the
+  ///  caller supplies and is NOT named here.
+  PCEEvaluationContext? get CONTEXT => PCEEvaluationContext.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Interval to search, ISO 8601.
+  String? get SCAN_START_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get scanStartEpoch => SCAN_START_EPOCH;
+  String? get SCAN_STOP_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get scanStopEpoch => SCAN_STOP_EPOCH;
+  ///  Time system of the interval, named by the $TIM timingStandard member
+  ///  name.
+  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
+  ///  Coarse step the event function is sampled at before refinement. A
+  ///  provider MAY choose its own step when this is absent, and the located
+  ///  epochs MUST NOT depend on it beyond REFINEMENT_TOLERANCE_SECONDS.
+  double get SCAN_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get scanStepSeconds => SCAN_STEP_SECONDS;
+  ///  Convergence bar on a located epoch. A provider that cannot meet it
+  ///  returns ROOT_REFINEMENT_FAILED.
+  double get REFINEMENT_TOLERANCE_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get refinementToleranceSeconds => REFINEMENT_TOLERANCE_SECONDS;
+  ///  Upper bound on reported events. 0 means no bound.
+  int get MAXIMUM_EVENTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get maximumEvents => MAXIMUM_EVENTS;
+  ///  Parameters to evaluate at each event's instants.
+  List<PCEParameterRef>? get REPORT_PARAMETERS => const fb.ListReader<PCEParameterRef>(PCEParameterRef.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  List<PCEParameterRef>? get reportParameters => REPORT_PARAMETERS;
+  ///  Exactly the configuration matching LOCATOR_CLASS is present; any other
+  ///  combination is MISSING_CONFIGURATION.
+  EVLEclipseConfiguration? get ECLIPSE_CONFIGURATION => EVLEclipseConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  EVLEclipseConfiguration? get eclipseConfiguration => ECLIPSE_CONFIGURATION;
+  EVLContactConfiguration? get CONTACT_CONFIGURATION => EVLContactConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  EVLContactConfiguration? get contactConfiguration => CONTACT_CONFIGURATION;
+  EVLIntrusionConfiguration? get INTRUSION_CONFIGURATION => EVLIntrusionConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  EVLIntrusionConfiguration? get intrusionConfiguration => INTRUSION_CONFIGURATION;
+  EVLApsidesConfiguration? get APSIDES_CONFIGURATION => EVLApsidesConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  EVLApsidesConfiguration? get apsidesConfiguration => APSIDES_CONFIGURATION;
+  EVLNodeCrossingConfiguration? get NODE_CROSSING_CONFIGURATION => EVLNodeCrossingConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  EVLNodeCrossingConfiguration? get nodeCrossingConfiguration => NODE_CROSSING_CONFIGURATION;
+  EVLParameterConditionConfiguration? get PARAMETER_CONDITION_CONFIGURATION => EVLParameterConditionConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 34);
+  EVLParameterConditionConfiguration? get parameterConditionConfiguration => PARAMETER_CONDITION_CONFIGURATION;
+  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get traceId => TRACE_ID;
 
   @override
   String toString() {
-    return 'PCE{CATALOG: ${CATALOG}, evaluationRequest: ${evaluationRequest}, evaluationResult: ${evaluationResult}, stopRequest: ${stopRequest}, stopReport: ${stopReport}}';
+    return 'EVLEventLocationRequest{locatorClass: ${locatorClass}, targetObjectId: ${targetObjectId}, CONTEXT: ${CONTEXT}, scanStartEpoch: ${scanStartEpoch}, scanStopEpoch: ${scanStopEpoch}, epochTimeSystem: ${epochTimeSystem}, scanStepSeconds: ${scanStepSeconds}, refinementToleranceSeconds: ${refinementToleranceSeconds}, maximumEvents: ${maximumEvents}, reportParameters: ${reportParameters}, eclipseConfiguration: ${eclipseConfiguration}, contactConfiguration: ${contactConfiguration}, intrusionConfiguration: ${intrusionConfiguration}, apsidesConfiguration: ${apsidesConfiguration}, nodeCrossingConfiguration: ${nodeCrossingConfiguration}, parameterConditionConfiguration: ${parameterConditionConfiguration}, traceId: ${traceId}}';
   }
 }
 
-class _PCEReader extends fb.TableReader<PCE> {
-  const _PCEReader();
+class _EVLEventLocationRequestReader extends fb.TableReader<EVLEventLocationRequest> {
+  const _EVLEventLocationRequestReader();
 
   @override
-  PCE createObject(fb.BufferContext bc, int offset) =>
-    PCE._(bc, offset);
+  EVLEventLocationRequest createObject(fb.BufferContext bc, int offset) =>
+    EVLEventLocationRequest._(bc, offset);
 }
 
-class PCEBuilder {
-  PCEBuilder(this.fbBuilder);
+class EVLEventLocationRequestBuilder {
+  EVLEventLocationRequestBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(17);
   }
 
-  int addCatalogOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addLocatorClass(evlLocatorClass? LOCATOR_CLASS) {
+    fbBuilder.addUint8(0, LOCATOR_CLASS?.value);
     return fbBuilder.offset;
   }
-  int addEvaluationRequestOffset(int? offset) {
+  int addTargetObjectIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addEvaluationResultOffset(int? offset) {
+  int addContextOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addStopRequestOffset(int? offset) {
+  int addScanStartEpochOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addStopReportOffset(int? offset) {
+  int addScanStopEpochOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addScanStepSeconds(double? SCAN_STEP_SECONDS) {
+    fbBuilder.addFloat64(6, SCAN_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addRefinementToleranceSeconds(double? REFINEMENT_TOLERANCE_SECONDS) {
+    fbBuilder.addFloat64(7, REFINEMENT_TOLERANCE_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addMaximumEvents(int? MAXIMUM_EVENTS) {
+    fbBuilder.addUint32(8, MAXIMUM_EVENTS);
+    return fbBuilder.offset;
+  }
+  int addReportParametersOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addEclipseConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addContactConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addIntrusionConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addApsidesConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addNodeCrossingConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addParameterConditionConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addTraceIdOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
 
@@ -2940,44 +1647,421 @@ class PCEBuilder {
   }
 }
 
-class PCEObjectBuilder extends fb.ObjectBuilder {
-  final PCEParameterCatalogObjectBuilder? _CATALOG;
-  final PCEEvaluationRequestObjectBuilder? _EVALUATION_REQUEST;
-  final PCEEvaluationResultObjectBuilder? _EVALUATION_RESULT;
-  final PCEStopRequestObjectBuilder? _STOP_REQUEST;
-  final PCEStopReportObjectBuilder? _STOP_REPORT;
+class EVLEventLocationRequestObjectBuilder extends fb.ObjectBuilder {
+  final evlLocatorClass? _LOCATOR_CLASS;
+  final String? _TARGET_OBJECT_ID;
+  final PCEEvaluationContextObjectBuilder? _CONTEXT;
+  final String? _SCAN_START_EPOCH;
+  final String? _SCAN_STOP_EPOCH;
+  final String? _EPOCH_TIME_SYSTEM;
+  final double? _SCAN_STEP_SECONDS;
+  final double? _REFINEMENT_TOLERANCE_SECONDS;
+  final int? _MAXIMUM_EVENTS;
+  final List<PCEParameterRefObjectBuilder>? _REPORT_PARAMETERS;
+  final EVLEclipseConfigurationObjectBuilder? _ECLIPSE_CONFIGURATION;
+  final EVLContactConfigurationObjectBuilder? _CONTACT_CONFIGURATION;
+  final EVLIntrusionConfigurationObjectBuilder? _INTRUSION_CONFIGURATION;
+  final EVLApsidesConfigurationObjectBuilder? _APSIDES_CONFIGURATION;
+  final EVLNodeCrossingConfigurationObjectBuilder? _NODE_CROSSING_CONFIGURATION;
+  final EVLParameterConditionConfigurationObjectBuilder? _PARAMETER_CONDITION_CONFIGURATION;
+  final String? _TRACE_ID;
 
-  PCEObjectBuilder({
-    PCEParameterCatalogObjectBuilder? CATALOG,
-    PCEEvaluationRequestObjectBuilder? EVALUATION_REQUEST,
-    PCEEvaluationRequestObjectBuilder? evaluationRequest,
-    PCEEvaluationResultObjectBuilder? EVALUATION_RESULT,
-    PCEEvaluationResultObjectBuilder? evaluationResult,
-    PCEStopRequestObjectBuilder? STOP_REQUEST,
-    PCEStopRequestObjectBuilder? stopRequest,
-    PCEStopReportObjectBuilder? STOP_REPORT,
-    PCEStopReportObjectBuilder? stopReport,
+  EVLEventLocationRequestObjectBuilder({
+    evlLocatorClass? LOCATOR_CLASS,
+    evlLocatorClass? locatorClass,
+    String? TARGET_OBJECT_ID,
+    String? targetObjectId,
+    PCEEvaluationContextObjectBuilder? CONTEXT,
+    String? SCAN_START_EPOCH,
+    String? scanStartEpoch,
+    String? SCAN_STOP_EPOCH,
+    String? scanStopEpoch,
+    String? EPOCH_TIME_SYSTEM,
+    String? epochTimeSystem,
+    double? SCAN_STEP_SECONDS,
+    double? scanStepSeconds,
+    double? REFINEMENT_TOLERANCE_SECONDS,
+    double? refinementToleranceSeconds,
+    int? MAXIMUM_EVENTS,
+    int? maximumEvents,
+    List<PCEParameterRefObjectBuilder>? REPORT_PARAMETERS,
+    List<PCEParameterRefObjectBuilder>? reportParameters,
+    EVLEclipseConfigurationObjectBuilder? ECLIPSE_CONFIGURATION,
+    EVLEclipseConfigurationObjectBuilder? eclipseConfiguration,
+    EVLContactConfigurationObjectBuilder? CONTACT_CONFIGURATION,
+    EVLContactConfigurationObjectBuilder? contactConfiguration,
+    EVLIntrusionConfigurationObjectBuilder? INTRUSION_CONFIGURATION,
+    EVLIntrusionConfigurationObjectBuilder? intrusionConfiguration,
+    EVLApsidesConfigurationObjectBuilder? APSIDES_CONFIGURATION,
+    EVLApsidesConfigurationObjectBuilder? apsidesConfiguration,
+    EVLNodeCrossingConfigurationObjectBuilder? NODE_CROSSING_CONFIGURATION,
+    EVLNodeCrossingConfigurationObjectBuilder? nodeCrossingConfiguration,
+    EVLParameterConditionConfigurationObjectBuilder? PARAMETER_CONDITION_CONFIGURATION,
+    EVLParameterConditionConfigurationObjectBuilder? parameterConditionConfiguration,
+    String? TRACE_ID,
+    String? traceId,
   })
-      : _CATALOG = CATALOG,
-        _EVALUATION_REQUEST = evaluationRequest ?? EVALUATION_REQUEST,
-        _EVALUATION_RESULT = evaluationResult ?? EVALUATION_RESULT,
-        _STOP_REQUEST = stopRequest ?? STOP_REQUEST,
-        _STOP_REPORT = stopReport ?? STOP_REPORT;
+      : _LOCATOR_CLASS = locatorClass ?? LOCATOR_CLASS,
+        _TARGET_OBJECT_ID = targetObjectId ?? TARGET_OBJECT_ID,
+        _CONTEXT = CONTEXT,
+        _SCAN_START_EPOCH = scanStartEpoch ?? SCAN_START_EPOCH,
+        _SCAN_STOP_EPOCH = scanStopEpoch ?? SCAN_STOP_EPOCH,
+        _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
+        _SCAN_STEP_SECONDS = scanStepSeconds ?? SCAN_STEP_SECONDS,
+        _REFINEMENT_TOLERANCE_SECONDS = refinementToleranceSeconds ?? REFINEMENT_TOLERANCE_SECONDS,
+        _MAXIMUM_EVENTS = maximumEvents ?? MAXIMUM_EVENTS,
+        _REPORT_PARAMETERS = reportParameters ?? REPORT_PARAMETERS,
+        _ECLIPSE_CONFIGURATION = eclipseConfiguration ?? ECLIPSE_CONFIGURATION,
+        _CONTACT_CONFIGURATION = contactConfiguration ?? CONTACT_CONFIGURATION,
+        _INTRUSION_CONFIGURATION = intrusionConfiguration ?? INTRUSION_CONFIGURATION,
+        _APSIDES_CONFIGURATION = apsidesConfiguration ?? APSIDES_CONFIGURATION,
+        _NODE_CROSSING_CONFIGURATION = nodeCrossingConfiguration ?? NODE_CROSSING_CONFIGURATION,
+        _PARAMETER_CONDITION_CONFIGURATION = parameterConditionConfiguration ?? PARAMETER_CONDITION_CONFIGURATION,
+        _TRACE_ID = traceId ?? TRACE_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? CATALOGOffset = _CATALOG?.getOrCreateOffset(fbBuilder);
-    final int? EVALUATION_REQUESTOffset = _EVALUATION_REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? EVALUATION_RESULTOffset = _EVALUATION_RESULT?.getOrCreateOffset(fbBuilder);
-    final int? STOP_REQUESTOffset = _STOP_REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? STOP_REPORTOffset = _STOP_REPORT?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, CATALOGOffset);
-    fbBuilder.addOffset(1, EVALUATION_REQUESTOffset);
-    fbBuilder.addOffset(2, EVALUATION_RESULTOffset);
-    fbBuilder.addOffset(3, STOP_REQUESTOffset);
-    fbBuilder.addOffset(4, STOP_REPORTOffset);
+    final int? TARGET_OBJECT_IDOffset = _TARGET_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_TARGET_OBJECT_ID!);
+    final int? CONTEXTOffset = _CONTEXT?.getOrCreateOffset(fbBuilder);
+    final int? SCAN_START_EPOCHOffset = _SCAN_START_EPOCH == null ? null
+        : fbBuilder.writeString(_SCAN_START_EPOCH!);
+    final int? SCAN_STOP_EPOCHOffset = _SCAN_STOP_EPOCH == null ? null
+        : fbBuilder.writeString(_SCAN_STOP_EPOCH!);
+    final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
+    final int? REPORT_PARAMETERSOffset = _REPORT_PARAMETERS == null ? null
+        : fbBuilder.writeList(_REPORT_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ECLIPSE_CONFIGURATIONOffset = _ECLIPSE_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    final int? CONTACT_CONFIGURATIONOffset = _CONTACT_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    final int? INTRUSION_CONFIGURATIONOffset = _INTRUSION_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    final int? APSIDES_CONFIGURATIONOffset = _APSIDES_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    final int? NODE_CROSSING_CONFIGURATIONOffset = _NODE_CROSSING_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    final int? PARAMETER_CONDITION_CONFIGURATIONOffset = _PARAMETER_CONDITION_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    final int? TRACE_IDOffset = _TRACE_ID == null ? null
+        : fbBuilder.writeString(_TRACE_ID!);
+    fbBuilder.startTable(17);
+    fbBuilder.addUint8(0, _LOCATOR_CLASS?.value);
+    fbBuilder.addOffset(1, TARGET_OBJECT_IDOffset);
+    fbBuilder.addOffset(2, CONTEXTOffset);
+    fbBuilder.addOffset(3, SCAN_START_EPOCHOffset);
+    fbBuilder.addOffset(4, SCAN_STOP_EPOCHOffset);
+    fbBuilder.addOffset(5, EPOCH_TIME_SYSTEMOffset);
+    fbBuilder.addFloat64(6, _SCAN_STEP_SECONDS);
+    fbBuilder.addFloat64(7, _REFINEMENT_TOLERANCE_SECONDS);
+    fbBuilder.addUint32(8, _MAXIMUM_EVENTS);
+    fbBuilder.addOffset(9, REPORT_PARAMETERSOffset);
+    fbBuilder.addOffset(10, ECLIPSE_CONFIGURATIONOffset);
+    fbBuilder.addOffset(11, CONTACT_CONFIGURATIONOffset);
+    fbBuilder.addOffset(12, INTRUSION_CONFIGURATIONOffset);
+    fbBuilder.addOffset(13, APSIDES_CONFIGURATIONOffset);
+    fbBuilder.addOffset(14, NODE_CROSSING_CONFIGURATIONOffset);
+    fbBuilder.addOffset(15, PARAMETER_CONDITION_CONFIGURATIONOffset);
+    fbBuilder.addOffset(16, TRACE_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The events found, and the interval they were actually searched over.
+class EVLEventReport {
+  EVLEventReport._(this._bc, this._bcOffset);
+  factory EVLEventReport(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EVLEventReport> reader = _EVLEventReportReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  evlResultStatus get STATUS => evlResultStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get errorMessage => ERROR_MESSAGE;
+  evlLocatorClass get LOCATOR_CLASS => evlLocatorClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  evlLocatorClass get locatorClass => LOCATOR_CLASS;
+  String? get TARGET_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get targetObjectId => TARGET_OBJECT_ID;
+  ///  Interval actually searched, ISO 8601. A BUDGET_EXCEEDED run reports the
+  ///  interval it reached, not the interval it was asked for.
+  String? get SCAN_START_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get scanStartEpoch => SCAN_START_EPOCH;
+  String? get SCAN_STOP_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get scanStopEpoch => SCAN_STOP_EPOCH;
+  ///  Time system of the epochs, named by the $TIM timingStandard member name.
+  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
+  ///  Events in chronological order of START_EPOCH.
+  List<EVLEvent>? get EVENTS => const fb.ListReader<EVLEvent>(EVLEvent.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Event-function evaluations actually performed, for step-independence
+  ///  evidence.
+  int get FUNCTION_EVALUATION_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get functionEvaluationCount => FUNCTION_EVALUATION_COUNT;
+  ///  Content identifier of the Earth-orientation data set actually used.
+  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get eopDataSetCid => EOP_DATA_SET_CID;
+  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get traceId => TRACE_ID;
+
+  @override
+  String toString() {
+    return 'EVLEventReport{STATUS: ${STATUS}, errorMessage: ${errorMessage}, locatorClass: ${locatorClass}, targetObjectId: ${targetObjectId}, scanStartEpoch: ${scanStartEpoch}, scanStopEpoch: ${scanStopEpoch}, epochTimeSystem: ${epochTimeSystem}, EVENTS: ${EVENTS}, functionEvaluationCount: ${functionEvaluationCount}, eopDataSetCid: ${eopDataSetCid}, traceId: ${traceId}}';
+  }
+}
+
+class _EVLEventReportReader extends fb.TableReader<EVLEventReport> {
+  const _EVLEventReportReader();
+
+  @override
+  EVLEventReport createObject(fb.BufferContext bc, int offset) =>
+    EVLEventReport._(bc, offset);
+}
+
+class EVLEventReportBuilder {
+  EVLEventReportBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addStatus(evlResultStatus? STATUS) {
+    fbBuilder.addUint8(0, STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addErrorMessageOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addLocatorClass(evlLocatorClass? LOCATOR_CLASS) {
+    fbBuilder.addUint8(2, LOCATOR_CLASS?.value);
+    return fbBuilder.offset;
+  }
+  int addTargetObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addScanStartEpochOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addScanStopEpochOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addEventsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addFunctionEvaluationCount(int? FUNCTION_EVALUATION_COUNT) {
+    fbBuilder.addUint32(8, FUNCTION_EVALUATION_COUNT);
+    return fbBuilder.offset;
+  }
+  int addEopDataSetCidOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addTraceIdOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EVLEventReportObjectBuilder extends fb.ObjectBuilder {
+  final evlResultStatus? _STATUS;
+  final String? _ERROR_MESSAGE;
+  final evlLocatorClass? _LOCATOR_CLASS;
+  final String? _TARGET_OBJECT_ID;
+  final String? _SCAN_START_EPOCH;
+  final String? _SCAN_STOP_EPOCH;
+  final String? _EPOCH_TIME_SYSTEM;
+  final List<EVLEventObjectBuilder>? _EVENTS;
+  final int? _FUNCTION_EVALUATION_COUNT;
+  final String? _EOP_DATA_SET_CID;
+  final String? _TRACE_ID;
+
+  EVLEventReportObjectBuilder({
+    evlResultStatus? STATUS,
+    String? ERROR_MESSAGE,
+    String? errorMessage,
+    evlLocatorClass? LOCATOR_CLASS,
+    evlLocatorClass? locatorClass,
+    String? TARGET_OBJECT_ID,
+    String? targetObjectId,
+    String? SCAN_START_EPOCH,
+    String? scanStartEpoch,
+    String? SCAN_STOP_EPOCH,
+    String? scanStopEpoch,
+    String? EPOCH_TIME_SYSTEM,
+    String? epochTimeSystem,
+    List<EVLEventObjectBuilder>? EVENTS,
+    int? FUNCTION_EVALUATION_COUNT,
+    int? functionEvaluationCount,
+    String? EOP_DATA_SET_CID,
+    String? eopDataSetCid,
+    String? TRACE_ID,
+    String? traceId,
+  })
+      : _STATUS = STATUS,
+        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
+        _LOCATOR_CLASS = locatorClass ?? LOCATOR_CLASS,
+        _TARGET_OBJECT_ID = targetObjectId ?? TARGET_OBJECT_ID,
+        _SCAN_START_EPOCH = scanStartEpoch ?? SCAN_START_EPOCH,
+        _SCAN_STOP_EPOCH = scanStopEpoch ?? SCAN_STOP_EPOCH,
+        _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
+        _EVENTS = EVENTS,
+        _FUNCTION_EVALUATION_COUNT = functionEvaluationCount ?? FUNCTION_EVALUATION_COUNT,
+        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID,
+        _TRACE_ID = traceId ?? TRACE_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
+        : fbBuilder.writeString(_ERROR_MESSAGE!);
+    final int? TARGET_OBJECT_IDOffset = _TARGET_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_TARGET_OBJECT_ID!);
+    final int? SCAN_START_EPOCHOffset = _SCAN_START_EPOCH == null ? null
+        : fbBuilder.writeString(_SCAN_START_EPOCH!);
+    final int? SCAN_STOP_EPOCHOffset = _SCAN_STOP_EPOCH == null ? null
+        : fbBuilder.writeString(_SCAN_STOP_EPOCH!);
+    final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
+    final int? EVENTSOffset = _EVENTS == null ? null
+        : fbBuilder.writeList(_EVENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
+        : fbBuilder.writeString(_EOP_DATA_SET_CID!);
+    final int? TRACE_IDOffset = _TRACE_ID == null ? null
+        : fbBuilder.writeString(_TRACE_ID!);
+    fbBuilder.startTable(11);
+    fbBuilder.addUint8(0, _STATUS?.value);
+    fbBuilder.addOffset(1, ERROR_MESSAGEOffset);
+    fbBuilder.addUint8(2, _LOCATOR_CLASS?.value);
+    fbBuilder.addOffset(3, TARGET_OBJECT_IDOffset);
+    fbBuilder.addOffset(4, SCAN_START_EPOCHOffset);
+    fbBuilder.addOffset(5, SCAN_STOP_EPOCHOffset);
+    fbBuilder.addOffset(6, EPOCH_TIME_SYSTEMOffset);
+    fbBuilder.addOffset(7, EVENTSOffset);
+    fbBuilder.addUint32(8, _FUNCTION_EVALUATION_COUNT);
+    fbBuilder.addOffset(9, EOP_DATA_SET_CIDOffset);
+    fbBuilder.addOffset(10, TRACE_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Event Locator
+///
+///  One request and one report for every class of located event: shadow
+///  passage, site visibility, sensor-field-of-view intrusion, apsis passage,
+///  node crossing, and the generic condition on any $PCE catalog parameter.
+///  Every class is the same pair of an event function and a refined root, so a
+///  new class is a configuration table and a vocabulary member, never a new
+///  record. Entry and exit epochs, duration, the occulting or observed body and
+///  the parameter values captured at each event's instants are reported in one
+///  shape, and the predicate of the generic class is $PCE's
+///  PCEParameterCondition rather than a second spelling of the same idea.
+///
+///  Angles are radians, durations seconds, epochs ISO 8601 in a named time
+///  system.
+class EVL {
+  EVL._(this._bc, this._bcOffset);
+  factory EVL(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EVL> reader = _EVLReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  EVLEventLocationRequest? get LOCATION_REQUEST => EVLEventLocationRequest.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  EVLEventLocationRequest? get locationRequest => LOCATION_REQUEST;
+  EVLEventReport? get EVENT_REPORT => EVLEventReport.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  EVLEventReport? get eventReport => EVENT_REPORT;
+
+  @override
+  String toString() {
+    return 'EVL{locationRequest: ${locationRequest}, eventReport: ${eventReport}}';
+  }
+}
+
+class _EVLReader extends fb.TableReader<EVL> {
+  const _EVLReader();
+
+  @override
+  EVL createObject(fb.BufferContext bc, int offset) =>
+    EVL._(bc, offset);
+}
+
+class EVLBuilder {
+  EVLBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addLocationRequestOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEventReportOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EVLObjectBuilder extends fb.ObjectBuilder {
+  final EVLEventLocationRequestObjectBuilder? _LOCATION_REQUEST;
+  final EVLEventReportObjectBuilder? _EVENT_REPORT;
+
+  EVLObjectBuilder({
+    EVLEventLocationRequestObjectBuilder? LOCATION_REQUEST,
+    EVLEventLocationRequestObjectBuilder? locationRequest,
+    EVLEventReportObjectBuilder? EVENT_REPORT,
+    EVLEventReportObjectBuilder? eventReport,
+  })
+      : _LOCATION_REQUEST = locationRequest ?? LOCATION_REQUEST,
+        _EVENT_REPORT = eventReport ?? EVENT_REPORT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LOCATION_REQUESTOffset = _LOCATION_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? EVENT_REPORTOffset = _EVENT_REPORT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, LOCATION_REQUESTOffset);
+    fbBuilder.addOffset(1, EVENT_REPORTOffset);
     return fbBuilder.endTable();
   }
 

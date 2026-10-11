@@ -5,567 +5,270 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Weather Forecast Field (WXF)
+///  Tropical Cyclone Track (TCT)
 ///  Description
-///  One two-dimensional slice of a weather forecast: a single variable, at a
-///  single vertical level, for a single ensemble member (or a statistic over
-///  the ensemble), valid at a single time, on a regular latitude-longitude
-///  grid. A producer such as a global ensemble forecast model initialised on a
-///  fixed cadence emits one WXF per (variable, level, member, lead) at each
-///  initialisation; a consumer selects by INIT_TIME_MS / LEAD_HOURS / VARIABLE /
-///  LEVEL_KIND / MEMBER_KIND and reads the cells. Fields of up to 1,048,576
-///  cells carry their samples inline in VALUES; larger fields are split into
-///  tiles (TILE_INDEX / TILE_COUNT, each with its own GRID) or reference a
-///  content-addressed chunk through CHUNK_CID. Every epoch is Unix
-///  milliseconds UTC. A forecast is a model output, never an official warning.
-///  Class of model that produced the field. Names a capability class, never a
-///  producer. Append new values only; never reorder or reuse existing values.
-enum wxfModelClass {
+///  One track of one tropical cyclone as produced by a single realisation of
+///  a forecast model (a member, control, deterministic run or ensemble
+///  statistic) from one initialisation, or as observed (best track / analysis).
+///  Each point carries valid time, centre position, maximum sustained wind,
+///  minimum central pressure, wind radii by quadrant at the standard
+///  thresholds and the intensity category. An ensemble of N members yields N
+///  TCT records sharing STORM_ID and INIT_TIME_MS; a consumer draws the spread
+///  from them. Every epoch is Unix milliseconds UTC. A forecast track is a
+///  model output, never an official advisory.
+///  Ocean basin the system is tracked in, following the common best-track
+///  basin partition. Append new values only; never reorder or reuse existing
+///  values.
+enum tctBasin {
   Unspecified(0),
-  MachineLearnedGlobalEnsemble(1),
-  NumericalGlobalEnsemble(2),
-  NumericalGlobalDeterministic(3),
-  NumericalRegional(4),
-  Reanalysis(5),
-  Analysis(6),
-  Other(7),
-  EmpiricalClimatology(8);
+  NorthAtlantic(1),
+  EastPacific(2),
+  CentralPacific(3),
+  WestPacific(4),
+  NorthIndian(5),
+  SouthIndian(6),
+  SouthPacific(7),
+  SouthAtlantic(8),
+  Other(9);
 
   final int value;
-  const wxfModelClass(this.value);
+  const tctBasin(this.value);
 
-  factory wxfModelClass.fromValue(int value) {
+  factory tctBasin.fromValue(int value) {
     switch (value) {
-      case 0: return wxfModelClass.Unspecified;
-      case 1: return wxfModelClass.MachineLearnedGlobalEnsemble;
-      case 2: return wxfModelClass.NumericalGlobalEnsemble;
-      case 3: return wxfModelClass.NumericalGlobalDeterministic;
-      case 4: return wxfModelClass.NumericalRegional;
-      case 5: return wxfModelClass.Reanalysis;
-      case 6: return wxfModelClass.Analysis;
-      case 7: return wxfModelClass.Other;
-      case 8: return wxfModelClass.EmpiricalClimatology;
+      case 0: return tctBasin.Unspecified;
+      case 1: return tctBasin.NorthAtlantic;
+      case 2: return tctBasin.EastPacific;
+      case 3: return tctBasin.CentralPacific;
+      case 4: return tctBasin.WestPacific;
+      case 5: return tctBasin.NorthIndian;
+      case 6: return tctBasin.SouthIndian;
+      case 7: return tctBasin.SouthPacific;
+      case 8: return tctBasin.SouthAtlantic;
+      case 9: return tctBasin.Other;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static wxfModelClass? _createOrNull(int? value) =>
-      value == null ? null : wxfModelClass.fromValue(value);
+  static tctBasin? _createOrNull(int? value) =>
+      value == null ? null : tctBasin.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 8;
-  static const fb.Reader<wxfModelClass> reader = _wxfModelClassReader();
+  static const int maxValue = 9;
+  static const fb.Reader<tctBasin> reader = _tctBasinReader();
 }
 
-class _wxfModelClassReader extends fb.Reader<wxfModelClass> {
-  const _wxfModelClassReader();
+class _tctBasinReader extends fb.Reader<tctBasin> {
+  const _tctBasinReader();
 
   @override
   int get size => 1;
 
   @override
-  wxfModelClass read(fb.BufferContext bc, int offset) =>
-      wxfModelClass.fromValue(const fb.Int8Reader().read(bc, offset));
+  tctBasin read(fb.BufferContext bc, int offset) =>
+      tctBasin.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Which realisation of an ensemble the field represents. Append new values
-///  only; never reorder or reuse existing values.
-enum wxfMemberKind {
-  Member(0),
-  Control(1),
-  Deterministic(2),
-  Mean(3),
-  Median(4),
-  StandardDeviation(5),
-  Minimum(6),
-  Maximum(7),
-  Percentile(8),
-  ProbabilityAboveThreshold(9),
-  ProbabilityBelowThreshold(10),
-  Unspecified(11);
-
-  final int value;
-  const wxfMemberKind(this.value);
-
-  factory wxfMemberKind.fromValue(int value) {
-    switch (value) {
-      case 0: return wxfMemberKind.Member;
-      case 1: return wxfMemberKind.Control;
-      case 2: return wxfMemberKind.Deterministic;
-      case 3: return wxfMemberKind.Mean;
-      case 4: return wxfMemberKind.Median;
-      case 5: return wxfMemberKind.StandardDeviation;
-      case 6: return wxfMemberKind.Minimum;
-      case 7: return wxfMemberKind.Maximum;
-      case 8: return wxfMemberKind.Percentile;
-      case 9: return wxfMemberKind.ProbabilityAboveThreshold;
-      case 10: return wxfMemberKind.ProbabilityBelowThreshold;
-      case 11: return wxfMemberKind.Unspecified;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static wxfMemberKind? _createOrNull(int? value) =>
-      value == null ? null : wxfMemberKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 11;
-  static const fb.Reader<wxfMemberKind> reader = _wxfMemberKindReader();
-}
-
-class _wxfMemberKindReader extends fb.Reader<wxfMemberKind> {
-  const _wxfMemberKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  wxfMemberKind read(fb.BufferContext bc, int offset) =>
-      wxfMemberKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Meteorological variable carried by the field. Append new values only;
-///  never reorder or reuse existing values. Units are fixed per value and
-///  repeated in UNITS.
-enum wxfVariable {
-  Unspecified(0),
-  Temperature2m(1),
-  DewpointTemperature2m(2),
-  WindU10m(3),
-  WindV10m(4),
-  WindSpeed10m(5),
-  WindU100m(6),
-  WindV100m(7),
-  WindSpeed100m(8),
-  MeanSeaLevelPressure(9),
-  SeaSurfaceTemperature(10),
-  TotalCloudCover(11),
-  HighCloudCover(12),
-  MediumCloudCover(13),
-  LowCloudCover(14),
-  SurfaceSolarRadiationDownwards(15),
-  TotalSkyDirectSolarRadiationAtSurface(16),
-  TotalPrecipitation(17),
-  TotalPrecipitationSatelliteBlended(18),
-  TotalPrecipitationExperimental(19),
-  Geopotential(20),
-  Temperature(21),
-  SpecificHumidity(22),
-  WindU(23),
-  WindV(24),
-  VerticalVelocity(25),
-  PrecipitationRate(26),
-  RelativeHumidity(27),
-  TotalColumnWaterVapour(28),
-  SurfacePressure(29),
-  GeopotentialHeight(30),
-  BrightnessTemperature(31),
-  Reflectance(32),
-  CloudMask(33),
-  CloudPhase(34),
-  CloudOpticalDepth(35),
-  CloudEffectiveRadius(36),
-  CloudEmissivity(37);
-
-  final int value;
-  const wxfVariable(this.value);
-
-  factory wxfVariable.fromValue(int value) {
-    switch (value) {
-      case 0: return wxfVariable.Unspecified;
-      case 1: return wxfVariable.Temperature2m;
-      case 2: return wxfVariable.DewpointTemperature2m;
-      case 3: return wxfVariable.WindU10m;
-      case 4: return wxfVariable.WindV10m;
-      case 5: return wxfVariable.WindSpeed10m;
-      case 6: return wxfVariable.WindU100m;
-      case 7: return wxfVariable.WindV100m;
-      case 8: return wxfVariable.WindSpeed100m;
-      case 9: return wxfVariable.MeanSeaLevelPressure;
-      case 10: return wxfVariable.SeaSurfaceTemperature;
-      case 11: return wxfVariable.TotalCloudCover;
-      case 12: return wxfVariable.HighCloudCover;
-      case 13: return wxfVariable.MediumCloudCover;
-      case 14: return wxfVariable.LowCloudCover;
-      case 15: return wxfVariable.SurfaceSolarRadiationDownwards;
-      case 16: return wxfVariable.TotalSkyDirectSolarRadiationAtSurface;
-      case 17: return wxfVariable.TotalPrecipitation;
-      case 18: return wxfVariable.TotalPrecipitationSatelliteBlended;
-      case 19: return wxfVariable.TotalPrecipitationExperimental;
-      case 20: return wxfVariable.Geopotential;
-      case 21: return wxfVariable.Temperature;
-      case 22: return wxfVariable.SpecificHumidity;
-      case 23: return wxfVariable.WindU;
-      case 24: return wxfVariable.WindV;
-      case 25: return wxfVariable.VerticalVelocity;
-      case 26: return wxfVariable.PrecipitationRate;
-      case 27: return wxfVariable.RelativeHumidity;
-      case 28: return wxfVariable.TotalColumnWaterVapour;
-      case 29: return wxfVariable.SurfacePressure;
-      case 30: return wxfVariable.GeopotentialHeight;
-      case 31: return wxfVariable.BrightnessTemperature;
-      case 32: return wxfVariable.Reflectance;
-      case 33: return wxfVariable.CloudMask;
-      case 34: return wxfVariable.CloudPhase;
-      case 35: return wxfVariable.CloudOpticalDepth;
-      case 36: return wxfVariable.CloudEffectiveRadius;
-      case 37: return wxfVariable.CloudEmissivity;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static wxfVariable? _createOrNull(int? value) =>
-      value == null ? null : wxfVariable.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 37;
-  static const fb.Reader<wxfVariable> reader = _wxfVariableReader();
-}
-
-class _wxfVariableReader extends fb.Reader<wxfVariable> {
-  const _wxfVariableReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  wxfVariable read(fb.BufferContext bc, int offset) =>
-      wxfVariable.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Vertical coordinate of the field. Append new values only; never reorder or
+///  Provenance kind of the track. Append new values only; never reorder or
 ///  reuse existing values.
-enum wxfLevelKind {
-  Surface(0),
-  HeightAboveGround(1),
-  PressureLevel(2),
-  MeanSeaLevel(3),
-  EntireAtmosphere(4),
-  TopOfAtmosphere(5),
-  Tropopause(6),
-  HeightAboveEllipsoid(7),
-  CloudTop(8);
+enum tctTrackKind {
+  Forecast(0),
+  BestTrack(1),
+  Analysis(2);
 
   final int value;
-  const wxfLevelKind(this.value);
+  const tctTrackKind(this.value);
 
-  factory wxfLevelKind.fromValue(int value) {
+  factory tctTrackKind.fromValue(int value) {
     switch (value) {
-      case 0: return wxfLevelKind.Surface;
-      case 1: return wxfLevelKind.HeightAboveGround;
-      case 2: return wxfLevelKind.PressureLevel;
-      case 3: return wxfLevelKind.MeanSeaLevel;
-      case 4: return wxfLevelKind.EntireAtmosphere;
-      case 5: return wxfLevelKind.TopOfAtmosphere;
-      case 6: return wxfLevelKind.Tropopause;
-      case 7: return wxfLevelKind.HeightAboveEllipsoid;
-      case 8: return wxfLevelKind.CloudTop;
+      case 0: return tctTrackKind.Forecast;
+      case 1: return tctTrackKind.BestTrack;
+      case 2: return tctTrackKind.Analysis;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static wxfLevelKind? _createOrNull(int? value) =>
-      value == null ? null : wxfLevelKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 8;
-  static const fb.Reader<wxfLevelKind> reader = _wxfLevelKindReader();
-}
-
-class _wxfLevelKindReader extends fb.Reader<wxfLevelKind> {
-  const _wxfLevelKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  wxfLevelKind read(fb.BufferContext bc, int offset) =>
-      wxfLevelKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Temporal character of the value in each cell. Append new values only;
-///  never reorder or reuse existing values.
-enum wxfTemporalKind {
-  Instantaneous(0),
-  Accumulated(1),
-  Averaged(2),
-  Maximum(3),
-  Minimum(4);
-
-  final int value;
-  const wxfTemporalKind(this.value);
-
-  factory wxfTemporalKind.fromValue(int value) {
-    switch (value) {
-      case 0: return wxfTemporalKind.Instantaneous;
-      case 1: return wxfTemporalKind.Accumulated;
-      case 2: return wxfTemporalKind.Averaged;
-      case 3: return wxfTemporalKind.Maximum;
-      case 4: return wxfTemporalKind.Minimum;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static wxfTemporalKind? _createOrNull(int? value) =>
-      value == null ? null : wxfTemporalKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<wxfTemporalKind> reader = _wxfTemporalKindReader();
-}
-
-class _wxfTemporalKindReader extends fb.Reader<wxfTemporalKind> {
-  const _wxfTemporalKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  wxfTemporalKind read(fb.BufferContext bc, int offset) =>
-      wxfTemporalKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Horizontal grid geometry. Append new values only; never reorder or reuse
-///  existing values.
-enum wxfGridKind {
-  RegularLatLon(0);
-
-  final int value;
-  const wxfGridKind(this.value);
-
-  factory wxfGridKind.fromValue(int value) {
-    switch (value) {
-      case 0: return wxfGridKind.RegularLatLon;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static wxfGridKind? _createOrNull(int? value) =>
-      value == null ? null : wxfGridKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 0;
-  static const fb.Reader<wxfGridKind> reader = _wxfGridKindReader();
-}
-
-class _wxfGridKindReader extends fb.Reader<wxfGridKind> {
-  const _wxfGridKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  wxfGridKind read(fb.BufferContext bc, int offset) =>
-      wxfGridKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Where the cell samples live. Append new values only; never reorder or
-///  reuse existing values.
-enum wxfValuesEncoding {
-  InlineFloat32(0),
-  ContentAddressedChunk(1),
-  InlineQuantizedUint16(2),
-  InlineQuantizedUint8(3),
-  InlineEncodedChunk(4);
-
-  final int value;
-  const wxfValuesEncoding(this.value);
-
-  factory wxfValuesEncoding.fromValue(int value) {
-    switch (value) {
-      case 0: return wxfValuesEncoding.InlineFloat32;
-      case 1: return wxfValuesEncoding.ContentAddressedChunk;
-      case 2: return wxfValuesEncoding.InlineQuantizedUint16;
-      case 3: return wxfValuesEncoding.InlineQuantizedUint8;
-      case 4: return wxfValuesEncoding.InlineEncodedChunk;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static wxfValuesEncoding? _createOrNull(int? value) =>
-      value == null ? null : wxfValuesEncoding.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<wxfValuesEncoding> reader = _wxfValuesEncodingReader();
-}
-
-class _wxfValuesEncodingReader extends fb.Reader<wxfValuesEncoding> {
-  const _wxfValuesEncodingReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  wxfValuesEncoding read(fb.BufferContext bc, int offset) =>
-      wxfValuesEncoding.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Licence class of the data at RETRIEVED_AT, following the split a producer
-///  applies between real-time and historical output. Append new values only;
-///  never reorder or reuse existing values.
-enum wxfLicenseClass {
-  RealTimeExperimental(0),
-  Historical(1),
-  OpenAttribution(2);
-
-  final int value;
-  const wxfLicenseClass(this.value);
-
-  factory wxfLicenseClass.fromValue(int value) {
-    switch (value) {
-      case 0: return wxfLicenseClass.RealTimeExperimental;
-      case 1: return wxfLicenseClass.Historical;
-      case 2: return wxfLicenseClass.OpenAttribution;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static wxfLicenseClass? _createOrNull(int? value) =>
-      value == null ? null : wxfLicenseClass.fromValue(value);
+  static tctTrackKind? _createOrNull(int? value) =>
+      value == null ? null : tctTrackKind.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 2;
-  static const fb.Reader<wxfLicenseClass> reader = _wxfLicenseClassReader();
+  static const fb.Reader<tctTrackKind> reader = _tctTrackKindReader();
 }
 
-class _wxfLicenseClassReader extends fb.Reader<wxfLicenseClass> {
-  const _wxfLicenseClassReader();
+class _tctTrackKindReader extends fb.Reader<tctTrackKind> {
+  const _tctTrackKindReader();
 
   @override
   int get size => 1;
 
   @override
-  wxfLicenseClass read(fb.BufferContext bc, int offset) =>
-      wxfLicenseClass.fromValue(const fb.Int8Reader().read(bc, offset));
+  tctTrackKind read(fb.BufferContext bc, int offset) =>
+      tctTrackKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Which forecast times the source actually publishes. Append new values
-///  only; never reorder or reuse existing values.
-enum wxfTimeBasis {
-  Initialization(0),
-  ValidTimeOnly(1);
+///  Whether the system existed at initialisation. Append new values only;
+///  never reorder or reuse existing values.
+enum tctTrackOrigin {
+  ExistingSystem(0),
+  Genesis(1);
 
   final int value;
-  const wxfTimeBasis(this.value);
+  const tctTrackOrigin(this.value);
 
-  factory wxfTimeBasis.fromValue(int value) {
+  factory tctTrackOrigin.fromValue(int value) {
     switch (value) {
-      case 0: return wxfTimeBasis.Initialization;
-      case 1: return wxfTimeBasis.ValidTimeOnly;
+      case 0: return tctTrackOrigin.ExistingSystem;
+      case 1: return tctTrackOrigin.Genesis;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static wxfTimeBasis? _createOrNull(int? value) =>
-      value == null ? null : wxfTimeBasis.fromValue(value);
+  static tctTrackOrigin? _createOrNull(int? value) =>
+      value == null ? null : tctTrackOrigin.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 1;
-  static const fb.Reader<wxfTimeBasis> reader = _wxfTimeBasisReader();
+  static const fb.Reader<tctTrackOrigin> reader = _tctTrackOriginReader();
 }
 
-class _wxfTimeBasisReader extends fb.Reader<wxfTimeBasis> {
-  const _wxfTimeBasisReader();
+class _tctTrackOriginReader extends fb.Reader<tctTrackOrigin> {
+  const _tctTrackOriginReader();
 
   @override
   int get size => 1;
 
   @override
-  wxfTimeBasis read(fb.BufferContext bc, int offset) =>
-      wxfTimeBasis.fromValue(const fb.Int8Reader().read(bc, offset));
+  tctTrackOrigin read(fb.BufferContext bc, int offset) =>
+      tctTrackOrigin.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Regular grid the samples are laid out on. Samples are row-major with
-///  latitude as the outer index: cell (i, j) for 0 <= i < NLAT, 0 <= j < NLON
-///  sits at VALUES[i * NLON + j] and is centred at
-///  (LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north
-///  to south. Longitudes are in [-180, 180) or [0, 360) exactly as the
-///  producer publishes them; a consumer normalises.
-class WXFGrid {
-  WXFGrid._(this._bc, this._bcOffset);
-  factory WXFGrid(List<int> bytes) {
+///  Intensity category on the Saffir-Simpson style scale by maximum sustained
+///  wind. Append new values only; never reorder or reuse existing values.
+enum tctIntensityCategory {
+  Unspecified(0),
+  TropicalDepression(1),
+  TropicalStorm(2),
+  Category1(3),
+  Category2(4),
+  Category3(5),
+  Category4(6),
+  Category5(7),
+  PostTropical(8);
+
+  final int value;
+  const tctIntensityCategory(this.value);
+
+  factory tctIntensityCategory.fromValue(int value) {
+    switch (value) {
+      case 0: return tctIntensityCategory.Unspecified;
+      case 1: return tctIntensityCategory.TropicalDepression;
+      case 2: return tctIntensityCategory.TropicalStorm;
+      case 3: return tctIntensityCategory.Category1;
+      case 4: return tctIntensityCategory.Category2;
+      case 5: return tctIntensityCategory.Category3;
+      case 6: return tctIntensityCategory.Category4;
+      case 7: return tctIntensityCategory.Category5;
+      case 8: return tctIntensityCategory.PostTropical;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static tctIntensityCategory? _createOrNull(int? value) =>
+      value == null ? null : tctIntensityCategory.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 8;
+  static const fb.Reader<tctIntensityCategory> reader = _tctIntensityCategoryReader();
+}
+
+class _tctIntensityCategoryReader extends fb.Reader<tctIntensityCategory> {
+  const _tctIntensityCategoryReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  tctIntensityCategory read(fb.BufferContext bc, int offset) =>
+      tctIntensityCategory.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Wind radii by quadrant at one wind-speed threshold. Radii are kilometres
+///  (1 nmi = 1.852 km exactly) from the centre to the outermost point at which
+///  the threshold is reached; 0 means the threshold is not reached in that
+///  quadrant; a negative value means not reported.
+class TCTRadii {
+  TCTRadii._(this._bc, this._bcOffset);
+  factory TCTRadii(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<WXFGrid> reader = _WXFGridReader();
+  static const fb.Reader<TCTRadii> reader = _TCTRadiiReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Grid geometry.
-  wxfGridKind get KIND => wxfGridKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Latitude of the first row's cell centre, degrees north.
-  double get LAT0 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  ///  Longitude of the first column's cell centre, degrees east.
-  double get LON0 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///  Latitude step between rows, degrees (signed).
-  double get DLAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  Longitude step between columns, degrees (signed).
-  double get DLON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  ///  Number of rows (latitudes).
-  int get NLAT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  ///  Number of columns (longitudes).
-  int get NLON => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  ///  Whether the last column wraps to the first (global grid).
-  bool get PERIODIC_LON => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
-  bool get periodicLon => PERIODIC_LON;
+  ///  Wind-speed threshold, m/s, converted exactly from knots
+  ///  (1 kt = 1852/3600 m/s: 34 kt = 17.49, 50 kt = 25.72, 64 kt = 32.92).
+  double get THRESHOLD_WIND_MS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get thresholdWindMs => THRESHOLD_WIND_MS;
+  ///  North-east quadrant radius, km.
+  double get NE_KM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get neKm => NE_KM;
+  ///  South-east quadrant radius, km.
+  double get SE_KM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get seKm => SE_KM;
+  ///  South-west quadrant radius, km.
+  double get SW_KM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get swKm => SW_KM;
+  ///  North-west quadrant radius, km.
+  double get NW_KM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get nwKm => NW_KM;
 
   @override
   String toString() {
-    return 'WXFGrid{KIND: ${KIND}, LAT0: ${LAT0}, LON0: ${LON0}, DLAT: ${DLAT}, DLON: ${DLON}, NLAT: ${NLAT}, NLON: ${NLON}, periodicLon: ${periodicLon}}';
+    return 'TCTRadii{thresholdWindMs: ${thresholdWindMs}, neKm: ${neKm}, seKm: ${seKm}, swKm: ${swKm}, nwKm: ${nwKm}}';
   }
 }
 
-class _WXFGridReader extends fb.TableReader<WXFGrid> {
-  const _WXFGridReader();
+class _TCTRadiiReader extends fb.TableReader<TCTRadii> {
+  const _TCTRadiiReader();
 
   @override
-  WXFGrid createObject(fb.BufferContext bc, int offset) =>
-    WXFGrid._(bc, offset);
+  TCTRadii createObject(fb.BufferContext bc, int offset) =>
+    TCTRadii._(bc, offset);
 }
 
-class WXFGridBuilder {
-  WXFGridBuilder(this.fbBuilder);
+class TCTRadiiBuilder {
+  TCTRadiiBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(5);
   }
 
-  int addKind(wxfGridKind? KIND) {
-    fbBuilder.addInt8(0, KIND?.value);
+  int addThresholdWindMs(double? THRESHOLD_WIND_MS) {
+    fbBuilder.addFloat32(0, THRESHOLD_WIND_MS);
     return fbBuilder.offset;
   }
-  int addLat0(double? LAT0) {
-    fbBuilder.addFloat64(1, LAT0);
+  int addNeKm(double? NE_KM) {
+    fbBuilder.addFloat32(1, NE_KM);
     return fbBuilder.offset;
   }
-  int addLon0(double? LON0) {
-    fbBuilder.addFloat64(2, LON0);
+  int addSeKm(double? SE_KM) {
+    fbBuilder.addFloat32(2, SE_KM);
     return fbBuilder.offset;
   }
-  int addDlat(double? DLAT) {
-    fbBuilder.addFloat64(3, DLAT);
+  int addSwKm(double? SW_KM) {
+    fbBuilder.addFloat32(3, SW_KM);
     return fbBuilder.offset;
   }
-  int addDlon(double? DLON) {
-    fbBuilder.addFloat64(4, DLON);
-    return fbBuilder.offset;
-  }
-  int addNlat(int? NLAT) {
-    fbBuilder.addUint32(5, NLAT);
-    return fbBuilder.offset;
-  }
-  int addNlon(int? NLON) {
-    fbBuilder.addUint32(6, NLON);
-    return fbBuilder.offset;
-  }
-  int addPeriodicLon(bool? PERIODIC_LON) {
-    fbBuilder.addBool(7, PERIODIC_LON);
+  int addNwKm(double? NW_KM) {
+    fbBuilder.addFloat32(4, NW_KM);
     return fbBuilder.offset;
   }
 
@@ -574,48 +277,40 @@ class WXFGridBuilder {
   }
 }
 
-class WXFGridObjectBuilder extends fb.ObjectBuilder {
-  final wxfGridKind? _KIND;
-  final double? _LAT0;
-  final double? _LON0;
-  final double? _DLAT;
-  final double? _DLON;
-  final int? _NLAT;
-  final int? _NLON;
-  final bool? _PERIODIC_LON;
+class TCTRadiiObjectBuilder extends fb.ObjectBuilder {
+  final double? _THRESHOLD_WIND_MS;
+  final double? _NE_KM;
+  final double? _SE_KM;
+  final double? _SW_KM;
+  final double? _NW_KM;
 
-  WXFGridObjectBuilder({
-    wxfGridKind? KIND,
-    double? LAT0,
-    double? LON0,
-    double? DLAT,
-    double? DLON,
-    int? NLAT,
-    int? NLON,
-    bool? PERIODIC_LON,
-    bool? periodicLon,
+  TCTRadiiObjectBuilder({
+    double? THRESHOLD_WIND_MS,
+    double? thresholdWindMs,
+    double? NE_KM,
+    double? neKm,
+    double? SE_KM,
+    double? seKm,
+    double? SW_KM,
+    double? swKm,
+    double? NW_KM,
+    double? nwKm,
   })
-      : _KIND = KIND,
-        _LAT0 = LAT0,
-        _LON0 = LON0,
-        _DLAT = DLAT,
-        _DLON = DLON,
-        _NLAT = NLAT,
-        _NLON = NLON,
-        _PERIODIC_LON = periodicLon ?? PERIODIC_LON;
+      : _THRESHOLD_WIND_MS = thresholdWindMs ?? THRESHOLD_WIND_MS,
+        _NE_KM = neKm ?? NE_KM,
+        _SE_KM = seKm ?? SE_KM,
+        _SW_KM = swKm ?? SW_KM,
+        _NW_KM = nwKm ?? NW_KM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(8);
-    fbBuilder.addInt8(0, _KIND?.value);
-    fbBuilder.addFloat64(1, _LAT0);
-    fbBuilder.addFloat64(2, _LON0);
-    fbBuilder.addFloat64(3, _DLAT);
-    fbBuilder.addFloat64(4, _DLON);
-    fbBuilder.addUint32(5, _NLAT);
-    fbBuilder.addUint32(6, _NLON);
-    fbBuilder.addBool(7, _PERIODIC_LON);
+    fbBuilder.startTable(5);
+    fbBuilder.addFloat32(0, _THRESHOLD_WIND_MS);
+    fbBuilder.addFloat32(1, _NE_KM);
+    fbBuilder.addFloat32(2, _SE_KM);
+    fbBuilder.addFloat32(3, _SW_KM);
+    fbBuilder.addFloat32(4, _NW_KM);
     return fbBuilder.endTable();
   }
 
@@ -627,428 +322,124 @@ class WXFGridObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Weather Forecast Field - One variable, level, member and valid time on a
-///  regular grid.
-class WXF {
-  WXF._(this._bc, this._bcOffset);
-  factory WXF(List<int> bytes) {
+///  One point along a track.
+class TCTPoint {
+  TCTPoint._(this._bc, this._bcOffset);
+  factory TCTPoint(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<WXF> reader = _WXFReader();
+  static const fb.Reader<TCTPoint> reader = _TCTPointReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Stable identifier of the whole field this record belongs to; equal
-  ///  across all tiles of one (producer, init, member, variable, level, lead).
-  String? get FIELD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get fieldId => FIELD_ID;
-  ///  Class of the producing model.
-  wxfModelClass get MODEL_CLASS => wxfModelClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  wxfModelClass get modelClass => MODEL_CLASS;
-  ///  Producer-defined model identifier.
-  String? get MODEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get modelId => MODEL_ID;
-  ///  Producer-defined model version.
-  String? get MODEL_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get modelVersion => MODEL_VERSION;
-  ///  Initialisation (analysis) time of the run, Unix milliseconds UTC.
-  ///  Present only for TIME_BASIS Initialization.
-  int get INIT_TIME_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get initTimeMs => INIT_TIME_MS;
-  ///  Forecast lead from INIT_TIME_MS, hours. Present only for TIME_BASIS
-  ///  Initialization.
-  double get LEAD_HOURS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get leadHours => LEAD_HOURS;
-  ///  Time the field is valid at, Unix milliseconds UTC
-  ///  (INIT_TIME_MS + LEAD_HOURS * 3.6e6 when TIME_BASIS is Initialization).
-  int get VALID_TIME_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  Time the point is valid at, Unix milliseconds UTC.
+  int get VALID_TIME_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 4, 0);
   int get validTimeMs => VALID_TIME_MS;
-  ///  Maximum lead the run was integrated to, hours (e.g. 360 for a synoptic
-  ///  cycle, 48 for an interim cycle). Omitted for ValidTimeOnly.
-  int get HORIZON_HOURS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get horizonHours => HORIZON_HOURS;
-  ///  Ensemble realisation or statistic the field represents.
-  wxfMemberKind get MEMBER_KIND => wxfMemberKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  wxfMemberKind get memberKind => MEMBER_KIND;
-  ///  Zero-based member index when MEMBER_KIND is Member.
-  int get MEMBER_INDEX => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get memberIndex => MEMBER_INDEX;
-  ///  Number of members in the ensemble the run produced.
-  int get ENSEMBLE_SIZE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  int get ensembleSize => ENSEMBLE_SIZE;
-  ///  Percentile rank in [0, 100] when MEMBER_KIND is Percentile.
-  double get PERCENTILE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  ///  Threshold in UNITS when MEMBER_KIND is a probability kind.
-  double get THRESHOLD_VALUE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get thresholdValue => THRESHOLD_VALUE;
-  ///  Variable carried by the field.
-  wxfVariable get VARIABLE => wxfVariable.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 30, 0));
-  ///  Producer's native variable name (always set; authoritative when
-  ///  VARIABLE is Unspecified).
-  String? get VARIABLE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  String? get variableName => VARIABLE_NAME;
-  ///  Units of every cell value, UCUM or CF style (e.g. "K", "m s-1", "Pa",
-  ///  "1").
-  String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  ///  Vertical coordinate kind.
-  wxfLevelKind get LEVEL_KIND => wxfLevelKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
-  wxfLevelKind get levelKind => LEVEL_KIND;
-  ///  Vertical coordinate value in the unit fixed by LEVEL_KIND.
-  double get LEVEL_VALUE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get levelValue => LEVEL_VALUE;
-  ///  Temporal character of each cell value.
-  wxfTemporalKind get TEMPORAL_KIND => wxfTemporalKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 40, 0));
-  wxfTemporalKind get temporalKind => TEMPORAL_KIND;
-  ///  Accumulation or averaging window ending at VALID_TIME_MS, hours; 0 for
-  ///  Instantaneous.
-  double get ACCUMULATION_HOURS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  double get accumulationHours => ACCUMULATION_HOURS;
-  ///  Grid geometry of this record's samples (of this tile when tiled).
-  WXFGrid? get GRID => WXFGrid.reader.vTableGetNullable(_bc, _bcOffset, 44);
-  ///  Zero-based tile index within FIELD_ID; 0 for an untiled field.
-  int get TILE_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 46, 0);
-  int get tileIndex => TILE_INDEX;
-  ///  Number of tiles FIELD_ID was split into; 1 for an untiled field.
-  int get TILE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 48, 1);
-  int get tileCount => TILE_COUNT;
-  ///  Where the samples live.
-  wxfValuesEncoding get VALUES_ENCODING => wxfValuesEncoding.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 50, 0));
-  wxfValuesEncoding get valuesEncoding => VALUES_ENCODING;
-  ///  Inline samples, GRID.NLAT * GRID.NLON float32 cells in row-major order;
-  ///  NaN marks a missing cell. Present only when VALUES_ENCODING is
-  ///  InlineFloat32 and the cell count is at most 1,048,576.
-  List<double>? get VALUES => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 52);
-  ///  Content identifier of the sample chunk when VALUES_ENCODING is
-  ///  ContentAddressedChunk.
-  String? get CHUNK_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
-  String? get chunkCid => CHUNK_CID;
-  ///  Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
-  ///  for InlineEncodedChunk).
-  String? get CHUNK_DTYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
-  String? get chunkDtype => CHUNK_DTYPE;
-  ///  Codec chain applied to the chunk, outermost last (e.g. "bytes",
-  ///  "zstd"). For InlineEncodedChunk, applied in order to the codes in the
-  ///  order of VALUES (little-endian elements):
-  ///    "delta"   each element less the one before it, the first kept,
-  ///              wrapping in the element type;
-  ///    "zigzag"  each element read as signed in its type and mapped to
-  ///              unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
-  ///    "shuffle" the elements' bytes grouped by significance, every
-  ///              element's least significant byte first.
-  ///  Decoding applies the inverses from the last back.
-  List<String>? get CHUNK_CODECS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 58);
-  List<String>? get chunkCodecs => CHUNK_CODECS;
-  ///  Encoded chunk length in bytes.
-  int get CHUNK_BYTE_LENGTH => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 60, 0);
-  int get chunkByteLength => CHUNK_BYTE_LENGTH;
-  ///  Minimum sample over the field (after decoding); statistics for display
-  ///  scaling without touching the chunk.
-  double get VALUE_MIN => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  double get valueMin => VALUE_MIN;
-  ///  Maximum sample over the field (after decoding).
-  double get VALUE_MAX => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  double get valueMax => VALUE_MAX;
-  ///  Number of cells with a missing value.
-  int get MISSING_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 66, 0);
-  int get missingCount => MISSING_COUNT;
-  ///  Upstream publisher the field was retrieved from, as a host name or
-  ///  stable identifier.
-  String? get ORIGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
-  String? get originId => ORIGIN_ID;
-  ///  Stable dataset identifier within the origin (e.g. a bucket, collection
-  ///  or table name).
-  String? get DATASET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
-  String? get datasetId => DATASET_ID;
-  ///  Upstream URL or object path the field was retrieved from.
-  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
-  String? get sourceUrl => SOURCE_URL;
-  ///  Unix milliseconds UTC when the field was retrieved from the origin.
-  int get RETRIEVED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 74, 0);
-  int get retrievedAt => RETRIEVED_AT;
-  ///  Licence class applicable at RETRIEVED_AT.
-  wxfLicenseClass get LICENSE_CLASS => wxfLicenseClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 76, 0));
-  wxfLicenseClass get licenseClass => LICENSE_CLASS;
-  ///  URL of the licence or terms the field is offered under.
-  String? get LICENSE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
-  String? get licenseUrl => LICENSE_URL;
-  ///  Citation the upstream publisher asks for.
-  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
-  ///  Peer identifier of the node that ingested and published this record.
-  String? get PRODUCER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
-  String? get producerPeerId => PRODUCER_PEER_ID;
-  ///  Times published by the source; governs whether initialization, lead
-  ///  and horizon are meaningful. The default preserves existing records.
-  wxfTimeBasis get TIME_BASIS => wxfTimeBasis.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 84, 0));
-  wxfTimeBasis get timeBasis => TIME_BASIS;
-  ///  Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
-  ///  GRID.NLAT * GRID.NLON in the order of VALUES.
-  List<int>? get QUANTIZED_U16 => const fb.ListReader<int>(fb.Uint16Reader()).vTableGetNullable(_bc, _bcOffset, 86);
-  List<int>? get quantizedU16 => QUANTIZED_U16;
-  ///  Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
-  ///  encoded chunk when it is InlineEncodedChunk.
-  List<int>? get QUANTIZED_U8 => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 88);
-  List<int>? get quantizedU8 => QUANTIZED_U8;
-  ///  Scale applied to a quantized code, in UNITS per code step.
-  double get SCALE_FACTOR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 1.0);
-  double get scaleFactor => SCALE_FACTOR;
-  ///  Offset added after scaling a quantized code, in UNITS.
-  double get ADD_OFFSET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
-  double get addOffset => ADD_OFFSET;
-  ///  Instrument that observed the field: the platform and instrument
-  ///  designation its operator publishes. Absent for model output.
-  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
-  String? get sensorId => SENSOR_ID;
-  ///  Central wavelength of the channel the field was measured or retrieved
-  ///  at, micrometres; 0 when not a single channel.
-  double get CHANNEL_WAVELENGTH_UM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
-  double get channelWavelengthUm => CHANNEL_WAVELENGTH_UM;
-  ///  Geodetic longitude of the observing platform, degrees east (the
-  ///  sub-satellite point of a geostationary imager), for viewing-geometry
-  ///  and parallax corrections. NaN when unstated.
-  double get PLATFORM_LONGITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, double.nan);
-  double get platformLongitudeDeg => PLATFORM_LONGITUDE_DEG;
-  ///  Geodetic latitude of the observing platform, degrees north. NaN when
-  ///  unstated.
-  double get PLATFORM_LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, double.nan);
-  double get platformLatitudeDeg => PLATFORM_LATITUDE_DEG;
-  ///  Height of the observing platform above the WGS84 ellipsoid, metres.
-  ///  NaN when unstated.
-  double get PLATFORM_HEIGHT_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, double.nan);
-  double get platformHeightM => PLATFORM_HEIGHT_M;
-  ///  End of the observation's scan, Unix milliseconds UTC, when the samples
-  ///  were taken over an interval; VALID_TIME_MS is then the scan start.
-  ///  0 when unstated.
-  int get SCAN_END_TIME_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 104, 0);
-  int get scanEndTimeMs => SCAN_END_TIME_MS;
+  ///  Lead from INIT_TIME_MS, hours; 0 for observed tracks.
+  double get LEAD_HOURS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get leadHours => LEAD_HOURS;
+  ///  Centre latitude, degrees north.
+  double get LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Centre longitude, degrees east in [-180, 180).
+  double get LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Maximum sustained wind over WIND_AVERAGING_PERIOD_S, m/s
+  ///  (1 kt = 1852/3600 m/s).
+  double get MAX_SUSTAINED_WIND_MS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get maxSustainedWindMs => MAX_SUSTAINED_WIND_MS;
+  ///  Minimum central pressure, pascal (1 hPa = 100 Pa).
+  double get MIN_CENTRAL_PRESSURE_PA => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get minCentralPressurePa => MIN_CENTRAL_PRESSURE_PA;
+  ///  Radius of maximum wind, km; negative when not reported.
+  double get RADIUS_MAX_WIND_KM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get radiusMaxWindKm => RADIUS_MAX_WIND_KM;
+  ///  Wind radii at each reported threshold.
+  List<TCTRadii>? get RADII => const fb.ListReader<TCTRadii>(TCTRadii.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Intensity category at this point.
+  tctIntensityCategory get CATEGORY => tctIntensityCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  Probability in [0, 1] that the system exists at this point; 1 for
+  ///  observed tracks and unconditional forecasts.
+  double get EXISTENCE_PROBABILITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 22, 1.0);
+  double get existenceProbability => EXISTENCE_PROBABILITY;
+  ///  Direction of motion, degrees clockwise from north; negative when not
+  ///  reported.
+  double get MOTION_DIRECTION_DEG => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get motionDirectionDeg => MOTION_DIRECTION_DEG;
+  ///  Speed of motion, m/s; negative when not reported.
+  double get MOTION_SPEED_MS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get motionSpeedMs => MOTION_SPEED_MS;
 
   @override
   String toString() {
-    return 'WXF{fieldId: ${fieldId}, modelClass: ${modelClass}, modelId: ${modelId}, modelVersion: ${modelVersion}, initTimeMs: ${initTimeMs}, leadHours: ${leadHours}, validTimeMs: ${validTimeMs}, horizonHours: ${horizonHours}, memberKind: ${memberKind}, memberIndex: ${memberIndex}, ensembleSize: ${ensembleSize}, PERCENTILE: ${PERCENTILE}, thresholdValue: ${thresholdValue}, VARIABLE: ${VARIABLE}, variableName: ${variableName}, UNITS: ${UNITS}, levelKind: ${levelKind}, levelValue: ${levelValue}, temporalKind: ${temporalKind}, accumulationHours: ${accumulationHours}, GRID: ${GRID}, tileIndex: ${tileIndex}, tileCount: ${tileCount}, valuesEncoding: ${valuesEncoding}, VALUES: ${VALUES}, chunkCid: ${chunkCid}, chunkDtype: ${chunkDtype}, chunkCodecs: ${chunkCodecs}, chunkByteLength: ${chunkByteLength}, valueMin: ${valueMin}, valueMax: ${valueMax}, missingCount: ${missingCount}, originId: ${originId}, datasetId: ${datasetId}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}, licenseClass: ${licenseClass}, licenseUrl: ${licenseUrl}, CITATION: ${CITATION}, producerPeerId: ${producerPeerId}, timeBasis: ${timeBasis}, quantizedU16: ${quantizedU16}, quantizedU8: ${quantizedU8}, scaleFactor: ${scaleFactor}, addOffset: ${addOffset}, sensorId: ${sensorId}, channelWavelengthUm: ${channelWavelengthUm}, platformLongitudeDeg: ${platformLongitudeDeg}, platformLatitudeDeg: ${platformLatitudeDeg}, platformHeightM: ${platformHeightM}, scanEndTimeMs: ${scanEndTimeMs}}';
+    return 'TCTPoint{validTimeMs: ${validTimeMs}, leadHours: ${leadHours}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, maxSustainedWindMs: ${maxSustainedWindMs}, minCentralPressurePa: ${minCentralPressurePa}, radiusMaxWindKm: ${radiusMaxWindKm}, RADII: ${RADII}, CATEGORY: ${CATEGORY}, existenceProbability: ${existenceProbability}, motionDirectionDeg: ${motionDirectionDeg}, motionSpeedMs: ${motionSpeedMs}}';
   }
 }
 
-class _WXFReader extends fb.TableReader<WXF> {
-  const _WXFReader();
+class _TCTPointReader extends fb.TableReader<TCTPoint> {
+  const _TCTPointReader();
 
   @override
-  WXF createObject(fb.BufferContext bc, int offset) =>
-    WXF._(bc, offset);
+  TCTPoint createObject(fb.BufferContext bc, int offset) =>
+    TCTPoint._(bc, offset);
 }
 
-class WXFBuilder {
-  WXFBuilder(this.fbBuilder);
+class TCTPointBuilder {
+  TCTPointBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(51);
+    fbBuilder.startTable(12);
   }
 
-  int addFieldIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addModelClass(wxfModelClass? MODEL_CLASS) {
-    fbBuilder.addInt8(1, MODEL_CLASS?.value);
-    return fbBuilder.offset;
-  }
-  int addModelIdOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addModelVersionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addInitTimeMs(int? INIT_TIME_MS) {
-    fbBuilder.addUint64(4, INIT_TIME_MS);
+  int addValidTimeMs(int? VALID_TIME_MS) {
+    fbBuilder.addUint64(0, VALID_TIME_MS);
     return fbBuilder.offset;
   }
   int addLeadHours(double? LEAD_HOURS) {
-    fbBuilder.addFloat32(5, LEAD_HOURS);
+    fbBuilder.addFloat32(1, LEAD_HOURS);
     return fbBuilder.offset;
   }
-  int addValidTimeMs(int? VALID_TIME_MS) {
-    fbBuilder.addUint64(6, VALID_TIME_MS);
+  int addLatitude(double? LATITUDE) {
+    fbBuilder.addFloat64(2, LATITUDE);
     return fbBuilder.offset;
   }
-  int addHorizonHours(int? HORIZON_HOURS) {
-    fbBuilder.addUint16(7, HORIZON_HOURS);
+  int addLongitude(double? LONGITUDE) {
+    fbBuilder.addFloat64(3, LONGITUDE);
     return fbBuilder.offset;
   }
-  int addMemberKind(wxfMemberKind? MEMBER_KIND) {
-    fbBuilder.addInt8(8, MEMBER_KIND?.value);
+  int addMaxSustainedWindMs(double? MAX_SUSTAINED_WIND_MS) {
+    fbBuilder.addFloat32(4, MAX_SUSTAINED_WIND_MS);
     return fbBuilder.offset;
   }
-  int addMemberIndex(int? MEMBER_INDEX) {
-    fbBuilder.addUint16(9, MEMBER_INDEX);
+  int addMinCentralPressurePa(double? MIN_CENTRAL_PRESSURE_PA) {
+    fbBuilder.addFloat32(5, MIN_CENTRAL_PRESSURE_PA);
     return fbBuilder.offset;
   }
-  int addEnsembleSize(int? ENSEMBLE_SIZE) {
-    fbBuilder.addUint16(10, ENSEMBLE_SIZE);
+  int addRadiusMaxWindKm(double? RADIUS_MAX_WIND_KM) {
+    fbBuilder.addFloat32(6, RADIUS_MAX_WIND_KM);
     return fbBuilder.offset;
   }
-  int addPercentile(double? PERCENTILE) {
-    fbBuilder.addFloat32(11, PERCENTILE);
+  int addRadiiOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addThresholdValue(double? THRESHOLD_VALUE) {
-    fbBuilder.addFloat32(12, THRESHOLD_VALUE);
+  int addCategory(tctIntensityCategory? CATEGORY) {
+    fbBuilder.addInt8(8, CATEGORY?.value);
     return fbBuilder.offset;
   }
-  int addVariable(wxfVariable? VARIABLE) {
-    fbBuilder.addInt8(13, VARIABLE?.value);
+  int addExistenceProbability(double? EXISTENCE_PROBABILITY) {
+    fbBuilder.addFloat32(9, EXISTENCE_PROBABILITY);
     return fbBuilder.offset;
   }
-  int addVariableNameOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+  int addMotionDirectionDeg(double? MOTION_DIRECTION_DEG) {
+    fbBuilder.addFloat32(10, MOTION_DIRECTION_DEG);
     return fbBuilder.offset;
   }
-  int addUnitsOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addLevelKind(wxfLevelKind? LEVEL_KIND) {
-    fbBuilder.addInt8(16, LEVEL_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addLevelValue(double? LEVEL_VALUE) {
-    fbBuilder.addFloat32(17, LEVEL_VALUE);
-    return fbBuilder.offset;
-  }
-  int addTemporalKind(wxfTemporalKind? TEMPORAL_KIND) {
-    fbBuilder.addInt8(18, TEMPORAL_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addAccumulationHours(double? ACCUMULATION_HOURS) {
-    fbBuilder.addFloat32(19, ACCUMULATION_HOURS);
-    return fbBuilder.offset;
-  }
-  int addGridOffset(int? offset) {
-    fbBuilder.addOffset(20, offset);
-    return fbBuilder.offset;
-  }
-  int addTileIndex(int? TILE_INDEX) {
-    fbBuilder.addUint32(21, TILE_INDEX);
-    return fbBuilder.offset;
-  }
-  int addTileCount(int? TILE_COUNT) {
-    fbBuilder.addUint32(22, TILE_COUNT);
-    return fbBuilder.offset;
-  }
-  int addValuesEncoding(wxfValuesEncoding? VALUES_ENCODING) {
-    fbBuilder.addInt8(23, VALUES_ENCODING?.value);
-    return fbBuilder.offset;
-  }
-  int addValuesOffset(int? offset) {
-    fbBuilder.addOffset(24, offset);
-    return fbBuilder.offset;
-  }
-  int addChunkCidOffset(int? offset) {
-    fbBuilder.addOffset(25, offset);
-    return fbBuilder.offset;
-  }
-  int addChunkDtypeOffset(int? offset) {
-    fbBuilder.addOffset(26, offset);
-    return fbBuilder.offset;
-  }
-  int addChunkCodecsOffset(int? offset) {
-    fbBuilder.addOffset(27, offset);
-    return fbBuilder.offset;
-  }
-  int addChunkByteLength(int? CHUNK_BYTE_LENGTH) {
-    fbBuilder.addUint64(28, CHUNK_BYTE_LENGTH);
-    return fbBuilder.offset;
-  }
-  int addValueMin(double? VALUE_MIN) {
-    fbBuilder.addFloat32(29, VALUE_MIN);
-    return fbBuilder.offset;
-  }
-  int addValueMax(double? VALUE_MAX) {
-    fbBuilder.addFloat32(30, VALUE_MAX);
-    return fbBuilder.offset;
-  }
-  int addMissingCount(int? MISSING_COUNT) {
-    fbBuilder.addUint32(31, MISSING_COUNT);
-    return fbBuilder.offset;
-  }
-  int addOriginIdOffset(int? offset) {
-    fbBuilder.addOffset(32, offset);
-    return fbBuilder.offset;
-  }
-  int addDatasetIdOffset(int? offset) {
-    fbBuilder.addOffset(33, offset);
-    return fbBuilder.offset;
-  }
-  int addSourceUrlOffset(int? offset) {
-    fbBuilder.addOffset(34, offset);
-    return fbBuilder.offset;
-  }
-  int addRetrievedAt(int? RETRIEVED_AT) {
-    fbBuilder.addUint64(35, RETRIEVED_AT);
-    return fbBuilder.offset;
-  }
-  int addLicenseClass(wxfLicenseClass? LICENSE_CLASS) {
-    fbBuilder.addInt8(36, LICENSE_CLASS?.value);
-    return fbBuilder.offset;
-  }
-  int addLicenseUrlOffset(int? offset) {
-    fbBuilder.addOffset(37, offset);
-    return fbBuilder.offset;
-  }
-  int addCitationOffset(int? offset) {
-    fbBuilder.addOffset(38, offset);
-    return fbBuilder.offset;
-  }
-  int addProducerPeerIdOffset(int? offset) {
-    fbBuilder.addOffset(39, offset);
-    return fbBuilder.offset;
-  }
-  int addTimeBasis(wxfTimeBasis? TIME_BASIS) {
-    fbBuilder.addInt8(40, TIME_BASIS?.value);
-    return fbBuilder.offset;
-  }
-  int addQuantizedU16Offset(int? offset) {
-    fbBuilder.addOffset(41, offset);
-    return fbBuilder.offset;
-  }
-  int addQuantizedU8Offset(int? offset) {
-    fbBuilder.addOffset(42, offset);
-    return fbBuilder.offset;
-  }
-  int addScaleFactor(double? SCALE_FACTOR) {
-    fbBuilder.addFloat64(43, SCALE_FACTOR);
-    return fbBuilder.offset;
-  }
-  int addAddOffset(double? ADD_OFFSET) {
-    fbBuilder.addFloat64(44, ADD_OFFSET);
-    return fbBuilder.offset;
-  }
-  int addSensorIdOffset(int? offset) {
-    fbBuilder.addOffset(45, offset);
-    return fbBuilder.offset;
-  }
-  int addChannelWavelengthUm(double? CHANNEL_WAVELENGTH_UM) {
-    fbBuilder.addFloat32(46, CHANNEL_WAVELENGTH_UM);
-    return fbBuilder.offset;
-  }
-  int addPlatformLongitudeDeg(double? PLATFORM_LONGITUDE_DEG) {
-    fbBuilder.addFloat64(47, PLATFORM_LONGITUDE_DEG);
-    return fbBuilder.offset;
-  }
-  int addPlatformLatitudeDeg(double? PLATFORM_LATITUDE_DEG) {
-    fbBuilder.addFloat64(48, PLATFORM_LATITUDE_DEG);
-    return fbBuilder.offset;
-  }
-  int addPlatformHeightM(double? PLATFORM_HEIGHT_M) {
-    fbBuilder.addFloat64(49, PLATFORM_HEIGHT_M);
-    return fbBuilder.offset;
-  }
-  int addScanEndTimeMs(int? SCAN_END_TIME_MS) {
-    fbBuilder.addUint64(50, SCAN_END_TIME_MS);
+  int addMotionSpeedMs(double? MOTION_SPEED_MS) {
+    fbBuilder.addFloat32(11, MOTION_SPEED_MS);
     return fbBuilder.offset;
   }
 
@@ -1057,39 +448,296 @@ class WXFBuilder {
   }
 }
 
-class WXFObjectBuilder extends fb.ObjectBuilder {
-  final String? _FIELD_ID;
+class TCTPointObjectBuilder extends fb.ObjectBuilder {
+  final int? _VALID_TIME_MS;
+  final double? _LEAD_HOURS;
+  final double? _LATITUDE;
+  final double? _LONGITUDE;
+  final double? _MAX_SUSTAINED_WIND_MS;
+  final double? _MIN_CENTRAL_PRESSURE_PA;
+  final double? _RADIUS_MAX_WIND_KM;
+  final List<TCTRadiiObjectBuilder>? _RADII;
+  final tctIntensityCategory? _CATEGORY;
+  final double? _EXISTENCE_PROBABILITY;
+  final double? _MOTION_DIRECTION_DEG;
+  final double? _MOTION_SPEED_MS;
+
+  TCTPointObjectBuilder({
+    int? VALID_TIME_MS,
+    int? validTimeMs,
+    double? LEAD_HOURS,
+    double? leadHours,
+    double? LATITUDE,
+    double? LONGITUDE,
+    double? MAX_SUSTAINED_WIND_MS,
+    double? maxSustainedWindMs,
+    double? MIN_CENTRAL_PRESSURE_PA,
+    double? minCentralPressurePa,
+    double? RADIUS_MAX_WIND_KM,
+    double? radiusMaxWindKm,
+    List<TCTRadiiObjectBuilder>? RADII,
+    tctIntensityCategory? CATEGORY,
+    double? EXISTENCE_PROBABILITY,
+    double? existenceProbability,
+    double? MOTION_DIRECTION_DEG,
+    double? motionDirectionDeg,
+    double? MOTION_SPEED_MS,
+    double? motionSpeedMs,
+  })
+      : _VALID_TIME_MS = validTimeMs ?? VALID_TIME_MS,
+        _LEAD_HOURS = leadHours ?? LEAD_HOURS,
+        _LATITUDE = LATITUDE,
+        _LONGITUDE = LONGITUDE,
+        _MAX_SUSTAINED_WIND_MS = maxSustainedWindMs ?? MAX_SUSTAINED_WIND_MS,
+        _MIN_CENTRAL_PRESSURE_PA = minCentralPressurePa ?? MIN_CENTRAL_PRESSURE_PA,
+        _RADIUS_MAX_WIND_KM = radiusMaxWindKm ?? RADIUS_MAX_WIND_KM,
+        _RADII = RADII,
+        _CATEGORY = CATEGORY,
+        _EXISTENCE_PROBABILITY = existenceProbability ?? EXISTENCE_PROBABILITY,
+        _MOTION_DIRECTION_DEG = motionDirectionDeg ?? MOTION_DIRECTION_DEG,
+        _MOTION_SPEED_MS = motionSpeedMs ?? MOTION_SPEED_MS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? RADIIOffset = _RADII == null ? null
+        : fbBuilder.writeList(_RADII!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(12);
+    fbBuilder.addUint64(0, _VALID_TIME_MS);
+    fbBuilder.addFloat32(1, _LEAD_HOURS);
+    fbBuilder.addFloat64(2, _LATITUDE);
+    fbBuilder.addFloat64(3, _LONGITUDE);
+    fbBuilder.addFloat32(4, _MAX_SUSTAINED_WIND_MS);
+    fbBuilder.addFloat32(5, _MIN_CENTRAL_PRESSURE_PA);
+    fbBuilder.addFloat32(6, _RADIUS_MAX_WIND_KM);
+    fbBuilder.addOffset(7, RADIIOffset);
+    fbBuilder.addInt8(8, _CATEGORY?.value);
+    fbBuilder.addFloat32(9, _EXISTENCE_PROBABILITY);
+    fbBuilder.addFloat32(10, _MOTION_DIRECTION_DEG);
+    fbBuilder.addFloat32(11, _MOTION_SPEED_MS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Tropical Cyclone Track - One realisation of one storm's track.
+class TCT {
+  TCT._(this._bc, this._bcOffset);
+  factory TCT(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TCT> reader = _TCTReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable storm identifier as issued by the origin (e.g. a best-track
+  ///  serial identifier); equal across every member of the same storm.
+  String? get STORM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get stormId => STORM_ID;
+  ///  Storm name if assigned; empty for invests and unnamed genesis events.
+  String? get STORM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get stormName => STORM_NAME;
+  ///  Basin the system is tracked in.
+  tctBasin get BASIN => tctBasin.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Provenance kind of the track.
+  tctTrackKind get TRACK_KIND => tctTrackKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  tctTrackKind get trackKind => TRACK_KIND;
+  ///  Whether the system existed at initialisation.
+  tctTrackOrigin get TRACK_ORIGIN => tctTrackOrigin.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  tctTrackOrigin get trackOrigin => TRACK_ORIGIN;
+  ///  Class of the producing model; Unspecified for observed tracks.
+  wxfModelClass get MODEL_CLASS => wxfModelClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  wxfModelClass get modelClass => MODEL_CLASS;
+  ///  Producer-defined model identifier.
+  String? get MODEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get modelId => MODEL_ID;
+  ///  Producer-defined model version.
+  String? get MODEL_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get modelVersion => MODEL_VERSION;
+  ///  Initialisation time of the run, Unix milliseconds UTC; for observed
+  ///  tracks the issue time of the track.
+  int get INIT_TIME_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get initTimeMs => INIT_TIME_MS;
+  ///  Ensemble realisation or statistic the track represents.
+  wxfMemberKind get MEMBER_KIND => wxfMemberKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  wxfMemberKind get memberKind => MEMBER_KIND;
+  ///  Zero-based member index when MEMBER_KIND is Member.
+  int get MEMBER_INDEX => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get memberIndex => MEMBER_INDEX;
+  ///  Number of members in the ensemble the run produced.
+  int get ENSEMBLE_SIZE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get ensembleSize => ENSEMBLE_SIZE;
+  ///  Averaging period of MAX_SUSTAINED_WIND_MS, seconds (60 or 600).
+  int get WIND_AVERAGING_PERIOD_S => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get windAveragingPeriodS => WIND_AVERAGING_PERIOD_S;
+  ///  Track points in ascending VALID_TIME_MS order.
+  List<TCTPoint>? get POINTS => const fb.ListReader<TCTPoint>(TCTPoint.reader).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Upstream publisher the track was retrieved from, as a host name or
+  ///  stable identifier.
+  String? get ORIGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get originId => ORIGIN_ID;
+  ///  Stable dataset identifier within the origin.
+  String? get DATASET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get datasetId => DATASET_ID;
+  ///  Upstream URL or object path the track was retrieved from.
+  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get sourceUrl => SOURCE_URL;
+  ///  Unix milliseconds UTC when the track was retrieved from the origin.
+  int get RETRIEVED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 38, 0);
+  int get retrievedAt => RETRIEVED_AT;
+  ///  Licence class applicable at RETRIEVED_AT.
+  wxfLicenseClass get LICENSE_CLASS => wxfLicenseClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 40, 0));
+  wxfLicenseClass get licenseClass => LICENSE_CLASS;
+  ///  URL of the licence or terms the track is offered under.
+  String? get LICENSE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get licenseUrl => LICENSE_URL;
+  ///  Citation the upstream publisher asks for.
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Peer identifier of the node that ingested and published this record.
+  String? get PRODUCER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get producerPeerId => PRODUCER_PEER_ID;
+
+  @override
+  String toString() {
+    return 'TCT{stormId: ${stormId}, stormName: ${stormName}, BASIN: ${BASIN}, trackKind: ${trackKind}, trackOrigin: ${trackOrigin}, modelClass: ${modelClass}, modelId: ${modelId}, modelVersion: ${modelVersion}, initTimeMs: ${initTimeMs}, memberKind: ${memberKind}, memberIndex: ${memberIndex}, ensembleSize: ${ensembleSize}, windAveragingPeriodS: ${windAveragingPeriodS}, POINTS: ${POINTS}, originId: ${originId}, datasetId: ${datasetId}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}, licenseClass: ${licenseClass}, licenseUrl: ${licenseUrl}, CITATION: ${CITATION}, producerPeerId: ${producerPeerId}}';
+  }
+}
+
+class _TCTReader extends fb.TableReader<TCT> {
+  const _TCTReader();
+
+  @override
+  TCT createObject(fb.BufferContext bc, int offset) =>
+    TCT._(bc, offset);
+}
+
+class TCTBuilder {
+  TCTBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(22);
+  }
+
+  int addStormIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addStormNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addBasin(tctBasin? BASIN) {
+    fbBuilder.addInt8(2, BASIN?.value);
+    return fbBuilder.offset;
+  }
+  int addTrackKind(tctTrackKind? TRACK_KIND) {
+    fbBuilder.addInt8(3, TRACK_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addTrackOrigin(tctTrackOrigin? TRACK_ORIGIN) {
+    fbBuilder.addInt8(4, TRACK_ORIGIN?.value);
+    return fbBuilder.offset;
+  }
+  int addModelClass(wxfModelClass? MODEL_CLASS) {
+    fbBuilder.addInt8(5, MODEL_CLASS?.value);
+    return fbBuilder.offset;
+  }
+  int addModelIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addModelVersionOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addInitTimeMs(int? INIT_TIME_MS) {
+    fbBuilder.addUint64(8, INIT_TIME_MS);
+    return fbBuilder.offset;
+  }
+  int addMemberKind(wxfMemberKind? MEMBER_KIND) {
+    fbBuilder.addInt8(9, MEMBER_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addMemberIndex(int? MEMBER_INDEX) {
+    fbBuilder.addUint16(10, MEMBER_INDEX);
+    return fbBuilder.offset;
+  }
+  int addEnsembleSize(int? ENSEMBLE_SIZE) {
+    fbBuilder.addUint16(11, ENSEMBLE_SIZE);
+    return fbBuilder.offset;
+  }
+  int addWindAveragingPeriodS(int? WIND_AVERAGING_PERIOD_S) {
+    fbBuilder.addUint16(12, WIND_AVERAGING_PERIOD_S);
+    return fbBuilder.offset;
+  }
+  int addPointsOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addDatasetIdOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceUrlOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAt(int? RETRIEVED_AT) {
+    fbBuilder.addUint64(17, RETRIEVED_AT);
+    return fbBuilder.offset;
+  }
+  int addLicenseClass(wxfLicenseClass? LICENSE_CLASS) {
+    fbBuilder.addInt8(18, LICENSE_CLASS?.value);
+    return fbBuilder.offset;
+  }
+  int addLicenseUrlOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addProducerPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TCTObjectBuilder extends fb.ObjectBuilder {
+  final String? _STORM_ID;
+  final String? _STORM_NAME;
+  final tctBasin? _BASIN;
+  final tctTrackKind? _TRACK_KIND;
+  final tctTrackOrigin? _TRACK_ORIGIN;
   final wxfModelClass? _MODEL_CLASS;
   final String? _MODEL_ID;
   final String? _MODEL_VERSION;
   final int? _INIT_TIME_MS;
-  final double? _LEAD_HOURS;
-  final int? _VALID_TIME_MS;
-  final int? _HORIZON_HOURS;
   final wxfMemberKind? _MEMBER_KIND;
   final int? _MEMBER_INDEX;
   final int? _ENSEMBLE_SIZE;
-  final double? _PERCENTILE;
-  final double? _THRESHOLD_VALUE;
-  final wxfVariable? _VARIABLE;
-  final String? _VARIABLE_NAME;
-  final String? _UNITS;
-  final wxfLevelKind? _LEVEL_KIND;
-  final double? _LEVEL_VALUE;
-  final wxfTemporalKind? _TEMPORAL_KIND;
-  final double? _ACCUMULATION_HOURS;
-  final WXFGridObjectBuilder? _GRID;
-  final int? _TILE_INDEX;
-  final int? _TILE_COUNT;
-  final wxfValuesEncoding? _VALUES_ENCODING;
-  final List<double>? _VALUES;
-  final String? _CHUNK_CID;
-  final String? _CHUNK_DTYPE;
-  final List<String>? _CHUNK_CODECS;
-  final int? _CHUNK_BYTE_LENGTH;
-  final double? _VALUE_MIN;
-  final double? _VALUE_MAX;
-  final int? _MISSING_COUNT;
+  final int? _WIND_AVERAGING_PERIOD_S;
+  final List<TCTPointObjectBuilder>? _POINTS;
   final String? _ORIGIN_ID;
   final String? _DATASET_ID;
   final String? _SOURCE_URL;
@@ -1098,21 +746,17 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
   final String? _LICENSE_URL;
   final String? _CITATION;
   final String? _PRODUCER_PEER_ID;
-  final wxfTimeBasis? _TIME_BASIS;
-  final List<int>? _QUANTIZED_U16;
-  final List<int>? _QUANTIZED_U8;
-  final double? _SCALE_FACTOR;
-  final double? _ADD_OFFSET;
-  final String? _SENSOR_ID;
-  final double? _CHANNEL_WAVELENGTH_UM;
-  final double? _PLATFORM_LONGITUDE_DEG;
-  final double? _PLATFORM_LATITUDE_DEG;
-  final double? _PLATFORM_HEIGHT_M;
-  final int? _SCAN_END_TIME_MS;
 
-  WXFObjectBuilder({
-    String? FIELD_ID,
-    String? fieldId,
+  TCTObjectBuilder({
+    String? STORM_ID,
+    String? stormId,
+    String? STORM_NAME,
+    String? stormName,
+    tctBasin? BASIN,
+    tctTrackKind? TRACK_KIND,
+    tctTrackKind? trackKind,
+    tctTrackOrigin? TRACK_ORIGIN,
+    tctTrackOrigin? trackOrigin,
     wxfModelClass? MODEL_CLASS,
     wxfModelClass? modelClass,
     String? MODEL_ID,
@@ -1121,55 +765,15 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
     String? modelVersion,
     int? INIT_TIME_MS,
     int? initTimeMs,
-    double? LEAD_HOURS,
-    double? leadHours,
-    int? VALID_TIME_MS,
-    int? validTimeMs,
-    int? HORIZON_HOURS,
-    int? horizonHours,
     wxfMemberKind? MEMBER_KIND,
     wxfMemberKind? memberKind,
     int? MEMBER_INDEX,
     int? memberIndex,
     int? ENSEMBLE_SIZE,
     int? ensembleSize,
-    double? PERCENTILE,
-    double? THRESHOLD_VALUE,
-    double? thresholdValue,
-    wxfVariable? VARIABLE,
-    String? VARIABLE_NAME,
-    String? variableName,
-    String? UNITS,
-    wxfLevelKind? LEVEL_KIND,
-    wxfLevelKind? levelKind,
-    double? LEVEL_VALUE,
-    double? levelValue,
-    wxfTemporalKind? TEMPORAL_KIND,
-    wxfTemporalKind? temporalKind,
-    double? ACCUMULATION_HOURS,
-    double? accumulationHours,
-    WXFGridObjectBuilder? GRID,
-    int? TILE_INDEX,
-    int? tileIndex,
-    int? TILE_COUNT,
-    int? tileCount,
-    wxfValuesEncoding? VALUES_ENCODING,
-    wxfValuesEncoding? valuesEncoding,
-    List<double>? VALUES,
-    String? CHUNK_CID,
-    String? chunkCid,
-    String? CHUNK_DTYPE,
-    String? chunkDtype,
-    List<String>? CHUNK_CODECS,
-    List<String>? chunkCodecs,
-    int? CHUNK_BYTE_LENGTH,
-    int? chunkByteLength,
-    double? VALUE_MIN,
-    double? valueMin,
-    double? VALUE_MAX,
-    double? valueMax,
-    int? MISSING_COUNT,
-    int? missingCount,
+    int? WIND_AVERAGING_PERIOD_S,
+    int? windAveragingPeriodS,
+    List<TCTPointObjectBuilder>? POINTS,
     String? ORIGIN_ID,
     String? originId,
     String? DATASET_ID,
@@ -1185,61 +789,21 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
     String? CITATION,
     String? PRODUCER_PEER_ID,
     String? producerPeerId,
-    wxfTimeBasis? TIME_BASIS,
-    wxfTimeBasis? timeBasis,
-    List<int>? QUANTIZED_U16,
-    List<int>? quantizedU16,
-    List<int>? QUANTIZED_U8,
-    List<int>? quantizedU8,
-    double? SCALE_FACTOR,
-    double? scaleFactor,
-    double? ADD_OFFSET,
-    double? addOffset,
-    String? SENSOR_ID,
-    String? sensorId,
-    double? CHANNEL_WAVELENGTH_UM,
-    double? channelWavelengthUm,
-    double? PLATFORM_LONGITUDE_DEG,
-    double? platformLongitudeDeg,
-    double? PLATFORM_LATITUDE_DEG,
-    double? platformLatitudeDeg,
-    double? PLATFORM_HEIGHT_M,
-    double? platformHeightM,
-    int? SCAN_END_TIME_MS,
-    int? scanEndTimeMs,
   })
-      : _FIELD_ID = fieldId ?? FIELD_ID,
+      : _STORM_ID = stormId ?? STORM_ID,
+        _STORM_NAME = stormName ?? STORM_NAME,
+        _BASIN = BASIN,
+        _TRACK_KIND = trackKind ?? TRACK_KIND,
+        _TRACK_ORIGIN = trackOrigin ?? TRACK_ORIGIN,
         _MODEL_CLASS = modelClass ?? MODEL_CLASS,
         _MODEL_ID = modelId ?? MODEL_ID,
         _MODEL_VERSION = modelVersion ?? MODEL_VERSION,
         _INIT_TIME_MS = initTimeMs ?? INIT_TIME_MS,
-        _LEAD_HOURS = leadHours ?? LEAD_HOURS,
-        _VALID_TIME_MS = validTimeMs ?? VALID_TIME_MS,
-        _HORIZON_HOURS = horizonHours ?? HORIZON_HOURS,
         _MEMBER_KIND = memberKind ?? MEMBER_KIND,
         _MEMBER_INDEX = memberIndex ?? MEMBER_INDEX,
         _ENSEMBLE_SIZE = ensembleSize ?? ENSEMBLE_SIZE,
-        _PERCENTILE = PERCENTILE,
-        _THRESHOLD_VALUE = thresholdValue ?? THRESHOLD_VALUE,
-        _VARIABLE = VARIABLE,
-        _VARIABLE_NAME = variableName ?? VARIABLE_NAME,
-        _UNITS = UNITS,
-        _LEVEL_KIND = levelKind ?? LEVEL_KIND,
-        _LEVEL_VALUE = levelValue ?? LEVEL_VALUE,
-        _TEMPORAL_KIND = temporalKind ?? TEMPORAL_KIND,
-        _ACCUMULATION_HOURS = accumulationHours ?? ACCUMULATION_HOURS,
-        _GRID = GRID,
-        _TILE_INDEX = tileIndex ?? TILE_INDEX,
-        _TILE_COUNT = tileCount ?? TILE_COUNT,
-        _VALUES_ENCODING = valuesEncoding ?? VALUES_ENCODING,
-        _VALUES = VALUES,
-        _CHUNK_CID = chunkCid ?? CHUNK_CID,
-        _CHUNK_DTYPE = chunkDtype ?? CHUNK_DTYPE,
-        _CHUNK_CODECS = chunkCodecs ?? CHUNK_CODECS,
-        _CHUNK_BYTE_LENGTH = chunkByteLength ?? CHUNK_BYTE_LENGTH,
-        _VALUE_MIN = valueMin ?? VALUE_MIN,
-        _VALUE_MAX = valueMax ?? VALUE_MAX,
-        _MISSING_COUNT = missingCount ?? MISSING_COUNT,
+        _WIND_AVERAGING_PERIOD_S = windAveragingPeriodS ?? WIND_AVERAGING_PERIOD_S,
+        _POINTS = POINTS,
         _ORIGIN_ID = originId ?? ORIGIN_ID,
         _DATASET_ID = datasetId ?? DATASET_ID,
         _SOURCE_URL = sourceUrl ?? SOURCE_URL,
@@ -1247,41 +811,21 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
         _LICENSE_CLASS = licenseClass ?? LICENSE_CLASS,
         _LICENSE_URL = licenseUrl ?? LICENSE_URL,
         _CITATION = CITATION,
-        _PRODUCER_PEER_ID = producerPeerId ?? PRODUCER_PEER_ID,
-        _TIME_BASIS = timeBasis ?? TIME_BASIS,
-        _QUANTIZED_U16 = quantizedU16 ?? QUANTIZED_U16,
-        _QUANTIZED_U8 = quantizedU8 ?? QUANTIZED_U8,
-        _SCALE_FACTOR = scaleFactor ?? SCALE_FACTOR,
-        _ADD_OFFSET = addOffset ?? ADD_OFFSET,
-        _SENSOR_ID = sensorId ?? SENSOR_ID,
-        _CHANNEL_WAVELENGTH_UM = channelWavelengthUm ?? CHANNEL_WAVELENGTH_UM,
-        _PLATFORM_LONGITUDE_DEG = platformLongitudeDeg ?? PLATFORM_LONGITUDE_DEG,
-        _PLATFORM_LATITUDE_DEG = platformLatitudeDeg ?? PLATFORM_LATITUDE_DEG,
-        _PLATFORM_HEIGHT_M = platformHeightM ?? PLATFORM_HEIGHT_M,
-        _SCAN_END_TIME_MS = scanEndTimeMs ?? SCAN_END_TIME_MS;
+        _PRODUCER_PEER_ID = producerPeerId ?? PRODUCER_PEER_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? FIELD_IDOffset = _FIELD_ID == null ? null
-        : fbBuilder.writeString(_FIELD_ID!);
+    final int? STORM_IDOffset = _STORM_ID == null ? null
+        : fbBuilder.writeString(_STORM_ID!);
+    final int? STORM_NAMEOffset = _STORM_NAME == null ? null
+        : fbBuilder.writeString(_STORM_NAME!);
     final int? MODEL_IDOffset = _MODEL_ID == null ? null
         : fbBuilder.writeString(_MODEL_ID!);
     final int? MODEL_VERSIONOffset = _MODEL_VERSION == null ? null
         : fbBuilder.writeString(_MODEL_VERSION!);
-    final int? VARIABLE_NAMEOffset = _VARIABLE_NAME == null ? null
-        : fbBuilder.writeString(_VARIABLE_NAME!);
-    final int? UNITSOffset = _UNITS == null ? null
-        : fbBuilder.writeString(_UNITS!);
-    final int? GRIDOffset = _GRID?.getOrCreateOffset(fbBuilder);
-    final int? VALUESOffset = _VALUES == null ? null
-        : fbBuilder.writeListFloat32(_VALUES!);
-    final int? CHUNK_CIDOffset = _CHUNK_CID == null ? null
-        : fbBuilder.writeString(_CHUNK_CID!);
-    final int? CHUNK_DTYPEOffset = _CHUNK_DTYPE == null ? null
-        : fbBuilder.writeString(_CHUNK_DTYPE!);
-    final int? CHUNK_CODECSOffset = _CHUNK_CODECS == null ? null
-        : fbBuilder.writeList(_CHUNK_CODECS!.map(fbBuilder.writeString).toList());
+    final int? POINTSOffset = _POINTS == null ? null
+        : fbBuilder.writeList(_POINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? ORIGIN_IDOffset = _ORIGIN_ID == null ? null
         : fbBuilder.writeString(_ORIGIN_ID!);
     final int? DATASET_IDOffset = _DATASET_ID == null ? null
@@ -1294,64 +838,29 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CITATION!);
     final int? PRODUCER_PEER_IDOffset = _PRODUCER_PEER_ID == null ? null
         : fbBuilder.writeString(_PRODUCER_PEER_ID!);
-    final int? QUANTIZED_U16Offset = _QUANTIZED_U16 == null ? null
-        : fbBuilder.writeListUint16(_QUANTIZED_U16!);
-    final int? QUANTIZED_U8Offset = _QUANTIZED_U8 == null ? null
-        : fbBuilder.writeListUint8(_QUANTIZED_U8!);
-    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
-        : fbBuilder.writeString(_SENSOR_ID!);
-    fbBuilder.startTable(51);
-    fbBuilder.addOffset(0, FIELD_IDOffset);
-    fbBuilder.addInt8(1, _MODEL_CLASS?.value);
-    fbBuilder.addOffset(2, MODEL_IDOffset);
-    fbBuilder.addOffset(3, MODEL_VERSIONOffset);
-    fbBuilder.addUint64(4, _INIT_TIME_MS);
-    fbBuilder.addFloat32(5, _LEAD_HOURS);
-    fbBuilder.addUint64(6, _VALID_TIME_MS);
-    fbBuilder.addUint16(7, _HORIZON_HOURS);
-    fbBuilder.addInt8(8, _MEMBER_KIND?.value);
-    fbBuilder.addUint16(9, _MEMBER_INDEX);
-    fbBuilder.addUint16(10, _ENSEMBLE_SIZE);
-    fbBuilder.addFloat32(11, _PERCENTILE);
-    fbBuilder.addFloat32(12, _THRESHOLD_VALUE);
-    fbBuilder.addInt8(13, _VARIABLE?.value);
-    fbBuilder.addOffset(14, VARIABLE_NAMEOffset);
-    fbBuilder.addOffset(15, UNITSOffset);
-    fbBuilder.addInt8(16, _LEVEL_KIND?.value);
-    fbBuilder.addFloat32(17, _LEVEL_VALUE);
-    fbBuilder.addInt8(18, _TEMPORAL_KIND?.value);
-    fbBuilder.addFloat32(19, _ACCUMULATION_HOURS);
-    fbBuilder.addOffset(20, GRIDOffset);
-    fbBuilder.addUint32(21, _TILE_INDEX);
-    fbBuilder.addUint32(22, _TILE_COUNT);
-    fbBuilder.addInt8(23, _VALUES_ENCODING?.value);
-    fbBuilder.addOffset(24, VALUESOffset);
-    fbBuilder.addOffset(25, CHUNK_CIDOffset);
-    fbBuilder.addOffset(26, CHUNK_DTYPEOffset);
-    fbBuilder.addOffset(27, CHUNK_CODECSOffset);
-    fbBuilder.addUint64(28, _CHUNK_BYTE_LENGTH);
-    fbBuilder.addFloat32(29, _VALUE_MIN);
-    fbBuilder.addFloat32(30, _VALUE_MAX);
-    fbBuilder.addUint32(31, _MISSING_COUNT);
-    fbBuilder.addOffset(32, ORIGIN_IDOffset);
-    fbBuilder.addOffset(33, DATASET_IDOffset);
-    fbBuilder.addOffset(34, SOURCE_URLOffset);
-    fbBuilder.addUint64(35, _RETRIEVED_AT);
-    fbBuilder.addInt8(36, _LICENSE_CLASS?.value);
-    fbBuilder.addOffset(37, LICENSE_URLOffset);
-    fbBuilder.addOffset(38, CITATIONOffset);
-    fbBuilder.addOffset(39, PRODUCER_PEER_IDOffset);
-    fbBuilder.addInt8(40, _TIME_BASIS?.value);
-    fbBuilder.addOffset(41, QUANTIZED_U16Offset);
-    fbBuilder.addOffset(42, QUANTIZED_U8Offset);
-    fbBuilder.addFloat64(43, _SCALE_FACTOR);
-    fbBuilder.addFloat64(44, _ADD_OFFSET);
-    fbBuilder.addOffset(45, SENSOR_IDOffset);
-    fbBuilder.addFloat32(46, _CHANNEL_WAVELENGTH_UM);
-    fbBuilder.addFloat64(47, _PLATFORM_LONGITUDE_DEG);
-    fbBuilder.addFloat64(48, _PLATFORM_LATITUDE_DEG);
-    fbBuilder.addFloat64(49, _PLATFORM_HEIGHT_M);
-    fbBuilder.addUint64(50, _SCAN_END_TIME_MS);
+    fbBuilder.startTable(22);
+    fbBuilder.addOffset(0, STORM_IDOffset);
+    fbBuilder.addOffset(1, STORM_NAMEOffset);
+    fbBuilder.addInt8(2, _BASIN?.value);
+    fbBuilder.addInt8(3, _TRACK_KIND?.value);
+    fbBuilder.addInt8(4, _TRACK_ORIGIN?.value);
+    fbBuilder.addInt8(5, _MODEL_CLASS?.value);
+    fbBuilder.addOffset(6, MODEL_IDOffset);
+    fbBuilder.addOffset(7, MODEL_VERSIONOffset);
+    fbBuilder.addUint64(8, _INIT_TIME_MS);
+    fbBuilder.addInt8(9, _MEMBER_KIND?.value);
+    fbBuilder.addUint16(10, _MEMBER_INDEX);
+    fbBuilder.addUint16(11, _ENSEMBLE_SIZE);
+    fbBuilder.addUint16(12, _WIND_AVERAGING_PERIOD_S);
+    fbBuilder.addOffset(13, POINTSOffset);
+    fbBuilder.addOffset(14, ORIGIN_IDOffset);
+    fbBuilder.addOffset(15, DATASET_IDOffset);
+    fbBuilder.addOffset(16, SOURCE_URLOffset);
+    fbBuilder.addUint64(17, _RETRIEVED_AT);
+    fbBuilder.addInt8(18, _LICENSE_CLASS?.value);
+    fbBuilder.addOffset(19, LICENSE_URLOffset);
+    fbBuilder.addOffset(20, CITATIONOffset);
+    fbBuilder.addOffset(21, PRODUCER_PEER_IDOffset);
     return fbBuilder.endTable();
   }
 

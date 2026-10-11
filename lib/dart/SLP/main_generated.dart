@@ -7,448 +7,289 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
-///  Operations this record can request. Values 1-4 are the original
-///  position-only planet-centred-inertial / planet-centred-fixed / geodetic
-///  conversions and are FROZEN. Append new values only; never reorder.
-enum frmOperationCode {
-  UNKNOWN(0),
-  PCI_TO_PCPF(1),
-  PCPF_TO_PCI(2),
-  LLA_TO_PCPF(3),
-  PCPF_TO_LLA(4),
-  STATE_TRANSFORM(5),
-  FRAME_ROTATION(6),
-  STATE_REPRESENTATION_CONVERT(7);
+///  Solver Problem Definition ($SLP)
+///
+///  A portable targeting or constrained-optimization problem. The evaluator and
+///  propagator are named as ports rather than implementations: a solver may be
+///  connected to any module that supplies the requested parameter values.
+enum slpProblemKind {
+  UNSPECIFIED(0),
+  TARGET(1),
+  OPTIMIZE(2);
 
   final int value;
-  const frmOperationCode(this.value);
+  const slpProblemKind(this.value);
 
-  factory frmOperationCode.fromValue(int value) {
+  factory slpProblemKind.fromValue(int value) {
     switch (value) {
-      case 0: return frmOperationCode.UNKNOWN;
-      case 1: return frmOperationCode.PCI_TO_PCPF;
-      case 2: return frmOperationCode.PCPF_TO_PCI;
-      case 3: return frmOperationCode.LLA_TO_PCPF;
-      case 4: return frmOperationCode.PCPF_TO_LLA;
-      case 5: return frmOperationCode.STATE_TRANSFORM;
-      case 6: return frmOperationCode.FRAME_ROTATION;
-      case 7: return frmOperationCode.STATE_REPRESENTATION_CONVERT;
+      case 0: return slpProblemKind.UNSPECIFIED;
+      case 1: return slpProblemKind.TARGET;
+      case 2: return slpProblemKind.OPTIMIZE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static frmOperationCode? _createOrNull(int? value) =>
-      value == null ? null : frmOperationCode.fromValue(value);
+  static slpProblemKind? _createOrNull(int? value) =>
+      value == null ? null : slpProblemKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<slpProblemKind> reader = _slpProblemKindReader();
+}
+
+class _slpProblemKindReader extends fb.Reader<slpProblemKind> {
+  const _slpProblemKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  slpProblemKind read(fb.BufferContext bc, int offset) =>
+      slpProblemKind.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum slpAlgorithm {
+  UNSPECIFIED(0),
+  NEWTON_RAPHSON(1),
+  BROYDEN(2),
+  MODIFIED_BROYDEN(3),
+  SEQUENTIAL_QUADRATIC_PROGRAMMING(4);
+
+  final int value;
+  const slpAlgorithm(this.value);
+
+  factory slpAlgorithm.fromValue(int value) {
+    switch (value) {
+      case 0: return slpAlgorithm.UNSPECIFIED;
+      case 1: return slpAlgorithm.NEWTON_RAPHSON;
+      case 2: return slpAlgorithm.BROYDEN;
+      case 3: return slpAlgorithm.MODIFIED_BROYDEN;
+      case 4: return slpAlgorithm.SEQUENTIAL_QUADRATIC_PROGRAMMING;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static slpAlgorithm? _createOrNull(int? value) =>
+      value == null ? null : slpAlgorithm.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<slpAlgorithm> reader = _slpAlgorithmReader();
+}
+
+class _slpAlgorithmReader extends fb.Reader<slpAlgorithm> {
+  const _slpAlgorithmReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  slpAlgorithm read(fb.BufferContext bc, int offset) =>
+      slpAlgorithm.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum slpDifferenceMode {
+  UNSPECIFIED(0),
+  FORWARD(1),
+  CENTRAL(2),
+  ANALYTIC_STATE_TRANSITION_MATRIX(3);
+
+  final int value;
+  const slpDifferenceMode(this.value);
+
+  factory slpDifferenceMode.fromValue(int value) {
+    switch (value) {
+      case 0: return slpDifferenceMode.UNSPECIFIED;
+      case 1: return slpDifferenceMode.FORWARD;
+      case 2: return slpDifferenceMode.CENTRAL;
+      case 3: return slpDifferenceMode.ANALYTIC_STATE_TRANSITION_MATRIX;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static slpDifferenceMode? _createOrNull(int? value) =>
+      value == null ? null : slpDifferenceMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<slpDifferenceMode> reader = _slpDifferenceModeReader();
+}
+
+class _slpDifferenceModeReader extends fb.Reader<slpDifferenceMode> {
+  const _slpDifferenceModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  slpDifferenceMode read(fb.BufferContext bc, int offset) =>
+      slpDifferenceMode.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum slpObjectiveDirection {
+  UNSPECIFIED(0),
+  MINIMIZE(1),
+  MAXIMIZE(2);
+
+  final int value;
+  const slpObjectiveDirection(this.value);
+
+  factory slpObjectiveDirection.fromValue(int value) {
+    switch (value) {
+      case 0: return slpObjectiveDirection.UNSPECIFIED;
+      case 1: return slpObjectiveDirection.MINIMIZE;
+      case 2: return slpObjectiveDirection.MAXIMIZE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static slpObjectiveDirection? _createOrNull(int? value) =>
+      value == null ? null : slpObjectiveDirection.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<slpObjectiveDirection> reader = _slpObjectiveDirectionReader();
+}
+
+class _slpObjectiveDirectionReader extends fb.Reader<slpObjectiveDirection> {
+  const _slpObjectiveDirectionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  slpObjectiveDirection read(fb.BufferContext bc, int offset) =>
+      slpObjectiveDirection.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum slpConstraintRelation {
+  UNSPECIFIED(0),
+  EQUAL(1),
+  LESS_THAN_OR_EQUAL(2),
+  GREATER_THAN_OR_EQUAL(3),
+  INTERVAL(4);
+
+  final int value;
+  const slpConstraintRelation(this.value);
+
+  factory slpConstraintRelation.fromValue(int value) {
+    switch (value) {
+      case 0: return slpConstraintRelation.UNSPECIFIED;
+      case 1: return slpConstraintRelation.EQUAL;
+      case 2: return slpConstraintRelation.LESS_THAN_OR_EQUAL;
+      case 3: return slpConstraintRelation.GREATER_THAN_OR_EQUAL;
+      case 4: return slpConstraintRelation.INTERVAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static slpConstraintRelation? _createOrNull(int? value) =>
+      value == null ? null : slpConstraintRelation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<slpConstraintRelation> reader = _slpConstraintRelationReader();
+}
+
+class _slpConstraintRelationReader extends fb.Reader<slpConstraintRelation> {
+  const _slpConstraintRelationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  slpConstraintRelation read(fb.BufferContext bc, int offset) =>
+      slpConstraintRelation.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum slpSolveStatus {
+  UNSPECIFIED(0),
+  CONVERGED(1),
+  INVALID_PROBLEM(2),
+  EVALUATION_FAILED(3),
+  SINGULAR_JACOBIAN(4),
+  BUDGET_EXCEEDED(5),
+  STALLED(6),
+  INFEASIBLE(7);
+
+  final int value;
+  const slpSolveStatus(this.value);
+
+  factory slpSolveStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return slpSolveStatus.UNSPECIFIED;
+      case 1: return slpSolveStatus.CONVERGED;
+      case 2: return slpSolveStatus.INVALID_PROBLEM;
+      case 3: return slpSolveStatus.EVALUATION_FAILED;
+      case 4: return slpSolveStatus.SINGULAR_JACOBIAN;
+      case 5: return slpSolveStatus.BUDGET_EXCEEDED;
+      case 6: return slpSolveStatus.STALLED;
+      case 7: return slpSolveStatus.INFEASIBLE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static slpSolveStatus? _createOrNull(int? value) =>
+      value == null ? null : slpSolveStatus.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 7;
-  static const fb.Reader<frmOperationCode> reader = _frmOperationCodeReader();
+  static const fb.Reader<slpSolveStatus> reader = _slpSolveStatusReader();
 }
 
-class _frmOperationCodeReader extends fb.Reader<frmOperationCode> {
-  const _frmOperationCodeReader();
+class _slpSolveStatusReader extends fb.Reader<slpSolveStatus> {
+  const _slpSolveStatusReader();
 
   @override
   int get size => 1;
 
   @override
-  frmOperationCode read(fb.BufferContext bc, int offset) =>
-      frmOperationCode.fromValue(const fb.Int8Reader().read(bc, offset));
+  slpSolveStatus read(fb.BufferContext bc, int offset) =>
+      slpSolveStatus.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Append new values only; never reorder or reuse existing values.
-enum frmResultStatus {
-  OK(0),
-  INVALID_INPUT(1),
-  UNSUPPORTED_OPERATION(2),
-  UNSUPPORTED_AXIS_TYPE(3),
-  UNSUPPORTED_STATE_REPRESENTATION(4),
-  MISSING_EOP_DATA(5),
-  SINGULAR_ELEMENT_SET(6);
-
-  final int value;
-  const frmResultStatus(this.value);
-
-  factory frmResultStatus.fromValue(int value) {
-    switch (value) {
-      case 0: return frmResultStatus.OK;
-      case 1: return frmResultStatus.INVALID_INPUT;
-      case 2: return frmResultStatus.UNSUPPORTED_OPERATION;
-      case 3: return frmResultStatus.UNSUPPORTED_AXIS_TYPE;
-      case 4: return frmResultStatus.UNSUPPORTED_STATE_REPRESENTATION;
-      case 5: return frmResultStatus.MISSING_EOP_DATA;
-      case 6: return frmResultStatus.SINGULAR_ELEMENT_SET;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static frmResultStatus? _createOrNull(int? value) =>
-      value == null ? null : frmResultStatus.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 6;
-  static const fb.Reader<frmResultStatus> reader = _frmResultStatusReader();
-}
-
-class _frmResultStatusReader extends fb.Reader<frmResultStatus> {
-  const _frmResultStatusReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  frmResultStatus read(fb.BufferContext bc, int offset) =>
-      frmResultStatus.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Orbit state element sets. Append new values only; never reorder or reuse
-///  existing values.
-enum frmStateRepresentation {
-  UNSPECIFIED(0),
-  CARTESIAN(1),
-  KEPLERIAN(2),
-  MODIFIED_KEPLERIAN(3),
-  SPHERICAL_AZFPA(4),
-  SPHERICAL_RADEC(5),
-  EQUINOCTIAL(6),
-  MODIFIED_EQUINOCTIAL(7),
-  ALTERNATE_EQUINOCTIAL(8),
-  DELAUNAY(9),
-  PLANETODETIC(10),
-  INCOMING_ASYMPTOTE(11),
-  OUTGOING_ASYMPTOTE(12),
-  BROUWER_MEAN_SHORT(13),
-  BROUWER_MEAN_LONG(14);
-
-  final int value;
-  const frmStateRepresentation(this.value);
-
-  factory frmStateRepresentation.fromValue(int value) {
-    switch (value) {
-      case 0: return frmStateRepresentation.UNSPECIFIED;
-      case 1: return frmStateRepresentation.CARTESIAN;
-      case 2: return frmStateRepresentation.KEPLERIAN;
-      case 3: return frmStateRepresentation.MODIFIED_KEPLERIAN;
-      case 4: return frmStateRepresentation.SPHERICAL_AZFPA;
-      case 5: return frmStateRepresentation.SPHERICAL_RADEC;
-      case 6: return frmStateRepresentation.EQUINOCTIAL;
-      case 7: return frmStateRepresentation.MODIFIED_EQUINOCTIAL;
-      case 8: return frmStateRepresentation.ALTERNATE_EQUINOCTIAL;
-      case 9: return frmStateRepresentation.DELAUNAY;
-      case 10: return frmStateRepresentation.PLANETODETIC;
-      case 11: return frmStateRepresentation.INCOMING_ASYMPTOTE;
-      case 12: return frmStateRepresentation.OUTGOING_ASYMPTOTE;
-      case 13: return frmStateRepresentation.BROUWER_MEAN_SHORT;
-      case 14: return frmStateRepresentation.BROUWER_MEAN_LONG;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static frmStateRepresentation? _createOrNull(int? value) =>
-      value == null ? null : frmStateRepresentation.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 14;
-  static const fb.Reader<frmStateRepresentation> reader = _frmStateRepresentationReader();
-}
-
-class _frmStateRepresentationReader extends fb.Reader<frmStateRepresentation> {
-  const _frmStateRepresentationReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  frmStateRepresentation read(fb.BufferContext bc, int offset) =>
-      frmStateRepresentation.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-class FRMVector3 {
-  FRMVector3._(this._bc, this._bcOffset);
-  factory FRMVector3(List<int> bytes) {
+class SLPVariable {
+  SLPVariable._(this._bc, this._bcOffset);
+  factory SLPVariable(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<FRMVector3> reader = _FRMVector3Reader();
+  static const fb.Reader<SLPVariable> reader = _SLPVariableReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  String? get VARIABLE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get variableId => VARIABLE_ID;
+  pceParameter get PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  String? get PROVIDER_DEFINED_PARAMETER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get providerDefinedParameterName => PROVIDER_DEFINED_PARAMETER_NAME;
+  double get INITIAL_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get initialValue => INITIAL_VALUE;
+  double get LOWER_BOUND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, -1.7976931348623157e+308);
+  double get lowerBound => LOWER_BOUND;
+  double get UPPER_BOUND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 1.7976931348623157e+308);
+  double get upperBound => UPPER_BOUND;
+  double get PERTURBATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get SCALE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 1.0);
 
   @override
   String toString() {
-    return 'FRMVector3{X: ${X}, Y: ${Y}, Z: ${Z}}';
+    return 'SLPVariable{variableId: ${variableId}, PARAMETER: ${PARAMETER}, providerDefinedParameterName: ${providerDefinedParameterName}, initialValue: ${initialValue}, lowerBound: ${lowerBound}, upperBound: ${upperBound}, PERTURBATION: ${PERTURBATION}, SCALE: ${SCALE}}';
   }
 }
 
-class _FRMVector3Reader extends fb.TableReader<FRMVector3> {
-  const _FRMVector3Reader();
+class _SLPVariableReader extends fb.TableReader<SLPVariable> {
+  const _SLPVariableReader();
 
   @override
-  FRMVector3 createObject(fb.BufferContext bc, int offset) =>
-    FRMVector3._(bc, offset);
+  SLPVariable createObject(fb.BufferContext bc, int offset) =>
+    SLPVariable._(bc, offset);
 }
 
-class FRMVector3Builder {
-  FRMVector3Builder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addX(double? X) {
-    fbBuilder.addFloat64(0, X);
-    return fbBuilder.offset;
-  }
-  int addY(double? Y) {
-    fbBuilder.addFloat64(1, Y);
-    return fbBuilder.offset;
-  }
-  int addZ(double? Z) {
-    fbBuilder.addFloat64(2, Z);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FRMVector3ObjectBuilder extends fb.ObjectBuilder {
-  final double? _X;
-  final double? _Y;
-  final double? _Z;
-
-  FRMVector3ObjectBuilder({
-    double? X,
-    double? Y,
-    double? Z,
-  })
-      : _X = X,
-        _Y = Y,
-        _Z = Z;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(3);
-    fbBuilder.addFloat64(0, _X);
-    fbBuilder.addFloat64(1, _Y);
-    fbBuilder.addFloat64(2, _Z);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class FRMMatrix3 {
-  FRMMatrix3._(this._bc, this._bcOffset);
-  factory FRMMatrix3(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FRMMatrix3> reader = _FRMMatrix3Reader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  double get M11 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get M12 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get M13 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get M21 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get M22 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get M23 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get M31 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get M32 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get M33 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-
-  @override
-  String toString() {
-    return 'FRMMatrix3{M11: ${M11}, M12: ${M12}, M13: ${M13}, M21: ${M21}, M22: ${M22}, M23: ${M23}, M31: ${M31}, M32: ${M32}, M33: ${M33}}';
-  }
-}
-
-class _FRMMatrix3Reader extends fb.TableReader<FRMMatrix3> {
-  const _FRMMatrix3Reader();
-
-  @override
-  FRMMatrix3 createObject(fb.BufferContext bc, int offset) =>
-    FRMMatrix3._(bc, offset);
-}
-
-class FRMMatrix3Builder {
-  FRMMatrix3Builder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(9);
-  }
-
-  int addM11(double? M11) {
-    fbBuilder.addFloat64(0, M11);
-    return fbBuilder.offset;
-  }
-  int addM12(double? M12) {
-    fbBuilder.addFloat64(1, M12);
-    return fbBuilder.offset;
-  }
-  int addM13(double? M13) {
-    fbBuilder.addFloat64(2, M13);
-    return fbBuilder.offset;
-  }
-  int addM21(double? M21) {
-    fbBuilder.addFloat64(3, M21);
-    return fbBuilder.offset;
-  }
-  int addM22(double? M22) {
-    fbBuilder.addFloat64(4, M22);
-    return fbBuilder.offset;
-  }
-  int addM23(double? M23) {
-    fbBuilder.addFloat64(5, M23);
-    return fbBuilder.offset;
-  }
-  int addM31(double? M31) {
-    fbBuilder.addFloat64(6, M31);
-    return fbBuilder.offset;
-  }
-  int addM32(double? M32) {
-    fbBuilder.addFloat64(7, M32);
-    return fbBuilder.offset;
-  }
-  int addM33(double? M33) {
-    fbBuilder.addFloat64(8, M33);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FRMMatrix3ObjectBuilder extends fb.ObjectBuilder {
-  final double? _M11;
-  final double? _M12;
-  final double? _M13;
-  final double? _M21;
-  final double? _M22;
-  final double? _M23;
-  final double? _M31;
-  final double? _M32;
-  final double? _M33;
-
-  FRMMatrix3ObjectBuilder({
-    double? M11,
-    double? M12,
-    double? M13,
-    double? M21,
-    double? M22,
-    double? M23,
-    double? M31,
-    double? M32,
-    double? M33,
-  })
-      : _M11 = M11,
-        _M12 = M12,
-        _M13 = M13,
-        _M21 = M21,
-        _M22 = M22,
-        _M23 = M23,
-        _M31 = M31,
-        _M32 = M32,
-        _M33 = M33;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(9);
-    fbBuilder.addFloat64(0, _M11);
-    fbBuilder.addFloat64(1, _M12);
-    fbBuilder.addFloat64(2, _M13);
-    fbBuilder.addFloat64(3, _M21);
-    fbBuilder.addFloat64(4, _M22);
-    fbBuilder.addFloat64(5, _M23);
-    fbBuilder.addFloat64(6, _M31);
-    fbBuilder.addFloat64(7, _M32);
-    fbBuilder.addFloat64(8, _M33);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  A state in a named element set at a named epoch. ELEMENTS is the element
-///  set's own 6 values in the order documented on frmStateRepresentation.
-///  POSITION and VELOCITY are the Cartesian projection of the same state and
-///  are populated when REPRESENTATION is CARTESIAN or when the provider can
-///  supply them; a consumer MUST NOT infer velocity from POSITION alone.
-class FRMStateVector {
-  FRMStateVector._(this._bc, this._bcOffset);
-  factory FRMStateVector(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FRMStateVector> reader = _FRMStateVectorReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  frmStateRepresentation get REPRESENTATION => frmStateRepresentation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  The 6 element values of REPRESENTATION, SI units and radians.
-  List<double>? get ELEMENTS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Cartesian position, metres.
-  FRMVector3? get POSITION => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Cartesian velocity, metres per second.
-  FRMVector3? get VELOCITY => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Name of the coordinate system these elements are expressed in; resolves
-  ///  against RFMCoordinateSystem.NAME.
-  String? get COORDINATE_SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get coordinateSystemName => COORDINATE_SYSTEM_NAME;
-  ///  Epoch of this state, ISO 8601.
-  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
-  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
-  ///  Gravitational parameter, m^3/s^2, of the origin body when the element
-  ///  set requires one. Absent means the provider's default for the origin.
-  double get GRAVITATIONAL_PARAMETER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get gravitationalParameter => GRAVITATIONAL_PARAMETER;
-
-  @override
-  String toString() {
-    return 'FRMStateVector{REPRESENTATION: ${REPRESENTATION}, ELEMENTS: ${ELEMENTS}, POSITION: ${POSITION}, VELOCITY: ${VELOCITY}, coordinateSystemName: ${coordinateSystemName}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, gravitationalParameter: ${gravitationalParameter}}';
-  }
-}
-
-class _FRMStateVectorReader extends fb.TableReader<FRMStateVector> {
-  const _FRMStateVectorReader();
-
-  @override
-  FRMStateVector createObject(fb.BufferContext bc, int offset) =>
-    FRMStateVector._(bc, offset);
-}
-
-class FRMStateVectorBuilder {
-  FRMStateVectorBuilder(this.fbBuilder);
+class SLPVariableBuilder {
+  SLPVariableBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -456,36 +297,36 @@ class FRMStateVectorBuilder {
     fbBuilder.startTable(8);
   }
 
-  int addRepresentation(frmStateRepresentation? REPRESENTATION) {
-    fbBuilder.addUint8(0, REPRESENTATION?.value);
+  int addVariableIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addElementsOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addParameter(pceParameter? PARAMETER) {
+    fbBuilder.addUint16(1, PARAMETER?.value);
     return fbBuilder.offset;
   }
-  int addPositionOffset(int? offset) {
+  int addProviderDefinedParameterNameOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addVelocityOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addInitialValue(double? INITIAL_VALUE) {
+    fbBuilder.addFloat64(3, INITIAL_VALUE);
     return fbBuilder.offset;
   }
-  int addCoordinateSystemNameOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addLowerBound(double? LOWER_BOUND) {
+    fbBuilder.addFloat64(4, LOWER_BOUND);
     return fbBuilder.offset;
   }
-  int addEpochOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addUpperBound(double? UPPER_BOUND) {
+    fbBuilder.addFloat64(5, UPPER_BOUND);
     return fbBuilder.offset;
   }
-  int addEpochTimeSystemOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addPerturbation(double? PERTURBATION) {
+    fbBuilder.addFloat64(6, PERTURBATION);
     return fbBuilder.offset;
   }
-  int addGravitationalParameter(double? GRAVITATIONAL_PARAMETER) {
-    fbBuilder.addFloat64(7, GRAVITATIONAL_PARAMETER);
+  int addScale(double? SCALE) {
+    fbBuilder.addFloat64(7, SCALE);
     return fbBuilder.offset;
   }
 
@@ -494,60 +335,56 @@ class FRMStateVectorBuilder {
   }
 }
 
-class FRMStateVectorObjectBuilder extends fb.ObjectBuilder {
-  final frmStateRepresentation? _REPRESENTATION;
-  final List<double>? _ELEMENTS;
-  final FRMVector3ObjectBuilder? _POSITION;
-  final FRMVector3ObjectBuilder? _VELOCITY;
-  final String? _COORDINATE_SYSTEM_NAME;
-  final String? _EPOCH;
-  final String? _EPOCH_TIME_SYSTEM;
-  final double? _GRAVITATIONAL_PARAMETER;
+class SLPVariableObjectBuilder extends fb.ObjectBuilder {
+  final String? _VARIABLE_ID;
+  final pceParameter? _PARAMETER;
+  final String? _PROVIDER_DEFINED_PARAMETER_NAME;
+  final double? _INITIAL_VALUE;
+  final double? _LOWER_BOUND;
+  final double? _UPPER_BOUND;
+  final double? _PERTURBATION;
+  final double? _SCALE;
 
-  FRMStateVectorObjectBuilder({
-    frmStateRepresentation? REPRESENTATION,
-    List<double>? ELEMENTS,
-    FRMVector3ObjectBuilder? POSITION,
-    FRMVector3ObjectBuilder? VELOCITY,
-    String? COORDINATE_SYSTEM_NAME,
-    String? coordinateSystemName,
-    String? EPOCH,
-    String? EPOCH_TIME_SYSTEM,
-    String? epochTimeSystem,
-    double? GRAVITATIONAL_PARAMETER,
-    double? gravitationalParameter,
+  SLPVariableObjectBuilder({
+    String? VARIABLE_ID,
+    String? variableId,
+    pceParameter? PARAMETER,
+    String? PROVIDER_DEFINED_PARAMETER_NAME,
+    String? providerDefinedParameterName,
+    double? INITIAL_VALUE,
+    double? initialValue,
+    double? LOWER_BOUND,
+    double? lowerBound,
+    double? UPPER_BOUND,
+    double? upperBound,
+    double? PERTURBATION,
+    double? SCALE,
   })
-      : _REPRESENTATION = REPRESENTATION,
-        _ELEMENTS = ELEMENTS,
-        _POSITION = POSITION,
-        _VELOCITY = VELOCITY,
-        _COORDINATE_SYSTEM_NAME = coordinateSystemName ?? COORDINATE_SYSTEM_NAME,
-        _EPOCH = EPOCH,
-        _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
-        _GRAVITATIONAL_PARAMETER = gravitationalParameter ?? GRAVITATIONAL_PARAMETER;
+      : _VARIABLE_ID = variableId ?? VARIABLE_ID,
+        _PARAMETER = PARAMETER,
+        _PROVIDER_DEFINED_PARAMETER_NAME = providerDefinedParameterName ?? PROVIDER_DEFINED_PARAMETER_NAME,
+        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE,
+        _LOWER_BOUND = lowerBound ?? LOWER_BOUND,
+        _UPPER_BOUND = upperBound ?? UPPER_BOUND,
+        _PERTURBATION = PERTURBATION,
+        _SCALE = SCALE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? ELEMENTSOffset = _ELEMENTS == null ? null
-        : fbBuilder.writeListFloat64(_ELEMENTS!);
-    final int? POSITIONOffset = _POSITION?.getOrCreateOffset(fbBuilder);
-    final int? VELOCITYOffset = _VELOCITY?.getOrCreateOffset(fbBuilder);
-    final int? COORDINATE_SYSTEM_NAMEOffset = _COORDINATE_SYSTEM_NAME == null ? null
-        : fbBuilder.writeString(_COORDINATE_SYSTEM_NAME!);
-    final int? EPOCHOffset = _EPOCH == null ? null
-        : fbBuilder.writeString(_EPOCH!);
-    final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
-        : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
+    final int? VARIABLE_IDOffset = _VARIABLE_ID == null ? null
+        : fbBuilder.writeString(_VARIABLE_ID!);
+    final int? PROVIDER_DEFINED_PARAMETER_NAMEOffset = _PROVIDER_DEFINED_PARAMETER_NAME == null ? null
+        : fbBuilder.writeString(_PROVIDER_DEFINED_PARAMETER_NAME!);
     fbBuilder.startTable(8);
-    fbBuilder.addUint8(0, _REPRESENTATION?.value);
-    fbBuilder.addOffset(1, ELEMENTSOffset);
-    fbBuilder.addOffset(2, POSITIONOffset);
-    fbBuilder.addOffset(3, VELOCITYOffset);
-    fbBuilder.addOffset(4, COORDINATE_SYSTEM_NAMEOffset);
-    fbBuilder.addOffset(5, EPOCHOffset);
-    fbBuilder.addOffset(6, EPOCH_TIME_SYSTEMOffset);
-    fbBuilder.addFloat64(7, _GRAVITATIONAL_PARAMETER);
+    fbBuilder.addOffset(0, VARIABLE_IDOffset);
+    fbBuilder.addUint16(1, _PARAMETER?.value);
+    fbBuilder.addOffset(2, PROVIDER_DEFINED_PARAMETER_NAMEOffset);
+    fbBuilder.addFloat64(3, _INITIAL_VALUE);
+    fbBuilder.addFloat64(4, _LOWER_BOUND);
+    fbBuilder.addFloat64(5, _UPPER_BOUND);
+    fbBuilder.addFloat64(6, _PERTURBATION);
+    fbBuilder.addFloat64(7, _SCALE);
     return fbBuilder.endTable();
   }
 
@@ -559,69 +396,1048 @@ class FRMStateVectorObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-class FRMFrameTransformRequest {
-  FRMFrameTransformRequest._(this._bc, this._bcOffset);
-  factory FRMFrameTransformRequest(List<int> bytes) {
+class SLPGoal {
+  SLPGoal._(this._bc, this._bcOffset);
+  factory SLPGoal(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<FRMFrameTransformRequest> reader = _FRMFrameTransformRequestReader();
+  static const fb.Reader<SLPGoal> reader = _SLPGoalReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  frmOperationCode get OPERATION => frmOperationCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  FRMVector3? get POSITION => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  FRMMatrix3? get TRANSFORM_DCM => FRMMatrix3.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  FRMMatrix3? get transformDcm => TRANSFORM_DCM;
-  double get EQUATORIAL_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get equatorialRadiusM => EQUATORIAL_RADIUS_M;
-  double get POLAR_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get polarRadiusM => POLAR_RADIUS_M;
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get traceId => TRACE_ID;
-  ///  Coordinate system the request's state is expressed in.
-  RFMCoordinateSystem? get SOURCE_COORDINATE_SYSTEM => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  RFMCoordinateSystem? get sourceCoordinateSystem => SOURCE_COORDINATE_SYSTEM;
-  ///  Coordinate system the result is required in.
-  RFMCoordinateSystem? get TARGET_COORDINATE_SYSTEM => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  RFMCoordinateSystem? get targetCoordinateSystem => TARGET_COORDINATE_SYSTEM;
-  ///  The full input state, carrying velocity as well as position. POSITION
-  ///  above is position-only and remains the input for operations 1-4.
-  FRMStateVector? get SOURCE_STATE => FRMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 20);
-  FRMStateVector? get sourceState => SOURCE_STATE;
-  ///  Element set the result must be expressed in.
-  frmStateRepresentation get TARGET_REPRESENTATION => frmStateRepresentation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 22, 0));
-  frmStateRepresentation get targetRepresentation => TARGET_REPRESENTATION;
-  ///  Epoch the transform is evaluated at, ISO 8601. Required for every
-  ///  time-dependent axis chain.
-  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  ///  Time system of EPOCH, named by the $TIM timingStandard member name.
-  String? get EPOCH_TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get epochTimeSystem => EPOCH_TIME_SYSTEM;
-  ///  Content identifier of the Earth-orientation data set the caller requires
-  ///  the provider to use. A provider that cannot honour it returns
-  ///  MISSING_EOP_DATA rather than substituting another table.
-  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get eopDataSetCid => EOP_DATA_SET_CID;
+  String? get GOAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get goalId => GOAL_ID;
+  pceParameter get PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  String? get PROVIDER_DEFINED_PARAMETER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get providerDefinedParameterName => PROVIDER_DEFINED_PARAMETER_NAME;
+  double get TARGET_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get targetValue => TARGET_VALUE;
+  double get TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get SCALE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 1.0);
 
   @override
   String toString() {
-    return 'FRMFrameTransformRequest{OPERATION: ${OPERATION}, POSITION: ${POSITION}, transformDcm: ${transformDcm}, equatorialRadiusM: ${equatorialRadiusM}, polarRadiusM: ${polarRadiusM}, traceId: ${traceId}, sourceCoordinateSystem: ${sourceCoordinateSystem}, targetCoordinateSystem: ${targetCoordinateSystem}, sourceState: ${sourceState}, targetRepresentation: ${targetRepresentation}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, eopDataSetCid: ${eopDataSetCid}}';
+    return 'SLPGoal{goalId: ${goalId}, PARAMETER: ${PARAMETER}, providerDefinedParameterName: ${providerDefinedParameterName}, targetValue: ${targetValue}, TOLERANCE: ${TOLERANCE}, SCALE: ${SCALE}}';
   }
 }
 
-class _FRMFrameTransformRequestReader extends fb.TableReader<FRMFrameTransformRequest> {
-  const _FRMFrameTransformRequestReader();
+class _SLPGoalReader extends fb.TableReader<SLPGoal> {
+  const _SLPGoalReader();
 
   @override
-  FRMFrameTransformRequest createObject(fb.BufferContext bc, int offset) =>
-    FRMFrameTransformRequest._(bc, offset);
+  SLPGoal createObject(fb.BufferContext bc, int offset) =>
+    SLPGoal._(bc, offset);
 }
 
-class FRMFrameTransformRequestBuilder {
-  FRMFrameTransformRequestBuilder(this.fbBuilder);
+class SLPGoalBuilder {
+  SLPGoalBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addGoalIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addParameter(pceParameter? PARAMETER) {
+    fbBuilder.addUint16(1, PARAMETER?.value);
+    return fbBuilder.offset;
+  }
+  int addProviderDefinedParameterNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetValue(double? TARGET_VALUE) {
+    fbBuilder.addFloat64(3, TARGET_VALUE);
+    return fbBuilder.offset;
+  }
+  int addTolerance(double? TOLERANCE) {
+    fbBuilder.addFloat64(4, TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addScale(double? SCALE) {
+    fbBuilder.addFloat64(5, SCALE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SLPGoalObjectBuilder extends fb.ObjectBuilder {
+  final String? _GOAL_ID;
+  final pceParameter? _PARAMETER;
+  final String? _PROVIDER_DEFINED_PARAMETER_NAME;
+  final double? _TARGET_VALUE;
+  final double? _TOLERANCE;
+  final double? _SCALE;
+
+  SLPGoalObjectBuilder({
+    String? GOAL_ID,
+    String? goalId,
+    pceParameter? PARAMETER,
+    String? PROVIDER_DEFINED_PARAMETER_NAME,
+    String? providerDefinedParameterName,
+    double? TARGET_VALUE,
+    double? targetValue,
+    double? TOLERANCE,
+    double? SCALE,
+  })
+      : _GOAL_ID = goalId ?? GOAL_ID,
+        _PARAMETER = PARAMETER,
+        _PROVIDER_DEFINED_PARAMETER_NAME = providerDefinedParameterName ?? PROVIDER_DEFINED_PARAMETER_NAME,
+        _TARGET_VALUE = targetValue ?? TARGET_VALUE,
+        _TOLERANCE = TOLERANCE,
+        _SCALE = SCALE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? GOAL_IDOffset = _GOAL_ID == null ? null
+        : fbBuilder.writeString(_GOAL_ID!);
+    final int? PROVIDER_DEFINED_PARAMETER_NAMEOffset = _PROVIDER_DEFINED_PARAMETER_NAME == null ? null
+        : fbBuilder.writeString(_PROVIDER_DEFINED_PARAMETER_NAME!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, GOAL_IDOffset);
+    fbBuilder.addUint16(1, _PARAMETER?.value);
+    fbBuilder.addOffset(2, PROVIDER_DEFINED_PARAMETER_NAMEOffset);
+    fbBuilder.addFloat64(3, _TARGET_VALUE);
+    fbBuilder.addFloat64(4, _TOLERANCE);
+    fbBuilder.addFloat64(5, _SCALE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SLPObjective {
+  SLPObjective._(this._bc, this._bcOffset);
+  factory SLPObjective(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SLPObjective> reader = _SLPObjectiveReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get OBJECTIVE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get objectiveId => OBJECTIVE_ID;
+  pceParameter get PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  String? get PROVIDER_DEFINED_PARAMETER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get providerDefinedParameterName => PROVIDER_DEFINED_PARAMETER_NAME;
+  slpObjectiveDirection get DIRECTION => slpObjectiveDirection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  double get SCALE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 1.0);
+
+  @override
+  String toString() {
+    return 'SLPObjective{objectiveId: ${objectiveId}, PARAMETER: ${PARAMETER}, providerDefinedParameterName: ${providerDefinedParameterName}, DIRECTION: ${DIRECTION}, SCALE: ${SCALE}}';
+  }
+}
+
+class _SLPObjectiveReader extends fb.TableReader<SLPObjective> {
+  const _SLPObjectiveReader();
+
+  @override
+  SLPObjective createObject(fb.BufferContext bc, int offset) =>
+    SLPObjective._(bc, offset);
+}
+
+class SLPObjectiveBuilder {
+  SLPObjectiveBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addObjectiveIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addParameter(pceParameter? PARAMETER) {
+    fbBuilder.addUint16(1, PARAMETER?.value);
+    return fbBuilder.offset;
+  }
+  int addProviderDefinedParameterNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDirection(slpObjectiveDirection? DIRECTION) {
+    fbBuilder.addUint8(3, DIRECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addScale(double? SCALE) {
+    fbBuilder.addFloat64(4, SCALE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SLPObjectiveObjectBuilder extends fb.ObjectBuilder {
+  final String? _OBJECTIVE_ID;
+  final pceParameter? _PARAMETER;
+  final String? _PROVIDER_DEFINED_PARAMETER_NAME;
+  final slpObjectiveDirection? _DIRECTION;
+  final double? _SCALE;
+
+  SLPObjectiveObjectBuilder({
+    String? OBJECTIVE_ID,
+    String? objectiveId,
+    pceParameter? PARAMETER,
+    String? PROVIDER_DEFINED_PARAMETER_NAME,
+    String? providerDefinedParameterName,
+    slpObjectiveDirection? DIRECTION,
+    double? SCALE,
+  })
+      : _OBJECTIVE_ID = objectiveId ?? OBJECTIVE_ID,
+        _PARAMETER = PARAMETER,
+        _PROVIDER_DEFINED_PARAMETER_NAME = providerDefinedParameterName ?? PROVIDER_DEFINED_PARAMETER_NAME,
+        _DIRECTION = DIRECTION,
+        _SCALE = SCALE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OBJECTIVE_IDOffset = _OBJECTIVE_ID == null ? null
+        : fbBuilder.writeString(_OBJECTIVE_ID!);
+    final int? PROVIDER_DEFINED_PARAMETER_NAMEOffset = _PROVIDER_DEFINED_PARAMETER_NAME == null ? null
+        : fbBuilder.writeString(_PROVIDER_DEFINED_PARAMETER_NAME!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, OBJECTIVE_IDOffset);
+    fbBuilder.addUint16(1, _PARAMETER?.value);
+    fbBuilder.addOffset(2, PROVIDER_DEFINED_PARAMETER_NAMEOffset);
+    fbBuilder.addUint8(3, _DIRECTION?.value);
+    fbBuilder.addFloat64(4, _SCALE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SLPNonlinearConstraint {
+  SLPNonlinearConstraint._(this._bc, this._bcOffset);
+  factory SLPNonlinearConstraint(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SLPNonlinearConstraint> reader = _SLPNonlinearConstraintReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get CONSTRAINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get constraintId => CONSTRAINT_ID;
+  pceParameter get PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  String? get PROVIDER_DEFINED_PARAMETER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get providerDefinedParameterName => PROVIDER_DEFINED_PARAMETER_NAME;
+  slpConstraintRelation get RELATION => slpConstraintRelation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  double get LOWER_BOUND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, -1.7976931348623157e+308);
+  double get lowerBound => LOWER_BOUND;
+  double get UPPER_BOUND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 1.7976931348623157e+308);
+  double get upperBound => UPPER_BOUND;
+  double get TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get SCALE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 1.0);
+
+  @override
+  String toString() {
+    return 'SLPNonlinearConstraint{constraintId: ${constraintId}, PARAMETER: ${PARAMETER}, providerDefinedParameterName: ${providerDefinedParameterName}, RELATION: ${RELATION}, lowerBound: ${lowerBound}, upperBound: ${upperBound}, TOLERANCE: ${TOLERANCE}, SCALE: ${SCALE}}';
+  }
+}
+
+class _SLPNonlinearConstraintReader extends fb.TableReader<SLPNonlinearConstraint> {
+  const _SLPNonlinearConstraintReader();
+
+  @override
+  SLPNonlinearConstraint createObject(fb.BufferContext bc, int offset) =>
+    SLPNonlinearConstraint._(bc, offset);
+}
+
+class SLPNonlinearConstraintBuilder {
+  SLPNonlinearConstraintBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addConstraintIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addParameter(pceParameter? PARAMETER) {
+    fbBuilder.addUint16(1, PARAMETER?.value);
+    return fbBuilder.offset;
+  }
+  int addProviderDefinedParameterNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRelation(slpConstraintRelation? RELATION) {
+    fbBuilder.addUint8(3, RELATION?.value);
+    return fbBuilder.offset;
+  }
+  int addLowerBound(double? LOWER_BOUND) {
+    fbBuilder.addFloat64(4, LOWER_BOUND);
+    return fbBuilder.offset;
+  }
+  int addUpperBound(double? UPPER_BOUND) {
+    fbBuilder.addFloat64(5, UPPER_BOUND);
+    return fbBuilder.offset;
+  }
+  int addTolerance(double? TOLERANCE) {
+    fbBuilder.addFloat64(6, TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addScale(double? SCALE) {
+    fbBuilder.addFloat64(7, SCALE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SLPNonlinearConstraintObjectBuilder extends fb.ObjectBuilder {
+  final String? _CONSTRAINT_ID;
+  final pceParameter? _PARAMETER;
+  final String? _PROVIDER_DEFINED_PARAMETER_NAME;
+  final slpConstraintRelation? _RELATION;
+  final double? _LOWER_BOUND;
+  final double? _UPPER_BOUND;
+  final double? _TOLERANCE;
+  final double? _SCALE;
+
+  SLPNonlinearConstraintObjectBuilder({
+    String? CONSTRAINT_ID,
+    String? constraintId,
+    pceParameter? PARAMETER,
+    String? PROVIDER_DEFINED_PARAMETER_NAME,
+    String? providerDefinedParameterName,
+    slpConstraintRelation? RELATION,
+    double? LOWER_BOUND,
+    double? lowerBound,
+    double? UPPER_BOUND,
+    double? upperBound,
+    double? TOLERANCE,
+    double? SCALE,
+  })
+      : _CONSTRAINT_ID = constraintId ?? CONSTRAINT_ID,
+        _PARAMETER = PARAMETER,
+        _PROVIDER_DEFINED_PARAMETER_NAME = providerDefinedParameterName ?? PROVIDER_DEFINED_PARAMETER_NAME,
+        _RELATION = RELATION,
+        _LOWER_BOUND = lowerBound ?? LOWER_BOUND,
+        _UPPER_BOUND = upperBound ?? UPPER_BOUND,
+        _TOLERANCE = TOLERANCE,
+        _SCALE = SCALE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CONSTRAINT_IDOffset = _CONSTRAINT_ID == null ? null
+        : fbBuilder.writeString(_CONSTRAINT_ID!);
+    final int? PROVIDER_DEFINED_PARAMETER_NAMEOffset = _PROVIDER_DEFINED_PARAMETER_NAME == null ? null
+        : fbBuilder.writeString(_PROVIDER_DEFINED_PARAMETER_NAME!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, CONSTRAINT_IDOffset);
+    fbBuilder.addUint16(1, _PARAMETER?.value);
+    fbBuilder.addOffset(2, PROVIDER_DEFINED_PARAMETER_NAMEOffset);
+    fbBuilder.addUint8(3, _RELATION?.value);
+    fbBuilder.addFloat64(4, _LOWER_BOUND);
+    fbBuilder.addFloat64(5, _UPPER_BOUND);
+    fbBuilder.addFloat64(6, _TOLERANCE);
+    fbBuilder.addFloat64(7, _SCALE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SLPSolverSettings {
+  SLPSolverSettings._(this._bc, this._bcOffset);
+  factory SLPSolverSettings(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SLPSolverSettings> reader = _SLPSolverSettingsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  slpAlgorithm get ALGORITHM => slpAlgorithm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  slpDifferenceMode get DIFFERENCE_MODE => slpDifferenceMode.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  slpDifferenceMode get differenceMode => DIFFERENCE_MODE;
+  int get MAXIMUM_ITERATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 50);
+  int get maximumIterations => MAXIMUM_ITERATIONS;
+  int get MAXIMUM_EVALUATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 1000);
+  int get maximumEvaluations => MAXIMUM_EVALUATIONS;
+  double get RESIDUAL_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 1e-9);
+  double get residualTolerance => RESIDUAL_TOLERANCE;
+  double get STEP_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 1e-12);
+  double get stepTolerance => STEP_TOLERANCE;
+  double get OBJECTIVE_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 1e-10);
+  double get objectiveTolerance => OBJECTIVE_TOLERANCE;
+  double get CONSTRAINT_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 1e-8);
+  double get constraintTolerance => CONSTRAINT_TOLERANCE;
+  double get KKT_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 1e-6);
+  double get kktTolerance => KKT_TOLERANCE;
+
+  @override
+  String toString() {
+    return 'SLPSolverSettings{ALGORITHM: ${ALGORITHM}, differenceMode: ${differenceMode}, maximumIterations: ${maximumIterations}, maximumEvaluations: ${maximumEvaluations}, residualTolerance: ${residualTolerance}, stepTolerance: ${stepTolerance}, objectiveTolerance: ${objectiveTolerance}, constraintTolerance: ${constraintTolerance}, kktTolerance: ${kktTolerance}}';
+  }
+}
+
+class _SLPSolverSettingsReader extends fb.TableReader<SLPSolverSettings> {
+  const _SLPSolverSettingsReader();
+
+  @override
+  SLPSolverSettings createObject(fb.BufferContext bc, int offset) =>
+    SLPSolverSettings._(bc, offset);
+}
+
+class SLPSolverSettingsBuilder {
+  SLPSolverSettingsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addAlgorithm(slpAlgorithm? ALGORITHM) {
+    fbBuilder.addUint8(0, ALGORITHM?.value);
+    return fbBuilder.offset;
+  }
+  int addDifferenceMode(slpDifferenceMode? DIFFERENCE_MODE) {
+    fbBuilder.addUint8(1, DIFFERENCE_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addMaximumIterations(int? MAXIMUM_ITERATIONS) {
+    fbBuilder.addUint32(2, MAXIMUM_ITERATIONS);
+    return fbBuilder.offset;
+  }
+  int addMaximumEvaluations(int? MAXIMUM_EVALUATIONS) {
+    fbBuilder.addUint32(3, MAXIMUM_EVALUATIONS);
+    return fbBuilder.offset;
+  }
+  int addResidualTolerance(double? RESIDUAL_TOLERANCE) {
+    fbBuilder.addFloat64(4, RESIDUAL_TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addStepTolerance(double? STEP_TOLERANCE) {
+    fbBuilder.addFloat64(5, STEP_TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addObjectiveTolerance(double? OBJECTIVE_TOLERANCE) {
+    fbBuilder.addFloat64(6, OBJECTIVE_TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addConstraintTolerance(double? CONSTRAINT_TOLERANCE) {
+    fbBuilder.addFloat64(7, CONSTRAINT_TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addKktTolerance(double? KKT_TOLERANCE) {
+    fbBuilder.addFloat64(8, KKT_TOLERANCE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SLPSolverSettingsObjectBuilder extends fb.ObjectBuilder {
+  final slpAlgorithm? _ALGORITHM;
+  final slpDifferenceMode? _DIFFERENCE_MODE;
+  final int? _MAXIMUM_ITERATIONS;
+  final int? _MAXIMUM_EVALUATIONS;
+  final double? _RESIDUAL_TOLERANCE;
+  final double? _STEP_TOLERANCE;
+  final double? _OBJECTIVE_TOLERANCE;
+  final double? _CONSTRAINT_TOLERANCE;
+  final double? _KKT_TOLERANCE;
+
+  SLPSolverSettingsObjectBuilder({
+    slpAlgorithm? ALGORITHM,
+    slpDifferenceMode? DIFFERENCE_MODE,
+    slpDifferenceMode? differenceMode,
+    int? MAXIMUM_ITERATIONS,
+    int? maximumIterations,
+    int? MAXIMUM_EVALUATIONS,
+    int? maximumEvaluations,
+    double? RESIDUAL_TOLERANCE,
+    double? residualTolerance,
+    double? STEP_TOLERANCE,
+    double? stepTolerance,
+    double? OBJECTIVE_TOLERANCE,
+    double? objectiveTolerance,
+    double? CONSTRAINT_TOLERANCE,
+    double? constraintTolerance,
+    double? KKT_TOLERANCE,
+    double? kktTolerance,
+  })
+      : _ALGORITHM = ALGORITHM,
+        _DIFFERENCE_MODE = differenceMode ?? DIFFERENCE_MODE,
+        _MAXIMUM_ITERATIONS = maximumIterations ?? MAXIMUM_ITERATIONS,
+        _MAXIMUM_EVALUATIONS = maximumEvaluations ?? MAXIMUM_EVALUATIONS,
+        _RESIDUAL_TOLERANCE = residualTolerance ?? RESIDUAL_TOLERANCE,
+        _STEP_TOLERANCE = stepTolerance ?? STEP_TOLERANCE,
+        _OBJECTIVE_TOLERANCE = objectiveTolerance ?? OBJECTIVE_TOLERANCE,
+        _CONSTRAINT_TOLERANCE = constraintTolerance ?? CONSTRAINT_TOLERANCE,
+        _KKT_TOLERANCE = kktTolerance ?? KKT_TOLERANCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(9);
+    fbBuilder.addUint8(0, _ALGORITHM?.value);
+    fbBuilder.addUint8(1, _DIFFERENCE_MODE?.value);
+    fbBuilder.addUint32(2, _MAXIMUM_ITERATIONS);
+    fbBuilder.addUint32(3, _MAXIMUM_EVALUATIONS);
+    fbBuilder.addFloat64(4, _RESIDUAL_TOLERANCE);
+    fbBuilder.addFloat64(5, _STEP_TOLERANCE);
+    fbBuilder.addFloat64(6, _OBJECTIVE_TOLERANCE);
+    fbBuilder.addFloat64(7, _CONSTRAINT_TOLERANCE);
+    fbBuilder.addFloat64(8, _KKT_TOLERANCE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SLPIteration {
+  SLPIteration._(this._bc, this._bcOffset);
+  factory SLPIteration(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SLPIteration> reader = _SLPIterationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get ITERATION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  List<double>? get VARIABLES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  List<double>? get VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  double get RESIDUAL_NORM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get residualNorm => RESIDUAL_NORM;
+  double get OBJECTIVE_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get objectiveValue => OBJECTIVE_VALUE;
+  double get MAXIMUM_CONSTRAINT_VIOLATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get maximumConstraintViolation => MAXIMUM_CONSTRAINT_VIOLATION;
+  double get JACOBIAN_CONDITION_ESTIMATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get jacobianConditionEstimate => JACOBIAN_CONDITION_ESTIMATE;
+  double get KKT_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get kktResidual => KKT_RESIDUAL;
+  int get EVALUATION_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get evaluationCount => EVALUATION_COUNT;
+
+  @override
+  String toString() {
+    return 'SLPIteration{ITERATION: ${ITERATION}, VARIABLES: ${VARIABLES}, VALUES: ${VALUES}, residualNorm: ${residualNorm}, objectiveValue: ${objectiveValue}, maximumConstraintViolation: ${maximumConstraintViolation}, jacobianConditionEstimate: ${jacobianConditionEstimate}, kktResidual: ${kktResidual}, evaluationCount: ${evaluationCount}}';
+  }
+}
+
+class _SLPIterationReader extends fb.TableReader<SLPIteration> {
+  const _SLPIterationReader();
+
+  @override
+  SLPIteration createObject(fb.BufferContext bc, int offset) =>
+    SLPIteration._(bc, offset);
+}
+
+class SLPIterationBuilder {
+  SLPIterationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addIteration(int? ITERATION) {
+    fbBuilder.addUint32(0, ITERATION);
+    return fbBuilder.offset;
+  }
+  int addVariablesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addValuesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addResidualNorm(double? RESIDUAL_NORM) {
+    fbBuilder.addFloat64(3, RESIDUAL_NORM);
+    return fbBuilder.offset;
+  }
+  int addObjectiveValue(double? OBJECTIVE_VALUE) {
+    fbBuilder.addFloat64(4, OBJECTIVE_VALUE);
+    return fbBuilder.offset;
+  }
+  int addMaximumConstraintViolation(double? MAXIMUM_CONSTRAINT_VIOLATION) {
+    fbBuilder.addFloat64(5, MAXIMUM_CONSTRAINT_VIOLATION);
+    return fbBuilder.offset;
+  }
+  int addJacobianConditionEstimate(double? JACOBIAN_CONDITION_ESTIMATE) {
+    fbBuilder.addFloat64(6, JACOBIAN_CONDITION_ESTIMATE);
+    return fbBuilder.offset;
+  }
+  int addKktResidual(double? KKT_RESIDUAL) {
+    fbBuilder.addFloat64(7, KKT_RESIDUAL);
+    return fbBuilder.offset;
+  }
+  int addEvaluationCount(int? EVALUATION_COUNT) {
+    fbBuilder.addUint32(8, EVALUATION_COUNT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SLPIterationObjectBuilder extends fb.ObjectBuilder {
+  final int? _ITERATION;
+  final List<double>? _VARIABLES;
+  final List<double>? _VALUES;
+  final double? _RESIDUAL_NORM;
+  final double? _OBJECTIVE_VALUE;
+  final double? _MAXIMUM_CONSTRAINT_VIOLATION;
+  final double? _JACOBIAN_CONDITION_ESTIMATE;
+  final double? _KKT_RESIDUAL;
+  final int? _EVALUATION_COUNT;
+
+  SLPIterationObjectBuilder({
+    int? ITERATION,
+    List<double>? VARIABLES,
+    List<double>? VALUES,
+    double? RESIDUAL_NORM,
+    double? residualNorm,
+    double? OBJECTIVE_VALUE,
+    double? objectiveValue,
+    double? MAXIMUM_CONSTRAINT_VIOLATION,
+    double? maximumConstraintViolation,
+    double? JACOBIAN_CONDITION_ESTIMATE,
+    double? jacobianConditionEstimate,
+    double? KKT_RESIDUAL,
+    double? kktResidual,
+    int? EVALUATION_COUNT,
+    int? evaluationCount,
+  })
+      : _ITERATION = ITERATION,
+        _VARIABLES = VARIABLES,
+        _VALUES = VALUES,
+        _RESIDUAL_NORM = residualNorm ?? RESIDUAL_NORM,
+        _OBJECTIVE_VALUE = objectiveValue ?? OBJECTIVE_VALUE,
+        _MAXIMUM_CONSTRAINT_VIOLATION = maximumConstraintViolation ?? MAXIMUM_CONSTRAINT_VIOLATION,
+        _JACOBIAN_CONDITION_ESTIMATE = jacobianConditionEstimate ?? JACOBIAN_CONDITION_ESTIMATE,
+        _KKT_RESIDUAL = kktResidual ?? KKT_RESIDUAL,
+        _EVALUATION_COUNT = evaluationCount ?? EVALUATION_COUNT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? VARIABLESOffset = _VARIABLES == null ? null
+        : fbBuilder.writeListFloat64(_VARIABLES!);
+    final int? VALUESOffset = _VALUES == null ? null
+        : fbBuilder.writeListFloat64(_VALUES!);
+    fbBuilder.startTable(9);
+    fbBuilder.addUint32(0, _ITERATION);
+    fbBuilder.addOffset(1, VARIABLESOffset);
+    fbBuilder.addOffset(2, VALUESOffset);
+    fbBuilder.addFloat64(3, _RESIDUAL_NORM);
+    fbBuilder.addFloat64(4, _OBJECTIVE_VALUE);
+    fbBuilder.addFloat64(5, _MAXIMUM_CONSTRAINT_VIOLATION);
+    fbBuilder.addFloat64(6, _JACOBIAN_CONDITION_ESTIMATE);
+    fbBuilder.addFloat64(7, _KKT_RESIDUAL);
+    fbBuilder.addUint32(8, _EVALUATION_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SLPSolverReport {
+  SLPSolverReport._(this._bc, this._bcOffset);
+  factory SLPSolverReport(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SLPSolverReport> reader = _SLPSolverReportReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  slpSolveStatus get STATUS => slpSolveStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  String? get MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  List<SLPIteration>? get ITERATIONS => const fb.ListReader<SLPIteration>(SLPIteration.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  List<double>? get FINAL_VARIABLES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<double>? get finalVariables => FINAL_VARIABLES;
+  List<double>? get FINAL_VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<double>? get finalValues => FINAL_VALUES;
+  double get OBJECTIVE_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get objectiveValue => OBJECTIVE_VALUE;
+  double get RESIDUAL_NORM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get residualNorm => RESIDUAL_NORM;
+  double get MAXIMUM_CONSTRAINT_VIOLATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get maximumConstraintViolation => MAXIMUM_CONSTRAINT_VIOLATION;
+  double get KKT_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get kktResidual => KKT_RESIDUAL;
+  int get EVALUATION_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get evaluationCount => EVALUATION_COUNT;
+
+  @override
+  String toString() {
+    return 'SLPSolverReport{STATUS: ${STATUS}, MESSAGE: ${MESSAGE}, ITERATIONS: ${ITERATIONS}, finalVariables: ${finalVariables}, finalValues: ${finalValues}, objectiveValue: ${objectiveValue}, residualNorm: ${residualNorm}, maximumConstraintViolation: ${maximumConstraintViolation}, kktResidual: ${kktResidual}, evaluationCount: ${evaluationCount}}';
+  }
+}
+
+class _SLPSolverReportReader extends fb.TableReader<SLPSolverReport> {
+  const _SLPSolverReportReader();
+
+  @override
+  SLPSolverReport createObject(fb.BufferContext bc, int offset) =>
+    SLPSolverReport._(bc, offset);
+}
+
+class SLPSolverReportBuilder {
+  SLPSolverReportBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(10);
+  }
+
+  int addStatus(slpSolveStatus? STATUS) {
+    fbBuilder.addUint8(0, STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addMessageOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIterationsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addFinalVariablesOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addFinalValuesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectiveValue(double? OBJECTIVE_VALUE) {
+    fbBuilder.addFloat64(5, OBJECTIVE_VALUE);
+    return fbBuilder.offset;
+  }
+  int addResidualNorm(double? RESIDUAL_NORM) {
+    fbBuilder.addFloat64(6, RESIDUAL_NORM);
+    return fbBuilder.offset;
+  }
+  int addMaximumConstraintViolation(double? MAXIMUM_CONSTRAINT_VIOLATION) {
+    fbBuilder.addFloat64(7, MAXIMUM_CONSTRAINT_VIOLATION);
+    return fbBuilder.offset;
+  }
+  int addKktResidual(double? KKT_RESIDUAL) {
+    fbBuilder.addFloat64(8, KKT_RESIDUAL);
+    return fbBuilder.offset;
+  }
+  int addEvaluationCount(int? EVALUATION_COUNT) {
+    fbBuilder.addUint32(9, EVALUATION_COUNT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SLPSolverReportObjectBuilder extends fb.ObjectBuilder {
+  final slpSolveStatus? _STATUS;
+  final String? _MESSAGE;
+  final List<SLPIterationObjectBuilder>? _ITERATIONS;
+  final List<double>? _FINAL_VARIABLES;
+  final List<double>? _FINAL_VALUES;
+  final double? _OBJECTIVE_VALUE;
+  final double? _RESIDUAL_NORM;
+  final double? _MAXIMUM_CONSTRAINT_VIOLATION;
+  final double? _KKT_RESIDUAL;
+  final int? _EVALUATION_COUNT;
+
+  SLPSolverReportObjectBuilder({
+    slpSolveStatus? STATUS,
+    String? MESSAGE,
+    List<SLPIterationObjectBuilder>? ITERATIONS,
+    List<double>? FINAL_VARIABLES,
+    List<double>? finalVariables,
+    List<double>? FINAL_VALUES,
+    List<double>? finalValues,
+    double? OBJECTIVE_VALUE,
+    double? objectiveValue,
+    double? RESIDUAL_NORM,
+    double? residualNorm,
+    double? MAXIMUM_CONSTRAINT_VIOLATION,
+    double? maximumConstraintViolation,
+    double? KKT_RESIDUAL,
+    double? kktResidual,
+    int? EVALUATION_COUNT,
+    int? evaluationCount,
+  })
+      : _STATUS = STATUS,
+        _MESSAGE = MESSAGE,
+        _ITERATIONS = ITERATIONS,
+        _FINAL_VARIABLES = finalVariables ?? FINAL_VARIABLES,
+        _FINAL_VALUES = finalValues ?? FINAL_VALUES,
+        _OBJECTIVE_VALUE = objectiveValue ?? OBJECTIVE_VALUE,
+        _RESIDUAL_NORM = residualNorm ?? RESIDUAL_NORM,
+        _MAXIMUM_CONSTRAINT_VIOLATION = maximumConstraintViolation ?? MAXIMUM_CONSTRAINT_VIOLATION,
+        _KKT_RESIDUAL = kktResidual ?? KKT_RESIDUAL,
+        _EVALUATION_COUNT = evaluationCount ?? EVALUATION_COUNT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MESSAGEOffset = _MESSAGE == null ? null
+        : fbBuilder.writeString(_MESSAGE!);
+    final int? ITERATIONSOffset = _ITERATIONS == null ? null
+        : fbBuilder.writeList(_ITERATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? FINAL_VARIABLESOffset = _FINAL_VARIABLES == null ? null
+        : fbBuilder.writeListFloat64(_FINAL_VARIABLES!);
+    final int? FINAL_VALUESOffset = _FINAL_VALUES == null ? null
+        : fbBuilder.writeListFloat64(_FINAL_VALUES!);
+    fbBuilder.startTable(10);
+    fbBuilder.addUint8(0, _STATUS?.value);
+    fbBuilder.addOffset(1, MESSAGEOffset);
+    fbBuilder.addOffset(2, ITERATIONSOffset);
+    fbBuilder.addOffset(3, FINAL_VARIABLESOffset);
+    fbBuilder.addOffset(4, FINAL_VALUESOffset);
+    fbBuilder.addFloat64(5, _OBJECTIVE_VALUE);
+    fbBuilder.addFloat64(6, _RESIDUAL_NORM);
+    fbBuilder.addFloat64(7, _MAXIMUM_CONSTRAINT_VIOLATION);
+    fbBuilder.addFloat64(8, _KKT_RESIDUAL);
+    fbBuilder.addUint32(9, _EVALUATION_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SLPAttestation {
+  SLPAttestation._(this._bc, this._bcOffset);
+  factory SLPAttestation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SLPAttestation> reader = _SLPAttestationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Literal Ed25519 public key, encoded as 64 lowercase hexadecimal characters.
+  String? get SIGNING_PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get signingPublicKey => SIGNING_PUBLIC_KEY;
+  String? get SIGNED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get signedAt => SIGNED_AT;
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both signature
+  ///  payloads zeroed while preserving their vectors and offsets.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Ed25519 signature over canonical JSON in IDL field order and capitalization,
+  ///  with both signature fields omitted.
+  List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
+  List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
+
+  @override
+  String toString() {
+    return 'SLPAttestation{signingPublicKey: ${signingPublicKey}, signedAt: ${signedAt}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}}';
+  }
+}
+
+class _SLPAttestationReader extends fb.TableReader<SLPAttestation> {
+  const _SLPAttestationReader();
+
+  @override
+  SLPAttestation createObject(fb.BufferContext bc, int offset) =>
+    SLPAttestation._(bc, offset);
+}
+
+class SLPAttestationBuilder {
+  SLPAttestationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addSigningPublicKeyOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSignedAtOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalJsonSignatureOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SLPAttestationObjectBuilder extends fb.ObjectBuilder {
+  final String? _SIGNING_PUBLIC_KEY;
+  final String? _SIGNED_AT;
+  final List<int>? _SIGNATURE;
+  final List<int>? _CANONICAL_JSON_SIGNATURE;
+
+  SLPAttestationObjectBuilder({
+    String? SIGNING_PUBLIC_KEY,
+    String? signingPublicKey,
+    String? SIGNED_AT,
+    String? signedAt,
+    List<int>? SIGNATURE,
+    List<int>? CANONICAL_JSON_SIGNATURE,
+    List<int>? canonicalJsonSignature,
+  })
+      : _SIGNING_PUBLIC_KEY = signingPublicKey ?? SIGNING_PUBLIC_KEY,
+        _SIGNED_AT = signedAt ?? SIGNED_AT,
+        _SIGNATURE = SIGNATURE,
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SIGNING_PUBLIC_KEYOffset = _SIGNING_PUBLIC_KEY == null ? null
+        : fbBuilder.writeString(_SIGNING_PUBLIC_KEY!);
+    final int? SIGNED_ATOffset = _SIGNED_AT == null ? null
+        : fbBuilder.writeString(_SIGNED_AT!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, SIGNING_PUBLIC_KEYOffset);
+    fbBuilder.addOffset(1, SIGNED_ATOffset);
+    fbBuilder.addOffset(2, SIGNATUREOffset);
+    fbBuilder.addOffset(3, CANONICAL_JSON_SIGNATUREOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SLP {
+  SLP._(this._bc, this._bcOffset);
+  factory SLP(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SLP> reader = _SLPReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get PROBLEM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get problemId => PROBLEM_ID;
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  slpProblemKind get KIND => slpProblemKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  String? get PROPAGATOR_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get propagatorPortId => PROPAGATOR_PORT_ID;
+  String? get OBJECTIVE_EVALUATOR_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get objectiveEvaluatorPortId => OBJECTIVE_EVALUATOR_PORT_ID;
+  List<SLPVariable>? get VARIABLES => const fb.ListReader<SLPVariable>(SLPVariable.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<SLPGoal>? get GOALS => const fb.ListReader<SLPGoal>(SLPGoal.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  SLPObjective? get OBJECTIVE => SLPObjective.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  List<SLPNonlinearConstraint>? get CONSTRAINTS => const fb.ListReader<SLPNonlinearConstraint>(SLPNonlinearConstraint.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  SLPSolverSettings? get SETTINGS => SLPSolverSettings.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  SLPSolverReport? get REPORT => SLPSolverReport.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  String? get CREATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get createdAt => CREATED_AT;
+  SLPAttestation? get ATTESTATION => SLPAttestation.reader.vTableGetNullable(_bc, _bcOffset, 28);
+
+  @override
+  String toString() {
+    return 'SLP{problemId: ${problemId}, NAME: ${NAME}, KIND: ${KIND}, propagatorPortId: ${propagatorPortId}, objectiveEvaluatorPortId: ${objectiveEvaluatorPortId}, VARIABLES: ${VARIABLES}, GOALS: ${GOALS}, OBJECTIVE: ${OBJECTIVE}, CONSTRAINTS: ${CONSTRAINTS}, SETTINGS: ${SETTINGS}, REPORT: ${REPORT}, createdAt: ${createdAt}, ATTESTATION: ${ATTESTATION}}';
+  }
+}
+
+class _SLPReader extends fb.TableReader<SLP> {
+  const _SLPReader();
+
+  @override
+  SLP createObject(fb.BufferContext bc, int offset) =>
+    SLP._(bc, offset);
+}
+
+class SLPBuilder {
+  SLPBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -629,55 +1445,55 @@ class FRMFrameTransformRequestBuilder {
     fbBuilder.startTable(13);
   }
 
-  int addOperation(frmOperationCode? OPERATION) {
-    fbBuilder.addInt8(0, OPERATION?.value);
+  int addProblemIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addPositionOffset(int? offset) {
+  int addNameOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addTransformDcmOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addKind(slpProblemKind? KIND) {
+    fbBuilder.addUint8(2, KIND?.value);
     return fbBuilder.offset;
   }
-  int addEquatorialRadiusM(double? EQUATORIAL_RADIUS_M) {
-    fbBuilder.addFloat64(3, EQUATORIAL_RADIUS_M);
+  int addPropagatorPortIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addPolarRadiusM(double? POLAR_RADIUS_M) {
-    fbBuilder.addFloat64(4, POLAR_RADIUS_M);
+  int addObjectiveEvaluatorPortIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addTraceIdOffset(int? offset) {
+  int addVariablesOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addSourceCoordinateSystemOffset(int? offset) {
+  int addGoalsOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addTargetCoordinateSystemOffset(int? offset) {
+  int addObjectiveOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addSourceStateOffset(int? offset) {
+  int addConstraintsOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addTargetRepresentation(frmStateRepresentation? TARGET_REPRESENTATION) {
-    fbBuilder.addUint8(9, TARGET_REPRESENTATION?.value);
+  int addSettingsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addEpochOffset(int? offset) {
+  int addReportOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addEpochTimeSystemOffset(int? offset) {
+  int addCreatedAtOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addEopDataSetCidOffset(int? offset) {
+  int addAttestationOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
@@ -687,366 +1503,91 @@ class FRMFrameTransformRequestBuilder {
   }
 }
 
-class FRMFrameTransformRequestObjectBuilder extends fb.ObjectBuilder {
-  final frmOperationCode? _OPERATION;
-  final FRMVector3ObjectBuilder? _POSITION;
-  final FRMMatrix3ObjectBuilder? _TRANSFORM_DCM;
-  final double? _EQUATORIAL_RADIUS_M;
-  final double? _POLAR_RADIUS_M;
-  final String? _TRACE_ID;
-  final RFMCoordinateSystemObjectBuilder? _SOURCE_COORDINATE_SYSTEM;
-  final RFMCoordinateSystemObjectBuilder? _TARGET_COORDINATE_SYSTEM;
-  final FRMStateVectorObjectBuilder? _SOURCE_STATE;
-  final frmStateRepresentation? _TARGET_REPRESENTATION;
-  final String? _EPOCH;
-  final String? _EPOCH_TIME_SYSTEM;
-  final String? _EOP_DATA_SET_CID;
+class SLPObjectBuilder extends fb.ObjectBuilder {
+  final String? _PROBLEM_ID;
+  final String? _NAME;
+  final slpProblemKind? _KIND;
+  final String? _PROPAGATOR_PORT_ID;
+  final String? _OBJECTIVE_EVALUATOR_PORT_ID;
+  final List<SLPVariableObjectBuilder>? _VARIABLES;
+  final List<SLPGoalObjectBuilder>? _GOALS;
+  final SLPObjectiveObjectBuilder? _OBJECTIVE;
+  final List<SLPNonlinearConstraintObjectBuilder>? _CONSTRAINTS;
+  final SLPSolverSettingsObjectBuilder? _SETTINGS;
+  final SLPSolverReportObjectBuilder? _REPORT;
+  final String? _CREATED_AT;
+  final SLPAttestationObjectBuilder? _ATTESTATION;
 
-  FRMFrameTransformRequestObjectBuilder({
-    frmOperationCode? OPERATION,
-    FRMVector3ObjectBuilder? POSITION,
-    FRMMatrix3ObjectBuilder? TRANSFORM_DCM,
-    FRMMatrix3ObjectBuilder? transformDcm,
-    double? EQUATORIAL_RADIUS_M,
-    double? equatorialRadiusM,
-    double? POLAR_RADIUS_M,
-    double? polarRadiusM,
-    String? TRACE_ID,
-    String? traceId,
-    RFMCoordinateSystemObjectBuilder? SOURCE_COORDINATE_SYSTEM,
-    RFMCoordinateSystemObjectBuilder? sourceCoordinateSystem,
-    RFMCoordinateSystemObjectBuilder? TARGET_COORDINATE_SYSTEM,
-    RFMCoordinateSystemObjectBuilder? targetCoordinateSystem,
-    FRMStateVectorObjectBuilder? SOURCE_STATE,
-    FRMStateVectorObjectBuilder? sourceState,
-    frmStateRepresentation? TARGET_REPRESENTATION,
-    frmStateRepresentation? targetRepresentation,
-    String? EPOCH,
-    String? EPOCH_TIME_SYSTEM,
-    String? epochTimeSystem,
-    String? EOP_DATA_SET_CID,
-    String? eopDataSetCid,
+  SLPObjectBuilder({
+    String? PROBLEM_ID,
+    String? problemId,
+    String? NAME,
+    slpProblemKind? KIND,
+    String? PROPAGATOR_PORT_ID,
+    String? propagatorPortId,
+    String? OBJECTIVE_EVALUATOR_PORT_ID,
+    String? objectiveEvaluatorPortId,
+    List<SLPVariableObjectBuilder>? VARIABLES,
+    List<SLPGoalObjectBuilder>? GOALS,
+    SLPObjectiveObjectBuilder? OBJECTIVE,
+    List<SLPNonlinearConstraintObjectBuilder>? CONSTRAINTS,
+    SLPSolverSettingsObjectBuilder? SETTINGS,
+    SLPSolverReportObjectBuilder? REPORT,
+    String? CREATED_AT,
+    String? createdAt,
+    SLPAttestationObjectBuilder? ATTESTATION,
   })
-      : _OPERATION = OPERATION,
-        _POSITION = POSITION,
-        _TRANSFORM_DCM = transformDcm ?? TRANSFORM_DCM,
-        _EQUATORIAL_RADIUS_M = equatorialRadiusM ?? EQUATORIAL_RADIUS_M,
-        _POLAR_RADIUS_M = polarRadiusM ?? POLAR_RADIUS_M,
-        _TRACE_ID = traceId ?? TRACE_ID,
-        _SOURCE_COORDINATE_SYSTEM = sourceCoordinateSystem ?? SOURCE_COORDINATE_SYSTEM,
-        _TARGET_COORDINATE_SYSTEM = targetCoordinateSystem ?? TARGET_COORDINATE_SYSTEM,
-        _SOURCE_STATE = sourceState ?? SOURCE_STATE,
-        _TARGET_REPRESENTATION = targetRepresentation ?? TARGET_REPRESENTATION,
-        _EPOCH = EPOCH,
-        _EPOCH_TIME_SYSTEM = epochTimeSystem ?? EPOCH_TIME_SYSTEM,
-        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID;
+      : _PROBLEM_ID = problemId ?? PROBLEM_ID,
+        _NAME = NAME,
+        _KIND = KIND,
+        _PROPAGATOR_PORT_ID = propagatorPortId ?? PROPAGATOR_PORT_ID,
+        _OBJECTIVE_EVALUATOR_PORT_ID = objectiveEvaluatorPortId ?? OBJECTIVE_EVALUATOR_PORT_ID,
+        _VARIABLES = VARIABLES,
+        _GOALS = GOALS,
+        _OBJECTIVE = OBJECTIVE,
+        _CONSTRAINTS = CONSTRAINTS,
+        _SETTINGS = SETTINGS,
+        _REPORT = REPORT,
+        _CREATED_AT = createdAt ?? CREATED_AT,
+        _ATTESTATION = ATTESTATION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? POSITIONOffset = _POSITION?.getOrCreateOffset(fbBuilder);
-    final int? TRANSFORM_DCMOffset = _TRANSFORM_DCM?.getOrCreateOffset(fbBuilder);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    final int? SOURCE_COORDINATE_SYSTEMOffset = _SOURCE_COORDINATE_SYSTEM?.getOrCreateOffset(fbBuilder);
-    final int? TARGET_COORDINATE_SYSTEMOffset = _TARGET_COORDINATE_SYSTEM?.getOrCreateOffset(fbBuilder);
-    final int? SOURCE_STATEOffset = _SOURCE_STATE?.getOrCreateOffset(fbBuilder);
-    final int? EPOCHOffset = _EPOCH == null ? null
-        : fbBuilder.writeString(_EPOCH!);
-    final int? EPOCH_TIME_SYSTEMOffset = _EPOCH_TIME_SYSTEM == null ? null
-        : fbBuilder.writeString(_EPOCH_TIME_SYSTEM!);
-    final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
-        : fbBuilder.writeString(_EOP_DATA_SET_CID!);
+    final int? PROBLEM_IDOffset = _PROBLEM_ID == null ? null
+        : fbBuilder.writeString(_PROBLEM_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? PROPAGATOR_PORT_IDOffset = _PROPAGATOR_PORT_ID == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_PORT_ID!);
+    final int? OBJECTIVE_EVALUATOR_PORT_IDOffset = _OBJECTIVE_EVALUATOR_PORT_ID == null ? null
+        : fbBuilder.writeString(_OBJECTIVE_EVALUATOR_PORT_ID!);
+    final int? VARIABLESOffset = _VARIABLES == null ? null
+        : fbBuilder.writeList(_VARIABLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? GOALSOffset = _GOALS == null ? null
+        : fbBuilder.writeList(_GOALS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? OBJECTIVEOffset = _OBJECTIVE?.getOrCreateOffset(fbBuilder);
+    final int? CONSTRAINTSOffset = _CONSTRAINTS == null ? null
+        : fbBuilder.writeList(_CONSTRAINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SETTINGSOffset = _SETTINGS?.getOrCreateOffset(fbBuilder);
+    final int? REPORTOffset = _REPORT?.getOrCreateOffset(fbBuilder);
+    final int? CREATED_ATOffset = _CREATED_AT == null ? null
+        : fbBuilder.writeString(_CREATED_AT!);
+    final int? ATTESTATIONOffset = _ATTESTATION?.getOrCreateOffset(fbBuilder);
     fbBuilder.startTable(13);
-    fbBuilder.addInt8(0, _OPERATION?.value);
-    fbBuilder.addOffset(1, POSITIONOffset);
-    fbBuilder.addOffset(2, TRANSFORM_DCMOffset);
-    fbBuilder.addFloat64(3, _EQUATORIAL_RADIUS_M);
-    fbBuilder.addFloat64(4, _POLAR_RADIUS_M);
-    fbBuilder.addOffset(5, TRACE_IDOffset);
-    fbBuilder.addOffset(6, SOURCE_COORDINATE_SYSTEMOffset);
-    fbBuilder.addOffset(7, TARGET_COORDINATE_SYSTEMOffset);
-    fbBuilder.addOffset(8, SOURCE_STATEOffset);
-    fbBuilder.addUint8(9, _TARGET_REPRESENTATION?.value);
-    fbBuilder.addOffset(10, EPOCHOffset);
-    fbBuilder.addOffset(11, EPOCH_TIME_SYSTEMOffset);
-    fbBuilder.addOffset(12, EOP_DATA_SET_CIDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class FRMFrameTransformResult {
-  FRMFrameTransformResult._(this._bc, this._bcOffset);
-  factory FRMFrameTransformResult(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FRMFrameTransformResult> reader = _FRMFrameTransformResultReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  frmResultStatus get STATUS => frmResultStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get errorMessage => ERROR_MESSAGE;
-  FRMVector3? get POSITION => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get traceId => TRACE_ID;
-  ///  The transformed state, with velocity, in TARGET_COORDINATE_SYSTEM and
-  ///  TARGET_REPRESENTATION.
-  FRMStateVector? get TARGET_STATE => FRMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  FRMStateVector? get targetState => TARGET_STATE;
-  ///  Rotation from the source axes to the target axes at EPOCH.
-  FRMMatrix3? get ROTATION_DCM => FRMMatrix3.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  FRMMatrix3? get rotationDcm => ROTATION_DCM;
-  ///  Time derivative of ROTATION_DCM, per second. Required for a velocity
-  ///  transform between relatively rotating axis sets.
-  FRMMatrix3? get ROTATION_DCM_RATE => FRMMatrix3.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  FRMMatrix3? get rotationDcmRate => ROTATION_DCM_RATE;
-  ///  Angular velocity of the target axes with respect to the source axes,
-  ///  radians per second, expressed in the source axes.
-  FRMVector3? get ANGULAR_VELOCITY_RAD_S => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  FRMVector3? get angularVelocityRadS => ANGULAR_VELOCITY_RAD_S;
-  ///  Epoch of the Earth-orientation data set actually used, ISO 8601.
-  String? get EOP_DATA_SET_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get eopDataSetEpoch => EOP_DATA_SET_EPOCH;
-  ///  Content identifier of the Earth-orientation data set actually used.
-  String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get eopDataSetCid => EOP_DATA_SET_CID;
-
-  @override
-  String toString() {
-    return 'FRMFrameTransformResult{STATUS: ${STATUS}, errorMessage: ${errorMessage}, POSITION: ${POSITION}, traceId: ${traceId}, targetState: ${targetState}, rotationDcm: ${rotationDcm}, rotationDcmRate: ${rotationDcmRate}, angularVelocityRadS: ${angularVelocityRadS}, eopDataSetEpoch: ${eopDataSetEpoch}, eopDataSetCid: ${eopDataSetCid}}';
-  }
-}
-
-class _FRMFrameTransformResultReader extends fb.TableReader<FRMFrameTransformResult> {
-  const _FRMFrameTransformResultReader();
-
-  @override
-  FRMFrameTransformResult createObject(fb.BufferContext bc, int offset) =>
-    FRMFrameTransformResult._(bc, offset);
-}
-
-class FRMFrameTransformResultBuilder {
-  FRMFrameTransformResultBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(10);
-  }
-
-  int addStatus(frmResultStatus? STATUS) {
-    fbBuilder.addInt8(0, STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addErrorMessageOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addPositionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addTargetStateOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addRotationDcmOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addRotationDcmRateOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addAngularVelocityRadSOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addEopDataSetEpochOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addEopDataSetCidOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FRMFrameTransformResultObjectBuilder extends fb.ObjectBuilder {
-  final frmResultStatus? _STATUS;
-  final String? _ERROR_MESSAGE;
-  final FRMVector3ObjectBuilder? _POSITION;
-  final String? _TRACE_ID;
-  final FRMStateVectorObjectBuilder? _TARGET_STATE;
-  final FRMMatrix3ObjectBuilder? _ROTATION_DCM;
-  final FRMMatrix3ObjectBuilder? _ROTATION_DCM_RATE;
-  final FRMVector3ObjectBuilder? _ANGULAR_VELOCITY_RAD_S;
-  final String? _EOP_DATA_SET_EPOCH;
-  final String? _EOP_DATA_SET_CID;
-
-  FRMFrameTransformResultObjectBuilder({
-    frmResultStatus? STATUS,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
-    FRMVector3ObjectBuilder? POSITION,
-    String? TRACE_ID,
-    String? traceId,
-    FRMStateVectorObjectBuilder? TARGET_STATE,
-    FRMStateVectorObjectBuilder? targetState,
-    FRMMatrix3ObjectBuilder? ROTATION_DCM,
-    FRMMatrix3ObjectBuilder? rotationDcm,
-    FRMMatrix3ObjectBuilder? ROTATION_DCM_RATE,
-    FRMMatrix3ObjectBuilder? rotationDcmRate,
-    FRMVector3ObjectBuilder? ANGULAR_VELOCITY_RAD_S,
-    FRMVector3ObjectBuilder? angularVelocityRadS,
-    String? EOP_DATA_SET_EPOCH,
-    String? eopDataSetEpoch,
-    String? EOP_DATA_SET_CID,
-    String? eopDataSetCid,
-  })
-      : _STATUS = STATUS,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
-        _POSITION = POSITION,
-        _TRACE_ID = traceId ?? TRACE_ID,
-        _TARGET_STATE = targetState ?? TARGET_STATE,
-        _ROTATION_DCM = rotationDcm ?? ROTATION_DCM,
-        _ROTATION_DCM_RATE = rotationDcmRate ?? ROTATION_DCM_RATE,
-        _ANGULAR_VELOCITY_RAD_S = angularVelocityRadS ?? ANGULAR_VELOCITY_RAD_S,
-        _EOP_DATA_SET_EPOCH = eopDataSetEpoch ?? EOP_DATA_SET_EPOCH,
-        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    final int? POSITIONOffset = _POSITION?.getOrCreateOffset(fbBuilder);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    final int? TARGET_STATEOffset = _TARGET_STATE?.getOrCreateOffset(fbBuilder);
-    final int? ROTATION_DCMOffset = _ROTATION_DCM?.getOrCreateOffset(fbBuilder);
-    final int? ROTATION_DCM_RATEOffset = _ROTATION_DCM_RATE?.getOrCreateOffset(fbBuilder);
-    final int? ANGULAR_VELOCITY_RAD_SOffset = _ANGULAR_VELOCITY_RAD_S?.getOrCreateOffset(fbBuilder);
-    final int? EOP_DATA_SET_EPOCHOffset = _EOP_DATA_SET_EPOCH == null ? null
-        : fbBuilder.writeString(_EOP_DATA_SET_EPOCH!);
-    final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
-        : fbBuilder.writeString(_EOP_DATA_SET_CID!);
-    fbBuilder.startTable(10);
-    fbBuilder.addInt8(0, _STATUS?.value);
-    fbBuilder.addOffset(1, ERROR_MESSAGEOffset);
-    fbBuilder.addOffset(2, POSITIONOffset);
-    fbBuilder.addOffset(3, TRACE_IDOffset);
-    fbBuilder.addOffset(4, TARGET_STATEOffset);
-    fbBuilder.addOffset(5, ROTATION_DCMOffset);
-    fbBuilder.addOffset(6, ROTATION_DCM_RATEOffset);
-    fbBuilder.addOffset(7, ANGULAR_VELOCITY_RAD_SOffset);
-    fbBuilder.addOffset(8, EOP_DATA_SET_EPOCHOffset);
-    fbBuilder.addOffset(9, EOP_DATA_SET_CIDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class FRM {
-  FRM._(this._bc, this._bcOffset);
-  factory FRM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FRM> reader = _FRMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  FRMFrameTransformRequest? get FRAME_TRANSFORM_REQUEST => FRMFrameTransformRequest.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  FRMFrameTransformRequest? get frameTransformRequest => FRAME_TRANSFORM_REQUEST;
-  FRMFrameTransformResult? get FRAME_TRANSFORM_RESULT => FRMFrameTransformResult.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  FRMFrameTransformResult? get frameTransformResult => FRAME_TRANSFORM_RESULT;
-
-  @override
-  String toString() {
-    return 'FRM{frameTransformRequest: ${frameTransformRequest}, frameTransformResult: ${frameTransformResult}}';
-  }
-}
-
-class _FRMReader extends fb.TableReader<FRM> {
-  const _FRMReader();
-
-  @override
-  FRM createObject(fb.BufferContext bc, int offset) =>
-    FRM._(bc, offset);
-}
-
-class FRMBuilder {
-  FRMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addFrameTransformRequestOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addFrameTransformResultOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FRMObjectBuilder extends fb.ObjectBuilder {
-  final FRMFrameTransformRequestObjectBuilder? _FRAME_TRANSFORM_REQUEST;
-  final FRMFrameTransformResultObjectBuilder? _FRAME_TRANSFORM_RESULT;
-
-  FRMObjectBuilder({
-    FRMFrameTransformRequestObjectBuilder? FRAME_TRANSFORM_REQUEST,
-    FRMFrameTransformRequestObjectBuilder? frameTransformRequest,
-    FRMFrameTransformResultObjectBuilder? FRAME_TRANSFORM_RESULT,
-    FRMFrameTransformResultObjectBuilder? frameTransformResult,
-  })
-      : _FRAME_TRANSFORM_REQUEST = frameTransformRequest ?? FRAME_TRANSFORM_REQUEST,
-        _FRAME_TRANSFORM_RESULT = frameTransformResult ?? FRAME_TRANSFORM_RESULT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? FRAME_TRANSFORM_REQUESTOffset = _FRAME_TRANSFORM_REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? FRAME_TRANSFORM_RESULTOffset = _FRAME_TRANSFORM_RESULT?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, FRAME_TRANSFORM_REQUESTOffset);
-    fbBuilder.addOffset(1, FRAME_TRANSFORM_RESULTOffset);
+    fbBuilder.addOffset(0, PROBLEM_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addUint8(2, _KIND?.value);
+    fbBuilder.addOffset(3, PROPAGATOR_PORT_IDOffset);
+    fbBuilder.addOffset(4, OBJECTIVE_EVALUATOR_PORT_IDOffset);
+    fbBuilder.addOffset(5, VARIABLESOffset);
+    fbBuilder.addOffset(6, GOALSOffset);
+    fbBuilder.addOffset(7, OBJECTIVEOffset);
+    fbBuilder.addOffset(8, CONSTRAINTSOffset);
+    fbBuilder.addOffset(9, SETTINGSOffset);
+    fbBuilder.addOffset(10, REPORTOffset);
+    fbBuilder.addOffset(11, CREATED_ATOffset);
+    fbBuilder.addOffset(12, ATTESTATIONOffset);
     return fbBuilder.endTable();
   }
 

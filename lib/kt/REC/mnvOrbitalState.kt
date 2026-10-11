@@ -222,7 +222,7 @@ class mnvOrbitalState : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Position uncertainty U (km, 1-sigma)
+     * Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
      */
     val sigmaU : Double
         get() {
@@ -230,7 +230,7 @@ class mnvOrbitalState : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Position uncertainty V (km, 1-sigma)
+     * Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
      */
     val sigmaV : Double
         get() {
@@ -238,7 +238,7 @@ class mnvOrbitalState : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Position uncertainty W (km, 1-sigma)
+     * Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
      */
     val sigmaW : Double
         get() {

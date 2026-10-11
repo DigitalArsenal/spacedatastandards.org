@@ -492,6 +492,30 @@ class OMM : Table() {
         get() {
             val o = __offset(88); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Where the element set comes from and the terms it travels under.
+     */
+    val provenance : PVN? get() = provenance(PVN())
+    fun provenance(obj: PVN) : PVN? {
+        val o = __offset(90)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Realism of COVARIANCE.
+     */
+    val covRealism : CVR? get() = covRealism(CVR())
+    fun covRealism(obj: CVR) : CVR? {
+        val o = __offset(92)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOMM(_bb: ByteBuffer): OMM = getRootAsOMM(_bb, OMM())
@@ -500,8 +524,8 @@ class OMM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OMM")
-        fun createOMM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, timeSystem: Byte, meanElementTheory: Byte, commentOffset: Int, epochOffset: Int, semiMajorAxis: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, ephemerisType: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double, classificationOffset: Int, messageIdOffset: Int, userDefinedParametersOffset: Int) : Int {
-            builder.startTable(43)
+        fun createOMM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, timeSystem: Byte, meanElementTheory: Byte, commentOffset: Int, epochOffset: Int, semiMajorAxis: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, ephemerisType: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double, classificationOffset: Int, messageIdOffset: Int, userDefinedParametersOffset: Int, provenanceOffset: Int, covRealismOffset: Int) : Int {
+            builder.startTable(45)
             addUSERDEFINEDMICROSECONDS(builder, userDefinedMicroseconds)
             addUSERDEFINEDEPOCHTIMESTAMP(builder, userDefinedEpochTimestamp)
             addMEANMOTIONDDOT(builder, meanMotionDdot)
@@ -522,6 +546,8 @@ class OMM : Table() {
             addMEANMOTION(builder, meanMotion)
             addSEMIMAJORAXIS(builder, semiMajorAxis)
             addCCSDSOMMVERS(builder, ccsdsOmmVers)
+            addCOVREALISM(builder, covRealismOffset)
+            addPROVENANCE(builder, provenanceOffset)
             addUSERDEFINEDPARAMETERS(builder, userDefinedParametersOffset)
             addMESSAGEID(builder, messageIdOffset)
             addCLASSIFICATION(builder, classificationOffset)
@@ -547,7 +573,7 @@ class OMM : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endOMM(builder)
         }
-        fun startOMM(builder: FlatBufferBuilder) = builder.startTable(43)
+        fun startOMM(builder: FlatBufferBuilder) = builder.startTable(45)
         fun addCCSDSOMMVERS(builder: FlatBufferBuilder, ccsdsOmmVers: Double) = builder.addDouble(0, ccsdsOmmVers, 0.0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -607,6 +633,8 @@ class OMM : Table() {
             return builder.endVector()
         }
         fun startUserDefinedParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(43, provenance, 0)
+        fun addCOVREALISM(builder: FlatBufferBuilder, covRealism: Int) = builder.addOffset(44, covRealism, 0)
         fun endOMM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

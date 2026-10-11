@@ -8,382 +8,328 @@ import Common
 
 import FlatBuffers
 
-///  Trust predicate evaluated by a rule policy. Append new values only; never
-///  reorder or reuse existing values.
-public enum trpPredicateKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  A subject must hold at least the configured value.
-  case minvaluelocked = 0
-  ///  A subject must have held the configured value for a minimum duration.
-  case valueforduration = 1
-  ///  A subject's qualifying value must use an allowed asset.
-  case allowedtokens = 2
-  ///  A subject must satisfy an X-of-N trusted-connection rule.
-  case trustedconnections = 3
-
-  public static var max: trpPredicateKind { return .trustedconnections }
-  public static var min: trpPredicateKind { return .minvaluelocked }
-}
-
-
-///  Boolean combinator applied to a predicate group. Append new values only;
-///  never reorder or reuse existing values. A policy's rules are a flat list
-///  that must all pass, so evaluators accept only All.
-public enum trpCombinator: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Every rule must pass.
-  case all = 0
-  ///  Retired: rules are never alternatives. Evaluators refuse a policy that
-  ///  uses it.
-  case any = 1
-
-  public static var max: trpCombinator { return .any }
-  public static var min: trpCombinator { return .all }
-}
-
-
-///  Asset admitted by a value or token predicate.
-public struct TRPAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Chain evidence supporting a value-based predicate result.
+public struct TRVBondEvidence: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TRP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TRPAsset.id, addPrefix: prefix) }
+  public static var id: String { "$TRV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TRVBondEvidence.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let CHAIN_ID: VOffset = 4
-    static let TOKEN_ADDRESS: VOffset = 6
-    static let TOKEN_SYMBOL: VOffset = 8
-    static let DECIMALS: VOffset = 10
+    static let ADDRESS: VOffset = 6
+    static let TOKEN_ADDRESS: VOffset = 8
+    static let BALANCE: VOffset = 10
+    static let DECIMALS: VOffset = 12
+    static let VALUE_CURRENCY: VOffset = 14
+    static let NORMALIZED_VALUE: VOffset = 16
+    static let HELD_SINCE: VOffset = 18
+    static let OBSERVED_AT: VOffset = 20
+    static let BLOCK_REFERENCE: VOffset = 22
+    static let SOURCE_QUERY: VOffset = 24
   }
 
-  ///  CAIP-2 style chain identifier, e.g. "eip155:1" or
-  ///  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp". Vendor and organization names
-  ///  are forbidden; a chain is named only by its identifier.
+  ///  Chain identifier using the same identifier-only convention as TRPAsset.
   public var CHAIN_ID: String? { let o = _accessor.offset(VT.CHAIN_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var CHAIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHAIN_ID) }
+  ///  Chain-local address whose balance was evaluated.
+  public var ADDRESS: String? { let o = _accessor.offset(VT.ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ADDRESS) }
   ///  Chain-local token address, or empty for the chain's native asset.
   public var TOKEN_ADDRESS: String? { let o = _accessor.offset(VT.TOKEN_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
   public var TOKEN_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TOKEN_ADDRESS) }
-  ///  Published token symbol used for display and matching.
-  public var TOKEN_SYMBOL: String? { let o = _accessor.offset(VT.TOKEN_SYMBOL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TOKEN_SYMBOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TOKEN_SYMBOL) }
-  ///  Number of decimal places used by the smallest-unit integer balance.
+  ///  Observed uint64 balance expressed in the asset's smallest unit.
+  public var BALANCE: UInt64 { let o = _accessor.offset(VT.BALANCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Number of decimal places used by BALANCE.
   public var DECIMALS: UInt8 { let o = _accessor.offset(VT.DECIMALS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public static func startTRPAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  ///  Currency or unit used for normalized valuation.
+  public var VALUE_CURRENCY: String? { let o = _accessor.offset(VT.VALUE_CURRENCY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VALUE_CURRENCYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALUE_CURRENCY) }
+  ///  Balance normalized into VALUE_CURRENCY.
+  public var NORMALIZED_VALUE: Double { let o = _accessor.offset(VT.NORMALIZED_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Unix timestamp in milliseconds from which the balance is proven to have
+  ///  been continuously held, established from chain history.
+  public var HELD_SINCE: UInt64 { let o = _accessor.offset(VT.HELD_SINCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix timestamp in milliseconds when the balance was observed.
+  public var OBSERVED_AT: UInt64 { let o = _accessor.offset(VT.OBSERVED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Chain-specific block identifier anchoring the observation.
+  public var BLOCK_REFERENCE: String? { let o = _accessor.offset(VT.BLOCK_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BLOCK_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BLOCK_REFERENCE) }
+  ///  Replayable query or query description used to obtain the evidence.
+  public var SOURCE_QUERY: String? { let o = _accessor.offset(VT.SOURCE_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_QUERY) }
+  public static func startTRVBondEvidence(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(CHAIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN_ID, at: VT.CHAIN_ID) }
+  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VT.ADDRESS) }
   public static func add(TOKEN_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOKEN_ADDRESS, at: VT.TOKEN_ADDRESS) }
-  public static func add(TOKEN_SYMBOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOKEN_SYMBOL, at: VT.TOKEN_SYMBOL) }
+  public static func add(BALANCE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BALANCE, def: 0, at: VT.BALANCE) }
   public static func add(DECIMALS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECIMALS, def: 0, at: VT.DECIMALS) }
-  public static func endTRPAsset(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTRPAsset(
+  public static func add(VALUE_CURRENCY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE_CURRENCY, at: VT.VALUE_CURRENCY) }
+  public static func add(NORMALIZED_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMALIZED_VALUE, def: 0.0, at: VT.NORMALIZED_VALUE) }
+  public static func add(HELD_SINCE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HELD_SINCE, def: 0, at: VT.HELD_SINCE) }
+  public static func add(OBSERVED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVED_AT, def: 0, at: VT.OBSERVED_AT) }
+  public static func add(BLOCK_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLOCK_REFERENCE, at: VT.BLOCK_REFERENCE) }
+  public static func add(SOURCE_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_QUERY, at: VT.SOURCE_QUERY) }
+  public static func endTRVBondEvidence(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createTRVBondEvidence(
     _ fbb: inout FlatBufferBuilder,
     CHAIN_IDOffset CHAIN_ID: Offset = Offset(),
+    ADDRESSOffset ADDRESS: Offset = Offset(),
     TOKEN_ADDRESSOffset TOKEN_ADDRESS: Offset = Offset(),
-    TOKEN_SYMBOLOffset TOKEN_SYMBOL: Offset = Offset(),
-    DECIMALS: UInt8 = 0
+    BALANCE: UInt64 = 0,
+    DECIMALS: UInt8 = 0,
+    VALUE_CURRENCYOffset VALUE_CURRENCY: Offset = Offset(),
+    NORMALIZED_VALUE: Double = 0.0,
+    HELD_SINCE: UInt64 = 0,
+    OBSERVED_AT: UInt64 = 0,
+    BLOCK_REFERENCEOffset BLOCK_REFERENCE: Offset = Offset(),
+    SOURCE_QUERYOffset SOURCE_QUERY: Offset = Offset()
   ) -> Offset {
-    let __start = TRPAsset.startTRPAsset(&fbb)
-    TRPAsset.add(CHAIN_ID: CHAIN_ID, &fbb)
-    TRPAsset.add(TOKEN_ADDRESS: TOKEN_ADDRESS, &fbb)
-    TRPAsset.add(TOKEN_SYMBOL: TOKEN_SYMBOL, &fbb)
-    TRPAsset.add(DECIMALS: DECIMALS, &fbb)
-    return TRPAsset.endTRPAsset(&fbb, start: __start)
+    let __start = TRVBondEvidence.startTRVBondEvidence(&fbb)
+    TRVBondEvidence.add(CHAIN_ID: CHAIN_ID, &fbb)
+    TRVBondEvidence.add(ADDRESS: ADDRESS, &fbb)
+    TRVBondEvidence.add(TOKEN_ADDRESS: TOKEN_ADDRESS, &fbb)
+    TRVBondEvidence.add(BALANCE: BALANCE, &fbb)
+    TRVBondEvidence.add(DECIMALS: DECIMALS, &fbb)
+    TRVBondEvidence.add(VALUE_CURRENCY: VALUE_CURRENCY, &fbb)
+    TRVBondEvidence.add(NORMALIZED_VALUE: NORMALIZED_VALUE, &fbb)
+    TRVBondEvidence.add(HELD_SINCE: HELD_SINCE, &fbb)
+    TRVBondEvidence.add(OBSERVED_AT: OBSERVED_AT, &fbb)
+    TRVBondEvidence.add(BLOCK_REFERENCE: BLOCK_REFERENCE, &fbb)
+    TRVBondEvidence.add(SOURCE_QUERY: SOURCE_QUERY, &fbb)
+    return TRVBondEvidence.endTRVBondEvidence(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.CHAIN_ID, fieldName: "CHAIN_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ADDRESS, fieldName: "ADDRESS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.TOKEN_ADDRESS, fieldName: "TOKEN_ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TOKEN_SYMBOL, fieldName: "TOKEN_SYMBOL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BALANCE, fieldName: "BALANCE", required: false, type: UInt64.self)
     try _v.visit(field: VT.DECIMALS, fieldName: "DECIMALS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.VALUE_CURRENCY, fieldName: "VALUE_CURRENCY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORMALIZED_VALUE, fieldName: "NORMALIZED_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.HELD_SINCE, fieldName: "HELD_SINCE", required: false, type: UInt64.self)
+    try _v.visit(field: VT.OBSERVED_AT, fieldName: "OBSERVED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.BLOCK_REFERENCE, fieldName: "BLOCK_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_QUERY, fieldName: "SOURCE_QUERY", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  One named rule in a trust rule policy: a predicate and the values it
-///  needs. A subject meets the policy only when every rule passes.
-public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Outcome and evidence for one policy predicate.
+public struct TRVPredicateResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TRP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TRPPredicate.id, addPrefix: prefix) }
+  public static var id: String { "$TRV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TRVPredicateResult.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let PREDICATE_ID: VOffset = 4
     static let KIND: VOffset = 6
-    static let MIN_VALUE: VOffset = 8
-    static let VALUE_CURRENCY: VOffset = 10
-    static let MIN_HELD_SECONDS: VOffset = 12
-    static let ASSETS: VOffset = 14
-    static let REQUIRED_COUNT: VOffset = 16
-    static let TRUSTER_IDS: VOffset = 18
-    static let MIN_EDGE_WEIGHT: VOffset = 20
-    static let NAME: VOffset = 22
+    static let PASSED: VOffset = 8
+    static let MEASURED_VALUE: VOffset = 10
+    static let REQUIRED_VALUE: VOffset = 12
+    static let BOND_EVIDENCE: VOffset = 14
+    static let TRUSTER_IDS_MATCHED: VOffset = 16
+    static let EVIDENCE_TEXT: VOffset = 18
   }
 
-  ///  Stable identifier unique within the policy.
+  ///  Identifier of the evaluated `$TRP` predicate.
   public var PREDICATE_ID: String? { let o = _accessor.offset(VT.PREDICATE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var PREDICATE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREDICATE_ID) }
-  ///  Predicate operation to evaluate.
+  ///  Predicate operation copied from the evaluated policy.
   public var KIND: trpPredicateKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .minvaluelocked : trpPredicateKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .minvaluelocked }
-  ///  Minimum qualifying value expressed as a uint64 in the smallest unit.
-  public var MIN_VALUE: UInt64 { let o = _accessor.offset(VT.MIN_VALUE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Currency or unit used to compare normalized values.
-  public var VALUE_CURRENCY: String? { let o = _accessor.offset(VT.VALUE_CURRENCY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALUE_CURRENCYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALUE_CURRENCY) }
-  ///  Minimum continuous holding duration in seconds.
-  public var MIN_HELD_SECONDS: UInt64 { let o = _accessor.offset(VT.MIN_HELD_SECONDS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Assets admitted by this predicate.
-  public var ASSETS: FlatbufferVector<TRPAsset> { return _accessor.vector(at: VT.ASSETS, byteSize: 4) }
-  ///  X, the number of named trusters that must match.
-  public var REQUIRED_COUNT: UInt32 { let o = _accessor.offset(VT.REQUIRED_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  The N named `$TRE` trusters considered by a trusted-connections predicate.
-  public var TRUSTER_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TRUSTER_IDS, byteSize: 4) }
-  ///  Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
-  public var MIN_EDGE_WEIGHT: Double { let o = _accessor.offset(VT.MIN_EDGE_WEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The rule's name as its author wrote it, shown wherever the rule and its
-  ///  results are listed.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  public static func startTRPPredicate(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  ///  Whether this predicate passed.
+  public var PASSED: Bool { let o = _accessor.offset(VT.PASSED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Value measured by the evaluator.
+  public var MEASURED_VALUE: Double { let o = _accessor.offset(VT.MEASURED_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Threshold required by the evaluated predicate.
+  public var REQUIRED_VALUE: Double { let o = _accessor.offset(VT.REQUIRED_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Chain evidence used by value and duration predicates.
+  public var BOND_EVIDENCE: FlatbufferVector<TRVBondEvidence> { return _accessor.vector(at: VT.BOND_EVIDENCE, byteSize: 4) }
+  ///  Named `$TRE` trusters whose qualifying edges matched.
+  public var TRUSTER_IDS_MATCHED: FlatbufferVector<String?> { return _accessor.vector(at: VT.TRUSTER_IDS_MATCHED, byteSize: 4) }
+  ///  Human-readable evidence summary.
+  public var EVIDENCE_TEXT: String? { let o = _accessor.offset(VT.EVIDENCE_TEXT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVIDENCE_TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVIDENCE_TEXT) }
+  public static func startTRVPredicateResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(PREDICATE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREDICATE_ID, at: VT.PREDICATE_ID) }
   public static func add(KIND: trpPredicateKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
-  public static func add(MIN_VALUE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_VALUE, def: 0, at: VT.MIN_VALUE) }
-  public static func add(VALUE_CURRENCY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE_CURRENCY, at: VT.VALUE_CURRENCY) }
-  public static func add(MIN_HELD_SECONDS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_HELD_SECONDS, def: 0, at: VT.MIN_HELD_SECONDS) }
-  public static func addVectorOf(ASSETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSETS, at: VT.ASSETS) }
-  public static func add(REQUIRED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_COUNT, def: 0, at: VT.REQUIRED_COUNT) }
-  public static func addVectorOf(TRUSTER_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRUSTER_IDS, at: VT.TRUSTER_IDS) }
-  public static func add(MIN_EDGE_WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_EDGE_WEIGHT, def: 0.0, at: VT.MIN_EDGE_WEIGHT) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func endTRPPredicate(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTRPPredicate(
+  public static func add(PASSED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PASSED, def: false,
+   at: VT.PASSED) }
+  public static func add(MEASURED_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEASURED_VALUE, def: 0.0, at: VT.MEASURED_VALUE) }
+  public static func add(REQUIRED_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_VALUE, def: 0.0, at: VT.REQUIRED_VALUE) }
+  public static func addVectorOf(BOND_EVIDENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOND_EVIDENCE, at: VT.BOND_EVIDENCE) }
+  public static func addVectorOf(TRUSTER_IDS_MATCHED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRUSTER_IDS_MATCHED, at: VT.TRUSTER_IDS_MATCHED) }
+  public static func add(EVIDENCE_TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVIDENCE_TEXT, at: VT.EVIDENCE_TEXT) }
+  public static func endTRVPredicateResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createTRVPredicateResult(
     _ fbb: inout FlatBufferBuilder,
     PREDICATE_IDOffset PREDICATE_ID: Offset = Offset(),
     KIND: trpPredicateKind = .minvaluelocked,
-    MIN_VALUE: UInt64 = 0,
-    VALUE_CURRENCYOffset VALUE_CURRENCY: Offset = Offset(),
-    MIN_HELD_SECONDS: UInt64 = 0,
-    ASSETSVectorOffset ASSETS: Offset = Offset(),
-    REQUIRED_COUNT: UInt32 = 0,
-    TRUSTER_IDSVectorOffset TRUSTER_IDS: Offset = Offset(),
-    MIN_EDGE_WEIGHT: Double = 0.0,
-    NAMEOffset NAME: Offset = Offset()
+    PASSED: Bool = false,
+    MEASURED_VALUE: Double = 0.0,
+    REQUIRED_VALUE: Double = 0.0,
+    BOND_EVIDENCEVectorOffset BOND_EVIDENCE: Offset = Offset(),
+    TRUSTER_IDS_MATCHEDVectorOffset TRUSTER_IDS_MATCHED: Offset = Offset(),
+    EVIDENCE_TEXTOffset EVIDENCE_TEXT: Offset = Offset()
   ) -> Offset {
-    let __start = TRPPredicate.startTRPPredicate(&fbb)
-    TRPPredicate.add(PREDICATE_ID: PREDICATE_ID, &fbb)
-    TRPPredicate.add(KIND: KIND, &fbb)
-    TRPPredicate.add(MIN_VALUE: MIN_VALUE, &fbb)
-    TRPPredicate.add(VALUE_CURRENCY: VALUE_CURRENCY, &fbb)
-    TRPPredicate.add(MIN_HELD_SECONDS: MIN_HELD_SECONDS, &fbb)
-    TRPPredicate.addVectorOf(ASSETS: ASSETS, &fbb)
-    TRPPredicate.add(REQUIRED_COUNT: REQUIRED_COUNT, &fbb)
-    TRPPredicate.addVectorOf(TRUSTER_IDS: TRUSTER_IDS, &fbb)
-    TRPPredicate.add(MIN_EDGE_WEIGHT: MIN_EDGE_WEIGHT, &fbb)
-    TRPPredicate.add(NAME: NAME, &fbb)
-    return TRPPredicate.endTRPPredicate(&fbb, start: __start)
+    let __start = TRVPredicateResult.startTRVPredicateResult(&fbb)
+    TRVPredicateResult.add(PREDICATE_ID: PREDICATE_ID, &fbb)
+    TRVPredicateResult.add(KIND: KIND, &fbb)
+    TRVPredicateResult.add(PASSED: PASSED, &fbb)
+    TRVPredicateResult.add(MEASURED_VALUE: MEASURED_VALUE, &fbb)
+    TRVPredicateResult.add(REQUIRED_VALUE: REQUIRED_VALUE, &fbb)
+    TRVPredicateResult.addVectorOf(BOND_EVIDENCE: BOND_EVIDENCE, &fbb)
+    TRVPredicateResult.addVectorOf(TRUSTER_IDS_MATCHED: TRUSTER_IDS_MATCHED, &fbb)
+    TRVPredicateResult.add(EVIDENCE_TEXT: EVIDENCE_TEXT, &fbb)
+    return TRVPredicateResult.endTRVPredicateResult(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.PREDICATE_ID, fieldName: "PREDICATE_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: trpPredicateKind.self)
-    try _v.visit(field: VT.MIN_VALUE, fieldName: "MIN_VALUE", required: false, type: UInt64.self)
-    try _v.visit(field: VT.VALUE_CURRENCY, fieldName: "VALUE_CURRENCY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MIN_HELD_SECONDS, fieldName: "MIN_HELD_SECONDS", required: false, type: UInt64.self)
-    try _v.visit(field: VT.ASSETS, fieldName: "ASSETS", required: false, type: ForwardOffset<Vector<ForwardOffset<TRPAsset>, TRPAsset>>.self)
-    try _v.visit(field: VT.REQUIRED_COUNT, fieldName: "REQUIRED_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.TRUSTER_IDS, fieldName: "TRUSTER_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.MIN_EDGE_WEIGHT, fieldName: "MIN_EDGE_WEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PASSED, fieldName: "PASSED", required: false, type: Bool.self)
+    try _v.visit(field: VT.MEASURED_VALUE, fieldName: "MEASURED_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.REQUIRED_VALUE, fieldName: "REQUIRED_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.BOND_EVIDENCE, fieldName: "BOND_EVIDENCE", required: false, type: ForwardOffset<Vector<ForwardOffset<TRVBondEvidence>, TRVBondEvidence>>.self)
+    try _v.visit(field: VT.TRUSTER_IDS_MATCHED, fieldName: "TRUSTER_IDS_MATCHED", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.EVIDENCE_TEXT, fieldName: "EVIDENCE_TEXT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  The rules of a trust rule policy.
-public struct TRPGroup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Trust Rule Verdict.
+///
+///  A TRV records one reproducible evaluation of a `$TRP` policy for a subject.
+///  This record replaces ad-hoc trust status events.
+public struct TRV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TRP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TRPGroup.id, addPrefix: prefix) }
+  public static var id: String { "$TRV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TRV.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let GROUP_ID: VOffset = 4
-    static let COMBINATOR: VOffset = 6
-    static let PREDICATES: VOffset = 8
-    static let GROUPS: VOffset = 10
+    static let VERDICT_ID: VOffset = 4
+    static let POLICY_ID: VOffset = 6
+    static let SUBJECT_ID: VOffset = 8
+    static let PASSED: VOffset = 10
+    static let PREVIOUS_PASSED: VOffset = 12
+    static let SCORE: VOffset = 14
+    static let PREVIOUS_SCORE: VOffset = 16
+    static let RESULTS: VOffset = 18
+    static let TRIGGER: VOffset = 20
+    static let EVALUATED_AT: VOffset = 22
+    static let EVALUATOR_PEER_ID: VOffset = 24
+    static let EVALUATOR_SIGNATURE: VOffset = 26
   }
 
-  ///  Stable identifier unique within the policy.
-  public var GROUP_ID: String? { let o = _accessor.offset(VT.GROUP_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GROUP_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GROUP_ID) }
-  ///  Always All: every rule must pass.
-  public var COMBINATOR: trpCombinator { let o = _accessor.offset(VT.COMBINATOR); return o == 0 ? .all : trpCombinator(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .all }
-  ///  The policy's rules, all of which must pass.
-  public var PREDICATES: FlatbufferVector<TRPPredicate> { return _accessor.vector(at: VT.PREDICATES, byteSize: 4) }
-  ///  Retired: rules do not nest. Evaluators refuse a policy with child groups.
-  public var GROUPS: FlatbufferVector<TRPGroup> { return _accessor.vector(at: VT.GROUPS, byteSize: 4) }
-  public static func startTRPGroup(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(GROUP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUP_ID, at: VT.GROUP_ID) }
-  public static func add(COMBINATOR: trpCombinator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMBINATOR.rawValue, def: 0, at: VT.COMBINATOR) }
-  public static func addVectorOf(PREDICATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREDICATES, at: VT.PREDICATES) }
-  public static func addVectorOf(GROUPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUPS, at: VT.GROUPS) }
-  public static func endTRPGroup(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTRPGroup(
-    _ fbb: inout FlatBufferBuilder,
-    GROUP_IDOffset GROUP_ID: Offset = Offset(),
-    COMBINATOR: trpCombinator = .all,
-    PREDICATESVectorOffset PREDICATES: Offset = Offset(),
-    GROUPSVectorOffset GROUPS: Offset = Offset()
-  ) -> Offset {
-    let __start = TRPGroup.startTRPGroup(&fbb)
-    TRPGroup.add(GROUP_ID: GROUP_ID, &fbb)
-    TRPGroup.add(COMBINATOR: COMBINATOR, &fbb)
-    TRPGroup.addVectorOf(PREDICATES: PREDICATES, &fbb)
-    TRPGroup.addVectorOf(GROUPS: GROUPS, &fbb)
-    return TRPGroup.endTRPGroup(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.GROUP_ID, fieldName: "GROUP_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.COMBINATOR, fieldName: "COMBINATOR", required: false, type: trpCombinator.self)
-    try _v.visit(field: VT.PREDICATES, fieldName: "PREDICATES", required: false, type: ForwardOffset<Vector<ForwardOffset<TRPPredicate>, TRPPredicate>>.self)
-    try _v.visit(field: VT.GROUPS, fieldName: "GROUPS", required: false, type: ForwardOffset<Vector<ForwardOffset<TRPGroup>, TRPGroup>>.self)
-    _v.finish()
-  }
-}
-
-///  Trust Rule Policy - a signed list of named rules for evaluating a subject.
-///  The subject meets the policy when every rule passes; there is no
-///  alternative and no nesting.
-public struct TRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$TRP" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TRP.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let POLICY_ID: VOffset = 4
-    static let NAME: VOffset = 6
-    static let DESCRIPTION: VOffset = 8
-    static let ROOT: VOffset = 10
-    static let EVALUATION_INTERVAL_MS: VOffset = 12
-    static let EVENT_SOURCES: VOffset = 14
-    static let ACTIVE: VOffset = 16
-    static let CREATED_AT: VOffset = 18
-    static let UPDATED_AT: VOffset = 20
-    static let EVALUATOR_PEER_ID: VOffset = 22
-    static let EVALUATOR_SIGNATURE: VOffset = 24
-  }
-
-  ///  Stable policy identifier.
+  ///  Stable identifier for this evaluation.
+  public var VERDICT_ID: String! { let o = _accessor.offset(VT.VERDICT_ID); return _accessor.string(at: o) }
+  public var VERDICT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERDICT_ID) }
+  ///  Identifier of the evaluated `$TRP` policy.
   public var POLICY_ID: String! { let o = _accessor.offset(VT.POLICY_ID); return _accessor.string(at: o) }
   public var POLICY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.POLICY_ID) }
-  ///  Human-readable policy name.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Human-readable policy description.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  The policy's rules.
-  public var ROOT: TRPGroup? { let o = _accessor.offset(VT.ROOT); return o == 0 ? nil : TRPGroup(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Periodic evaluation cadence in milliseconds. The 10000 default is the
-  ///  0.1 Hz baseline and is configurable by the policy author.
-  public var EVALUATION_INTERVAL_MS: UInt32 { let o = _accessor.offset(VT.EVALUATION_INTERVAL_MS); return o == 0 ? 10000 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Event names that may trigger evaluation, e.g. "trust-edge", "trust-node",
-  ///  "entity-profile", or "chain-balance".
-  public var EVENT_SOURCES: FlatbufferVector<String?> { return _accessor.vector(at: VT.EVENT_SOURCES, byteSize: 4) }
-  ///  Whether evaluators should currently apply this policy.
-  public var ACTIVE: Bool { let o = _accessor.offset(VT.ACTIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Unix timestamp in milliseconds when this policy was created.
-  public var CREATED_AT: UInt64 { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Unix timestamp in milliseconds when this policy was last updated.
-  public var UPDATED_AT: UInt64 { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Peer identifier of the evaluator that issued this policy record.
+  ///  Identifier of the subject evaluated by the policy.
+  public var SUBJECT_ID: String! { let o = _accessor.offset(VT.SUBJECT_ID); return _accessor.string(at: o) }
+  public var SUBJECT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SUBJECT_ID) }
+  ///  Whether the complete policy passed.
+  public var PASSED: Bool { let o = _accessor.offset(VT.PASSED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Pass state produced by the immediately preceding evaluation.
+  public var PREVIOUS_PASSED: Bool { let o = _accessor.offset(VT.PREVIOUS_PASSED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Score produced by this evaluation.
+  public var SCORE: Double { let o = _accessor.offset(VT.SCORE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Score produced by the immediately preceding evaluation.
+  public var PREVIOUS_SCORE: Double { let o = _accessor.offset(VT.PREVIOUS_SCORE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Per-predicate results and their evidence.
+  public var RESULTS: FlatbufferVector<TRVPredicateResult> { return _accessor.vector(at: VT.RESULTS, byteSize: 4) }
+  ///  Evaluation trigger: "interval" or an event source name.
+  public var TRIGGER: String? { let o = _accessor.offset(VT.TRIGGER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRIGGERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRIGGER) }
+  ///  Unix timestamp in milliseconds when the evaluation completed.
+  public var EVALUATED_AT: UInt64 { let o = _accessor.offset(VT.EVALUATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Peer identifier of the evaluator that issued this verdict.
   public var EVALUATOR_PEER_ID: String? { let o = _accessor.offset(VT.EVALUATOR_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var EVALUATOR_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVALUATOR_PEER_ID) }
-  ///  Evaluator signature over the policy record.
+  ///  Evaluator signature over the verdict record.
   public var EVALUATOR_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.EVALUATOR_SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToEvaluatorSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.EVALUATOR_SIGNATURE, body: body) }
-  public static func startTRP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func startTRV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(VERDICT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERDICT_ID, at: VT.VERDICT_ID) }
   public static func add(POLICY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLICY_ID, at: VT.POLICY_ID) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(ROOT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT, at: VT.ROOT) }
-  public static func add(EVALUATION_INTERVAL_MS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVALUATION_INTERVAL_MS, def: 10000, at: VT.EVALUATION_INTERVAL_MS) }
-  public static func addVectorOf(EVENT_SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_SOURCES, at: VT.EVENT_SOURCES) }
-  public static func add(ACTIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTIVE, def: false,
-   at: VT.ACTIVE) }
-  public static func add(CREATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREATED_AT, def: 0, at: VT.CREATED_AT) }
-  public static func add(UPDATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT, def: 0, at: VT.UPDATED_AT) }
+  public static func add(SUBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUBJECT_ID, at: VT.SUBJECT_ID) }
+  public static func add(PASSED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PASSED, def: false,
+   at: VT.PASSED) }
+  public static func add(PREVIOUS_PASSED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREVIOUS_PASSED, def: false,
+   at: VT.PREVIOUS_PASSED) }
+  public static func add(SCORE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCORE, def: 0.0, at: VT.SCORE) }
+  public static func add(PREVIOUS_SCORE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREVIOUS_SCORE, def: 0.0, at: VT.PREVIOUS_SCORE) }
+  public static func addVectorOf(RESULTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESULTS, at: VT.RESULTS) }
+  public static func add(TRIGGER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRIGGER, at: VT.TRIGGER) }
+  public static func add(EVALUATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVALUATED_AT, def: 0, at: VT.EVALUATED_AT) }
   public static func add(EVALUATOR_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVALUATOR_PEER_ID, at: VT.EVALUATOR_PEER_ID) }
   public static func addVectorOf(EVALUATOR_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVALUATOR_SIGNATURE, at: VT.EVALUATOR_SIGNATURE) }
-  public static func endTRP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createTRP(
+  public static func endTRV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
+  public static func createTRV(
     _ fbb: inout FlatBufferBuilder,
+    VERDICT_IDOffset VERDICT_ID: Offset,
     POLICY_IDOffset POLICY_ID: Offset,
-    NAMEOffset NAME: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    ROOTOffset ROOT: Offset = Offset(),
-    EVALUATION_INTERVAL_MS: UInt32 = 10000,
-    EVENT_SOURCESVectorOffset EVENT_SOURCES: Offset = Offset(),
-    ACTIVE: Bool = false,
-    CREATED_AT: UInt64 = 0,
-    UPDATED_AT: UInt64 = 0,
+    SUBJECT_IDOffset SUBJECT_ID: Offset,
+    PASSED: Bool = false,
+    PREVIOUS_PASSED: Bool = false,
+    SCORE: Double = 0.0,
+    PREVIOUS_SCORE: Double = 0.0,
+    RESULTSVectorOffset RESULTS: Offset = Offset(),
+    TRIGGEROffset TRIGGER: Offset = Offset(),
+    EVALUATED_AT: UInt64 = 0,
     EVALUATOR_PEER_IDOffset EVALUATOR_PEER_ID: Offset = Offset(),
     EVALUATOR_SIGNATUREVectorOffset EVALUATOR_SIGNATURE: Offset = Offset()
   ) -> Offset {
-    let __start = TRP.startTRP(&fbb)
-    TRP.add(POLICY_ID: POLICY_ID, &fbb)
-    TRP.add(NAME: NAME, &fbb)
-    TRP.add(DESCRIPTION: DESCRIPTION, &fbb)
-    TRP.add(ROOT: ROOT, &fbb)
-    TRP.add(EVALUATION_INTERVAL_MS: EVALUATION_INTERVAL_MS, &fbb)
-    TRP.addVectorOf(EVENT_SOURCES: EVENT_SOURCES, &fbb)
-    TRP.add(ACTIVE: ACTIVE, &fbb)
-    TRP.add(CREATED_AT: CREATED_AT, &fbb)
-    TRP.add(UPDATED_AT: UPDATED_AT, &fbb)
-    TRP.add(EVALUATOR_PEER_ID: EVALUATOR_PEER_ID, &fbb)
-    TRP.addVectorOf(EVALUATOR_SIGNATURE: EVALUATOR_SIGNATURE, &fbb)
-    return TRP.endTRP(&fbb, start: __start)
+    let __start = TRV.startTRV(&fbb)
+    TRV.add(VERDICT_ID: VERDICT_ID, &fbb)
+    TRV.add(POLICY_ID: POLICY_ID, &fbb)
+    TRV.add(SUBJECT_ID: SUBJECT_ID, &fbb)
+    TRV.add(PASSED: PASSED, &fbb)
+    TRV.add(PREVIOUS_PASSED: PREVIOUS_PASSED, &fbb)
+    TRV.add(SCORE: SCORE, &fbb)
+    TRV.add(PREVIOUS_SCORE: PREVIOUS_SCORE, &fbb)
+    TRV.addVectorOf(RESULTS: RESULTS, &fbb)
+    TRV.add(TRIGGER: TRIGGER, &fbb)
+    TRV.add(EVALUATED_AT: EVALUATED_AT, &fbb)
+    TRV.add(EVALUATOR_PEER_ID: EVALUATOR_PEER_ID, &fbb)
+    TRV.addVectorOf(EVALUATOR_SIGNATURE: EVALUATOR_SIGNATURE, &fbb)
+    return TRV.endTRV(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.VERDICT_ID, fieldName: "VERDICT_ID", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.POLICY_ID, fieldName: "POLICY_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ROOT, fieldName: "ROOT", required: false, type: ForwardOffset<TRPGroup>.self)
-    try _v.visit(field: VT.EVALUATION_INTERVAL_MS, fieldName: "EVALUATION_INTERVAL_MS", required: false, type: UInt32.self)
-    try _v.visit(field: VT.EVENT_SOURCES, fieldName: "EVENT_SOURCES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.ACTIVE, fieldName: "ACTIVE", required: false, type: Bool.self)
-    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.SUBJECT_ID, fieldName: "SUBJECT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PASSED, fieldName: "PASSED", required: false, type: Bool.self)
+    try _v.visit(field: VT.PREVIOUS_PASSED, fieldName: "PREVIOUS_PASSED", required: false, type: Bool.self)
+    try _v.visit(field: VT.SCORE, fieldName: "SCORE", required: false, type: Double.self)
+    try _v.visit(field: VT.PREVIOUS_SCORE, fieldName: "PREVIOUS_SCORE", required: false, type: Double.self)
+    try _v.visit(field: VT.RESULTS, fieldName: "RESULTS", required: false, type: ForwardOffset<Vector<ForwardOffset<TRVPredicateResult>, TRVPredicateResult>>.self)
+    try _v.visit(field: VT.TRIGGER, fieldName: "TRIGGER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVALUATED_AT, fieldName: "EVALUATED_AT", required: false, type: UInt64.self)
     try _v.visit(field: VT.EVALUATOR_PEER_ID, fieldName: "EVALUATOR_PEER_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.EVALUATOR_SIGNATURE, fieldName: "EVALUATOR_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()

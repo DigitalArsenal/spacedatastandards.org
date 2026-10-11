@@ -5,271 +5,117 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Entity category for shared entity metadata index rows.
-enum entityKind {
-  ENTITY(0),
-  SPACE(1),
-  GROUND(2),
-  AIRCRAFT(3),
-  MISSILE(4),
-  SHIP(5),
-  VEHICLE(6),
-  SENSOR(7),
-  OTHER(127);
+///  Catalog query discriminator. Callers and host plugins use this enum to
+///  select a query shape for in-memory catalog queries answered by a host
+///  runtime (for example the shared FlatSQL entity collection).
+enum catalogQueryKind {
+  ROWS(0),
+  ENTITY_INDICES(1),
+  VISIBILITY_MASK(2),
+  CATALOG_ROW(3);
 
   final int value;
-  const entityKind(this.value);
+  const catalogQueryKind(this.value);
 
-  factory entityKind.fromValue(int value) {
+  factory catalogQueryKind.fromValue(int value) {
     switch (value) {
-      case 0: return entityKind.ENTITY;
-      case 1: return entityKind.SPACE;
-      case 2: return entityKind.GROUND;
-      case 3: return entityKind.AIRCRAFT;
-      case 4: return entityKind.MISSILE;
-      case 5: return entityKind.SHIP;
-      case 6: return entityKind.VEHICLE;
-      case 7: return entityKind.SENSOR;
-      case 127: return entityKind.OTHER;
+      case 0: return catalogQueryKind.ROWS;
+      case 1: return catalogQueryKind.ENTITY_INDICES;
+      case 2: return catalogQueryKind.VISIBILITY_MASK;
+      case 3: return catalogQueryKind.CATALOG_ROW;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static entityKind? _createOrNull(int? value) =>
-      value == null ? null : entityKind.fromValue(value);
+  static catalogQueryKind? _createOrNull(int? value) =>
+      value == null ? null : catalogQueryKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 127;
-  static const fb.Reader<entityKind> reader = _entityKindReader();
+  static const int maxValue = 3;
+  static const fb.Reader<catalogQueryKind> reader = _catalogQueryKindReader();
 }
 
-class _entityKindReader extends fb.Reader<entityKind> {
-  const _entityKindReader();
+class _catalogQueryKindReader extends fb.Reader<catalogQueryKind> {
+  const _catalogQueryKindReader();
 
   @override
   int get size => 1;
 
   @override
-  entityKind read(fb.BufferContext bc, int offset) =>
-      entityKind.fromValue(const fb.Int8Reader().read(bc, offset));
+  catalogQueryKind read(fb.BufferContext bc, int offset) =>
+      catalogQueryKind.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Entity Metadata — generic queryable metadata for a host-local entity.
-///  Participates in shared FlatSQL/WASM runtimes where multiple plugins
-///  cross-query the same entity collection.
-class ETM {
-  ETM._(this._bc, this._bcOffset);
-  factory ETM(List<int> bytes) {
+///  Catalog query request payload.
+class CAQRequest {
+  CAQRequest._(this._bc, this._bcOffset);
+  factory CAQRequest(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<ETM> reader = _ETMReader();
+  static const fb.Reader<CAQRequest> reader = _CAQRequestReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Stable host-local entity identifier.
-  String? get ENTITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get entityId => ENTITY_ID;
-  ///  Human-readable entity name used for shared query/search surfaces.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Broad entity category.
-  entityKind get KIND => entityKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  More specific runtime subtype or class name.
-  String? get SUBTYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Optional parent entity id for hierarchy / linkage queries.
-  String? get PARENT_ENTITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get parentEntityId => PARENT_ENTITY_ID;
-  ///  Collection-scoped WASM handle used for batch visibility application.
-  int get WASM_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get wasmHandle => WASM_HANDLE;
-  ///  Optional NORAD catalog id for standards-backed entities.
-  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get noradCatId => NORAD_CAT_ID;
-  ///  Primary object name surfaced by attached standards metadata.
-  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get objectName => OBJECT_NAME;
-  ///  Primary international / object designator surfaced by attached standards metadata.
-  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get objectId => OBJECT_ID;
-  ///  Secondary CAT object name when different from the primary object name.
-  String? get CAT_OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get catObjectName => CAT_OBJECT_NAME;
-  ///  Secondary CAT object id when different from the primary object id.
-  String? get CAT_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get catObjectId => CAT_OBJECT_ID;
-  ///  Ground / facility subtype metadata for non-space entity search.
-  String? get FACILITY_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get facilityType => FACILITY_TYPE;
-  ///  Pre-normalized phrase-search text for collection-wide shared queries.
-  String? get SEARCH_TEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get searchText => SEARCH_TEXT;
-  ///  CAT owner country code.
-  String? get OWNER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  ///  CAT operational status code.
-  String? get STATUS_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  String? get statusCode => STATUS_CODE;
-  ///  CAT launch date.
-  String? get LAUNCH_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  String? get launchDate => LAUNCH_DATE;
-  ///  Launch year derived from launch date.
-  String? get LAUNCH_YEAR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  String? get launchYear => LAUNCH_YEAR;
-  ///  Derived orbit regime classification.
-  String? get ORBIT_REGIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
-  String? get orbitRegime => ORBIT_REGIME;
-  ///  Orbital period in minutes.
-  double get PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  ///  Inclination in degrees.
-  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  ///  Apogee altitude in kilometers.
-  double get APOGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  ///  Perigee altitude in kilometers.
-  double get PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  ///  Mean motion in revolutions per day.
-  double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get meanMotion => MEAN_MOTION;
-  ///  Orbital eccentricity.
-  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  ///  B* drag term from OMM.
-  double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  ///  Whether GP / OMM state is present for the entity.
-  bool get HAS_GP => const fb.BoolReader().vTableGet(_bc, _bcOffset, 54, false);
-  bool get hasGp => HAS_GP;
-  ///  Reserved for forward-compatible growth.
-  List<int>? get RESERVED => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 56);
+  catalogQueryKind get KIND => catalogQueryKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Host-specific query string (for example a FlatSQL or DSL expression).
+  String? get QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Entity index for single-row queries.
+  int get ENTITY_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get entityIndex => ENTITY_INDEX;
+  ///  Upper bound on the number of rows / indices to return (0 = unbounded).
+  int get MAX_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get maxCount => MAX_COUNT;
+  ///  Expected number of entities in the catalog at the time the request was
+  ///  issued, used to size visibility masks.
+  int get ENTITY_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get entityCount => ENTITY_COUNT;
 
   @override
   String toString() {
-    return 'ETM{entityId: ${entityId}, NAME: ${NAME}, KIND: ${KIND}, SUBTYPE: ${SUBTYPE}, parentEntityId: ${parentEntityId}, wasmHandle: ${wasmHandle}, noradCatId: ${noradCatId}, objectName: ${objectName}, objectId: ${objectId}, catObjectName: ${catObjectName}, catObjectId: ${catObjectId}, facilityType: ${facilityType}, searchText: ${searchText}, OWNER: ${OWNER}, statusCode: ${statusCode}, launchDate: ${launchDate}, launchYear: ${launchYear}, orbitRegime: ${orbitRegime}, PERIOD: ${PERIOD}, INCLINATION: ${INCLINATION}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, BSTAR: ${BSTAR}, hasGp: ${hasGp}, RESERVED: ${RESERVED}}';
+    return 'CAQRequest{KIND: ${KIND}, QUERY: ${QUERY}, entityIndex: ${entityIndex}, maxCount: ${maxCount}, entityCount: ${entityCount}}';
   }
 }
 
-class _ETMReader extends fb.TableReader<ETM> {
-  const _ETMReader();
+class _CAQRequestReader extends fb.TableReader<CAQRequest> {
+  const _CAQRequestReader();
 
   @override
-  ETM createObject(fb.BufferContext bc, int offset) =>
-    ETM._(bc, offset);
+  CAQRequest createObject(fb.BufferContext bc, int offset) =>
+    CAQRequest._(bc, offset);
 }
 
-class ETMBuilder {
-  ETMBuilder(this.fbBuilder);
+class CAQRequestBuilder {
+  CAQRequestBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(27);
+    fbBuilder.startTable(5);
   }
 
-  int addEntityIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addKind(catalogQueryKind? KIND) {
+    fbBuilder.addUint8(0, KIND?.value);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addQueryOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addKind(entityKind? KIND) {
-    fbBuilder.addInt8(2, KIND?.value);
+  int addEntityIndex(int? ENTITY_INDEX) {
+    fbBuilder.addUint32(2, ENTITY_INDEX);
     return fbBuilder.offset;
   }
-  int addSubtypeOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addMaxCount(int? MAX_COUNT) {
+    fbBuilder.addUint32(3, MAX_COUNT);
     return fbBuilder.offset;
   }
-  int addParentEntityIdOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addWasmHandle(int? WASM_HANDLE) {
-    fbBuilder.addUint32(5, WASM_HANDLE);
-    return fbBuilder.offset;
-  }
-  int addNoradCatId(int? NORAD_CAT_ID) {
-    fbBuilder.addUint32(6, NORAD_CAT_ID);
-    return fbBuilder.offset;
-  }
-  int addObjectNameOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addCatObjectNameOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addCatObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addFacilityTypeOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addSearchTextOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addOwnerOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addStatusCodeOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addLaunchDateOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addLaunchYearOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
-    return fbBuilder.offset;
-  }
-  int addOrbitRegimeOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
-    return fbBuilder.offset;
-  }
-  int addPeriod(double? PERIOD) {
-    fbBuilder.addFloat64(18, PERIOD);
-    return fbBuilder.offset;
-  }
-  int addInclination(double? INCLINATION) {
-    fbBuilder.addFloat64(19, INCLINATION);
-    return fbBuilder.offset;
-  }
-  int addApogee(double? APOGEE) {
-    fbBuilder.addFloat64(20, APOGEE);
-    return fbBuilder.offset;
-  }
-  int addPerigee(double? PERIGEE) {
-    fbBuilder.addFloat64(21, PERIGEE);
-    return fbBuilder.offset;
-  }
-  int addMeanMotion(double? MEAN_MOTION) {
-    fbBuilder.addFloat64(22, MEAN_MOTION);
-    return fbBuilder.offset;
-  }
-  int addEccentricity(double? ECCENTRICITY) {
-    fbBuilder.addFloat64(23, ECCENTRICITY);
-    return fbBuilder.offset;
-  }
-  int addBstar(double? BSTAR) {
-    fbBuilder.addFloat64(24, BSTAR);
-    return fbBuilder.offset;
-  }
-  int addHasGp(bool? HAS_GP) {
-    fbBuilder.addBool(25, HAS_GP);
-    return fbBuilder.offset;
-  }
-  int addReservedOffset(int? offset) {
-    fbBuilder.addOffset(26, offset);
+  int addEntityCount(int? ENTITY_COUNT) {
+    fbBuilder.addUint32(4, ENTITY_COUNT);
     return fbBuilder.offset;
   }
 
@@ -278,171 +124,268 @@ class ETMBuilder {
   }
 }
 
-class ETMObjectBuilder extends fb.ObjectBuilder {
-  final String? _ENTITY_ID;
-  final String? _NAME;
-  final entityKind? _KIND;
-  final String? _SUBTYPE;
-  final String? _PARENT_ENTITY_ID;
-  final int? _WASM_HANDLE;
-  final int? _NORAD_CAT_ID;
-  final String? _OBJECT_NAME;
-  final String? _OBJECT_ID;
-  final String? _CAT_OBJECT_NAME;
-  final String? _CAT_OBJECT_ID;
-  final String? _FACILITY_TYPE;
-  final String? _SEARCH_TEXT;
-  final String? _OWNER;
-  final String? _STATUS_CODE;
-  final String? _LAUNCH_DATE;
-  final String? _LAUNCH_YEAR;
-  final String? _ORBIT_REGIME;
-  final double? _PERIOD;
-  final double? _INCLINATION;
-  final double? _APOGEE;
-  final double? _PERIGEE;
-  final double? _MEAN_MOTION;
-  final double? _ECCENTRICITY;
-  final double? _BSTAR;
-  final bool? _HAS_GP;
-  final List<int>? _RESERVED;
+class CAQRequestObjectBuilder extends fb.ObjectBuilder {
+  final catalogQueryKind? _KIND;
+  final String? _QUERY;
+  final int? _ENTITY_INDEX;
+  final int? _MAX_COUNT;
+  final int? _ENTITY_COUNT;
 
-  ETMObjectBuilder({
-    String? ENTITY_ID,
-    String? entityId,
-    String? NAME,
-    entityKind? KIND,
-    String? SUBTYPE,
-    String? PARENT_ENTITY_ID,
-    String? parentEntityId,
-    int? WASM_HANDLE,
-    int? wasmHandle,
-    int? NORAD_CAT_ID,
-    int? noradCatId,
-    String? OBJECT_NAME,
-    String? objectName,
-    String? OBJECT_ID,
-    String? objectId,
-    String? CAT_OBJECT_NAME,
-    String? catObjectName,
-    String? CAT_OBJECT_ID,
-    String? catObjectId,
-    String? FACILITY_TYPE,
-    String? facilityType,
-    String? SEARCH_TEXT,
-    String? searchText,
-    String? OWNER,
-    String? STATUS_CODE,
-    String? statusCode,
-    String? LAUNCH_DATE,
-    String? launchDate,
-    String? LAUNCH_YEAR,
-    String? launchYear,
-    String? ORBIT_REGIME,
-    String? orbitRegime,
-    double? PERIOD,
-    double? INCLINATION,
-    double? APOGEE,
-    double? PERIGEE,
-    double? MEAN_MOTION,
-    double? meanMotion,
-    double? ECCENTRICITY,
-    double? BSTAR,
-    bool? HAS_GP,
-    bool? hasGp,
-    List<int>? RESERVED,
+  CAQRequestObjectBuilder({
+    catalogQueryKind? KIND,
+    String? QUERY,
+    int? ENTITY_INDEX,
+    int? entityIndex,
+    int? MAX_COUNT,
+    int? maxCount,
+    int? ENTITY_COUNT,
+    int? entityCount,
   })
-      : _ENTITY_ID = entityId ?? ENTITY_ID,
-        _NAME = NAME,
-        _KIND = KIND,
-        _SUBTYPE = SUBTYPE,
-        _PARENT_ENTITY_ID = parentEntityId ?? PARENT_ENTITY_ID,
-        _WASM_HANDLE = wasmHandle ?? WASM_HANDLE,
-        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
-        _OBJECT_NAME = objectName ?? OBJECT_NAME,
-        _OBJECT_ID = objectId ?? OBJECT_ID,
-        _CAT_OBJECT_NAME = catObjectName ?? CAT_OBJECT_NAME,
-        _CAT_OBJECT_ID = catObjectId ?? CAT_OBJECT_ID,
-        _FACILITY_TYPE = facilityType ?? FACILITY_TYPE,
-        _SEARCH_TEXT = searchText ?? SEARCH_TEXT,
-        _OWNER = OWNER,
-        _STATUS_CODE = statusCode ?? STATUS_CODE,
-        _LAUNCH_DATE = launchDate ?? LAUNCH_DATE,
-        _LAUNCH_YEAR = launchYear ?? LAUNCH_YEAR,
-        _ORBIT_REGIME = orbitRegime ?? ORBIT_REGIME,
-        _PERIOD = PERIOD,
-        _INCLINATION = INCLINATION,
-        _APOGEE = APOGEE,
-        _PERIGEE = PERIGEE,
-        _MEAN_MOTION = meanMotion ?? MEAN_MOTION,
-        _ECCENTRICITY = ECCENTRICITY,
-        _BSTAR = BSTAR,
-        _HAS_GP = hasGp ?? HAS_GP,
-        _RESERVED = RESERVED;
+      : _KIND = KIND,
+        _QUERY = QUERY,
+        _ENTITY_INDEX = entityIndex ?? ENTITY_INDEX,
+        _MAX_COUNT = maxCount ?? MAX_COUNT,
+        _ENTITY_COUNT = entityCount ?? ENTITY_COUNT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? ENTITY_IDOffset = _ENTITY_ID == null ? null
-        : fbBuilder.writeString(_ENTITY_ID!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SUBTYPEOffset = _SUBTYPE == null ? null
-        : fbBuilder.writeString(_SUBTYPE!);
-    final int? PARENT_ENTITY_IDOffset = _PARENT_ENTITY_ID == null ? null
-        : fbBuilder.writeString(_PARENT_ENTITY_ID!);
-    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
-        : fbBuilder.writeString(_OBJECT_NAME!);
-    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
-        : fbBuilder.writeString(_OBJECT_ID!);
-    final int? CAT_OBJECT_NAMEOffset = _CAT_OBJECT_NAME == null ? null
-        : fbBuilder.writeString(_CAT_OBJECT_NAME!);
-    final int? CAT_OBJECT_IDOffset = _CAT_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_CAT_OBJECT_ID!);
-    final int? FACILITY_TYPEOffset = _FACILITY_TYPE == null ? null
-        : fbBuilder.writeString(_FACILITY_TYPE!);
-    final int? SEARCH_TEXTOffset = _SEARCH_TEXT == null ? null
-        : fbBuilder.writeString(_SEARCH_TEXT!);
-    final int? OWNEROffset = _OWNER == null ? null
-        : fbBuilder.writeString(_OWNER!);
-    final int? STATUS_CODEOffset = _STATUS_CODE == null ? null
-        : fbBuilder.writeString(_STATUS_CODE!);
-    final int? LAUNCH_DATEOffset = _LAUNCH_DATE == null ? null
-        : fbBuilder.writeString(_LAUNCH_DATE!);
-    final int? LAUNCH_YEAROffset = _LAUNCH_YEAR == null ? null
-        : fbBuilder.writeString(_LAUNCH_YEAR!);
-    final int? ORBIT_REGIMEOffset = _ORBIT_REGIME == null ? null
-        : fbBuilder.writeString(_ORBIT_REGIME!);
-    final int? RESERVEDOffset = _RESERVED == null ? null
-        : fbBuilder.writeListUint8(_RESERVED!);
-    fbBuilder.startTable(27);
-    fbBuilder.addOffset(0, ENTITY_IDOffset);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addInt8(2, _KIND?.value);
-    fbBuilder.addOffset(3, SUBTYPEOffset);
-    fbBuilder.addOffset(4, PARENT_ENTITY_IDOffset);
-    fbBuilder.addUint32(5, _WASM_HANDLE);
-    fbBuilder.addUint32(6, _NORAD_CAT_ID);
-    fbBuilder.addOffset(7, OBJECT_NAMEOffset);
-    fbBuilder.addOffset(8, OBJECT_IDOffset);
-    fbBuilder.addOffset(9, CAT_OBJECT_NAMEOffset);
-    fbBuilder.addOffset(10, CAT_OBJECT_IDOffset);
-    fbBuilder.addOffset(11, FACILITY_TYPEOffset);
-    fbBuilder.addOffset(12, SEARCH_TEXTOffset);
-    fbBuilder.addOffset(13, OWNEROffset);
-    fbBuilder.addOffset(14, STATUS_CODEOffset);
-    fbBuilder.addOffset(15, LAUNCH_DATEOffset);
-    fbBuilder.addOffset(16, LAUNCH_YEAROffset);
-    fbBuilder.addOffset(17, ORBIT_REGIMEOffset);
-    fbBuilder.addFloat64(18, _PERIOD);
-    fbBuilder.addFloat64(19, _INCLINATION);
-    fbBuilder.addFloat64(20, _APOGEE);
-    fbBuilder.addFloat64(21, _PERIGEE);
-    fbBuilder.addFloat64(22, _MEAN_MOTION);
-    fbBuilder.addFloat64(23, _ECCENTRICITY);
-    fbBuilder.addFloat64(24, _BSTAR);
-    fbBuilder.addBool(25, _HAS_GP);
-    fbBuilder.addOffset(26, RESERVEDOffset);
+    final int? QUERYOffset = _QUERY == null ? null
+        : fbBuilder.writeString(_QUERY!);
+    fbBuilder.startTable(5);
+    fbBuilder.addUint8(0, _KIND?.value);
+    fbBuilder.addOffset(1, QUERYOffset);
+    fbBuilder.addUint32(2, _ENTITY_INDEX);
+    fbBuilder.addUint32(3, _MAX_COUNT);
+    fbBuilder.addUint32(4, _ENTITY_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Catalog query result payload.
+class CAQResult {
+  CAQResult._(this._bc, this._bcOffset);
+  factory CAQResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CAQResult> reader = _CAQResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  catalogQueryKind get KIND => catalogQueryKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Populated when KIND == ROWS.
+  List<ETM>? get ROWS => const fb.ListReader<ETM>(ETM.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Populated when KIND == ENTITY_INDICES.
+  List<int>? get ENTITY_INDICES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<int>? get entityIndices => ENTITY_INDICES;
+  ///  Populated when KIND == VISIBILITY_MASK (one byte per entity).
+  List<int>? get MASK => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Number of visible (masked-in) entities in MASK.
+  int get VISIBLE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get visibleCount => VISIBLE_COUNT;
+  ///  Populated when KIND == CATALOG_ROW.
+  int get ENTITY_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get entityIndex => ENTITY_INDEX;
+  ///  Single matched row when KIND == CATALOG_ROW.
+  ETM? get ROW => ETM.reader.vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'CAQResult{KIND: ${KIND}, ROWS: ${ROWS}, entityIndices: ${entityIndices}, MASK: ${MASK}, visibleCount: ${visibleCount}, entityIndex: ${entityIndex}, ROW: ${ROW}}';
+  }
+}
+
+class _CAQResultReader extends fb.TableReader<CAQResult> {
+  const _CAQResultReader();
+
+  @override
+  CAQResult createObject(fb.BufferContext bc, int offset) =>
+    CAQResult._(bc, offset);
+}
+
+class CAQResultBuilder {
+  CAQResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addKind(catalogQueryKind? KIND) {
+    fbBuilder.addUint8(0, KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addRowsOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addEntityIndicesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMaskOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addVisibleCount(int? VISIBLE_COUNT) {
+    fbBuilder.addUint32(4, VISIBLE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addEntityIndex(int? ENTITY_INDEX) {
+    fbBuilder.addUint32(5, ENTITY_INDEX);
+    return fbBuilder.offset;
+  }
+  int addRowOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CAQResultObjectBuilder extends fb.ObjectBuilder {
+  final catalogQueryKind? _KIND;
+  final List<ETMObjectBuilder>? _ROWS;
+  final List<int>? _ENTITY_INDICES;
+  final List<int>? _MASK;
+  final int? _VISIBLE_COUNT;
+  final int? _ENTITY_INDEX;
+  final ETMObjectBuilder? _ROW;
+
+  CAQResultObjectBuilder({
+    catalogQueryKind? KIND,
+    List<ETMObjectBuilder>? ROWS,
+    List<int>? ENTITY_INDICES,
+    List<int>? entityIndices,
+    List<int>? MASK,
+    int? VISIBLE_COUNT,
+    int? visibleCount,
+    int? ENTITY_INDEX,
+    int? entityIndex,
+    ETMObjectBuilder? ROW,
+  })
+      : _KIND = KIND,
+        _ROWS = ROWS,
+        _ENTITY_INDICES = entityIndices ?? ENTITY_INDICES,
+        _MASK = MASK,
+        _VISIBLE_COUNT = visibleCount ?? VISIBLE_COUNT,
+        _ENTITY_INDEX = entityIndex ?? ENTITY_INDEX,
+        _ROW = ROW;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ROWSOffset = _ROWS == null ? null
+        : fbBuilder.writeList(_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ENTITY_INDICESOffset = _ENTITY_INDICES == null ? null
+        : fbBuilder.writeListUint32(_ENTITY_INDICES!);
+    final int? MASKOffset = _MASK == null ? null
+        : fbBuilder.writeListUint8(_MASK!);
+    final int? ROWOffset = _ROW?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(7);
+    fbBuilder.addUint8(0, _KIND?.value);
+    fbBuilder.addOffset(1, ROWSOffset);
+    fbBuilder.addOffset(2, ENTITY_INDICESOffset);
+    fbBuilder.addOffset(3, MASKOffset);
+    fbBuilder.addUint32(4, _VISIBLE_COUNT);
+    fbBuilder.addUint32(5, _ENTITY_INDEX);
+    fbBuilder.addOffset(6, ROWOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Catalog query envelope — carries either a request or a result payload.
+class CAQ {
+  CAQ._(this._bc, this._bcOffset);
+  factory CAQ(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CAQ> reader = _CAQReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  CAQRequest? get REQUEST => CAQRequest.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  CAQResult? get RESULT => CAQResult.reader.vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'CAQ{REQUEST: ${REQUEST}, RESULT: ${RESULT}}';
+  }
+}
+
+class _CAQReader extends fb.TableReader<CAQ> {
+  const _CAQReader();
+
+  @override
+  CAQ createObject(fb.BufferContext bc, int offset) =>
+    CAQ._(bc, offset);
+}
+
+class CAQBuilder {
+  CAQBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addRequestOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addResultOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CAQObjectBuilder extends fb.ObjectBuilder {
+  final CAQRequestObjectBuilder? _REQUEST;
+  final CAQResultObjectBuilder? _RESULT;
+
+  CAQObjectBuilder({
+    CAQRequestObjectBuilder? REQUEST,
+    CAQResultObjectBuilder? RESULT,
+  })
+      : _REQUEST = REQUEST,
+        _RESULT = RESULT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REQUESTOffset = _REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? RESULTOffset = _RESULT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, REQUESTOffset);
+    fbBuilder.addOffset(1, RESULTOffset);
     return fbBuilder.endTable();
   }
 

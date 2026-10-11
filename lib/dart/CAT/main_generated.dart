@@ -5,332 +5,294 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum legacyCountryCode {
-  AB(0),
-  ABS(1),
-  AC(2),
-  ALG(3),
-  ANG(4),
-  ARGN(5),
-  ARM(6),
-  ASRA(7),
-  AUS(8),
-  AZER(9),
-  BEL(10),
-  BELA(11),
-  BERM(12),
-  BGD(13),
-  BHUT(14),
-  BOL(15),
-  BRAZ(16),
-  BUL(17),
-  CA(18),
-  CHBZ(19),
-  CHTU(20),
-  CHLE(21),
-  CIS(22),
-  COL(23),
-  CRI(24),
-  CZCH(25),
-  DEN(26),
-  DJI(27),
-  ECU(28),
-  EGYP(29),
-  ESA(30),
-  ESRO(31),
-  EST(32),
-  ETH(33),
-  EUME(34),
-  EUTE(35),
-  FGER(36),
-  FIN(37),
-  FR(38),
-  FRIT(39),
-  GER(40),
-  GHA(41),
-  GLOB(42),
-  GREC(43),
-  GRSA(44),
-  GUAT(45),
-  HUN(46),
-  IM(47),
-  IND(48),
-  INDO(49),
-  IRAN(50),
-  IRAQ(51),
-  IRID(52),
-  IRL(53),
-  ISRA(54),
-  ISRO(55),
-  ISS(56),
-  IT(57),
-  ITSO(58),
-  JPN(59),
-  KAZ(60),
-  KEN(61),
-  LAOS(62),
-  LKA(63),
-  LTU(64),
-  LUXE(65),
-  MA(66),
-  MALA(67),
-  MCO(68),
-  MDA(69),
-  MEX(70),
-  MMR(71),
-  MNG(72),
-  MUS(73),
-  NATO(74),
-  NETH(75),
-  NICO(76),
-  NIG(77),
-  NKOR(78),
-  NOR(79),
-  NPL(80),
-  NZ(81),
-  O3B(82),
-  ORB(83),
-  PAKI(84),
-  PERU(85),
-  POL(86),
-  POR(87),
-  PRC(88),
-  PRY(89),
-  PRES(90),
-  QAT(91),
-  RASC(92),
-  ROC(93),
-  ROM(94),
-  RP(95),
-  RWA(96),
-  SAFR(97),
-  SAUD(98),
-  SDN(99),
-  SEAL(100),
-  SES(101),
-  SGJP(102),
-  SING(103),
-  SKOR(104),
-  SPN(105),
-  STCT(106),
-  SVN(107),
-  SWED(108),
-  SWTZ(109),
-  TBD(110),
-  THAI(111),
-  TMMC(112),
-  TUN(113),
-  TURK(114),
-  UAE(115),
-  UK(116),
-  UKR(117),
-  UNK(118),
-  URY(119),
-  US(120),
-  USBZ(121),
-  VAT(122),
-  VENZ(123),
-  VTNM(124),
-  ZWE(125);
+enum spaceObjectClass {
+  PAYLOAD(0),
+  ROCKET_BODY(1),
+  DEBRIS(2),
+  UNKNOWN(3);
 
   final int value;
-  const legacyCountryCode(this.value);
+  const spaceObjectClass(this.value);
 
-  factory legacyCountryCode.fromValue(int value) {
+  factory spaceObjectClass.fromValue(int value) {
     switch (value) {
-      case 0: return legacyCountryCode.AB;
-      case 1: return legacyCountryCode.ABS;
-      case 2: return legacyCountryCode.AC;
-      case 3: return legacyCountryCode.ALG;
-      case 4: return legacyCountryCode.ANG;
-      case 5: return legacyCountryCode.ARGN;
-      case 6: return legacyCountryCode.ARM;
-      case 7: return legacyCountryCode.ASRA;
-      case 8: return legacyCountryCode.AUS;
-      case 9: return legacyCountryCode.AZER;
-      case 10: return legacyCountryCode.BEL;
-      case 11: return legacyCountryCode.BELA;
-      case 12: return legacyCountryCode.BERM;
-      case 13: return legacyCountryCode.BGD;
-      case 14: return legacyCountryCode.BHUT;
-      case 15: return legacyCountryCode.BOL;
-      case 16: return legacyCountryCode.BRAZ;
-      case 17: return legacyCountryCode.BUL;
-      case 18: return legacyCountryCode.CA;
-      case 19: return legacyCountryCode.CHBZ;
-      case 20: return legacyCountryCode.CHTU;
-      case 21: return legacyCountryCode.CHLE;
-      case 22: return legacyCountryCode.CIS;
-      case 23: return legacyCountryCode.COL;
-      case 24: return legacyCountryCode.CRI;
-      case 25: return legacyCountryCode.CZCH;
-      case 26: return legacyCountryCode.DEN;
-      case 27: return legacyCountryCode.DJI;
-      case 28: return legacyCountryCode.ECU;
-      case 29: return legacyCountryCode.EGYP;
-      case 30: return legacyCountryCode.ESA;
-      case 31: return legacyCountryCode.ESRO;
-      case 32: return legacyCountryCode.EST;
-      case 33: return legacyCountryCode.ETH;
-      case 34: return legacyCountryCode.EUME;
-      case 35: return legacyCountryCode.EUTE;
-      case 36: return legacyCountryCode.FGER;
-      case 37: return legacyCountryCode.FIN;
-      case 38: return legacyCountryCode.FR;
-      case 39: return legacyCountryCode.FRIT;
-      case 40: return legacyCountryCode.GER;
-      case 41: return legacyCountryCode.GHA;
-      case 42: return legacyCountryCode.GLOB;
-      case 43: return legacyCountryCode.GREC;
-      case 44: return legacyCountryCode.GRSA;
-      case 45: return legacyCountryCode.GUAT;
-      case 46: return legacyCountryCode.HUN;
-      case 47: return legacyCountryCode.IM;
-      case 48: return legacyCountryCode.IND;
-      case 49: return legacyCountryCode.INDO;
-      case 50: return legacyCountryCode.IRAN;
-      case 51: return legacyCountryCode.IRAQ;
-      case 52: return legacyCountryCode.IRID;
-      case 53: return legacyCountryCode.IRL;
-      case 54: return legacyCountryCode.ISRA;
-      case 55: return legacyCountryCode.ISRO;
-      case 56: return legacyCountryCode.ISS;
-      case 57: return legacyCountryCode.IT;
-      case 58: return legacyCountryCode.ITSO;
-      case 59: return legacyCountryCode.JPN;
-      case 60: return legacyCountryCode.KAZ;
-      case 61: return legacyCountryCode.KEN;
-      case 62: return legacyCountryCode.LAOS;
-      case 63: return legacyCountryCode.LKA;
-      case 64: return legacyCountryCode.LTU;
-      case 65: return legacyCountryCode.LUXE;
-      case 66: return legacyCountryCode.MA;
-      case 67: return legacyCountryCode.MALA;
-      case 68: return legacyCountryCode.MCO;
-      case 69: return legacyCountryCode.MDA;
-      case 70: return legacyCountryCode.MEX;
-      case 71: return legacyCountryCode.MMR;
-      case 72: return legacyCountryCode.MNG;
-      case 73: return legacyCountryCode.MUS;
-      case 74: return legacyCountryCode.NATO;
-      case 75: return legacyCountryCode.NETH;
-      case 76: return legacyCountryCode.NICO;
-      case 77: return legacyCountryCode.NIG;
-      case 78: return legacyCountryCode.NKOR;
-      case 79: return legacyCountryCode.NOR;
-      case 80: return legacyCountryCode.NPL;
-      case 81: return legacyCountryCode.NZ;
-      case 82: return legacyCountryCode.O3B;
-      case 83: return legacyCountryCode.ORB;
-      case 84: return legacyCountryCode.PAKI;
-      case 85: return legacyCountryCode.PERU;
-      case 86: return legacyCountryCode.POL;
-      case 87: return legacyCountryCode.POR;
-      case 88: return legacyCountryCode.PRC;
-      case 89: return legacyCountryCode.PRY;
-      case 90: return legacyCountryCode.PRES;
-      case 91: return legacyCountryCode.QAT;
-      case 92: return legacyCountryCode.RASC;
-      case 93: return legacyCountryCode.ROC;
-      case 94: return legacyCountryCode.ROM;
-      case 95: return legacyCountryCode.RP;
-      case 96: return legacyCountryCode.RWA;
-      case 97: return legacyCountryCode.SAFR;
-      case 98: return legacyCountryCode.SAUD;
-      case 99: return legacyCountryCode.SDN;
-      case 100: return legacyCountryCode.SEAL;
-      case 101: return legacyCountryCode.SES;
-      case 102: return legacyCountryCode.SGJP;
-      case 103: return legacyCountryCode.SING;
-      case 104: return legacyCountryCode.SKOR;
-      case 105: return legacyCountryCode.SPN;
-      case 106: return legacyCountryCode.STCT;
-      case 107: return legacyCountryCode.SVN;
-      case 108: return legacyCountryCode.SWED;
-      case 109: return legacyCountryCode.SWTZ;
-      case 110: return legacyCountryCode.TBD;
-      case 111: return legacyCountryCode.THAI;
-      case 112: return legacyCountryCode.TMMC;
-      case 113: return legacyCountryCode.TUN;
-      case 114: return legacyCountryCode.TURK;
-      case 115: return legacyCountryCode.UAE;
-      case 116: return legacyCountryCode.UK;
-      case 117: return legacyCountryCode.UKR;
-      case 118: return legacyCountryCode.UNK;
-      case 119: return legacyCountryCode.URY;
-      case 120: return legacyCountryCode.US;
-      case 121: return legacyCountryCode.USBZ;
-      case 122: return legacyCountryCode.VAT;
-      case 123: return legacyCountryCode.VENZ;
-      case 124: return legacyCountryCode.VTNM;
-      case 125: return legacyCountryCode.ZWE;
+      case 0: return spaceObjectClass.PAYLOAD;
+      case 1: return spaceObjectClass.ROCKET_BODY;
+      case 2: return spaceObjectClass.DEBRIS;
+      case 3: return spaceObjectClass.UNKNOWN;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static legacyCountryCode? _createOrNull(int? value) =>
-      value == null ? null : legacyCountryCode.fromValue(value);
+  static spaceObjectClass? _createOrNull(int? value) =>
+      value == null ? null : spaceObjectClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 125;
-  static const fb.Reader<legacyCountryCode> reader = _legacyCountryCodeReader();
+  static const int maxValue = 3;
+  static const fb.Reader<spaceObjectClass> reader = _spaceObjectClassReader();
 }
 
-class _legacyCountryCodeReader extends fb.Reader<legacyCountryCode> {
-  const _legacyCountryCodeReader();
+class _spaceObjectClassReader extends fb.Reader<spaceObjectClass> {
+  const _spaceObjectClassReader();
 
   @override
   int get size => 1;
 
   @override
-  legacyCountryCode read(fb.BufferContext bc, int offset) =>
-      legacyCountryCode.fromValue(const fb.Int8Reader().read(bc, offset));
+  spaceObjectClass read(fb.BufferContext bc, int offset) =>
+      spaceObjectClass.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Legacy Country Code
-class LCC {
-  LCC._(this._bc, this._bcOffset);
-  factory LCC(List<int> bytes) {
+enum operationalState {
+  OPERATIONAL(0),
+  NONOPERATIONAL(1),
+  PARTIALLY_OPERATIONAL(2),
+  BACKUP_STANDBY(3),
+  SPARE(4),
+  EXTENDED_MISSION(5),
+  DECAYED(6),
+  UNKNOWN(7);
+
+  final int value;
+  const operationalState(this.value);
+
+  factory operationalState.fromValue(int value) {
+    switch (value) {
+      case 0: return operationalState.OPERATIONAL;
+      case 1: return operationalState.NONOPERATIONAL;
+      case 2: return operationalState.PARTIALLY_OPERATIONAL;
+      case 3: return operationalState.BACKUP_STANDBY;
+      case 4: return operationalState.SPARE;
+      case 5: return operationalState.EXTENDED_MISSION;
+      case 6: return operationalState.DECAYED;
+      case 7: return operationalState.UNKNOWN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static operationalState? _createOrNull(int? value) =>
+      value == null ? null : operationalState.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static const fb.Reader<operationalState> reader = _operationalStateReader();
+}
+
+class _operationalStateReader extends fb.Reader<operationalState> {
+  const _operationalStateReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  operationalState read(fb.BufferContext bc, int offset) =>
+      operationalState.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+enum dataAvailability {
+  NO_CURRENT_ELEMENTS(0),
+  NO_INITIAL_ELEMENTS(1),
+  NO_ELEMENTS_AVAILABLE(2),
+  OK(3);
+
+  final int value;
+  const dataAvailability(this.value);
+
+  factory dataAvailability.fromValue(int value) {
+    switch (value) {
+      case 0: return dataAvailability.NO_CURRENT_ELEMENTS;
+      case 1: return dataAvailability.NO_INITIAL_ELEMENTS;
+      case 2: return dataAvailability.NO_ELEMENTS_AVAILABLE;
+      case 3: return dataAvailability.OK;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static dataAvailability? _createOrNull(int? value) =>
+      value == null ? null : dataAvailability.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<dataAvailability> reader = _dataAvailabilityReader();
+}
+
+class _dataAvailabilityReader extends fb.Reader<dataAvailability> {
+  const _dataAvailabilityReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  dataAvailability read(fb.BufferContext bc, int offset) =>
+      dataAvailability.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+enum orbitRegime {
+  ORBIT(0),
+  LANDING(1),
+  IMPACT(2),
+  DOCKED(3),
+  ROUNDTRIP(4);
+
+  final int value;
+  const orbitRegime(this.value);
+
+  factory orbitRegime.fromValue(int value) {
+    switch (value) {
+      case 0: return orbitRegime.ORBIT;
+      case 1: return orbitRegime.LANDING;
+      case 2: return orbitRegime.IMPACT;
+      case 3: return orbitRegime.DOCKED;
+      case 4: return orbitRegime.ROUNDTRIP;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static orbitRegime? _createOrNull(int? value) =>
+      value == null ? null : orbitRegime.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<orbitRegime> reader = _orbitRegimeReader();
+}
+
+class _orbitRegimeReader extends fb.Reader<orbitRegime> {
+  const _orbitRegimeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  orbitRegime read(fb.BufferContext bc, int offset) =>
+      orbitRegime.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+enum massCategory {
+  DRY(0),
+  WET(1);
+
+  final int value;
+  const massCategory(this.value);
+
+  factory massCategory.fromValue(int value) {
+    switch (value) {
+      case 0: return massCategory.DRY;
+      case 1: return massCategory.WET;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static massCategory? _createOrNull(int? value) =>
+      value == null ? null : massCategory.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<massCategory> reader = _massCategoryReader();
+}
+
+class _massCategoryReader extends fb.Reader<massCategory> {
+  const _massCategoryReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  massCategory read(fb.BufferContext bc, int offset) =>
+      massCategory.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  What a product the catalog selected for an object is.
+enum catalogProductKind {
+  Unspecified(0),
+  Sgp4Elements(1),
+  Sgp4XpElements(2),
+  StateCovariance(3);
+
+  final int value;
+  const catalogProductKind(this.value);
+
+  factory catalogProductKind.fromValue(int value) {
+    switch (value) {
+      case 0: return catalogProductKind.Unspecified;
+      case 1: return catalogProductKind.Sgp4Elements;
+      case 2: return catalogProductKind.Sgp4XpElements;
+      case 3: return catalogProductKind.StateCovariance;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static catalogProductKind? _createOrNull(int? value) =>
+      value == null ? null : catalogProductKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<catalogProductKind> reader = _catalogProductKindReader();
+}
+
+class _catalogProductKindReader extends fb.Reader<catalogProductKind> {
+  const _catalogProductKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  catalogProductKind read(fb.BufferContext bc, int offset) =>
+      catalogProductKind.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  One product the catalog selected for the object, by content identifier.
+class CATProduct {
+  CATProduct._(this._bc, this._bcOffset);
+  factory CATProduct(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<LCC> reader = _LCCReader();
+  static const fb.Reader<CATProduct> reader = _CATProductReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  legacyCountryCode get OWNER => legacyCountryCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Display name of the owner or source the code stands for.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Longer description of the owner or source.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  True while the code is in current use by the publishing catalogue.
-  bool get ACTIVE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
-  ///  URL of the reference table the row was retrieved from.
-  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get sourceUrl => SOURCE_URL;
-  ///  ISO 8601 UTC time the reference table was retrieved.
-  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get retrievedAt => RETRIEVED_AT;
+  ///  What the product is.
+  catalogProductKind get KIND => catalogProductKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as
+  ///  published, a size-prefixed FlatBuffer.
+  String? get RECORD_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get recordCid => RECORD_CID;
+  ///  The product's source: its PROVENANCE SOURCE_ID.
+  String? get SOURCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sourceId => SOURCE_ID;
+  ///  Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
+  ///  epoch.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Why the catalog selected this product over the other candidates of its
+  ///  KIND, as the selecting integrator states it (for example, the lowest
+  ///  measured median error for the object's orbit regime and prediction
+  ///  horizon).
+  String? get SELECTION_REASON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get selectionReason => SELECTION_REASON;
+  ///  True when a maneuver after EPOCH retired the product and no product of its
+  ///  KIND from after the maneuver has been selected yet.
+  bool get STALE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
 
   @override
   String toString() {
-    return 'LCC{OWNER: ${OWNER}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ACTIVE: ${ACTIVE}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}}';
+    return 'CATProduct{KIND: ${KIND}, recordCid: ${recordCid}, sourceId: ${sourceId}, EPOCH: ${EPOCH}, selectionReason: ${selectionReason}, STALE: ${STALE}}';
   }
 }
 
-class _LCCReader extends fb.TableReader<LCC> {
-  const _LCCReader();
+class _CATProductReader extends fb.TableReader<CATProduct> {
+  const _CATProductReader();
 
   @override
-  LCC createObject(fb.BufferContext bc, int offset) =>
-    LCC._(bc, offset);
+  CATProduct createObject(fb.BufferContext bc, int offset) =>
+    CATProduct._(bc, offset);
 }
 
-class LCCBuilder {
-  LCCBuilder(this.fbBuilder);
+class CATProductBuilder {
+  CATProductBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -338,28 +300,28 @@ class LCCBuilder {
     fbBuilder.startTable(6);
   }
 
-  int addOwner(legacyCountryCode? OWNER) {
-    fbBuilder.addInt8(0, OWNER?.value);
+  int addKind(catalogProductKind? KIND) {
+    fbBuilder.addInt8(0, KIND?.value);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addRecordCidOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDescriptionOffset(int? offset) {
+  int addSourceIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addActive(bool? ACTIVE) {
-    fbBuilder.addBool(3, ACTIVE);
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addSourceUrlOffset(int? offset) {
+  int addSelectionReasonOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addRetrievedAtOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addStale(bool? STALE) {
+    fbBuilder.addBool(5, STALE);
     return fbBuilder.offset;
   }
 
@@ -368,49 +330,469 @@ class LCCBuilder {
   }
 }
 
-class LCCObjectBuilder extends fb.ObjectBuilder {
-  final legacyCountryCode? _OWNER;
-  final String? _NAME;
-  final String? _DESCRIPTION;
-  final bool? _ACTIVE;
-  final String? _SOURCE_URL;
-  final String? _RETRIEVED_AT;
+class CATProductObjectBuilder extends fb.ObjectBuilder {
+  final catalogProductKind? _KIND;
+  final String? _RECORD_CID;
+  final String? _SOURCE_ID;
+  final String? _EPOCH;
+  final String? _SELECTION_REASON;
+  final bool? _STALE;
 
-  LCCObjectBuilder({
-    legacyCountryCode? OWNER,
-    String? NAME,
-    String? DESCRIPTION,
-    bool? ACTIVE,
-    String? SOURCE_URL,
-    String? sourceUrl,
-    String? RETRIEVED_AT,
-    String? retrievedAt,
+  CATProductObjectBuilder({
+    catalogProductKind? KIND,
+    String? RECORD_CID,
+    String? recordCid,
+    String? SOURCE_ID,
+    String? sourceId,
+    String? EPOCH,
+    String? SELECTION_REASON,
+    String? selectionReason,
+    bool? STALE,
   })
-      : _OWNER = OWNER,
-        _NAME = NAME,
-        _DESCRIPTION = DESCRIPTION,
-        _ACTIVE = ACTIVE,
-        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
-        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT;
+      : _KIND = KIND,
+        _RECORD_CID = recordCid ?? RECORD_CID,
+        _SOURCE_ID = sourceId ?? SOURCE_ID,
+        _EPOCH = EPOCH,
+        _SELECTION_REASON = selectionReason ?? SELECTION_REASON,
+        _STALE = STALE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
-        : fbBuilder.writeString(_SOURCE_URL!);
-    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
-        : fbBuilder.writeString(_RETRIEVED_AT!);
+    final int? RECORD_CIDOffset = _RECORD_CID == null ? null
+        : fbBuilder.writeString(_RECORD_CID!);
+    final int? SOURCE_IDOffset = _SOURCE_ID == null ? null
+        : fbBuilder.writeString(_SOURCE_ID!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? SELECTION_REASONOffset = _SELECTION_REASON == null ? null
+        : fbBuilder.writeString(_SELECTION_REASON!);
     fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _OWNER?.value);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, DESCRIPTIONOffset);
-    fbBuilder.addBool(3, _ACTIVE);
-    fbBuilder.addOffset(4, SOURCE_URLOffset);
-    fbBuilder.addOffset(5, RETRIEVED_ATOffset);
+    fbBuilder.addInt8(0, _KIND?.value);
+    fbBuilder.addOffset(1, RECORD_CIDOffset);
+    fbBuilder.addOffset(2, SOURCE_IDOffset);
+    fbBuilder.addOffset(3, EPOCHOffset);
+    fbBuilder.addOffset(4, SELECTION_REASONOffset);
+    fbBuilder.addBool(5, _STALE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Catalog Entity Message
+class CAT {
+  CAT._(this._bc, this._bcOffset);
+  factory CAT(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CAT> reader = _CATReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Satellite Name(s)
+  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get objectName => OBJECT_NAME;
+  ///  International Designator (YYYY-NNNAAA)
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get objectId => OBJECT_ID;
+  ///  NORAD Catalog Number
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  Object type (Payload, Rocket body, Debris, Unknown)
+  spaceObjectClass get OBJECT_TYPE => spaceObjectClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 3));
+  spaceObjectClass get objectType => OBJECT_TYPE;
+  ///  Operational Status Code
+  operationalState get OPS_STATUS_CODE => operationalState.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 7));
+  operationalState get opsStatusCode => OPS_STATUS_CODE;
+  ///  Ownership, typically country or company
+  legacyCountryCode get OWNER => legacyCountryCode.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Launch Date [year-month-day] (ISO 8601)
+  String? get LAUNCH_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get launchDate => LAUNCH_DATE;
+  ///  Launch Site
+  String? get LAUNCH_SITE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get launchSite => LAUNCH_SITE;
+  ///  Decay Date, if applicable [year-month-day] (ISO 8601)
+  String? get DECAY_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get decayDate => DECAY_DATE;
+  ///  Orbital period [minutes]
+  double get PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Inclination [degrees]
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Apogee Altitude [kilometers]
+  double get APOGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Perigee Altitude [kilometers]
+  double get PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Radar Cross Section [meters2]; blank if no data available
+  double get RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Data status code; blank otherwise
+  dataAvailability get DATA_STATUS_CODE => dataAvailability.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0));
+  dataAvailability get dataStatusCode => DATA_STATUS_CODE;
+  ///  Orbit center
+  String? get ORBIT_CENTER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get orbitCenter => ORBIT_CENTER;
+  ///  Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
+  orbitRegime get ORBIT_TYPE => orbitRegime.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  orbitRegime get orbitType => ORBIT_TYPE;
+  ///  Deployment Date [year-month-day] (ISO 8601)
+  String? get DEPLOYMENT_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get deploymentDate => DEPLOYMENT_DATE;
+  ///  Indicates if the object is maneuverable
+  bool get MANEUVERABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
+  ///  Size [meters]; blank if no data available
+  double get SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Mass [kilograms]; blank if no data available
+  double get MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Mass type (Dry, Wet)
+  massCategory get MASS_TYPE => massCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 46, 0));
+  massCategory get massType => MASS_TYPE;
+  ///  Vector of PAYLOADS
+  List<PLD>? get PAYLOADS => const fb.ListReader<PLD>(PLD.reader).vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Join key to the BUS record describing this object's satellite bus; holds
+  ///  that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+  ///  and WET_MASS are properties of the bus design and live on BUS — they are
+  ///  NOT duplicated here. Empty when the bus is unknown.
+  String? get BUS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get busId => BUS_ID;
+  ///  Absolute URI identifying the original catalog's object-ID namespace.
+  ///  This is an identifier, not an instruction to fetch a resource. Use with
+  ///  CATALOG_OBJECT_ID only when both fields are present. Preserve the pair
+  ///  through replicas and derived catalogs; it does not assert a NORAD or
+  ///  COSPAR association. If the authority can reassign an object ID, this URI
+  ///  must identify its immutable edition or assignment interval, rather than
+  ///  the unversioned catalog. Stable IDs may use a persistent catalog URI.
+  String? get CATALOG_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get catalogUri => CATALOG_URI;
+  ///  Exact, opaque object identifier assigned by CATALOG_URI's authority.
+  ///  Preserve case, Unicode and leading zeros. Numeric-looking native IDs
+  ///  are not NORAD_CAT_ID values. Neither a matching name nor a native ID
+  ///  in a different namespace establishes that two records describe the same
+  ///  physical object. Publication provenance retains source and edition data.
+  String? get CATALOG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get catalogObjectId => CATALOG_OBJECT_ID;
+  ///  The products an integrating catalog selected for the object as of
+  ///  PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+  ///  the same source and epoch where there is one. The object's maneuvers are
+  ///  its $MNV stream, not references here.
+  List<CATProduct>? get PRODUCTS => const fb.ListReader<CATProduct>(CATProduct.reader).vTableGetNullable(_bc, _bcOffset, 56);
+  ///  ISO 8601 UTC instant the selection in PRODUCTS holds at.
+  String? get PRODUCTS_AS_OF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get productsAsOf => PRODUCTS_AS_OF;
+
+  @override
+  String toString() {
+    return 'CAT{objectName: ${objectName}, objectId: ${objectId}, noradCatId: ${noradCatId}, objectType: ${objectType}, opsStatusCode: ${opsStatusCode}, OWNER: ${OWNER}, launchDate: ${launchDate}, launchSite: ${launchSite}, decayDate: ${decayDate}, PERIOD: ${PERIOD}, INCLINATION: ${INCLINATION}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, RCS: ${RCS}, dataStatusCode: ${dataStatusCode}, orbitCenter: ${orbitCenter}, orbitType: ${orbitType}, deploymentDate: ${deploymentDate}, MANEUVERABLE: ${MANEUVERABLE}, SIZE: ${SIZE}, MASS: ${MASS}, massType: ${massType}, PAYLOADS: ${PAYLOADS}, busId: ${busId}, catalogUri: ${catalogUri}, catalogObjectId: ${catalogObjectId}, PRODUCTS: ${PRODUCTS}, productsAsOf: ${productsAsOf}}';
+  }
+}
+
+class _CATReader extends fb.TableReader<CAT> {
+  const _CATReader();
+
+  @override
+  CAT createObject(fb.BufferContext bc, int offset) =>
+    CAT._(bc, offset);
+}
+
+class CATBuilder {
+  CATBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(28);
+  }
+
+  int addObjectNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(2, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addObjectType(spaceObjectClass? OBJECT_TYPE) {
+    fbBuilder.addInt8(3, OBJECT_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addOpsStatusCode(operationalState? OPS_STATUS_CODE) {
+    fbBuilder.addInt8(4, OPS_STATUS_CODE?.value);
+    return fbBuilder.offset;
+  }
+  int addOwner(legacyCountryCode? OWNER) {
+    fbBuilder.addUint8(5, OWNER?.value);
+    return fbBuilder.offset;
+  }
+  int addLaunchDateOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchSiteOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addDecayDateOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addPeriod(double? PERIOD) {
+    fbBuilder.addFloat64(9, PERIOD);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(10, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addApogee(double? APOGEE) {
+    fbBuilder.addFloat64(11, APOGEE);
+    return fbBuilder.offset;
+  }
+  int addPerigee(double? PERIGEE) {
+    fbBuilder.addFloat64(12, PERIGEE);
+    return fbBuilder.offset;
+  }
+  int addRcs(double? RCS) {
+    fbBuilder.addFloat64(13, RCS);
+    return fbBuilder.offset;
+  }
+  int addDataStatusCode(dataAvailability? DATA_STATUS_CODE) {
+    fbBuilder.addInt8(14, DATA_STATUS_CODE?.value);
+    return fbBuilder.offset;
+  }
+  int addOrbitCenterOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitType(orbitRegime? ORBIT_TYPE) {
+    fbBuilder.addInt8(16, ORBIT_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addDeploymentDateOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addManeuverable(bool? MANEUVERABLE) {
+    fbBuilder.addBool(18, MANEUVERABLE);
+    return fbBuilder.offset;
+  }
+  int addSize(double? SIZE) {
+    fbBuilder.addFloat64(19, SIZE);
+    return fbBuilder.offset;
+  }
+  int addMass(double? MASS) {
+    fbBuilder.addFloat64(20, MASS);
+    return fbBuilder.offset;
+  }
+  int addMassType(massCategory? MASS_TYPE) {
+    fbBuilder.addInt8(21, MASS_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addPayloadsOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addBusIdOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogUriOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addProductsOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addProductsAsOfOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CATObjectBuilder extends fb.ObjectBuilder {
+  final String? _OBJECT_NAME;
+  final String? _OBJECT_ID;
+  final int? _NORAD_CAT_ID;
+  final spaceObjectClass? _OBJECT_TYPE;
+  final operationalState? _OPS_STATUS_CODE;
+  final legacyCountryCode? _OWNER;
+  final String? _LAUNCH_DATE;
+  final String? _LAUNCH_SITE;
+  final String? _DECAY_DATE;
+  final double? _PERIOD;
+  final double? _INCLINATION;
+  final double? _APOGEE;
+  final double? _PERIGEE;
+  final double? _RCS;
+  final dataAvailability? _DATA_STATUS_CODE;
+  final String? _ORBIT_CENTER;
+  final orbitRegime? _ORBIT_TYPE;
+  final String? _DEPLOYMENT_DATE;
+  final bool? _MANEUVERABLE;
+  final double? _SIZE;
+  final double? _MASS;
+  final massCategory? _MASS_TYPE;
+  final List<PLDObjectBuilder>? _PAYLOADS;
+  final String? _BUS_ID;
+  final String? _CATALOG_URI;
+  final String? _CATALOG_OBJECT_ID;
+  final List<CATProductObjectBuilder>? _PRODUCTS;
+  final String? _PRODUCTS_AS_OF;
+
+  CATObjectBuilder({
+    String? OBJECT_NAME,
+    String? objectName,
+    String? OBJECT_ID,
+    String? objectId,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    spaceObjectClass? OBJECT_TYPE,
+    spaceObjectClass? objectType,
+    operationalState? OPS_STATUS_CODE,
+    operationalState? opsStatusCode,
+    legacyCountryCode? OWNER,
+    String? LAUNCH_DATE,
+    String? launchDate,
+    String? LAUNCH_SITE,
+    String? launchSite,
+    String? DECAY_DATE,
+    String? decayDate,
+    double? PERIOD,
+    double? INCLINATION,
+    double? APOGEE,
+    double? PERIGEE,
+    double? RCS,
+    dataAvailability? DATA_STATUS_CODE,
+    dataAvailability? dataStatusCode,
+    String? ORBIT_CENTER,
+    String? orbitCenter,
+    orbitRegime? ORBIT_TYPE,
+    orbitRegime? orbitType,
+    String? DEPLOYMENT_DATE,
+    String? deploymentDate,
+    bool? MANEUVERABLE,
+    double? SIZE,
+    double? MASS,
+    massCategory? MASS_TYPE,
+    massCategory? massType,
+    List<PLDObjectBuilder>? PAYLOADS,
+    String? BUS_ID,
+    String? busId,
+    String? CATALOG_URI,
+    String? catalogUri,
+    String? CATALOG_OBJECT_ID,
+    String? catalogObjectId,
+    List<CATProductObjectBuilder>? PRODUCTS,
+    String? PRODUCTS_AS_OF,
+    String? productsAsOf,
+  })
+      : _OBJECT_NAME = objectName ?? OBJECT_NAME,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _OBJECT_TYPE = objectType ?? OBJECT_TYPE,
+        _OPS_STATUS_CODE = opsStatusCode ?? OPS_STATUS_CODE,
+        _OWNER = OWNER,
+        _LAUNCH_DATE = launchDate ?? LAUNCH_DATE,
+        _LAUNCH_SITE = launchSite ?? LAUNCH_SITE,
+        _DECAY_DATE = decayDate ?? DECAY_DATE,
+        _PERIOD = PERIOD,
+        _INCLINATION = INCLINATION,
+        _APOGEE = APOGEE,
+        _PERIGEE = PERIGEE,
+        _RCS = RCS,
+        _DATA_STATUS_CODE = dataStatusCode ?? DATA_STATUS_CODE,
+        _ORBIT_CENTER = orbitCenter ?? ORBIT_CENTER,
+        _ORBIT_TYPE = orbitType ?? ORBIT_TYPE,
+        _DEPLOYMENT_DATE = deploymentDate ?? DEPLOYMENT_DATE,
+        _MANEUVERABLE = MANEUVERABLE,
+        _SIZE = SIZE,
+        _MASS = MASS,
+        _MASS_TYPE = massType ?? MASS_TYPE,
+        _PAYLOADS = PAYLOADS,
+        _BUS_ID = busId ?? BUS_ID,
+        _CATALOG_URI = catalogUri ?? CATALOG_URI,
+        _CATALOG_OBJECT_ID = catalogObjectId ?? CATALOG_OBJECT_ID,
+        _PRODUCTS = PRODUCTS,
+        _PRODUCTS_AS_OF = productsAsOf ?? PRODUCTS_AS_OF;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
+        : fbBuilder.writeString(_OBJECT_NAME!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? LAUNCH_DATEOffset = _LAUNCH_DATE == null ? null
+        : fbBuilder.writeString(_LAUNCH_DATE!);
+    final int? LAUNCH_SITEOffset = _LAUNCH_SITE == null ? null
+        : fbBuilder.writeString(_LAUNCH_SITE!);
+    final int? DECAY_DATEOffset = _DECAY_DATE == null ? null
+        : fbBuilder.writeString(_DECAY_DATE!);
+    final int? ORBIT_CENTEROffset = _ORBIT_CENTER == null ? null
+        : fbBuilder.writeString(_ORBIT_CENTER!);
+    final int? DEPLOYMENT_DATEOffset = _DEPLOYMENT_DATE == null ? null
+        : fbBuilder.writeString(_DEPLOYMENT_DATE!);
+    final int? PAYLOADSOffset = _PAYLOADS == null ? null
+        : fbBuilder.writeList(_PAYLOADS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? BUS_IDOffset = _BUS_ID == null ? null
+        : fbBuilder.writeString(_BUS_ID!);
+    final int? CATALOG_URIOffset = _CATALOG_URI == null ? null
+        : fbBuilder.writeString(_CATALOG_URI!);
+    final int? CATALOG_OBJECT_IDOffset = _CATALOG_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_CATALOG_OBJECT_ID!);
+    final int? PRODUCTSOffset = _PRODUCTS == null ? null
+        : fbBuilder.writeList(_PRODUCTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PRODUCTS_AS_OFOffset = _PRODUCTS_AS_OF == null ? null
+        : fbBuilder.writeString(_PRODUCTS_AS_OF!);
+    fbBuilder.startTable(28);
+    fbBuilder.addOffset(0, OBJECT_NAMEOffset);
+    fbBuilder.addOffset(1, OBJECT_IDOffset);
+    fbBuilder.addUint32(2, _NORAD_CAT_ID);
+    fbBuilder.addInt8(3, _OBJECT_TYPE?.value);
+    fbBuilder.addInt8(4, _OPS_STATUS_CODE?.value);
+    fbBuilder.addUint8(5, _OWNER?.value);
+    fbBuilder.addOffset(6, LAUNCH_DATEOffset);
+    fbBuilder.addOffset(7, LAUNCH_SITEOffset);
+    fbBuilder.addOffset(8, DECAY_DATEOffset);
+    fbBuilder.addFloat64(9, _PERIOD);
+    fbBuilder.addFloat64(10, _INCLINATION);
+    fbBuilder.addFloat64(11, _APOGEE);
+    fbBuilder.addFloat64(12, _PERIGEE);
+    fbBuilder.addFloat64(13, _RCS);
+    fbBuilder.addInt8(14, _DATA_STATUS_CODE?.value);
+    fbBuilder.addOffset(15, ORBIT_CENTEROffset);
+    fbBuilder.addInt8(16, _ORBIT_TYPE?.value);
+    fbBuilder.addOffset(17, DEPLOYMENT_DATEOffset);
+    fbBuilder.addBool(18, _MANEUVERABLE);
+    fbBuilder.addFloat64(19, _SIZE);
+    fbBuilder.addFloat64(20, _MASS);
+    fbBuilder.addInt8(21, _MASS_TYPE?.value);
+    fbBuilder.addOffset(22, PAYLOADSOffset);
+    fbBuilder.addOffset(23, BUS_IDOffset);
+    fbBuilder.addOffset(24, CATALOG_URIOffset);
+    fbBuilder.addOffset(25, CATALOG_OBJECT_IDOffset);
+    fbBuilder.addOffset(26, PRODUCTSOffset);
+    fbBuilder.addOffset(27, PRODUCTS_AS_OFOffset);
     return fbBuilder.endTable();
   }
 

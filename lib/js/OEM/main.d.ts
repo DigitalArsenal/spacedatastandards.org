@@ -1,5 +1,7 @@
 export * from './Band.js';
 export * from './CAT.js';
+export * from './catalogProductKind.js';
+export * from './CATProduct.js';
 export * from './CelestialFrame.js';
 export * from './CelestialFrameWrapper.js';
 export * from './covarianceMatrixLine.js';

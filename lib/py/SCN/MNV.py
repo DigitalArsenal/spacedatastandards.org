@@ -7,6 +7,12 @@ from flatbuffers.compat import import_numpy
 np = import_numpy()
 
 # Spacecraft Maneuver
+#
+# U, V and W are the UVW axes of an orbit state: U radial, along the position
+# vector away from the central body; W cross-track, along the orbit normal
+# (the direction of r x v); V in-track, W x U, completing the right-handed
+# frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+# pre-maneuver state at EVENT_START_TIME.
 class MNV(object):
     __slots__ = ['_tab']
 
@@ -141,7 +147,8 @@ class MNV(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Maneuver event identifier
+    # Maneuver event identifier. Records of one event share it: a merged event
+    # and the source records it combines.
     # MNV
     def EVENT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -173,7 +180,7 @@ class MNV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Delta-V along-track/U component (km/s)
+    # Delta-V along U, radial (km/s)
     # MNV
     def DELTA_VEL_U(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
@@ -181,7 +188,7 @@ class MNV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Delta-V cross-track/V component (km/s)
+    # Delta-V along V, in-track (km/s)
     # MNV
     def DELTA_VEL_V(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
@@ -189,7 +196,7 @@ class MNV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Delta-V radial/W component (km/s)
+    # Delta-V along W, cross-track (km/s)
     # MNV
     def DELTA_VEL_W(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
@@ -205,7 +212,7 @@ class MNV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Delta position U component (km)
+    # Delta position along U, radial (km)
     # MNV
     def DELTA_POS_U(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -213,7 +220,7 @@ class MNV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Delta position V component (km)
+    # Delta position along V, in-track (km)
     # MNV
     def DELTA_POS_V(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
@@ -221,7 +228,7 @@ class MNV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Delta position W component (km)
+    # Delta position along W, cross-track (km)
     # MNV
     def DELTA_POS_W(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
@@ -358,7 +365,8 @@ class MNV(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         return o == 0
 
-    # Acceleration values (km/s^2, 3 components per point)
+    # Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+    # the state at that point's MNVR_ACCEL_TIMES entry
     # MNV
     def MNVR_ACCELS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
@@ -459,7 +467,9 @@ class MNV(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         return o == 0
 
-    # Sourced data references
+    # Sourced data references: identifiers of the records this one was
+    # determined from (CIDv1 for records of this network), such as the source
+    # records a merged event combines
     # MNV
     def SOURCED_DATA(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
@@ -496,8 +506,20 @@ class MNV(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Where the maneuver's data comes from and the terms it travels under.
+    # MNV
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def MNVStart(builder):
-    builder.StartObject(45)
+    builder.StartObject(46)
 
 def Start(builder):
     MNVStart(builder)
@@ -856,12 +878,19 @@ def MNVAddTRANSACTION_ID(builder, TRANSACTION_ID):
 def AddTRANSACTION_ID(builder, TRANSACTION_ID):
     MNVAddTRANSACTION_ID(builder, TRANSACTION_ID)
 
+def MNVAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    MNVAddPROVENANCE(builder, PROVENANCE)
+
 def MNVEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return MNVEnd(builder)
 
+import PVN
 import mnvOrbitalState
 try:
     from typing import List, Optional
@@ -918,6 +947,7 @@ class MNVT(object):
         SOURCED_DATA = None,
         SOURCED_DATA_TYPES = None,
         TRANSACTION_ID = None,
+        PROVENANCE = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.SAT_NO = SAT_NO  # type: int
@@ -964,6 +994,7 @@ class MNVT(object):
         self.SOURCED_DATA = SOURCED_DATA  # type: Optional[List[Optional[str]]]
         self.SOURCED_DATA_TYPES = SOURCED_DATA_TYPES  # type: Optional[str]
         self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1060,6 +1091,8 @@ class MNVT(object):
                 self.SOURCED_DATA.append(MNV.SOURCED_DATA(i))
         self.SOURCED_DATA_TYPES = MNV.SOURCED_DATA_TYPES()
         self.TRANSACTION_ID = MNV.TRANSACTION_ID()
+        if MNV.PROVENANCE() is not None:
+            self.PROVENANCE = PVN.PVNT.InitFromObj(MNV.PROVENANCE())
 
     # MNVT
     def Pack(self, builder):
@@ -1147,6 +1180,8 @@ class MNVT(object):
             SOURCED_DATA_TYPES = builder.CreateString(self.SOURCED_DATA_TYPES)
         if self.TRANSACTION_ID is not None:
             TRANSACTION_ID = builder.CreateString(self.TRANSACTION_ID)
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
         MNVStart(builder)
         if self.ID is not None:
             MNVAddID(builder, ID)
@@ -1217,5 +1252,7 @@ class MNVT(object):
             MNVAddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPES)
         if self.TRANSACTION_ID is not None:
             MNVAddTRANSACTION_ID(builder, TRANSACTION_ID)
+        if self.PROVENANCE is not None:
+            MNVAddPROVENANCE(builder, PROVENANCE)
         MNV = MNVEnd(builder)
         return MNV

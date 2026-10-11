@@ -4,7 +4,12 @@ package CQR
 
 import "strconv"
 
-type legacyCountryCode int8
+/// Owner and country codes of the public satellite catalog. An ordinal is a
+/// wire value: members are appended after ZWE, never inserted, so the ones
+/// after it are out of alphabetical order. Some owners have two codes, the
+/// catalog's older one and an ISO 3166-1 alpha-3 code the catalog also uses
+/// (CA and CAN); each code is its own member.
+type legacyCountryCode byte
 
 const (
 	/// Arab Satellite Communications Organization
@@ -259,6 +264,36 @@ const (
 	legacyCountryCodeVTNM legacyCountryCode = 124
 	/// Republic of Zimbabwe
 	legacyCountryCodeZWE  legacyCountryCode = 125
+	/// Angola (ISO 3166-1 alpha-3; also ANG)
+	legacyCountryCodeAGO  legacyCountryCode = 126
+	/// Bulgaria (ISO 3166-1 alpha-3; also BUL)
+	legacyCountryCodeBGR  legacyCountryCode = 127
+	/// Bahrain
+	legacyCountryCodeBHR  legacyCountryCode = 128
+	/// Botswana
+	legacyCountryCodeBWA  legacyCountryCode = 129
+	/// Canada (ISO 3166-1 alpha-3; also CA)
+	legacyCountryCodeCAN  legacyCountryCode = 130
+	/// Czechia (ISO 3166-1 alpha-3; also CZCH)
+	legacyCountryCodeCZE  legacyCountryCode = 131
+	/// Croatia
+	legacyCountryCodeHRV  legacyCountryCode = 132
+	/// Jordan
+	legacyCountryCodeJOR  legacyCountryCode = 133
+	/// Kuwait
+	legacyCountryCodeKWT  legacyCountryCode = 134
+	/// Peru (ISO 3166-1 alpha-3; also PERU)
+	legacyCountryCodePER  legacyCountryCode = 135
+	/// Puerto Rico
+	legacyCountryCodePRI  legacyCountryCode = 136
+	/// Solomon Islands
+	legacyCountryCodeSLB  legacyCountryCode = 137
+	/// Slovakia
+	legacyCountryCodeSVK  legacyCountryCode = 138
+	/// Taiwan (ISO 3166-1 alpha-3; also ROC)
+	legacyCountryCodeTWN  legacyCountryCode = 139
+	/// Uganda
+	legacyCountryCodeUGA  legacyCountryCode = 140
 )
 
 var EnumNameslegacyCountryCode = map[legacyCountryCode]string{
@@ -388,6 +423,21 @@ var EnumNameslegacyCountryCode = map[legacyCountryCode]string{
 	legacyCountryCodeVENZ: "VENZ",
 	legacyCountryCodeVTNM: "VTNM",
 	legacyCountryCodeZWE:  "ZWE",
+	legacyCountryCodeAGO:  "AGO",
+	legacyCountryCodeBGR:  "BGR",
+	legacyCountryCodeBHR:  "BHR",
+	legacyCountryCodeBWA:  "BWA",
+	legacyCountryCodeCAN:  "CAN",
+	legacyCountryCodeCZE:  "CZE",
+	legacyCountryCodeHRV:  "HRV",
+	legacyCountryCodeJOR:  "JOR",
+	legacyCountryCodeKWT:  "KWT",
+	legacyCountryCodePER:  "PER",
+	legacyCountryCodePRI:  "PRI",
+	legacyCountryCodeSLB:  "SLB",
+	legacyCountryCodeSVK:  "SVK",
+	legacyCountryCodeTWN:  "TWN",
+	legacyCountryCodeUGA:  "UGA",
 }
 
 var EnumValueslegacyCountryCode = map[string]legacyCountryCode{
@@ -517,6 +567,21 @@ var EnumValueslegacyCountryCode = map[string]legacyCountryCode{
 	"VENZ": legacyCountryCodeVENZ,
 	"VTNM": legacyCountryCodeVTNM,
 	"ZWE":  legacyCountryCodeZWE,
+	"AGO":  legacyCountryCodeAGO,
+	"BGR":  legacyCountryCodeBGR,
+	"BHR":  legacyCountryCodeBHR,
+	"BWA":  legacyCountryCodeBWA,
+	"CAN":  legacyCountryCodeCAN,
+	"CZE":  legacyCountryCodeCZE,
+	"HRV":  legacyCountryCodeHRV,
+	"JOR":  legacyCountryCodeJOR,
+	"KWT":  legacyCountryCodeKWT,
+	"PER":  legacyCountryCodePER,
+	"PRI":  legacyCountryCodePRI,
+	"SLB":  legacyCountryCodeSLB,
+	"SVK":  legacyCountryCodeSVK,
+	"TWN":  legacyCountryCodeTWN,
+	"UGA":  legacyCountryCodeUGA,
 }
 
 func (v legacyCountryCode) String() string {

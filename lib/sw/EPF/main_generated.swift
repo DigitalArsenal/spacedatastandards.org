@@ -8,525 +8,399 @@ import Common
 
 import FlatBuffers
 
-public enum timingStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Quantity constrained by the compliance limit.
+public enum epfLimitCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Greenwich Mean Sidereal Time
-  case gmst = 0
-  ///  Global Positioning System
-  case gps = 1
-  ///  Mission Elapsed Time
-  case met = 2
-  ///  Mission Relative Time
-  case mrt = 3
-  ///  Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  case sclk = 4
-  ///  International Atomic Time
-  case tai = 5
-  ///  Barycentric Coordinate Time
-  case tcb = 6
-  ///  Barycentric Dynamical Time
-  case tdb = 7
-  ///  Geocentric Coordinate Time
-  case tcg = 8
-  ///  Terrestrial Time
-  case tt = 9
-  ///  Universal Time
-  case ut1 = 10
-  ///  Coordinated Universal Time
-  case utc = 11
-  ///  GLONASS Time
-  case glonass = 12
-  ///  Galileo System Time
-  case gst = 13
-  ///  Quasi-Zenith Satellite System Time
-  case qzss = 14
-  ///  BeiDou Time
-  case bdt = 15
-  ///  Navigation with Indian Constellation Time
-  case navic = 16
-  ///  Satellite-Based Augmentation System Time
-  case sbas = 17
-  ///  Atomic time scale of the reference atomic-time network, offset from
-  ///  International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
-  ///  exactly. Appended last; never reorder or reuse existing values.
-  case a1 = 18
+  case unspecified = 0
+  case pfd = 1
+  case epfdDown = 2
+  case epfdUp = 3
+  case epfdIntersatellite = 4
+  case aggregateIN = 5
+  case deltaTOverT = 6
 
-  public static var max: timingStandard { return .a1 }
-  public static var min: timingStandard { return .gmst }
+  public static var max: epfLimitCategory { return .deltaTOverT }
+  public static var min: epfLimitCategory { return .unspecified }
 }
 
 
-public enum timEpochRepresentation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Julian Date day count.
-  case julianDate = 0
-  ///  Modified Julian Date day count (JD - 2400000.5).
-  case modifiedJulianDate = 1
-  ///  Seconds since 1970-01-01T00:00:00 UTC.
-  case unixSeconds = 2
-  ///  ISO 8601 timestamp text.
-  case iso8601 = 3
-  ///  Seconds since 1980-01-06T00:00:00 GPS.
-  case gpsSeconds = 4
-  ///  GNSS week number plus seconds within the week.
-  case gnssWeekSeconds = 5
-  ///  CCSDS binary time-code field with preamble metadata.
-  case ccsdsTimeCode = 6
-  ///  Seconds from an application-defined mission epoch.
-  case missionElapsedSeconds = 7
-
-  public static var max: timEpochRepresentation { return .missionElapsedSeconds }
-  public static var min: timEpochRepresentation { return .julianDate }
-}
-
-
-public enum timCcsdsTimeCodeKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  No CCSDS time code selected.
-  case none_ = 0
-  ///  CCSDS Unsegmented Time Code (CUC).
-  case unsegmented = 1
-  ///  CCSDS Day Segmented Time Code (CDS).
-  case daySegmented = 2
-  ///  CCSDS Calendar Segmented Time Code (CCS).
-  case calendarSegmented = 3
-
-  public static var max: timCcsdsTimeCodeKind { return .calendarSegmented }
-  public static var min: timCcsdsTimeCodeKind { return .none_ }
-}
-
-
-public enum timConversionStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Conversion completed.
-  case ok = 0
-  ///  Input epoch or requested representation is invalid.
-  case invalidInput = 1
-  ///  Requested source or target time system is not supported.
-  case unsupportedTimeSystem = 2
-  ///  Conversion requires leap-second data that was not available.
-  case leapSecondDataRequired = 3
-  ///  Conversion requires Earth-orientation data that was not available.
-  case eopDataRequired = 4
-  ///  Requested instant is outside the supported conversion range.
-  case outOfRange = 5
-
-  public static var max: timConversionStatus { return .outOfRange }
-  public static var min: timConversionStatus { return .ok }
-}
-
-
-///  CCSDS time-code payload and preamble metadata.
-public struct TIMCcsdsTimeCode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One source's contribution to one sample.
+public struct EPFContributor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMCcsdsTimeCode.id, addPrefix: prefix) }
+  public static var id: String { "$EPF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EPFContributor.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE_KIND: VOffset = 4
-    static let PREAMBLE_FIELD1: VOffset = 6
-    static let PREAMBLE_FIELD2: VOffset = 8
-    static let TIME_FIELD: VOffset = 10
-    static let AGENCY_DEFINED_EPOCH_ISO8601: VOffset = 12
-    static let CCSDS_EPOCH_ISO8601: VOffset = 14
+    static let CONTRIBUTOR_ID: VOffset = 4
+    static let SAMPLE_INDEX: VOffset = 6
+    static let SOURCE_ENDPOINT_ID: VOffset = 8
+    static let RFE_ID: VOffset = 10
+    static let RFB_ID: VOffset = 12
+    static let PAP_ID: VOffset = 14
+    static let NORAD_CAT_ID: VOffset = 16
+    static let INTERFERENCE_POWER_DBW: VOffset = 18
+    static let ANTENNA_DISCRIMINATION_DB: VOffset = 20
+    static let SPECTRAL_OVERLAP_FRACTION: VOffset = 22
+    static let CONTRIBUTION_VALUE: VOffset = 24
+    static let CONTRIBUTION_UNITS: VOffset = 26
   }
 
-  ///  CCSDS time-code family.
-  public var CODE_KIND: timCcsdsTimeCodeKind { let o = _accessor.offset(VT.CODE_KIND); return o == 0 ? .none_ : timCcsdsTimeCodeKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
-  ///  First CCSDS preamble field octet.
-  public var PREAMBLE_FIELD1: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
-  public var PREAMBLE_FIELD2: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD2); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Raw CCSDS time field octets.
-  public var TIME_FIELD: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.TIME_FIELD, byteSize: 1) }
-  public func withUnsafePointerToTimeField<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TIME_FIELD, body: body) }
-  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
-  public var AGENCY_DEFINED_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.AGENCY_DEFINED_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AGENCY_DEFINED_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
-  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
-  public var CCSDS_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.CCSDS_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CCSDS_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_EPOCH_ISO8601) }
-  public static func startTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(CODE_KIND: timCcsdsTimeCodeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE_KIND.rawValue, def: 0, at: VT.CODE_KIND) }
-  public static func add(PREAMBLE_FIELD1: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD1, def: 0, at: VT.PREAMBLE_FIELD1) }
-  public static func add(PREAMBLE_FIELD2: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD2, def: 0, at: VT.PREAMBLE_FIELD2) }
-  public static func addVectorOf(TIME_FIELD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_FIELD, at: VT.TIME_FIELD) }
-  public static func add(AGENCY_DEFINED_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGENCY_DEFINED_EPOCH_ISO8601, at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
-  public static func add(CCSDS_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_EPOCH_ISO8601, at: VT.CCSDS_EPOCH_ISO8601) }
-  public static func endTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMCcsdsTimeCode(
+  public var CONTRIBUTOR_ID: String! { let o = _accessor.offset(VT.CONTRIBUTOR_ID); return _accessor.string(at: o) }
+  public var CONTRIBUTOR_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CONTRIBUTOR_ID) }
+  public var SAMPLE_INDEX: UInt32 { let o = _accessor.offset(VT.SAMPLE_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCE_ENDPOINT_ID: String? { let o = _accessor.offset(VT.SOURCE_ENDPOINT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_ENDPOINT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_ENDPOINT_ID) }
+  public var RFE_ID: String? { let o = _accessor.offset(VT.RFE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFE_ID) }
+  public var RFB_ID: String? { let o = _accessor.offset(VT.RFB_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFB_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFB_ID) }
+  public var PAP_ID: String? { let o = _accessor.offset(VT.PAP_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PAP_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAP_ID) }
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INTERFERENCE_POWER_DBW: Double { let o = _accessor.offset(VT.INTERFERENCE_POWER_DBW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Pattern discrimination applied in the victim direction, dB.
+  public var ANTENNA_DISCRIMINATION_DB: Double { let o = _accessor.offset(VT.ANTENNA_DISCRIMINATION_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fraction of the victim measurement bandwidth overlapped [0-1].
+  public var SPECTRAL_OVERLAP_FRACTION: Double { let o = _accessor.offset(VT.SPECTRAL_OVERLAP_FRACTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CONTRIBUTION_VALUE: Double { let o = _accessor.offset(VT.CONTRIBUTION_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CONTRIBUTION_UNITS: String? { let o = _accessor.offset(VT.CONTRIBUTION_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTRIBUTION_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTRIBUTION_UNITS) }
+  public static func startEPFContributor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(CONTRIBUTOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRIBUTOR_ID, at: VT.CONTRIBUTOR_ID) }
+  public static func add(SAMPLE_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_INDEX, def: 0, at: VT.SAMPLE_INDEX) }
+  public static func add(SOURCE_ENDPOINT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ENDPOINT_ID, at: VT.SOURCE_ENDPOINT_ID) }
+  public static func add(RFE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFE_ID, at: VT.RFE_ID) }
+  public static func add(RFB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFB_ID, at: VT.RFB_ID) }
+  public static func add(PAP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAP_ID, at: VT.PAP_ID) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(INTERFERENCE_POWER_DBW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERFERENCE_POWER_DBW, def: 0.0, at: VT.INTERFERENCE_POWER_DBW) }
+  public static func add(ANTENNA_DISCRIMINATION_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANTENNA_DISCRIMINATION_DB, def: 0.0, at: VT.ANTENNA_DISCRIMINATION_DB) }
+  public static func add(SPECTRAL_OVERLAP_FRACTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECTRAL_OVERLAP_FRACTION, def: 0.0, at: VT.SPECTRAL_OVERLAP_FRACTION) }
+  public static func add(CONTRIBUTION_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTRIBUTION_VALUE, def: 0.0, at: VT.CONTRIBUTION_VALUE) }
+  public static func add(CONTRIBUTION_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRIBUTION_UNITS, at: VT.CONTRIBUTION_UNITS) }
+  public static func endEPFContributor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createEPFContributor(
     _ fbb: inout FlatBufferBuilder,
-    CODE_KIND: timCcsdsTimeCodeKind = .none_,
-    PREAMBLE_FIELD1: UInt8 = 0,
-    PREAMBLE_FIELD2: UInt8 = 0,
-    TIME_FIELDVectorOffset TIME_FIELD: Offset = Offset(),
-    AGENCY_DEFINED_EPOCH_ISO8601Offset AGENCY_DEFINED_EPOCH_ISO8601: Offset = Offset(),
-    CCSDS_EPOCH_ISO8601Offset CCSDS_EPOCH_ISO8601: Offset = Offset()
+    CONTRIBUTOR_IDOffset CONTRIBUTOR_ID: Offset,
+    SAMPLE_INDEX: UInt32 = 0,
+    SOURCE_ENDPOINT_IDOffset SOURCE_ENDPOINT_ID: Offset = Offset(),
+    RFE_IDOffset RFE_ID: Offset = Offset(),
+    RFB_IDOffset RFB_ID: Offset = Offset(),
+    PAP_IDOffset PAP_ID: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    INTERFERENCE_POWER_DBW: Double = 0.0,
+    ANTENNA_DISCRIMINATION_DB: Double = 0.0,
+    SPECTRAL_OVERLAP_FRACTION: Double = 0.0,
+    CONTRIBUTION_VALUE: Double = 0.0,
+    CONTRIBUTION_UNITSOffset CONTRIBUTION_UNITS: Offset = Offset()
   ) -> Offset {
-    let __start = TIMCcsdsTimeCode.startTIMCcsdsTimeCode(&fbb)
-    TIMCcsdsTimeCode.add(CODE_KIND: CODE_KIND, &fbb)
-    TIMCcsdsTimeCode.add(PREAMBLE_FIELD1: PREAMBLE_FIELD1, &fbb)
-    TIMCcsdsTimeCode.add(PREAMBLE_FIELD2: PREAMBLE_FIELD2, &fbb)
-    TIMCcsdsTimeCode.addVectorOf(TIME_FIELD: TIME_FIELD, &fbb)
-    TIMCcsdsTimeCode.add(AGENCY_DEFINED_EPOCH_ISO8601: AGENCY_DEFINED_EPOCH_ISO8601, &fbb)
-    TIMCcsdsTimeCode.add(CCSDS_EPOCH_ISO8601: CCSDS_EPOCH_ISO8601, &fbb)
-    return TIMCcsdsTimeCode.endTIMCcsdsTimeCode(&fbb, start: __start)
+    let __start = EPFContributor.startEPFContributor(&fbb)
+    EPFContributor.add(CONTRIBUTOR_ID: CONTRIBUTOR_ID, &fbb)
+    EPFContributor.add(SAMPLE_INDEX: SAMPLE_INDEX, &fbb)
+    EPFContributor.add(SOURCE_ENDPOINT_ID: SOURCE_ENDPOINT_ID, &fbb)
+    EPFContributor.add(RFE_ID: RFE_ID, &fbb)
+    EPFContributor.add(RFB_ID: RFB_ID, &fbb)
+    EPFContributor.add(PAP_ID: PAP_ID, &fbb)
+    EPFContributor.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    EPFContributor.add(INTERFERENCE_POWER_DBW: INTERFERENCE_POWER_DBW, &fbb)
+    EPFContributor.add(ANTENNA_DISCRIMINATION_DB: ANTENNA_DISCRIMINATION_DB, &fbb)
+    EPFContributor.add(SPECTRAL_OVERLAP_FRACTION: SPECTRAL_OVERLAP_FRACTION, &fbb)
+    EPFContributor.add(CONTRIBUTION_VALUE: CONTRIBUTION_VALUE, &fbb)
+    EPFContributor.add(CONTRIBUTION_UNITS: CONTRIBUTION_UNITS, &fbb)
+    return EPFContributor.endEPFContributor(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE_KIND, fieldName: "CODE_KIND", required: false, type: timCcsdsTimeCodeKind.self)
-    try _v.visit(field: VT.PREAMBLE_FIELD1, fieldName: "PREAMBLE_FIELD1", required: false, type: UInt8.self)
-    try _v.visit(field: VT.PREAMBLE_FIELD2, fieldName: "PREAMBLE_FIELD2", required: false, type: UInt8.self)
-    try _v.visit(field: VT.TIME_FIELD, fieldName: "TIME_FIELD", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.AGENCY_DEFINED_EPOCH_ISO8601, fieldName: "AGENCY_DEFINED_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CCSDS_EPOCH_ISO8601, fieldName: "CCSDS_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTRIBUTOR_ID, fieldName: "CONTRIBUTOR_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAMPLE_INDEX, fieldName: "SAMPLE_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_ENDPOINT_ID, fieldName: "SOURCE_ENDPOINT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFE_ID, fieldName: "RFE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFB_ID, fieldName: "RFB_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAP_ID, fieldName: "PAP_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INTERFERENCE_POWER_DBW, fieldName: "INTERFERENCE_POWER_DBW", required: false, type: Double.self)
+    try _v.visit(field: VT.ANTENNA_DISCRIMINATION_DB, fieldName: "ANTENNA_DISCRIMINATION_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.SPECTRAL_OVERLAP_FRACTION, fieldName: "SPECTRAL_OVERLAP_FRACTION", required: false, type: Double.self)
+    try _v.visit(field: VT.CONTRIBUTION_VALUE, fieldName: "CONTRIBUTION_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.CONTRIBUTION_UNITS, fieldName: "CONTRIBUTION_UNITS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Numeric or textual instant tagged with its time system and representation.
-public struct TIMInstant: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  FlatSQL-queryable compliance verdict consumed directly by `$RPT`.
+public struct EPFVerdict: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMInstant.id, addPrefix: prefix) }
+  public static var id: String { "$EPF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EPFVerdict.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let TIME_SYSTEM: VOffset = 4
-    static let EPOCH_FORMAT: VOffset = 6
-    static let JULIAN_DATE: VOffset = 8
-    static let SECONDS: VOffset = 10
-    static let ISO8601: VOffset = 12
-    static let SUBSECOND_NANOS: VOffset = 14
-    static let EPOCH_LABEL: VOffset = 16
-    static let GNSS_WEEK: VOffset = 18
-    static let HAS_GNSS_ROLLOVER_REFERENCE: VOffset = 20
-    static let GNSS_ROLLOVER_REFERENCE_ISO8601: VOffset = 22
-    static let CCSDS_TIME_CODE: VOffset = 24
+    static let LIMIT_KIND: VOffset = 4
+    static let COMPLIANT: VOffset = 6
+    static let MARGIN_DB: VOffset = 8
+    static let PERCENT_TIME_EXCEEDED: VOffset = 10
+    static let WORST_SAMPLE_INDEX: VOffset = 12
+    static let NOTE: VOffset = 14
   }
 
-  ///  Time system for this instant.
-  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
-  public var EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
-  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
-  public var JULIAN_DATE: Double { let o = _accessor.offset(VT.JULIAN_DATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
-  public var SECONDS: Double { let o = _accessor.offset(VT.SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
-  public var ISO8601: String? { let o = _accessor.offset(VT.ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ISO8601) }
-  ///  Additional nanoseconds beyond the fractional scalar/text value.
-  public var SUBSECOND_NANOS: Int32 { let o = _accessor.offset(VT.SUBSECOND_NANOS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
-  public var EPOCH_LABEL: String? { let o = _accessor.offset(VT.EPOCH_LABEL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_LABEL) }
-  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
-  public var GNSS_WEEK: Int32 { let o = _accessor.offset(VT.GNSS_WEEK); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
-  public var HAS_GNSS_ROLLOVER_REFERENCE: Bool { let o = _accessor.offset(VT.HAS_GNSS_ROLLOVER_REFERENCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional Orekit-style GNSS week rollover reference timestamp.
-  public var GNSS_ROLLOVER_REFERENCE_ISO8601: String? { let o = _accessor.offset(VT.GNSS_ROLLOVER_REFERENCE_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GNSS_ROLLOVER_REFERENCE_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
-  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
-  public var CCSDS_TIME_CODE: TIMCcsdsTimeCode? { let o = _accessor.offset(VT.CCSDS_TIME_CODE); return o == 0 ? nil : TIMCcsdsTimeCode(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTIMInstant(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
-  public static func add(EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_FORMAT.rawValue, def: 0, at: VT.EPOCH_FORMAT) }
-  public static func add(JULIAN_DATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JULIAN_DATE, def: 0.0, at: VT.JULIAN_DATE) }
-  public static func add(SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDS, def: 0.0, at: VT.SECONDS) }
-  public static func add(ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISO8601, at: VT.ISO8601) }
-  public static func add(SUBSECOND_NANOS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSECOND_NANOS, def: 0, at: VT.SUBSECOND_NANOS) }
-  public static func add(EPOCH_LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_LABEL, at: VT.EPOCH_LABEL) }
-  public static func add(GNSS_WEEK: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNSS_WEEK, def: 0, at: VT.GNSS_WEEK) }
-  public static func add(HAS_GNSS_ROLLOVER_REFERENCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GNSS_ROLLOVER_REFERENCE, def: false,
-   at: VT.HAS_GNSS_ROLLOVER_REFERENCE) }
-  public static func add(GNSS_ROLLOVER_REFERENCE_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_ROLLOVER_REFERENCE_ISO8601, at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
-  public static func add(CCSDS_TIME_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_TIME_CODE, at: VT.CCSDS_TIME_CODE) }
-  public static func endTIMInstant(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMInstant(
+  public var LIMIT_KIND: epfLimitCategory { let o = _accessor.offset(VT.LIMIT_KIND); return o == 0 ? .unspecified : epfLimitCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var COMPLIANT: Bool { let o = _accessor.offset(VT.COMPLIANT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Worst margin to the applicable limit, dB. Positive means compliant.
+  public var MARGIN_DB: Double { let o = _accessor.offset(VT.MARGIN_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERCENT_TIME_EXCEEDED: Double { let o = _accessor.offset(VT.PERCENT_TIME_EXCEEDED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WORST_SAMPLE_INDEX: UInt32 { let o = _accessor.offset(VT.WORST_SAMPLE_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NOTE: String? { let o = _accessor.offset(VT.NOTE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTE) }
+  public static func startEPFVerdict(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(LIMIT_KIND: epfLimitCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIMIT_KIND.rawValue, def: 0, at: VT.LIMIT_KIND) }
+  public static func add(COMPLIANT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPLIANT, def: false,
+   at: VT.COMPLIANT) }
+  public static func add(MARGIN_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MARGIN_DB, def: 0.0, at: VT.MARGIN_DB) }
+  public static func add(PERCENT_TIME_EXCEEDED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERCENT_TIME_EXCEEDED, def: 0.0, at: VT.PERCENT_TIME_EXCEEDED) }
+  public static func add(WORST_SAMPLE_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WORST_SAMPLE_INDEX, def: 0, at: VT.WORST_SAMPLE_INDEX) }
+  public static func add(NOTE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTE, at: VT.NOTE) }
+  public static func endEPFVerdict(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEPFVerdict(
     _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst,
-    EPOCH_FORMAT: timEpochRepresentation = .julianDate,
-    JULIAN_DATE: Double = 0.0,
-    SECONDS: Double = 0.0,
-    ISO8601Offset ISO8601: Offset = Offset(),
-    SUBSECOND_NANOS: Int32 = 0,
-    EPOCH_LABELOffset EPOCH_LABEL: Offset = Offset(),
-    GNSS_WEEK: Int32 = 0,
-    HAS_GNSS_ROLLOVER_REFERENCE: Bool = false,
-    GNSS_ROLLOVER_REFERENCE_ISO8601Offset GNSS_ROLLOVER_REFERENCE_ISO8601: Offset = Offset(),
-    CCSDS_TIME_CODEOffset CCSDS_TIME_CODE: Offset = Offset()
+    LIMIT_KIND: epfLimitCategory = .unspecified,
+    COMPLIANT: Bool = false,
+    MARGIN_DB: Double = 0.0,
+    PERCENT_TIME_EXCEEDED: Double = 0.0,
+    WORST_SAMPLE_INDEX: UInt32 = 0,
+    NOTEOffset NOTE: Offset = Offset()
   ) -> Offset {
-    let __start = TIMInstant.startTIMInstant(&fbb)
-    TIMInstant.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    TIMInstant.add(EPOCH_FORMAT: EPOCH_FORMAT, &fbb)
-    TIMInstant.add(JULIAN_DATE: JULIAN_DATE, &fbb)
-    TIMInstant.add(SECONDS: SECONDS, &fbb)
-    TIMInstant.add(ISO8601: ISO8601, &fbb)
-    TIMInstant.add(SUBSECOND_NANOS: SUBSECOND_NANOS, &fbb)
-    TIMInstant.add(EPOCH_LABEL: EPOCH_LABEL, &fbb)
-    TIMInstant.add(GNSS_WEEK: GNSS_WEEK, &fbb)
-    TIMInstant.add(HAS_GNSS_ROLLOVER_REFERENCE: HAS_GNSS_ROLLOVER_REFERENCE, &fbb)
-    TIMInstant.add(GNSS_ROLLOVER_REFERENCE_ISO8601: GNSS_ROLLOVER_REFERENCE_ISO8601, &fbb)
-    TIMInstant.add(CCSDS_TIME_CODE: CCSDS_TIME_CODE, &fbb)
-    return TIMInstant.endTIMInstant(&fbb, start: __start)
+    let __start = EPFVerdict.startEPFVerdict(&fbb)
+    EPFVerdict.add(LIMIT_KIND: LIMIT_KIND, &fbb)
+    EPFVerdict.add(COMPLIANT: COMPLIANT, &fbb)
+    EPFVerdict.add(MARGIN_DB: MARGIN_DB, &fbb)
+    EPFVerdict.add(PERCENT_TIME_EXCEEDED: PERCENT_TIME_EXCEEDED, &fbb)
+    EPFVerdict.add(WORST_SAMPLE_INDEX: WORST_SAMPLE_INDEX, &fbb)
+    EPFVerdict.add(NOTE: NOTE, &fbb)
+    return EPFVerdict.endEPFVerdict(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.EPOCH_FORMAT, fieldName: "EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
-    try _v.visit(field: VT.JULIAN_DATE, fieldName: "JULIAN_DATE", required: false, type: Double.self)
-    try _v.visit(field: VT.SECONDS, fieldName: "SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.ISO8601, fieldName: "ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUBSECOND_NANOS, fieldName: "SUBSECOND_NANOS", required: false, type: Int32.self)
-    try _v.visit(field: VT.EPOCH_LABEL, fieldName: "EPOCH_LABEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GNSS_WEEK, fieldName: "GNSS_WEEK", required: false, type: Int32.self)
-    try _v.visit(field: VT.HAS_GNSS_ROLLOVER_REFERENCE, fieldName: "HAS_GNSS_ROLLOVER_REFERENCE", required: false, type: Bool.self)
-    try _v.visit(field: VT.GNSS_ROLLOVER_REFERENCE_ISO8601, fieldName: "GNSS_ROLLOVER_REFERENCE_ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CCSDS_TIME_CODE, fieldName: "CCSDS_TIME_CODE", required: false, type: ForwardOffset<TIMCcsdsTimeCode>.self)
+    try _v.visit(field: VT.LIMIT_KIND, fieldName: "LIMIT_KIND", required: false, type: epfLimitCategory.self)
+    try _v.visit(field: VT.COMPLIANT, fieldName: "COMPLIANT", required: false, type: Bool.self)
+    try _v.visit(field: VT.MARGIN_DB, fieldName: "MARGIN_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.PERCENT_TIME_EXCEEDED, fieldName: "PERCENT_TIME_EXCEEDED", required: false, type: Double.self)
+    try _v.visit(field: VT.WORST_SAMPLE_INDEX, fieldName: "WORST_SAMPLE_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.NOTE, fieldName: "NOTE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Request to convert one instant into another time system/representation.
-public struct TIMConversionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Aggregate Interference and Flux-Density Compliance
+public struct EPF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionRequest.id, addPrefix: prefix) }
+  public static var id: String { "$EPF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EPF.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SOURCE: VOffset = 4
-    static let TARGET_TIME_SYSTEM: VOffset = 6
-    static let TARGET_EPOCH_FORMAT: VOffset = 8
-    static let TAI_MINUS_UTC_SECONDS: VOffset = 10
-    static let HAS_TAI_MINUS_UTC: VOffset = 12
-    static let DUT1_SECONDS: VOffset = 14
-    static let HAS_DUT1: VOffset = 16
-    static let TRACE_ID: VOffset = 18
+    static let EPF_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let SCENARIO_ID: VOffset = 8
+    static let RFL_ID: VOffset = 10
+    static let ACI_ID: VOffset = 12
+    static let VICTIM_ENDPOINT_ID: VOffset = 14
+    static let LIMIT_KIND: VOffset = 16
+    static let LIMIT_MODEL_NAME: VOffset = 18
+    static let VALUE_UNITS: VOffset = 20
+    static let SAMPLE_COUNT: VOffset = 22
+    static let SAMPLE_EPOCHS: VOffset = 24
+    static let SAMPLE_VALUES: VOffset = 26
+    static let SAMPLE_LIMIT_VALUES: VOffset = 28
+    static let SAMPLE_MARGIN_DB: VOffset = 30
+    static let SAMPLE_EXCEEDS_LIMIT: VOffset = 32
+    static let CONTRIBUTORS: VOffset = 34
+    static let CDF_VALUES: VOffset = 36
+    static let CDF_PERCENT_TIME_EXCEEDED: VOffset = 38
+    static let VERDICT: VOffset = 40
+    static let PROVENANCE: VOffset = 42
+    static let COMPUTED_AT: VOffset = 44
+    static let PRODUCER_ID: VOffset = 46
+    static let SIGNATURE: VOffset = 48
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 50
   }
 
-  ///  Source instant to convert.
-  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Target time system.
-  public var TARGET_TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TARGET_TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Preferred target representation.
-  public var TARGET_EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.TARGET_EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
-  ///  Optional TAI-UTC override in seconds for the source instant.
-  public var TAI_MINUS_UTC_SECONDS: Double { let o = _accessor.offset(VT.TAI_MINUS_UTC_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
-  public var HAS_TAI_MINUS_UTC: Bool { let o = _accessor.offset(VT.HAS_TAI_MINUS_UTC); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional UT1-UTC override in seconds for UT1 conversions.
-  public var DUT1_SECONDS: Double { let o = _accessor.offset(VT.DUT1_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
-  public var HAS_DUT1: Bool { let o = _accessor.offset(VT.HAS_DUT1); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional caller trace/correlation identifier.
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startTIMConversionRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(TARGET_TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_TIME_SYSTEM.rawValue, def: 0, at: VT.TARGET_TIME_SYSTEM) }
-  public static func add(TARGET_EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_EPOCH_FORMAT.rawValue, def: 0, at: VT.TARGET_EPOCH_FORMAT) }
-  public static func add(TAI_MINUS_UTC_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAI_MINUS_UTC_SECONDS, def: 0.0, at: VT.TAI_MINUS_UTC_SECONDS) }
-  public static func add(HAS_TAI_MINUS_UTC: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TAI_MINUS_UTC, def: false,
-   at: VT.HAS_TAI_MINUS_UTC) }
-  public static func add(DUT1_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DUT1_SECONDS, def: 0.0, at: VT.DUT1_SECONDS) }
-  public static func add(HAS_DUT1: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DUT1, def: false,
-   at: VT.HAS_DUT1) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endTIMConversionRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMConversionRequest(
+  public var EPF_ID: String! { let o = _accessor.offset(VT.EPF_ID); return _accessor.string(at: o) }
+  public var EPF_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.EPF_ID) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var SCENARIO_ID: String? { let o = _accessor.offset(VT.SCENARIO_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCENARIO_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCENARIO_ID) }
+  public var RFL_ID: String? { let o = _accessor.offset(VT.RFL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFL_ID) }
+  public var ACI_ID: String? { let o = _accessor.offset(VT.ACI_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ACI_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACI_ID) }
+  public var VICTIM_ENDPOINT_ID: String? { let o = _accessor.offset(VT.VICTIM_ENDPOINT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VICTIM_ENDPOINT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VICTIM_ENDPOINT_ID) }
+  public var LIMIT_KIND: epfLimitCategory { let o = _accessor.offset(VT.LIMIT_KIND); return o == 0 ? .unspecified : epfLimitCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var LIMIT_MODEL_NAME: String? { let o = _accessor.offset(VT.LIMIT_MODEL_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LIMIT_MODEL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LIMIT_MODEL_NAME) }
+  public var VALUE_UNITS: String! { let o = _accessor.offset(VT.VALUE_UNITS); return _accessor.string(at: o) }
+  public var VALUE_UNITSSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VALUE_UNITS) }
+  public var SAMPLE_COUNT: UInt32 { let o = _accessor.offset(VT.SAMPLE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAMPLE_EPOCHS: FlatbufferVector<Double> { return _accessor.vector(at: VT.SAMPLE_EPOCHS, byteSize: 8) }
+  public func withUnsafePointerToSampleEpochs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SAMPLE_EPOCHS, body: body) }
+  public var SAMPLE_VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.SAMPLE_VALUES, byteSize: 8) }
+  public func withUnsafePointerToSampleValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SAMPLE_VALUES, body: body) }
+  public var SAMPLE_LIMIT_VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.SAMPLE_LIMIT_VALUES, byteSize: 8) }
+  public func withUnsafePointerToSampleLimitValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SAMPLE_LIMIT_VALUES, body: body) }
+  ///  Positive means the sample complies with its limit.
+  public var SAMPLE_MARGIN_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.SAMPLE_MARGIN_DB, byteSize: 8) }
+  public func withUnsafePointerToSampleMarginDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SAMPLE_MARGIN_DB, body: body) }
+  public var SAMPLE_EXCEEDS_LIMIT: FlatbufferVector<Bool> { return _accessor.vector(at: VT.SAMPLE_EXCEEDS_LIMIT, byteSize: 1) }
+  public func withUnsafePointerToSampleExceedsLimit<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SAMPLE_EXCEEDS_LIMIT, body: body) }
+  public var CONTRIBUTORS: FlatbufferVector<EPFContributor> { return _accessor.vector(at: VT.CONTRIBUTORS, byteSize: 4) }
+  ///  Empirical distribution values and their percent-time exceedance. Arrays
+  ///  are index-aligned and ordered as stated by provenance.
+  public var CDF_VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.CDF_VALUES, byteSize: 8) }
+  public func withUnsafePointerToCdfValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CDF_VALUES, body: body) }
+  public var CDF_PERCENT_TIME_EXCEEDED: FlatbufferVector<Double> { return _accessor.vector(at: VT.CDF_PERCENT_TIME_EXCEEDED, byteSize: 8) }
+  public func withUnsafePointerToCdfPercentTimeExceeded<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CDF_PERCENT_TIME_EXCEEDED, body: body) }
+  public var VERDICT: EPFVerdict! { let o = _accessor.offset(VT.VERDICT); return EPFVerdict(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PROVENANCE: RFLProvenance! { let o = _accessor.offset(VT.PROVENANCE); return RFLProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var PRODUCER_ID: String! { let o = _accessor.offset(VT.PRODUCER_ID); return _accessor.string(at: o) }
+  public var PRODUCER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PRODUCER_ID) }
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  public static func startEPF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
+  public static func add(EPF_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPF_ID, at: VT.EPF_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
+  public static func add(RFL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFL_ID, at: VT.RFL_ID) }
+  public static func add(ACI_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACI_ID, at: VT.ACI_ID) }
+  public static func add(VICTIM_ENDPOINT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VICTIM_ENDPOINT_ID, at: VT.VICTIM_ENDPOINT_ID) }
+  public static func add(LIMIT_KIND: epfLimitCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIMIT_KIND.rawValue, def: 0, at: VT.LIMIT_KIND) }
+  public static func add(LIMIT_MODEL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIMIT_MODEL_NAME, at: VT.LIMIT_MODEL_NAME) }
+  public static func add(VALUE_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE_UNITS, at: VT.VALUE_UNITS) }
+  public static func add(SAMPLE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_COUNT, def: 0, at: VT.SAMPLE_COUNT) }
+  public static func addVectorOf(SAMPLE_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_EPOCHS, at: VT.SAMPLE_EPOCHS) }
+  public static func addVectorOf(SAMPLE_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_VALUES, at: VT.SAMPLE_VALUES) }
+  public static func addVectorOf(SAMPLE_LIMIT_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_LIMIT_VALUES, at: VT.SAMPLE_LIMIT_VALUES) }
+  public static func addVectorOf(SAMPLE_MARGIN_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_MARGIN_DB, at: VT.SAMPLE_MARGIN_DB) }
+  public static func addVectorOf(SAMPLE_EXCEEDS_LIMIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_EXCEEDS_LIMIT, at: VT.SAMPLE_EXCEEDS_LIMIT) }
+  public static func addVectorOf(CONTRIBUTORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRIBUTORS, at: VT.CONTRIBUTORS) }
+  public static func addVectorOf(CDF_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CDF_VALUES, at: VT.CDF_VALUES) }
+  public static func addVectorOf(CDF_PERCENT_TIME_EXCEEDED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CDF_PERCENT_TIME_EXCEEDED, at: VT.CDF_PERCENT_TIME_EXCEEDED) }
+  public static func add(VERDICT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERDICT, at: VT.VERDICT) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func add(PRODUCER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_ID, at: VT.PRODUCER_ID) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
+  public static func endEPF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 20, 24, 26, 28, 30, 32, 36, 38, 40, 42, 46, 48, 50]); return end }
+  public static func createEPF(
     _ fbb: inout FlatBufferBuilder,
-    SOURCEOffset SOURCE: Offset = Offset(),
-    TARGET_TIME_SYSTEM: timingStandard = .gmst,
-    TARGET_EPOCH_FORMAT: timEpochRepresentation = .julianDate,
-    TAI_MINUS_UTC_SECONDS: Double = 0.0,
-    HAS_TAI_MINUS_UTC: Bool = false,
-    DUT1_SECONDS: Double = 0.0,
-    HAS_DUT1: Bool = false,
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    EPF_IDOffset EPF_ID: Offset,
+    NAMEOffset NAME: Offset = Offset(),
+    SCENARIO_IDOffset SCENARIO_ID: Offset = Offset(),
+    RFL_IDOffset RFL_ID: Offset = Offset(),
+    ACI_IDOffset ACI_ID: Offset = Offset(),
+    VICTIM_ENDPOINT_IDOffset VICTIM_ENDPOINT_ID: Offset = Offset(),
+    LIMIT_KIND: epfLimitCategory = .unspecified,
+    LIMIT_MODEL_NAMEOffset LIMIT_MODEL_NAME: Offset = Offset(),
+    VALUE_UNITSOffset VALUE_UNITS: Offset,
+    SAMPLE_COUNT: UInt32 = 0,
+    SAMPLE_EPOCHSVectorOffset SAMPLE_EPOCHS: Offset,
+    SAMPLE_VALUESVectorOffset SAMPLE_VALUES: Offset,
+    SAMPLE_LIMIT_VALUESVectorOffset SAMPLE_LIMIT_VALUES: Offset,
+    SAMPLE_MARGIN_DBVectorOffset SAMPLE_MARGIN_DB: Offset,
+    SAMPLE_EXCEEDS_LIMITVectorOffset SAMPLE_EXCEEDS_LIMIT: Offset,
+    CONTRIBUTORSVectorOffset CONTRIBUTORS: Offset = Offset(),
+    CDF_VALUESVectorOffset CDF_VALUES: Offset,
+    CDF_PERCENT_TIME_EXCEEDEDVectorOffset CDF_PERCENT_TIME_EXCEEDED: Offset,
+    VERDICTOffset VERDICT: Offset,
+    PROVENANCEOffset PROVENANCE: Offset,
+    COMPUTED_AT: UInt64 = 0,
+    PRODUCER_IDOffset PRODUCER_ID: Offset,
+    SIGNATUREVectorOffset SIGNATURE: Offset,
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset
   ) -> Offset {
-    let __start = TIMConversionRequest.startTIMConversionRequest(&fbb)
-    TIMConversionRequest.add(SOURCE: SOURCE, &fbb)
-    TIMConversionRequest.add(TARGET_TIME_SYSTEM: TARGET_TIME_SYSTEM, &fbb)
-    TIMConversionRequest.add(TARGET_EPOCH_FORMAT: TARGET_EPOCH_FORMAT, &fbb)
-    TIMConversionRequest.add(TAI_MINUS_UTC_SECONDS: TAI_MINUS_UTC_SECONDS, &fbb)
-    TIMConversionRequest.add(HAS_TAI_MINUS_UTC: HAS_TAI_MINUS_UTC, &fbb)
-    TIMConversionRequest.add(DUT1_SECONDS: DUT1_SECONDS, &fbb)
-    TIMConversionRequest.add(HAS_DUT1: HAS_DUT1, &fbb)
-    TIMConversionRequest.add(TRACE_ID: TRACE_ID, &fbb)
-    return TIMConversionRequest.endTIMConversionRequest(&fbb, start: __start)
+    let __start = EPF.startEPF(&fbb)
+    EPF.add(EPF_ID: EPF_ID, &fbb)
+    EPF.add(NAME: NAME, &fbb)
+    EPF.add(SCENARIO_ID: SCENARIO_ID, &fbb)
+    EPF.add(RFL_ID: RFL_ID, &fbb)
+    EPF.add(ACI_ID: ACI_ID, &fbb)
+    EPF.add(VICTIM_ENDPOINT_ID: VICTIM_ENDPOINT_ID, &fbb)
+    EPF.add(LIMIT_KIND: LIMIT_KIND, &fbb)
+    EPF.add(LIMIT_MODEL_NAME: LIMIT_MODEL_NAME, &fbb)
+    EPF.add(VALUE_UNITS: VALUE_UNITS, &fbb)
+    EPF.add(SAMPLE_COUNT: SAMPLE_COUNT, &fbb)
+    EPF.addVectorOf(SAMPLE_EPOCHS: SAMPLE_EPOCHS, &fbb)
+    EPF.addVectorOf(SAMPLE_VALUES: SAMPLE_VALUES, &fbb)
+    EPF.addVectorOf(SAMPLE_LIMIT_VALUES: SAMPLE_LIMIT_VALUES, &fbb)
+    EPF.addVectorOf(SAMPLE_MARGIN_DB: SAMPLE_MARGIN_DB, &fbb)
+    EPF.addVectorOf(SAMPLE_EXCEEDS_LIMIT: SAMPLE_EXCEEDS_LIMIT, &fbb)
+    EPF.addVectorOf(CONTRIBUTORS: CONTRIBUTORS, &fbb)
+    EPF.addVectorOf(CDF_VALUES: CDF_VALUES, &fbb)
+    EPF.addVectorOf(CDF_PERCENT_TIME_EXCEEDED: CDF_PERCENT_TIME_EXCEEDED, &fbb)
+    EPF.add(VERDICT: VERDICT, &fbb)
+    EPF.add(PROVENANCE: PROVENANCE, &fbb)
+    EPF.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    EPF.add(PRODUCER_ID: PRODUCER_ID, &fbb)
+    EPF.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    EPF.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
+    return EPF.endEPF(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.TARGET_TIME_SYSTEM, fieldName: "TARGET_TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.TARGET_EPOCH_FORMAT, fieldName: "TARGET_EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
-    try _v.visit(field: VT.TAI_MINUS_UTC_SECONDS, fieldName: "TAI_MINUS_UTC_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_TAI_MINUS_UTC, fieldName: "HAS_TAI_MINUS_UTC", required: false, type: Bool.self)
-    try _v.visit(field: VT.DUT1_SECONDS, fieldName: "DUT1_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_DUT1, fieldName: "HAS_DUT1", required: false, type: Bool.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Result of a time conversion request.
-public struct TIMConversionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionResult.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let SOURCE: VOffset = 4
-    static let TARGET: VOffset = 6
-    static let DELTA_SECONDS: VOffset = 8
-    static let STATUS: VOffset = 10
-    static let ERROR_MESSAGE: VOffset = 12
-    static let TRACE_ID: VOffset = 14
-  }
-
-  ///  Original source instant.
-  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Converted target instant.
-  public var TARGET: TIMInstant? { let o = _accessor.offset(VT.TARGET); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Target minus source offset in SI seconds for the requested conversion.
-  public var DELTA_SECONDS: Double { let o = _accessor.offset(VT.DELTA_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Conversion status.
-  public var STATUS: timConversionStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : timConversionStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ok }
-  ///  Optional error detail when STATUS is not OK.
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  ///  Caller trace/correlation identifier copied from the request when present.
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startTIMConversionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(TARGET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET, at: VT.TARGET) }
-  public static func add(DELTA_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_SECONDS, def: 0.0, at: VT.DELTA_SECONDS) }
-  public static func add(STATUS: timConversionStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endTIMConversionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMConversionResult(
-    _ fbb: inout FlatBufferBuilder,
-    SOURCEOffset SOURCE: Offset = Offset(),
-    TARGETOffset TARGET: Offset = Offset(),
-    DELTA_SECONDS: Double = 0.0,
-    STATUS: timConversionStatus = .ok,
-    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
-  ) -> Offset {
-    let __start = TIMConversionResult.startTIMConversionResult(&fbb)
-    TIMConversionResult.add(SOURCE: SOURCE, &fbb)
-    TIMConversionResult.add(TARGET: TARGET, &fbb)
-    TIMConversionResult.add(DELTA_SECONDS: DELTA_SECONDS, &fbb)
-    TIMConversionResult.add(STATUS: STATUS, &fbb)
-    TIMConversionResult.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
-    TIMConversionResult.add(TRACE_ID: TRACE_ID, &fbb)
-    return TIMConversionResult.endTIMConversionResult(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.DELTA_SECONDS, fieldName: "DELTA_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: timConversionStatus.self)
-    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Time System and time-conversion envelope.
-public struct TIM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let TIME_SYSTEM: VOffset = 4
-    static let INSTANT: VOffset = 6
-    static let CONVERSION_REQUEST: VOffset = 8
-    static let CONVERSION_RESULT: VOffset = 10
-  }
-
-  ///  Legacy time-system selector retained for existing TIM consumers.
-  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  A single tagged instant.
-  public var INSTANT: TIMInstant? { let o = _accessor.offset(VT.INSTANT); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time conversion request.
-  public var CONVERSION_REQUEST: TIMConversionRequest? { let o = _accessor.offset(VT.CONVERSION_REQUEST); return o == 0 ? nil : TIMConversionRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time conversion result.
-  public var CONVERSION_RESULT: TIMConversionResult? { let o = _accessor.offset(VT.CONVERSION_RESULT); return o == 0 ? nil : TIMConversionResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTIM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
-  public static func add(INSTANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANT, at: VT.INSTANT) }
-  public static func add(CONVERSION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_REQUEST, at: VT.CONVERSION_REQUEST) }
-  public static func add(CONVERSION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_RESULT, at: VT.CONVERSION_RESULT) }
-  public static func endTIM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIM(
-    _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst,
-    INSTANTOffset INSTANT: Offset = Offset(),
-    CONVERSION_REQUESTOffset CONVERSION_REQUEST: Offset = Offset(),
-    CONVERSION_RESULTOffset CONVERSION_RESULT: Offset = Offset()
-  ) -> Offset {
-    let __start = TIM.startTIM(&fbb)
-    TIM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    TIM.add(INSTANT: INSTANT, &fbb)
-    TIM.add(CONVERSION_REQUEST: CONVERSION_REQUEST, &fbb)
-    TIM.add(CONVERSION_RESULT: CONVERSION_RESULT, &fbb)
-    return TIM.endTIM(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.INSTANT, fieldName: "INSTANT", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.CONVERSION_REQUEST, fieldName: "CONVERSION_REQUEST", required: false, type: ForwardOffset<TIMConversionRequest>.self)
-    try _v.visit(field: VT.CONVERSION_RESULT, fieldName: "CONVERSION_RESULT", required: false, type: ForwardOffset<TIMConversionResult>.self)
+    try _v.visit(field: VT.EPF_ID, fieldName: "EPF_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCENARIO_ID, fieldName: "SCENARIO_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFL_ID, fieldName: "RFL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACI_ID, fieldName: "ACI_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VICTIM_ENDPOINT_ID, fieldName: "VICTIM_ENDPOINT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LIMIT_KIND, fieldName: "LIMIT_KIND", required: false, type: epfLimitCategory.self)
+    try _v.visit(field: VT.LIMIT_MODEL_NAME, fieldName: "LIMIT_MODEL_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE_UNITS, fieldName: "VALUE_UNITS", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAMPLE_COUNT, fieldName: "SAMPLE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SAMPLE_EPOCHS, fieldName: "SAMPLE_EPOCHS", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SAMPLE_VALUES, fieldName: "SAMPLE_VALUES", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SAMPLE_LIMIT_VALUES, fieldName: "SAMPLE_LIMIT_VALUES", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SAMPLE_MARGIN_DB, fieldName: "SAMPLE_MARGIN_DB", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SAMPLE_EXCEEDS_LIMIT, fieldName: "SAMPLE_EXCEEDS_LIMIT", required: true, type: ForwardOffset<Vector<Bool, Bool>>.self)
+    try _v.visit(field: VT.CONTRIBUTORS, fieldName: "CONTRIBUTORS", required: false, type: ForwardOffset<Vector<ForwardOffset<EPFContributor>, EPFContributor>>.self)
+    try _v.visit(field: VT.CDF_VALUES, fieldName: "CDF_VALUES", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CDF_PERCENT_TIME_EXCEEDED, fieldName: "CDF_PERCENT_TIME_EXCEEDED", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.VERDICT, fieldName: "VERDICT", required: true, type: ForwardOffset<EPFVerdict>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<RFLProvenance>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

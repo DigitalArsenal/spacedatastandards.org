@@ -447,10 +447,25 @@
         "VAT",
         "VENZ",
         "VTNM",
-        "ZWE"
+        "ZWE",
+        "AGO",
+        "BGR",
+        "BHR",
+        "BWA",
+        "CAN",
+        "CZE",
+        "HRV",
+        "JOR",
+        "KWT",
+        "PER",
+        "PRI",
+        "SLB",
+        "SVK",
+        "TWN",
+        "UGA"
       ],
       "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-type": "ubyte",
       "x-flatbuffer-enum-values": {
         "AB": {
           "value": 0,
@@ -955,6 +970,66 @@
         "ZWE": {
           "value": 125,
           "description": "Republic of Zimbabwe"
+        },
+        "AGO": {
+          "value": 126,
+          "description": "Angola (ISO 3166-1 alpha-3; also ANG)"
+        },
+        "BGR": {
+          "value": 127,
+          "description": "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+        },
+        "BHR": {
+          "value": 128,
+          "description": "Bahrain"
+        },
+        "BWA": {
+          "value": 129,
+          "description": "Botswana"
+        },
+        "CAN": {
+          "value": 130,
+          "description": "Canada (ISO 3166-1 alpha-3; also CA)"
+        },
+        "CZE": {
+          "value": 131,
+          "description": "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+        },
+        "HRV": {
+          "value": 132,
+          "description": "Croatia"
+        },
+        "JOR": {
+          "value": 133,
+          "description": "Jordan"
+        },
+        "KWT": {
+          "value": 134,
+          "description": "Kuwait"
+        },
+        "PER": {
+          "value": 135,
+          "description": "Peru (ISO 3166-1 alpha-3; also PERU)"
+        },
+        "PRI": {
+          "value": 136,
+          "description": "Puerto Rico"
+        },
+        "SLB": {
+          "value": 137,
+          "description": "Solomon Islands"
+        },
+        "SVK": {
+          "value": 138,
+          "description": "Slovakia"
+        },
+        "TWN": {
+          "value": 139,
+          "description": "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+        },
+        "UGA": {
+          "value": 140,
+          "description": "Uganda"
         }
       }
     },
@@ -1113,6 +1188,35 @@
         },
         "WET": {
           "value": 1
+        }
+      }
+    },
+    "catalogProductKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Sgp4Elements",
+        "Sgp4XpElements",
+        "StateCovariance"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "Sgp4Elements": {
+          "value": 1,
+          "description": "$OMM with MEAN_ELEMENT_THEORY SGP4"
+        },
+        "Sgp4XpElements": {
+          "value": 2,
+          "description": "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+        },
+        "StateCovariance": {
+          "value": 3,
+          "description": "$OCM: a state and its covariance"
         }
       }
     },
@@ -2482,7 +2586,7 @@
         "OWNER": {
           "$ref": "#/definitions/legacyCountryCode",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             "AB": {
               "value": 0,
@@ -2987,6 +3091,66 @@
             "ZWE": {
               "value": 125,
               "description": "Republic of Zimbabwe"
+            },
+            "AGO": {
+              "value": 126,
+              "description": "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            "BGR": {
+              "value": 127,
+              "description": "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            "BHR": {
+              "value": 128,
+              "description": "Bahrain"
+            },
+            "BWA": {
+              "value": 129,
+              "description": "Botswana"
+            },
+            "CAN": {
+              "value": 130,
+              "description": "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            "CZE": {
+              "value": 131,
+              "description": "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            "HRV": {
+              "value": 132,
+              "description": "Croatia"
+            },
+            "JOR": {
+              "value": 133,
+              "description": "Jordan"
+            },
+            "KWT": {
+              "value": 134,
+              "description": "Kuwait"
+            },
+            "PER": {
+              "value": 135,
+              "description": "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            "PRI": {
+              "value": 136,
+              "description": "Puerto Rico"
+            },
+            "SLB": {
+              "value": 137,
+              "description": "Solomon Islands"
+            },
+            "SVK": {
+              "value": 138,
+              "description": "Slovakia"
+            },
+            "TWN": {
+              "value": 139,
+              "description": "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            "UGA": {
+              "value": 140,
+              "description": "Uganda"
             }
           }
         },
@@ -3014,6 +3178,64 @@
           "type": "string",
           "description": "ISO 8601 UTC time the reference table was retrieved.",
           "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CATProduct": {
+      "type": "object",
+      "description": "One product the catalog selected for the object, by content identifier.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/catalogProductKind",
+          "description": "What the product is.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "Sgp4Elements": {
+              "value": 1,
+              "description": "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            "Sgp4XpElements": {
+              "value": 2,
+              "description": "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            "StateCovariance": {
+              "value": 3,
+              "description": "$OCM: a state and its covariance"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "RECORD_CID": {
+          "type": "string",
+          "description": "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "The product's source: its PROVENANCE SOURCE_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+          "x-flatbuffer-type": "string"
+        },
+        "SELECTION_REASON": {
+          "type": "string",
+          "description": "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+          "x-flatbuffer-type": "string"
+        },
+        "STALE": {
+          "type": "boolean",
+          "description": "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         }
       },
       "additionalProperties": false
@@ -3109,7 +3331,7 @@
           "$ref": "#/definitions/legacyCountryCode",
           "description": "Ownership, typically country or company",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             "AB": {
               "value": 0,
@@ -3614,6 +3836,66 @@
             "ZWE": {
               "value": 125,
               "description": "Republic of Zimbabwe"
+            },
+            "AGO": {
+              "value": 126,
+              "description": "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            "BGR": {
+              "value": 127,
+              "description": "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            "BHR": {
+              "value": 128,
+              "description": "Bahrain"
+            },
+            "BWA": {
+              "value": 129,
+              "description": "Botswana"
+            },
+            "CAN": {
+              "value": 130,
+              "description": "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            "CZE": {
+              "value": 131,
+              "description": "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            "HRV": {
+              "value": 132,
+              "description": "Croatia"
+            },
+            "JOR": {
+              "value": 133,
+              "description": "Jordan"
+            },
+            "KWT": {
+              "value": 134,
+              "description": "Kuwait"
+            },
+            "PER": {
+              "value": 135,
+              "description": "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            "PRI": {
+              "value": 136,
+              "description": "Puerto Rico"
+            },
+            "SLB": {
+              "value": 137,
+              "description": "Solomon Islands"
+            },
+            "SVK": {
+              "value": 138,
+              "description": "Slovakia"
+            },
+            "TWN": {
+              "value": 139,
+              "description": "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            "UGA": {
+              "value": 140,
+              "description": "Uganda"
             }
           }
         },
@@ -3770,6 +4052,19 @@
         "CATALOG_OBJECT_ID": {
           "type": "string",
           "description": "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CATProduct"
+          },
+          "description": "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+          "x-flatbuffer-type": "[CATProduct]"
+        },
+        "PRODUCTS_AS_OF": {
+          "type": "string",
+          "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
           "x-flatbuffer-type": "string"
         }
       },

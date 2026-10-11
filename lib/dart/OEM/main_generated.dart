@@ -7,267 +7,184 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
-///  Polynomial basis type for coefficient interpretation.
-///  Determines how the coefficient arrays are evaluated.
-enum polynomialBasisType {
-  CHEBYSHEV(0),
-  LEGENDRE(1),
-  HERMITE(2),
-  LAGRANGE(3),
-  POWER_SERIES(4);
-
-  final int value;
-  const polynomialBasisType(this.value);
-
-  factory polynomialBasisType.fromValue(int value) {
-    switch (value) {
-      case 0: return polynomialBasisType.CHEBYSHEV;
-      case 1: return polynomialBasisType.LEGENDRE;
-      case 2: return polynomialBasisType.HERMITE;
-      case 3: return polynomialBasisType.LAGRANGE;
-      case 4: return polynomialBasisType.POWER_SERIES;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static polynomialBasisType? _createOrNull(int? value) =>
-      value == null ? null : polynomialBasisType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<polynomialBasisType> reader = _polynomialBasisTypeReader();
-}
-
-class _polynomialBasisTypeReader extends fb.Reader<polynomialBasisType> {
-  const _polynomialBasisTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  polynomialBasisType read(fb.BufferContext bc, int offset) =>
-      polynomialBasisType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Anomaly type flag for orbital element records.
-enum ppeAnomalyType {
-  TRUE_ANOMALY(0),
-  MEAN_ANOMALY(1),
-  ECCENTRIC_ANOMALY(2);
-
-  final int value;
-  const ppeAnomalyType(this.value);
-
-  factory ppeAnomalyType.fromValue(int value) {
-    switch (value) {
-      case 0: return ppeAnomalyType.TRUE_ANOMALY;
-      case 1: return ppeAnomalyType.MEAN_ANOMALY;
-      case 2: return ppeAnomalyType.ECCENTRIC_ANOMALY;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static ppeAnomalyType? _createOrNull(int? value) =>
-      value == null ? null : ppeAnomalyType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<ppeAnomalyType> reader = _ppeAnomalyTypeReader();
-}
-
-class _ppeAnomalyTypeReader extends fb.Reader<ppeAnomalyType> {
-  const _ppeAnomalyTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  ppeAnomalyType read(fb.BufferContext bc, int offset) =>
-      ppeAnomalyType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Orbital element parameterization for the first element (size/shape).
-enum sizeShapeProfile {
-  SMA(0),
-  R_PERIAPSIS(1);
-
-  final int value;
-  const sizeShapeProfile(this.value);
-
-  factory sizeShapeProfile.fromValue(int value) {
-    switch (value) {
-      case 0: return sizeShapeProfile.SMA;
-      case 1: return sizeShapeProfile.R_PERIAPSIS;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static sizeShapeProfile? _createOrNull(int? value) =>
-      value == null ? null : sizeShapeProfile.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<sizeShapeProfile> reader = _sizeShapeProfileReader();
-}
-
-class _sizeShapeProfileReader extends fb.Reader<sizeShapeProfile> {
-  const _sizeShapeProfileReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  sizeShapeProfile read(fb.BufferContext bc, int offset) =>
-      sizeShapeProfile.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  A single time-segment record of polynomial coefficients for Cartesian position
-///  (and optionally velocity). Coefficients are stored per axis.
-///
-///  To evaluate position at time t within this record's validity window:
-///    1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
-///       where tau is in [-1, +1].
-///    2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
-///       the coefficients for each axis.
-///
-///  Velocity coefficients, if present, follow the same evaluation procedure.
-///  If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
-///  analytically differentiating the position polynomial.
-class PPEPositionRecord {
-  PPEPositionRecord._(this._bc, this._bcOffset);
-  factory PPEPositionRecord(List<int> bytes) {
+///  A single ephemeris data line (for non-uniform time steps only)
+///  Use this format when time intervals between states are irregular.
+///  For uniform time steps, use the compact EPHEMERIS_DATA array instead.
+class ephemerisDataLine {
+  ephemerisDataLine._(this._bc, this._bcOffset);
+  factory ephemerisDataLine(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PPEPositionRecord> reader = _PPEPositionRecordReader();
+  static const fb.Reader<ephemerisDataLine> reader = _ephemerisDataLineReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
-  ///  Together with EPOCH_HALF_SPAN, defines the time interval:
-  ///    [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
-  String? get EPOCH_MID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get epochMid => EPOCH_MID;
-  ///  Half-span of the validity window in seconds.
-  ///  The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
-  double get EPOCH_HALF_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get epochHalfSpan => EPOCH_HALF_SPAN;
-  ///  Number of polynomial coefficients per axis.
-  ///  The polynomial degree is (NUM_COEFFICIENTS - 1).
-  ///  Typical values: 8-32 for high-fidelity ephemeris fits.
-  int get NUM_COEFFICIENTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get numCoefficients => NUM_COEFFICIENTS;
-  ///  Polynomial basis type for interpreting the coefficient arrays.
-  polynomialBasisType get BASIS_TYPE => polynomialBasisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  polynomialBasisType get basisType => BASIS_TYPE;
-  ///  Position coefficients for X-axis (km).
-  ///  Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
-  List<double>? get POS_COEFF_X => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
-  List<double>? get posCoeffX => POS_COEFF_X;
-  ///  Position coefficients for Y-axis (km).
-  ///  Length must equal NUM_COEFFICIENTS.
-  List<double>? get POS_COEFF_Y => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
-  List<double>? get posCoeffY => POS_COEFF_Y;
-  ///  Position coefficients for Z-axis (km).
-  ///  Length must equal NUM_COEFFICIENTS.
-  List<double>? get POS_COEFF_Z => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
-  List<double>? get posCoeffZ => POS_COEFF_Z;
-  ///  Whether explicit velocity coefficients are provided.
-  ///  If false, velocity should be derived by differentiating the position polynomial.
-  bool get HAS_VELOCITY_COEFFICIENTS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
-  bool get hasVelocityCoefficients => HAS_VELOCITY_COEFFICIENTS;
-  ///  Velocity coefficients for X-axis (km/s). Optional.
-  ///  Length must equal NUM_COEFFICIENTS if present.
-  List<double>? get VEL_COEFF_X => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
-  List<double>? get velCoeffX => VEL_COEFF_X;
-  ///  Velocity coefficients for Y-axis (km/s). Optional.
-  List<double>? get VEL_COEFF_Y => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
-  List<double>? get velCoeffY => VEL_COEFF_Y;
-  ///  Velocity coefficients for Z-axis (km/s). Optional.
-  List<double>? get VEL_COEFF_Z => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
-  List<double>? get velCoeffZ => VEL_COEFF_Z;
-  ///  Maximum position fit residual over this segment (km). Optional quality metric.
-  double get MAX_POSITION_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get maxPositionResidual => MAX_POSITION_RESIDUAL;
-  ///  RMS position fit residual over this segment (km). Optional quality metric.
-  double get RMS_POSITION_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get rmsPositionResidual => RMS_POSITION_RESIDUAL;
+  ///  Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Position vector X-component km
+  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Position vector Y-component km
+  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Position vector Z-component km
+  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Velocity vector X-component km/s
+  double get X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get xDot => X_DOT;
+  ///  Velocity vector Y-component km/s
+  double get Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get yDot => Y_DOT;
+  ///  Velocity vector Z-component km/s
+  double get Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get zDot => Z_DOT;
+  ///  Optional: Acceleration vector X-component km/s²
+  double get X_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get xDdot => X_DDOT;
+  ///  Optional: Acceleration vector Y-component km/s²
+  double get Y_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get yDdot => Y_DDOT;
+  ///  Optional: Acceleration vector Z-component km/s²
+  double get Z_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get zDdot => Z_DDOT;
+  ///  Satellite clock bias (offset), microseconds. SP3 position-record clock
+  ///  column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+  ///  field instead.
+  double get CLOCK_BIAS_MICROSECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get clockBiasMicroseconds => CLOCK_BIAS_MICROSECONDS;
+  ///  Satellite clock rate of change, 1e-4 microseconds per second. SP3
+  ///  velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+  double get CLOCK_RATE_MICROSECONDS_PER_SECOND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get clockRateMicrosecondsPerSecond => CLOCK_RATE_MICROSECONDS_PER_SECOND;
+  ///  Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+  double get CLOCK_BIAS_SIGMA_PICOSECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get clockBiasSigmaPicoseconds => CLOCK_BIAS_SIGMA_PICOSECONDS;
+  ///  Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+  ///  1e-4 picoseconds per second.
+  double get CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get clockRateSigmaPicosecondsPerSecond => CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND;
+  ///  Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+  ///  sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+  ///  the result in mm. These are the raw SP3 exponent columns, kept as
+  ///  exponents so an SP3 round-trip is exact; a consumer that wants a linear
+  ///  sigma raises the header base to this power.
+  int get X_SIGMA_EXPONENT => const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0);
+  int get xSigmaExponent => X_SIGMA_EXPONENT;
+  int get Y_SIGMA_EXPONENT => const fb.Int8Reader().vTableGet(_bc, _bcOffset, 34, 0);
+  int get ySigmaExponent => Y_SIGMA_EXPONENT;
+  int get Z_SIGMA_EXPONENT => const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  int get zSigmaExponent => Z_SIGMA_EXPONENT;
+  ///  Per-coordinate velocity standard-deviation exponents, result in
+  ///  1e-4 mm/s. Same base**n rule.
+  int get X_DOT_SIGMA_EXPONENT => const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0);
+  int get xDotSigmaExponent => X_DOT_SIGMA_EXPONENT;
+  int get Y_DOT_SIGMA_EXPONENT => const fb.Int8Reader().vTableGet(_bc, _bcOffset, 40, 0);
+  int get yDotSigmaExponent => Y_DOT_SIGMA_EXPONENT;
+  int get Z_DOT_SIGMA_EXPONENT => const fb.Int8Reader().vTableGet(_bc, _bcOffset, 42, 0);
+  int get zDotSigmaExponent => Z_DOT_SIGMA_EXPONENT;
 
   @override
   String toString() {
-    return 'PPEPositionRecord{epochMid: ${epochMid}, epochHalfSpan: ${epochHalfSpan}, numCoefficients: ${numCoefficients}, basisType: ${basisType}, posCoeffX: ${posCoeffX}, posCoeffY: ${posCoeffY}, posCoeffZ: ${posCoeffZ}, hasVelocityCoefficients: ${hasVelocityCoefficients}, velCoeffX: ${velCoeffX}, velCoeffY: ${velCoeffY}, velCoeffZ: ${velCoeffZ}, maxPositionResidual: ${maxPositionResidual}, rmsPositionResidual: ${rmsPositionResidual}}';
+    return 'ephemerisDataLine{EPOCH: ${EPOCH}, X: ${X}, Y: ${Y}, Z: ${Z}, xDot: ${xDot}, yDot: ${yDot}, zDot: ${zDot}, xDdot: ${xDdot}, yDdot: ${yDdot}, zDdot: ${zDdot}, clockBiasMicroseconds: ${clockBiasMicroseconds}, clockRateMicrosecondsPerSecond: ${clockRateMicrosecondsPerSecond}, clockBiasSigmaPicoseconds: ${clockBiasSigmaPicoseconds}, clockRateSigmaPicosecondsPerSecond: ${clockRateSigmaPicosecondsPerSecond}, xSigmaExponent: ${xSigmaExponent}, ySigmaExponent: ${ySigmaExponent}, zSigmaExponent: ${zSigmaExponent}, xDotSigmaExponent: ${xDotSigmaExponent}, yDotSigmaExponent: ${yDotSigmaExponent}, zDotSigmaExponent: ${zDotSigmaExponent}}';
   }
 }
 
-class _PPEPositionRecordReader extends fb.TableReader<PPEPositionRecord> {
-  const _PPEPositionRecordReader();
+class _ephemerisDataLineReader extends fb.TableReader<ephemerisDataLine> {
+  const _ephemerisDataLineReader();
 
   @override
-  PPEPositionRecord createObject(fb.BufferContext bc, int offset) =>
-    PPEPositionRecord._(bc, offset);
+  ephemerisDataLine createObject(fb.BufferContext bc, int offset) =>
+    ephemerisDataLine._(bc, offset);
 }
 
-class PPEPositionRecordBuilder {
-  PPEPositionRecordBuilder(this.fbBuilder);
+class ephemerisDataLineBuilder {
+  ephemerisDataLineBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(20);
   }
 
-  int addEpochMidOffset(int? offset) {
+  int addEpochOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addEpochHalfSpan(double? EPOCH_HALF_SPAN) {
-    fbBuilder.addFloat64(1, EPOCH_HALF_SPAN);
+  int addX(double? X) {
+    fbBuilder.addFloat64(1, X);
     return fbBuilder.offset;
   }
-  int addNumCoefficients(int? NUM_COEFFICIENTS) {
-    fbBuilder.addUint16(2, NUM_COEFFICIENTS);
+  int addY(double? Y) {
+    fbBuilder.addFloat64(2, Y);
     return fbBuilder.offset;
   }
-  int addBasisType(polynomialBasisType? BASIS_TYPE) {
-    fbBuilder.addInt8(3, BASIS_TYPE?.value);
+  int addZ(double? Z) {
+    fbBuilder.addFloat64(3, Z);
     return fbBuilder.offset;
   }
-  int addPosCoeffXOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addXDot(double? X_DOT) {
+    fbBuilder.addFloat64(4, X_DOT);
     return fbBuilder.offset;
   }
-  int addPosCoeffYOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addYDot(double? Y_DOT) {
+    fbBuilder.addFloat64(5, Y_DOT);
     return fbBuilder.offset;
   }
-  int addPosCoeffZOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addZDot(double? Z_DOT) {
+    fbBuilder.addFloat64(6, Z_DOT);
     return fbBuilder.offset;
   }
-  int addHasVelocityCoefficients(bool? HAS_VELOCITY_COEFFICIENTS) {
-    fbBuilder.addBool(7, HAS_VELOCITY_COEFFICIENTS);
+  int addXDdot(double? X_DDOT) {
+    fbBuilder.addFloat64(7, X_DDOT);
     return fbBuilder.offset;
   }
-  int addVelCoeffXOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+  int addYDdot(double? Y_DDOT) {
+    fbBuilder.addFloat64(8, Y_DDOT);
     return fbBuilder.offset;
   }
-  int addVelCoeffYOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addZDdot(double? Z_DDOT) {
+    fbBuilder.addFloat64(9, Z_DDOT);
     return fbBuilder.offset;
   }
-  int addVelCoeffZOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+  int addClockBiasMicroseconds(double? CLOCK_BIAS_MICROSECONDS) {
+    fbBuilder.addFloat64(10, CLOCK_BIAS_MICROSECONDS);
     return fbBuilder.offset;
   }
-  int addMaxPositionResidual(double? MAX_POSITION_RESIDUAL) {
-    fbBuilder.addFloat64(11, MAX_POSITION_RESIDUAL);
+  int addClockRateMicrosecondsPerSecond(double? CLOCK_RATE_MICROSECONDS_PER_SECOND) {
+    fbBuilder.addFloat64(11, CLOCK_RATE_MICROSECONDS_PER_SECOND);
     return fbBuilder.offset;
   }
-  int addRmsPositionResidual(double? RMS_POSITION_RESIDUAL) {
-    fbBuilder.addFloat64(12, RMS_POSITION_RESIDUAL);
+  int addClockBiasSigmaPicoseconds(double? CLOCK_BIAS_SIGMA_PICOSECONDS) {
+    fbBuilder.addFloat64(12, CLOCK_BIAS_SIGMA_PICOSECONDS);
+    return fbBuilder.offset;
+  }
+  int addClockRateSigmaPicosecondsPerSecond(double? CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND) {
+    fbBuilder.addFloat64(13, CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND);
+    return fbBuilder.offset;
+  }
+  int addXSigmaExponent(int? X_SIGMA_EXPONENT) {
+    fbBuilder.addInt8(14, X_SIGMA_EXPONENT);
+    return fbBuilder.offset;
+  }
+  int addYSigmaExponent(int? Y_SIGMA_EXPONENT) {
+    fbBuilder.addInt8(15, Y_SIGMA_EXPONENT);
+    return fbBuilder.offset;
+  }
+  int addZSigmaExponent(int? Z_SIGMA_EXPONENT) {
+    fbBuilder.addInt8(16, Z_SIGMA_EXPONENT);
+    return fbBuilder.offset;
+  }
+  int addXDotSigmaExponent(int? X_DOT_SIGMA_EXPONENT) {
+    fbBuilder.addInt8(17, X_DOT_SIGMA_EXPONENT);
+    return fbBuilder.offset;
+  }
+  int addYDotSigmaExponent(int? Y_DOT_SIGMA_EXPONENT) {
+    fbBuilder.addInt8(18, Y_DOT_SIGMA_EXPONENT);
+    return fbBuilder.offset;
+  }
+  int addZDotSigmaExponent(int? Z_DOT_SIGMA_EXPONENT) {
+    fbBuilder.addInt8(19, Z_DOT_SIGMA_EXPONENT);
     return fbBuilder.offset;
   }
 
@@ -276,94 +193,113 @@ class PPEPositionRecordBuilder {
   }
 }
 
-class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
-  final String? _EPOCH_MID;
-  final double? _EPOCH_HALF_SPAN;
-  final int? _NUM_COEFFICIENTS;
-  final polynomialBasisType? _BASIS_TYPE;
-  final List<double>? _POS_COEFF_X;
-  final List<double>? _POS_COEFF_Y;
-  final List<double>? _POS_COEFF_Z;
-  final bool? _HAS_VELOCITY_COEFFICIENTS;
-  final List<double>? _VEL_COEFF_X;
-  final List<double>? _VEL_COEFF_Y;
-  final List<double>? _VEL_COEFF_Z;
-  final double? _MAX_POSITION_RESIDUAL;
-  final double? _RMS_POSITION_RESIDUAL;
+class ephemerisDataLineObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final double? _X;
+  final double? _Y;
+  final double? _Z;
+  final double? _X_DOT;
+  final double? _Y_DOT;
+  final double? _Z_DOT;
+  final double? _X_DDOT;
+  final double? _Y_DDOT;
+  final double? _Z_DDOT;
+  final double? _CLOCK_BIAS_MICROSECONDS;
+  final double? _CLOCK_RATE_MICROSECONDS_PER_SECOND;
+  final double? _CLOCK_BIAS_SIGMA_PICOSECONDS;
+  final double? _CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND;
+  final int? _X_SIGMA_EXPONENT;
+  final int? _Y_SIGMA_EXPONENT;
+  final int? _Z_SIGMA_EXPONENT;
+  final int? _X_DOT_SIGMA_EXPONENT;
+  final int? _Y_DOT_SIGMA_EXPONENT;
+  final int? _Z_DOT_SIGMA_EXPONENT;
 
-  PPEPositionRecordObjectBuilder({
-    String? EPOCH_MID,
-    String? epochMid,
-    double? EPOCH_HALF_SPAN,
-    double? epochHalfSpan,
-    int? NUM_COEFFICIENTS,
-    int? numCoefficients,
-    polynomialBasisType? BASIS_TYPE,
-    polynomialBasisType? basisType,
-    List<double>? POS_COEFF_X,
-    List<double>? posCoeffX,
-    List<double>? POS_COEFF_Y,
-    List<double>? posCoeffY,
-    List<double>? POS_COEFF_Z,
-    List<double>? posCoeffZ,
-    bool? HAS_VELOCITY_COEFFICIENTS,
-    bool? hasVelocityCoefficients,
-    List<double>? VEL_COEFF_X,
-    List<double>? velCoeffX,
-    List<double>? VEL_COEFF_Y,
-    List<double>? velCoeffY,
-    List<double>? VEL_COEFF_Z,
-    List<double>? velCoeffZ,
-    double? MAX_POSITION_RESIDUAL,
-    double? maxPositionResidual,
-    double? RMS_POSITION_RESIDUAL,
-    double? rmsPositionResidual,
+  ephemerisDataLineObjectBuilder({
+    String? EPOCH,
+    double? X,
+    double? Y,
+    double? Z,
+    double? X_DOT,
+    double? xDot,
+    double? Y_DOT,
+    double? yDot,
+    double? Z_DOT,
+    double? zDot,
+    double? X_DDOT,
+    double? xDdot,
+    double? Y_DDOT,
+    double? yDdot,
+    double? Z_DDOT,
+    double? zDdot,
+    double? CLOCK_BIAS_MICROSECONDS,
+    double? clockBiasMicroseconds,
+    double? CLOCK_RATE_MICROSECONDS_PER_SECOND,
+    double? clockRateMicrosecondsPerSecond,
+    double? CLOCK_BIAS_SIGMA_PICOSECONDS,
+    double? clockBiasSigmaPicoseconds,
+    double? CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND,
+    double? clockRateSigmaPicosecondsPerSecond,
+    int? X_SIGMA_EXPONENT,
+    int? xSigmaExponent,
+    int? Y_SIGMA_EXPONENT,
+    int? ySigmaExponent,
+    int? Z_SIGMA_EXPONENT,
+    int? zSigmaExponent,
+    int? X_DOT_SIGMA_EXPONENT,
+    int? xDotSigmaExponent,
+    int? Y_DOT_SIGMA_EXPONENT,
+    int? yDotSigmaExponent,
+    int? Z_DOT_SIGMA_EXPONENT,
+    int? zDotSigmaExponent,
   })
-      : _EPOCH_MID = epochMid ?? EPOCH_MID,
-        _EPOCH_HALF_SPAN = epochHalfSpan ?? EPOCH_HALF_SPAN,
-        _NUM_COEFFICIENTS = numCoefficients ?? NUM_COEFFICIENTS,
-        _BASIS_TYPE = basisType ?? BASIS_TYPE,
-        _POS_COEFF_X = posCoeffX ?? POS_COEFF_X,
-        _POS_COEFF_Y = posCoeffY ?? POS_COEFF_Y,
-        _POS_COEFF_Z = posCoeffZ ?? POS_COEFF_Z,
-        _HAS_VELOCITY_COEFFICIENTS = hasVelocityCoefficients ?? HAS_VELOCITY_COEFFICIENTS,
-        _VEL_COEFF_X = velCoeffX ?? VEL_COEFF_X,
-        _VEL_COEFF_Y = velCoeffY ?? VEL_COEFF_Y,
-        _VEL_COEFF_Z = velCoeffZ ?? VEL_COEFF_Z,
-        _MAX_POSITION_RESIDUAL = maxPositionResidual ?? MAX_POSITION_RESIDUAL,
-        _RMS_POSITION_RESIDUAL = rmsPositionResidual ?? RMS_POSITION_RESIDUAL;
+      : _EPOCH = EPOCH,
+        _X = X,
+        _Y = Y,
+        _Z = Z,
+        _X_DOT = xDot ?? X_DOT,
+        _Y_DOT = yDot ?? Y_DOT,
+        _Z_DOT = zDot ?? Z_DOT,
+        _X_DDOT = xDdot ?? X_DDOT,
+        _Y_DDOT = yDdot ?? Y_DDOT,
+        _Z_DDOT = zDdot ?? Z_DDOT,
+        _CLOCK_BIAS_MICROSECONDS = clockBiasMicroseconds ?? CLOCK_BIAS_MICROSECONDS,
+        _CLOCK_RATE_MICROSECONDS_PER_SECOND = clockRateMicrosecondsPerSecond ?? CLOCK_RATE_MICROSECONDS_PER_SECOND,
+        _CLOCK_BIAS_SIGMA_PICOSECONDS = clockBiasSigmaPicoseconds ?? CLOCK_BIAS_SIGMA_PICOSECONDS,
+        _CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND = clockRateSigmaPicosecondsPerSecond ?? CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND,
+        _X_SIGMA_EXPONENT = xSigmaExponent ?? X_SIGMA_EXPONENT,
+        _Y_SIGMA_EXPONENT = ySigmaExponent ?? Y_SIGMA_EXPONENT,
+        _Z_SIGMA_EXPONENT = zSigmaExponent ?? Z_SIGMA_EXPONENT,
+        _X_DOT_SIGMA_EXPONENT = xDotSigmaExponent ?? X_DOT_SIGMA_EXPONENT,
+        _Y_DOT_SIGMA_EXPONENT = yDotSigmaExponent ?? Y_DOT_SIGMA_EXPONENT,
+        _Z_DOT_SIGMA_EXPONENT = zDotSigmaExponent ?? Z_DOT_SIGMA_EXPONENT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? EPOCH_MIDOffset = _EPOCH_MID == null ? null
-        : fbBuilder.writeString(_EPOCH_MID!);
-    final int? POS_COEFF_XOffset = _POS_COEFF_X == null ? null
-        : fbBuilder.writeListFloat64(_POS_COEFF_X!);
-    final int? POS_COEFF_YOffset = _POS_COEFF_Y == null ? null
-        : fbBuilder.writeListFloat64(_POS_COEFF_Y!);
-    final int? POS_COEFF_ZOffset = _POS_COEFF_Z == null ? null
-        : fbBuilder.writeListFloat64(_POS_COEFF_Z!);
-    final int? VEL_COEFF_XOffset = _VEL_COEFF_X == null ? null
-        : fbBuilder.writeListFloat64(_VEL_COEFF_X!);
-    final int? VEL_COEFF_YOffset = _VEL_COEFF_Y == null ? null
-        : fbBuilder.writeListFloat64(_VEL_COEFF_Y!);
-    final int? VEL_COEFF_ZOffset = _VEL_COEFF_Z == null ? null
-        : fbBuilder.writeListFloat64(_VEL_COEFF_Z!);
-    fbBuilder.startTable(13);
-    fbBuilder.addOffset(0, EPOCH_MIDOffset);
-    fbBuilder.addFloat64(1, _EPOCH_HALF_SPAN);
-    fbBuilder.addUint16(2, _NUM_COEFFICIENTS);
-    fbBuilder.addInt8(3, _BASIS_TYPE?.value);
-    fbBuilder.addOffset(4, POS_COEFF_XOffset);
-    fbBuilder.addOffset(5, POS_COEFF_YOffset);
-    fbBuilder.addOffset(6, POS_COEFF_ZOffset);
-    fbBuilder.addBool(7, _HAS_VELOCITY_COEFFICIENTS);
-    fbBuilder.addOffset(8, VEL_COEFF_XOffset);
-    fbBuilder.addOffset(9, VEL_COEFF_YOffset);
-    fbBuilder.addOffset(10, VEL_COEFF_ZOffset);
-    fbBuilder.addFloat64(11, _MAX_POSITION_RESIDUAL);
-    fbBuilder.addFloat64(12, _RMS_POSITION_RESIDUAL);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(20);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _X);
+    fbBuilder.addFloat64(2, _Y);
+    fbBuilder.addFloat64(3, _Z);
+    fbBuilder.addFloat64(4, _X_DOT);
+    fbBuilder.addFloat64(5, _Y_DOT);
+    fbBuilder.addFloat64(6, _Z_DOT);
+    fbBuilder.addFloat64(7, _X_DDOT);
+    fbBuilder.addFloat64(8, _Y_DDOT);
+    fbBuilder.addFloat64(9, _Z_DDOT);
+    fbBuilder.addFloat64(10, _CLOCK_BIAS_MICROSECONDS);
+    fbBuilder.addFloat64(11, _CLOCK_RATE_MICROSECONDS_PER_SECOND);
+    fbBuilder.addFloat64(12, _CLOCK_BIAS_SIGMA_PICOSECONDS);
+    fbBuilder.addFloat64(13, _CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND);
+    fbBuilder.addInt8(14, _X_SIGMA_EXPONENT);
+    fbBuilder.addInt8(15, _Y_SIGMA_EXPONENT);
+    fbBuilder.addInt8(16, _Z_SIGMA_EXPONENT);
+    fbBuilder.addInt8(17, _X_DOT_SIGMA_EXPONENT);
+    fbBuilder.addInt8(18, _Y_DOT_SIGMA_EXPONENT);
+    fbBuilder.addInt8(19, _Z_DOT_SIGMA_EXPONENT);
     return fbBuilder.endTable();
   }
 
@@ -375,156 +311,208 @@ class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  A single time-segment record of polynomial coefficients for classical orbital elements.
-///
-///  The six classical elements are:
-///    1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
-///    2. Eccentricity (dimensionless)
-///    3. Inclination (degrees)
-///    4. Right Ascension of Ascending Node / RAAN (degrees)
-///    5. Argument of Periapsis (degrees)
-///    6. Anomaly (degrees) — see ANOMALY_TYPE
-///
-///  Evaluation follows the same normalized-time procedure as PPEPositionRecord.
-class PPEOrbitalElementRecord {
-  PPEOrbitalElementRecord._(this._bc, this._bcOffset);
-  factory PPEOrbitalElementRecord(List<int> bytes) {
+///  Position/Velocity Covariance Matrix Line
+class covarianceMatrixLine {
+  covarianceMatrixLine._(this._bc, this._bcOffset);
+  factory covarianceMatrixLine(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PPEOrbitalElementRecord> reader = _PPEOrbitalElementRecordReader();
+  static const fb.Reader<covarianceMatrixLine> reader = _covarianceMatrixLineReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
-  String? get EPOCH_MID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get epochMid => EPOCH_MID;
-  ///  Half-span of the validity window in seconds.
-  double get EPOCH_HALF_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get epochHalfSpan => EPOCH_HALF_SPAN;
-  ///  Number of polynomial coefficients per element.
-  int get NUM_COEFFICIENTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get numCoefficients => NUM_COEFFICIENTS;
-  ///  Polynomial basis type for interpreting the coefficient arrays.
-  polynomialBasisType get BASIS_TYPE => polynomialBasisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  polynomialBasisType get basisType => BASIS_TYPE;
-  ///  Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-  sizeShapeProfile get SIZE_SHAPE_TYPE => sizeShapeProfile.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  sizeShapeProfile get sizeShapeType => SIZE_SHAPE_TYPE;
-  ///  Anomaly type for the sixth orbital element.
-  ppeAnomalyType get ANOMALY_TYPE => ppeAnomalyType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ppeAnomalyType get anomalyType => ANOMALY_TYPE;
-  ///  Coefficients for SMA or radius of periapsis (km).
-  ///  Length must equal NUM_COEFFICIENTS.
-  List<double>? get COEFF_SIZE_SHAPE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
-  List<double>? get coeffSizeShape => COEFF_SIZE_SHAPE;
-  ///  Coefficients for eccentricity (dimensionless).
-  ///  Length must equal NUM_COEFFICIENTS.
-  List<double>? get COEFF_ECCENTRICITY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
-  List<double>? get coeffEccentricity => COEFF_ECCENTRICITY;
-  ///  Coefficients for inclination (degrees).
-  ///  Length must equal NUM_COEFFICIENTS.
-  List<double>? get COEFF_INCLINATION => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
-  List<double>? get coeffInclination => COEFF_INCLINATION;
-  ///  Coefficients for RAAN (degrees).
-  ///  Length must equal NUM_COEFFICIENTS.
-  List<double>? get COEFF_RAAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
-  List<double>? get coeffRaan => COEFF_RAAN;
-  ///  Coefficients for argument of periapsis (degrees).
-  ///  Length must equal NUM_COEFFICIENTS.
-  List<double>? get COEFF_ARG_PERIAPSIS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
-  List<double>? get coeffArgPeriapsis => COEFF_ARG_PERIAPSIS;
-  ///  Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
-  ///  Length must equal NUM_COEFFICIENTS.
-  List<double>? get COEFF_ANOMALY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 26);
-  List<double>? get coeffAnomaly => COEFF_ANOMALY;
-  ///  Maximum element fit residual over this segment. Optional quality metric.
-  ///  Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
-  double get MAX_ELEMENT_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get maxElementResidual => MAX_ELEMENT_RESIDUAL;
-  ///  RMS element fit residual over this segment. Optional quality metric.
-  double get RMS_ELEMENT_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  double get rmsElementResidual => RMS_ELEMENT_RESIDUAL;
+  ///  Epoch
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Covariance matrix [1,1] km**2
+  double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get cxX => CX_X;
+  ///  Covariance matrix [2,1] km**2
+  double get CY_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get cyX => CY_X;
+  ///  Covariance matrix [2,2] km**2
+  double get CY_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get cyY => CY_Y;
+  ///  Covariance matrix [3,1] km**2
+  double get CZ_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get czX => CZ_X;
+  ///  Covariance matrix [3,2] km**2
+  double get CZ_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get czY => CZ_Y;
+  ///  Covariance matrix [3,3] km**2
+  double get CZ_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get czZ => CZ_Z;
+  ///  Covariance matrix [4,1] km**2/s
+  double get CX_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get cxDotX => CX_DOT_X;
+  ///  Covariance matrix [4,2] km**2/s
+  double get CX_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get cxDotY => CX_DOT_Y;
+  ///  Covariance matrix [4,3] km**2/s
+  double get CX_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get cxDotZ => CX_DOT_Z;
+  ///  Covariance matrix [4,4] km**2/s**2
+  double get CX_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get cxDotXDot => CX_DOT_X_DOT;
+  ///  Covariance matrix [5,1] km**2/s
+  double get CY_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get cyDotX => CY_DOT_X;
+  ///  Covariance matrix [5,2] km**2/s
+  double get CY_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get cyDotY => CY_DOT_Y;
+  ///  Covariance matrix [5,3] km**2/s
+  double get CY_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get cyDotZ => CY_DOT_Z;
+  ///  Covariance matrix [5,4] km**2/s**2
+  double get CY_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get cyDotXDot => CY_DOT_X_DOT;
+  ///  Covariance matrix [5,5] km**2/s**2
+  double get CY_DOT_Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get cyDotYDot => CY_DOT_Y_DOT;
+  ///  Covariance matrix [6,1] km**2/s
+  double get CZ_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get czDotX => CZ_DOT_X;
+  ///  Covariance matrix [6,2] km**2/s
+  double get CZ_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get czDotY => CZ_DOT_Y;
+  ///  Covariance matrix [6,3] km**2/s
+  double get CZ_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get czDotZ => CZ_DOT_Z;
+  ///  Covariance matrix [6,4] km**2/s**2
+  double get CZ_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get czDotXDot => CZ_DOT_X_DOT;
+  ///  Covariance matrix [6,5] km**2/s**2
+  double get CZ_DOT_Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get czDotYDot => CZ_DOT_Y_DOT;
+  ///  Covariance matrix [6,6] km**2/s**2
+  double get CZ_DOT_Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  double get czDotZDot => CZ_DOT_Z_DOT;
+  ///  COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  ///  COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+  ///  is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+  RFM? get COV_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 50);
+  RFM? get covReferenceFrame => COV_REFERENCE_FRAME;
 
   @override
   String toString() {
-    return 'PPEOrbitalElementRecord{epochMid: ${epochMid}, epochHalfSpan: ${epochHalfSpan}, numCoefficients: ${numCoefficients}, basisType: ${basisType}, sizeShapeType: ${sizeShapeType}, anomalyType: ${anomalyType}, coeffSizeShape: ${coeffSizeShape}, coeffEccentricity: ${coeffEccentricity}, coeffInclination: ${coeffInclination}, coeffRaan: ${coeffRaan}, coeffArgPeriapsis: ${coeffArgPeriapsis}, coeffAnomaly: ${coeffAnomaly}, maxElementResidual: ${maxElementResidual}, rmsElementResidual: ${rmsElementResidual}}';
+    return 'covarianceMatrixLine{EPOCH: ${EPOCH}, cxX: ${cxX}, cyX: ${cyX}, cyY: ${cyY}, czX: ${czX}, czY: ${czY}, czZ: ${czZ}, cxDotX: ${cxDotX}, cxDotY: ${cxDotY}, cxDotZ: ${cxDotZ}, cxDotXDot: ${cxDotXDot}, cyDotX: ${cyDotX}, cyDotY: ${cyDotY}, cyDotZ: ${cyDotZ}, cyDotXDot: ${cyDotXDot}, cyDotYDot: ${cyDotYDot}, czDotX: ${czDotX}, czDotY: ${czDotY}, czDotZ: ${czDotZ}, czDotXDot: ${czDotXDot}, czDotYDot: ${czDotYDot}, czDotZDot: ${czDotZDot}, COMMENT: ${COMMENT}, covReferenceFrame: ${covReferenceFrame}}';
   }
 }
 
-class _PPEOrbitalElementRecordReader extends fb.TableReader<PPEOrbitalElementRecord> {
-  const _PPEOrbitalElementRecordReader();
+class _covarianceMatrixLineReader extends fb.TableReader<covarianceMatrixLine> {
+  const _covarianceMatrixLineReader();
 
   @override
-  PPEOrbitalElementRecord createObject(fb.BufferContext bc, int offset) =>
-    PPEOrbitalElementRecord._(bc, offset);
+  covarianceMatrixLine createObject(fb.BufferContext bc, int offset) =>
+    covarianceMatrixLine._(bc, offset);
 }
 
-class PPEOrbitalElementRecordBuilder {
-  PPEOrbitalElementRecordBuilder(this.fbBuilder);
+class covarianceMatrixLineBuilder {
+  covarianceMatrixLineBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(24);
   }
 
-  int addEpochMidOffset(int? offset) {
+  int addEpochOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addEpochHalfSpan(double? EPOCH_HALF_SPAN) {
-    fbBuilder.addFloat64(1, EPOCH_HALF_SPAN);
+  int addCxX(double? CX_X) {
+    fbBuilder.addFloat64(1, CX_X);
     return fbBuilder.offset;
   }
-  int addNumCoefficients(int? NUM_COEFFICIENTS) {
-    fbBuilder.addUint16(2, NUM_COEFFICIENTS);
+  int addCyX(double? CY_X) {
+    fbBuilder.addFloat64(2, CY_X);
     return fbBuilder.offset;
   }
-  int addBasisType(polynomialBasisType? BASIS_TYPE) {
-    fbBuilder.addInt8(3, BASIS_TYPE?.value);
+  int addCyY(double? CY_Y) {
+    fbBuilder.addFloat64(3, CY_Y);
     return fbBuilder.offset;
   }
-  int addSizeShapeType(sizeShapeProfile? SIZE_SHAPE_TYPE) {
-    fbBuilder.addInt8(4, SIZE_SHAPE_TYPE?.value);
+  int addCzX(double? CZ_X) {
+    fbBuilder.addFloat64(4, CZ_X);
     return fbBuilder.offset;
   }
-  int addAnomalyType(ppeAnomalyType? ANOMALY_TYPE) {
-    fbBuilder.addInt8(5, ANOMALY_TYPE?.value);
+  int addCzY(double? CZ_Y) {
+    fbBuilder.addFloat64(5, CZ_Y);
     return fbBuilder.offset;
   }
-  int addCoeffSizeShapeOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addCzZ(double? CZ_Z) {
+    fbBuilder.addFloat64(6, CZ_Z);
     return fbBuilder.offset;
   }
-  int addCoeffEccentricityOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addCxDotX(double? CX_DOT_X) {
+    fbBuilder.addFloat64(7, CX_DOT_X);
     return fbBuilder.offset;
   }
-  int addCoeffInclinationOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+  int addCxDotY(double? CX_DOT_Y) {
+    fbBuilder.addFloat64(8, CX_DOT_Y);
     return fbBuilder.offset;
   }
-  int addCoeffRaanOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addCxDotZ(double? CX_DOT_Z) {
+    fbBuilder.addFloat64(9, CX_DOT_Z);
     return fbBuilder.offset;
   }
-  int addCoeffArgPeriapsisOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+  int addCxDotXDot(double? CX_DOT_X_DOT) {
+    fbBuilder.addFloat64(10, CX_DOT_X_DOT);
     return fbBuilder.offset;
   }
-  int addCoeffAnomalyOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
+  int addCyDotX(double? CY_DOT_X) {
+    fbBuilder.addFloat64(11, CY_DOT_X);
     return fbBuilder.offset;
   }
-  int addMaxElementResidual(double? MAX_ELEMENT_RESIDUAL) {
-    fbBuilder.addFloat64(12, MAX_ELEMENT_RESIDUAL);
+  int addCyDotY(double? CY_DOT_Y) {
+    fbBuilder.addFloat64(12, CY_DOT_Y);
     return fbBuilder.offset;
   }
-  int addRmsElementResidual(double? RMS_ELEMENT_RESIDUAL) {
-    fbBuilder.addFloat64(13, RMS_ELEMENT_RESIDUAL);
+  int addCyDotZ(double? CY_DOT_Z) {
+    fbBuilder.addFloat64(13, CY_DOT_Z);
+    return fbBuilder.offset;
+  }
+  int addCyDotXDot(double? CY_DOT_X_DOT) {
+    fbBuilder.addFloat64(14, CY_DOT_X_DOT);
+    return fbBuilder.offset;
+  }
+  int addCyDotYDot(double? CY_DOT_Y_DOT) {
+    fbBuilder.addFloat64(15, CY_DOT_Y_DOT);
+    return fbBuilder.offset;
+  }
+  int addCzDotX(double? CZ_DOT_X) {
+    fbBuilder.addFloat64(16, CZ_DOT_X);
+    return fbBuilder.offset;
+  }
+  int addCzDotY(double? CZ_DOT_Y) {
+    fbBuilder.addFloat64(17, CZ_DOT_Y);
+    return fbBuilder.offset;
+  }
+  int addCzDotZ(double? CZ_DOT_Z) {
+    fbBuilder.addFloat64(18, CZ_DOT_Z);
+    return fbBuilder.offset;
+  }
+  int addCzDotXDot(double? CZ_DOT_X_DOT) {
+    fbBuilder.addFloat64(19, CZ_DOT_X_DOT);
+    return fbBuilder.offset;
+  }
+  int addCzDotYDot(double? CZ_DOT_Y_DOT) {
+    fbBuilder.addFloat64(20, CZ_DOT_Y_DOT);
+    return fbBuilder.offset;
+  }
+  int addCzDotZDot(double? CZ_DOT_Z_DOT) {
+    fbBuilder.addFloat64(21, CZ_DOT_Z_DOT);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCovReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
 
@@ -533,99 +521,138 @@ class PPEOrbitalElementRecordBuilder {
   }
 }
 
-class PPEOrbitalElementRecordObjectBuilder extends fb.ObjectBuilder {
-  final String? _EPOCH_MID;
-  final double? _EPOCH_HALF_SPAN;
-  final int? _NUM_COEFFICIENTS;
-  final polynomialBasisType? _BASIS_TYPE;
-  final sizeShapeProfile? _SIZE_SHAPE_TYPE;
-  final ppeAnomalyType? _ANOMALY_TYPE;
-  final List<double>? _COEFF_SIZE_SHAPE;
-  final List<double>? _COEFF_ECCENTRICITY;
-  final List<double>? _COEFF_INCLINATION;
-  final List<double>? _COEFF_RAAN;
-  final List<double>? _COEFF_ARG_PERIAPSIS;
-  final List<double>? _COEFF_ANOMALY;
-  final double? _MAX_ELEMENT_RESIDUAL;
-  final double? _RMS_ELEMENT_RESIDUAL;
+class covarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final double? _CX_X;
+  final double? _CY_X;
+  final double? _CY_Y;
+  final double? _CZ_X;
+  final double? _CZ_Y;
+  final double? _CZ_Z;
+  final double? _CX_DOT_X;
+  final double? _CX_DOT_Y;
+  final double? _CX_DOT_Z;
+  final double? _CX_DOT_X_DOT;
+  final double? _CY_DOT_X;
+  final double? _CY_DOT_Y;
+  final double? _CY_DOT_Z;
+  final double? _CY_DOT_X_DOT;
+  final double? _CY_DOT_Y_DOT;
+  final double? _CZ_DOT_X;
+  final double? _CZ_DOT_Y;
+  final double? _CZ_DOT_Z;
+  final double? _CZ_DOT_X_DOT;
+  final double? _CZ_DOT_Y_DOT;
+  final double? _CZ_DOT_Z_DOT;
+  final String? _COMMENT;
+  final RFMObjectBuilder? _COV_REFERENCE_FRAME;
 
-  PPEOrbitalElementRecordObjectBuilder({
-    String? EPOCH_MID,
-    String? epochMid,
-    double? EPOCH_HALF_SPAN,
-    double? epochHalfSpan,
-    int? NUM_COEFFICIENTS,
-    int? numCoefficients,
-    polynomialBasisType? BASIS_TYPE,
-    polynomialBasisType? basisType,
-    sizeShapeProfile? SIZE_SHAPE_TYPE,
-    sizeShapeProfile? sizeShapeType,
-    ppeAnomalyType? ANOMALY_TYPE,
-    ppeAnomalyType? anomalyType,
-    List<double>? COEFF_SIZE_SHAPE,
-    List<double>? coeffSizeShape,
-    List<double>? COEFF_ECCENTRICITY,
-    List<double>? coeffEccentricity,
-    List<double>? COEFF_INCLINATION,
-    List<double>? coeffInclination,
-    List<double>? COEFF_RAAN,
-    List<double>? coeffRaan,
-    List<double>? COEFF_ARG_PERIAPSIS,
-    List<double>? coeffArgPeriapsis,
-    List<double>? COEFF_ANOMALY,
-    List<double>? coeffAnomaly,
-    double? MAX_ELEMENT_RESIDUAL,
-    double? maxElementResidual,
-    double? RMS_ELEMENT_RESIDUAL,
-    double? rmsElementResidual,
+  covarianceMatrixLineObjectBuilder({
+    String? EPOCH,
+    double? CX_X,
+    double? cxX,
+    double? CY_X,
+    double? cyX,
+    double? CY_Y,
+    double? cyY,
+    double? CZ_X,
+    double? czX,
+    double? CZ_Y,
+    double? czY,
+    double? CZ_Z,
+    double? czZ,
+    double? CX_DOT_X,
+    double? cxDotX,
+    double? CX_DOT_Y,
+    double? cxDotY,
+    double? CX_DOT_Z,
+    double? cxDotZ,
+    double? CX_DOT_X_DOT,
+    double? cxDotXDot,
+    double? CY_DOT_X,
+    double? cyDotX,
+    double? CY_DOT_Y,
+    double? cyDotY,
+    double? CY_DOT_Z,
+    double? cyDotZ,
+    double? CY_DOT_X_DOT,
+    double? cyDotXDot,
+    double? CY_DOT_Y_DOT,
+    double? cyDotYDot,
+    double? CZ_DOT_X,
+    double? czDotX,
+    double? CZ_DOT_Y,
+    double? czDotY,
+    double? CZ_DOT_Z,
+    double? czDotZ,
+    double? CZ_DOT_X_DOT,
+    double? czDotXDot,
+    double? CZ_DOT_Y_DOT,
+    double? czDotYDot,
+    double? CZ_DOT_Z_DOT,
+    double? czDotZDot,
+    String? COMMENT,
+    RFMObjectBuilder? COV_REFERENCE_FRAME,
+    RFMObjectBuilder? covReferenceFrame,
   })
-      : _EPOCH_MID = epochMid ?? EPOCH_MID,
-        _EPOCH_HALF_SPAN = epochHalfSpan ?? EPOCH_HALF_SPAN,
-        _NUM_COEFFICIENTS = numCoefficients ?? NUM_COEFFICIENTS,
-        _BASIS_TYPE = basisType ?? BASIS_TYPE,
-        _SIZE_SHAPE_TYPE = sizeShapeType ?? SIZE_SHAPE_TYPE,
-        _ANOMALY_TYPE = anomalyType ?? ANOMALY_TYPE,
-        _COEFF_SIZE_SHAPE = coeffSizeShape ?? COEFF_SIZE_SHAPE,
-        _COEFF_ECCENTRICITY = coeffEccentricity ?? COEFF_ECCENTRICITY,
-        _COEFF_INCLINATION = coeffInclination ?? COEFF_INCLINATION,
-        _COEFF_RAAN = coeffRaan ?? COEFF_RAAN,
-        _COEFF_ARG_PERIAPSIS = coeffArgPeriapsis ?? COEFF_ARG_PERIAPSIS,
-        _COEFF_ANOMALY = coeffAnomaly ?? COEFF_ANOMALY,
-        _MAX_ELEMENT_RESIDUAL = maxElementResidual ?? MAX_ELEMENT_RESIDUAL,
-        _RMS_ELEMENT_RESIDUAL = rmsElementResidual ?? RMS_ELEMENT_RESIDUAL;
+      : _EPOCH = EPOCH,
+        _CX_X = cxX ?? CX_X,
+        _CY_X = cyX ?? CY_X,
+        _CY_Y = cyY ?? CY_Y,
+        _CZ_X = czX ?? CZ_X,
+        _CZ_Y = czY ?? CZ_Y,
+        _CZ_Z = czZ ?? CZ_Z,
+        _CX_DOT_X = cxDotX ?? CX_DOT_X,
+        _CX_DOT_Y = cxDotY ?? CX_DOT_Y,
+        _CX_DOT_Z = cxDotZ ?? CX_DOT_Z,
+        _CX_DOT_X_DOT = cxDotXDot ?? CX_DOT_X_DOT,
+        _CY_DOT_X = cyDotX ?? CY_DOT_X,
+        _CY_DOT_Y = cyDotY ?? CY_DOT_Y,
+        _CY_DOT_Z = cyDotZ ?? CY_DOT_Z,
+        _CY_DOT_X_DOT = cyDotXDot ?? CY_DOT_X_DOT,
+        _CY_DOT_Y_DOT = cyDotYDot ?? CY_DOT_Y_DOT,
+        _CZ_DOT_X = czDotX ?? CZ_DOT_X,
+        _CZ_DOT_Y = czDotY ?? CZ_DOT_Y,
+        _CZ_DOT_Z = czDotZ ?? CZ_DOT_Z,
+        _CZ_DOT_X_DOT = czDotXDot ?? CZ_DOT_X_DOT,
+        _CZ_DOT_Y_DOT = czDotYDot ?? CZ_DOT_Y_DOT,
+        _CZ_DOT_Z_DOT = czDotZDot ?? CZ_DOT_Z_DOT,
+        _COMMENT = COMMENT,
+        _COV_REFERENCE_FRAME = covReferenceFrame ?? COV_REFERENCE_FRAME;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? EPOCH_MIDOffset = _EPOCH_MID == null ? null
-        : fbBuilder.writeString(_EPOCH_MID!);
-    final int? COEFF_SIZE_SHAPEOffset = _COEFF_SIZE_SHAPE == null ? null
-        : fbBuilder.writeListFloat64(_COEFF_SIZE_SHAPE!);
-    final int? COEFF_ECCENTRICITYOffset = _COEFF_ECCENTRICITY == null ? null
-        : fbBuilder.writeListFloat64(_COEFF_ECCENTRICITY!);
-    final int? COEFF_INCLINATIONOffset = _COEFF_INCLINATION == null ? null
-        : fbBuilder.writeListFloat64(_COEFF_INCLINATION!);
-    final int? COEFF_RAANOffset = _COEFF_RAAN == null ? null
-        : fbBuilder.writeListFloat64(_COEFF_RAAN!);
-    final int? COEFF_ARG_PERIAPSISOffset = _COEFF_ARG_PERIAPSIS == null ? null
-        : fbBuilder.writeListFloat64(_COEFF_ARG_PERIAPSIS!);
-    final int? COEFF_ANOMALYOffset = _COEFF_ANOMALY == null ? null
-        : fbBuilder.writeListFloat64(_COEFF_ANOMALY!);
-    fbBuilder.startTable(14);
-    fbBuilder.addOffset(0, EPOCH_MIDOffset);
-    fbBuilder.addFloat64(1, _EPOCH_HALF_SPAN);
-    fbBuilder.addUint16(2, _NUM_COEFFICIENTS);
-    fbBuilder.addInt8(3, _BASIS_TYPE?.value);
-    fbBuilder.addInt8(4, _SIZE_SHAPE_TYPE?.value);
-    fbBuilder.addInt8(5, _ANOMALY_TYPE?.value);
-    fbBuilder.addOffset(6, COEFF_SIZE_SHAPEOffset);
-    fbBuilder.addOffset(7, COEFF_ECCENTRICITYOffset);
-    fbBuilder.addOffset(8, COEFF_INCLINATIONOffset);
-    fbBuilder.addOffset(9, COEFF_RAANOffset);
-    fbBuilder.addOffset(10, COEFF_ARG_PERIAPSISOffset);
-    fbBuilder.addOffset(11, COEFF_ANOMALYOffset);
-    fbBuilder.addFloat64(12, _MAX_ELEMENT_RESIDUAL);
-    fbBuilder.addFloat64(13, _RMS_ELEMENT_RESIDUAL);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? COV_REFERENCE_FRAMEOffset = _COV_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(24);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _CX_X);
+    fbBuilder.addFloat64(2, _CY_X);
+    fbBuilder.addFloat64(3, _CY_Y);
+    fbBuilder.addFloat64(4, _CZ_X);
+    fbBuilder.addFloat64(5, _CZ_Y);
+    fbBuilder.addFloat64(6, _CZ_Z);
+    fbBuilder.addFloat64(7, _CX_DOT_X);
+    fbBuilder.addFloat64(8, _CX_DOT_Y);
+    fbBuilder.addFloat64(9, _CX_DOT_Z);
+    fbBuilder.addFloat64(10, _CX_DOT_X_DOT);
+    fbBuilder.addFloat64(11, _CY_DOT_X);
+    fbBuilder.addFloat64(12, _CY_DOT_Y);
+    fbBuilder.addFloat64(13, _CY_DOT_Z);
+    fbBuilder.addFloat64(14, _CY_DOT_X_DOT);
+    fbBuilder.addFloat64(15, _CY_DOT_Y_DOT);
+    fbBuilder.addFloat64(16, _CZ_DOT_X);
+    fbBuilder.addFloat64(17, _CZ_DOT_Y);
+    fbBuilder.addFloat64(18, _CZ_DOT_Z);
+    fbBuilder.addFloat64(19, _CZ_DOT_X_DOT);
+    fbBuilder.addFloat64(20, _CZ_DOT_Y_DOT);
+    fbBuilder.addFloat64(21, _CZ_DOT_Z_DOT);
+    fbBuilder.addOffset(22, COMMENTOffset);
+    fbBuilder.addOffset(23, COV_REFERENCE_FRAMEOffset);
     return fbBuilder.endTable();
   }
 
@@ -637,90 +664,121 @@ class PPEOrbitalElementRecordObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Polynomial Ephemeris — top-level message containing metadata and
-///  one or more polynomial coefficient records for a single space object.
-///
-///  A PPE message may contain position records, orbital element records, or both.
-///  Records should be ordered chronologically by EPOCH_MID and should collectively
-///  cover the time span [START_TIME, STOP_TIME] without gaps.
-class PPE {
-  PPE._(this._bc, this._bcOffset);
-  factory PPE(List<int> bytes) {
+///  OEM Ephemeris Data Block
+class ephemerisDataBlock {
+  ephemerisDataBlock._(this._bc, this._bcOffset);
+  factory ephemerisDataBlock(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PPE> reader = _PPEReader();
+  static const fb.Reader<ephemerisDataBlock> reader = _ephemerisDataBlockReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Plain-text comments.
-  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Space object identification.
+  ///  Plain-Text Comment
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Satellite name for the first object
   CAT? get OBJECT => CAT.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Origin of the reference frame (e.g., EARTH, MOON, MARS).
+  ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get centerName => CENTER_NAME;
-  ///  Reference frame for position/velocity coefficients.
+  ///  Name of the reference frame (TEME, EME2000, etc.)
   RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 10);
   RFM? get referenceFrame => REFERENCE_FRAME;
-  ///  Time system used for all epochs in this message.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
+  String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get referenceFrameEpoch => REFERENCE_FRAME_EPOCH;
+  ///  Reference frame for the covariance matrix
+  RFM? get COV_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  RFM? get covReferenceFrame => COV_REFERENCE_FRAME;
+  ///  Time system used for the orbit state and covariance matrix. (UTC)
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
   timingStandard get timeSystem => TIME_SYSTEM;
-  ///  Start of the total time span covered by this ephemeris (ISO 8601).
-  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   String? get startTime => START_TIME;
-  ///  End of the total time span covered by this ephemeris (ISO 8601).
-  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Optional start USEABLE time span covered by ephemeris data (ISO 8601)
+  String? get USEABLE_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get useableStartTime => USEABLE_START_TIME;
+  ///  Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
+  String? get USEABLE_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get useableStopTime => USEABLE_STOP_TIME;
+  ///  End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   String? get stopTime => STOP_TIME;
-  ///  Default polynomial basis type for all records in this message.
-  ///  Individual records may override this with their own BASIS_TYPE field.
-  polynomialBasisType get DEFAULT_BASIS_TYPE => polynomialBasisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  polynomialBasisType get defaultBasisType => DEFAULT_BASIS_TYPE;
-  ///  Array of position polynomial records.
-  ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-  List<PPEPositionRecord>? get POSITION_RECORDS => const fb.ListReader<PPEPositionRecord>(PPEPositionRecord.reader).vTableGetNullable(_bc, _bcOffset, 20);
-  List<PPEPositionRecord>? get positionRecords => POSITION_RECORDS;
-  ///  Array of orbital element polynomial records.
-  ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-  List<PPEOrbitalElementRecord>? get ORBITAL_ELEMENT_RECORDS => const fb.ListReader<PPEOrbitalElementRecord>(PPEOrbitalElementRecord.reader).vTableGetNullable(_bc, _bcOffset, 22);
-  List<PPEOrbitalElementRecord>? get orbitalElementRecords => ORBITAL_ELEMENT_RECORDS;
-  ///  Generating ephemeris source, verbatim as the generator names itself
-  ///  (e.g., a planetary ephemeris series designation, a numerical propagator
-  ///  name and version, or an in-house tool identifier).
-  String? get EPHEMERIS_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get ephemerisSource => EPHEMERIS_SOURCE;
-  ///  Fit span in seconds used to generate each polynomial segment.
-  ///  Informational; actual spans are in individual records.
-  double get NOMINAL_SEGMENT_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get nominalSegmentSpan => NOMINAL_SEGMENT_SPAN;
-  ///  Nominal number of coefficients per segment.
-  ///  Informational; actual counts are in individual records.
-  int get NOMINAL_NUM_COEFFICIENTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 28, 0);
-  int get nominalNumCoefficients => NOMINAL_NUM_COEFFICIENTS;
+  ///  Recommended interpolation method for ephemeris data.
+  ///  Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+  ///  When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+  ///  for high-fidelity polynomial interpolation instead of interpolating across
+  ///  discrete state vectors.
+  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Recommended interpolation degree for ephemeris data
+  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get interpolationDegree => INTERPOLATION_DEGREE;
+  ///  Time interval between ephemeris states in seconds.
+  ///  If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+  ///  If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get stepSize => STEP_SIZE;
+  ///  Number of components per state vector in EPHEMERIS_DATA array.
+  ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  ///  Only used when STEP_SIZE > 0. Default is 6.
+  int get STATE_VECTOR_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 32, 6);
+  int get stateVectorSize => STATE_VECTOR_SIZE;
+  ///  Compact ephemeris data as row-major array of doubles.
+  ///  Only used when STEP_SIZE > 0.
+  ///  Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  ///  Units: position in km, velocity in km/s, acceleration in km/s²
+  ///  Length must be divisible by STATE_VECTOR_SIZE.
+  ///  Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+  List<double>? get EPHEMERIS_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 34);
+  List<double>? get ephemerisData => EPHEMERIS_DATA;
+  ///  Array of ephemeris data lines with explicit epochs.
+  ///  Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+  ///  Each line contains its own EPOCH timestamp.
+  List<ephemerisDataLine>? get EPHEMERIS_DATA_LINES => const fb.ListReader<ephemerisDataLine>(ephemerisDataLine.reader).vTableGetNullable(_bc, _bcOffset, 36);
+  List<ephemerisDataLine>? get ephemerisDataLines => EPHEMERIS_DATA_LINES;
+  ///  Array of covariance matrix lines (optional)
+  List<covarianceMatrixLine>? get COVARIANCE_MATRIX_LINES => const fb.ListReader<covarianceMatrixLine>(covarianceMatrixLine.reader).vTableGetNullable(_bc, _bcOffset, 38);
+  List<covarianceMatrixLine>? get covarianceMatrixLines => COVARIANCE_MATRIX_LINES;
+  ///  Optional polynomial position records for high-fidelity interpolation.
+  ///  Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+  ///  polynomial coefficients for continuous position (and optionally velocity) evaluation.
+  ///  See PPE schema for record structure and evaluation procedure.
+  List<PPEPositionRecord>? get POLYNOMIAL_POSITION_RECORDS => const fb.ListReader<PPEPositionRecord>(PPEPositionRecord.reader).vTableGetNullable(_bc, _bcOffset, 40);
+  List<PPEPositionRecord>? get polynomialPositionRecords => POLYNOMIAL_POSITION_RECORDS;
+  ///  NAIF integer code of the ephemeris target (SPK segment target).
+  int get OBJECT_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 42, 0);
+  int get objectNaifId => OBJECT_NAIF_ID;
+  ///  NAIF integer code of the ephemeris centre, matching CENTER_NAME
+  ///  (SPK segment centre).
+  int get CENTER_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 44, 0);
+  int get centerNaifId => CENTER_NAIF_ID;
 
   @override
   String toString() {
-    return 'PPE{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, stopTime: ${stopTime}, defaultBasisType: ${defaultBasisType}, positionRecords: ${positionRecords}, orbitalElementRecords: ${orbitalElementRecords}, ephemerisSource: ${ephemerisSource}, nominalSegmentSpan: ${nominalSegmentSpan}, nominalNumCoefficients: ${nominalNumCoefficients}}';
+    return 'ephemerisDataBlock{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, referenceFrameEpoch: ${referenceFrameEpoch}, covReferenceFrame: ${covReferenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, useableStartTime: ${useableStartTime}, useableStopTime: ${useableStopTime}, stopTime: ${stopTime}, INTERPOLATION: ${INTERPOLATION}, interpolationDegree: ${interpolationDegree}, stepSize: ${stepSize}, stateVectorSize: ${stateVectorSize}, ephemerisData: ${ephemerisData}, ephemerisDataLines: ${ephemerisDataLines}, covarianceMatrixLines: ${covarianceMatrixLines}, polynomialPositionRecords: ${polynomialPositionRecords}, objectNaifId: ${objectNaifId}, centerNaifId: ${centerNaifId}}';
   }
 }
 
-class _PPEReader extends fb.TableReader<PPE> {
-  const _PPEReader();
+class _ephemerisDataBlockReader extends fb.TableReader<ephemerisDataBlock> {
+  const _ephemerisDataBlockReader();
 
   @override
-  PPE createObject(fb.BufferContext bc, int offset) =>
-    PPE._(bc, offset);
+  ephemerisDataBlock createObject(fb.BufferContext bc, int offset) =>
+    ephemerisDataBlock._(bc, offset);
 }
 
-class PPEBuilder {
-  PPEBuilder(this.fbBuilder);
+class ephemerisDataBlockBuilder {
+  ephemerisDataBlockBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(21);
   }
 
   int addCommentOffset(int? offset) {
@@ -739,40 +797,72 @@ class PPEBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(4, TIME_SYSTEM?.value);
+  int addReferenceFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addStartTimeOffset(int? offset) {
+  int addCovReferenceFrameOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addStopTimeOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
+    fbBuilder.addInt8(6, TIME_SYSTEM?.value);
     return fbBuilder.offset;
   }
-  int addDefaultBasisType(polynomialBasisType? DEFAULT_BASIS_TYPE) {
-    fbBuilder.addInt8(7, DEFAULT_BASIS_TYPE?.value);
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addPositionRecordsOffset(int? offset) {
+  int addUseableStartTimeOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addOrbitalElementRecordsOffset(int? offset) {
+  int addUseableStopTimeOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addEphemerisSourceOffset(int? offset) {
+  int addStopTimeOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addNominalSegmentSpan(double? NOMINAL_SEGMENT_SPAN) {
-    fbBuilder.addFloat64(11, NOMINAL_SEGMENT_SPAN);
+  int addInterpolationOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addNominalNumCoefficients(int? NOMINAL_NUM_COEFFICIENTS) {
-    fbBuilder.addUint16(12, NOMINAL_NUM_COEFFICIENTS);
+  int addInterpolationDegree(int? INTERPOLATION_DEGREE) {
+    fbBuilder.addUint32(12, INTERPOLATION_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addStepSize(double? STEP_SIZE) {
+    fbBuilder.addFloat64(13, STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addStateVectorSize(int? STATE_VECTOR_SIZE) {
+    fbBuilder.addUint8(14, STATE_VECTOR_SIZE);
+    return fbBuilder.offset;
+  }
+  int addEphemerisDataOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisDataLinesOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceMatrixLinesOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addPolynomialPositionRecordsOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectNaifId(int? OBJECT_NAIF_ID) {
+    fbBuilder.addInt32(19, OBJECT_NAIF_ID);
+    return fbBuilder.offset;
+  }
+  int addCenterNaifId(int? CENTER_NAIF_ID) {
+    fbBuilder.addInt32(20, CENTER_NAIF_ID);
     return fbBuilder.offset;
   }
 
@@ -781,94 +871,299 @@ class PPEBuilder {
   }
 }
 
-class PPEObjectBuilder extends fb.ObjectBuilder {
-  final List<String>? _COMMENT;
+class ephemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
+  final String? _COMMENT;
   final CATObjectBuilder? _OBJECT;
   final String? _CENTER_NAME;
   final RFMObjectBuilder? _REFERENCE_FRAME;
+  final String? _REFERENCE_FRAME_EPOCH;
+  final RFMObjectBuilder? _COV_REFERENCE_FRAME;
   final timingStandard? _TIME_SYSTEM;
   final String? _START_TIME;
+  final String? _USEABLE_START_TIME;
+  final String? _USEABLE_STOP_TIME;
   final String? _STOP_TIME;
-  final polynomialBasisType? _DEFAULT_BASIS_TYPE;
-  final List<PPEPositionRecordObjectBuilder>? _POSITION_RECORDS;
-  final List<PPEOrbitalElementRecordObjectBuilder>? _ORBITAL_ELEMENT_RECORDS;
-  final String? _EPHEMERIS_SOURCE;
-  final double? _NOMINAL_SEGMENT_SPAN;
-  final int? _NOMINAL_NUM_COEFFICIENTS;
+  final String? _INTERPOLATION;
+  final int? _INTERPOLATION_DEGREE;
+  final double? _STEP_SIZE;
+  final int? _STATE_VECTOR_SIZE;
+  final List<double>? _EPHEMERIS_DATA;
+  final List<ephemerisDataLineObjectBuilder>? _EPHEMERIS_DATA_LINES;
+  final List<covarianceMatrixLineObjectBuilder>? _COVARIANCE_MATRIX_LINES;
+  final List<PPEPositionRecordObjectBuilder>? _POLYNOMIAL_POSITION_RECORDS;
+  final int? _OBJECT_NAIF_ID;
+  final int? _CENTER_NAIF_ID;
 
-  PPEObjectBuilder({
-    List<String>? COMMENT,
+  ephemerisDataBlockObjectBuilder({
+    String? COMMENT,
     CATObjectBuilder? OBJECT,
     String? CENTER_NAME,
     String? centerName,
     RFMObjectBuilder? REFERENCE_FRAME,
     RFMObjectBuilder? referenceFrame,
+    String? REFERENCE_FRAME_EPOCH,
+    String? referenceFrameEpoch,
+    RFMObjectBuilder? COV_REFERENCE_FRAME,
+    RFMObjectBuilder? covReferenceFrame,
     timingStandard? TIME_SYSTEM,
     timingStandard? timeSystem,
     String? START_TIME,
     String? startTime,
+    String? USEABLE_START_TIME,
+    String? useableStartTime,
+    String? USEABLE_STOP_TIME,
+    String? useableStopTime,
     String? STOP_TIME,
     String? stopTime,
-    polynomialBasisType? DEFAULT_BASIS_TYPE,
-    polynomialBasisType? defaultBasisType,
-    List<PPEPositionRecordObjectBuilder>? POSITION_RECORDS,
-    List<PPEPositionRecordObjectBuilder>? positionRecords,
-    List<PPEOrbitalElementRecordObjectBuilder>? ORBITAL_ELEMENT_RECORDS,
-    List<PPEOrbitalElementRecordObjectBuilder>? orbitalElementRecords,
-    String? EPHEMERIS_SOURCE,
-    String? ephemerisSource,
-    double? NOMINAL_SEGMENT_SPAN,
-    double? nominalSegmentSpan,
-    int? NOMINAL_NUM_COEFFICIENTS,
-    int? nominalNumCoefficients,
+    String? INTERPOLATION,
+    int? INTERPOLATION_DEGREE,
+    int? interpolationDegree,
+    double? STEP_SIZE,
+    double? stepSize,
+    int? STATE_VECTOR_SIZE,
+    int? stateVectorSize,
+    List<double>? EPHEMERIS_DATA,
+    List<double>? ephemerisData,
+    List<ephemerisDataLineObjectBuilder>? EPHEMERIS_DATA_LINES,
+    List<ephemerisDataLineObjectBuilder>? ephemerisDataLines,
+    List<covarianceMatrixLineObjectBuilder>? COVARIANCE_MATRIX_LINES,
+    List<covarianceMatrixLineObjectBuilder>? covarianceMatrixLines,
+    List<PPEPositionRecordObjectBuilder>? POLYNOMIAL_POSITION_RECORDS,
+    List<PPEPositionRecordObjectBuilder>? polynomialPositionRecords,
+    int? OBJECT_NAIF_ID,
+    int? objectNaifId,
+    int? CENTER_NAIF_ID,
+    int? centerNaifId,
   })
       : _COMMENT = COMMENT,
         _OBJECT = OBJECT,
         _CENTER_NAME = centerName ?? CENTER_NAME,
         _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _REFERENCE_FRAME_EPOCH = referenceFrameEpoch ?? REFERENCE_FRAME_EPOCH,
+        _COV_REFERENCE_FRAME = covReferenceFrame ?? COV_REFERENCE_FRAME,
         _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
         _START_TIME = startTime ?? START_TIME,
+        _USEABLE_START_TIME = useableStartTime ?? USEABLE_START_TIME,
+        _USEABLE_STOP_TIME = useableStopTime ?? USEABLE_STOP_TIME,
         _STOP_TIME = stopTime ?? STOP_TIME,
-        _DEFAULT_BASIS_TYPE = defaultBasisType ?? DEFAULT_BASIS_TYPE,
-        _POSITION_RECORDS = positionRecords ?? POSITION_RECORDS,
-        _ORBITAL_ELEMENT_RECORDS = orbitalElementRecords ?? ORBITAL_ELEMENT_RECORDS,
-        _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE,
-        _NOMINAL_SEGMENT_SPAN = nominalSegmentSpan ?? NOMINAL_SEGMENT_SPAN,
-        _NOMINAL_NUM_COEFFICIENTS = nominalNumCoefficients ?? NOMINAL_NUM_COEFFICIENTS;
+        _INTERPOLATION = INTERPOLATION,
+        _INTERPOLATION_DEGREE = interpolationDegree ?? INTERPOLATION_DEGREE,
+        _STEP_SIZE = stepSize ?? STEP_SIZE,
+        _STATE_VECTOR_SIZE = stateVectorSize ?? STATE_VECTOR_SIZE,
+        _EPHEMERIS_DATA = ephemerisData ?? EPHEMERIS_DATA,
+        _EPHEMERIS_DATA_LINES = ephemerisDataLines ?? EPHEMERIS_DATA_LINES,
+        _COVARIANCE_MATRIX_LINES = covarianceMatrixLines ?? COVARIANCE_MATRIX_LINES,
+        _POLYNOMIAL_POSITION_RECORDS = polynomialPositionRecords ?? POLYNOMIAL_POSITION_RECORDS,
+        _OBJECT_NAIF_ID = objectNaifId ?? OBJECT_NAIF_ID,
+        _CENTER_NAIF_ID = centerNaifId ?? CENTER_NAIF_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? COMMENTOffset = _COMMENT == null ? null
-        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeString(_COMMENT!);
     final int? OBJECTOffset = _OBJECT?.getOrCreateOffset(fbBuilder);
     final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
         : fbBuilder.writeString(_CENTER_NAME!);
     final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? REFERENCE_FRAME_EPOCHOffset = _REFERENCE_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_REFERENCE_FRAME_EPOCH!);
+    final int? COV_REFERENCE_FRAMEOffset = _COV_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
     final int? START_TIMEOffset = _START_TIME == null ? null
         : fbBuilder.writeString(_START_TIME!);
+    final int? USEABLE_START_TIMEOffset = _USEABLE_START_TIME == null ? null
+        : fbBuilder.writeString(_USEABLE_START_TIME!);
+    final int? USEABLE_STOP_TIMEOffset = _USEABLE_STOP_TIME == null ? null
+        : fbBuilder.writeString(_USEABLE_STOP_TIME!);
     final int? STOP_TIMEOffset = _STOP_TIME == null ? null
         : fbBuilder.writeString(_STOP_TIME!);
-    final int? POSITION_RECORDSOffset = _POSITION_RECORDS == null ? null
-        : fbBuilder.writeList(_POSITION_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ORBITAL_ELEMENT_RECORDSOffset = _ORBITAL_ELEMENT_RECORDS == null ? null
-        : fbBuilder.writeList(_ORBITAL_ELEMENT_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? EPHEMERIS_SOURCEOffset = _EPHEMERIS_SOURCE == null ? null
-        : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
-    fbBuilder.startTable(13);
+    final int? INTERPOLATIONOffset = _INTERPOLATION == null ? null
+        : fbBuilder.writeString(_INTERPOLATION!);
+    final int? EPHEMERIS_DATAOffset = _EPHEMERIS_DATA == null ? null
+        : fbBuilder.writeListFloat64(_EPHEMERIS_DATA!);
+    final int? EPHEMERIS_DATA_LINESOffset = _EPHEMERIS_DATA_LINES == null ? null
+        : fbBuilder.writeList(_EPHEMERIS_DATA_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? COVARIANCE_MATRIX_LINESOffset = _COVARIANCE_MATRIX_LINES == null ? null
+        : fbBuilder.writeList(_COVARIANCE_MATRIX_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? POLYNOMIAL_POSITION_RECORDSOffset = _POLYNOMIAL_POSITION_RECORDS == null ? null
+        : fbBuilder.writeList(_POLYNOMIAL_POSITION_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(21);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECTOffset);
     fbBuilder.addOffset(2, CENTER_NAMEOffset);
     fbBuilder.addOffset(3, REFERENCE_FRAMEOffset);
-    fbBuilder.addInt8(4, _TIME_SYSTEM?.value);
-    fbBuilder.addOffset(5, START_TIMEOffset);
-    fbBuilder.addOffset(6, STOP_TIMEOffset);
-    fbBuilder.addInt8(7, _DEFAULT_BASIS_TYPE?.value);
-    fbBuilder.addOffset(8, POSITION_RECORDSOffset);
-    fbBuilder.addOffset(9, ORBITAL_ELEMENT_RECORDSOffset);
-    fbBuilder.addOffset(10, EPHEMERIS_SOURCEOffset);
-    fbBuilder.addFloat64(11, _NOMINAL_SEGMENT_SPAN);
-    fbBuilder.addUint16(12, _NOMINAL_NUM_COEFFICIENTS);
+    fbBuilder.addOffset(4, REFERENCE_FRAME_EPOCHOffset);
+    fbBuilder.addOffset(5, COV_REFERENCE_FRAMEOffset);
+    fbBuilder.addInt8(6, _TIME_SYSTEM?.value);
+    fbBuilder.addOffset(7, START_TIMEOffset);
+    fbBuilder.addOffset(8, USEABLE_START_TIMEOffset);
+    fbBuilder.addOffset(9, USEABLE_STOP_TIMEOffset);
+    fbBuilder.addOffset(10, STOP_TIMEOffset);
+    fbBuilder.addOffset(11, INTERPOLATIONOffset);
+    fbBuilder.addUint32(12, _INTERPOLATION_DEGREE);
+    fbBuilder.addFloat64(13, _STEP_SIZE);
+    fbBuilder.addUint8(14, _STATE_VECTOR_SIZE);
+    fbBuilder.addOffset(15, EPHEMERIS_DATAOffset);
+    fbBuilder.addOffset(16, EPHEMERIS_DATA_LINESOffset);
+    fbBuilder.addOffset(17, COVARIANCE_MATRIX_LINESOffset);
+    fbBuilder.addOffset(18, POLYNOMIAL_POSITION_RECORDSOffset);
+    fbBuilder.addInt32(19, _OBJECT_NAIF_ID);
+    fbBuilder.addInt32(20, _CENTER_NAIF_ID);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Orbit Ephemeris Message
+class OEM {
+  OEM._(this._bc, this._bcOffset);
+  factory OEM(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OEM> reader = _OEMReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  OEM Header
+  ///  Classification marking of the data in IC/CAPCO Portion-marked format.
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  OEM Version
+  double get CCSDS_OEM_VERS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get ccsdsOemVers => CCSDS_OEM_VERS;
+  ///  Creation Date
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get creationDate => CREATION_DATE;
+  ///  Originator
+  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Array of ephemeris data blocks
+  List<ephemerisDataBlock>? get EPHEMERIS_DATA_BLOCK => const fb.ListReader<ephemerisDataBlock>(ephemerisDataBlock.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  List<ephemerisDataBlock>? get ephemerisDataBlock => EPHEMERIS_DATA_BLOCK;
+  ///  COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+  ///  makes unique for this message.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get messageId => MESSAGE_ID;
+
+  @override
+  String toString() {
+    return 'OEM{CLASSIFICATION: ${CLASSIFICATION}, ccsdsOemVers: ${ccsdsOemVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, ephemerisDataBlock: ${ephemerisDataBlock}, COMMENT: ${COMMENT}, messageId: ${messageId}}';
+  }
+}
+
+class _OEMReader extends fb.TableReader<OEM> {
+  const _OEMReader();
+
+  @override
+  OEM createObject(fb.BufferContext bc, int offset) =>
+    OEM._(bc, offset);
+}
+
+class OEMBuilder {
+  OEMBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addClassificationOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCcsdsOemVers(double? CCSDS_OEM_VERS) {
+    fbBuilder.addFloat64(1, CCSDS_OEM_VERS);
+    return fbBuilder.offset;
+  }
+  int addCreationDateOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisDataBlockOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OEMObjectBuilder extends fb.ObjectBuilder {
+  final String? _CLASSIFICATION;
+  final double? _CCSDS_OEM_VERS;
+  final String? _CREATION_DATE;
+  final String? _ORIGINATOR;
+  final List<ephemerisDataBlockObjectBuilder>? _EPHEMERIS_DATA_BLOCK;
+  final String? _COMMENT;
+  final String? _MESSAGE_ID;
+
+  OEMObjectBuilder({
+    String? CLASSIFICATION,
+    double? CCSDS_OEM_VERS,
+    double? ccsdsOemVers,
+    String? CREATION_DATE,
+    String? creationDate,
+    String? ORIGINATOR,
+    List<ephemerisDataBlockObjectBuilder>? EPHEMERIS_DATA_BLOCK,
+    List<ephemerisDataBlockObjectBuilder>? ephemerisDataBlock,
+    String? COMMENT,
+    String? MESSAGE_ID,
+    String? messageId,
+  })
+      : _CLASSIFICATION = CLASSIFICATION,
+        _CCSDS_OEM_VERS = ccsdsOemVers ?? CCSDS_OEM_VERS,
+        _CREATION_DATE = creationDate ?? CREATION_DATE,
+        _ORIGINATOR = ORIGINATOR,
+        _EPHEMERIS_DATA_BLOCK = ephemerisDataBlock ?? EPHEMERIS_DATA_BLOCK,
+        _COMMENT = COMMENT,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
+    final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
+        : fbBuilder.writeString(_CREATION_DATE!);
+    final int? ORIGINATOROffset = _ORIGINATOR == null ? null
+        : fbBuilder.writeString(_ORIGINATOR!);
+    final int? EPHEMERIS_DATA_BLOCKOffset = _EPHEMERIS_DATA_BLOCK == null ? null
+        : fbBuilder.writeList(_EPHEMERIS_DATA_BLOCK!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, CLASSIFICATIONOffset);
+    fbBuilder.addFloat64(1, _CCSDS_OEM_VERS);
+    fbBuilder.addOffset(2, CREATION_DATEOffset);
+    fbBuilder.addOffset(3, ORIGINATOROffset);
+    fbBuilder.addOffset(4, EPHEMERIS_DATA_BLOCKOffset);
+    fbBuilder.addOffset(5, COMMENTOffset);
+    fbBuilder.addOffset(6, MESSAGE_IDOffset);
     return fbBuilder.endTable();
   }
 

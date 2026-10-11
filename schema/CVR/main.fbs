@@ -1,0 +1,96 @@
+// Hash: 0db82e1753a41fbd3c6ed4a477ec8720efecaa487101f0dc10a0e2156ac51c51
+// Version: 1.245.0
+// -----------------------------------END_HEADER
+// Covariance Realism (CVR)
+//
+// How far one covariance can be trusted: the rule that produced it, the cell of
+// the error model it came from, and the realism test of that cell against
+// held-out reference states. A covariance carries its CVR beside it ($OMM and
+// $OCM COV_REALISM, $OCM covariance blocks); a CVR on its own states the test
+// of one cell.
+//
+// The test: for each held-out reference state, d2 = e' inv(P) e, where e is the
+// position error (reference minus prediction, 3 components) and P the position
+// block of the covariance, both in one frame. A realistic covariance gives a
+// mean d2/3 of 1 and holds 95 % of the errors inside its 95 % region, d2 <= 7.815
+// (the 95th percentile of the chi-square distribution with 3 degrees of
+// freedom).
+
+/// Whether a covariance's coverage was measured against independent reference
+/// states: the share of reference errors inside its confidence regions matched
+/// what the covariance claims, for the regime and prediction age it covers.
+enum covarianceCalibration : byte {
+  /// Calibration not stated
+  Unspecified,
+  /// Not measured against independent reference states, or measured and failed
+  Uncalibrated,
+  /// Measured against independent reference states and passed
+  Calibrated
+}
+
+/// The rule that produced a covariance. A producer applies the first rule it
+/// can, in this order.
+enum covarianceRule : byte {
+  /// Not stated
+  Unspecified,
+  /// The operator's covariance, as supplied
+  Operator,
+  /// The formal covariance of an orbit fit, multiplied by the realism factor
+  /// measured for the source and the fit's class (SCALE_FACTOR)
+  ScaledFit,
+  /// The source's own empirical model of its element sets' errors, by orbit
+  /// regime and element-set age
+  SourceModel,
+  /// The empirical model pooled over all sources, for a source without its own
+  /// model in the regime
+  PooledModel
+}
+
+/// Covariance Realism
+table CVR {
+  /// The rule that produced the covariance. In a CCSDS covariance block,
+  /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
+  /// SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+  RULE: covarianceRule = Unspecified;
+  /// Identifier of the error model (SourceModel, PooledModel) or of the
+  /// measured realism factor (ScaledFit) the covariance came from. Empty for
+  /// Operator.
+  MODEL_ID: string;
+  /// Orbit regime of the cell, as the model names it.
+  REGIME: string;
+  /// Age of the element set at the covariance's epoch, in days. NaN when the
+  /// covariance is not an element set's.
+  AGE_DAYS: double = nan;
+  /// Prediction horizon of the cell, in days: the element-set age its
+  /// statistics were measured at. NaN when no cell applies.
+  HORIZON_DAYS: double = nan;
+  /// Lineage of the reference data the cell was measured on (a PVN LINEAGE).
+  /// The test speaks for a covariance whose source has this lineage; for any
+  /// other lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.
+  MEASURED_LINEAGE: string;
+  /// Window of the held-out reference states the test used: an ISO 8601 UTC
+  /// interval, start/end.
+  TEST_WINDOW: string;
+  /// Mean of d2/3 over the held-out samples. NaN when not measured.
+  MEAN_D2_OVER_3: double = nan;
+  /// Share of the held-out samples inside the 95 % region, 0 to 1. NaN when
+  /// not measured.
+  COVERAGE_95: double = nan;
+  /// Number of held-out samples the test used.
+  SAMPLES: uint;
+  /// Number of distinct objects the samples came from.
+  OBJECTS: uint;
+  /// Factor the covariance was multiplied by to make it realistic. NaN when
+  /// none was applied.
+  SCALE_FACTOR: double = nan;
+  /// The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and
+  /// COVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3
+  /// objects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell
+  /// never measured.
+  CALIBRATION: covarianceCalibration = Unspecified;
+  /// Identifier of the report or record that holds the test.
+  EVIDENCE: string;
+}
+
+root_type CVR;
+file_identifier "$CVR";

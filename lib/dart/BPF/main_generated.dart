@@ -5,507 +5,241 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Capability class of a distributable software unit (module, application, or
-///  composed flow).
+///  Build Profile ($BPF)
 ///
-///  This enum IS the ratified category vocabulary. A storefront, library, module
-///  manifest and search surface all classify against these members and nothing
-///  else; a category that is not a member here does not exist. Members name
-///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
-///  site, organization, product, protocol brand or algorithm implementation;
-///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
-///  the taxonomy.
+///  The authoring-time configuration of one composed build: which variable
+///  parts of a build template are embedded, which modules roll in and at what
+///  protection tier, the runtime lock the produced artifact enforces, the
+///  distribution-control mode, and the template the profile was authored
+///  against. It is a CONFIGURATION record, not a grant and not an entitlement:
+///  it names no licensee, carries no key material, and confers no rights.
 ///
-///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
-///  reuse an ordinal. A reorder silently re-labels every published listing.
+///  Related records, and why this is not one of them:
+///    - `$PLK` is a per-licensee license key with issuer/licensee identity,
+///      activation counts and a validity window. `$BPF` has no licensee.
+///    - `$LGR` is a delivery-time grant carrying wrapped content keys and a
+///      provider signature. `$BPF` carries neither.
+///    - `$PLG` is the module descriptor. `$BPF` REFERENCES it per selected
+///      module and never restates a module's manifest.
+///    - `$APP` is the launchable-app manifest. It is the portability wrapper
+///      for a `$BPF`, never a substitute for it.
 ///
-///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
-///  default-constructed classification can never decode as a real category. The
-///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
-///  ordinal 0 is a real family — and had to append an `Unspecified` member at
-///  the tail to recover. This enum does not repeat that.
-///
-///  Each member's canonical display name is stated in its doc comment and is
-///  part of the ratified contract: a consumer rendering a category label uses
-///  that string verbatim, so every surface spells a category identically. The
-///  canonical route slug is the member identifier lowercased with `_` replaced
-///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
-///  "rf-and-communications").
-enum capabilityClass {
+///  The domain-restriction spelling is deliberately the ratified `$PLK`
+///  spelling — `ALLOWED_DOMAINS` / `ALLOWED_TLDS` — so a lock authored here
+///  and a lock issued there are the same vocabulary on the wire.
+///  Class of variable part a build template exposes as a named slot.
+///  Capability classes only; a deployment's own slot names ride in
+///  `BPFPart.PART_ID`, never in this vocabulary. Append new values only;
+///  never reorder or reuse existing values.
+enum bpfPartKind {
   UNSPECIFIED(0),
-  PROPAGATION(1),
-  ORBIT_DETERMINATION(2),
-  MANEUVER_PLANNING(3),
-  CONJUNCTION_ASSESSMENT(4),
-  REENTRY_AND_BREAKUP(5),
-  ATTITUDE_AND_POINTING(6),
-  REFERENCE_FRAMES_AND_TIME(7),
-  SENSORS_AND_COVERAGE(8),
-  TRACKING_AND_OBSERVATION(9),
-  RF_AND_COMMUNICATIONS(10),
-  ELECTRONIC_WARFARE(11),
-  SPACE_ENVIRONMENT(12),
-  DATA_SOURCES_AND_INGEST(13),
-  DATA_VALIDATION_AND_QUALITY(14),
-  CATALOG_AND_IDENTITY(15),
-  VISUALIZATION_AND_RENDERING(16),
-  GROUND_SEGMENT_AND_HARDWARE(17),
-  MISSION_DESIGN_AND_ANALYSIS(18),
-  FLOW_AND_COMPOSITION(19),
-  DATA_STORAGE_AND_QUERY(20),
-  SECURITY_AND_IDENTITY(21),
-  COMMERCE_AND_LICENSING(22),
-  NODE_INFRASTRUCTURE(23),
-  FOUNDATION_AND_MATH(24);
+  ENGINE_BINARY(1),
+  IMAGERY_DATA(2),
+  URL_DATA(3),
+  DOCUMENTATION(4),
+  ISOLATION_LOADER(5),
+  SOURCE_MAPS(6),
+  MODULE(7),
+  OTHER(8);
 
   final int value;
-  const capabilityClass(this.value);
+  const bpfPartKind(this.value);
 
-  factory capabilityClass.fromValue(int value) {
+  factory bpfPartKind.fromValue(int value) {
     switch (value) {
-      case 0: return capabilityClass.UNSPECIFIED;
-      case 1: return capabilityClass.PROPAGATION;
-      case 2: return capabilityClass.ORBIT_DETERMINATION;
-      case 3: return capabilityClass.MANEUVER_PLANNING;
-      case 4: return capabilityClass.CONJUNCTION_ASSESSMENT;
-      case 5: return capabilityClass.REENTRY_AND_BREAKUP;
-      case 6: return capabilityClass.ATTITUDE_AND_POINTING;
-      case 7: return capabilityClass.REFERENCE_FRAMES_AND_TIME;
-      case 8: return capabilityClass.SENSORS_AND_COVERAGE;
-      case 9: return capabilityClass.TRACKING_AND_OBSERVATION;
-      case 10: return capabilityClass.RF_AND_COMMUNICATIONS;
-      case 11: return capabilityClass.ELECTRONIC_WARFARE;
-      case 12: return capabilityClass.SPACE_ENVIRONMENT;
-      case 13: return capabilityClass.DATA_SOURCES_AND_INGEST;
-      case 14: return capabilityClass.DATA_VALIDATION_AND_QUALITY;
-      case 15: return capabilityClass.CATALOG_AND_IDENTITY;
-      case 16: return capabilityClass.VISUALIZATION_AND_RENDERING;
-      case 17: return capabilityClass.GROUND_SEGMENT_AND_HARDWARE;
-      case 18: return capabilityClass.MISSION_DESIGN_AND_ANALYSIS;
-      case 19: return capabilityClass.FLOW_AND_COMPOSITION;
-      case 20: return capabilityClass.DATA_STORAGE_AND_QUERY;
-      case 21: return capabilityClass.SECURITY_AND_IDENTITY;
-      case 22: return capabilityClass.COMMERCE_AND_LICENSING;
-      case 23: return capabilityClass.NODE_INFRASTRUCTURE;
-      case 24: return capabilityClass.FOUNDATION_AND_MATH;
+      case 0: return bpfPartKind.UNSPECIFIED;
+      case 1: return bpfPartKind.ENGINE_BINARY;
+      case 2: return bpfPartKind.IMAGERY_DATA;
+      case 3: return bpfPartKind.URL_DATA;
+      case 4: return bpfPartKind.DOCUMENTATION;
+      case 5: return bpfPartKind.ISOLATION_LOADER;
+      case 6: return bpfPartKind.SOURCE_MAPS;
+      case 7: return bpfPartKind.MODULE;
+      case 8: return bpfPartKind.OTHER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static capabilityClass? _createOrNull(int? value) =>
-      value == null ? null : capabilityClass.fromValue(value);
+  static bpfPartKind? _createOrNull(int? value) =>
+      value == null ? null : bpfPartKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 24;
-  static const fb.Reader<capabilityClass> reader = _capabilityClassReader();
+  static const int maxValue = 8;
+  static const fb.Reader<bpfPartKind> reader = _bpfPartKindReader();
 }
 
-class _capabilityClassReader extends fb.Reader<capabilityClass> {
-  const _capabilityClassReader();
+class _bpfPartKindReader extends fb.Reader<bpfPartKind> {
+  const _bpfPartKindReader();
 
   @override
   int get size => 1;
 
   @override
-  capabilityClass read(fb.BufferContext bc, int offset) =>
-      capabilityClass.fromValue(const fb.Uint8Reader().read(bc, offset));
+  bpfPartKind read(fb.BufferContext bc, int offset) =>
+      bpfPartKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  One ratified category in the taxonomy.
-///
-///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
-///  without the label a surface will render, the sentence a browse row will
-///  show, and the route a link will target. This is what stops each consumer
-///  from inventing its own wording for the same code.
-class CCTCategory {
-  CCTCategory._(this._bc, this._bcOffset);
-  factory CCTCategory(List<int> bytes) {
+///  How a selected module's payload is protected inside the produced
+///  artifact. Append new values only; never reorder or reuse existing values.
+enum bpfProtectionTier {
+  UNSPECIFIED(0),
+  OPEN(1),
+  ENCRYPTED(2),
+  LICENSED(3);
+
+  final int value;
+  const bpfProtectionTier(this.value);
+
+  factory bpfProtectionTier.fromValue(int value) {
+    switch (value) {
+      case 0: return bpfProtectionTier.UNSPECIFIED;
+      case 1: return bpfProtectionTier.OPEN;
+      case 2: return bpfProtectionTier.ENCRYPTED;
+      case 3: return bpfProtectionTier.LICENSED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static bpfProtectionTier? _createOrNull(int? value) =>
+      value == null ? null : bpfProtectionTier.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<bpfProtectionTier> reader = _bpfProtectionTierReader();
+}
+
+class _bpfProtectionTierReader extends fb.Reader<bpfProtectionTier> {
+  const _bpfProtectionTierReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  bpfProtectionTier read(fb.BufferContext bc, int offset) =>
+      bpfProtectionTier.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Distribution-control mode of the produced artifact. This is a build
+///  configuration choice, not a commercial term and not an entitlement.
+///  Append new values only; never reorder or reuse existing values.
+enum bpfLicenseMode {
+  UNSPECIFIED(0),
+  NONE(1),
+  BUNDLED_KEY(2),
+  LICENSE_KEY(3);
+
+  final int value;
+  const bpfLicenseMode(this.value);
+
+  factory bpfLicenseMode.fromValue(int value) {
+    switch (value) {
+      case 0: return bpfLicenseMode.UNSPECIFIED;
+      case 1: return bpfLicenseMode.NONE;
+      case 2: return bpfLicenseMode.BUNDLED_KEY;
+      case 3: return bpfLicenseMode.LICENSE_KEY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static bpfLicenseMode? _createOrNull(int? value) =>
+      value == null ? null : bpfLicenseMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<bpfLicenseMode> reader = _bpfLicenseModeReader();
+}
+
+class _bpfLicenseModeReader extends fb.Reader<bpfLicenseMode> {
+  const _bpfLicenseModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  bpfLicenseMode read(fb.BufferContext bc, int offset) =>
+      bpfLicenseMode.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  One variable part of the build template and whether this profile embeds
+///  it.
+class BPFPart {
+  BPFPart._(this._bc, this._bcOffset);
+  factory BPFPart(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CCTCategory> reader = _CCTCategoryReader();
+  static const fb.Reader<BPFPart> reader = _BPFPartReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  The ratified category code. This is the join key every consumer uses.
-  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
-  ///  name stated in the CODE member's doc comment.
-  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get displayName => DISPLAY_NAME;
-  ///  One-sentence description shown on browse rows and category headers.
-  String? get SUMMARY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
-  ///  `-`. Published explicitly rather than derived so every surface routes
-  ///  identically.
-  String? get SLUG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Longer editorial description for a category landing page.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
-  ///  top-level category. A category MUST NOT name itself as its parent.
-  capabilityClass get PARENT => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ///  Presentation order within its parent, ascending. Ties break on
-  ///  DISPLAY_NAME.
-  int get SORT_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get sortOrder => SORT_ORDER;
-  ///  Search synonyms and alternate phrasings that resolve to this category.
-  ///  Feeds type-ahead; never rendered as the category label.
-  List<String>? get KEYWORDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
-  ///  URL: consuming node surfaces load zero external-origin bytes, so the
-  ///  consumer resolves this against its own local asset set.
-  String? get ICON_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get iconKey => ICON_KEY;
+  ///  Template slot identifier this entry configures, as published by the
+  ///  template's part manifest. Required, unique within the profile.
+  String? get PART_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get partId => PART_ID;
+  ///  Capability class of the part.
+  bpfPartKind get KIND => bpfPartKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  True when the part is embedded in the produced artifact.
+  bool get INCLUDED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  64 lowercase hexadecimal characters encoding SHA-256 of the part's
+  ///  bytes as published by the template, so a composed artifact can be
+  ///  verified against the profile that produced it.
+  String? get CONTENT_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get contentSha256 => CONTENT_SHA256;
+  ///  Size of the part's bytes in octets, as published by the template.
+  int get BYTE_LENGTH => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get byteLength => BYTE_LENGTH;
+  ///  Human-readable summary.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
 
   @override
   String toString() {
-    return 'CCTCategory{CODE: ${CODE}, displayName: ${displayName}, SUMMARY: ${SUMMARY}, SLUG: ${SLUG}, DESCRIPTION: ${DESCRIPTION}, PARENT: ${PARENT}, sortOrder: ${sortOrder}, KEYWORDS: ${KEYWORDS}, iconKey: ${iconKey}}';
+    return 'BPFPart{partId: ${partId}, KIND: ${KIND}, INCLUDED: ${INCLUDED}, contentSha256: ${contentSha256}, byteLength: ${byteLength}, DESCRIPTION: ${DESCRIPTION}}';
   }
 }
 
-class _CCTCategoryReader extends fb.TableReader<CCTCategory> {
-  const _CCTCategoryReader();
+class _BPFPartReader extends fb.TableReader<BPFPart> {
+  const _BPFPartReader();
 
   @override
-  CCTCategory createObject(fb.BufferContext bc, int offset) =>
-    CCTCategory._(bc, offset);
+  BPFPart createObject(fb.BufferContext bc, int offset) =>
+    BPFPart._(bc, offset);
 }
 
-class CCTCategoryBuilder {
-  CCTCategoryBuilder(this.fbBuilder);
+class BPFPartBuilder {
+  BPFPartBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(6);
   }
 
-  int addCode(capabilityClass? CODE) {
-    fbBuilder.addUint8(0, CODE?.value);
-    return fbBuilder.offset;
-  }
-  int addDisplayNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addSummaryOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addSlugOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addParent(capabilityClass? PARENT) {
-    fbBuilder.addUint8(5, PARENT?.value);
-    return fbBuilder.offset;
-  }
-  int addSortOrder(int? SORT_ORDER) {
-    fbBuilder.addUint16(6, SORT_ORDER);
-    return fbBuilder.offset;
-  }
-  int addKeywordsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addIconKeyOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CCTCategoryObjectBuilder extends fb.ObjectBuilder {
-  final capabilityClass? _CODE;
-  final String? _DISPLAY_NAME;
-  final String? _SUMMARY;
-  final String? _SLUG;
-  final String? _DESCRIPTION;
-  final capabilityClass? _PARENT;
-  final int? _SORT_ORDER;
-  final List<String>? _KEYWORDS;
-  final String? _ICON_KEY;
-
-  CCTCategoryObjectBuilder({
-    capabilityClass? CODE,
-    String? DISPLAY_NAME,
-    String? displayName,
-    String? SUMMARY,
-    String? SLUG,
-    String? DESCRIPTION,
-    capabilityClass? PARENT,
-    int? SORT_ORDER,
-    int? sortOrder,
-    List<String>? KEYWORDS,
-    String? ICON_KEY,
-    String? iconKey,
-  })
-      : _CODE = CODE,
-        _DISPLAY_NAME = displayName ?? DISPLAY_NAME,
-        _SUMMARY = SUMMARY,
-        _SLUG = SLUG,
-        _DESCRIPTION = DESCRIPTION,
-        _PARENT = PARENT,
-        _SORT_ORDER = sortOrder ?? SORT_ORDER,
-        _KEYWORDS = KEYWORDS,
-        _ICON_KEY = iconKey ?? ICON_KEY;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
-        : fbBuilder.writeString(_DISPLAY_NAME!);
-    final int? SUMMARYOffset = _SUMMARY == null ? null
-        : fbBuilder.writeString(_SUMMARY!);
-    final int? SLUGOffset = _SLUG == null ? null
-        : fbBuilder.writeString(_SLUG!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? KEYWORDSOffset = _KEYWORDS == null ? null
-        : fbBuilder.writeList(_KEYWORDS!.map(fbBuilder.writeString).toList());
-    final int? ICON_KEYOffset = _ICON_KEY == null ? null
-        : fbBuilder.writeString(_ICON_KEY!);
-    fbBuilder.startTable(9);
-    fbBuilder.addUint8(0, _CODE?.value);
-    fbBuilder.addOffset(1, DISPLAY_NAMEOffset);
-    fbBuilder.addOffset(2, SUMMARYOffset);
-    fbBuilder.addOffset(3, SLUGOffset);
-    fbBuilder.addOffset(4, DESCRIPTIONOffset);
-    fbBuilder.addUint8(5, _PARENT?.value);
-    fbBuilder.addUint16(6, _SORT_ORDER);
-    fbBuilder.addOffset(7, KEYWORDSOffset);
-    fbBuilder.addOffset(8, ICON_KEYOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  An observed count of catalogue items in one category.
-///
-///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
-///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
-///  count can never omit when it was taken or what it was taken over. A consumer
-///  that needs a live number computes it from the items; a consumer rendering a
-///  published rollup MUST show it as of COUNTED_AT.
-class CCTCategoryRollup {
-  CCTCategoryRollup._(this._bc, this._bcOffset);
-  factory CCTCategoryRollup(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CCTCategoryRollup> reader = _CCTCategoryRollupReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Category being counted.
-  capabilityClass get CODE => capabilityClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
-  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
-  int get ITEM_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get itemCount => ITEM_COUNT;
-  ///  Identifier of the catalogue the count was taken over.
-  String? get SOURCE_CATALOG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get sourceCatalogId => SOURCE_CATALOG_ID;
-  ///  Unix seconds when the count was taken.
-  int get COUNTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get countedAt => COUNTED_AT;
-
-  @override
-  String toString() {
-    return 'CCTCategoryRollup{CODE: ${CODE}, itemCount: ${itemCount}, sourceCatalogId: ${sourceCatalogId}, countedAt: ${countedAt}}';
-  }
-}
-
-class _CCTCategoryRollupReader extends fb.TableReader<CCTCategoryRollup> {
-  const _CCTCategoryRollupReader();
-
-  @override
-  CCTCategoryRollup createObject(fb.BufferContext bc, int offset) =>
-    CCTCategoryRollup._(bc, offset);
-}
-
-class CCTCategoryRollupBuilder {
-  CCTCategoryRollupBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addCode(capabilityClass? CODE) {
-    fbBuilder.addUint8(0, CODE?.value);
-    return fbBuilder.offset;
-  }
-  int addItemCount(int? ITEM_COUNT) {
-    fbBuilder.addUint32(1, ITEM_COUNT);
-    return fbBuilder.offset;
-  }
-  int addSourceCatalogIdOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addCountedAt(int? COUNTED_AT) {
-    fbBuilder.addUint64(3, COUNTED_AT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CCTCategoryRollupObjectBuilder extends fb.ObjectBuilder {
-  final capabilityClass? _CODE;
-  final int? _ITEM_COUNT;
-  final String? _SOURCE_CATALOG_ID;
-  final int? _COUNTED_AT;
-
-  CCTCategoryRollupObjectBuilder({
-    capabilityClass? CODE,
-    int? ITEM_COUNT,
-    int? itemCount,
-    String? SOURCE_CATALOG_ID,
-    String? sourceCatalogId,
-    int? COUNTED_AT,
-    int? countedAt,
-  })
-      : _CODE = CODE,
-        _ITEM_COUNT = itemCount ?? ITEM_COUNT,
-        _SOURCE_CATALOG_ID = sourceCatalogId ?? SOURCE_CATALOG_ID,
-        _COUNTED_AT = countedAt ?? COUNTED_AT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCE_CATALOG_IDOffset = _SOURCE_CATALOG_ID == null ? null
-        : fbBuilder.writeString(_SOURCE_CATALOG_ID!);
-    fbBuilder.startTable(4);
-    fbBuilder.addUint8(0, _CODE?.value);
-    fbBuilder.addUint32(1, _ITEM_COUNT);
-    fbBuilder.addOffset(2, SOURCE_CATALOG_IDOffset);
-    fbBuilder.addUint64(3, _COUNTED_AT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  $CCT — Capability Category Taxonomy.
-///
-///  The ratified set of capability classes that distributable units (modules,
-///  applications, composed flows) are classified under, together with the labels
-///  and routes every consuming surface renders. One published $CCT is the single
-///  source of truth shared by a storefront, a library, a search index and the
-///  unit manifests themselves.
-///
-///  Division of labour: `$CCT` = the category vocabulary and its presentation;
-///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
-///  application's manifest, which cites categories by code; `$PMM` = which
-///  modules a provider serves; `$STO`/`$STF` = commerce.
-class CCT {
-  CCT._(this._bc, this._bcOffset);
-  factory CCT(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CCT> reader = _CCTReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stable identifier of this taxonomy publication.
-  String? get TAXONOMY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get taxonomyId => TAXONOMY_ID;
-  ///  SemVer 2.0.0 version of the taxonomy content.
-  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Unix seconds when this taxonomy revision was issued.
-  int get ISSUED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get issuedAt => ISSUED_AT;
-  ///  Human-readable title of the taxonomy.
-  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  The ratified categories. Every capabilityClass member a consumer may
-  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
-  List<CCTCategory>? get CATEGORIES => const fb.ListReader<CCTCategory>(CCTCategory.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Optional per-category item counts as observed over a named catalogue.
-  ///  Absent means counts are computed by the consumer.
-  List<CCTCategoryRollup>? get ROLLUPS => const fb.ListReader<CCTCategoryRollup>(CCTCategoryRollup.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Signature from the publishing node key over the canonical taxonomy bytes.
-  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
-
-  @override
-  String toString() {
-    return 'CCT{taxonomyId: ${taxonomyId}, VERSION: ${VERSION}, issuedAt: ${issuedAt}, TITLE: ${TITLE}, CATEGORIES: ${CATEGORIES}, ROLLUPS: ${ROLLUPS}, SIGNATURE: ${SIGNATURE}}';
-  }
-}
-
-class _CCTReader extends fb.TableReader<CCT> {
-  const _CCTReader();
-
-  @override
-  CCT createObject(fb.BufferContext bc, int offset) =>
-    CCT._(bc, offset);
-}
-
-class CCTBuilder {
-  CCTBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addTaxonomyIdOffset(int? offset) {
+  int addPartIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addVersionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addKind(bpfPartKind? KIND) {
+    fbBuilder.addInt8(1, KIND?.value);
     return fbBuilder.offset;
   }
-  int addIssuedAt(int? ISSUED_AT) {
-    fbBuilder.addUint64(2, ISSUED_AT);
+  int addIncluded(bool? INCLUDED) {
+    fbBuilder.addBool(2, INCLUDED);
     return fbBuilder.offset;
   }
-  int addTitleOffset(int? offset) {
+  int addContentSha256Offset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addCategoriesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addByteLength(int? BYTE_LENGTH) {
+    fbBuilder.addUint64(4, BYTE_LENGTH);
     return fbBuilder.offset;
   }
-  int addRollupsOffset(int? offset) {
+  int addDescriptionOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addSignatureOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
 
@@ -514,57 +248,708 @@ class CCTBuilder {
   }
 }
 
-class CCTObjectBuilder extends fb.ObjectBuilder {
-  final String? _TAXONOMY_ID;
-  final String? _VERSION;
-  final int? _ISSUED_AT;
-  final String? _TITLE;
-  final List<CCTCategoryObjectBuilder>? _CATEGORIES;
-  final List<CCTCategoryRollupObjectBuilder>? _ROLLUPS;
-  final List<int>? _SIGNATURE;
+class BPFPartObjectBuilder extends fb.ObjectBuilder {
+  final String? _PART_ID;
+  final bpfPartKind? _KIND;
+  final bool? _INCLUDED;
+  final String? _CONTENT_SHA256;
+  final int? _BYTE_LENGTH;
+  final String? _DESCRIPTION;
 
-  CCTObjectBuilder({
-    String? TAXONOMY_ID,
-    String? taxonomyId,
-    String? VERSION,
-    int? ISSUED_AT,
-    int? issuedAt,
-    String? TITLE,
-    List<CCTCategoryObjectBuilder>? CATEGORIES,
-    List<CCTCategoryRollupObjectBuilder>? ROLLUPS,
-    List<int>? SIGNATURE,
+  BPFPartObjectBuilder({
+    String? PART_ID,
+    String? partId,
+    bpfPartKind? KIND,
+    bool? INCLUDED,
+    String? CONTENT_SHA256,
+    String? contentSha256,
+    int? BYTE_LENGTH,
+    int? byteLength,
+    String? DESCRIPTION,
   })
-      : _TAXONOMY_ID = taxonomyId ?? TAXONOMY_ID,
-        _VERSION = VERSION,
-        _ISSUED_AT = issuedAt ?? ISSUED_AT,
-        _TITLE = TITLE,
-        _CATEGORIES = CATEGORIES,
-        _ROLLUPS = ROLLUPS,
-        _SIGNATURE = SIGNATURE;
+      : _PART_ID = partId ?? PART_ID,
+        _KIND = KIND,
+        _INCLUDED = INCLUDED,
+        _CONTENT_SHA256 = contentSha256 ?? CONTENT_SHA256,
+        _BYTE_LENGTH = byteLength ?? BYTE_LENGTH,
+        _DESCRIPTION = DESCRIPTION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? TAXONOMY_IDOffset = _TAXONOMY_ID == null ? null
-        : fbBuilder.writeString(_TAXONOMY_ID!);
-    final int? VERSIONOffset = _VERSION == null ? null
-        : fbBuilder.writeString(_VERSION!);
-    final int? TITLEOffset = _TITLE == null ? null
-        : fbBuilder.writeString(_TITLE!);
-    final int? CATEGORIESOffset = _CATEGORIES == null ? null
-        : fbBuilder.writeList(_CATEGORIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ROLLUPSOffset = _ROLLUPS == null ? null
-        : fbBuilder.writeList(_ROLLUPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PART_IDOffset = _PART_ID == null ? null
+        : fbBuilder.writeString(_PART_ID!);
+    final int? CONTENT_SHA256Offset = _CONTENT_SHA256 == null ? null
+        : fbBuilder.writeString(_CONTENT_SHA256!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, PART_IDOffset);
+    fbBuilder.addInt8(1, _KIND?.value);
+    fbBuilder.addBool(2, _INCLUDED);
+    fbBuilder.addOffset(3, CONTENT_SHA256Offset);
+    fbBuilder.addUint64(4, _BYTE_LENGTH);
+    fbBuilder.addOffset(5, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One module selected into the build and the tier its payload is protected
+///  at.
+class BPFModule {
+  BPFModule._(this._bc, this._bcOffset);
+  factory BPFModule(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BPFModule> reader = _BPFModuleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Canonical module identifier. Required, unique within the profile.
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get moduleId => MODULE_ID;
+  ///  Module version or version range.
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get moduleVersion => MODULE_VERSION;
+  ///  True when the module is embedded in the produced artifact.
+  bool get INCLUDED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Protection tier applied to this module's payload.
+  bpfProtectionTier get PROTECTION => bpfProtectionTier.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  64 lowercase hexadecimal characters encoding SHA-256 of the module's
+  ///  portable (pre-AOT, publication-trailer-stripped) bytes. This is the
+  ///  identity a capability or signature policy keys on.
+  String? get CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get contentHash => CONTENT_HASH;
+  ///  Published module descriptor, carried when the authoring context holds
+  ///  it. Advisory: `MODULE_ID` and `CONTENT_HASH` are the identity, and a
+  ///  consumer MUST NOT prefer a carried descriptor over the module's own
+  ///  published manifest.
+  PLG? get MODULE_DESCRIPTOR => PLG.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  PLG? get moduleDescriptor => MODULE_DESCRIPTOR;
+
+  @override
+  String toString() {
+    return 'BPFModule{moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, INCLUDED: ${INCLUDED}, PROTECTION: ${PROTECTION}, contentHash: ${contentHash}, moduleDescriptor: ${moduleDescriptor}}';
+  }
+}
+
+class _BPFModuleReader extends fb.TableReader<BPFModule> {
+  const _BPFModuleReader();
+
+  @override
+  BPFModule createObject(fb.BufferContext bc, int offset) =>
+    BPFModule._(bc, offset);
+}
+
+class BPFModuleBuilder {
+  BPFModuleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIncluded(bool? INCLUDED) {
+    fbBuilder.addBool(2, INCLUDED);
+    return fbBuilder.offset;
+  }
+  int addProtection(bpfProtectionTier? PROTECTION) {
+    fbBuilder.addInt8(3, PROTECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addContentHashOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleDescriptorOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BPFModuleObjectBuilder extends fb.ObjectBuilder {
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final bool? _INCLUDED;
+  final bpfProtectionTier? _PROTECTION;
+  final String? _CONTENT_HASH;
+  final PLGObjectBuilder? _MODULE_DESCRIPTOR;
+
+  BPFModuleObjectBuilder({
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    bool? INCLUDED,
+    bpfProtectionTier? PROTECTION,
+    String? CONTENT_HASH,
+    String? contentHash,
+    PLGObjectBuilder? MODULE_DESCRIPTOR,
+    PLGObjectBuilder? moduleDescriptor,
+  })
+      : _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _INCLUDED = INCLUDED,
+        _PROTECTION = PROTECTION,
+        _CONTENT_HASH = contentHash ?? CONTENT_HASH,
+        _MODULE_DESCRIPTOR = moduleDescriptor ?? MODULE_DESCRIPTOR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? CONTENT_HASHOffset = _CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_CONTENT_HASH!);
+    final int? MODULE_DESCRIPTOROffset = _MODULE_DESCRIPTOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, MODULE_IDOffset);
+    fbBuilder.addOffset(1, MODULE_VERSIONOffset);
+    fbBuilder.addBool(2, _INCLUDED);
+    fbBuilder.addInt8(3, _PROTECTION?.value);
+    fbBuilder.addOffset(4, CONTENT_HASHOffset);
+    fbBuilder.addOffset(5, MODULE_DESCRIPTOROffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The runtime restriction the produced artifact enforces on itself.
+///
+///  AUTHORIZATION. A host is authorized when it equals an `ALLOWED_DOMAINS`
+///  entry, OR ends with an `ALLOWED_TLDS` entry, OR equals a `DEV_DOMAINS`
+///  entry. Suffix rules are DOT-ANCHORED: `.mil` admits `x.mil` and `a.b.mil`
+///  and admits neither `mil` nor `evilmil`; a suffix rule never matches a
+///  host that merely contains it (`x.mil.example` is refused).
+///
+///  UNLOCKED IS EXPLICIT. `ALLOWED_DOMAINS` empty AND `ALLOWED_TLDS` empty
+///  means every host is authorized. This is a stated, allowed configuration,
+///  which is why this table is required on `BPF`: an absent lock is never
+///  read as an unlocked one.
+///
+///  EXPIRY IS INDEPENDENT of authorization: an unlocked profile still
+///  expires. There is deliberately no stored expiry instant — expiry is
+///  `COMPILED_AT_MS + TTL_DAYS * 86400000` and a second, storable copy of it
+///  could disagree with the two values that produce it.
+class BPFRuntimeLock {
+  BPFRuntimeLock._(this._bc, this._bcOffset);
+  factory BPFRuntimeLock(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BPFRuntimeLock> reader = _BPFRuntimeLockReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Exact hostnames authorized to run the produced artifact. Empty
+  ///  together with `ALLOWED_TLDS` means unrestricted.
+  List<String>? get ALLOWED_DOMAINS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 4);
+  List<String>? get allowedDomains => ALLOWED_DOMAINS;
+  ///  Dot-anchored hostname suffix rules, each written with its leading dot,
+  ///  for example `.gov`. Empty together with `ALLOWED_DOMAINS` means
+  ///  unrestricted.
+  List<String>? get ALLOWED_TLDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 6);
+  List<String>? get allowedTlds => ALLOWED_TLDS;
+  ///  Development hosts authorized in addition to the rules above, so a
+  ///  locked profile remains runnable in a development context. Kept
+  ///  separate from `ALLOWED_DOMAINS` because a development exemption and a
+  ///  deployment authorization are different facts: folded together, a
+  ///  development host would be indistinguishable from a deployment grant
+  ///  and would silently persist into a locked artifact.
+  List<String>? get DEV_DOMAINS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<String>? get devDomains => DEV_DOMAINS;
+  ///  Lifetime of the produced artifact in days from `COMPILED_AT_MS`.
+  ///  Normative range 1 through 365 inclusive; 180 when unstated. A value of
+  ///  0 or above 365 is invalid and MUST be rejected, never clamped.
+  int get TTL_DAYS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 180);
+  int get ttlDays => TTL_DAYS;
+  ///  Milliseconds since the Unix epoch at which the artifact was composed.
+  ///  0 means the profile has not been used to compose an artifact yet and
+  ///  carries no expiry; the composing step stamps it.
+  int get COMPILED_AT_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get compiledAtMs => COMPILED_AT_MS;
+
+  @override
+  String toString() {
+    return 'BPFRuntimeLock{allowedDomains: ${allowedDomains}, allowedTlds: ${allowedTlds}, devDomains: ${devDomains}, ttlDays: ${ttlDays}, compiledAtMs: ${compiledAtMs}}';
+  }
+}
+
+class _BPFRuntimeLockReader extends fb.TableReader<BPFRuntimeLock> {
+  const _BPFRuntimeLockReader();
+
+  @override
+  BPFRuntimeLock createObject(fb.BufferContext bc, int offset) =>
+    BPFRuntimeLock._(bc, offset);
+}
+
+class BPFRuntimeLockBuilder {
+  BPFRuntimeLockBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addAllowedDomainsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAllowedTldsOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDevDomainsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTtlDays(int? TTL_DAYS) {
+    fbBuilder.addUint32(3, TTL_DAYS);
+    return fbBuilder.offset;
+  }
+  int addCompiledAtMs(int? COMPILED_AT_MS) {
+    fbBuilder.addUint64(4, COMPILED_AT_MS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BPFRuntimeLockObjectBuilder extends fb.ObjectBuilder {
+  final List<String>? _ALLOWED_DOMAINS;
+  final List<String>? _ALLOWED_TLDS;
+  final List<String>? _DEV_DOMAINS;
+  final int? _TTL_DAYS;
+  final int? _COMPILED_AT_MS;
+
+  BPFRuntimeLockObjectBuilder({
+    List<String>? ALLOWED_DOMAINS,
+    List<String>? allowedDomains,
+    List<String>? ALLOWED_TLDS,
+    List<String>? allowedTlds,
+    List<String>? DEV_DOMAINS,
+    List<String>? devDomains,
+    int? TTL_DAYS,
+    int? ttlDays,
+    int? COMPILED_AT_MS,
+    int? compiledAtMs,
+  })
+      : _ALLOWED_DOMAINS = allowedDomains ?? ALLOWED_DOMAINS,
+        _ALLOWED_TLDS = allowedTlds ?? ALLOWED_TLDS,
+        _DEV_DOMAINS = devDomains ?? DEV_DOMAINS,
+        _TTL_DAYS = ttlDays ?? TTL_DAYS,
+        _COMPILED_AT_MS = compiledAtMs ?? COMPILED_AT_MS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ALLOWED_DOMAINSOffset = _ALLOWED_DOMAINS == null ? null
+        : fbBuilder.writeList(_ALLOWED_DOMAINS!.map(fbBuilder.writeString).toList());
+    final int? ALLOWED_TLDSOffset = _ALLOWED_TLDS == null ? null
+        : fbBuilder.writeList(_ALLOWED_TLDS!.map(fbBuilder.writeString).toList());
+    final int? DEV_DOMAINSOffset = _DEV_DOMAINS == null ? null
+        : fbBuilder.writeList(_DEV_DOMAINS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, ALLOWED_DOMAINSOffset);
+    fbBuilder.addOffset(1, ALLOWED_TLDSOffset);
+    fbBuilder.addOffset(2, DEV_DOMAINSOffset);
+    fbBuilder.addUint32(3, _TTL_DAYS);
+    fbBuilder.addUint64(4, _COMPILED_AT_MS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The publisher's attestation over this profile, in BOTH ratified forms.
+///
+///  PRESENCE IS THE STATEMENT. A profile is SIGNED if and only if this table
+///  is present; a profile whose `ATTESTATION` is absent is UNSIGNED, and a
+///  consumer marks it as such. There is deliberately no boolean saying so: a
+///  self-asserted "signed" flag is attacker-controlled and proves nothing,
+///  while presence of the table is checkable.
+///
+///  FAIL CLOSED. When this table is present, every field below MUST be
+///  present and BOTH signatures MUST verify independently against
+///  `SIGNING_PUBLIC_KEY`. A profile whose attestation is incomplete, or
+///  whose either signature fails, is REJECTED — it is NEVER downgraded to
+///  "unsigned and therefore acceptable", which would let stripping one
+///  signature launder a tampered profile past an importer that admits
+///  unsigned input.
+class BPFAttestation {
+  BPFAttestation._(this._bc, this._bcOffset);
+  factory BPFAttestation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BPFAttestation> reader = _BPFAttestationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The signer's LITERAL Ed25519 public key, 64 lowercase hexadecimal
+  ///  characters. A derivation ancestor is structurally absent from this
+  ///  standard: publishing one lets any holder of a child key walk the
+  ///  signer's whole key tree. Rotation is republication.
+  String? get SIGNING_PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get signingPublicKey => SIGNING_PUBLIC_KEY;
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  at which the attestation was produced.
+  String? get SIGNED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get signedAt => SIGNED_AT;
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
+  List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
+
+  @override
+  String toString() {
+    return 'BPFAttestation{signingPublicKey: ${signingPublicKey}, signedAt: ${signedAt}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}}';
+  }
+}
+
+class _BPFAttestationReader extends fb.TableReader<BPFAttestation> {
+  const _BPFAttestationReader();
+
+  @override
+  BPFAttestation createObject(fb.BufferContext bc, int offset) =>
+    BPFAttestation._(bc, offset);
+}
+
+class BPFAttestationBuilder {
+  BPFAttestationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addSigningPublicKeyOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSignedAtOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalJsonSignatureOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BPFAttestationObjectBuilder extends fb.ObjectBuilder {
+  final String? _SIGNING_PUBLIC_KEY;
+  final String? _SIGNED_AT;
+  final List<int>? _SIGNATURE;
+  final List<int>? _CANONICAL_JSON_SIGNATURE;
+
+  BPFAttestationObjectBuilder({
+    String? SIGNING_PUBLIC_KEY,
+    String? signingPublicKey,
+    String? SIGNED_AT,
+    String? signedAt,
+    List<int>? SIGNATURE,
+    List<int>? CANONICAL_JSON_SIGNATURE,
+    List<int>? canonicalJsonSignature,
+  })
+      : _SIGNING_PUBLIC_KEY = signingPublicKey ?? SIGNING_PUBLIC_KEY,
+        _SIGNED_AT = signedAt ?? SIGNED_AT,
+        _SIGNATURE = SIGNATURE,
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SIGNING_PUBLIC_KEYOffset = _SIGNING_PUBLIC_KEY == null ? null
+        : fbBuilder.writeString(_SIGNING_PUBLIC_KEY!);
+    final int? SIGNED_ATOffset = _SIGNED_AT == null ? null
+        : fbBuilder.writeString(_SIGNED_AT!);
     final int? SIGNATUREOffset = _SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_SIGNATURE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, TAXONOMY_IDOffset);
-    fbBuilder.addOffset(1, VERSIONOffset);
-    fbBuilder.addUint64(2, _ISSUED_AT);
-    fbBuilder.addOffset(3, TITLEOffset);
-    fbBuilder.addOffset(4, CATEGORIESOffset);
-    fbBuilder.addOffset(5, ROLLUPSOffset);
-    fbBuilder.addOffset(6, SIGNATUREOffset);
+    final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, SIGNING_PUBLIC_KEYOffset);
+    fbBuilder.addOffset(1, SIGNED_ATOffset);
+    fbBuilder.addOffset(2, SIGNATUREOffset);
+    fbBuilder.addOffset(3, CANONICAL_JSON_SIGNATUREOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Build Profile — one saved, portable build configuration.
+///
+///  PORTABILITY. The export unit is a `$REC` collection carrying this record
+///  and, optionally, an `$APP` manifest that names it through an `APPDataRef`
+///  with `SDS_TYPE: "BPF"`. The `$APP` wrapper is launcher metadata and
+///  carries no authority; all authority over a profile lives in
+///  `ATTESTATION`. A bare size-prefixed `$BPF` buffer is also a complete,
+///  valid export.
+class BPF {
+  BPF._(this._bc, this._bcOffset);
+  factory BPF(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BPF> reader = _BPFReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable profile identity, unique per author. Required.
+  String? get PROFILE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get profileId => PROFILE_ID;
+  ///  Display name of the profile. Required.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Human-readable summary.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  when the profile was created.
+  String? get CREATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get createdAt => CREATED_AT;
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  when the profile was last updated.
+  String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get updatedAt => UPDATED_AT;
+  ///  64 lowercase hexadecimal characters encoding SHA-256 of the build
+  ///  template this profile was authored against. Required: a profile that
+  ///  does not say which template it configures cannot be validated against
+  ///  one. A consumer holding a different template MAY still import the
+  ///  profile but MUST mark it as authored against another template and MUST
+  ///  NOT silently re-map its parts.
+  String? get TEMPLATE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get templateSha256 => TEMPLATE_SHA256;
+  ///  Template slots and their inclusion decisions. A slot the template
+  ///  exposes and this vector omits is NOT included.
+  List<BPFPart>? get PARTS => const fb.ListReader<BPFPart>(BPFPart.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Modules selected into the build and their protection tiers.
+  List<BPFModule>? get MODULES => const fb.ListReader<BPFModule>(BPFModule.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  The runtime restriction the produced artifact enforces. Required, so
+  ///  that an unlocked build is a stated configuration rather than a missing
+  ///  one.
+  BPFRuntimeLock? get RUNTIME_LOCK => BPFRuntimeLock.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  BPFRuntimeLock? get runtimeLock => RUNTIME_LOCK;
+  ///  Distribution-control mode of the produced artifact.
+  bpfLicenseMode get LICENSE_MODE => bpfLicenseMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  bpfLicenseMode get licenseMode => LICENSE_MODE;
+  ///  Publisher attestation. Absent means the profile is unsigned; see
+  ///  `BPFAttestation` for the fail-closed rule when it is present.
+  BPFAttestation? get ATTESTATION => BPFAttestation.reader.vTableGetNullable(_bc, _bcOffset, 24);
+
+  @override
+  String toString() {
+    return 'BPF{profileId: ${profileId}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, templateSha256: ${templateSha256}, PARTS: ${PARTS}, MODULES: ${MODULES}, runtimeLock: ${runtimeLock}, licenseMode: ${licenseMode}, ATTESTATION: ${ATTESTATION}}';
+  }
+}
+
+class _BPFReader extends fb.TableReader<BPF> {
+  const _BPFReader();
+
+  @override
+  BPF createObject(fb.BufferContext bc, int offset) =>
+    BPF._(bc, offset);
+}
+
+class BPFBuilder {
+  BPFBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addProfileIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCreatedAtOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAtOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTemplateSha256Offset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addPartsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addModulesOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addRuntimeLockOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseMode(bpfLicenseMode? LICENSE_MODE) {
+    fbBuilder.addInt8(9, LICENSE_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addAttestationOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BPFObjectBuilder extends fb.ObjectBuilder {
+  final String? _PROFILE_ID;
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final String? _CREATED_AT;
+  final String? _UPDATED_AT;
+  final String? _TEMPLATE_SHA256;
+  final List<BPFPartObjectBuilder>? _PARTS;
+  final List<BPFModuleObjectBuilder>? _MODULES;
+  final BPFRuntimeLockObjectBuilder? _RUNTIME_LOCK;
+  final bpfLicenseMode? _LICENSE_MODE;
+  final BPFAttestationObjectBuilder? _ATTESTATION;
+
+  BPFObjectBuilder({
+    String? PROFILE_ID,
+    String? profileId,
+    String? NAME,
+    String? DESCRIPTION,
+    String? CREATED_AT,
+    String? createdAt,
+    String? UPDATED_AT,
+    String? updatedAt,
+    String? TEMPLATE_SHA256,
+    String? templateSha256,
+    List<BPFPartObjectBuilder>? PARTS,
+    List<BPFModuleObjectBuilder>? MODULES,
+    BPFRuntimeLockObjectBuilder? RUNTIME_LOCK,
+    BPFRuntimeLockObjectBuilder? runtimeLock,
+    bpfLicenseMode? LICENSE_MODE,
+    bpfLicenseMode? licenseMode,
+    BPFAttestationObjectBuilder? ATTESTATION,
+  })
+      : _PROFILE_ID = profileId ?? PROFILE_ID,
+        _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _CREATED_AT = createdAt ?? CREATED_AT,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+        _TEMPLATE_SHA256 = templateSha256 ?? TEMPLATE_SHA256,
+        _PARTS = PARTS,
+        _MODULES = MODULES,
+        _RUNTIME_LOCK = runtimeLock ?? RUNTIME_LOCK,
+        _LICENSE_MODE = licenseMode ?? LICENSE_MODE,
+        _ATTESTATION = ATTESTATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PROFILE_IDOffset = _PROFILE_ID == null ? null
+        : fbBuilder.writeString(_PROFILE_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? CREATED_ATOffset = _CREATED_AT == null ? null
+        : fbBuilder.writeString(_CREATED_AT!);
+    final int? UPDATED_ATOffset = _UPDATED_AT == null ? null
+        : fbBuilder.writeString(_UPDATED_AT!);
+    final int? TEMPLATE_SHA256Offset = _TEMPLATE_SHA256 == null ? null
+        : fbBuilder.writeString(_TEMPLATE_SHA256!);
+    final int? PARTSOffset = _PARTS == null ? null
+        : fbBuilder.writeList(_PARTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MODULESOffset = _MODULES == null ? null
+        : fbBuilder.writeList(_MODULES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? RUNTIME_LOCKOffset = _RUNTIME_LOCK?.getOrCreateOffset(fbBuilder);
+    final int? ATTESTATIONOffset = _ATTESTATION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, PROFILE_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, DESCRIPTIONOffset);
+    fbBuilder.addOffset(3, CREATED_ATOffset);
+    fbBuilder.addOffset(4, UPDATED_ATOffset);
+    fbBuilder.addOffset(5, TEMPLATE_SHA256Offset);
+    fbBuilder.addOffset(6, PARTSOffset);
+    fbBuilder.addOffset(7, MODULESOffset);
+    fbBuilder.addOffset(8, RUNTIME_LOCKOffset);
+    fbBuilder.addInt8(9, _LICENSE_MODE?.value);
+    fbBuilder.addOffset(10, ATTESTATIONOffset);
     return fbBuilder.endTable();
   }
 

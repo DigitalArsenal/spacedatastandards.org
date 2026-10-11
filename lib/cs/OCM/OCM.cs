@@ -128,7 +128,7 @@ public struct OCM : IFlatbufferObject
 #endif
   public byte[] GetORB_AVERAGINGArray() { return __p.__vector_as_array<byte>(44); }
   /// Whether COVARIANCE_DATA's coverage was measured against independent
-  /// reference states.
+  /// reference states: Calibrated only when every COV_REALISM entry is.
   public covarianceCalibration COV_CALIBRATION { get { int o = __p.__offset(46); return o != 0 ? (covarianceCalibration)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceCalibration.Unspecified; } }
   /// Identifier of that calibration evidence (a report or record).
   public string COV_CALIBRATION_REFERENCE { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -178,6 +178,12 @@ public struct OCM : IFlatbufferObject
   /// block when it is one line.
   public OCMCovarianceBlock? COVARIANCE_BLOCKS(int j) { int o = __p.__offset(64); return o != 0 ? (OCMCovarianceBlock?)(new OCMCovarianceBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int COVARIANCE_BLOCKSLength { get { int o = __p.__offset(64); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Where the message's data comes from and the terms it travels under.
+  public PVN? PROVENANCE { get { int o = __p.__offset(66); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+  /// STATE_DATA epochs, or one entry for every epoch.
+  public CVR? COV_REALISM(int j) { int o = __p.__offset(68); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int COV_REALISMLength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OCM> CreateOCM(FlatBufferBuilder builder,
       Offset<Header> HEADEROffset = default(Offset<Header>),
@@ -210,9 +216,13 @@ public struct OCM : IFlatbufferObject
       VectorOffset COV_PARAMETERSOffset = default(VectorOffset),
       VectorOffset COV_UNITSOffset = default(VectorOffset),
       VectorOffset TRAJECTORY_BLOCKSOffset = default(VectorOffset),
-      VectorOffset COVARIANCE_BLOCKSOffset = default(VectorOffset)) {
-    builder.StartTable(31);
+      VectorOffset COVARIANCE_BLOCKSOffset = default(VectorOffset),
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>),
+      VectorOffset COV_REALISMOffset = default(VectorOffset)) {
+    builder.StartTable(33);
     OCM.AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE);
+    OCM.AddCOV_REALISM(builder, COV_REALISMOffset);
+    OCM.AddPROVENANCE(builder, PROVENANCEOffset);
     OCM.AddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKSOffset);
     OCM.AddTRAJECTORY_BLOCKS(builder, TRAJECTORY_BLOCKSOffset);
     OCM.AddCOV_UNITS(builder, COV_UNITSOffset);
@@ -246,7 +256,7 @@ public struct OCM : IFlatbufferObject
     return OCM.EndOCM(builder);
   }
 
-  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(31); }
+  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(33); }
   public static void AddHEADER(FlatBufferBuilder builder, Offset<Header> HEADEROffset) { builder.AddOffset(0, HEADEROffset.Value, 0); }
   public static void AddMETADATA(FlatBufferBuilder builder, Offset<Metadata> METADATAOffset) { builder.AddOffset(1, METADATAOffset.Value, 0); }
   public static void AddTRAJ_TYPE(FlatBufferBuilder builder, trajectoryType TRAJ_TYPE) { builder.AddSbyte(2, (sbyte)TRAJ_TYPE, 0); }
@@ -333,6 +343,13 @@ public struct OCM : IFlatbufferObject
   public static VectorOffset CreateCOVARIANCE_BLOCKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OCMCovarianceBlock>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOVARIANCE_BLOCKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OCMCovarianceBlock>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOVARIANCE_BLOCKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(31, PROVENANCEOffset.Value, 0); }
+  public static void AddCOV_REALISM(FlatBufferBuilder builder, VectorOffset COV_REALISMOffset) { builder.AddOffset(32, COV_REALISMOffset.Value, 0); }
+  public static VectorOffset CreateCOV_REALISMVector(FlatBufferBuilder builder, Offset<CVR>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, Offset<CVR>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CVR>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CVR>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOV_REALISMVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OCM> EndOCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCM>(o);
@@ -387,6 +404,9 @@ public struct OCM : IFlatbufferObject
     for (var _j = 0; _j < this.TRAJECTORY_BLOCKSLength; ++_j) {_o.TRAJECTORY_BLOCKS.Add(this.TRAJECTORY_BLOCKS(_j).HasValue ? this.TRAJECTORY_BLOCKS(_j).Value.UnPack() : null);}
     _o.COVARIANCE_BLOCKS = new List<OCMCovarianceBlockT>();
     for (var _j = 0; _j < this.COVARIANCE_BLOCKSLength; ++_j) {_o.COVARIANCE_BLOCKS.Add(this.COVARIANCE_BLOCKS(_j).HasValue ? this.COVARIANCE_BLOCKS(_j).Value.UnPack() : null);}
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
+    _o.COV_REALISM = new List<CVRT>();
+    for (var _j = 0; _j < this.COV_REALISMLength; ++_j) {_o.COV_REALISM.Add(this.COV_REALISM(_j).HasValue ? this.COV_REALISM(_j).Value.UnPack() : null);}
   }
   public static Offset<OCM> Pack(FlatBufferBuilder builder, OCMT _o) {
     if (_o == null) return default(Offset<OCM>);
@@ -467,6 +487,13 @@ public struct OCM : IFlatbufferObject
       for (var _j = 0; _j < __COVARIANCE_BLOCKS.Length; ++_j) { __COVARIANCE_BLOCKS[_j] = OCMCovarianceBlock.Pack(builder, _o.COVARIANCE_BLOCKS[_j]); }
       _COVARIANCE_BLOCKS = CreateCOVARIANCE_BLOCKSVector(builder, __COVARIANCE_BLOCKS);
     }
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
+    var _COV_REALISM = default(VectorOffset);
+    if (_o.COV_REALISM != null) {
+      var __COV_REALISM = new Offset<CVR>[_o.COV_REALISM.Count];
+      for (var _j = 0; _j < __COV_REALISM.Length; ++_j) { __COV_REALISM[_j] = CVR.Pack(builder, _o.COV_REALISM[_j]); }
+      _COV_REALISM = CreateCOV_REALISMVector(builder, __COV_REALISM);
+    }
     return CreateOCM(
       builder,
       _HEADER,
@@ -499,7 +526,9 @@ public struct OCM : IFlatbufferObject
       _COV_PARAMETERS,
       _COV_UNITS,
       _TRAJECTORY_BLOCKS,
-      _COVARIANCE_BLOCKS);
+      _COVARIANCE_BLOCKS,
+      _PROVENANCE,
+      _COV_REALISM);
   }
 }
 
@@ -536,6 +565,8 @@ public class OCMT
   public List<string> COV_UNITS { get; set; }
   public List<OCMTrajectoryBlockT> TRAJECTORY_BLOCKS { get; set; }
   public List<OCMCovarianceBlockT> COVARIANCE_BLOCKS { get; set; }
+  public PVNT PROVENANCE { get; set; }
+  public List<CVRT> COV_REALISM { get; set; }
 
   public OCMT() {
     this.HEADER = null;
@@ -569,6 +600,8 @@ public class OCMT
     this.COV_UNITS = null;
     this.TRAJECTORY_BLOCKS = null;
     this.COVARIANCE_BLOCKS = null;
+    this.PROVENANCE = null;
+    this.COV_REALISM = null;
   }
   public static OCMT DeserializeFromBinary(byte[] fbBuffer) {
     return OCM.GetRootAsOCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -617,6 +650,8 @@ static public class OCMVerify
       && verifier.VerifyVectorOfStrings(tablePos, 60 /*COV_UNITS*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 62 /*TRAJECTORY_BLOCKS*/, OCMTrajectoryBlockVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 64 /*COVARIANCE_BLOCKS*/, OCMCovarianceBlockVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 66 /*PROVENANCE*/, PVNVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 68 /*COV_REALISM*/, CVRVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

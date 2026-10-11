@@ -4,7 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CVR, CVRT } from './CVR.js';
 import { OMMUserDefinedParameter, OMMUserDefinedParameterT } from './OMMUserDefinedParameter.js';
+import { PVN, PVNT } from './PVN.js';
 import { RFM, RFMT } from './RFM.js';
 import { ephemerisFormat } from './ephemerisFormat.js';
 import { meanElementSource } from './meanElementSource.js';
@@ -437,8 +439,24 @@ userDefinedParametersLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Where the element set comes from and the terms it travels under.
+ */
+PROVENANCE(obj?:PVN):PVN|null {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Realism of COVARIANCE.
+ */
+COV_REALISM(obj?:CVR):CVR|null {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? (obj || new CVR()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startOMM(builder:flatbuffers.Builder) {
-  builder.startObject(43);
+  builder.startObject(45);
 }
 
 static addCcsdsOmmVers(builder:flatbuffers.Builder, CCSDS_OMM_VERS:number) {
@@ -642,6 +660,14 @@ static startUserDefinedParametersVector(builder:flatbuffers.Builder, numElems:nu
   builder.startVector(4, numElems, 4);
 }
 
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(43, PROVENANCEOffset, 0);
+}
+
+static addCovRealism(builder:flatbuffers.Builder, COV_REALISMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(44, COV_REALISMOffset, 0);
+}
+
 static endOMM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -700,7 +726,9 @@ unpack(): OMMT {
     this.USER_DEFINED_MICROSECONDS(),
     this.CLASSIFICATION(),
     this.MESSAGE_ID(),
-    this.bb!.createObjList<OMMUserDefinedParameter, OMMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength())
+    this.bb!.createObjList<OMMUserDefinedParameter, OMMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength()),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
+    (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null)
   );
 }
 
@@ -749,6 +777,8 @@ unpackTo(_o: OMMT): void {
   _o.CLASSIFICATION = this.CLASSIFICATION();
   _o.MESSAGE_ID = this.MESSAGE_ID();
   _o.USER_DEFINED_PARAMETERS = this.bb!.createObjList<OMMUserDefinedParameter, OMMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength());
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
+  _o.COV_REALISM = (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null);
 }
 }
 
@@ -796,7 +826,9 @@ constructor(
   public USER_DEFINED_MICROSECONDS: number = 0.0,
   public CLASSIFICATION: string|Uint8Array|null = null,
   public MESSAGE_ID: string|Uint8Array|null = null,
-  public USER_DEFINED_PARAMETERS: (OMMUserDefinedParameterT)[] = []
+  public USER_DEFINED_PARAMETERS: (OMMUserDefinedParameterT)[] = [],
+  public PROVENANCE: PVNT|null = null,
+  public COV_REALISM: CVRT|null = null
 ){}
 
 
@@ -818,6 +850,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CLASSIFICATION = (this.CLASSIFICATION !== null ? builder.createString(this.CLASSIFICATION!) : 0);
   const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
   const USER_DEFINED_PARAMETERS = OMM.createUserDefinedParametersVector(builder, builder.createObjectOffsetList(this.USER_DEFINED_PARAMETERS));
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
+  const COV_REALISM = (this.COV_REALISM !== null ? this.COV_REALISM!.pack(builder) : 0);
 
   OMM.startOMM(builder);
   OMM.addCcsdsOmmVers(builder, this.CCSDS_OMM_VERS);
@@ -863,6 +897,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OMM.addClassification(builder, CLASSIFICATION);
   OMM.addMessageId(builder, MESSAGE_ID);
   OMM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERS);
+  OMM.addProvenance(builder, PROVENANCE);
+  OMM.addCovRealism(builder, COV_REALISM);
 
   return OMM.endOMM(builder);
 }

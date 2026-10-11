@@ -5,506 +5,335 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Coarse spectral region a band belongs to, by effective wavelength.
+///  Physical class of a non-stellar source.
 ///  Append new values only; never reorder or reuse existing values.
-enum phbSpectralRegime {
+enum csoSourceClass {
   UNSPECIFIED(0),
-  GAMMA_RAY(1),
-  HARD_X_RAY(2),
-  SOFT_X_RAY(3),
-  EXTREME_ULTRAVIOLET(4),
-  FAR_ULTRAVIOLET(5),
-  NEAR_ULTRAVIOLET(6),
-  VISIBLE(7),
-  NEAR_INFRARED(8),
-  MID_INFRARED(9),
-  FAR_INFRARED(10),
-  SUBMILLIMETRE(11),
-  MICROWAVE(12),
-  RADIO(13);
+  UNIDENTIFIED(1),
+  X_RAY_BINARY(2),
+  CATACLYSMIC_VARIABLE(3),
+  PULSAR(4),
+  MAGNETAR(5),
+  SUPERNOVA_REMNANT(6),
+  PULSAR_WIND_NEBULA(7),
+  ACTIVE_GALACTIC_NUCLEUS(8),
+  BLAZAR(9),
+  QUASAR(10),
+  GALAXY(11),
+  GALAXY_CLUSTER(12),
+  GLOBULAR_CLUSTER(13),
+  OPEN_CLUSTER(14),
+  EMISSION_NEBULA(15),
+  PLANETARY_NEBULA(16),
+  MOLECULAR_CLOUD(17),
+  GAMMA_RAY_BURST(18),
+  SUPERNOVA(19),
+  NOVA(20),
+  KILONOVA(21),
+  TIDAL_DISRUPTION_EVENT(22),
+  FAST_RADIO_BURST(23),
+  NEUTRINO_EVENT(24),
+  GRAVITATIONAL_WAVE_EVENT(25),
+  HIGH_ENERGY_FLARE(26),
+  OPTICAL_TRANSIENT(27),
+  OTHER(28);
 
   final int value;
-  const phbSpectralRegime(this.value);
+  const csoSourceClass(this.value);
 
-  factory phbSpectralRegime.fromValue(int value) {
+  factory csoSourceClass.fromValue(int value) {
     switch (value) {
-      case 0: return phbSpectralRegime.UNSPECIFIED;
-      case 1: return phbSpectralRegime.GAMMA_RAY;
-      case 2: return phbSpectralRegime.HARD_X_RAY;
-      case 3: return phbSpectralRegime.SOFT_X_RAY;
-      case 4: return phbSpectralRegime.EXTREME_ULTRAVIOLET;
-      case 5: return phbSpectralRegime.FAR_ULTRAVIOLET;
-      case 6: return phbSpectralRegime.NEAR_ULTRAVIOLET;
-      case 7: return phbSpectralRegime.VISIBLE;
-      case 8: return phbSpectralRegime.NEAR_INFRARED;
-      case 9: return phbSpectralRegime.MID_INFRARED;
-      case 10: return phbSpectralRegime.FAR_INFRARED;
-      case 11: return phbSpectralRegime.SUBMILLIMETRE;
-      case 12: return phbSpectralRegime.MICROWAVE;
-      case 13: return phbSpectralRegime.RADIO;
+      case 0: return csoSourceClass.UNSPECIFIED;
+      case 1: return csoSourceClass.UNIDENTIFIED;
+      case 2: return csoSourceClass.X_RAY_BINARY;
+      case 3: return csoSourceClass.CATACLYSMIC_VARIABLE;
+      case 4: return csoSourceClass.PULSAR;
+      case 5: return csoSourceClass.MAGNETAR;
+      case 6: return csoSourceClass.SUPERNOVA_REMNANT;
+      case 7: return csoSourceClass.PULSAR_WIND_NEBULA;
+      case 8: return csoSourceClass.ACTIVE_GALACTIC_NUCLEUS;
+      case 9: return csoSourceClass.BLAZAR;
+      case 10: return csoSourceClass.QUASAR;
+      case 11: return csoSourceClass.GALAXY;
+      case 12: return csoSourceClass.GALAXY_CLUSTER;
+      case 13: return csoSourceClass.GLOBULAR_CLUSTER;
+      case 14: return csoSourceClass.OPEN_CLUSTER;
+      case 15: return csoSourceClass.EMISSION_NEBULA;
+      case 16: return csoSourceClass.PLANETARY_NEBULA;
+      case 17: return csoSourceClass.MOLECULAR_CLOUD;
+      case 18: return csoSourceClass.GAMMA_RAY_BURST;
+      case 19: return csoSourceClass.SUPERNOVA;
+      case 20: return csoSourceClass.NOVA;
+      case 21: return csoSourceClass.KILONOVA;
+      case 22: return csoSourceClass.TIDAL_DISRUPTION_EVENT;
+      case 23: return csoSourceClass.FAST_RADIO_BURST;
+      case 24: return csoSourceClass.NEUTRINO_EVENT;
+      case 25: return csoSourceClass.GRAVITATIONAL_WAVE_EVENT;
+      case 26: return csoSourceClass.HIGH_ENERGY_FLARE;
+      case 27: return csoSourceClass.OPTICAL_TRANSIENT;
+      case 28: return csoSourceClass.OTHER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static phbSpectralRegime? _createOrNull(int? value) =>
-      value == null ? null : phbSpectralRegime.fromValue(value);
+  static csoSourceClass? _createOrNull(int? value) =>
+      value == null ? null : csoSourceClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 13;
-  static const fb.Reader<phbSpectralRegime> reader = _phbSpectralRegimeReader();
+  static const int maxValue = 28;
+  static const fb.Reader<csoSourceClass> reader = _csoSourceClassReader();
 }
 
-class _phbSpectralRegimeReader extends fb.Reader<phbSpectralRegime> {
-  const _phbSpectralRegimeReader();
+class _csoSourceClassReader extends fb.Reader<csoSourceClass> {
+  const _csoSourceClassReader();
 
   @override
   int get size => 1;
 
   @override
-  phbSpectralRegime read(fb.BufferContext bc, int offset) =>
-      phbSpectralRegime.fromValue(const fb.Uint8Reader().read(bc, offset));
+  csoSourceClass read(fb.BufferContext bc, int offset) =>
+      csoSourceClass.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Calibration system a magnitude is stated in.
+///  Carrier the source was detected in.
 ///  Append new values only; never reorder or reuse existing values.
-enum phbMagnitudeSystem {
+enum csoMessenger {
   UNSPECIFIED(0),
-  VEGA(1),
-  AB(2),
-  ST(3),
-  INSTRUMENTAL(4),
-  NOT_A_MAGNITUDE(5);
+  ELECTROMAGNETIC(1),
+  NEUTRINO(2),
+  GRAVITATIONAL_WAVE(3),
+  COSMIC_RAY(4);
 
   final int value;
-  const phbMagnitudeSystem(this.value);
+  const csoMessenger(this.value);
 
-  factory phbMagnitudeSystem.fromValue(int value) {
+  factory csoMessenger.fromValue(int value) {
     switch (value) {
-      case 0: return phbMagnitudeSystem.UNSPECIFIED;
-      case 1: return phbMagnitudeSystem.VEGA;
-      case 2: return phbMagnitudeSystem.AB;
-      case 3: return phbMagnitudeSystem.ST;
-      case 4: return phbMagnitudeSystem.INSTRUMENTAL;
-      case 5: return phbMagnitudeSystem.NOT_A_MAGNITUDE;
+      case 0: return csoMessenger.UNSPECIFIED;
+      case 1: return csoMessenger.ELECTROMAGNETIC;
+      case 2: return csoMessenger.NEUTRINO;
+      case 3: return csoMessenger.GRAVITATIONAL_WAVE;
+      case 4: return csoMessenger.COSMIC_RAY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static phbMagnitudeSystem? _createOrNull(int? value) =>
-      value == null ? null : phbMagnitudeSystem.fromValue(value);
+  static csoMessenger? _createOrNull(int? value) =>
+      value == null ? null : csoMessenger.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<phbMagnitudeSystem> reader = _phbMagnitudeSystemReader();
+  static const int maxValue = 4;
+  static const fb.Reader<csoMessenger> reader = _csoMessengerReader();
 }
 
-class _phbMagnitudeSystemReader extends fb.Reader<phbMagnitudeSystem> {
-  const _phbMagnitudeSystemReader();
+class _csoMessengerReader extends fb.Reader<csoMessenger> {
+  const _csoMessengerReader();
 
   @override
   int get size => 1;
 
   @override
-  phbMagnitudeSystem read(fb.BufferContext bc, int offset) =>
-      phbMagnitudeSystem.fromValue(const fb.Uint8Reader().read(bc, offset));
+  csoMessenger read(fb.BufferContext bc, int offset) =>
+      csoMessenger.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Physical quantity a measurement VALUE states.
+///  Stage of an alert record.
 ///  Append new values only; never reorder or reuse existing values.
-enum phbQuantity {
-  UNSPECIFIED(0),
-  MAGNITUDE(1),
-  FLUX_DENSITY_JY(2),
-  ENERGY_FLUX_W_PER_M2(3),
-  PHOTON_FLUX_PER_M2_S(4),
-  COUNT_RATE_PER_S(5),
-  BRIGHTNESS_TEMPERATURE_K(6);
+enum csoAlertStage {
+  NONE(0),
+  PRELIMINARY(1),
+  INITIAL(2),
+  UPDATE(3),
+  RETRACTED(4);
 
   final int value;
-  const phbQuantity(this.value);
+  const csoAlertStage(this.value);
 
-  factory phbQuantity.fromValue(int value) {
+  factory csoAlertStage.fromValue(int value) {
     switch (value) {
-      case 0: return phbQuantity.UNSPECIFIED;
-      case 1: return phbQuantity.MAGNITUDE;
-      case 2: return phbQuantity.FLUX_DENSITY_JY;
-      case 3: return phbQuantity.ENERGY_FLUX_W_PER_M2;
-      case 4: return phbQuantity.PHOTON_FLUX_PER_M2_S;
-      case 5: return phbQuantity.COUNT_RATE_PER_S;
-      case 6: return phbQuantity.BRIGHTNESS_TEMPERATURE_K;
+      case 0: return csoAlertStage.NONE;
+      case 1: return csoAlertStage.PRELIMINARY;
+      case 2: return csoAlertStage.INITIAL;
+      case 3: return csoAlertStage.UPDATE;
+      case 4: return csoAlertStage.RETRACTED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static phbQuantity? _createOrNull(int? value) =>
-      value == null ? null : phbQuantity.fromValue(value);
+  static csoAlertStage? _createOrNull(int? value) =>
+      value == null ? null : csoAlertStage.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
-  static const fb.Reader<phbQuantity> reader = _phbQuantityReader();
+  static const int maxValue = 4;
+  static const fb.Reader<csoAlertStage> reader = _csoAlertStageReader();
 }
 
-class _phbQuantityReader extends fb.Reader<phbQuantity> {
-  const _phbQuantityReader();
+class _csoAlertStageReader extends fb.Reader<csoAlertStage> {
+  const _csoAlertStageReader();
 
   @override
   int get size => 1;
 
   @override
-  phbQuantity read(fb.BufferContext bc, int offset) =>
-      phbQuantity.fromValue(const fb.Uint8Reader().read(bc, offset));
+  csoAlertStage read(fb.BufferContext bc, int offset) =>
+      csoAlertStage.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  How a measurement was obtained.
-///  Append new values only; never reorder or reuse existing values.
-enum phbDerivation {
-  UNSPECIFIED(0),
-  MEASURED(1),
-  TRANSFORMED(2),
-  MODELLED(3);
-
-  final int value;
-  const phbDerivation(this.value);
-
-  factory phbDerivation.fromValue(int value) {
-    switch (value) {
-      case 0: return phbDerivation.UNSPECIFIED;
-      case 1: return phbDerivation.MEASURED;
-      case 2: return phbDerivation.TRANSFORMED;
-      case 3: return phbDerivation.MODELLED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static phbDerivation? _createOrNull(int? value) =>
-      value == null ? null : phbDerivation.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<phbDerivation> reader = _phbDerivationReader();
-}
-
-class _phbDerivationReader extends fb.Reader<phbDerivation> {
-  const _phbDerivationReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  phbDerivation read(fb.BufferContext bc, int offset) =>
-      phbDerivation.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Whether a measurement is a detection or a bound.
-///  Append new values only; never reorder or reuse existing values.
-enum phbBoundKind {
-  DETECTION(0),
-  UPPER_LIMIT(1),
-  LOWER_LIMIT(2);
-
-  final int value;
-  const phbBoundKind(this.value);
-
-  factory phbBoundKind.fromValue(int value) {
-    switch (value) {
-      case 0: return phbBoundKind.DETECTION;
-      case 1: return phbBoundKind.UPPER_LIMIT;
-      case 2: return phbBoundKind.LOWER_LIMIT;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static phbBoundKind? _createOrNull(int? value) =>
-      value == null ? null : phbBoundKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<phbBoundKind> reader = _phbBoundKindReader();
-}
-
-class _phbBoundKindReader extends fb.Reader<phbBoundKind> {
-  const _phbBoundKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  phbBoundKind read(fb.BufferContext bc, int offset) =>
-      phbBoundKind.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  One source's brightness in one band.
-class PHBMeasurement {
-  PHBMeasurement._(this._bc, this._bcOffset);
-  factory PHBMeasurement(List<int> bytes) {
+///  Celestial Source: a non-stellar source or transient, with position and multi-band brightness.
+class CSO {
+  CSO._(this._bc, this._bcOffset);
+  factory CSO(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PHBMeasurement> reader = _PHBMeasurementReader();
+  static const fb.Reader<CSO> reader = _CSOReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Band identifier; resolves to a `$PHB` BAND_ID.
-  String? get BAND_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get bandId => BAND_ID;
-  ///  Coarse region of the band, copied from its descriptor so a consumer
-  ///  can select a mode without resolving the band.
-  phbSpectralRegime get SPECTRAL_REGIME => phbSpectralRegime.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  phbSpectralRegime get spectralRegime => SPECTRAL_REGIME;
-  ///  Effective wavelength of the band, nanometres (vacuum). Copied from the
-  ///  descriptor; required for synthesis when the descriptor is not at hand.
-  double get WAVELENGTH_EFF_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, double.nan);
-  double get wavelengthEffNm => WAVELENGTH_EFF_NM;
-  ///  Quantity VALUE states.
-  phbQuantity get QUANTITY => phbQuantity.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 1));
-  ///  Calibration system when QUANTITY is MAGNITUDE.
-  phbMagnitudeSystem get MAGNITUDE_SYSTEM => phbMagnitudeSystem.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  phbMagnitudeSystem get magnitudeSystem => MAGNITUDE_SYSTEM;
-  ///  The measurement, in QUANTITY's units.
-  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
-  ///  One-sigma uncertainty of VALUE, same units.
-  double get UNCERTAINTY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, double.nan);
-  ///  Detection or bound.
-  phbBoundKind get BOUND => phbBoundKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  ///  How the value was obtained.
-  phbDerivation get DERIVATION => phbDerivation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  ///  Mid-time of the observation, Modified Julian Date (TT), for sources
-  ///  whose brightness varies. Absent for a catalogue mean.
-  double get EPOCH_MJD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, double.nan);
-  double get epochMjd => EPOCH_MJD;
-  ///  Number of observations averaged into VALUE; 0 when unstated.
-  int get OBSERVATION_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  int get observationCount => OBSERVATION_COUNT;
-
-  @override
-  String toString() {
-    return 'PHBMeasurement{bandId: ${bandId}, spectralRegime: ${spectralRegime}, wavelengthEffNm: ${wavelengthEffNm}, QUANTITY: ${QUANTITY}, magnitudeSystem: ${magnitudeSystem}, VALUE: ${VALUE}, UNCERTAINTY: ${UNCERTAINTY}, BOUND: ${BOUND}, DERIVATION: ${DERIVATION}, epochMjd: ${epochMjd}, observationCount: ${observationCount}}';
-  }
-}
-
-class _PHBMeasurementReader extends fb.TableReader<PHBMeasurement> {
-  const _PHBMeasurementReader();
-
-  @override
-  PHBMeasurement createObject(fb.BufferContext bc, int offset) =>
-    PHBMeasurement._(bc, offset);
-}
-
-class PHBMeasurementBuilder {
-  PHBMeasurementBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(11);
-  }
-
-  int addBandIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addSpectralRegime(phbSpectralRegime? SPECTRAL_REGIME) {
-    fbBuilder.addUint8(1, SPECTRAL_REGIME?.value);
-    return fbBuilder.offset;
-  }
-  int addWavelengthEffNm(double? WAVELENGTH_EFF_NM) {
-    fbBuilder.addFloat64(2, WAVELENGTH_EFF_NM);
-    return fbBuilder.offset;
-  }
-  int addQuantity(phbQuantity? QUANTITY) {
-    fbBuilder.addUint8(3, QUANTITY?.value);
-    return fbBuilder.offset;
-  }
-  int addMagnitudeSystem(phbMagnitudeSystem? MAGNITUDE_SYSTEM) {
-    fbBuilder.addUint8(4, MAGNITUDE_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addValue(double? VALUE) {
-    fbBuilder.addFloat64(5, VALUE);
-    return fbBuilder.offset;
-  }
-  int addUncertainty(double? UNCERTAINTY) {
-    fbBuilder.addFloat64(6, UNCERTAINTY);
-    return fbBuilder.offset;
-  }
-  int addBound(phbBoundKind? BOUND) {
-    fbBuilder.addUint8(7, BOUND?.value);
-    return fbBuilder.offset;
-  }
-  int addDerivation(phbDerivation? DERIVATION) {
-    fbBuilder.addUint8(8, DERIVATION?.value);
-    return fbBuilder.offset;
-  }
-  int addEpochMjd(double? EPOCH_MJD) {
-    fbBuilder.addFloat64(9, EPOCH_MJD);
-    return fbBuilder.offset;
-  }
-  int addObservationCount(int? OBSERVATION_COUNT) {
-    fbBuilder.addUint32(10, OBSERVATION_COUNT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PHBMeasurementObjectBuilder extends fb.ObjectBuilder {
-  final String? _BAND_ID;
-  final phbSpectralRegime? _SPECTRAL_REGIME;
-  final double? _WAVELENGTH_EFF_NM;
-  final phbQuantity? _QUANTITY;
-  final phbMagnitudeSystem? _MAGNITUDE_SYSTEM;
-  final double? _VALUE;
-  final double? _UNCERTAINTY;
-  final phbBoundKind? _BOUND;
-  final phbDerivation? _DERIVATION;
-  final double? _EPOCH_MJD;
-  final int? _OBSERVATION_COUNT;
-
-  PHBMeasurementObjectBuilder({
-    String? BAND_ID,
-    String? bandId,
-    phbSpectralRegime? SPECTRAL_REGIME,
-    phbSpectralRegime? spectralRegime,
-    double? WAVELENGTH_EFF_NM,
-    double? wavelengthEffNm,
-    phbQuantity? QUANTITY,
-    phbMagnitudeSystem? MAGNITUDE_SYSTEM,
-    phbMagnitudeSystem? magnitudeSystem,
-    double? VALUE,
-    double? UNCERTAINTY,
-    phbBoundKind? BOUND,
-    phbDerivation? DERIVATION,
-    double? EPOCH_MJD,
-    double? epochMjd,
-    int? OBSERVATION_COUNT,
-    int? observationCount,
-  })
-      : _BAND_ID = bandId ?? BAND_ID,
-        _SPECTRAL_REGIME = spectralRegime ?? SPECTRAL_REGIME,
-        _WAVELENGTH_EFF_NM = wavelengthEffNm ?? WAVELENGTH_EFF_NM,
-        _QUANTITY = QUANTITY,
-        _MAGNITUDE_SYSTEM = magnitudeSystem ?? MAGNITUDE_SYSTEM,
-        _VALUE = VALUE,
-        _UNCERTAINTY = UNCERTAINTY,
-        _BOUND = BOUND,
-        _DERIVATION = DERIVATION,
-        _EPOCH_MJD = epochMjd ?? EPOCH_MJD,
-        _OBSERVATION_COUNT = observationCount ?? OBSERVATION_COUNT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? BAND_IDOffset = _BAND_ID == null ? null
-        : fbBuilder.writeString(_BAND_ID!);
-    fbBuilder.startTable(11);
-    fbBuilder.addOffset(0, BAND_IDOffset);
-    fbBuilder.addUint8(1, _SPECTRAL_REGIME?.value);
-    fbBuilder.addFloat64(2, _WAVELENGTH_EFF_NM);
-    fbBuilder.addUint8(3, _QUANTITY?.value);
-    fbBuilder.addUint8(4, _MAGNITUDE_SYSTEM?.value);
-    fbBuilder.addFloat64(5, _VALUE);
-    fbBuilder.addFloat64(6, _UNCERTAINTY);
-    fbBuilder.addUint8(7, _BOUND?.value);
-    fbBuilder.addUint8(8, _DERIVATION?.value);
-    fbBuilder.addFloat64(9, _EPOCH_MJD);
-    fbBuilder.addUint32(10, _OBSERVATION_COUNT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Photometric Band: one passband's place on the spectrum and its calibration.
-class PHB {
-  PHB._(this._bc, this._bcOffset);
-  factory PHB(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PHB> reader = _PHBReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stable band identifier, unique within the publishing catalogue, e.g.
-  ///  "V", "Ks", "0.5-2keV", "1.4GHz". Measurements refer to it.
-  String? get BAND_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get bandId => BAND_ID;
-  ///  Human-readable name.
+  ///  Stable identifier, equal across every revision of one source.
+  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Preferred name.
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Name of the photometric system the band belongs to, as the defining
-  ///  publication states it.
-  String? get SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get systemName => SYSTEM_NAME;
-  ///  Coarse spectral region, by WAVELENGTH_EFF_NM.
-  phbSpectralRegime get SPECTRAL_REGIME => phbSpectralRegime.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  phbSpectralRegime get spectralRegime => SPECTRAL_REGIME;
-  ///  Effective (pivot) wavelength, nanometres, vacuum.
-  double get WAVELENGTH_EFF_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
-  double get wavelengthEffNm => WAVELENGTH_EFF_NM;
-  ///  Short edge of the band at half maximum response, nanometres.
-  double get WAVELENGTH_MIN_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
-  double get wavelengthMinNm => WAVELENGTH_MIN_NM;
-  ///  Long edge of the band at half maximum response, nanometres.
-  double get WAVELENGTH_MAX_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, double.nan);
-  double get wavelengthMaxNm => WAVELENGTH_MAX_NM;
-  ///  Calibration system of magnitudes stated in the band.
-  phbMagnitudeSystem get MAGNITUDE_SYSTEM => phbMagnitudeSystem.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  phbMagnitudeSystem get magnitudeSystem => MAGNITUDE_SYSTEM;
-  ///  Flux density at the effective wavelength of a zero-magnitude source,
-  ///  janskys.
-  double get ZERO_POINT_JY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, double.nan);
-  double get zeroPointJy => ZERO_POINT_JY;
-  ///  Wavelengths the response curve is sampled at, nanometres, ascending.
-  List<double>? get RESPONSE_WAVELENGTH_NM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
-  List<double>? get responseWavelengthNm => RESPONSE_WAVELENGTH_NM;
-  ///  Relative system response at each RESPONSE_WAVELENGTH_NM sample,
-  ///  peak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY.
-  List<double>? get RESPONSE => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 24);
-  ///  True when RESPONSE is an energy-counting response.
-  bool get RESPONSE_IS_ENERGY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
-  bool get responseIsEnergy => RESPONSE_IS_ENERGY;
-  ///  Reference to the publication that defines the band.
-  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  ///  URL of the band's defining document or response table.
-  String? get DEFINITION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get definitionUrl => DEFINITION_URL;
+  ///  Other designations, each in the form its catalogue uses.
+  List<String>? get DESIGNATIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Physical class.
+  csoSourceClass get SOURCE_CLASS => csoSourceClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  csoSourceClass get sourceClass => SOURCE_CLASS;
+  ///  Producer's class name when SOURCE_CLASS is OTHER, or a finer subclass.
+  String? get CLASS_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get className => CLASS_NAME;
+  ///  Probability that SOURCE_CLASS is right, [0, 1].
+  double get CLASS_PROBABILITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
+  double get classProbability => CLASS_PROBABILITY;
+  ///  Carrier the source was detected in.
+  csoMessenger get MESSENGER => csoMessenger.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 1));
+  ///  Right ascension, degrees, ICRS.
+  double get RA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, double.nan);
+  ///  Declination, degrees, ICRS.
+  double get DEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, double.nan);
+  ///  Epoch of RA and DEC, Julian years (TT).
+  double get POSITION_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, double.nan);
+  double get positionEpoch => POSITION_EPOCH;
+  ///  Semi-major axis of the localisation ellipse, arcseconds.
+  double get POS_ERR_MAJOR_ARCSEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, double.nan);
+  double get posErrMajorArcsec => POS_ERR_MAJOR_ARCSEC;
+  ///  Semi-minor axis of the localisation ellipse, arcseconds.
+  double get POS_ERR_MINOR_ARCSEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, double.nan);
+  double get posErrMinorArcsec => POS_ERR_MINOR_ARCSEC;
+  ///  Position angle of the major axis, degrees east of north.
+  double get POS_ERR_PA_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, double.nan);
+  double get posErrPaDeg => POS_ERR_PA_DEG;
+  ///  Probability contained in the ellipse, (0, 1), e.g. 0.9.
+  double get POS_ERR_CONFIDENCE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 30, double.nan);
+  double get posErrConfidence => POS_ERR_CONFIDENCE;
+  ///  LAYER_ID of the `$SKT` probability-map tiles that localise the source,
+  ///  when an ellipse cannot.
+  String? get LOCALIZATION_LAYER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get localizationLayerId => LOCALIZATION_LAYER_ID;
+  ///  Parallax, milliarcseconds.
+  double get PARALLAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, double.nan);
+  ///  Proper motion in RA times cos(DEC), milliarcseconds per year.
+  double get PMRA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, double.nan);
+  ///  Proper motion in DEC, milliarcseconds per year.
+  double get PMDEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, double.nan);
+  ///  Redshift.
+  double get REDSHIFT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, double.nan);
+  ///  One-sigma redshift uncertainty.
+  double get REDSHIFT_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, double.nan);
+  double get redshiftUnc => REDSHIFT_UNC;
+  ///  Luminosity distance, megaparsecs, when stated directly (as for a
+  ///  gravitational-wave candidate).
+  double get DISTANCE_MPC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, double.nan);
+  double get distanceMpc => DISTANCE_MPC;
+  ///  One-sigma distance uncertainty, megaparsecs.
+  double get DISTANCE_UNC_MPC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, double.nan);
+  double get distanceUncMpc => DISTANCE_UNC_MPC;
+  ///  Angular size of an extended source: major axis, arcseconds. Absent for
+  ///  a point source.
+  double get SIZE_MAJOR_ARCSEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, double.nan);
+  double get sizeMajorArcsec => SIZE_MAJOR_ARCSEC;
+  ///  Minor axis, arcseconds.
+  double get SIZE_MINOR_ARCSEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, double.nan);
+  double get sizeMinorArcsec => SIZE_MINOR_ARCSEC;
+  ///  Position angle of the major axis, degrees east of north.
+  double get SIZE_PA_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, double.nan);
+  double get sizePaDeg => SIZE_PA_DEG;
+  ///  Brightness per band.
+  List<PHBMeasurement>? get PHOTOMETRY => const fb.ListReader<PHBMeasurement>(PHBMeasurement.reader).vTableGetNullable(_bc, _bcOffset, 54);
+  ///  True when the source is a transient or flaring episode rather than a
+  ///  persistent source.
+  bool get IS_TRANSIENT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, false);
+  bool get isTransient => IS_TRANSIENT;
+  ///  Trigger or peak time, ISO 8601 UTC.
+  String? get EVENT_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get eventTime => EVENT_TIME;
+  ///  Start of the activity, ISO 8601 UTC.
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get startTime => START_TIME;
+  ///  End of the activity, ISO 8601 UTC.
+  String? get END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get endTime => END_TIME;
+  ///  Duration containing 90% of the fluence, seconds.
+  double get DURATION_T90_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, double.nan);
+  double get durationT90S => DURATION_T90_S;
+  ///  Period of a periodic source (rotation, orbit, pulsation), seconds.
+  double get PERIOD_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, double.nan);
+  double get periodS => PERIOD_S;
+  ///  First time derivative of PERIOD_S, seconds per second.
+  double get PERIOD_DERIVATIVE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, double.nan);
+  double get periodDerivative => PERIOD_DERIVATIVE;
+  ///  Detection significance, standard deviations.
+  double get SIGNIFICANCE_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, double.nan);
+  double get significanceSigma => SIGNIFICANCE_SIGMA;
+  ///  False-alarm rate of the detection, per year.
+  double get FALSE_ALARM_RATE_PER_YR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, double.nan);
+  double get falseAlarmRatePerYr => FALSE_ALARM_RATE_PER_YR;
+  ///  Stage of an alert record.
+  csoAlertStage get ALERT_STATE => csoAlertStage.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 74, 0));
+  csoAlertStage get alertState => ALERT_STATE;
+  ///  Revision number of this record for its ID, from 0.
+  int get ALERT_REVISION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 76, 0);
+  int get alertRevision => ALERT_REVISION;
+  ///  Time this revision was issued, ISO 8601 UTC.
+  String? get ISSUED_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  String? get issuedTime => ISSUED_TIME;
+  ///  Verbatim name of the catalogue or alert stream the record came from.
+  String? get SOURCE_CATALOG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  String? get sourceCatalog => SOURCE_CATALOG;
+  ///  URL of the upstream record.
+  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get sourceUrl => SOURCE_URL;
+  ///  Citation the upstream publisher asks for.
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
 
   @override
   String toString() {
-    return 'PHB{bandId: ${bandId}, NAME: ${NAME}, systemName: ${systemName}, spectralRegime: ${spectralRegime}, wavelengthEffNm: ${wavelengthEffNm}, wavelengthMinNm: ${wavelengthMinNm}, wavelengthMaxNm: ${wavelengthMaxNm}, magnitudeSystem: ${magnitudeSystem}, zeroPointJy: ${zeroPointJy}, responseWavelengthNm: ${responseWavelengthNm}, RESPONSE: ${RESPONSE}, responseIsEnergy: ${responseIsEnergy}, CITATION: ${CITATION}, definitionUrl: ${definitionUrl}}';
+    return 'CSO{ID: ${ID}, NAME: ${NAME}, DESIGNATIONS: ${DESIGNATIONS}, sourceClass: ${sourceClass}, className: ${className}, classProbability: ${classProbability}, MESSENGER: ${MESSENGER}, RA: ${RA}, DEC: ${DEC}, positionEpoch: ${positionEpoch}, posErrMajorArcsec: ${posErrMajorArcsec}, posErrMinorArcsec: ${posErrMinorArcsec}, posErrPaDeg: ${posErrPaDeg}, posErrConfidence: ${posErrConfidence}, localizationLayerId: ${localizationLayerId}, PARALLAX: ${PARALLAX}, PMRA: ${PMRA}, PMDEC: ${PMDEC}, REDSHIFT: ${REDSHIFT}, redshiftUnc: ${redshiftUnc}, distanceMpc: ${distanceMpc}, distanceUncMpc: ${distanceUncMpc}, sizeMajorArcsec: ${sizeMajorArcsec}, sizeMinorArcsec: ${sizeMinorArcsec}, sizePaDeg: ${sizePaDeg}, PHOTOMETRY: ${PHOTOMETRY}, isTransient: ${isTransient}, eventTime: ${eventTime}, startTime: ${startTime}, endTime: ${endTime}, durationT90S: ${durationT90S}, periodS: ${periodS}, periodDerivative: ${periodDerivative}, significanceSigma: ${significanceSigma}, falseAlarmRatePerYr: ${falseAlarmRatePerYr}, alertState: ${alertState}, alertRevision: ${alertRevision}, issuedTime: ${issuedTime}, sourceCatalog: ${sourceCatalog}, sourceUrl: ${sourceUrl}, CITATION: ${CITATION}}';
   }
 }
 
-class _PHBReader extends fb.TableReader<PHB> {
-  const _PHBReader();
+class _CSOReader extends fb.TableReader<CSO> {
+  const _CSOReader();
 
   @override
-  PHB createObject(fb.BufferContext bc, int offset) =>
-    PHB._(bc, offset);
+  CSO createObject(fb.BufferContext bc, int offset) =>
+    CSO._(bc, offset);
 }
 
-class PHBBuilder {
-  PHBBuilder(this.fbBuilder);
+class CSOBuilder {
+  CSOBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(41);
   }
 
-  int addBandIdOffset(int? offset) {
+  int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
@@ -512,52 +341,160 @@ class PHBBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSystemNameOffset(int? offset) {
+  int addDesignationsOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addSpectralRegime(phbSpectralRegime? SPECTRAL_REGIME) {
-    fbBuilder.addUint8(3, SPECTRAL_REGIME?.value);
+  int addSourceClass(csoSourceClass? SOURCE_CLASS) {
+    fbBuilder.addUint8(3, SOURCE_CLASS?.value);
     return fbBuilder.offset;
   }
-  int addWavelengthEffNm(double? WAVELENGTH_EFF_NM) {
-    fbBuilder.addFloat64(4, WAVELENGTH_EFF_NM);
+  int addClassNameOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addWavelengthMinNm(double? WAVELENGTH_MIN_NM) {
-    fbBuilder.addFloat64(5, WAVELENGTH_MIN_NM);
+  int addClassProbability(double? CLASS_PROBABILITY) {
+    fbBuilder.addFloat32(5, CLASS_PROBABILITY);
     return fbBuilder.offset;
   }
-  int addWavelengthMaxNm(double? WAVELENGTH_MAX_NM) {
-    fbBuilder.addFloat64(6, WAVELENGTH_MAX_NM);
+  int addMessenger(csoMessenger? MESSENGER) {
+    fbBuilder.addUint8(6, MESSENGER?.value);
     return fbBuilder.offset;
   }
-  int addMagnitudeSystem(phbMagnitudeSystem? MAGNITUDE_SYSTEM) {
-    fbBuilder.addUint8(7, MAGNITUDE_SYSTEM?.value);
+  int addRa(double? RA) {
+    fbBuilder.addFloat64(7, RA);
     return fbBuilder.offset;
   }
-  int addZeroPointJy(double? ZERO_POINT_JY) {
-    fbBuilder.addFloat64(8, ZERO_POINT_JY);
+  int addDec(double? DEC) {
+    fbBuilder.addFloat64(8, DEC);
     return fbBuilder.offset;
   }
-  int addResponseWavelengthNmOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addPositionEpoch(double? POSITION_EPOCH) {
+    fbBuilder.addFloat64(9, POSITION_EPOCH);
     return fbBuilder.offset;
   }
-  int addResponseOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+  int addPosErrMajorArcsec(double? POS_ERR_MAJOR_ARCSEC) {
+    fbBuilder.addFloat64(10, POS_ERR_MAJOR_ARCSEC);
     return fbBuilder.offset;
   }
-  int addResponseIsEnergy(bool? RESPONSE_IS_ENERGY) {
-    fbBuilder.addBool(11, RESPONSE_IS_ENERGY);
+  int addPosErrMinorArcsec(double? POS_ERR_MINOR_ARCSEC) {
+    fbBuilder.addFloat64(11, POS_ERR_MINOR_ARCSEC);
+    return fbBuilder.offset;
+  }
+  int addPosErrPaDeg(double? POS_ERR_PA_DEG) {
+    fbBuilder.addFloat64(12, POS_ERR_PA_DEG);
+    return fbBuilder.offset;
+  }
+  int addPosErrConfidence(double? POS_ERR_CONFIDENCE) {
+    fbBuilder.addFloat32(13, POS_ERR_CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addLocalizationLayerIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addParallax(double? PARALLAX) {
+    fbBuilder.addFloat64(15, PARALLAX);
+    return fbBuilder.offset;
+  }
+  int addPmra(double? PMRA) {
+    fbBuilder.addFloat64(16, PMRA);
+    return fbBuilder.offset;
+  }
+  int addPmdec(double? PMDEC) {
+    fbBuilder.addFloat64(17, PMDEC);
+    return fbBuilder.offset;
+  }
+  int addRedshift(double? REDSHIFT) {
+    fbBuilder.addFloat64(18, REDSHIFT);
+    return fbBuilder.offset;
+  }
+  int addRedshiftUnc(double? REDSHIFT_UNC) {
+    fbBuilder.addFloat64(19, REDSHIFT_UNC);
+    return fbBuilder.offset;
+  }
+  int addDistanceMpc(double? DISTANCE_MPC) {
+    fbBuilder.addFloat64(20, DISTANCE_MPC);
+    return fbBuilder.offset;
+  }
+  int addDistanceUncMpc(double? DISTANCE_UNC_MPC) {
+    fbBuilder.addFloat64(21, DISTANCE_UNC_MPC);
+    return fbBuilder.offset;
+  }
+  int addSizeMajorArcsec(double? SIZE_MAJOR_ARCSEC) {
+    fbBuilder.addFloat64(22, SIZE_MAJOR_ARCSEC);
+    return fbBuilder.offset;
+  }
+  int addSizeMinorArcsec(double? SIZE_MINOR_ARCSEC) {
+    fbBuilder.addFloat64(23, SIZE_MINOR_ARCSEC);
+    return fbBuilder.offset;
+  }
+  int addSizePaDeg(double? SIZE_PA_DEG) {
+    fbBuilder.addFloat64(24, SIZE_PA_DEG);
+    return fbBuilder.offset;
+  }
+  int addPhotometryOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addIsTransient(bool? IS_TRANSIENT) {
+    fbBuilder.addBool(26, IS_TRANSIENT);
+    return fbBuilder.offset;
+  }
+  int addEventTimeOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addEndTimeOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addDurationT90S(double? DURATION_T90_S) {
+    fbBuilder.addFloat64(30, DURATION_T90_S);
+    return fbBuilder.offset;
+  }
+  int addPeriodS(double? PERIOD_S) {
+    fbBuilder.addFloat64(31, PERIOD_S);
+    return fbBuilder.offset;
+  }
+  int addPeriodDerivative(double? PERIOD_DERIVATIVE) {
+    fbBuilder.addFloat64(32, PERIOD_DERIVATIVE);
+    return fbBuilder.offset;
+  }
+  int addSignificanceSigma(double? SIGNIFICANCE_SIGMA) {
+    fbBuilder.addFloat64(33, SIGNIFICANCE_SIGMA);
+    return fbBuilder.offset;
+  }
+  int addFalseAlarmRatePerYr(double? FALSE_ALARM_RATE_PER_YR) {
+    fbBuilder.addFloat64(34, FALSE_ALARM_RATE_PER_YR);
+    return fbBuilder.offset;
+  }
+  int addAlertState(csoAlertStage? ALERT_STATE) {
+    fbBuilder.addUint8(35, ALERT_STATE?.value);
+    return fbBuilder.offset;
+  }
+  int addAlertRevision(int? ALERT_REVISION) {
+    fbBuilder.addUint32(36, ALERT_REVISION);
+    return fbBuilder.offset;
+  }
+  int addIssuedTimeOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceCatalogOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceUrlOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
     return fbBuilder.offset;
   }
   int addCitationOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addDefinitionUrlOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
+    fbBuilder.addOffset(40, offset);
     return fbBuilder.offset;
   }
 
@@ -566,96 +503,234 @@ class PHBBuilder {
   }
 }
 
-class PHBObjectBuilder extends fb.ObjectBuilder {
-  final String? _BAND_ID;
+class CSOObjectBuilder extends fb.ObjectBuilder {
+  final String? _ID;
   final String? _NAME;
-  final String? _SYSTEM_NAME;
-  final phbSpectralRegime? _SPECTRAL_REGIME;
-  final double? _WAVELENGTH_EFF_NM;
-  final double? _WAVELENGTH_MIN_NM;
-  final double? _WAVELENGTH_MAX_NM;
-  final phbMagnitudeSystem? _MAGNITUDE_SYSTEM;
-  final double? _ZERO_POINT_JY;
-  final List<double>? _RESPONSE_WAVELENGTH_NM;
-  final List<double>? _RESPONSE;
-  final bool? _RESPONSE_IS_ENERGY;
+  final List<String>? _DESIGNATIONS;
+  final csoSourceClass? _SOURCE_CLASS;
+  final String? _CLASS_NAME;
+  final double? _CLASS_PROBABILITY;
+  final csoMessenger? _MESSENGER;
+  final double? _RA;
+  final double? _DEC;
+  final double? _POSITION_EPOCH;
+  final double? _POS_ERR_MAJOR_ARCSEC;
+  final double? _POS_ERR_MINOR_ARCSEC;
+  final double? _POS_ERR_PA_DEG;
+  final double? _POS_ERR_CONFIDENCE;
+  final String? _LOCALIZATION_LAYER_ID;
+  final double? _PARALLAX;
+  final double? _PMRA;
+  final double? _PMDEC;
+  final double? _REDSHIFT;
+  final double? _REDSHIFT_UNC;
+  final double? _DISTANCE_MPC;
+  final double? _DISTANCE_UNC_MPC;
+  final double? _SIZE_MAJOR_ARCSEC;
+  final double? _SIZE_MINOR_ARCSEC;
+  final double? _SIZE_PA_DEG;
+  final List<PHBMeasurementObjectBuilder>? _PHOTOMETRY;
+  final bool? _IS_TRANSIENT;
+  final String? _EVENT_TIME;
+  final String? _START_TIME;
+  final String? _END_TIME;
+  final double? _DURATION_T90_S;
+  final double? _PERIOD_S;
+  final double? _PERIOD_DERIVATIVE;
+  final double? _SIGNIFICANCE_SIGMA;
+  final double? _FALSE_ALARM_RATE_PER_YR;
+  final csoAlertStage? _ALERT_STATE;
+  final int? _ALERT_REVISION;
+  final String? _ISSUED_TIME;
+  final String? _SOURCE_CATALOG;
+  final String? _SOURCE_URL;
   final String? _CITATION;
-  final String? _DEFINITION_URL;
 
-  PHBObjectBuilder({
-    String? BAND_ID,
-    String? bandId,
+  CSOObjectBuilder({
+    String? ID,
     String? NAME,
-    String? SYSTEM_NAME,
-    String? systemName,
-    phbSpectralRegime? SPECTRAL_REGIME,
-    phbSpectralRegime? spectralRegime,
-    double? WAVELENGTH_EFF_NM,
-    double? wavelengthEffNm,
-    double? WAVELENGTH_MIN_NM,
-    double? wavelengthMinNm,
-    double? WAVELENGTH_MAX_NM,
-    double? wavelengthMaxNm,
-    phbMagnitudeSystem? MAGNITUDE_SYSTEM,
-    phbMagnitudeSystem? magnitudeSystem,
-    double? ZERO_POINT_JY,
-    double? zeroPointJy,
-    List<double>? RESPONSE_WAVELENGTH_NM,
-    List<double>? responseWavelengthNm,
-    List<double>? RESPONSE,
-    bool? RESPONSE_IS_ENERGY,
-    bool? responseIsEnergy,
+    List<String>? DESIGNATIONS,
+    csoSourceClass? SOURCE_CLASS,
+    csoSourceClass? sourceClass,
+    String? CLASS_NAME,
+    String? className,
+    double? CLASS_PROBABILITY,
+    double? classProbability,
+    csoMessenger? MESSENGER,
+    double? RA,
+    double? DEC,
+    double? POSITION_EPOCH,
+    double? positionEpoch,
+    double? POS_ERR_MAJOR_ARCSEC,
+    double? posErrMajorArcsec,
+    double? POS_ERR_MINOR_ARCSEC,
+    double? posErrMinorArcsec,
+    double? POS_ERR_PA_DEG,
+    double? posErrPaDeg,
+    double? POS_ERR_CONFIDENCE,
+    double? posErrConfidence,
+    String? LOCALIZATION_LAYER_ID,
+    String? localizationLayerId,
+    double? PARALLAX,
+    double? PMRA,
+    double? PMDEC,
+    double? REDSHIFT,
+    double? REDSHIFT_UNC,
+    double? redshiftUnc,
+    double? DISTANCE_MPC,
+    double? distanceMpc,
+    double? DISTANCE_UNC_MPC,
+    double? distanceUncMpc,
+    double? SIZE_MAJOR_ARCSEC,
+    double? sizeMajorArcsec,
+    double? SIZE_MINOR_ARCSEC,
+    double? sizeMinorArcsec,
+    double? SIZE_PA_DEG,
+    double? sizePaDeg,
+    List<PHBMeasurementObjectBuilder>? PHOTOMETRY,
+    bool? IS_TRANSIENT,
+    bool? isTransient,
+    String? EVENT_TIME,
+    String? eventTime,
+    String? START_TIME,
+    String? startTime,
+    String? END_TIME,
+    String? endTime,
+    double? DURATION_T90_S,
+    double? durationT90S,
+    double? PERIOD_S,
+    double? periodS,
+    double? PERIOD_DERIVATIVE,
+    double? periodDerivative,
+    double? SIGNIFICANCE_SIGMA,
+    double? significanceSigma,
+    double? FALSE_ALARM_RATE_PER_YR,
+    double? falseAlarmRatePerYr,
+    csoAlertStage? ALERT_STATE,
+    csoAlertStage? alertState,
+    int? ALERT_REVISION,
+    int? alertRevision,
+    String? ISSUED_TIME,
+    String? issuedTime,
+    String? SOURCE_CATALOG,
+    String? sourceCatalog,
+    String? SOURCE_URL,
+    String? sourceUrl,
     String? CITATION,
-    String? DEFINITION_URL,
-    String? definitionUrl,
   })
-      : _BAND_ID = bandId ?? BAND_ID,
+      : _ID = ID,
         _NAME = NAME,
-        _SYSTEM_NAME = systemName ?? SYSTEM_NAME,
-        _SPECTRAL_REGIME = spectralRegime ?? SPECTRAL_REGIME,
-        _WAVELENGTH_EFF_NM = wavelengthEffNm ?? WAVELENGTH_EFF_NM,
-        _WAVELENGTH_MIN_NM = wavelengthMinNm ?? WAVELENGTH_MIN_NM,
-        _WAVELENGTH_MAX_NM = wavelengthMaxNm ?? WAVELENGTH_MAX_NM,
-        _MAGNITUDE_SYSTEM = magnitudeSystem ?? MAGNITUDE_SYSTEM,
-        _ZERO_POINT_JY = zeroPointJy ?? ZERO_POINT_JY,
-        _RESPONSE_WAVELENGTH_NM = responseWavelengthNm ?? RESPONSE_WAVELENGTH_NM,
-        _RESPONSE = RESPONSE,
-        _RESPONSE_IS_ENERGY = responseIsEnergy ?? RESPONSE_IS_ENERGY,
-        _CITATION = CITATION,
-        _DEFINITION_URL = definitionUrl ?? DEFINITION_URL;
+        _DESIGNATIONS = DESIGNATIONS,
+        _SOURCE_CLASS = sourceClass ?? SOURCE_CLASS,
+        _CLASS_NAME = className ?? CLASS_NAME,
+        _CLASS_PROBABILITY = classProbability ?? CLASS_PROBABILITY,
+        _MESSENGER = MESSENGER,
+        _RA = RA,
+        _DEC = DEC,
+        _POSITION_EPOCH = positionEpoch ?? POSITION_EPOCH,
+        _POS_ERR_MAJOR_ARCSEC = posErrMajorArcsec ?? POS_ERR_MAJOR_ARCSEC,
+        _POS_ERR_MINOR_ARCSEC = posErrMinorArcsec ?? POS_ERR_MINOR_ARCSEC,
+        _POS_ERR_PA_DEG = posErrPaDeg ?? POS_ERR_PA_DEG,
+        _POS_ERR_CONFIDENCE = posErrConfidence ?? POS_ERR_CONFIDENCE,
+        _LOCALIZATION_LAYER_ID = localizationLayerId ?? LOCALIZATION_LAYER_ID,
+        _PARALLAX = PARALLAX,
+        _PMRA = PMRA,
+        _PMDEC = PMDEC,
+        _REDSHIFT = REDSHIFT,
+        _REDSHIFT_UNC = redshiftUnc ?? REDSHIFT_UNC,
+        _DISTANCE_MPC = distanceMpc ?? DISTANCE_MPC,
+        _DISTANCE_UNC_MPC = distanceUncMpc ?? DISTANCE_UNC_MPC,
+        _SIZE_MAJOR_ARCSEC = sizeMajorArcsec ?? SIZE_MAJOR_ARCSEC,
+        _SIZE_MINOR_ARCSEC = sizeMinorArcsec ?? SIZE_MINOR_ARCSEC,
+        _SIZE_PA_DEG = sizePaDeg ?? SIZE_PA_DEG,
+        _PHOTOMETRY = PHOTOMETRY,
+        _IS_TRANSIENT = isTransient ?? IS_TRANSIENT,
+        _EVENT_TIME = eventTime ?? EVENT_TIME,
+        _START_TIME = startTime ?? START_TIME,
+        _END_TIME = endTime ?? END_TIME,
+        _DURATION_T90_S = durationT90S ?? DURATION_T90_S,
+        _PERIOD_S = periodS ?? PERIOD_S,
+        _PERIOD_DERIVATIVE = periodDerivative ?? PERIOD_DERIVATIVE,
+        _SIGNIFICANCE_SIGMA = significanceSigma ?? SIGNIFICANCE_SIGMA,
+        _FALSE_ALARM_RATE_PER_YR = falseAlarmRatePerYr ?? FALSE_ALARM_RATE_PER_YR,
+        _ALERT_STATE = alertState ?? ALERT_STATE,
+        _ALERT_REVISION = alertRevision ?? ALERT_REVISION,
+        _ISSUED_TIME = issuedTime ?? ISSUED_TIME,
+        _SOURCE_CATALOG = sourceCatalog ?? SOURCE_CATALOG,
+        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
+        _CITATION = CITATION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? BAND_IDOffset = _BAND_ID == null ? null
-        : fbBuilder.writeString(_BAND_ID!);
+    final int? IDOffset = _ID == null ? null
+        : fbBuilder.writeString(_ID!);
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
-    final int? SYSTEM_NAMEOffset = _SYSTEM_NAME == null ? null
-        : fbBuilder.writeString(_SYSTEM_NAME!);
-    final int? RESPONSE_WAVELENGTH_NMOffset = _RESPONSE_WAVELENGTH_NM == null ? null
-        : fbBuilder.writeListFloat64(_RESPONSE_WAVELENGTH_NM!);
-    final int? RESPONSEOffset = _RESPONSE == null ? null
-        : fbBuilder.writeListFloat32(_RESPONSE!);
+    final int? DESIGNATIONSOffset = _DESIGNATIONS == null ? null
+        : fbBuilder.writeList(_DESIGNATIONS!.map(fbBuilder.writeString).toList());
+    final int? CLASS_NAMEOffset = _CLASS_NAME == null ? null
+        : fbBuilder.writeString(_CLASS_NAME!);
+    final int? LOCALIZATION_LAYER_IDOffset = _LOCALIZATION_LAYER_ID == null ? null
+        : fbBuilder.writeString(_LOCALIZATION_LAYER_ID!);
+    final int? PHOTOMETRYOffset = _PHOTOMETRY == null ? null
+        : fbBuilder.writeList(_PHOTOMETRY!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? EVENT_TIMEOffset = _EVENT_TIME == null ? null
+        : fbBuilder.writeString(_EVENT_TIME!);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? END_TIMEOffset = _END_TIME == null ? null
+        : fbBuilder.writeString(_END_TIME!);
+    final int? ISSUED_TIMEOffset = _ISSUED_TIME == null ? null
+        : fbBuilder.writeString(_ISSUED_TIME!);
+    final int? SOURCE_CATALOGOffset = _SOURCE_CATALOG == null ? null
+        : fbBuilder.writeString(_SOURCE_CATALOG!);
+    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
+        : fbBuilder.writeString(_SOURCE_URL!);
     final int? CITATIONOffset = _CITATION == null ? null
         : fbBuilder.writeString(_CITATION!);
-    final int? DEFINITION_URLOffset = _DEFINITION_URL == null ? null
-        : fbBuilder.writeString(_DEFINITION_URL!);
-    fbBuilder.startTable(14);
-    fbBuilder.addOffset(0, BAND_IDOffset);
+    fbBuilder.startTable(41);
+    fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, SYSTEM_NAMEOffset);
-    fbBuilder.addUint8(3, _SPECTRAL_REGIME?.value);
-    fbBuilder.addFloat64(4, _WAVELENGTH_EFF_NM);
-    fbBuilder.addFloat64(5, _WAVELENGTH_MIN_NM);
-    fbBuilder.addFloat64(6, _WAVELENGTH_MAX_NM);
-    fbBuilder.addUint8(7, _MAGNITUDE_SYSTEM?.value);
-    fbBuilder.addFloat64(8, _ZERO_POINT_JY);
-    fbBuilder.addOffset(9, RESPONSE_WAVELENGTH_NMOffset);
-    fbBuilder.addOffset(10, RESPONSEOffset);
-    fbBuilder.addBool(11, _RESPONSE_IS_ENERGY);
-    fbBuilder.addOffset(12, CITATIONOffset);
-    fbBuilder.addOffset(13, DEFINITION_URLOffset);
+    fbBuilder.addOffset(2, DESIGNATIONSOffset);
+    fbBuilder.addUint8(3, _SOURCE_CLASS?.value);
+    fbBuilder.addOffset(4, CLASS_NAMEOffset);
+    fbBuilder.addFloat32(5, _CLASS_PROBABILITY);
+    fbBuilder.addUint8(6, _MESSENGER?.value);
+    fbBuilder.addFloat64(7, _RA);
+    fbBuilder.addFloat64(8, _DEC);
+    fbBuilder.addFloat64(9, _POSITION_EPOCH);
+    fbBuilder.addFloat64(10, _POS_ERR_MAJOR_ARCSEC);
+    fbBuilder.addFloat64(11, _POS_ERR_MINOR_ARCSEC);
+    fbBuilder.addFloat64(12, _POS_ERR_PA_DEG);
+    fbBuilder.addFloat32(13, _POS_ERR_CONFIDENCE);
+    fbBuilder.addOffset(14, LOCALIZATION_LAYER_IDOffset);
+    fbBuilder.addFloat64(15, _PARALLAX);
+    fbBuilder.addFloat64(16, _PMRA);
+    fbBuilder.addFloat64(17, _PMDEC);
+    fbBuilder.addFloat64(18, _REDSHIFT);
+    fbBuilder.addFloat64(19, _REDSHIFT_UNC);
+    fbBuilder.addFloat64(20, _DISTANCE_MPC);
+    fbBuilder.addFloat64(21, _DISTANCE_UNC_MPC);
+    fbBuilder.addFloat64(22, _SIZE_MAJOR_ARCSEC);
+    fbBuilder.addFloat64(23, _SIZE_MINOR_ARCSEC);
+    fbBuilder.addFloat64(24, _SIZE_PA_DEG);
+    fbBuilder.addOffset(25, PHOTOMETRYOffset);
+    fbBuilder.addBool(26, _IS_TRANSIENT);
+    fbBuilder.addOffset(27, EVENT_TIMEOffset);
+    fbBuilder.addOffset(28, START_TIMEOffset);
+    fbBuilder.addOffset(29, END_TIMEOffset);
+    fbBuilder.addFloat64(30, _DURATION_T90_S);
+    fbBuilder.addFloat64(31, _PERIOD_S);
+    fbBuilder.addFloat64(32, _PERIOD_DERIVATIVE);
+    fbBuilder.addFloat64(33, _SIGNIFICANCE_SIGMA);
+    fbBuilder.addFloat64(34, _FALSE_ALARM_RATE_PER_YR);
+    fbBuilder.addUint8(35, _ALERT_STATE?.value);
+    fbBuilder.addUint32(36, _ALERT_REVISION);
+    fbBuilder.addOffset(37, ISSUED_TIMEOffset);
+    fbBuilder.addOffset(38, SOURCE_CATALOGOffset);
+    fbBuilder.addOffset(39, SOURCE_URLOffset);
+    fbBuilder.addOffset(40, CITATIONOffset);
     return fbBuilder.endTable();
   }
 

@@ -1,5 +1,5 @@
-// Hash: a5f3153c1b78c9583dc74b8671e0c4d1ee85b6dec5daff3d8dc415c6e26e682d
-// Version: 1.0.5
+// Hash: 30021c5ddd227c7fef49f91d971d5aa50fcce3300072ab411b18497476846a0a
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
@@ -63,6 +63,40 @@ enum orbitRegime: byte {
 enum massCategory: byte {
   DRY,
   WET
+}
+
+/// What a product the catalog selected for an object is.
+enum catalogProductKind: byte {
+  /// Not stated
+  Unspecified,
+  /// $OMM with MEAN_ELEMENT_THEORY SGP4
+  Sgp4Elements,
+  /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+  Sgp4XpElements,
+  /// $OCM: a state and its covariance
+  StateCovariance
+}
+
+/// One product the catalog selected for the object, by content identifier.
+table CATProduct {
+  /// What the product is.
+  KIND: catalogProductKind = Unspecified;
+  /// CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as
+  /// published, a size-prefixed FlatBuffer.
+  RECORD_CID: string;
+  /// The product's source: its PROVENANCE SOURCE_ID.
+  SOURCE_ID: string;
+  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
+  /// epoch.
+  EPOCH: string;
+  /// Why the catalog selected this product over the other candidates of its
+  /// KIND, as the selecting integrator states it (for example, the lowest
+  /// measured median error for the object's orbit regime and prediction
+  /// horizon).
+  SELECTION_REASON: string;
+  /// True when a maneuver after EPOCH retired the product and no product of its
+  /// KIND from after the maneuver has been selected yet.
+  STALE: bool = false;
 }
 
 /// Catalog Entity Message
@@ -132,6 +166,13 @@ table CAT {
   /// in a different namespace establishes that two records describe the same
   /// physical object. Publication provenance retains source and edition data.
   CATALOG_OBJECT_ID: string;
+  /// The products an integrating catalog selected for the object as of
+  /// PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+  /// the same source and epoch where there is one. The object's maneuvers are
+  /// its $MNV stream, not references here.
+  PRODUCTS: [CATProduct];
+  /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
+  PRODUCTS_AS_OF: string;
 }
 
 root_type CAT;

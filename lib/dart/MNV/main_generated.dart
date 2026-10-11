@@ -5,6 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
 enum maneuverStatus {
   DETECTED(0),
@@ -168,13 +169,13 @@ class mnvOrbitalState {
   ///  Longitude drift rate (degrees/day)
   double get DRIFT_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
   double get driftRate => DRIFT_RATE;
-  ///  Position uncertainty U (km, 1-sigma)
+  ///  Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
   double get SIGMA_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
   double get sigmaU => SIGMA_U;
-  ///  Position uncertainty V (km, 1-sigma)
+  ///  Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
   double get SIGMA_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
   double get sigmaV => SIGMA_V;
-  ///  Position uncertainty W (km, 1-sigma)
+  ///  Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
   double get SIGMA_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
   double get sigmaW => SIGMA_W;
 
@@ -444,6 +445,12 @@ class mnvOrbitalStateObjectBuilder extends fb.ObjectBuilder {
   }
 }
 ///  Spacecraft Maneuver
+///
+///  U, V and W are the UVW axes of an orbit state: U radial, along the position
+///  vector away from the central body; W cross-track, along the orbit normal
+///  (the direction of r x v); V in-track, W x U, completing the right-handed
+///  frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+///  pre-maneuver state at EVENT_START_TIME.
 class MNV {
   MNV._(this._bc, this._bcOffset);
   factory MNV(List<int> bytes) {
@@ -495,7 +502,8 @@ class MNV {
   ///  Original sensor identifier
   String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
   String? get origSensorId => ORIG_SENSOR_ID;
-  ///  Maneuver event identifier
+  ///  Maneuver event identifier. Records of one event share it: a merged event
+  ///  and the source records it combines.
   String? get EVENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
   String? get eventId => EVENT_ID;
   ///  True if object is uncorrelated
@@ -506,25 +514,25 @@ class MNV {
   ///  Total delta-V magnitude (km/s)
   double get DELTA_VEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
   double get deltaVel => DELTA_VEL;
-  ///  Delta-V along-track/U component (km/s)
+  ///  Delta-V along U, radial (km/s)
   double get DELTA_VEL_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
   double get deltaVelU => DELTA_VEL_U;
-  ///  Delta-V cross-track/V component (km/s)
+  ///  Delta-V along V, in-track (km/s)
   double get DELTA_VEL_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
   double get deltaVelV => DELTA_VEL_V;
-  ///  Delta-V radial/W component (km/s)
+  ///  Delta-V along W, cross-track (km/s)
   double get DELTA_VEL_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
   double get deltaVelW => DELTA_VEL_W;
   ///  Total delta position (km)
   double get DELTA_POS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
   double get deltaPos => DELTA_POS;
-  ///  Delta position U component (km)
+  ///  Delta position along U, radial (km)
   double get DELTA_POS_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
   double get deltaPosU => DELTA_POS_U;
-  ///  Delta position V component (km)
+  ///  Delta position along V, in-track (km)
   double get DELTA_POS_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
   double get deltaPosV => DELTA_POS_V;
-  ///  Delta position W component (km)
+  ///  Delta position along W, cross-track (km)
   double get DELTA_POS_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
   double get deltaPosW => DELTA_POS_W;
   ///  Propellant mass consumed (kg)
@@ -559,7 +567,8 @@ class MNV {
   ///  Acceleration profile times (ISO 8601)
   List<String>? get MNVR_ACCEL_TIMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 74);
   List<String>? get mnvrAccelTimes => MNVR_ACCEL_TIMES;
-  ///  Acceleration values (km/s^2, 3 components per point)
+  ///  Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+  ///  the state at that point's MNVR_ACCEL_TIMES entry
   List<double>? get MNVR_ACCELS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 76);
   List<double>? get mnvrAccels => MNVR_ACCELS;
   ///  Acceleration uncertainties (km/s^2)
@@ -573,7 +582,9 @@ class MNV {
   String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
   ///  Associated tags
   List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 86);
-  ///  Sourced data references
+  ///  Sourced data references: identifiers of the records this one was
+  ///  determined from (CIDv1 for records of this network), such as the source
+  ///  records a merged event combines
   List<String>? get SOURCED_DATA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 88);
   List<String>? get sourcedData => SOURCED_DATA;
   ///  Sourced data types
@@ -582,10 +593,12 @@ class MNV {
   ///  Transaction identifier
   String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
   String? get transactionId => TRANSACTION_ID;
+  ///  Where the maneuver's data comes from and the terms it travels under.
+  PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 94);
 
   @override
   String toString() {
-    return 'MNV{ID: ${ID}, satNo: ${satNo}, origObjectId: ${origObjectId}, onOrbit: ${onOrbit}, STATUS: ${STATUS}, CHARACTERIZATION: ${CHARACTERIZATION}, characterizationUnc: ${characterizationUnc}, reportTime: ${reportTime}, eventStartTime: ${eventStartTime}, eventEndTime: ${eventEndTime}, totalBurnTime: ${totalBurnTime}, odFitEndTime: ${odFitEndTime}, idSensor: ${idSensor}, origSensorId: ${origSensorId}, eventId: ${eventId}, UCT: ${UCT}, maneuverUnc: ${maneuverUnc}, deltaVel: ${deltaVel}, deltaVelU: ${deltaVelU}, deltaVelV: ${deltaVelV}, deltaVelW: ${deltaVelW}, deltaPos: ${deltaPos}, deltaPosU: ${deltaPosU}, deltaPosV: ${deltaPosV}, deltaPosW: ${deltaPosW}, deltaMass: ${deltaMass}, preEvent: ${preEvent}, postEvent: ${postEvent}, postMass: ${postMass}, postArea: ${postArea}, COV: ${COV}, numObs: ${numObs}, stateModel: ${stateModel}, stateModelVersion: ${stateModelVersion}, numAccelPoints: ${numAccelPoints}, mnvrAccelTimes: ${mnvrAccelTimes}, mnvrAccels: ${mnvrAccels}, mnvrAccelUncs: ${mnvrAccelUncs}, DESCRIPTION: ${DESCRIPTION}, DESCRIPTOR: ${DESCRIPTOR}, ALGORITHM: ${ALGORITHM}, TAGS: ${TAGS}, sourcedData: ${sourcedData}, sourcedDataTypes: ${sourcedDataTypes}, transactionId: ${transactionId}}';
+    return 'MNV{ID: ${ID}, satNo: ${satNo}, origObjectId: ${origObjectId}, onOrbit: ${onOrbit}, STATUS: ${STATUS}, CHARACTERIZATION: ${CHARACTERIZATION}, characterizationUnc: ${characterizationUnc}, reportTime: ${reportTime}, eventStartTime: ${eventStartTime}, eventEndTime: ${eventEndTime}, totalBurnTime: ${totalBurnTime}, odFitEndTime: ${odFitEndTime}, idSensor: ${idSensor}, origSensorId: ${origSensorId}, eventId: ${eventId}, UCT: ${UCT}, maneuverUnc: ${maneuverUnc}, deltaVel: ${deltaVel}, deltaVelU: ${deltaVelU}, deltaVelV: ${deltaVelV}, deltaVelW: ${deltaVelW}, deltaPos: ${deltaPos}, deltaPosU: ${deltaPosU}, deltaPosV: ${deltaPosV}, deltaPosW: ${deltaPosW}, deltaMass: ${deltaMass}, preEvent: ${preEvent}, postEvent: ${postEvent}, postMass: ${postMass}, postArea: ${postArea}, COV: ${COV}, numObs: ${numObs}, stateModel: ${stateModel}, stateModelVersion: ${stateModelVersion}, numAccelPoints: ${numAccelPoints}, mnvrAccelTimes: ${mnvrAccelTimes}, mnvrAccels: ${mnvrAccels}, mnvrAccelUncs: ${mnvrAccelUncs}, DESCRIPTION: ${DESCRIPTION}, DESCRIPTOR: ${DESCRIPTOR}, ALGORITHM: ${ALGORITHM}, TAGS: ${TAGS}, sourcedData: ${sourcedData}, sourcedDataTypes: ${sourcedDataTypes}, transactionId: ${transactionId}, PROVENANCE: ${PROVENANCE}}';
   }
 }
 
@@ -603,7 +616,7 @@ class MNVBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(45);
+    fbBuilder.startTable(46);
   }
 
   int addIdOffset(int? offset) {
@@ -786,6 +799,10 @@ class MNVBuilder {
     fbBuilder.addOffset(44, offset);
     return fbBuilder.offset;
   }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -838,6 +855,7 @@ class MNVObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _SOURCED_DATA;
   final String? _SOURCED_DATA_TYPES;
   final String? _TRANSACTION_ID;
+  final PVNObjectBuilder? _PROVENANCE;
 
   MNVObjectBuilder({
     String? ID,
@@ -921,6 +939,7 @@ class MNVObjectBuilder extends fb.ObjectBuilder {
     String? sourcedDataTypes,
     String? TRANSACTION_ID,
     String? transactionId,
+    PVNObjectBuilder? PROVENANCE,
   })
       : _ID = ID,
         _SAT_NO = satNo ?? SAT_NO,
@@ -966,7 +985,8 @@ class MNVObjectBuilder extends fb.ObjectBuilder {
         _TAGS = TAGS,
         _SOURCED_DATA = sourcedData ?? SOURCED_DATA,
         _SOURCED_DATA_TYPES = sourcedDataTypes ?? SOURCED_DATA_TYPES,
-        _TRANSACTION_ID = transactionId ?? TRANSACTION_ID;
+        _TRANSACTION_ID = transactionId ?? TRANSACTION_ID,
+        _PROVENANCE = PROVENANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1017,7 +1037,8 @@ class MNVObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SOURCED_DATA_TYPES!);
     final int? TRANSACTION_IDOffset = _TRANSACTION_ID == null ? null
         : fbBuilder.writeString(_TRANSACTION_ID!);
-    fbBuilder.startTable(45);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(46);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addUint32(1, _SAT_NO);
     fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
@@ -1063,6 +1084,7 @@ class MNVObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(42, SOURCED_DATAOffset);
     fbBuilder.addOffset(43, SOURCED_DATA_TYPESOffset);
     fbBuilder.addOffset(44, TRANSACTION_IDOffset);
+    fbBuilder.addOffset(45, PROVENANCEOffset);
     return fbBuilder.endTable();
   }
 

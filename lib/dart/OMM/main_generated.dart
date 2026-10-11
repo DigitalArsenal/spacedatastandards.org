@@ -5,86 +5,403 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum meanElementSource {
-  SGP4(0),
-  SGP4XP(1),
-  DSST(2),
-  USM(3);
+enum ephemerisFormat {
+  SGP(0),
+  SGP4(1),
+  SDP4(2),
+  SGP8(3),
+  SDP8(4);
 
   final int value;
-  const meanElementSource(this.value);
+  const ephemerisFormat(this.value);
 
-  factory meanElementSource.fromValue(int value) {
+  factory ephemerisFormat.fromValue(int value) {
     switch (value) {
-      case 0: return meanElementSource.SGP4;
-      case 1: return meanElementSource.SGP4XP;
-      case 2: return meanElementSource.DSST;
-      case 3: return meanElementSource.USM;
+      case 0: return ephemerisFormat.SGP;
+      case 1: return ephemerisFormat.SGP4;
+      case 2: return ephemerisFormat.SDP4;
+      case 3: return ephemerisFormat.SGP8;
+      case 4: return ephemerisFormat.SDP8;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static meanElementSource? _createOrNull(int? value) =>
-      value == null ? null : meanElementSource.fromValue(value);
+  static ephemerisFormat? _createOrNull(int? value) =>
+      value == null ? null : ephemerisFormat.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<meanElementSource> reader = _meanElementSourceReader();
+  static const int maxValue = 4;
+  static const fb.Reader<ephemerisFormat> reader = _ephemerisFormatReader();
 }
 
-class _meanElementSourceReader extends fb.Reader<meanElementSource> {
-  const _meanElementSourceReader();
+class _ephemerisFormatReader extends fb.Reader<ephemerisFormat> {
+  const _ephemerisFormatReader();
 
   @override
   int get size => 1;
 
   @override
-  meanElementSource read(fb.BufferContext bc, int offset) =>
-      meanElementSource.fromValue(const fb.Int8Reader().read(bc, offset));
+  ephemerisFormat read(fb.BufferContext bc, int offset) =>
+      ephemerisFormat.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Mean Element Theory
-class MET {
-  MET._(this._bc, this._bcOffset);
-  factory MET(List<int> bytes) {
+///  Orbit Mean Elements Message
+class OMM {
+  OMM._(this._bc, this._bcOffset);
+  factory OMM(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<MET> reader = _METReader();
+  static const fb.Reader<OMM> reader = _OMMReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  CCSDS OMM Version
+  double get CCSDS_OMM_VERS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get ccsdsOmmVers => CCSDS_OMM_VERS;
+  ///  Creation Date (ISO 8601 UTC format)
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get creationDate => CREATION_DATE;
+  ///  Originator
+  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Satellite Name(s)
+  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get objectName => OBJECT_NAME;
+  ///  International Designator (YYYY-NNNAAA)
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get objectId => OBJECT_ID;
+  ///  Center Name (e.g. EARTH, MARS)
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get centerName => CENTER_NAME;
+  ///  Reference Frame
+  ///  Typically TEMEOFDATE
+  RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  RFM? get referenceFrame => REFERENCE_FRAME;
+  ///  Reference Frame Epoch (ISO 8601 UTC format)
+  String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get referenceFrameEpoch => REFERENCE_FRAME_EPOCH;
+  ///  Time System [M, UTC]
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 11));
+  timingStandard get timeSystem => TIME_SYSTEM;
+  ///  Mean Element Theory
+  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
   meanElementSource get meanElementTheory => MEAN_ELEMENT_THEORY;
+  ///  COMMENT (O): every COMMENT line of the message, in message order, joined by
+  ///  a line feed. A message states comments in its header, its metadata and each
+  ///  data group; this field holds them all, so a message written from the record
+  ///  states them together in its header.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Semi-major axis in km or Mean Motion in rev/day
+  double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get semiMajorAxis => SEMI_MAJOR_AXIS;
+  ///  Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
+  double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get meanMotion => MEAN_MOTION;
+  ///  Eccentricity (unitless)
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Inclination in degrees
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  RA_OF_ASC_NODE in degrees
+  double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get raOfAscNode => RA_OF_ASC_NODE;
+  ///  ARG_OF_PERICENTER in degrees
+  double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get argOfPericenter => ARG_OF_PERICENTER;
+  ///  MEAN_ANOMALY in degrees
+  double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get meanAnomaly => MEAN_ANOMALY;
+  ///  GM in km**3/s**2
+  double get GM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  MASS in kg
+  double get MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  SOLAR_RAD_AREA in m**2
+  double get SOLAR_RAD_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  double get solarRadArea => SOLAR_RAD_AREA;
+  ///  SOLAR_RAD_COEFF (unitless)
+  double get SOLAR_RAD_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  double get solarRadCoeff => SOLAR_RAD_COEFF;
+  ///  DRAG_AREA in m**2
+  double get DRAG_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  double get dragArea => DRAG_AREA;
+  ///  DRAG_COEFF (unitless)
+  double get DRAG_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get dragCoeff => DRAG_COEFF;
+  ///  TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  ///  EPHEMERIS_TYPE Default=0
+  ephemerisFormat get EPHEMERIS_TYPE => ephemerisFormat.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 54, 1));
+  ephemerisFormat get ephemerisType => EPHEMERIS_TYPE;
+  ///  CLASSIFICATION_TYPE Default=U
+  String? get CLASSIFICATION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get classificationType => CLASSIFICATION_TYPE;
+  ///  NORAD_CAT_ID (integer) [O if SGP/SGP4]
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 58, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  ELEMENT_SET_NO [O if SGP/SGP4]
+  int get ELEMENT_SET_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 60, 0);
+  int get elementSetNo => ELEMENT_SET_NO;
+  ///  REV_AT_EPOCH [O if SGP/SGP4]
+  double get REV_AT_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get revAtEpoch => REV_AT_EPOCH;
+  ///  BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+  double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  ///  MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
+  double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get meanMotionDot => MEAN_MOTION_DOT;
+  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  double get meanMotionDdot => MEAN_MOTION_DDOT;
+  ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  ///  COV_REF_FRAME reference frame for covariance [C if covariance given]
+  ///  Typically RSW
+  RFM? get COV_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 70);
+  RFM? get covReferenceFrame => COV_REFERENCE_FRAME;
+  ///  Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  ///  Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///          CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///          CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///          CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  ///  Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  List<double>? get COVARIANCE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 72);
+  ///  USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
+  int get USER_DEFINED_BIP_0044_TYPE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 74, 0);
+  int get userDefinedBip0044Type => USER_DEFINED_BIP_0044_TYPE;
+  ///  USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
+  String? get USER_DEFINED_OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  String? get userDefinedObjectDesignator => USER_DEFINED_OBJECT_DESIGNATOR;
+  ///  USER_DEFINED_EARTH_MODEL [O, units per ICD]
+  String? get USER_DEFINED_EARTH_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  String? get userDefinedEarthModel => USER_DEFINED_EARTH_MODEL;
+  ///  USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
+  double get USER_DEFINED_EPOCH_TIMESTAMP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
+  double get userDefinedEpochTimestamp => USER_DEFINED_EPOCH_TIMESTAMP;
+  ///  USER_DEFINED_MICROSECONDS [O, units per ICD]
+  double get USER_DEFINED_MICROSECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
+  double get userDefinedMicroseconds => USER_DEFINED_MICROSECONDS;
+  ///  CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+  ///  that states its security classification or handling caveat. Not
+  ///  CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  ///  MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+  ///  originator makes unique for this message.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  String? get messageId => MESSAGE_ID;
+  ///  Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+  ///  message that has no dedicated field above, in message order.
+  List<OMMUserDefinedParameter>? get USER_DEFINED_PARAMETERS => const fb.ListReader<OMMUserDefinedParameter>(OMMUserDefinedParameter.reader).vTableGetNullable(_bc, _bcOffset, 88);
+  List<OMMUserDefinedParameter>? get userDefinedParameters => USER_DEFINED_PARAMETERS;
+  ///  Where the element set comes from and the terms it travels under.
+  PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 90);
+  ///  Realism of COVARIANCE.
+  CVR? get COV_REALISM => CVR.reader.vTableGetNullable(_bc, _bcOffset, 92);
+  CVR? get covRealism => COV_REALISM;
 
   @override
   String toString() {
-    return 'MET{meanElementTheory: ${meanElementTheory}}';
+    return 'OMM{ccsdsOmmVers: ${ccsdsOmmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, referenceFrameEpoch: ${referenceFrameEpoch}, timeSystem: ${timeSystem}, meanElementTheory: ${meanElementTheory}, COMMENT: ${COMMENT}, EPOCH: ${EPOCH}, semiMajorAxis: ${semiMajorAxis}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, GM: ${GM}, MASS: ${MASS}, solarRadArea: ${solarRadArea}, solarRadCoeff: ${solarRadCoeff}, dragArea: ${dragArea}, dragCoeff: ${dragCoeff}, ephemerisType: ${ephemerisType}, classificationType: ${classificationType}, noradCatId: ${noradCatId}, elementSetNo: ${elementSetNo}, revAtEpoch: ${revAtEpoch}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, covReferenceFrame: ${covReferenceFrame}, COVARIANCE: ${COVARIANCE}, userDefinedBip0044Type: ${userDefinedBip0044Type}, userDefinedObjectDesignator: ${userDefinedObjectDesignator}, userDefinedEarthModel: ${userDefinedEarthModel}, userDefinedEpochTimestamp: ${userDefinedEpochTimestamp}, userDefinedMicroseconds: ${userDefinedMicroseconds}, CLASSIFICATION: ${CLASSIFICATION}, messageId: ${messageId}, userDefinedParameters: ${userDefinedParameters}, PROVENANCE: ${PROVENANCE}, covRealism: ${covRealism}}';
   }
 }
 
-class _METReader extends fb.TableReader<MET> {
-  const _METReader();
+class _OMMReader extends fb.TableReader<OMM> {
+  const _OMMReader();
 
   @override
-  MET createObject(fb.BufferContext bc, int offset) =>
-    MET._(bc, offset);
+  OMM createObject(fb.BufferContext bc, int offset) =>
+    OMM._(bc, offset);
 }
 
-class METBuilder {
-  METBuilder(this.fbBuilder);
+class OMMBuilder {
+  OMMBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(45);
   }
 
+  int addCcsdsOmmVers(double? CCSDS_OMM_VERS) {
+    fbBuilder.addFloat64(0, CCSDS_OMM_VERS);
+    return fbBuilder.offset;
+  }
+  int addCreationDateOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
+    fbBuilder.addInt8(8, TIME_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
   int addMeanElementTheory(meanElementSource? MEAN_ELEMENT_THEORY) {
-    fbBuilder.addInt8(0, MEAN_ELEMENT_THEORY?.value);
+    fbBuilder.addInt8(9, MEAN_ELEMENT_THEORY?.value);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addSemiMajorAxis(double? SEMI_MAJOR_AXIS) {
+    fbBuilder.addFloat64(12, SEMI_MAJOR_AXIS);
+    return fbBuilder.offset;
+  }
+  int addMeanMotion(double? MEAN_MOTION) {
+    fbBuilder.addFloat64(13, MEAN_MOTION);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(14, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(15, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addRaOfAscNode(double? RA_OF_ASC_NODE) {
+    fbBuilder.addFloat64(16, RA_OF_ASC_NODE);
+    return fbBuilder.offset;
+  }
+  int addArgOfPericenter(double? ARG_OF_PERICENTER) {
+    fbBuilder.addFloat64(17, ARG_OF_PERICENTER);
+    return fbBuilder.offset;
+  }
+  int addMeanAnomaly(double? MEAN_ANOMALY) {
+    fbBuilder.addFloat64(18, MEAN_ANOMALY);
+    return fbBuilder.offset;
+  }
+  int addGm(double? GM) {
+    fbBuilder.addFloat64(19, GM);
+    return fbBuilder.offset;
+  }
+  int addMass(double? MASS) {
+    fbBuilder.addFloat64(20, MASS);
+    return fbBuilder.offset;
+  }
+  int addSolarRadArea(double? SOLAR_RAD_AREA) {
+    fbBuilder.addFloat64(21, SOLAR_RAD_AREA);
+    return fbBuilder.offset;
+  }
+  int addSolarRadCoeff(double? SOLAR_RAD_COEFF) {
+    fbBuilder.addFloat64(22, SOLAR_RAD_COEFF);
+    return fbBuilder.offset;
+  }
+  int addDragArea(double? DRAG_AREA) {
+    fbBuilder.addFloat64(23, DRAG_AREA);
+    return fbBuilder.offset;
+  }
+  int addDragCoeff(double? DRAG_COEFF) {
+    fbBuilder.addFloat64(24, DRAG_COEFF);
+    return fbBuilder.offset;
+  }
+  int addEphemerisType(ephemerisFormat? EPHEMERIS_TYPE) {
+    fbBuilder.addInt8(25, EPHEMERIS_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addClassificationTypeOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(27, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addElementSetNo(int? ELEMENT_SET_NO) {
+    fbBuilder.addUint32(28, ELEMENT_SET_NO);
+    return fbBuilder.offset;
+  }
+  int addRevAtEpoch(double? REV_AT_EPOCH) {
+    fbBuilder.addFloat64(29, REV_AT_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addBstar(double? BSTAR) {
+    fbBuilder.addFloat64(30, BSTAR);
+    return fbBuilder.offset;
+  }
+  int addMeanMotionDot(double? MEAN_MOTION_DOT) {
+    fbBuilder.addFloat64(31, MEAN_MOTION_DOT);
+    return fbBuilder.offset;
+  }
+  int addMeanMotionDdot(double? MEAN_MOTION_DDOT) {
+    fbBuilder.addFloat64(32, MEAN_MOTION_DDOT);
+    return fbBuilder.offset;
+  }
+  int addCovReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedBip0044Type(int? USER_DEFINED_BIP_0044_TYPE) {
+    fbBuilder.addUint32(35, USER_DEFINED_BIP_0044_TYPE);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedObjectDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedEarthModelOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedEpochTimestamp(double? USER_DEFINED_EPOCH_TIMESTAMP) {
+    fbBuilder.addFloat64(38, USER_DEFINED_EPOCH_TIMESTAMP);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedMicroseconds(double? USER_DEFINED_MICROSECONDS) {
+    fbBuilder.addFloat64(39, USER_DEFINED_MICROSECONDS);
+    return fbBuilder.offset;
+  }
+  int addClassificationOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedParametersOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRealismOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
     return fbBuilder.offset;
   }
 
@@ -93,20 +410,355 @@ class METBuilder {
   }
 }
 
-class METObjectBuilder extends fb.ObjectBuilder {
+class OMMObjectBuilder extends fb.ObjectBuilder {
+  final double? _CCSDS_OMM_VERS;
+  final String? _CREATION_DATE;
+  final String? _ORIGINATOR;
+  final String? _OBJECT_NAME;
+  final String? _OBJECT_ID;
+  final String? _CENTER_NAME;
+  final RFMObjectBuilder? _REFERENCE_FRAME;
+  final String? _REFERENCE_FRAME_EPOCH;
+  final timingStandard? _TIME_SYSTEM;
   final meanElementSource? _MEAN_ELEMENT_THEORY;
+  final String? _COMMENT;
+  final String? _EPOCH;
+  final double? _SEMI_MAJOR_AXIS;
+  final double? _MEAN_MOTION;
+  final double? _ECCENTRICITY;
+  final double? _INCLINATION;
+  final double? _RA_OF_ASC_NODE;
+  final double? _ARG_OF_PERICENTER;
+  final double? _MEAN_ANOMALY;
+  final double? _GM;
+  final double? _MASS;
+  final double? _SOLAR_RAD_AREA;
+  final double? _SOLAR_RAD_COEFF;
+  final double? _DRAG_AREA;
+  final double? _DRAG_COEFF;
+  final ephemerisFormat? _EPHEMERIS_TYPE;
+  final String? _CLASSIFICATION_TYPE;
+  final int? _NORAD_CAT_ID;
+  final int? _ELEMENT_SET_NO;
+  final double? _REV_AT_EPOCH;
+  final double? _BSTAR;
+  final double? _MEAN_MOTION_DOT;
+  final double? _MEAN_MOTION_DDOT;
+  final RFMObjectBuilder? _COV_REFERENCE_FRAME;
+  final List<double>? _COVARIANCE;
+  final int? _USER_DEFINED_BIP_0044_TYPE;
+  final String? _USER_DEFINED_OBJECT_DESIGNATOR;
+  final String? _USER_DEFINED_EARTH_MODEL;
+  final double? _USER_DEFINED_EPOCH_TIMESTAMP;
+  final double? _USER_DEFINED_MICROSECONDS;
+  final String? _CLASSIFICATION;
+  final String? _MESSAGE_ID;
+  final List<OMMUserDefinedParameterObjectBuilder>? _USER_DEFINED_PARAMETERS;
+  final PVNObjectBuilder? _PROVENANCE;
+  final CVRObjectBuilder? _COV_REALISM;
 
-  METObjectBuilder({
+  OMMObjectBuilder({
+    double? CCSDS_OMM_VERS,
+    double? ccsdsOmmVers,
+    String? CREATION_DATE,
+    String? creationDate,
+    String? ORIGINATOR,
+    String? OBJECT_NAME,
+    String? objectName,
+    String? OBJECT_ID,
+    String? objectId,
+    String? CENTER_NAME,
+    String? centerName,
+    RFMObjectBuilder? REFERENCE_FRAME,
+    RFMObjectBuilder? referenceFrame,
+    String? REFERENCE_FRAME_EPOCH,
+    String? referenceFrameEpoch,
+    timingStandard? TIME_SYSTEM,
+    timingStandard? timeSystem,
     meanElementSource? MEAN_ELEMENT_THEORY,
     meanElementSource? meanElementTheory,
+    String? COMMENT,
+    String? EPOCH,
+    double? SEMI_MAJOR_AXIS,
+    double? semiMajorAxis,
+    double? MEAN_MOTION,
+    double? meanMotion,
+    double? ECCENTRICITY,
+    double? INCLINATION,
+    double? RA_OF_ASC_NODE,
+    double? raOfAscNode,
+    double? ARG_OF_PERICENTER,
+    double? argOfPericenter,
+    double? MEAN_ANOMALY,
+    double? meanAnomaly,
+    double? GM,
+    double? MASS,
+    double? SOLAR_RAD_AREA,
+    double? solarRadArea,
+    double? SOLAR_RAD_COEFF,
+    double? solarRadCoeff,
+    double? DRAG_AREA,
+    double? dragArea,
+    double? DRAG_COEFF,
+    double? dragCoeff,
+    ephemerisFormat? EPHEMERIS_TYPE,
+    ephemerisFormat? ephemerisType,
+    String? CLASSIFICATION_TYPE,
+    String? classificationType,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    int? ELEMENT_SET_NO,
+    int? elementSetNo,
+    double? REV_AT_EPOCH,
+    double? revAtEpoch,
+    double? BSTAR,
+    double? MEAN_MOTION_DOT,
+    double? meanMotionDot,
+    double? MEAN_MOTION_DDOT,
+    double? meanMotionDdot,
+    RFMObjectBuilder? COV_REFERENCE_FRAME,
+    RFMObjectBuilder? covReferenceFrame,
+    List<double>? COVARIANCE,
+    int? USER_DEFINED_BIP_0044_TYPE,
+    int? userDefinedBip0044Type,
+    String? USER_DEFINED_OBJECT_DESIGNATOR,
+    String? userDefinedObjectDesignator,
+    String? USER_DEFINED_EARTH_MODEL,
+    String? userDefinedEarthModel,
+    double? USER_DEFINED_EPOCH_TIMESTAMP,
+    double? userDefinedEpochTimestamp,
+    double? USER_DEFINED_MICROSECONDS,
+    double? userDefinedMicroseconds,
+    String? CLASSIFICATION,
+    String? MESSAGE_ID,
+    String? messageId,
+    List<OMMUserDefinedParameterObjectBuilder>? USER_DEFINED_PARAMETERS,
+    List<OMMUserDefinedParameterObjectBuilder>? userDefinedParameters,
+    PVNObjectBuilder? PROVENANCE,
+    CVRObjectBuilder? COV_REALISM,
+    CVRObjectBuilder? covRealism,
   })
-      : _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY;
+      : _CCSDS_OMM_VERS = ccsdsOmmVers ?? CCSDS_OMM_VERS,
+        _CREATION_DATE = creationDate ?? CREATION_DATE,
+        _ORIGINATOR = ORIGINATOR,
+        _OBJECT_NAME = objectName ?? OBJECT_NAME,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _REFERENCE_FRAME_EPOCH = referenceFrameEpoch ?? REFERENCE_FRAME_EPOCH,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY,
+        _COMMENT = COMMENT,
+        _EPOCH = EPOCH,
+        _SEMI_MAJOR_AXIS = semiMajorAxis ?? SEMI_MAJOR_AXIS,
+        _MEAN_MOTION = meanMotion ?? MEAN_MOTION,
+        _ECCENTRICITY = ECCENTRICITY,
+        _INCLINATION = INCLINATION,
+        _RA_OF_ASC_NODE = raOfAscNode ?? RA_OF_ASC_NODE,
+        _ARG_OF_PERICENTER = argOfPericenter ?? ARG_OF_PERICENTER,
+        _MEAN_ANOMALY = meanAnomaly ?? MEAN_ANOMALY,
+        _GM = GM,
+        _MASS = MASS,
+        _SOLAR_RAD_AREA = solarRadArea ?? SOLAR_RAD_AREA,
+        _SOLAR_RAD_COEFF = solarRadCoeff ?? SOLAR_RAD_COEFF,
+        _DRAG_AREA = dragArea ?? DRAG_AREA,
+        _DRAG_COEFF = dragCoeff ?? DRAG_COEFF,
+        _EPHEMERIS_TYPE = ephemerisType ?? EPHEMERIS_TYPE,
+        _CLASSIFICATION_TYPE = classificationType ?? CLASSIFICATION_TYPE,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _ELEMENT_SET_NO = elementSetNo ?? ELEMENT_SET_NO,
+        _REV_AT_EPOCH = revAtEpoch ?? REV_AT_EPOCH,
+        _BSTAR = BSTAR,
+        _MEAN_MOTION_DOT = meanMotionDot ?? MEAN_MOTION_DOT,
+        _MEAN_MOTION_DDOT = meanMotionDdot ?? MEAN_MOTION_DDOT,
+        _COV_REFERENCE_FRAME = covReferenceFrame ?? COV_REFERENCE_FRAME,
+        _COVARIANCE = COVARIANCE,
+        _USER_DEFINED_BIP_0044_TYPE = userDefinedBip0044Type ?? USER_DEFINED_BIP_0044_TYPE,
+        _USER_DEFINED_OBJECT_DESIGNATOR = userDefinedObjectDesignator ?? USER_DEFINED_OBJECT_DESIGNATOR,
+        _USER_DEFINED_EARTH_MODEL = userDefinedEarthModel ?? USER_DEFINED_EARTH_MODEL,
+        _USER_DEFINED_EPOCH_TIMESTAMP = userDefinedEpochTimestamp ?? USER_DEFINED_EPOCH_TIMESTAMP,
+        _USER_DEFINED_MICROSECONDS = userDefinedMicroseconds ?? USER_DEFINED_MICROSECONDS,
+        _CLASSIFICATION = CLASSIFICATION,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _USER_DEFINED_PARAMETERS = userDefinedParameters ?? USER_DEFINED_PARAMETERS,
+        _PROVENANCE = PROVENANCE,
+        _COV_REALISM = covRealism ?? COV_REALISM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _MEAN_ELEMENT_THEORY?.value);
+    final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
+        : fbBuilder.writeString(_CREATION_DATE!);
+    final int? ORIGINATOROffset = _ORIGINATOR == null ? null
+        : fbBuilder.writeString(_ORIGINATOR!);
+    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
+        : fbBuilder.writeString(_OBJECT_NAME!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? REFERENCE_FRAME_EPOCHOffset = _REFERENCE_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_REFERENCE_FRAME_EPOCH!);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? CLASSIFICATION_TYPEOffset = _CLASSIFICATION_TYPE == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION_TYPE!);
+    final int? COV_REFERENCE_FRAMEOffset = _COV_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? COVARIANCEOffset = _COVARIANCE == null ? null
+        : fbBuilder.writeListFloat64(_COVARIANCE!);
+    final int? USER_DEFINED_OBJECT_DESIGNATOROffset = _USER_DEFINED_OBJECT_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_USER_DEFINED_OBJECT_DESIGNATOR!);
+    final int? USER_DEFINED_EARTH_MODELOffset = _USER_DEFINED_EARTH_MODEL == null ? null
+        : fbBuilder.writeString(_USER_DEFINED_EARTH_MODEL!);
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    final int? USER_DEFINED_PARAMETERSOffset = _USER_DEFINED_PARAMETERS == null ? null
+        : fbBuilder.writeList(_USER_DEFINED_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? COV_REALISMOffset = _COV_REALISM?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(45);
+    fbBuilder.addFloat64(0, _CCSDS_OMM_VERS);
+    fbBuilder.addOffset(1, CREATION_DATEOffset);
+    fbBuilder.addOffset(2, ORIGINATOROffset);
+    fbBuilder.addOffset(3, OBJECT_NAMEOffset);
+    fbBuilder.addOffset(4, OBJECT_IDOffset);
+    fbBuilder.addOffset(5, CENTER_NAMEOffset);
+    fbBuilder.addOffset(6, REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(7, REFERENCE_FRAME_EPOCHOffset);
+    fbBuilder.addInt8(8, _TIME_SYSTEM?.value);
+    fbBuilder.addInt8(9, _MEAN_ELEMENT_THEORY?.value);
+    fbBuilder.addOffset(10, COMMENTOffset);
+    fbBuilder.addOffset(11, EPOCHOffset);
+    fbBuilder.addFloat64(12, _SEMI_MAJOR_AXIS);
+    fbBuilder.addFloat64(13, _MEAN_MOTION);
+    fbBuilder.addFloat64(14, _ECCENTRICITY);
+    fbBuilder.addFloat64(15, _INCLINATION);
+    fbBuilder.addFloat64(16, _RA_OF_ASC_NODE);
+    fbBuilder.addFloat64(17, _ARG_OF_PERICENTER);
+    fbBuilder.addFloat64(18, _MEAN_ANOMALY);
+    fbBuilder.addFloat64(19, _GM);
+    fbBuilder.addFloat64(20, _MASS);
+    fbBuilder.addFloat64(21, _SOLAR_RAD_AREA);
+    fbBuilder.addFloat64(22, _SOLAR_RAD_COEFF);
+    fbBuilder.addFloat64(23, _DRAG_AREA);
+    fbBuilder.addFloat64(24, _DRAG_COEFF);
+    fbBuilder.addInt8(25, _EPHEMERIS_TYPE?.value);
+    fbBuilder.addOffset(26, CLASSIFICATION_TYPEOffset);
+    fbBuilder.addUint32(27, _NORAD_CAT_ID);
+    fbBuilder.addUint32(28, _ELEMENT_SET_NO);
+    fbBuilder.addFloat64(29, _REV_AT_EPOCH);
+    fbBuilder.addFloat64(30, _BSTAR);
+    fbBuilder.addFloat64(31, _MEAN_MOTION_DOT);
+    fbBuilder.addFloat64(32, _MEAN_MOTION_DDOT);
+    fbBuilder.addOffset(33, COV_REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(34, COVARIANCEOffset);
+    fbBuilder.addUint32(35, _USER_DEFINED_BIP_0044_TYPE);
+    fbBuilder.addOffset(36, USER_DEFINED_OBJECT_DESIGNATOROffset);
+    fbBuilder.addOffset(37, USER_DEFINED_EARTH_MODELOffset);
+    fbBuilder.addFloat64(38, _USER_DEFINED_EPOCH_TIMESTAMP);
+    fbBuilder.addFloat64(39, _USER_DEFINED_MICROSECONDS);
+    fbBuilder.addOffset(40, CLASSIFICATIONOffset);
+    fbBuilder.addOffset(41, MESSAGE_IDOffset);
+    fbBuilder.addOffset(42, USER_DEFINED_PARAMETERSOffset);
+    fbBuilder.addOffset(43, PROVENANCEOffset);
+    fbBuilder.addOffset(44, COV_REALISMOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML
+///  form: the parameter name (the x) and the value as written.
+class OMMUserDefinedParameter {
+  OMMUserDefinedParameter._(this._bc, this._bcOffset);
+  factory OMMUserDefinedParameter(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OMMUserDefinedParameter> reader = _OMMUserDefinedParameterReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  String? get PARAM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get paramName => PARAM_NAME;
+  ///  The value as written, unit-less text
+  String? get PARAM_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get paramValue => PARAM_VALUE;
+
+  @override
+  String toString() {
+    return 'OMMUserDefinedParameter{paramName: ${paramName}, paramValue: ${paramValue}}';
+  }
+}
+
+class _OMMUserDefinedParameterReader extends fb.TableReader<OMMUserDefinedParameter> {
+  const _OMMUserDefinedParameterReader();
+
+  @override
+  OMMUserDefinedParameter createObject(fb.BufferContext bc, int offset) =>
+    OMMUserDefinedParameter._(bc, offset);
+}
+
+class OMMUserDefinedParameterBuilder {
+  OMMUserDefinedParameterBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addParamNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addParamValueOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OMMUserDefinedParameterObjectBuilder extends fb.ObjectBuilder {
+  final String? _PARAM_NAME;
+  final String? _PARAM_VALUE;
+
+  OMMUserDefinedParameterObjectBuilder({
+    String? PARAM_NAME,
+    String? paramName,
+    String? PARAM_VALUE,
+    String? paramValue,
+  })
+      : _PARAM_NAME = paramName ?? PARAM_NAME,
+        _PARAM_VALUE = paramValue ?? PARAM_VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PARAM_NAMEOffset = _PARAM_NAME == null ? null
+        : fbBuilder.writeString(_PARAM_NAME!);
+    final int? PARAM_VALUEOffset = _PARAM_VALUE == null ? null
+        : fbBuilder.writeString(_PARAM_VALUE!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, PARAM_NAMEOffset);
+    fbBuilder.addOffset(1, PARAM_VALUEOffset);
     return fbBuilder.endTable();
   }
 

@@ -130,11 +130,11 @@ public struct mnvOrbitalState: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   public var GEO_LONGITUDE: Double { let o = _accessor.offset(VT.GEO_LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude drift rate (degrees/day)
   public var DRIFT_RATE: Double { let o = _accessor.offset(VT.DRIFT_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Position uncertainty U (km, 1-sigma)
+  ///  Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
   public var SIGMA_U: Double { let o = _accessor.offset(VT.SIGMA_U); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Position uncertainty V (km, 1-sigma)
+  ///  Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
   public var SIGMA_V: Double { let o = _accessor.offset(VT.SIGMA_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Position uncertainty W (km, 1-sigma)
+  ///  Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
   public var SIGMA_W: Double { let o = _accessor.offset(VT.SIGMA_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startmnvOrbitalState(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(ID_ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ELSET, at: VT.ID_ELSET) }
@@ -248,6 +248,12 @@ public struct mnvOrbitalState: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Spacecraft Maneuver
+///
+///  U, V and W are the UVW axes of an orbit state: U radial, along the position
+///  vector away from the central body; W cross-track, along the orbit normal
+///  (the direction of r x v); V in-track, W x U, completing the right-handed
+///  frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+///  pre-maneuver state at EVENT_START_TIME.
 public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -305,6 +311,7 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let SOURCED_DATA: VOffset = 88
     static let SOURCED_DATA_TYPES: VOffset = 90
     static let TRANSACTION_ID: VOffset = 92
+    static let PROVENANCE: VOffset = 94
   }
 
   ///  Unique identifier
@@ -344,7 +351,8 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Original sensor identifier
   public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID) }
-  ///  Maneuver event identifier
+  ///  Maneuver event identifier. Records of one event share it: a merged event
+  ///  and the source records it combines.
   public var EVENT_ID: String? { let o = _accessor.offset(VT.EVENT_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var EVENT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_ID) }
   ///  True if object is uncorrelated
@@ -353,19 +361,19 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var MANEUVER_UNC: Double { let o = _accessor.offset(VT.MANEUVER_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total delta-V magnitude (km/s)
   public var DELTA_VEL: Double { let o = _accessor.offset(VT.DELTA_VEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Delta-V along-track/U component (km/s)
+  ///  Delta-V along U, radial (km/s)
   public var DELTA_VEL_U: Double { let o = _accessor.offset(VT.DELTA_VEL_U); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Delta-V cross-track/V component (km/s)
+  ///  Delta-V along V, in-track (km/s)
   public var DELTA_VEL_V: Double { let o = _accessor.offset(VT.DELTA_VEL_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Delta-V radial/W component (km/s)
+  ///  Delta-V along W, cross-track (km/s)
   public var DELTA_VEL_W: Double { let o = _accessor.offset(VT.DELTA_VEL_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total delta position (km)
   public var DELTA_POS: Double { let o = _accessor.offset(VT.DELTA_POS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Delta position U component (km)
+  ///  Delta position along U, radial (km)
   public var DELTA_POS_U: Double { let o = _accessor.offset(VT.DELTA_POS_U); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Delta position V component (km)
+  ///  Delta position along V, in-track (km)
   public var DELTA_POS_V: Double { let o = _accessor.offset(VT.DELTA_POS_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Delta position W component (km)
+  ///  Delta position along W, cross-track (km)
   public var DELTA_POS_W: Double { let o = _accessor.offset(VT.DELTA_POS_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Propellant mass consumed (kg)
   public var DELTA_MASS: Double { let o = _accessor.offset(VT.DELTA_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
@@ -391,7 +399,8 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var NUM_ACCEL_POINTS: UInt16 { let o = _accessor.offset(VT.NUM_ACCEL_POINTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Acceleration profile times (ISO 8601)
   public var MNVR_ACCEL_TIMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.MNVR_ACCEL_TIMES, byteSize: 4) }
-  ///  Acceleration values (km/s^2, 3 components per point)
+  ///  Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+  ///  the state at that point's MNVR_ACCEL_TIMES entry
   public var MNVR_ACCELS: FlatbufferVector<Double> { return _accessor.vector(at: VT.MNVR_ACCELS, byteSize: 8) }
   public func withUnsafePointerToMnvrAccels<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MNVR_ACCELS, body: body) }
   ///  Acceleration uncertainties (km/s^2)
@@ -408,7 +417,9 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
   ///  Associated tags
   public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
-  ///  Sourced data references
+  ///  Sourced data references: identifiers of the records this one was
+  ///  determined from (CIDv1 for records of this network), such as the source
+  ///  records a merged event combines
   public var SOURCED_DATA: FlatbufferVector<String?> { return _accessor.vector(at: VT.SOURCED_DATA, byteSize: 4) }
   ///  Sourced data types
   public var SOURCED_DATA_TYPES: String? { let o = _accessor.offset(VT.SOURCED_DATA_TYPES); return o == 0 ? nil : _accessor.string(at: o) }
@@ -416,7 +427,9 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Transaction identifier
   public var TRANSACTION_ID: String? { let o = _accessor.offset(VT.TRANSACTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSACTION_ID) }
-  public static func startMNV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 45) }
+  ///  Where the maneuver's data comes from and the terms it travels under.
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startMNV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 46) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
   public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
@@ -463,6 +476,7 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(SOURCED_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCED_DATA, at: VT.SOURCED_DATA) }
   public static func add(SOURCED_DATA_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCED_DATA_TYPES, at: VT.SOURCED_DATA_TYPES) }
   public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VT.TRANSACTION_ID) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func endMNV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMNV(
     _ fbb: inout FlatBufferBuilder,
@@ -510,7 +524,8 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     TAGSVectorOffset TAGS: Offset = Offset(),
     SOURCED_DATAVectorOffset SOURCED_DATA: Offset = Offset(),
     SOURCED_DATA_TYPESOffset SOURCED_DATA_TYPES: Offset = Offset(),
-    TRANSACTION_IDOffset TRANSACTION_ID: Offset = Offset()
+    TRANSACTION_IDOffset TRANSACTION_ID: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
   ) -> Offset {
     let __start = MNV.startMNV(&fbb)
     MNV.add(ID: ID, &fbb)
@@ -558,6 +573,7 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MNV.addVectorOf(SOURCED_DATA: SOURCED_DATA, &fbb)
     MNV.add(SOURCED_DATA_TYPES: SOURCED_DATA_TYPES, &fbb)
     MNV.add(TRANSACTION_ID: TRANSACTION_ID, &fbb)
+    MNV.add(PROVENANCE: PROVENANCE, &fbb)
     return MNV.endMNV(&fbb, start: __start)
   }
 
@@ -608,6 +624,7 @@ public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.SOURCED_DATA, fieldName: "SOURCED_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.SOURCED_DATA_TYPES, fieldName: "SOURCED_DATA_TYPES", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.TRANSACTION_ID, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
     _v.finish()
   }
 }

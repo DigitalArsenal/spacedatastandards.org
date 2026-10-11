@@ -25,6 +25,8 @@ const descriptionOverrides = {
   "CMS": "Communications System - transponder channels, modulation, data rates",
   "COM": "Communications Link - RF link analysis, frequency bands, propagation",
   "MNV": "Orbit Maneuver - detected, planned, or executed maneuvers",
+  "CVR": "Covariance Realism - the rule behind a covariance and its realism test against held-out reference states",
+  "PVN": "Product Provenance - source, originator, provider, producer, licence class and lineage of a data product",
   "MNF": "Orbit Manifold - manifold propagation with delta-V and probability weights",
   "RFM": "Reference Frame - CCSDS celestial and terrestrial coordinate frames",
   "ATM": "Atmospheric Model - CCSDS SANA registry of atmosphere density models",
@@ -66,6 +68,8 @@ const keywordsMap = {
   "OCM": ["orbit", "comprehensive", "trajectory", "covariance", "maneuver", "perturbation", "CCSDS"],
   "BOV": ["burn out", "vector", "launch", "trajectory", "EFG", "velocity", "epoch"],
   "MNV": ["maneuver", "orbit change", "delta-v", "station-keeping", "thrust", "burn"],
+  "CVR": ["covariance", "realism", "calibration", "uncertainty", "Mahalanobis", "coverage", "error model"],
+  "PVN": ["provenance", "attribution", "source", "originator", "provider", "license", "licence", "lineage"],
   "MFE": ["manifold", "element set", "temporary", "satellite number", "TLE"],
   "MNF": ["manifold", "propagation", "delta-v", "probability", "candidate"],
   "MPE": ["minimum", "propagatable", "compact", "mean motion", "BSTAR", "TLE subset"],
@@ -200,7 +204,7 @@ const keywordsMap = {
 const categoryMap = {};
 // Build category map from taxonomy-like structure
 const categories = [
-  { tag: "Orbit", types: ["OMM","OEM","OPM","OCM","BOV","MNV","MFE","MNF","MPE","STV","OBT","OBD","OSM","AST","PCF","VCM","PPE"] },
+  { tag: "Orbit", types: ["OMM","OEM","OPM","OCM","BOV","MNV","MFE","MNF","MPE","STV","OBT","OBD","OSM","AST","PCF","VCM","PPE","CVR"] },
   { tag: "Attitude", types: ["AEM","APM","ACM","ATD"] },
   { tag: "Conjunction", types: ["CDM","CSM","HYP"] },
   { tag: "Tracking", types: ["TDM","TRK","TKG"] },
@@ -214,7 +218,7 @@ const categories = [
   { tag: "Protocol", types: ["SPP","AOF","TCF","TMF","CFP","CLT","RAF","RCF","SDL","XTC"] },
   { tag: "Security", types: ["EME","ENC","EPM","PLK"] },
   { tag: "Reference", types: ["RFM","CRD","TIM","TME","MET","LCC","CTR","SIT","SCM"] },
-  { tag: "Exchange", types: ["CRM","PNM","ACL","PUR","REV","REC","STF","PLG"] },
+  { tag: "Exchange", types: ["CRM","PNM","ACL","PUR","REV","REC","STF","PLG","PVN"] },
   { tag: "Network Operations", types: ["ABA","PGM","PRR","TNR","TRE"] },
   { tag: "Geospatial", types: ["GJN","CZM","KML","GPX","COT"] },
 ];

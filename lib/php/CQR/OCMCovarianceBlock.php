@@ -174,22 +174,43 @@ class OCMCovarianceBlock extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Realism of the block's covariance: one entry per line of LINES, in order,
+    /// or one entry for every line.
+    /**
+     * @returnVectorOffset
+     */
+    public function getCOV_REALISM($j)
+    {
+        $o = $this->__offset(34);
+        $obj = new CVR();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_REALISMLength()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCMCovarianceBlock(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(16);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCMCovarianceBlock
      */
-    public static function createOCMCovarianceBlock(FlatBufferBuilder $builder, $COMMENT, $COV_ID, $COV_PREV_ID, $COV_NEXT_ID, $COV_BASIS, $COV_BASIS_ID, $COV_REF_FRAME, $COV_FRAME_EPOCH, $COV_SCALE_MIN, $COV_SCALE_MAX, $COV_CONFIDENCE, $COV_TYPE, $COV_ORDERING, $COV_UNITS, $LINES)
+    public static function createOCMCovarianceBlock(FlatBufferBuilder $builder, $COMMENT, $COV_ID, $COV_PREV_ID, $COV_NEXT_ID, $COV_BASIS, $COV_BASIS_ID, $COV_REF_FRAME, $COV_FRAME_EPOCH, $COV_SCALE_MIN, $COV_SCALE_MAX, $COV_CONFIDENCE, $COV_TYPE, $COV_ORDERING, $COV_UNITS, $LINES, $COV_REALISM)
     {
-        $builder->startObject(15);
+        $builder->startObject(16);
         self::addCOMMENT($builder, $COMMENT);
         self::addCOV_ID($builder, $COV_ID);
         self::addCOV_PREV_ID($builder, $COV_PREV_ID);
@@ -205,6 +226,7 @@ class OCMCovarianceBlock extends Table
         self::addCOV_ORDERING($builder, $COV_ORDERING);
         self::addCOV_UNITS($builder, $COV_UNITS);
         self::addLINES($builder, $LINES);
+        self::addCOV_REALISM($builder, $COV_REALISM);
         $o = $builder->endObject();
         return $o;
     }
@@ -379,6 +401,40 @@ class OCMCovarianceBlock extends Table
      * @return void
      */
     public static function startLINESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_REALISM(FlatBufferBuilder $builder, $COV_REALISM)
+    {
+        $builder->addOffsetX(15, $COV_REALISM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_REALISMVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_REALISMVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

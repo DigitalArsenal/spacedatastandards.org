@@ -1,8 +1,10 @@
-// Hash: c334c75a3a9e57a8e7a956eee0c03113b66e753033daa04844c9c0038aa83305
-// Version: 2.1.7
+// Hash: 6b4149d1574ea8dc7d2a5713a6e0f1e1b1931539ea83702c22d4fd0c8fbad7e5
+// Version: 2.1.8
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
+include "../CVR/main.fbs";
 include "../PPE/main.fbs";
+include "../PVN/main.fbs";
 include "../RFM/main.fbs";
 
 // Orbit Comprehensive Message (OCM)
@@ -497,18 +499,6 @@ enum estimatorCategory : byte {
   Smoother
 }
 
-/// Whether a covariance's coverage was measured against independent reference
-/// states: the share of reference errors inside its confidence regions matched
-/// what the covariance claims, for the regime and prediction age it covers.
-enum covarianceCalibration : byte {
-  /// Calibration not stated
-  Unspecified,
-  /// Not measured against independent reference states, or measured and failed
-  Uncalibrated,
-  /// Measured against independent reference states and passed
-  Calibrated
-}
-
 /// Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
 enum covarianceOrdering : byte {
   /// Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
@@ -726,6 +716,9 @@ table OCMCovarianceBlock {
   COV_UNITS: string;
   /// The data lines, as written.
   LINES: [string];
+  /// Realism of the block's covariance: one entry per line of LINES, in order,
+  /// or one entry for every line.
+  COV_REALISM: [CVR];
 }
 
 table UserDefinedParameters {
@@ -812,7 +805,7 @@ table OCM {
   /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
   ORB_AVERAGING: string;
   /// Whether COVARIANCE_DATA's coverage was measured against independent
-  /// reference states.
+  /// reference states: Calibrated only when every COV_REALISM entry is.
   COV_CALIBRATION: covarianceCalibration = Unspecified;
   /// Identifier of that calibration evidence (a report or record).
   COV_CALIBRATION_REFERENCE: string;
@@ -845,6 +838,11 @@ table OCM {
   /// order. COVARIANCE_DATA and the fields that go with it above state the first
   /// block when it is one line.
   COVARIANCE_BLOCKS: [OCMCovarianceBlock];
+  /// Where the message's data comes from and the terms it travels under.
+  PROVENANCE: PVN;
+  /// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+  /// STATE_DATA epochs, or one entry for every epoch.
+  COV_REALISM: [CVR];
 }
 
 root_type OCM;

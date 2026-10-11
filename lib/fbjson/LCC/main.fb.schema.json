@@ -129,10 +129,25 @@
         "VAT",
         "VENZ",
         "VTNM",
-        "ZWE"
+        "ZWE",
+        "AGO",
+        "BGR",
+        "BHR",
+        "BWA",
+        "CAN",
+        "CZE",
+        "HRV",
+        "JOR",
+        "KWT",
+        "PER",
+        "PRI",
+        "SLB",
+        "SVK",
+        "TWN",
+        "UGA"
       ],
       "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-type": "ubyte",
       "x-flatbuffer-enum-values": {
         "AB": {
           "value": 0,
@@ -637,6 +652,66 @@
         "ZWE": {
           "value": 125,
           "description": "Republic of Zimbabwe"
+        },
+        "AGO": {
+          "value": 126,
+          "description": "Angola (ISO 3166-1 alpha-3; also ANG)"
+        },
+        "BGR": {
+          "value": 127,
+          "description": "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+        },
+        "BHR": {
+          "value": 128,
+          "description": "Bahrain"
+        },
+        "BWA": {
+          "value": 129,
+          "description": "Botswana"
+        },
+        "CAN": {
+          "value": 130,
+          "description": "Canada (ISO 3166-1 alpha-3; also CA)"
+        },
+        "CZE": {
+          "value": 131,
+          "description": "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+        },
+        "HRV": {
+          "value": 132,
+          "description": "Croatia"
+        },
+        "JOR": {
+          "value": 133,
+          "description": "Jordan"
+        },
+        "KWT": {
+          "value": 134,
+          "description": "Kuwait"
+        },
+        "PER": {
+          "value": 135,
+          "description": "Peru (ISO 3166-1 alpha-3; also PERU)"
+        },
+        "PRI": {
+          "value": 136,
+          "description": "Puerto Rico"
+        },
+        "SLB": {
+          "value": 137,
+          "description": "Solomon Islands"
+        },
+        "SVK": {
+          "value": 138,
+          "description": "Slovakia"
+        },
+        "TWN": {
+          "value": 139,
+          "description": "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+        },
+        "UGA": {
+          "value": 140,
+          "description": "Uganda"
         }
       }
     },
@@ -647,7 +722,7 @@
         "OWNER": {
           "$ref": "#/definitions/legacyCountryCode",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             "AB": {
               "value": 0,
@@ -1152,6 +1227,66 @@
             "ZWE": {
               "value": 125,
               "description": "Republic of Zimbabwe"
+            },
+            "AGO": {
+              "value": 126,
+              "description": "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            "BGR": {
+              "value": 127,
+              "description": "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            "BHR": {
+              "value": 128,
+              "description": "Bahrain"
+            },
+            "BWA": {
+              "value": 129,
+              "description": "Botswana"
+            },
+            "CAN": {
+              "value": 130,
+              "description": "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            "CZE": {
+              "value": 131,
+              "description": "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            "HRV": {
+              "value": 132,
+              "description": "Croatia"
+            },
+            "JOR": {
+              "value": 133,
+              "description": "Jordan"
+            },
+            "KWT": {
+              "value": 134,
+              "description": "Kuwait"
+            },
+            "PER": {
+              "value": 135,
+              "description": "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            "PRI": {
+              "value": 136,
+              "description": "Puerto Rico"
+            },
+            "SLB": {
+              "value": 137,
+              "description": "Solomon Islands"
+            },
+            "SVK": {
+              "value": 138,
+              "description": "Slovakia"
+            },
+            "TWN": {
+              "value": 139,
+              "description": "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            "UGA": {
+              "value": 140,
+              "description": "Uganda"
             }
           }
         },

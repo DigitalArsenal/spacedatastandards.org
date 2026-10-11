@@ -8,257 +8,239 @@ import Common
 
 import FlatBuffers
 
-///  Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
-///  through an arena-backed plugin stream. Carries enough identity for a
-///  receiver to dispatch on schema without inspecting the payload bytes.
-///  Logical payload wire format for a stream frame or an accepted port type.
-public enum payloadWireFormat: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
-  case flatbuffer = 0
-  ///  Body is a raw aligned binary chunk (for example zero-copy structs).
-  case alignedBinary = 1
+///  Coarse envelope status for an invoke response. Per-method numeric
+///  return codes travel in STATUS_CODE; STATUS categorizes the outcome
+///  for host routing (retry, yield-and-resume, fail-closed) without the
+///  host having to decode method-specific numbers.
+public enum pivStatus: Int32, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int32
+  public static var byteSize: Int { return MemoryLayout<Int32>.size }
+  public var value: Int32 { return self.rawValue }
+  ///  Invocation completed; STATUS_CODE carries the method-specific value.
+  case ok = 0
+  ///  Method id not registered on the target plugin.
+  case notFound = 1
+  ///  Invocation succeeded but yielded before draining queued work.
+  ///  Caller should inspect BACKLOG_REMAINING and re-invoke to continue.
+  case yielded = 2
+  ///  Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure.
+  case failed = 3
 
-  public static var max: payloadWireFormat { return .alignedBinary }
-  public static var min: payloadWireFormat { return .flatbuffer }
+  public static var max: pivStatus { return .failed }
+  public static var min: pivStatus { return .ok }
 }
 
 
-///  Buffer mutability contract advertised by a stream port.
-public enum bufferMutability: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  Buffer is immutable after produce.
-  case immutable = 0
-  ///  Buffer may be written in place by the owner (single writer).
-  case singleWriterMutable = 1
-  ///  Buffer is append-only (rings / logs).
-  case appendOnly = 2
-
-  public static var max: bufferMutability { return .appendOnly }
-  public static var min: bufferMutability { return .immutable }
-}
-
-
-///  Buffer ownership contract advertised by a stream port.
-public enum bufferOwnership: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  Arena / host owns the backing bytes; receiver must not free.
-  case hostOwned = 0
-  ///  Plugin owns the backing bytes; host must not free.
-  case pluginOwned = 1
-  ///  Ownership transfers with the frame (hand-off semantics).
-  case transferred = 2
-
-  public static var max: bufferOwnership { return .transferred }
-  public static var min: bufferOwnership { return .hostOwned }
-}
-
-
-///  Payload-schema identity for a stream frame or an accepted port type.
-public struct FlatBufferTypeRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Request envelope carried by `plugin_invoke_stream`.
+public struct PIVRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TAB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FlatBufferTypeRef.id, addPrefix: prefix) }
+  public static var id: String { "$PIV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PIVRequest.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SCHEMA_NAME: VOffset = 4
-    static let FILE_IDENTIFIER: VOffset = 6
-    static let SCHEMA_VERSION: VOffset = 8
-    static let ROOT_TYPE: VOffset = 10
-    static let SCHEMA_HASH: VOffset = 12
-    static let ACCEPTS_ANY_FLATBUFFER: VOffset = 14
-    static let WIRE_FORMAT: VOffset = 16
-    static let FIXED_STRING_LENGTH: VOffset = 18
-    static let BYTE_LENGTH: VOffset = 20
-    static let REQUIRED_ALIGNMENT: VOffset = 22
+    static let METHOD_ID: VOffset = 4
+    static let INPUTS: VOffset = 6
+    static let PAYLOAD_ARENA: VOffset = 8
+    static let TRACE_ID: VOffset = 10
+    static let OUTPUT_STREAM_CAP: VOffset = 12
   }
 
-  ///  Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
-  public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
-  ///  Optional 4-byte FlatBuffer file identifier.
-  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VT.FILE_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_IDENTIFIER) }
-  ///  Optional semver or schema revision string.
-  public var SCHEMA_VERSION: String? { let o = _accessor.offset(VT.SCHEMA_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_VERSION) }
-  ///  Optional root type name within the schema.
-  public var ROOT_TYPE: String? { let o = _accessor.offset(VT.ROOT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROOT_TYPE) }
-  ///  Optional schema hash bytes for stronger compatibility checks.
-  public var SCHEMA_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SCHEMA_HASH, byteSize: 1) }
-  public func withUnsafePointerToSchemaHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SCHEMA_HASH, body: body) }
-  ///  True when this port/type set accepts any FlatBuffer frame.
-  public var ACCEPTS_ANY_FLATBUFFER: Bool { let o = _accessor.offset(VT.ACCEPTS_ANY_FLATBUFFER); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Logical wire format for this accepted type.
-  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VT.WIRE_FORMAT); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
-  ///  Fixed string length for aligned-binary string fields, when applicable.
-  public var FIXED_STRING_LENGTH: UInt16 { let o = _accessor.offset(VT.FIXED_STRING_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Byte length for fixed-size aligned-binary records, when applicable.
-  public var BYTE_LENGTH: UInt32 { let o = _accessor.offset(VT.BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Required start alignment for aligned-binary records, when applicable.
-  public var REQUIRED_ALIGNMENT: UInt16 { let o = _accessor.offset(VT.REQUIRED_ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public static func startFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
-  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
-  public static func add(SCHEMA_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_VERSION, at: VT.SCHEMA_VERSION) }
-  public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VT.ROOT_TYPE) }
-  public static func addVectorOf(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
-  public static func add(ACCEPTS_ANY_FLATBUFFER: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCEPTS_ANY_FLATBUFFER, def: false,
-   at: VT.ACCEPTS_ANY_FLATBUFFER) }
-  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VT.WIRE_FORMAT) }
-  public static func add(FIXED_STRING_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_STRING_LENGTH, def: 0, at: VT.FIXED_STRING_LENGTH) }
-  public static func add(BYTE_LENGTH: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_LENGTH, def: 0, at: VT.BYTE_LENGTH) }
-  public static func add(REQUIRED_ALIGNMENT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_ALIGNMENT, def: 0, at: VT.REQUIRED_ALIGNMENT) }
-  public static func endFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createFlatBufferTypeRef(
+  ///  Stable method identifier from PLG.METHODS[].METHOD_ID.
+  public var METHOD_ID: String! { let o = _accessor.offset(VT.METHOD_ID); return _accessor.string(at: o) }
+  public var METHOD_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.METHOD_ID) }
+  ///  Input frames. Each TAB.TYPE_REF names the payload schema and each
+  ///  TAB.WIRE_FORMAT selects FLATBUFFER or ALIGNED_BINARY. TAB.OFFSET
+  ///  is arena-relative into PAYLOAD_ARENA (or an absolute pointer when
+  ///  PAYLOAD_ARENA is empty).
+  public var INPUTS: FlatbufferVector<TAB> { return _accessor.vector(at: VT.INPUTS, byteSize: 4) }
+  ///  Optional arena backing the INPUTS payload bodies. Empty means the
+  ///  caller manages arena state out-of-band.
+  public var PAYLOAD_ARENA: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PAYLOAD_ARENA, byteSize: 1) }
+  public func withUnsafePointerToPayloadArena<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PAYLOAD_ARENA, body: body) }
+  ///  Optional trace identifier for request correlation.
+  public var TRACE_ID: UInt64 { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Optional yield-budget hint. Plugins MAY pause queued work after
+  ///  draining this many output frames and return YIELDED for the caller
+  ///  to resume. 0 = no hint.
+  public var OUTPUT_STREAM_CAP: UInt32 { let o = _accessor.offset(VT.OUTPUT_STREAM_CAP); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startPIVRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(METHOD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_ID, at: VT.METHOD_ID) }
+  public static func addVectorOf(INPUTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUTS, at: VT.INPUTS) }
+  public static func addVectorOf(PAYLOAD_ARENA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOAD_ARENA, at: VT.PAYLOAD_ARENA) }
+  public static func add(TRACE_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACE_ID, def: 0, at: VT.TRACE_ID) }
+  public static func add(OUTPUT_STREAM_CAP: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_STREAM_CAP, def: 0, at: VT.OUTPUT_STREAM_CAP) }
+  public static func endPIVRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPIVRequest(
     _ fbb: inout FlatBufferBuilder,
-    SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
-    FILE_IDENTIFIEROffset FILE_IDENTIFIER: Offset = Offset(),
-    SCHEMA_VERSIONOffset SCHEMA_VERSION: Offset = Offset(),
-    ROOT_TYPEOffset ROOT_TYPE: Offset = Offset(),
-    SCHEMA_HASHVectorOffset SCHEMA_HASH: Offset = Offset(),
-    ACCEPTS_ANY_FLATBUFFER: Bool = false,
-    WIRE_FORMAT: payloadWireFormat = .flatbuffer,
-    FIXED_STRING_LENGTH: UInt16 = 0,
-    BYTE_LENGTH: UInt32 = 0,
-    REQUIRED_ALIGNMENT: UInt16 = 0
+    METHOD_IDOffset METHOD_ID: Offset,
+    INPUTSVectorOffset INPUTS: Offset = Offset(),
+    PAYLOAD_ARENAVectorOffset PAYLOAD_ARENA: Offset = Offset(),
+    TRACE_ID: UInt64 = 0,
+    OUTPUT_STREAM_CAP: UInt32 = 0
   ) -> Offset {
-    let __start = FlatBufferTypeRef.startFlatBufferTypeRef(&fbb)
-    FlatBufferTypeRef.add(SCHEMA_NAME: SCHEMA_NAME, &fbb)
-    FlatBufferTypeRef.add(FILE_IDENTIFIER: FILE_IDENTIFIER, &fbb)
-    FlatBufferTypeRef.add(SCHEMA_VERSION: SCHEMA_VERSION, &fbb)
-    FlatBufferTypeRef.add(ROOT_TYPE: ROOT_TYPE, &fbb)
-    FlatBufferTypeRef.addVectorOf(SCHEMA_HASH: SCHEMA_HASH, &fbb)
-    FlatBufferTypeRef.add(ACCEPTS_ANY_FLATBUFFER: ACCEPTS_ANY_FLATBUFFER, &fbb)
-    FlatBufferTypeRef.add(WIRE_FORMAT: WIRE_FORMAT, &fbb)
-    FlatBufferTypeRef.add(FIXED_STRING_LENGTH: FIXED_STRING_LENGTH, &fbb)
-    FlatBufferTypeRef.add(BYTE_LENGTH: BYTE_LENGTH, &fbb)
-    FlatBufferTypeRef.add(REQUIRED_ALIGNMENT: REQUIRED_ALIGNMENT, &fbb)
-    return FlatBufferTypeRef.endFlatBufferTypeRef(&fbb, start: __start)
+    let __start = PIVRequest.startPIVRequest(&fbb)
+    PIVRequest.add(METHOD_ID: METHOD_ID, &fbb)
+    PIVRequest.addVectorOf(INPUTS: INPUTS, &fbb)
+    PIVRequest.addVectorOf(PAYLOAD_ARENA: PAYLOAD_ARENA, &fbb)
+    PIVRequest.add(TRACE_ID: TRACE_ID, &fbb)
+    PIVRequest.add(OUTPUT_STREAM_CAP: OUTPUT_STREAM_CAP, &fbb)
+    return PIVRequest.endPIVRequest(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SCHEMA_VERSION, fieldName: "SCHEMA_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ROOT_TYPE, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.ACCEPTS_ANY_FLATBUFFER, fieldName: "ACCEPTS_ANY_FLATBUFFER", required: false, type: Bool.self)
-    try _v.visit(field: VT.WIRE_FORMAT, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
-    try _v.visit(field: VT.FIXED_STRING_LENGTH, fieldName: "FIXED_STRING_LENGTH", required: false, type: UInt16.self)
-    try _v.visit(field: VT.BYTE_LENGTH, fieldName: "BYTE_LENGTH", required: false, type: UInt32.self)
-    try _v.visit(field: VT.REQUIRED_ALIGNMENT, fieldName: "REQUIRED_ALIGNMENT", required: false, type: UInt16.self)
+    try _v.visit(field: VT.METHOD_ID, fieldName: "METHOD_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INPUTS, fieldName: "INPUTS", required: false, type: ForwardOffset<Vector<ForwardOffset<TAB>, TAB>>.self)
+    try _v.visit(field: VT.PAYLOAD_ARENA, fieldName: "PAYLOAD_ARENA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: UInt64.self)
+    try _v.visit(field: VT.OUTPUT_STREAM_CAP, fieldName: "OUTPUT_STREAM_CAP", required: false, type: UInt32.self)
     _v.finish()
   }
 }
 
-///  Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-public struct TAB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Response envelope emitted by `plugin_invoke_stream`.
+public struct PIVResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TAB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TAB.id, addPrefix: prefix) }
+  public static var id: String { "$PIV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PIVResponse.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let OFFSET: VOffset = 4
-    static let SIZE: VOffset = 6
-    static let ALIGNMENT: VOffset = 8
-    static let WIRE_FORMAT: VOffset = 10
-    static let TYPE_REF: VOffset = 12
-    static let MUTABILITY: VOffset = 14
-    static let OWNERSHIP: VOffset = 16
-    static let FRAME_ID: VOffset = 18
-    static let PORT_ID: VOffset = 20
+    static let STATUS_CODE: VOffset = 4
+    static let STATUS: VOffset = 6
+    static let YIELDED: VOffset = 8
+    static let BACKLOG_REMAINING: VOffset = 10
+    static let OUTPUTS: VOffset = 12
+    static let PAYLOAD_ARENA: VOffset = 14
+    static let ERROR_CODE: VOffset = 16
+    static let ERROR_MESSAGE: VOffset = 18
+    static let TRACE_ID: VOffset = 20
   }
 
-  ///  Byte offset of the payload body within the arena.
-  public var OFFSET: UInt32 { let o = _accessor.offset(VT.OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Byte length of the payload body.
-  public var SIZE: UInt32 { let o = _accessor.offset(VT.SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Required start alignment of the payload body (in bytes).
-  public var ALIGNMENT: UInt32 { let o = _accessor.offset(VT.ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Wire format for the body.
-  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VT.WIRE_FORMAT); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
-  ///  Optional payload schema identity.
-  public var TYPE_REF: FlatBufferTypeRef? { let o = _accessor.offset(VT.TYPE_REF); return o == 0 ? nil : FlatBufferTypeRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Mutability contract for the slot.
-  public var MUTABILITY: bufferMutability { let o = _accessor.offset(VT.MUTABILITY); return o == 0 ? .immutable : bufferMutability(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .immutable }
-  ///  Ownership contract for the slot.
-  public var OWNERSHIP: bufferOwnership { let o = _accessor.offset(VT.OWNERSHIP); return o == 0 ? .hostOwned : bufferOwnership(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .hostOwned }
-  ///  Optional opaque frame identifier for stream bookkeeping.
-  public var FRAME_ID: UInt64 { let o = _accessor.offset(VT.FRAME_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Optional port identifier for frames that route to/from a named
-  ///  input or output port on a method (maps to
-  ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
-  ///  no port routing hint.
-  public var PORT_ID: String? { let o = _accessor.offset(VT.PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PORT_ID) }
-  public static func startTAB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0, at: VT.OFFSET) }
-  public static func add(SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0, at: VT.SIZE) }
-  public static func add(ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALIGNMENT, def: 0, at: VT.ALIGNMENT) }
-  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VT.WIRE_FORMAT) }
-  public static func add(TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE_REF, at: VT.TYPE_REF) }
-  public static func add(MUTABILITY: bufferMutability, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUTABILITY.rawValue, def: 0, at: VT.MUTABILITY) }
-  public static func add(OWNERSHIP: bufferOwnership, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNERSHIP.rawValue, def: 0, at: VT.OWNERSHIP) }
-  public static func add(FRAME_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_ID, def: 0, at: VT.FRAME_ID) }
-  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VT.PORT_ID) }
-  public static func endTAB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTAB(
+  ///  Method-specific status code. Zero conventionally indicates success.
+  public var STATUS_CODE: Int32 { let o = _accessor.offset(VT.STATUS_CODE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Coarse envelope status.
+  public var STATUS: pivStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : pivStatus(rawValue: _accessor.readBuffer(of: Int32.self, at: o)) ?? .ok }
+  ///  True when the method yielded before fully draining queued work.
+  public var YIELDED: Bool { let o = _accessor.offset(VT.YIELDED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Outstanding frame count remaining after this response. Non-zero
+  ///  only when STATUS == YIELDED.
+  public var BACKLOG_REMAINING: UInt32 { let o = _accessor.offset(VT.BACKLOG_REMAINING); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Output frames. Each TAB carries schema identity and wire format.
+  public var OUTPUTS: FlatbufferVector<TAB> { return _accessor.vector(at: VT.OUTPUTS, byteSize: 4) }
+  ///  Optional arena backing OUTPUTS payload bodies.
+  public var PAYLOAD_ARENA: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PAYLOAD_ARENA, byteSize: 1) }
+  public func withUnsafePointerToPayloadArena<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PAYLOAD_ARENA, body: body) }
+  ///  Stable machine-readable error code when STATUS == FAILED.
+  public var ERROR_CODE: String? { let o = _accessor.offset(VT.ERROR_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_CODE) }
+  ///  Human-readable diagnostic when STATUS == FAILED.
+  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
+  ///  Echo of the request's TRACE_ID for correlation.
+  public var TRACE_ID: UInt64 { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startPIVResponse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(STATUS_CODE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS_CODE, def: 0, at: VT.STATUS_CODE) }
+  public static func add(STATUS: pivStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func add(YIELDED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: YIELDED, def: false,
+   at: VT.YIELDED) }
+  public static func add(BACKLOG_REMAINING: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKLOG_REMAINING, def: 0, at: VT.BACKLOG_REMAINING) }
+  public static func addVectorOf(OUTPUTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUTS, at: VT.OUTPUTS) }
+  public static func addVectorOf(PAYLOAD_ARENA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOAD_ARENA, at: VT.PAYLOAD_ARENA) }
+  public static func add(ERROR_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_CODE, at: VT.ERROR_CODE) }
+  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
+  public static func add(TRACE_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACE_ID, def: 0, at: VT.TRACE_ID) }
+  public static func endPIVResponse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPIVResponse(
     _ fbb: inout FlatBufferBuilder,
-    OFFSET: UInt32 = 0,
-    SIZE: UInt32 = 0,
-    ALIGNMENT: UInt32 = 0,
-    WIRE_FORMAT: payloadWireFormat = .flatbuffer,
-    TYPE_REFOffset TYPE_REF: Offset = Offset(),
-    MUTABILITY: bufferMutability = .immutable,
-    OWNERSHIP: bufferOwnership = .hostOwned,
-    FRAME_ID: UInt64 = 0,
-    PORT_IDOffset PORT_ID: Offset = Offset()
+    STATUS_CODE: Int32 = 0,
+    STATUS: pivStatus = .ok,
+    YIELDED: Bool = false,
+    BACKLOG_REMAINING: UInt32 = 0,
+    OUTPUTSVectorOffset OUTPUTS: Offset = Offset(),
+    PAYLOAD_ARENAVectorOffset PAYLOAD_ARENA: Offset = Offset(),
+    ERROR_CODEOffset ERROR_CODE: Offset = Offset(),
+    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
+    TRACE_ID: UInt64 = 0
   ) -> Offset {
-    let __start = TAB.startTAB(&fbb)
-    TAB.add(OFFSET: OFFSET, &fbb)
-    TAB.add(SIZE: SIZE, &fbb)
-    TAB.add(ALIGNMENT: ALIGNMENT, &fbb)
-    TAB.add(WIRE_FORMAT: WIRE_FORMAT, &fbb)
-    TAB.add(TYPE_REF: TYPE_REF, &fbb)
-    TAB.add(MUTABILITY: MUTABILITY, &fbb)
-    TAB.add(OWNERSHIP: OWNERSHIP, &fbb)
-    TAB.add(FRAME_ID: FRAME_ID, &fbb)
-    TAB.add(PORT_ID: PORT_ID, &fbb)
-    return TAB.endTAB(&fbb, start: __start)
+    let __start = PIVResponse.startPIVResponse(&fbb)
+    PIVResponse.add(STATUS_CODE: STATUS_CODE, &fbb)
+    PIVResponse.add(STATUS: STATUS, &fbb)
+    PIVResponse.add(YIELDED: YIELDED, &fbb)
+    PIVResponse.add(BACKLOG_REMAINING: BACKLOG_REMAINING, &fbb)
+    PIVResponse.addVectorOf(OUTPUTS: OUTPUTS, &fbb)
+    PIVResponse.addVectorOf(PAYLOAD_ARENA: PAYLOAD_ARENA, &fbb)
+    PIVResponse.add(ERROR_CODE: ERROR_CODE, &fbb)
+    PIVResponse.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
+    PIVResponse.add(TRACE_ID: TRACE_ID, &fbb)
+    return PIVResponse.endPIVResponse(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.OFFSET, fieldName: "OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VT.SIZE, fieldName: "SIZE", required: false, type: UInt32.self)
-    try _v.visit(field: VT.ALIGNMENT, fieldName: "ALIGNMENT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.WIRE_FORMAT, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
-    try _v.visit(field: VT.TYPE_REF, fieldName: "TYPE_REF", required: false, type: ForwardOffset<FlatBufferTypeRef>.self)
-    try _v.visit(field: VT.MUTABILITY, fieldName: "MUTABILITY", required: false, type: bufferMutability.self)
-    try _v.visit(field: VT.OWNERSHIP, fieldName: "OWNERSHIP", required: false, type: bufferOwnership.self)
-    try _v.visit(field: VT.FRAME_ID, fieldName: "FRAME_ID", required: false, type: UInt64.self)
-    try _v.visit(field: VT.PORT_ID, fieldName: "PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS_CODE, fieldName: "STATUS_CODE", required: false, type: Int32.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: pivStatus.self)
+    try _v.visit(field: VT.YIELDED, fieldName: "YIELDED", required: false, type: Bool.self)
+    try _v.visit(field: VT.BACKLOG_REMAINING, fieldName: "BACKLOG_REMAINING", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUTS, fieldName: "OUTPUTS", required: false, type: ForwardOffset<Vector<ForwardOffset<TAB>, TAB>>.self)
+    try _v.visit(field: VT.PAYLOAD_ARENA, fieldName: "PAYLOAD_ARENA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ERROR_CODE, fieldName: "ERROR_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+///  Envelope — carries either a request or a response. Either REQUEST or
+///  RESPONSE is populated per message; both populated is undefined.
+public struct PIV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PIV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PIV.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let REQUEST: VOffset = 4
+    static let RESPONSE: VOffset = 6
+  }
+
+  public var REQUEST: PIVRequest? { let o = _accessor.offset(VT.REQUEST); return o == 0 ? nil : PIVRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RESPONSE: PIVResponse? { let o = _accessor.offset(VT.RESPONSE); return o == 0 ? nil : PIVResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPIV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST, at: VT.REQUEST) }
+  public static func add(RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESPONSE, at: VT.RESPONSE) }
+  public static func endPIV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPIV(
+    _ fbb: inout FlatBufferBuilder,
+    REQUESTOffset REQUEST: Offset = Offset(),
+    RESPONSEOffset RESPONSE: Offset = Offset()
+  ) -> Offset {
+    let __start = PIV.startPIV(&fbb)
+    PIV.add(REQUEST: REQUEST, &fbb)
+    PIV.add(RESPONSE: RESPONSE, &fbb)
+    return PIV.endPIV(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.REQUEST, fieldName: "REQUEST", required: false, type: ForwardOffset<PIVRequest>.self)
+    try _v.visit(field: VT.RESPONSE, fieldName: "RESPONSE", required: false, type: ForwardOffset<PIVResponse>.self)
     _v.finish()
   }
 }

@@ -2,6 +2,13 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+/**
+ * Owner and country codes of the public satellite catalog. An ordinal is a
+ * wire value: members are appended after ZWE, never inserted, so the ones
+ * after it are out of alphabetical order. Some owners have two codes, the
+ * catalog's older one and an ISO 3166-1 alpha-3 code the catalog also uses
+ * (CA and CAN); each code is its own member.
+ */
 export enum legacyCountryCode {
   /**
    * Arab Satellite Communications Organization
@@ -631,5 +638,80 @@ export enum legacyCountryCode {
   /**
    * Republic of Zimbabwe
    */
-  ZWE = 125
+  ZWE = 125,
+
+  /**
+   * Angola (ISO 3166-1 alpha-3; also ANG)
+   */
+  AGO = 126,
+
+  /**
+   * Bulgaria (ISO 3166-1 alpha-3; also BUL)
+   */
+  BGR = 127,
+
+  /**
+   * Bahrain
+   */
+  BHR = 128,
+
+  /**
+   * Botswana
+   */
+  BWA = 129,
+
+  /**
+   * Canada (ISO 3166-1 alpha-3; also CA)
+   */
+  CAN = 130,
+
+  /**
+   * Czechia (ISO 3166-1 alpha-3; also CZCH)
+   */
+  CZE = 131,
+
+  /**
+   * Croatia
+   */
+  HRV = 132,
+
+  /**
+   * Jordan
+   */
+  JOR = 133,
+
+  /**
+   * Kuwait
+   */
+  KWT = 134,
+
+  /**
+   * Peru (ISO 3166-1 alpha-3; also PERU)
+   */
+  PER = 135,
+
+  /**
+   * Puerto Rico
+   */
+  PRI = 136,
+
+  /**
+   * Solomon Islands
+   */
+  SLB = 137,
+
+  /**
+   * Slovakia
+   */
+  SVK = 138,
+
+  /**
+   * Taiwan (ISO 3166-1 alpha-3; also ROC)
+   */
+  TWN = 139,
+
+  /**
+   * Uganda
+   */
+  UGA = 140
 }

@@ -8,237 +8,225 @@ import Common
 
 import FlatBuffers
 
-///  On-chain settlement mechanism a buyer's payment targets.
-public enum settlementMechanism: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  What a set of commission terms applies to.
+public enum commissionScope: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Native-asset transfer to a plain address (no split contract)
-  case nativetransfer = 0
-  ///  ERC-20 / SPL token transfer to a plain address
-  case erc20transfer = 1
-  ///  0xSplits-style splitter contract on an EVM chain
-  case ethsplitter = 2
-  ///  Splitter program on Solana
-  case solsplitter = 3
-  ///  Direct address payout (e.g. Bitcoin); split settled off-contract
-  case directaddress = 4
+  ///  A single listing
+  case listing = 0
+  ///  A whole store's default terms
+  case store = 1
+  ///  A publisher's default terms
+  case publisher = 2
 
-  public static var max: settlementMechanism { return .directaddress }
-  public static var min: settlementMechanism { return .nativetransfer }
+  public static var max: commissionScope { return .publisher }
+  public static var min: commissionScope { return .listing }
 }
 
 
-///  How the purchase reference (`$PUR.REQUEST_ID`) is bound on-chain so a
-///  payment can be matched to an order replay-safely.
-public enum memoBindingScheme: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  How the commission split is enforced.
+public enum commissionEnforcement: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  No on-chain memo binding
-  case nomemo = 0
-  ///  Bound in EVM transaction calldata
-  case txdata = 1
-  ///  Solana memo program instruction
-  case solmemo = 2
-  ///  Bitcoin OP_RETURN output
-  case opreturn = 3
+  ///  Enforced on-chain by an established splitter contract/program: the split
+  ///  executes when the buyer pays the splitter. No off-chain or manual
+  ///  settlement — the platform collects commission purely by the buyer's
+  ///  payment routing through the splitter contract.
+  case splittercontract = 0
+  ///  Provider-attested off-contract split, used only where no splitter exists
+  ///  (e.g. BTC / DirectAddress)
+  case providerattested = 1
 
-  public static var max: memoBindingScheme { return .opreturn }
-  public static var min: memoBindingScheme { return .nomemo }
+  public static var max: commissionEnforcement { return .providerattested }
+  public static var min: commissionEnforcement { return .splittercontract }
 }
 
 
-///  Recipient of an on-chain revenue split. The identity binds to an `$EPM`
-///  via CHAIN_PROOFS so a payout address is provably the recipient's.
-public struct SplitRecipient: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Role a split recipient plays in the revenue division.
+public enum splitRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  The module/flow publisher (vendor)
+  case publisher = 0
+  ///  The store operator platform — the commission recipient
+  case platform = 1
+  ///  A referrer who drove the sale
+  case referrer = 2
+  ///  A charitable recipient
+  case charity = 3
+
+  public static var max: splitRole { return .charity }
+  public static var min: splitRole { return .publisher }
+}
+
+
+///  One recipient's share of a sale, expressed in basis points.
+public struct RevenueSplit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SCX" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SplitRecipient.id, addPrefix: prefix) }
+  public static var id: String { "$CMT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RevenueSplit.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let EPM_CID: VOffset = 4
-    static let CHAIN: VOffset = 6
-    static let ADDRESS: VOffset = 8
-    static let XPUB: VOffset = 10
+    static let RECIPIENT: VOffset = 4
+    static let BPS: VOffset = 6
+    static let ROLE: VOffset = 8
   }
 
-  ///  IPFS CID of the recipient's Entity Profile Message (`$EPM`)
-  public var EPM_CID: String? { let o = _accessor.offset(VT.EPM_CID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPM_CID) }
-  ///  Settlement chain, e.g. "ethereum", "solana", "bitcoin"
-  public var CHAIN: String? { let o = _accessor.offset(VT.CHAIN); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CHAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHAIN) }
-  ///  On-chain payout address (EVM 0x / SOL base58 / BTC address)
-  public var ADDRESS: String? { let o = _accessor.offset(VT.ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ADDRESS) }
-  ///  Account xpub the address derives from
-  public var XPUB: String? { let o = _accessor.offset(VT.XPUB); return o == 0 ? nil : _accessor.string(at: o) }
-  public var XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.XPUB) }
-  public static func startSplitRecipient(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(EPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPM_CID, at: VT.EPM_CID) }
-  public static func add(CHAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN, at: VT.CHAIN) }
-  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VT.ADDRESS) }
-  public static func add(XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPUB, at: VT.XPUB) }
-  public static func endSplitRecipient(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createSplitRecipient(
+  ///  The payout recipient
+  public var RECIPIENT: SplitRecipient? { let o = _accessor.offset(VT.RECIPIENT); return o == 0 ? nil : SplitRecipient(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Share in basis points (1/100 of a percent); all splits plus the platform
+  ///  commission sum to 10000
+  public var BPS: UInt16 { let o = _accessor.offset(VT.BPS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  The role this recipient plays
+  public var ROLE: splitRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .publisher : splitRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .publisher }
+  public static func startRevenueSplit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(RECIPIENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECIPIENT, at: VT.RECIPIENT) }
+  public static func add(BPS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BPS, def: 0, at: VT.BPS) }
+  public static func add(ROLE: splitRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VT.ROLE) }
+  public static func endRevenueSplit(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createRevenueSplit(
     _ fbb: inout FlatBufferBuilder,
-    EPM_CIDOffset EPM_CID: Offset = Offset(),
-    CHAINOffset CHAIN: Offset = Offset(),
-    ADDRESSOffset ADDRESS: Offset = Offset(),
-    XPUBOffset XPUB: Offset = Offset()
+    RECIPIENTOffset RECIPIENT: Offset = Offset(),
+    BPS: UInt16 = 0,
+    ROLE: splitRole = .publisher
   ) -> Offset {
-    let __start = SplitRecipient.startSplitRecipient(&fbb)
-    SplitRecipient.add(EPM_CID: EPM_CID, &fbb)
-    SplitRecipient.add(CHAIN: CHAIN, &fbb)
-    SplitRecipient.add(ADDRESS: ADDRESS, &fbb)
-    SplitRecipient.add(XPUB: XPUB, &fbb)
-    return SplitRecipient.endSplitRecipient(&fbb, start: __start)
+    let __start = RevenueSplit.startRevenueSplit(&fbb)
+    RevenueSplit.add(RECIPIENT: RECIPIENT, &fbb)
+    RevenueSplit.add(BPS: BPS, &fbb)
+    RevenueSplit.add(ROLE: ROLE, &fbb)
+    return RevenueSplit.endRevenueSplit(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.EPM_CID, fieldName: "EPM_CID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CHAIN, fieldName: "CHAIN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ADDRESS, fieldName: "ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.XPUB, fieldName: "XPUB", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECIPIENT, fieldName: "RECIPIENT", required: false, type: ForwardOffset<SplitRecipient>.self)
+    try _v.visit(field: VT.BPS, fieldName: "BPS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: splitRole.self)
     _v.finish()
   }
 }
 
-///  Chain Settlement / Smart-Contract Descriptor. The forward description of the
-///  exact established splitter contract/program a buyer's wallet targets so
-///  payment and platform commission settle atomically on-chain. Referenced by
-///  `$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is
-///  realized by the splitter contract itself when the buyer pays it; there is no
-///  off-chain or manual settlement step.
-public struct SCX: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Commission Terms / Revenue Split. Binds a listing, store, or publisher to a
+///  platform commission and the on-chain split that enforces it. This record
+///  makes "the platform earns on every transaction" auditable and portable
+///  across store deployments. Commission is realized purely by the buyer's
+///  payment routing through the on-chain splitter contract described in
+///  CONTRACTS — never by a manual or off-chain settlement step.
+public struct CMT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SCX" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCX.id, addPrefix: prefix) }
+  public static var id: String { "$CMT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CMT.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CHAIN: VOffset = 4
-    static let CHAIN_ID: VOffset = 6
-    static let SETTLEMENT_KIND: VOffset = 8
-    static let SPLITTER_STANDARD: VOffset = 10
-    static let SPLITTER_ADDRESS: VOffset = 12
-    static let SPLIT_CONFIG_ID: VOffset = 14
-    static let TOKEN_ADDRESS: VOffset = 16
-    static let TOKEN_SYMBOL: VOffset = 18
-    static let TOKEN_DECIMALS: VOffset = 20
-    static let SPLIT_RECIPIENTS: VOffset = 22
-    static let MIN_CONFIRMATIONS: VOffset = 24
-    static let MEMO_SCHEME: VOffset = 26
+    static let TERMS_ID: VOffset = 4
+    static let SCOPE: VOffset = 6
+    static let TARGET_ID: VOffset = 8
+    static let COMMISSION_BPS: VOffset = 10
+    static let SPLITS: VOffset = 12
+    static let PLATFORM_RECIPIENT: VOffset = 14
+    static let ENFORCEMENT: VOffset = 16
+    static let CONTRACTS: VOffset = 18
+    static let EFFECTIVE_AT: VOffset = 20
+    static let EXPIRES_AT: VOffset = 22
+    static let SIGNATURE: VOffset = 24
   }
 
-  ///  Settlement chain identifier, e.g. "ethereum", "solana", "bitcoin"
-  ///  (matches `$PUR.PAYMENT_CHAIN`)
-  public var CHAIN: String! { let o = _accessor.offset(VT.CHAIN); return _accessor.string(at: o) }
-  public var CHAINSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CHAIN) }
-  ///  EVM chainId; 0 for non-EVM chains
-  public var CHAIN_ID: UInt64 { let o = _accessor.offset(VT.CHAIN_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  On-chain settlement mechanism
-  public var SETTLEMENT_KIND: settlementMechanism { let o = _accessor.offset(VT.SETTLEMENT_KIND); return o == 0 ? .nativetransfer : settlementMechanism(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .nativetransfer }
-  ///  Established split standard id, e.g. "0xsplits.v2" (ETH) or the SOL
-  ///  splitter program name. An audited off-the-shelf standard, not a custom
-  ///  contract.
-  public var SPLITTER_STANDARD: String? { let o = _accessor.offset(VT.SPLITTER_STANDARD); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPLITTER_STANDARDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPLITTER_STANDARD) }
-  ///  Deployed splitter contract address (ETH) or splitter program id (SOL) the
-  ///  buyer's payment routes into
-  public var SPLITTER_ADDRESS: String? { let o = _accessor.offset(VT.SPLITTER_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPLITTER_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPLITTER_ADDRESS) }
-  ///  The specific split configuration (recipient set + basis points) registered
-  ///  with the splitter
-  public var SPLIT_CONFIG_ID: String? { let o = _accessor.offset(VT.SPLIT_CONFIG_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPLIT_CONFIG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPLIT_CONFIG_ID) }
-  ///  ERC-20 / SPL mint address for stablecoin settlement; empty = native asset
-  public var TOKEN_ADDRESS: String? { let o = _accessor.offset(VT.TOKEN_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TOKEN_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TOKEN_ADDRESS) }
-  ///  Token symbol, e.g. "USDC"
-  public var TOKEN_SYMBOL: String? { let o = _accessor.offset(VT.TOKEN_SYMBOL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TOKEN_SYMBOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TOKEN_SYMBOL) }
-  ///  Token decimals, e.g. 6 for USDC
-  public var TOKEN_DECIMALS: UInt8 { let o = _accessor.offset(VT.TOKEN_DECIMALS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  The recipient set the split configuration encodes (platform + publisher…),
-  ///  mirrored here for independent verification
-  public var SPLIT_RECIPIENTS: FlatbufferVector<SplitRecipient> { return _accessor.vector(at: VT.SPLIT_RECIPIENTS, byteSize: 4) }
-  ///  Confirmations required before the payment is accepted
-  public var MIN_CONFIRMATIONS: UInt32 { let o = _accessor.offset(VT.MIN_CONFIRMATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  How the order reference is bound on-chain for replay-safe matching
-  public var MEMO_SCHEME: memoBindingScheme { let o = _accessor.offset(VT.MEMO_SCHEME); return o == 0 ? .nomemo : memoBindingScheme(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .nomemo }
-  public static func startSCX(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(CHAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN, at: VT.CHAIN) }
-  public static func add(CHAIN_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHAIN_ID, def: 0, at: VT.CHAIN_ID) }
-  public static func add(SETTLEMENT_KIND: settlementMechanism, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SETTLEMENT_KIND.rawValue, def: 0, at: VT.SETTLEMENT_KIND) }
-  public static func add(SPLITTER_STANDARD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPLITTER_STANDARD, at: VT.SPLITTER_STANDARD) }
-  public static func add(SPLITTER_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPLITTER_ADDRESS, at: VT.SPLITTER_ADDRESS) }
-  public static func add(SPLIT_CONFIG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPLIT_CONFIG_ID, at: VT.SPLIT_CONFIG_ID) }
-  public static func add(TOKEN_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOKEN_ADDRESS, at: VT.TOKEN_ADDRESS) }
-  public static func add(TOKEN_SYMBOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOKEN_SYMBOL, at: VT.TOKEN_SYMBOL) }
-  public static func add(TOKEN_DECIMALS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOKEN_DECIMALS, def: 0, at: VT.TOKEN_DECIMALS) }
-  public static func addVectorOf(SPLIT_RECIPIENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPLIT_RECIPIENTS, at: VT.SPLIT_RECIPIENTS) }
-  public static func add(MIN_CONFIRMATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_CONFIRMATIONS, def: 0, at: VT.MIN_CONFIRMATIONS) }
-  public static func add(MEMO_SCHEME: memoBindingScheme, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEMO_SCHEME.rawValue, def: 0, at: VT.MEMO_SCHEME) }
-  public static func endSCX(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createSCX(
+  ///  Stable terms identifier, referenced by `$PUR`/`$ACL`/listings
+  public var TERMS_ID: String! { let o = _accessor.offset(VT.TERMS_ID); return _accessor.string(at: o) }
+  public var TERMS_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TERMS_ID) }
+  ///  What these terms cover
+  public var SCOPE: commissionScope { let o = _accessor.offset(VT.SCOPE); return o == 0 ? .listing : commissionScope(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .listing }
+  ///  The `$PLG.PLUGIN_ID` / store id / publisher xpub the terms apply to
+  public var TARGET_ID: String? { let o = _accessor.offset(VT.TARGET_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_ID) }
+  ///  Platform commission in basis points (e.g. 500 = 5%)
+  public var COMMISSION_BPS: UInt16 { let o = _accessor.offset(VT.COMMISSION_BPS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Recipient splits; each in basis points, summing with the commission to 10000
+  public var SPLITS: FlatbufferVector<RevenueSplit> { return _accessor.vector(at: VT.SPLITS, byteSize: 4) }
+  ///  The platform's per-chain payout identity (the commission recipient)
+  public var PLATFORM_RECIPIENT: SplitRecipient? { let o = _accessor.offset(VT.PLATFORM_RECIPIENT); return o == 0 ? nil : SplitRecipient(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  How the split is enforced (on-chain splitter vs provider-attested)
+  public var ENFORCEMENT: commissionEnforcement { let o = _accessor.offset(VT.ENFORCEMENT); return o == 0 ? .splittercontract : commissionEnforcement(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .splittercontract }
+  ///  The established splitter contract(s)/program(s) that perform the split,
+  ///  one per accepted chain/asset
+  public var CONTRACTS: FlatbufferVector<SCX> { return _accessor.vector(at: VT.CONTRACTS, byteSize: 4) }
+  ///  Unix ms when these terms take effect
+  public var EFFECTIVE_AT: UInt64 { let o = _accessor.offset(VT.EFFECTIVE_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix ms when these terms expire, or 0 for no expiry
+  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Ed25519 signature by the store operator `$EPM`
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  public static func startCMT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(TERMS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TERMS_ID, at: VT.TERMS_ID) }
+  public static func add(SCOPE: commissionScope, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCOPE.rawValue, def: 0, at: VT.SCOPE) }
+  public static func add(TARGET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_ID, at: VT.TARGET_ID) }
+  public static func add(COMMISSION_BPS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMMISSION_BPS, def: 0, at: VT.COMMISSION_BPS) }
+  public static func addVectorOf(SPLITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPLITS, at: VT.SPLITS) }
+  public static func add(PLATFORM_RECIPIENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLATFORM_RECIPIENT, at: VT.PLATFORM_RECIPIENT) }
+  public static func add(ENFORCEMENT: commissionEnforcement, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENFORCEMENT.rawValue, def: 0, at: VT.ENFORCEMENT) }
+  public static func addVectorOf(CONTRACTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRACTS, at: VT.CONTRACTS) }
+  public static func add(EFFECTIVE_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EFFECTIVE_AT, def: 0, at: VT.EFFECTIVE_AT) }
+  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VT.EXPIRES_AT) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func endCMT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCMT(
     _ fbb: inout FlatBufferBuilder,
-    CHAINOffset CHAIN: Offset,
-    CHAIN_ID: UInt64 = 0,
-    SETTLEMENT_KIND: settlementMechanism = .nativetransfer,
-    SPLITTER_STANDARDOffset SPLITTER_STANDARD: Offset = Offset(),
-    SPLITTER_ADDRESSOffset SPLITTER_ADDRESS: Offset = Offset(),
-    SPLIT_CONFIG_IDOffset SPLIT_CONFIG_ID: Offset = Offset(),
-    TOKEN_ADDRESSOffset TOKEN_ADDRESS: Offset = Offset(),
-    TOKEN_SYMBOLOffset TOKEN_SYMBOL: Offset = Offset(),
-    TOKEN_DECIMALS: UInt8 = 0,
-    SPLIT_RECIPIENTSVectorOffset SPLIT_RECIPIENTS: Offset = Offset(),
-    MIN_CONFIRMATIONS: UInt32 = 0,
-    MEMO_SCHEME: memoBindingScheme = .nomemo
+    TERMS_IDOffset TERMS_ID: Offset,
+    SCOPE: commissionScope = .listing,
+    TARGET_IDOffset TARGET_ID: Offset = Offset(),
+    COMMISSION_BPS: UInt16 = 0,
+    SPLITSVectorOffset SPLITS: Offset = Offset(),
+    PLATFORM_RECIPIENTOffset PLATFORM_RECIPIENT: Offset = Offset(),
+    ENFORCEMENT: commissionEnforcement = .splittercontract,
+    CONTRACTSVectorOffset CONTRACTS: Offset = Offset(),
+    EFFECTIVE_AT: UInt64 = 0,
+    EXPIRES_AT: UInt64 = 0,
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
   ) -> Offset {
-    let __start = SCX.startSCX(&fbb)
-    SCX.add(CHAIN: CHAIN, &fbb)
-    SCX.add(CHAIN_ID: CHAIN_ID, &fbb)
-    SCX.add(SETTLEMENT_KIND: SETTLEMENT_KIND, &fbb)
-    SCX.add(SPLITTER_STANDARD: SPLITTER_STANDARD, &fbb)
-    SCX.add(SPLITTER_ADDRESS: SPLITTER_ADDRESS, &fbb)
-    SCX.add(SPLIT_CONFIG_ID: SPLIT_CONFIG_ID, &fbb)
-    SCX.add(TOKEN_ADDRESS: TOKEN_ADDRESS, &fbb)
-    SCX.add(TOKEN_SYMBOL: TOKEN_SYMBOL, &fbb)
-    SCX.add(TOKEN_DECIMALS: TOKEN_DECIMALS, &fbb)
-    SCX.addVectorOf(SPLIT_RECIPIENTS: SPLIT_RECIPIENTS, &fbb)
-    SCX.add(MIN_CONFIRMATIONS: MIN_CONFIRMATIONS, &fbb)
-    SCX.add(MEMO_SCHEME: MEMO_SCHEME, &fbb)
-    return SCX.endSCX(&fbb, start: __start)
+    let __start = CMT.startCMT(&fbb)
+    CMT.add(TERMS_ID: TERMS_ID, &fbb)
+    CMT.add(SCOPE: SCOPE, &fbb)
+    CMT.add(TARGET_ID: TARGET_ID, &fbb)
+    CMT.add(COMMISSION_BPS: COMMISSION_BPS, &fbb)
+    CMT.addVectorOf(SPLITS: SPLITS, &fbb)
+    CMT.add(PLATFORM_RECIPIENT: PLATFORM_RECIPIENT, &fbb)
+    CMT.add(ENFORCEMENT: ENFORCEMENT, &fbb)
+    CMT.addVectorOf(CONTRACTS: CONTRACTS, &fbb)
+    CMT.add(EFFECTIVE_AT: EFFECTIVE_AT, &fbb)
+    CMT.add(EXPIRES_AT: EXPIRES_AT, &fbb)
+    CMT.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    return CMT.endCMT(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CHAIN, fieldName: "CHAIN", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CHAIN_ID, fieldName: "CHAIN_ID", required: false, type: UInt64.self)
-    try _v.visit(field: VT.SETTLEMENT_KIND, fieldName: "SETTLEMENT_KIND", required: false, type: settlementMechanism.self)
-    try _v.visit(field: VT.SPLITTER_STANDARD, fieldName: "SPLITTER_STANDARD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPLITTER_ADDRESS, fieldName: "SPLITTER_ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SPLIT_CONFIG_ID, fieldName: "SPLIT_CONFIG_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TOKEN_ADDRESS, fieldName: "TOKEN_ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TOKEN_SYMBOL, fieldName: "TOKEN_SYMBOL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TOKEN_DECIMALS, fieldName: "TOKEN_DECIMALS", required: false, type: UInt8.self)
-    try _v.visit(field: VT.SPLIT_RECIPIENTS, fieldName: "SPLIT_RECIPIENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<SplitRecipient>, SplitRecipient>>.self)
-    try _v.visit(field: VT.MIN_CONFIRMATIONS, fieldName: "MIN_CONFIRMATIONS", required: false, type: UInt32.self)
-    try _v.visit(field: VT.MEMO_SCHEME, fieldName: "MEMO_SCHEME", required: false, type: memoBindingScheme.self)
+    try _v.visit(field: VT.TERMS_ID, fieldName: "TERMS_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCOPE, fieldName: "SCOPE", required: false, type: commissionScope.self)
+    try _v.visit(field: VT.TARGET_ID, fieldName: "TARGET_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMISSION_BPS, fieldName: "COMMISSION_BPS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.SPLITS, fieldName: "SPLITS", required: false, type: ForwardOffset<Vector<ForwardOffset<RevenueSplit>, RevenueSplit>>.self)
+    try _v.visit(field: VT.PLATFORM_RECIPIENT, fieldName: "PLATFORM_RECIPIENT", required: false, type: ForwardOffset<SplitRecipient>.self)
+    try _v.visit(field: VT.ENFORCEMENT, fieldName: "ENFORCEMENT", required: false, type: commissionEnforcement.self)
+    try _v.visit(field: VT.CONTRACTS, fieldName: "CONTRACTS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCX>, SCX>>.self)
+    try _v.visit(field: VT.EFFECTIVE_AT, fieldName: "EFFECTIVE_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

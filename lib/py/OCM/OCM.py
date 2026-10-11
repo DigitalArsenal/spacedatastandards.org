@@ -362,7 +362,7 @@ class OCM(object):
         return None
 
     # Whether COVARIANCE_DATA's coverage was measured against independent
-    # reference states.
+    # reference states: Calibrated only when every COV_REALISM entry is.
     # OCM
     def COV_CALIBRATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
@@ -530,8 +530,47 @@ class OCM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         return o == 0
 
+    # Where the message's data comes from and the terms it travels under.
+    # OCM
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+    # STATE_DATA epochs, or one entry for every epoch.
+    # OCM
+    def COV_REALISM(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CVR import CVR
+            obj = CVR()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCM
+    def COV_REALISMLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def COV_REALISMIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        return o == 0
+
 def OCMStart(builder):
-    builder.StartObject(31)
+    builder.StartObject(33)
 
 def Start(builder):
     OCMStart(builder)
@@ -862,12 +901,37 @@ def OCMCreateCOVARIANCE_BLOCKSVector(builder, data):
 def CreateCOVARIANCE_BLOCKSVector(builder, data):
     return OCMCreateCOVARIANCE_BLOCKSVector(builder, data)
 
+def OCMAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    OCMAddPROVENANCE(builder, PROVENANCE)
+
+def OCMAddCOV_REALISM(builder, COV_REALISM):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REALISM), 0)
+
+def AddCOV_REALISM(builder, COV_REALISM):
+    OCMAddCOV_REALISM(builder, COV_REALISM)
+
+def OCMStartCOV_REALISMVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOV_REALISMVector(builder, numElems):
+    return OCMStartCOV_REALISMVector(builder, numElems)
+
+def OCMCreateCOV_REALISMVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOV_REALISMVector(builder, data):
+    return OCMCreateCOV_REALISMVector(builder, data)
+
 def OCMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return OCMEnd(builder)
 
+import CVR
 import Header
 import Maneuver
 import Metadata
@@ -876,6 +940,7 @@ import OCMTrajectoryBlock
 import OrbitDetermination
 import PPEOrbitalElementRecord
 import PPEPositionRecord
+import PVN
 import Perturbations
 import PhysicalProperties
 import RFM
@@ -921,6 +986,8 @@ class OCMT(object):
         COV_UNITS = None,
         TRAJECTORY_BLOCKS = None,
         COVARIANCE_BLOCKS = None,
+        PROVENANCE = None,
+        COV_REALISM = None,
     ):
         self.HEADER = HEADER  # type: Optional[Header.HeaderT]
         self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
@@ -953,6 +1020,8 @@ class OCMT(object):
         self.COV_UNITS = COV_UNITS  # type: Optional[List[Optional[str]]]
         self.TRAJECTORY_BLOCKS = TRAJECTORY_BLOCKS  # type: Optional[List[OCMTrajectoryBlock.OCMTrajectoryBlockT]]
         self.COVARIANCE_BLOCKS = COVARIANCE_BLOCKS  # type: Optional[List[OCMCovarianceBlock.OCMCovarianceBlockT]]
+        self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
+        self.COV_REALISM = COV_REALISM  # type: Optional[List[CVR.CVRT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1076,6 +1145,16 @@ class OCMT(object):
                 else:
                     oCMCovarianceBlock_ = OCMCovarianceBlock.OCMCovarianceBlockT.InitFromObj(OCM.COVARIANCE_BLOCKS(i))
                     self.COVARIANCE_BLOCKS.append(oCMCovarianceBlock_)
+        if OCM.PROVENANCE() is not None:
+            self.PROVENANCE = PVN.PVNT.InitFromObj(OCM.PROVENANCE())
+        if not OCM.COV_REALISMIsNone():
+            self.COV_REALISM = []
+            for i in range(OCM.COV_REALISMLength()):
+                if OCM.COV_REALISM(i) is None:
+                    self.COV_REALISM.append(None)
+                else:
+                    cVR_ = CVR.CVRT.InitFromObj(OCM.COV_REALISM(i))
+                    self.COV_REALISM.append(cVR_)
 
     # OCMT
     def Pack(self, builder):
@@ -1193,6 +1272,16 @@ class OCMT(object):
             for i in reversed(range(len(self.COVARIANCE_BLOCKS))):
                 builder.PrependUOffsetTRelative(COVARIANCE_BLOCKSlist[i])
             COVARIANCE_BLOCKS = builder.EndVector()
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
+        if self.COV_REALISM is not None:
+            COV_REALISMlist = []
+            for i in range(len(self.COV_REALISM)):
+                COV_REALISMlist.append(self.COV_REALISM[i].Pack(builder))
+            OCMStartCOV_REALISMVector(builder, len(self.COV_REALISM))
+            for i in reversed(range(len(self.COV_REALISM))):
+                builder.PrependUOffsetTRelative(COV_REALISMlist[i])
+            COV_REALISM = builder.EndVector()
         OCMStart(builder)
         if self.HEADER is not None:
             OCMAddHEADER(builder, HEADER)
@@ -1249,5 +1338,9 @@ class OCMT(object):
             OCMAddTRAJECTORY_BLOCKS(builder, TRAJECTORY_BLOCKS)
         if self.COVARIANCE_BLOCKS is not None:
             OCMAddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKS)
+        if self.PROVENANCE is not None:
+            OCMAddPROVENANCE(builder, PROVENANCE)
+        if self.COV_REALISM is not None:
+            OCMAddCOV_REALISM(builder, COV_REALISM)
         OCM = OCMEnd(builder)
         return OCM

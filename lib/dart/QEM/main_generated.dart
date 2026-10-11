@@ -5,218 +5,70 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Row element encoding used by a CES or QEM vector table.
-enum cesVectorEncoding {
-  INT8(0),
-  FLOAT32(1);
-
-  final int value;
-  const cesVectorEncoding(this.value);
-
-  factory cesVectorEncoding.fromValue(int value) {
-    switch (value) {
-      case 0: return cesVectorEncoding.INT8;
-      case 1: return cesVectorEncoding.FLOAT32;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static cesVectorEncoding? _createOrNull(int? value) =>
-      value == null ? null : cesVectorEncoding.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<cesVectorEncoding> reader = _cesVectorEncodingReader();
-}
-
-class _cesVectorEncodingReader extends fb.Reader<cesVectorEncoding> {
-  const _cesVectorEncodingReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  cesVectorEncoding read(fb.BufferContext bc, int offset) =>
-      cesVectorEncoding.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Sentence/document pooling method an embedding encoder used.
-///  Append new values only; never reorder or reuse existing values.
-///  MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
-///  every enum, so a member of either name makes the generated C++ and Swift
-///  uncompilable. MAX_POOL carries the element-wise maximum pooling method and
-///  keeps ordinal 2, which is the wire value.
-enum cesPoolingKind {
-  MEAN(0),
-  CLS(1),
-  MAX_POOL(2),
-  UNKNOWN(3);
-
-  final int value;
-  const cesPoolingKind(this.value);
-
-  factory cesPoolingKind.fromValue(int value) {
-    switch (value) {
-      case 0: return cesPoolingKind.MEAN;
-      case 1: return cesPoolingKind.CLS;
-      case 2: return cesPoolingKind.MAX_POOL;
-      case 3: return cesPoolingKind.UNKNOWN;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static cesPoolingKind? _createOrNull(int? value) =>
-      value == null ? null : cesPoolingKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<cesPoolingKind> reader = _cesPoolingKindReader();
-}
-
-class _cesPoolingKindReader extends fb.Reader<cesPoolingKind> {
-  const _cesPoolingKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  cesPoolingKind read(fb.BufferContext bc, int offset) =>
-      cesPoolingKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Row-vector normalization applied before quantization.
-enum cesNormalizationKind {
-  NONE(0),
-  L2(1);
-
-  final int value;
-  const cesNormalizationKind(this.value);
-
-  factory cesNormalizationKind.fromValue(int value) {
-    switch (value) {
-      case 0: return cesNormalizationKind.NONE;
-      case 1: return cesNormalizationKind.L2;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static cesNormalizationKind? _createOrNull(int? value) =>
-      value == null ? null : cesNormalizationKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<cesNormalizationKind> reader = _cesNormalizationKindReader();
-}
-
-class _cesNormalizationKindReader extends fb.Reader<cesNormalizationKind> {
-  const _cesNormalizationKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  cesNormalizationKind read(fb.BufferContext bc, int offset) =>
-      cesNormalizationKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Similarity function rows are intended to be compared with.
-enum cesSimilarityKind {
-  DOT_PRODUCT(0),
-  COSINE(1),
-  EUCLIDEAN(2);
-
-  final int value;
-  const cesSimilarityKind(this.value);
-
-  factory cesSimilarityKind.fromValue(int value) {
-    switch (value) {
-      case 0: return cesSimilarityKind.DOT_PRODUCT;
-      case 1: return cesSimilarityKind.COSINE;
-      case 2: return cesSimilarityKind.EUCLIDEAN;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static cesSimilarityKind? _createOrNull(int? value) =>
-      value == null ? null : cesSimilarityKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<cesSimilarityKind> reader = _cesSimilarityKindReader();
-}
-
-class _cesSimilarityKindReader extends fb.Reader<cesSimilarityKind> {
-  const _cesSimilarityKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  cesSimilarityKind read(fb.BufferContext bc, int offset) =>
-      cesSimilarityKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  One catalog object's dense embedding row.
-class CESObjectVector {
-  CESObjectVector._(this._bc, this._bcOffset);
-  factory CESObjectVector(List<int> bytes) {
+///  One pruned-vocabulary token's static embedding row.
+class QEMTokenVector {
+  QEMTokenVector._(this._bc, this._bcOffset);
+  factory QEMTokenVector(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CESObjectVector> reader = _CESObjectVectorReader();
+  static const fb.Reader<QEMTokenVector> reader = _QEMTokenVectorReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound.
-  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get noradCatId => NORAD_CAT_ID;
-  ///  International designator. Joins to CAT.OBJECT_ID.
-  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get objectId => OBJECT_ID;
-  ///  Row values when the parent CES.ENCODING is INT8. Length equals
-  ///  CES.DIMENSIONS.
+  ///  WordPiece token text, verbatim including any ## continuation marker.
+  String? get TOKEN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Vocabulary row index. Row order in TOKENS is not guaranteed stable
+  ///  across MODEL_VERSION; look up by TOKEN_ID, not array position.
+  int get TOKEN_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get tokenId => TOKEN_ID;
+  ///  Row values when the parent QEM.ENCODING is INT8. Length equals
+  ///  QEM.DIMENSIONS.
   List<int>? get VECTOR_INT8 => const fb.Int8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
   List<int>? get vectorInt8 => VECTOR_INT8;
   ///  Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.
   ///  Unused when ENCODING is FLOAT32.
   double get SCALE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  Row values when the parent CES.ENCODING is FLOAT32. Length equals
-  ///  CES.DIMENSIONS.
+  ///  Row values when the parent QEM.ENCODING is FLOAT32. Length equals
+  ///  QEM.DIMENSIONS.
   List<double>? get VECTOR_FLOAT32 => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 12);
   List<double>? get vectorFloat32 => VECTOR_FLOAT32;
+  ///  Inverse document frequency weight for this token.
+  double get IDF => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
 
   @override
   String toString() {
-    return 'CESObjectVector{noradCatId: ${noradCatId}, objectId: ${objectId}, vectorInt8: ${vectorInt8}, SCALE: ${SCALE}, vectorFloat32: ${vectorFloat32}}';
+    return 'QEMTokenVector{TOKEN: ${TOKEN}, tokenId: ${tokenId}, vectorInt8: ${vectorInt8}, SCALE: ${SCALE}, vectorFloat32: ${vectorFloat32}, IDF: ${IDF}}';
   }
 }
 
-class _CESObjectVectorReader extends fb.TableReader<CESObjectVector> {
-  const _CESObjectVectorReader();
+class _QEMTokenVectorReader extends fb.TableReader<QEMTokenVector> {
+  const _QEMTokenVectorReader();
 
   @override
-  CESObjectVector createObject(fb.BufferContext bc, int offset) =>
-    CESObjectVector._(bc, offset);
+  QEMTokenVector createObject(fb.BufferContext bc, int offset) =>
+    QEMTokenVector._(bc, offset);
 }
 
-class CESObjectVectorBuilder {
-  CESObjectVectorBuilder(this.fbBuilder);
+class QEMTokenVectorBuilder {
+  QEMTokenVectorBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
   }
 
-  int addNoradCatId(int? NORAD_CAT_ID) {
-    fbBuilder.addUint32(0, NORAD_CAT_ID);
+  int addTokenOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addTokenId(int? TOKEN_ID) {
+    fbBuilder.addUint32(1, TOKEN_ID);
     return fbBuilder.offset;
   }
   int addVectorInt8Offset(int? offset) {
@@ -231,51 +83,58 @@ class CESObjectVectorBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addIdf(double? IDF) {
+    fbBuilder.addFloat32(5, IDF);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
   }
 }
 
-class CESObjectVectorObjectBuilder extends fb.ObjectBuilder {
-  final int? _NORAD_CAT_ID;
-  final String? _OBJECT_ID;
+class QEMTokenVectorObjectBuilder extends fb.ObjectBuilder {
+  final String? _TOKEN;
+  final int? _TOKEN_ID;
   final List<int>? _VECTOR_INT8;
   final double? _SCALE;
   final List<double>? _VECTOR_FLOAT32;
+  final double? _IDF;
 
-  CESObjectVectorObjectBuilder({
-    int? NORAD_CAT_ID,
-    int? noradCatId,
-    String? OBJECT_ID,
-    String? objectId,
+  QEMTokenVectorObjectBuilder({
+    String? TOKEN,
+    int? TOKEN_ID,
+    int? tokenId,
     List<int>? VECTOR_INT8,
     List<int>? vectorInt8,
     double? SCALE,
     List<double>? VECTOR_FLOAT32,
     List<double>? vectorFloat32,
+    double? IDF,
   })
-      : _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
-        _OBJECT_ID = objectId ?? OBJECT_ID,
+      : _TOKEN = TOKEN,
+        _TOKEN_ID = tokenId ?? TOKEN_ID,
         _VECTOR_INT8 = vectorInt8 ?? VECTOR_INT8,
         _SCALE = SCALE,
-        _VECTOR_FLOAT32 = vectorFloat32 ?? VECTOR_FLOAT32;
+        _VECTOR_FLOAT32 = vectorFloat32 ?? VECTOR_FLOAT32,
+        _IDF = IDF;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
-        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? TOKENOffset = _TOKEN == null ? null
+        : fbBuilder.writeString(_TOKEN!);
     final int? VECTOR_INT8Offset = _VECTOR_INT8 == null ? null
         : fbBuilder.writeListInt8(_VECTOR_INT8!);
     final int? VECTOR_FLOAT32Offset = _VECTOR_FLOAT32 == null ? null
         : fbBuilder.writeListFloat32(_VECTOR_FLOAT32!);
-    fbBuilder.startTable(5);
-    fbBuilder.addUint32(0, _NORAD_CAT_ID);
-    fbBuilder.addOffset(1, OBJECT_IDOffset);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, TOKENOffset);
+    fbBuilder.addUint32(1, _TOKEN_ID);
     fbBuilder.addOffset(2, VECTOR_INT8Offset);
     fbBuilder.addFloat32(3, _SCALE);
     fbBuilder.addOffset(4, VECTOR_FLOAT32Offset);
+    fbBuilder.addFloat32(5, _IDF);
     return fbBuilder.endTable();
   }
 
@@ -287,135 +146,121 @@ class CESObjectVectorObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Catalog Embedding Shard.
+///  Query Encoder Model.
 ///
-///  One CES publishes the dense semantic-search vector table for one dataset
-///  update: one row per catalog object, alongside that update's $OMM shard and
-///  $DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are
-///  L2-normalised at the encoder's output; similarity between two rows, or
-///  between a row and a query vector produced by a paired $QEM, is dot
-///  product (equivalent to cosine similarity for unit-norm vectors).
+///  One QEM publishes the pruned static token-embedding table a lightweight
+///  client (e.g. a browser) loads to encode a search query into the same
+///  vector space a paired $CES shard's rows live in, without shipping a full
+///  transformer. A consumer pools the rows of the query's tokens (per
+///  POOLING_METHOD) into a query vector, then dot-products it against
+///  CES.ROWS.
 ///
-///  A consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,
-///  POOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting
-///  cross-encoding similarity between a query vector and CES rows; a mismatch
-///  on any one field means the two vector spaces are not comparable.
-class CES {
-  CES._(this._bc, this._bcOffset);
-  factory CES(List<int> bytes) {
+///  A QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION,
+///  MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a
+///  mismatch on any one means the two vector spaces are not comparable.
+class QEM {
+  QEM._(this._bc, this._bcOffset);
+  factory QEM(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CES> reader = _CESReader();
+  static const fb.Reader<QEM> reader = _QEMReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Joins to DPM.DATASET_ID for the publication this shard belongs to.
-  String? get DATASET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get datasetId => DATASET_ID;
-  ///  Joins to DPM.UPDATE_ID for the specific update this shard was computed
-  ///  against.
-  String? get UPDATE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get updateId => UPDATE_ID;
-  ///  Fixed embedding dimensionality shared by every row (e.g. 384).
-  int get DIMENSIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  ///  Row element encoding used across ROWS.
-  cesVectorEncoding get ENCODING => cesVectorEncoding.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  ///  Row-vector normalization applied before quantization.
-  cesNormalizationKind get NORMALIZATION => cesNormalizationKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 1));
-  ///  Similarity function rows are intended to be compared with.
-  cesSimilarityKind get SIMILARITY => cesSimilarityKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ///  Encoder model identifier/name.
-  String? get MODEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Encoder model identifier/name. Compared verbatim against CES.MODEL_ID.
+  String? get MODEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get modelId => MODEL_ID;
-  ///  Encoder model version.
-  String? get MODEL_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Encoder model version. Compared verbatim against CES.MODEL_VERSION.
+  String? get MODEL_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get modelVersion => MODEL_VERSION;
   ///  SHA-256 of the encoder weights, lowercase hex. Same convention as
-  ///  DPMAsset.BYTE_SHA256.
-  String? get MODEL_WEIGHTS_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  DPMAsset.BYTE_SHA256. Compared verbatim against CES.MODEL_WEIGHTS_SHA256.
+  String? get MODEL_WEIGHTS_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get modelWeightsSha256 => MODEL_WEIGHTS_SHA256;
-  ///  Sentence/document pooling method the encoder used.
-  cesPoolingKind get POOLING_METHOD => cesPoolingKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Sentence/document pooling method the encoder uses. Compared verbatim
+  ///  against CES.POOLING_METHOD.
+  cesPoolingKind get POOLING_METHOD => cesPoolingKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
   cesPoolingKind get poolingMethod => POOLING_METHOD;
   ///  Version of the text template documents were rendered from before
-  ///  encoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval.
-  String? get TEMPLATE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  encoding. Compared verbatim against CES.TEMPLATE_VERSION.
+  String? get TEMPLATE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get templateVersion => TEMPLATE_VERSION;
-  ///  One row per catalog object.
-  List<CESObjectVector>? get ROWS => const fb.ListReader<CESObjectVector>(CESObjectVector.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Fixed embedding dimensionality; must equal the paired CES.DIMENSIONS.
+  int get DIMENSIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  Row element encoding used across TOKENS.
+  cesVectorEncoding get ENCODING => cesVectorEncoding.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  ///  Row-vector normalization applied before quantization.
+  cesNormalizationKind get NORMALIZATION => cesNormalizationKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 1));
+  ///  Number of tokens in the pruned vocabulary.
+  int get VOCAB_SIZE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get vocabSize => VOCAB_SIZE;
+  ///  One row per pruned vocabulary token.
+  List<QEMTokenVector>? get TOKENS => const fb.ListReader<QEMTokenVector>(QEMTokenVector.reader).vTableGetNullable(_bc, _bcOffset, 22);
 
   @override
   String toString() {
-    return 'CES{datasetId: ${datasetId}, updateId: ${updateId}, DIMENSIONS: ${DIMENSIONS}, ENCODING: ${ENCODING}, NORMALIZATION: ${NORMALIZATION}, SIMILARITY: ${SIMILARITY}, modelId: ${modelId}, modelVersion: ${modelVersion}, modelWeightsSha256: ${modelWeightsSha256}, poolingMethod: ${poolingMethod}, templateVersion: ${templateVersion}, ROWS: ${ROWS}}';
+    return 'QEM{modelId: ${modelId}, modelVersion: ${modelVersion}, modelWeightsSha256: ${modelWeightsSha256}, poolingMethod: ${poolingMethod}, templateVersion: ${templateVersion}, DIMENSIONS: ${DIMENSIONS}, ENCODING: ${ENCODING}, NORMALIZATION: ${NORMALIZATION}, vocabSize: ${vocabSize}, TOKENS: ${TOKENS}}';
   }
 }
 
-class _CESReader extends fb.TableReader<CES> {
-  const _CESReader();
+class _QEMReader extends fb.TableReader<QEM> {
+  const _QEMReader();
 
   @override
-  CES createObject(fb.BufferContext bc, int offset) =>
-    CES._(bc, offset);
+  QEM createObject(fb.BufferContext bc, int offset) =>
+    QEM._(bc, offset);
 }
 
-class CESBuilder {
-  CESBuilder(this.fbBuilder);
+class QEMBuilder {
+  QEMBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(10);
   }
 
-  int addDatasetIdOffset(int? offset) {
+  int addModelIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addUpdateIdOffset(int? offset) {
+  int addModelVersionOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDimensions(int? DIMENSIONS) {
-    fbBuilder.addUint32(2, DIMENSIONS);
-    return fbBuilder.offset;
-  }
-  int addEncoding(cesVectorEncoding? ENCODING) {
-    fbBuilder.addInt8(3, ENCODING?.value);
-    return fbBuilder.offset;
-  }
-  int addNormalization(cesNormalizationKind? NORMALIZATION) {
-    fbBuilder.addInt8(4, NORMALIZATION?.value);
-    return fbBuilder.offset;
-  }
-  int addSimilarity(cesSimilarityKind? SIMILARITY) {
-    fbBuilder.addInt8(5, SIMILARITY?.value);
-    return fbBuilder.offset;
-  }
-  int addModelIdOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addModelVersionOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
   int addModelWeightsSha256Offset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
   int addPoolingMethod(cesPoolingKind? POOLING_METHOD) {
-    fbBuilder.addInt8(9, POOLING_METHOD?.value);
+    fbBuilder.addInt8(3, POOLING_METHOD?.value);
     return fbBuilder.offset;
   }
   int addTemplateVersionOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addRowsOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
+  int addDimensions(int? DIMENSIONS) {
+    fbBuilder.addUint32(5, DIMENSIONS);
+    return fbBuilder.offset;
+  }
+  int addEncoding(cesVectorEncoding? ENCODING) {
+    fbBuilder.addInt8(6, ENCODING?.value);
+    return fbBuilder.offset;
+  }
+  int addNormalization(cesNormalizationKind? NORMALIZATION) {
+    fbBuilder.addInt8(7, NORMALIZATION?.value);
+    return fbBuilder.offset;
+  }
+  int addVocabSize(int? VOCAB_SIZE) {
+    fbBuilder.addUint32(8, VOCAB_SIZE);
+    return fbBuilder.offset;
+  }
+  int addTokensOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
 
@@ -424,29 +269,19 @@ class CESBuilder {
   }
 }
 
-class CESObjectBuilder extends fb.ObjectBuilder {
-  final String? _DATASET_ID;
-  final String? _UPDATE_ID;
-  final int? _DIMENSIONS;
-  final cesVectorEncoding? _ENCODING;
-  final cesNormalizationKind? _NORMALIZATION;
-  final cesSimilarityKind? _SIMILARITY;
+class QEMObjectBuilder extends fb.ObjectBuilder {
   final String? _MODEL_ID;
   final String? _MODEL_VERSION;
   final String? _MODEL_WEIGHTS_SHA256;
   final cesPoolingKind? _POOLING_METHOD;
   final String? _TEMPLATE_VERSION;
-  final List<CESObjectVectorObjectBuilder>? _ROWS;
+  final int? _DIMENSIONS;
+  final cesVectorEncoding? _ENCODING;
+  final cesNormalizationKind? _NORMALIZATION;
+  final int? _VOCAB_SIZE;
+  final List<QEMTokenVectorObjectBuilder>? _TOKENS;
 
-  CESObjectBuilder({
-    String? DATASET_ID,
-    String? datasetId,
-    String? UPDATE_ID,
-    String? updateId,
-    int? DIMENSIONS,
-    cesVectorEncoding? ENCODING,
-    cesNormalizationKind? NORMALIZATION,
-    cesSimilarityKind? SIMILARITY,
+  QEMObjectBuilder({
     String? MODEL_ID,
     String? modelId,
     String? MODEL_VERSION,
@@ -457,28 +292,27 @@ class CESObjectBuilder extends fb.ObjectBuilder {
     cesPoolingKind? poolingMethod,
     String? TEMPLATE_VERSION,
     String? templateVersion,
-    List<CESObjectVectorObjectBuilder>? ROWS,
+    int? DIMENSIONS,
+    cesVectorEncoding? ENCODING,
+    cesNormalizationKind? NORMALIZATION,
+    int? VOCAB_SIZE,
+    int? vocabSize,
+    List<QEMTokenVectorObjectBuilder>? TOKENS,
   })
-      : _DATASET_ID = datasetId ?? DATASET_ID,
-        _UPDATE_ID = updateId ?? UPDATE_ID,
-        _DIMENSIONS = DIMENSIONS,
-        _ENCODING = ENCODING,
-        _NORMALIZATION = NORMALIZATION,
-        _SIMILARITY = SIMILARITY,
-        _MODEL_ID = modelId ?? MODEL_ID,
+      : _MODEL_ID = modelId ?? MODEL_ID,
         _MODEL_VERSION = modelVersion ?? MODEL_VERSION,
         _MODEL_WEIGHTS_SHA256 = modelWeightsSha256 ?? MODEL_WEIGHTS_SHA256,
         _POOLING_METHOD = poolingMethod ?? POOLING_METHOD,
         _TEMPLATE_VERSION = templateVersion ?? TEMPLATE_VERSION,
-        _ROWS = ROWS;
+        _DIMENSIONS = DIMENSIONS,
+        _ENCODING = ENCODING,
+        _NORMALIZATION = NORMALIZATION,
+        _VOCAB_SIZE = vocabSize ?? VOCAB_SIZE,
+        _TOKENS = TOKENS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? DATASET_IDOffset = _DATASET_ID == null ? null
-        : fbBuilder.writeString(_DATASET_ID!);
-    final int? UPDATE_IDOffset = _UPDATE_ID == null ? null
-        : fbBuilder.writeString(_UPDATE_ID!);
     final int? MODEL_IDOffset = _MODEL_ID == null ? null
         : fbBuilder.writeString(_MODEL_ID!);
     final int? MODEL_VERSIONOffset = _MODEL_VERSION == null ? null
@@ -487,21 +321,19 @@ class CESObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_MODEL_WEIGHTS_SHA256!);
     final int? TEMPLATE_VERSIONOffset = _TEMPLATE_VERSION == null ? null
         : fbBuilder.writeString(_TEMPLATE_VERSION!);
-    final int? ROWSOffset = _ROWS == null ? null
-        : fbBuilder.writeList(_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(12);
-    fbBuilder.addOffset(0, DATASET_IDOffset);
-    fbBuilder.addOffset(1, UPDATE_IDOffset);
-    fbBuilder.addUint32(2, _DIMENSIONS);
-    fbBuilder.addInt8(3, _ENCODING?.value);
-    fbBuilder.addInt8(4, _NORMALIZATION?.value);
-    fbBuilder.addInt8(5, _SIMILARITY?.value);
-    fbBuilder.addOffset(6, MODEL_IDOffset);
-    fbBuilder.addOffset(7, MODEL_VERSIONOffset);
-    fbBuilder.addOffset(8, MODEL_WEIGHTS_SHA256Offset);
-    fbBuilder.addInt8(9, _POOLING_METHOD?.value);
-    fbBuilder.addOffset(10, TEMPLATE_VERSIONOffset);
-    fbBuilder.addOffset(11, ROWSOffset);
+    final int? TOKENSOffset = _TOKENS == null ? null
+        : fbBuilder.writeList(_TOKENS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(10);
+    fbBuilder.addOffset(0, MODEL_IDOffset);
+    fbBuilder.addOffset(1, MODEL_VERSIONOffset);
+    fbBuilder.addOffset(2, MODEL_WEIGHTS_SHA256Offset);
+    fbBuilder.addInt8(3, _POOLING_METHOD?.value);
+    fbBuilder.addOffset(4, TEMPLATE_VERSIONOffset);
+    fbBuilder.addUint32(5, _DIMENSIONS);
+    fbBuilder.addInt8(6, _ENCODING?.value);
+    fbBuilder.addInt8(7, _NORMALIZATION?.value);
+    fbBuilder.addUint32(8, _VOCAB_SIZE);
+    fbBuilder.addOffset(9, TOKENSOffset);
     return fbBuilder.endTable();
   }
 

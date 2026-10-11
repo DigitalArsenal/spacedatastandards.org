@@ -5,219 +5,222 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Encryption Header for FlatBuffers field-level encryption
-///  Key exchange algorithm used to derive the shared secret
-enum KeyExchange {
-  X25519(0),
-  Secp256k1(1),
-  P256(2);
+///  Licensing grant message type
+enum licensingGrantMessageType {
+  Request(0),
+  Granted(1),
+  Denied(2);
 
   final int value;
-  const KeyExchange(this.value);
+  const licensingGrantMessageType(this.value);
 
-  factory KeyExchange.fromValue(int value) {
+  factory licensingGrantMessageType.fromValue(int value) {
     switch (value) {
-      case 0: return KeyExchange.X25519;
-      case 1: return KeyExchange.Secp256k1;
-      case 2: return KeyExchange.P256;
+      case 0: return licensingGrantMessageType.Request;
+      case 1: return licensingGrantMessageType.Granted;
+      case 2: return licensingGrantMessageType.Denied;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static KeyExchange? _createOrNull(int? value) =>
-      value == null ? null : KeyExchange.fromValue(value);
+  static licensingGrantMessageType? _createOrNull(int? value) =>
+      value == null ? null : licensingGrantMessageType.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 2;
-  static const fb.Reader<KeyExchange> reader = _KeyExchangeReader();
+  static const fb.Reader<licensingGrantMessageType> reader = _licensingGrantMessageTypeReader();
 }
 
-class _KeyExchangeReader extends fb.Reader<KeyExchange> {
-  const _KeyExchangeReader();
+class _licensingGrantMessageTypeReader extends fb.Reader<licensingGrantMessageType> {
+  const _licensingGrantMessageTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  KeyExchange read(fb.BufferContext bc, int offset) =>
-      KeyExchange.fromValue(const fb.Int8Reader().read(bc, offset));
+  licensingGrantMessageType read(fb.BufferContext bc, int offset) =>
+      licensingGrantMessageType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Symmetric encryption algorithm
-enum SymmetricAlgo {
-  AES_256_CTR(0);
-
-  final int value;
-  const SymmetricAlgo(this.value);
-
-  factory SymmetricAlgo.fromValue(int value) {
-    switch (value) {
-      case 0: return SymmetricAlgo.AES_256_CTR;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static SymmetricAlgo? _createOrNull(int? value) =>
-      value == null ? null : SymmetricAlgo.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 0;
-  static const fb.Reader<SymmetricAlgo> reader = _SymmetricAlgoReader();
-}
-
-class _SymmetricAlgoReader extends fb.Reader<SymmetricAlgo> {
-  const _SymmetricAlgoReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  SymmetricAlgo read(fb.BufferContext bc, int offset) =>
-      SymmetricAlgo.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Key derivation function
-enum KDF {
-  HKDF_SHA256(0);
-
-  final int value;
-  const KDF(this.value);
-
-  factory KDF.fromValue(int value) {
-    switch (value) {
-      case 0: return KDF.HKDF_SHA256;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static KDF? _createOrNull(int? value) =>
-      value == null ? null : KDF.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 0;
-  static const fb.Reader<KDF> reader = _KDFReader();
-}
-
-class _KDFReader extends fb.Reader<KDF> {
-  const _KDFReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  KDF read(fb.BufferContext bc, int offset) =>
-      KDF.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Encryption Header containing all parameters needed for decryption
-class ENC {
-  ENC._(this._bc, this._bcOffset);
-  factory ENC(List<int> bytes) {
+///  Licensing grant message
+class LGR {
+  LGR._(this._bc, this._bcOffset);
+  factory LGR(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<ENC> reader = _ENCReader();
+  static const fb.Reader<LGR> reader = _LGRReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Schema version for forward compatibility
-  int get VERSION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 1);
-  ///  Key exchange algorithm used
-  KeyExchange get KEY_EXCHANGE => KeyExchange.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  KeyExchange get keyExchange => KEY_EXCHANGE;
-  ///  Symmetric encryption algorithm used
-  SymmetricAlgo get SYMMETRIC => SymmetricAlgo.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  Key derivation function used
-  KDF get KEY_DERIVATION => KDF.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  KDF get keyDerivation => KEY_DERIVATION;
-  ///  Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
-  List<int>? get EPHEMERAL_PUBLIC_KEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
-  List<int>? get ephemeralPublicKey => EPHEMERAL_PUBLIC_KEY;
-  ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
-  List<int>? get NONCE_START => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
-  List<int>? get nonceStart => NONCE_START;
-  ///  Optional identifier for the recipient's public key (up to 32 bytes)
-  List<int>? get RECIPIENT_KEY_ID => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
-  List<int>? get recipientKeyId => RECIPIENT_KEY_ID;
-  ///  Optional domain separation context string
-  String? get CONTEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
-  List<int>? get SCHEMA_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
-  List<int>? get schemaHash => SCHEMA_HASH;
-  ///  Optional root type name from the schema
-  String? get ROOT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get rootType => ROOT_TYPE;
-  ///  Optional Unix timestamp (milliseconds) when encryption was performed
-  int get TIMESTAMP => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  ///  Message type
+  licensingGrantMessageType get MESSAGE_TYPE => licensingGrantMessageType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  licensingGrantMessageType get messageType => MESSAGE_TYPE;
+  ///  Unique request identifier
+  String? get REQUEST_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get requestId => REQUEST_ID;
+  ///  Canonical module identifier
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get moduleId => MODULE_ID;
+  ///  Optional module version
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get moduleVersion => MODULE_VERSION;
+  ///  Requester peer identifier
+  String? get REQUESTER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get requesterPeerId => REQUESTER_PEER_ID;
+  ///  Requester account identity or wallet xpub
+  String? get REQUESTER_XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get requesterXpub => REQUESTER_XPUB;
+  ///  Requested domain
+  String? get REQUESTED_DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get requestedDomain => REQUESTED_DOMAIN;
+  ///  Requested timeout in milliseconds
+  int get REQUESTED_TIMEOUT_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get requestedTimeoutMs => REQUESTED_TIMEOUT_MS;
+  ///  Granted domain
+  String? get GRANTED_DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get grantedDomain => GRANTED_DOMAIN;
+  ///  Granted timeout in milliseconds
+  int get GRANTED_TIMEOUT_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get grantedTimeoutMs => GRANTED_TIMEOUT_MS;
+  ///  Grant expiration time in milliseconds since epoch
+  int get EXPIRES_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get expiresAt => EXPIRES_AT;
+  ///  Required scope for the publication
+  String? get REQUIRED_SCOPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get requiredScope => REQUIRED_SCOPE;
+  ///  Grant status string
+  String? get GRANT_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get grantStatus => GRANT_STATUS;
+  ///  Structured denial reason
+  String? get DENIAL_REASON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get denialReason => DENIAL_REASON;
+  ///  Issued capability token bytes
+  List<int>? get CAPABILITY_TOKEN => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 32);
+  List<int>? get capabilityToken => CAPABILITY_TOKEN;
+  ///  Published module descriptor
+  PLG? get MODULE_DESCRIPTOR => PLG.reader.vTableGetNullable(_bc, _bcOffset, 34);
+  PLG? get moduleDescriptor => MODULE_DESCRIPTOR;
+  ///  Encryption header for the recipient-specific wrapped content-key payload.
+  ENC? get WRAPPED_CONTENT_KEY_HEADER => ENC.reader.vTableGetNullable(_bc, _bcOffset, 36);
+  ENC? get wrappedContentKeyHeader => WRAPPED_CONTENT_KEY_HEADER;
+  ///  Encrypted FlatBuffer payload containing the recipient-specific content key
+  ///  material. The payload currently uses `$KMF` semantics and is decrypted
+  ///  using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+  List<int>? get WRAPPED_CONTENT_KEY_PAYLOAD => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 38);
+  List<int>? get wrappedContentKeyPayload => WRAPPED_CONTENT_KEY_PAYLOAD;
+  ///  Provider public key used to verify the grant signature
+  List<int>? get GRANT_VERIFIER_PUBKEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 40);
+  List<int>? get grantVerifierPubkey => GRANT_VERIFIER_PUBKEY;
+  ///  Provider signature over the grant
+  List<int>? get PROVIDER_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 42);
+  List<int>? get providerSignature => PROVIDER_SIGNATURE;
 
   @override
   String toString() {
-    return 'ENC{VERSION: ${VERSION}, keyExchange: ${keyExchange}, SYMMETRIC: ${SYMMETRIC}, keyDerivation: ${keyDerivation}, ephemeralPublicKey: ${ephemeralPublicKey}, nonceStart: ${nonceStart}, recipientKeyId: ${recipientKeyId}, CONTEXT: ${CONTEXT}, schemaHash: ${schemaHash}, rootType: ${rootType}, TIMESTAMP: ${TIMESTAMP}}';
+    return 'LGR{messageType: ${messageType}, requestId: ${requestId}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, requesterPeerId: ${requesterPeerId}, requesterXpub: ${requesterXpub}, requestedDomain: ${requestedDomain}, requestedTimeoutMs: ${requestedTimeoutMs}, grantedDomain: ${grantedDomain}, grantedTimeoutMs: ${grantedTimeoutMs}, expiresAt: ${expiresAt}, requiredScope: ${requiredScope}, grantStatus: ${grantStatus}, denialReason: ${denialReason}, capabilityToken: ${capabilityToken}, moduleDescriptor: ${moduleDescriptor}, wrappedContentKeyHeader: ${wrappedContentKeyHeader}, wrappedContentKeyPayload: ${wrappedContentKeyPayload}, grantVerifierPubkey: ${grantVerifierPubkey}, providerSignature: ${providerSignature}}';
   }
 }
 
-class _ENCReader extends fb.TableReader<ENC> {
-  const _ENCReader();
+class _LGRReader extends fb.TableReader<LGR> {
+  const _LGRReader();
 
   @override
-  ENC createObject(fb.BufferContext bc, int offset) =>
-    ENC._(bc, offset);
+  LGR createObject(fb.BufferContext bc, int offset) =>
+    LGR._(bc, offset);
 }
 
-class ENCBuilder {
-  ENCBuilder(this.fbBuilder);
+class LGRBuilder {
+  LGRBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(20);
   }
 
-  int addVersion(int? VERSION) {
-    fbBuilder.addUint8(0, VERSION);
+  int addMessageType(licensingGrantMessageType? MESSAGE_TYPE) {
+    fbBuilder.addInt8(0, MESSAGE_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addKeyExchange(KeyExchange? KEY_EXCHANGE) {
-    fbBuilder.addInt8(1, KEY_EXCHANGE?.value);
+  int addRequestIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSymmetric(SymmetricAlgo? SYMMETRIC) {
-    fbBuilder.addInt8(2, SYMMETRIC?.value);
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addKeyDerivation(KDF? KEY_DERIVATION) {
-    fbBuilder.addInt8(3, KEY_DERIVATION?.value);
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addEphemeralPublicKeyOffset(int? offset) {
+  int addRequesterPeerIdOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addNonceStartOffset(int? offset) {
+  int addRequesterXpubOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addRecipientKeyIdOffset(int? offset) {
+  int addRequestedDomainOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addContextOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addRequestedTimeoutMs(int? REQUESTED_TIMEOUT_MS) {
+    fbBuilder.addUint64(7, REQUESTED_TIMEOUT_MS);
     return fbBuilder.offset;
   }
-  int addSchemaHashOffset(int? offset) {
+  int addGrantedDomainOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addRootTypeOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addGrantedTimeoutMs(int? GRANTED_TIMEOUT_MS) {
+    fbBuilder.addUint64(9, GRANTED_TIMEOUT_MS);
     return fbBuilder.offset;
   }
-  int addTimestamp(int? TIMESTAMP) {
-    fbBuilder.addUint64(10, TIMESTAMP);
+  int addExpiresAt(int? EXPIRES_AT) {
+    fbBuilder.addUint64(10, EXPIRES_AT);
+    return fbBuilder.offset;
+  }
+  int addRequiredScopeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addGrantStatusOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addDenialReasonOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addCapabilityTokenOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleDescriptorOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addWrappedContentKeyHeaderOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addWrappedContentKeyPayloadOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addGrantVerifierPubkeyOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderSignatureOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
 
@@ -226,78 +229,145 @@ class ENCBuilder {
   }
 }
 
-class ENCObjectBuilder extends fb.ObjectBuilder {
-  final int? _VERSION;
-  final KeyExchange? _KEY_EXCHANGE;
-  final SymmetricAlgo? _SYMMETRIC;
-  final KDF? _KEY_DERIVATION;
-  final List<int>? _EPHEMERAL_PUBLIC_KEY;
-  final List<int>? _NONCE_START;
-  final List<int>? _RECIPIENT_KEY_ID;
-  final String? _CONTEXT;
-  final List<int>? _SCHEMA_HASH;
-  final String? _ROOT_TYPE;
-  final int? _TIMESTAMP;
+class LGRObjectBuilder extends fb.ObjectBuilder {
+  final licensingGrantMessageType? _MESSAGE_TYPE;
+  final String? _REQUEST_ID;
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final String? _REQUESTER_PEER_ID;
+  final String? _REQUESTER_XPUB;
+  final String? _REQUESTED_DOMAIN;
+  final int? _REQUESTED_TIMEOUT_MS;
+  final String? _GRANTED_DOMAIN;
+  final int? _GRANTED_TIMEOUT_MS;
+  final int? _EXPIRES_AT;
+  final String? _REQUIRED_SCOPE;
+  final String? _GRANT_STATUS;
+  final String? _DENIAL_REASON;
+  final List<int>? _CAPABILITY_TOKEN;
+  final PLGObjectBuilder? _MODULE_DESCRIPTOR;
+  final ENCObjectBuilder? _WRAPPED_CONTENT_KEY_HEADER;
+  final List<int>? _WRAPPED_CONTENT_KEY_PAYLOAD;
+  final List<int>? _GRANT_VERIFIER_PUBKEY;
+  final List<int>? _PROVIDER_SIGNATURE;
 
-  ENCObjectBuilder({
-    int? VERSION,
-    KeyExchange? KEY_EXCHANGE,
-    KeyExchange? keyExchange,
-    SymmetricAlgo? SYMMETRIC,
-    KDF? KEY_DERIVATION,
-    KDF? keyDerivation,
-    List<int>? EPHEMERAL_PUBLIC_KEY,
-    List<int>? ephemeralPublicKey,
-    List<int>? NONCE_START,
-    List<int>? nonceStart,
-    List<int>? RECIPIENT_KEY_ID,
-    List<int>? recipientKeyId,
-    String? CONTEXT,
-    List<int>? SCHEMA_HASH,
-    List<int>? schemaHash,
-    String? ROOT_TYPE,
-    String? rootType,
-    int? TIMESTAMP,
+  LGRObjectBuilder({
+    licensingGrantMessageType? MESSAGE_TYPE,
+    licensingGrantMessageType? messageType,
+    String? REQUEST_ID,
+    String? requestId,
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    String? REQUESTER_PEER_ID,
+    String? requesterPeerId,
+    String? REQUESTER_XPUB,
+    String? requesterXpub,
+    String? REQUESTED_DOMAIN,
+    String? requestedDomain,
+    int? REQUESTED_TIMEOUT_MS,
+    int? requestedTimeoutMs,
+    String? GRANTED_DOMAIN,
+    String? grantedDomain,
+    int? GRANTED_TIMEOUT_MS,
+    int? grantedTimeoutMs,
+    int? EXPIRES_AT,
+    int? expiresAt,
+    String? REQUIRED_SCOPE,
+    String? requiredScope,
+    String? GRANT_STATUS,
+    String? grantStatus,
+    String? DENIAL_REASON,
+    String? denialReason,
+    List<int>? CAPABILITY_TOKEN,
+    List<int>? capabilityToken,
+    PLGObjectBuilder? MODULE_DESCRIPTOR,
+    PLGObjectBuilder? moduleDescriptor,
+    ENCObjectBuilder? WRAPPED_CONTENT_KEY_HEADER,
+    ENCObjectBuilder? wrappedContentKeyHeader,
+    List<int>? WRAPPED_CONTENT_KEY_PAYLOAD,
+    List<int>? wrappedContentKeyPayload,
+    List<int>? GRANT_VERIFIER_PUBKEY,
+    List<int>? grantVerifierPubkey,
+    List<int>? PROVIDER_SIGNATURE,
+    List<int>? providerSignature,
   })
-      : _VERSION = VERSION,
-        _KEY_EXCHANGE = keyExchange ?? KEY_EXCHANGE,
-        _SYMMETRIC = SYMMETRIC,
-        _KEY_DERIVATION = keyDerivation ?? KEY_DERIVATION,
-        _EPHEMERAL_PUBLIC_KEY = ephemeralPublicKey ?? EPHEMERAL_PUBLIC_KEY,
-        _NONCE_START = nonceStart ?? NONCE_START,
-        _RECIPIENT_KEY_ID = recipientKeyId ?? RECIPIENT_KEY_ID,
-        _CONTEXT = CONTEXT,
-        _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
-        _ROOT_TYPE = rootType ?? ROOT_TYPE,
-        _TIMESTAMP = TIMESTAMP;
+      : _MESSAGE_TYPE = messageType ?? MESSAGE_TYPE,
+        _REQUEST_ID = requestId ?? REQUEST_ID,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _REQUESTER_PEER_ID = requesterPeerId ?? REQUESTER_PEER_ID,
+        _REQUESTER_XPUB = requesterXpub ?? REQUESTER_XPUB,
+        _REQUESTED_DOMAIN = requestedDomain ?? REQUESTED_DOMAIN,
+        _REQUESTED_TIMEOUT_MS = requestedTimeoutMs ?? REQUESTED_TIMEOUT_MS,
+        _GRANTED_DOMAIN = grantedDomain ?? GRANTED_DOMAIN,
+        _GRANTED_TIMEOUT_MS = grantedTimeoutMs ?? GRANTED_TIMEOUT_MS,
+        _EXPIRES_AT = expiresAt ?? EXPIRES_AT,
+        _REQUIRED_SCOPE = requiredScope ?? REQUIRED_SCOPE,
+        _GRANT_STATUS = grantStatus ?? GRANT_STATUS,
+        _DENIAL_REASON = denialReason ?? DENIAL_REASON,
+        _CAPABILITY_TOKEN = capabilityToken ?? CAPABILITY_TOKEN,
+        _MODULE_DESCRIPTOR = moduleDescriptor ?? MODULE_DESCRIPTOR,
+        _WRAPPED_CONTENT_KEY_HEADER = wrappedContentKeyHeader ?? WRAPPED_CONTENT_KEY_HEADER,
+        _WRAPPED_CONTENT_KEY_PAYLOAD = wrappedContentKeyPayload ?? WRAPPED_CONTENT_KEY_PAYLOAD,
+        _GRANT_VERIFIER_PUBKEY = grantVerifierPubkey ?? GRANT_VERIFIER_PUBKEY,
+        _PROVIDER_SIGNATURE = providerSignature ?? PROVIDER_SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? EPHEMERAL_PUBLIC_KEYOffset = _EPHEMERAL_PUBLIC_KEY == null ? null
-        : fbBuilder.writeListUint8(_EPHEMERAL_PUBLIC_KEY!);
-    final int? NONCE_STARTOffset = _NONCE_START == null ? null
-        : fbBuilder.writeListUint8(_NONCE_START!);
-    final int? RECIPIENT_KEY_IDOffset = _RECIPIENT_KEY_ID == null ? null
-        : fbBuilder.writeListUint8(_RECIPIENT_KEY_ID!);
-    final int? CONTEXTOffset = _CONTEXT == null ? null
-        : fbBuilder.writeString(_CONTEXT!);
-    final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
-        : fbBuilder.writeListUint8(_SCHEMA_HASH!);
-    final int? ROOT_TYPEOffset = _ROOT_TYPE == null ? null
-        : fbBuilder.writeString(_ROOT_TYPE!);
-    fbBuilder.startTable(11);
-    fbBuilder.addUint8(0, _VERSION);
-    fbBuilder.addInt8(1, _KEY_EXCHANGE?.value);
-    fbBuilder.addInt8(2, _SYMMETRIC?.value);
-    fbBuilder.addInt8(3, _KEY_DERIVATION?.value);
-    fbBuilder.addOffset(4, EPHEMERAL_PUBLIC_KEYOffset);
-    fbBuilder.addOffset(5, NONCE_STARTOffset);
-    fbBuilder.addOffset(6, RECIPIENT_KEY_IDOffset);
-    fbBuilder.addOffset(7, CONTEXTOffset);
-    fbBuilder.addOffset(8, SCHEMA_HASHOffset);
-    fbBuilder.addOffset(9, ROOT_TYPEOffset);
-    fbBuilder.addUint64(10, _TIMESTAMP);
+    final int? REQUEST_IDOffset = _REQUEST_ID == null ? null
+        : fbBuilder.writeString(_REQUEST_ID!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? REQUESTER_PEER_IDOffset = _REQUESTER_PEER_ID == null ? null
+        : fbBuilder.writeString(_REQUESTER_PEER_ID!);
+    final int? REQUESTER_XPUBOffset = _REQUESTER_XPUB == null ? null
+        : fbBuilder.writeString(_REQUESTER_XPUB!);
+    final int? REQUESTED_DOMAINOffset = _REQUESTED_DOMAIN == null ? null
+        : fbBuilder.writeString(_REQUESTED_DOMAIN!);
+    final int? GRANTED_DOMAINOffset = _GRANTED_DOMAIN == null ? null
+        : fbBuilder.writeString(_GRANTED_DOMAIN!);
+    final int? REQUIRED_SCOPEOffset = _REQUIRED_SCOPE == null ? null
+        : fbBuilder.writeString(_REQUIRED_SCOPE!);
+    final int? GRANT_STATUSOffset = _GRANT_STATUS == null ? null
+        : fbBuilder.writeString(_GRANT_STATUS!);
+    final int? DENIAL_REASONOffset = _DENIAL_REASON == null ? null
+        : fbBuilder.writeString(_DENIAL_REASON!);
+    final int? CAPABILITY_TOKENOffset = _CAPABILITY_TOKEN == null ? null
+        : fbBuilder.writeListUint8(_CAPABILITY_TOKEN!);
+    final int? MODULE_DESCRIPTOROffset = _MODULE_DESCRIPTOR?.getOrCreateOffset(fbBuilder);
+    final int? WRAPPED_CONTENT_KEY_HEADEROffset = _WRAPPED_CONTENT_KEY_HEADER?.getOrCreateOffset(fbBuilder);
+    final int? WRAPPED_CONTENT_KEY_PAYLOADOffset = _WRAPPED_CONTENT_KEY_PAYLOAD == null ? null
+        : fbBuilder.writeListUint8(_WRAPPED_CONTENT_KEY_PAYLOAD!);
+    final int? GRANT_VERIFIER_PUBKEYOffset = _GRANT_VERIFIER_PUBKEY == null ? null
+        : fbBuilder.writeListUint8(_GRANT_VERIFIER_PUBKEY!);
+    final int? PROVIDER_SIGNATUREOffset = _PROVIDER_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_PROVIDER_SIGNATURE!);
+    fbBuilder.startTable(20);
+    fbBuilder.addInt8(0, _MESSAGE_TYPE?.value);
+    fbBuilder.addOffset(1, REQUEST_IDOffset);
+    fbBuilder.addOffset(2, MODULE_IDOffset);
+    fbBuilder.addOffset(3, MODULE_VERSIONOffset);
+    fbBuilder.addOffset(4, REQUESTER_PEER_IDOffset);
+    fbBuilder.addOffset(5, REQUESTER_XPUBOffset);
+    fbBuilder.addOffset(6, REQUESTED_DOMAINOffset);
+    fbBuilder.addUint64(7, _REQUESTED_TIMEOUT_MS);
+    fbBuilder.addOffset(8, GRANTED_DOMAINOffset);
+    fbBuilder.addUint64(9, _GRANTED_TIMEOUT_MS);
+    fbBuilder.addUint64(10, _EXPIRES_AT);
+    fbBuilder.addOffset(11, REQUIRED_SCOPEOffset);
+    fbBuilder.addOffset(12, GRANT_STATUSOffset);
+    fbBuilder.addOffset(13, DENIAL_REASONOffset);
+    fbBuilder.addOffset(14, CAPABILITY_TOKENOffset);
+    fbBuilder.addOffset(15, MODULE_DESCRIPTOROffset);
+    fbBuilder.addOffset(16, WRAPPED_CONTENT_KEY_HEADEROffset);
+    fbBuilder.addOffset(17, WRAPPED_CONTENT_KEY_PAYLOADOffset);
+    fbBuilder.addOffset(18, GRANT_VERIFIER_PUBKEYOffset);
+    fbBuilder.addOffset(19, PROVIDER_SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

@@ -5,689 +5,274 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum timingStandard {
-  GMST(0),
-  GPS(1),
-  MET(2),
-  MRT(3),
-  SCLK(4),
-  TAI(5),
-  TCB(6),
-  TDB(7),
-  TCG(8),
-  TT(9),
-  UT1(10),
-  UTC(11),
-  GLONASS(12),
-  GST(13),
-  QZSS(14),
-  BDT(15),
-  NAVIC(16),
-  SBAS(17),
-  A1(18);
+///  What kind of interval an entry describes.
+///
+///  `UNSPECIFIED` holds ordinal 0 so an unset field can never decode as a claim
+///  of geometric access.
+enum aciIntervalKind {
+  UNSPECIFIED(0),
+  GEOMETRIC_ACCESS(1),
+  THRESHOLD_SATISFIED(2),
+  OUTAGE(3),
+  HANDOVER(4),
+  SCHEDULED_CONTACT(5),
+  KEEP_OUT(6),
+  INTERFERENCE_EVENT(7);
 
   final int value;
-  const timingStandard(this.value);
+  const aciIntervalKind(this.value);
 
-  factory timingStandard.fromValue(int value) {
+  factory aciIntervalKind.fromValue(int value) {
     switch (value) {
-      case 0: return timingStandard.GMST;
-      case 1: return timingStandard.GPS;
-      case 2: return timingStandard.MET;
-      case 3: return timingStandard.MRT;
-      case 4: return timingStandard.SCLK;
-      case 5: return timingStandard.TAI;
-      case 6: return timingStandard.TCB;
-      case 7: return timingStandard.TDB;
-      case 8: return timingStandard.TCG;
-      case 9: return timingStandard.TT;
-      case 10: return timingStandard.UT1;
-      case 11: return timingStandard.UTC;
-      case 12: return timingStandard.GLONASS;
-      case 13: return timingStandard.GST;
-      case 14: return timingStandard.QZSS;
-      case 15: return timingStandard.BDT;
-      case 16: return timingStandard.NAVIC;
-      case 17: return timingStandard.SBAS;
-      case 18: return timingStandard.A1;
+      case 0: return aciIntervalKind.UNSPECIFIED;
+      case 1: return aciIntervalKind.GEOMETRIC_ACCESS;
+      case 2: return aciIntervalKind.THRESHOLD_SATISFIED;
+      case 3: return aciIntervalKind.OUTAGE;
+      case 4: return aciIntervalKind.HANDOVER;
+      case 5: return aciIntervalKind.SCHEDULED_CONTACT;
+      case 6: return aciIntervalKind.KEEP_OUT;
+      case 7: return aciIntervalKind.INTERFERENCE_EVENT;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timingStandard? _createOrNull(int? value) =>
-      value == null ? null : timingStandard.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 18;
-  static const fb.Reader<timingStandard> reader = _timingStandardReader();
-}
-
-class _timingStandardReader extends fb.Reader<timingStandard> {
-  const _timingStandardReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  timingStandard read(fb.BufferContext bc, int offset) =>
-      timingStandard.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-enum timEpochRepresentation {
-  JULIAN_DATE(0),
-  MODIFIED_JULIAN_DATE(1),
-  UNIX_SECONDS(2),
-  ISO8601(3),
-  GPS_SECONDS(4),
-  GNSS_WEEK_SECONDS(5),
-  CCSDS_TIME_CODE(6),
-  MISSION_ELAPSED_SECONDS(7);
-
-  final int value;
-  const timEpochRepresentation(this.value);
-
-  factory timEpochRepresentation.fromValue(int value) {
-    switch (value) {
-      case 0: return timEpochRepresentation.JULIAN_DATE;
-      case 1: return timEpochRepresentation.MODIFIED_JULIAN_DATE;
-      case 2: return timEpochRepresentation.UNIX_SECONDS;
-      case 3: return timEpochRepresentation.ISO8601;
-      case 4: return timEpochRepresentation.GPS_SECONDS;
-      case 5: return timEpochRepresentation.GNSS_WEEK_SECONDS;
-      case 6: return timEpochRepresentation.CCSDS_TIME_CODE;
-      case 7: return timEpochRepresentation.MISSION_ELAPSED_SECONDS;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static timEpochRepresentation? _createOrNull(int? value) =>
-      value == null ? null : timEpochRepresentation.fromValue(value);
+  static aciIntervalKind? _createOrNull(int? value) =>
+      value == null ? null : aciIntervalKind.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 7;
-  static const fb.Reader<timEpochRepresentation> reader = _timEpochRepresentationReader();
+  static const fb.Reader<aciIntervalKind> reader = _aciIntervalKindReader();
 }
 
-class _timEpochRepresentationReader extends fb.Reader<timEpochRepresentation> {
-  const _timEpochRepresentationReader();
+class _aciIntervalKindReader extends fb.Reader<aciIntervalKind> {
+  const _aciIntervalKindReader();
 
   @override
   int get size => 1;
 
   @override
-  timEpochRepresentation read(fb.BufferContext bc, int offset) =>
-      timEpochRepresentation.fromValue(const fb.Int8Reader().read(bc, offset));
+  aciIntervalKind read(fb.BufferContext bc, int offset) =>
+      aciIntervalKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timCcsdsTimeCodeKind {
-  NONE(0),
-  UNSEGMENTED(1),
-  DAY_SEGMENTED(2),
-  CALENDAR_SEGMENTED(3);
+///  How service moved between links at a handover.
+enum aciHandoverKind {
+  UNSPECIFIED(0),
+  MAKE_BEFORE_BREAK(1),
+  BREAK_BEFORE_MAKE(2),
+  HARD(3),
+  SOFT(4),
+  SCHEDULED(5);
 
   final int value;
-  const timCcsdsTimeCodeKind(this.value);
+  const aciHandoverKind(this.value);
 
-  factory timCcsdsTimeCodeKind.fromValue(int value) {
+  factory aciHandoverKind.fromValue(int value) {
     switch (value) {
-      case 0: return timCcsdsTimeCodeKind.NONE;
-      case 1: return timCcsdsTimeCodeKind.UNSEGMENTED;
-      case 2: return timCcsdsTimeCodeKind.DAY_SEGMENTED;
-      case 3: return timCcsdsTimeCodeKind.CALENDAR_SEGMENTED;
+      case 0: return aciHandoverKind.UNSPECIFIED;
+      case 1: return aciHandoverKind.MAKE_BEFORE_BREAK;
+      case 2: return aciHandoverKind.BREAK_BEFORE_MAKE;
+      case 3: return aciHandoverKind.HARD;
+      case 4: return aciHandoverKind.SOFT;
+      case 5: return aciHandoverKind.SCHEDULED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timCcsdsTimeCodeKind? _createOrNull(int? value) =>
-      value == null ? null : timCcsdsTimeCodeKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<timCcsdsTimeCodeKind> reader = _timCcsdsTimeCodeKindReader();
-}
-
-class _timCcsdsTimeCodeKindReader extends fb.Reader<timCcsdsTimeCodeKind> {
-  const _timCcsdsTimeCodeKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  timCcsdsTimeCodeKind read(fb.BufferContext bc, int offset) =>
-      timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-enum timConversionStatus {
-  OK(0),
-  INVALID_INPUT(1),
-  UNSUPPORTED_TIME_SYSTEM(2),
-  LEAP_SECOND_DATA_REQUIRED(3),
-  EOP_DATA_REQUIRED(4),
-  OUT_OF_RANGE(5);
-
-  final int value;
-  const timConversionStatus(this.value);
-
-  factory timConversionStatus.fromValue(int value) {
-    switch (value) {
-      case 0: return timConversionStatus.OK;
-      case 1: return timConversionStatus.INVALID_INPUT;
-      case 2: return timConversionStatus.UNSUPPORTED_TIME_SYSTEM;
-      case 3: return timConversionStatus.LEAP_SECOND_DATA_REQUIRED;
-      case 4: return timConversionStatus.EOP_DATA_REQUIRED;
-      case 5: return timConversionStatus.OUT_OF_RANGE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static timConversionStatus? _createOrNull(int? value) =>
-      value == null ? null : timConversionStatus.fromValue(value);
+  static aciHandoverKind? _createOrNull(int? value) =>
+      value == null ? null : aciHandoverKind.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 5;
-  static const fb.Reader<timConversionStatus> reader = _timConversionStatusReader();
+  static const fb.Reader<aciHandoverKind> reader = _aciHandoverKindReader();
 }
 
-class _timConversionStatusReader extends fb.Reader<timConversionStatus> {
-  const _timConversionStatusReader();
+class _aciHandoverKindReader extends fb.Reader<aciHandoverKind> {
+  const _aciHandoverKindReader();
 
   @override
   int get size => 1;
 
   @override
-  timConversionStatus read(fb.BufferContext bc, int offset) =>
-      timConversionStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+  aciHandoverKind read(fb.BufferContext bc, int offset) =>
+      aciHandoverKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  CCSDS time-code payload and preamble metadata.
-class TIMCcsdsTimeCode {
-  TIMCcsdsTimeCode._(this._bc, this._bcOffset);
-  factory TIMCcsdsTimeCode(List<int> bytes) {
+///  The server that served an interval best, and what it beat. Publishing the
+///  runner-up is what makes a best-server claim auditable rather than an
+///  assertion.
+class ACIBestServer {
+  ACIBestServer._(this._bc, this._bcOffset);
+  factory ACIBestServer(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMCcsdsTimeCode> reader = _TIMCcsdsTimeCodeReader();
+  static const fb.Reader<ACIBestServer> reader = _ACIBestServerReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  CCSDS time-code family.
-  timCcsdsTimeCodeKind get CODE_KIND => timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timCcsdsTimeCodeKind get codeKind => CODE_KIND;
-  ///  First CCSDS preamble field octet.
-  int get PREAMBLE_FIELD1 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get preambleField1 => PREAMBLE_FIELD1;
-  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
-  int get PREAMBLE_FIELD2 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get preambleField2 => PREAMBLE_FIELD2;
-  ///  Raw CCSDS time field octets.
-  List<int>? get TIME_FIELD => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
-  List<int>? get timeField => TIME_FIELD;
-  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
-  String? get AGENCY_DEFINED_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get agencyDefinedEpochIso8601 => AGENCY_DEFINED_EPOCH_ISO8601;
-  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
-  String? get CCSDS_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get ccsdsEpochIso8601 => CCSDS_EPOCH_ISO8601;
+  ///  `$RFL.RFLEndpoint.ENDPOINT_ID` of the winning server.
+  String? get ENDPOINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get endpointId => ENDPOINT_ID;
+  ///  `$RFL.RFLLink.LINK_ID` of the winning link.
+  String? get LINK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get linkId => LINK_ID;
+  ///  The metric the selection was made on.
+  rflBudgetTerm get SELECTION_TERM => rflBudgetTerm.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  rflBudgetTerm get selectionTerm => SELECTION_TERM;
+  ///  Winning value of SELECTION_TERM.
+  double get SELECTION_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get selectionValue => SELECTION_VALUE;
+  ///  Units of SELECTION_VALUE. Required whenever a value is published: a
+  ///  selection metric with no unit cannot be re-derived or compared.
+  String? get SELECTION_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get selectionUnits => SELECTION_UNITS;
+  ///  Endpoint that placed second.
+  String? get RUNNER_UP_ENDPOINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get runnerUpEndpointId => RUNNER_UP_ENDPOINT_ID;
+  ///  Runner-up value of SELECTION_TERM, same units.
+  double get RUNNER_UP_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get runnerUpValue => RUNNER_UP_VALUE;
+  ///  Rule applied when the metric tied (e.g. "lowest slant range").
+  String? get TIE_BROKEN_BY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get tieBrokenBy => TIE_BROKEN_BY;
+  ///  Number of candidate servers evaluated, including the winner.
+  int get CANDIDATES_EVALUATED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get candidatesEvaluated => CANDIDATES_EVALUATED;
 
   @override
   String toString() {
-    return 'TIMCcsdsTimeCode{codeKind: ${codeKind}, preambleField1: ${preambleField1}, preambleField2: ${preambleField2}, timeField: ${timeField}, agencyDefinedEpochIso8601: ${agencyDefinedEpochIso8601}, ccsdsEpochIso8601: ${ccsdsEpochIso8601}}';
+    return 'ACIBestServer{endpointId: ${endpointId}, linkId: ${linkId}, selectionTerm: ${selectionTerm}, selectionValue: ${selectionValue}, selectionUnits: ${selectionUnits}, runnerUpEndpointId: ${runnerUpEndpointId}, runnerUpValue: ${runnerUpValue}, tieBrokenBy: ${tieBrokenBy}, candidatesEvaluated: ${candidatesEvaluated}}';
   }
 }
 
-class _TIMCcsdsTimeCodeReader extends fb.TableReader<TIMCcsdsTimeCode> {
-  const _TIMCcsdsTimeCodeReader();
+class _ACIBestServerReader extends fb.TableReader<ACIBestServer> {
+  const _ACIBestServerReader();
 
   @override
-  TIMCcsdsTimeCode createObject(fb.BufferContext bc, int offset) =>
-    TIMCcsdsTimeCode._(bc, offset);
+  ACIBestServer createObject(fb.BufferContext bc, int offset) =>
+    ACIBestServer._(bc, offset);
 }
 
-class TIMCcsdsTimeCodeBuilder {
-  TIMCcsdsTimeCodeBuilder(this.fbBuilder);
+class ACIBestServerBuilder {
+  ACIBestServerBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(9);
   }
 
-  int addCodeKind(timCcsdsTimeCodeKind? CODE_KIND) {
-    fbBuilder.addInt8(0, CODE_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addPreambleField1(int? PREAMBLE_FIELD1) {
-    fbBuilder.addUint8(1, PREAMBLE_FIELD1);
-    return fbBuilder.offset;
-  }
-  int addPreambleField2(int? PREAMBLE_FIELD2) {
-    fbBuilder.addUint8(2, PREAMBLE_FIELD2);
-    return fbBuilder.offset;
-  }
-  int addTimeFieldOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addAgencyDefinedEpochIso8601Offset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addCcsdsEpochIso8601Offset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMCcsdsTimeCodeObjectBuilder extends fb.ObjectBuilder {
-  final timCcsdsTimeCodeKind? _CODE_KIND;
-  final int? _PREAMBLE_FIELD1;
-  final int? _PREAMBLE_FIELD2;
-  final List<int>? _TIME_FIELD;
-  final String? _AGENCY_DEFINED_EPOCH_ISO8601;
-  final String? _CCSDS_EPOCH_ISO8601;
-
-  TIMCcsdsTimeCodeObjectBuilder({
-    timCcsdsTimeCodeKind? CODE_KIND,
-    timCcsdsTimeCodeKind? codeKind,
-    int? PREAMBLE_FIELD1,
-    int? preambleField1,
-    int? PREAMBLE_FIELD2,
-    int? preambleField2,
-    List<int>? TIME_FIELD,
-    List<int>? timeField,
-    String? AGENCY_DEFINED_EPOCH_ISO8601,
-    String? agencyDefinedEpochIso8601,
-    String? CCSDS_EPOCH_ISO8601,
-    String? ccsdsEpochIso8601,
-  })
-      : _CODE_KIND = codeKind ?? CODE_KIND,
-        _PREAMBLE_FIELD1 = preambleField1 ?? PREAMBLE_FIELD1,
-        _PREAMBLE_FIELD2 = preambleField2 ?? PREAMBLE_FIELD2,
-        _TIME_FIELD = timeField ?? TIME_FIELD,
-        _AGENCY_DEFINED_EPOCH_ISO8601 = agencyDefinedEpochIso8601 ?? AGENCY_DEFINED_EPOCH_ISO8601,
-        _CCSDS_EPOCH_ISO8601 = ccsdsEpochIso8601 ?? CCSDS_EPOCH_ISO8601;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? TIME_FIELDOffset = _TIME_FIELD == null ? null
-        : fbBuilder.writeListUint8(_TIME_FIELD!);
-    final int? AGENCY_DEFINED_EPOCH_ISO8601Offset = _AGENCY_DEFINED_EPOCH_ISO8601 == null ? null
-        : fbBuilder.writeString(_AGENCY_DEFINED_EPOCH_ISO8601!);
-    final int? CCSDS_EPOCH_ISO8601Offset = _CCSDS_EPOCH_ISO8601 == null ? null
-        : fbBuilder.writeString(_CCSDS_EPOCH_ISO8601!);
-    fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _CODE_KIND?.value);
-    fbBuilder.addUint8(1, _PREAMBLE_FIELD1);
-    fbBuilder.addUint8(2, _PREAMBLE_FIELD2);
-    fbBuilder.addOffset(3, TIME_FIELDOffset);
-    fbBuilder.addOffset(4, AGENCY_DEFINED_EPOCH_ISO8601Offset);
-    fbBuilder.addOffset(5, CCSDS_EPOCH_ISO8601Offset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Numeric or textual instant tagged with its time system and representation.
-class TIMInstant {
-  TIMInstant._(this._bc, this._bcOffset);
-  factory TIMInstant(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIMInstant> reader = _TIMInstantReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Time system for this instant.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timingStandard get timeSystem => TIME_SYSTEM;
-  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
-  timEpochRepresentation get EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  timEpochRepresentation get epochFormat => EPOCH_FORMAT;
-  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
-  double get JULIAN_DATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get julianDate => JULIAN_DATE;
-  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
-  double get SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
-  String? get ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Additional nanoseconds beyond the fractional scalar/text value.
-  int get SUBSECOND_NANOS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get subsecondNanos => SUBSECOND_NANOS;
-  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
-  String? get EPOCH_LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get epochLabel => EPOCH_LABEL;
-  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
-  int get GNSS_WEEK => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get gnssWeek => GNSS_WEEK;
-  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
-  bool get HAS_GNSS_ROLLOVER_REFERENCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
-  bool get hasGnssRolloverReference => HAS_GNSS_ROLLOVER_REFERENCE;
-  ///  Optional Orekit-style GNSS week rollover reference timestamp.
-  String? get GNSS_ROLLOVER_REFERENCE_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get gnssRolloverReferenceIso8601 => GNSS_ROLLOVER_REFERENCE_ISO8601;
-  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
-  TIMCcsdsTimeCode? get CCSDS_TIME_CODE => TIMCcsdsTimeCode.reader.vTableGetNullable(_bc, _bcOffset, 24);
-  TIMCcsdsTimeCode? get ccsdsTimeCode => CCSDS_TIME_CODE;
-
-  @override
-  String toString() {
-    return 'TIMInstant{timeSystem: ${timeSystem}, epochFormat: ${epochFormat}, julianDate: ${julianDate}, SECONDS: ${SECONDS}, ISO8601: ${ISO8601}, subsecondNanos: ${subsecondNanos}, epochLabel: ${epochLabel}, gnssWeek: ${gnssWeek}, hasGnssRolloverReference: ${hasGnssRolloverReference}, gnssRolloverReferenceIso8601: ${gnssRolloverReferenceIso8601}, ccsdsTimeCode: ${ccsdsTimeCode}}';
-  }
-}
-
-class _TIMInstantReader extends fb.TableReader<TIMInstant> {
-  const _TIMInstantReader();
-
-  @override
-  TIMInstant createObject(fb.BufferContext bc, int offset) =>
-    TIMInstant._(bc, offset);
-}
-
-class TIMInstantBuilder {
-  TIMInstantBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(11);
-  }
-
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addEpochFormat(timEpochRepresentation? EPOCH_FORMAT) {
-    fbBuilder.addInt8(1, EPOCH_FORMAT?.value);
-    return fbBuilder.offset;
-  }
-  int addJulianDate(double? JULIAN_DATE) {
-    fbBuilder.addFloat64(2, JULIAN_DATE);
-    return fbBuilder.offset;
-  }
-  int addSeconds(double? SECONDS) {
-    fbBuilder.addFloat64(3, SECONDS);
-    return fbBuilder.offset;
-  }
-  int addIso8601Offset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addSubsecondNanos(int? SUBSECOND_NANOS) {
-    fbBuilder.addInt32(5, SUBSECOND_NANOS);
-    return fbBuilder.offset;
-  }
-  int addEpochLabelOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addGnssWeek(int? GNSS_WEEK) {
-    fbBuilder.addInt32(7, GNSS_WEEK);
-    return fbBuilder.offset;
-  }
-  int addHasGnssRolloverReference(bool? HAS_GNSS_ROLLOVER_REFERENCE) {
-    fbBuilder.addBool(8, HAS_GNSS_ROLLOVER_REFERENCE);
-    return fbBuilder.offset;
-  }
-  int addGnssRolloverReferenceIso8601Offset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addCcsdsTimeCodeOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMInstantObjectBuilder extends fb.ObjectBuilder {
-  final timingStandard? _TIME_SYSTEM;
-  final timEpochRepresentation? _EPOCH_FORMAT;
-  final double? _JULIAN_DATE;
-  final double? _SECONDS;
-  final String? _ISO8601;
-  final int? _SUBSECOND_NANOS;
-  final String? _EPOCH_LABEL;
-  final int? _GNSS_WEEK;
-  final bool? _HAS_GNSS_ROLLOVER_REFERENCE;
-  final String? _GNSS_ROLLOVER_REFERENCE_ISO8601;
-  final TIMCcsdsTimeCodeObjectBuilder? _CCSDS_TIME_CODE;
-
-  TIMInstantObjectBuilder({
-    timingStandard? TIME_SYSTEM,
-    timingStandard? timeSystem,
-    timEpochRepresentation? EPOCH_FORMAT,
-    timEpochRepresentation? epochFormat,
-    double? JULIAN_DATE,
-    double? julianDate,
-    double? SECONDS,
-    String? ISO8601,
-    int? SUBSECOND_NANOS,
-    int? subsecondNanos,
-    String? EPOCH_LABEL,
-    String? epochLabel,
-    int? GNSS_WEEK,
-    int? gnssWeek,
-    bool? HAS_GNSS_ROLLOVER_REFERENCE,
-    bool? hasGnssRolloverReference,
-    String? GNSS_ROLLOVER_REFERENCE_ISO8601,
-    String? gnssRolloverReferenceIso8601,
-    TIMCcsdsTimeCodeObjectBuilder? CCSDS_TIME_CODE,
-    TIMCcsdsTimeCodeObjectBuilder? ccsdsTimeCode,
-  })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
-        _EPOCH_FORMAT = epochFormat ?? EPOCH_FORMAT,
-        _JULIAN_DATE = julianDate ?? JULIAN_DATE,
-        _SECONDS = SECONDS,
-        _ISO8601 = ISO8601,
-        _SUBSECOND_NANOS = subsecondNanos ?? SUBSECOND_NANOS,
-        _EPOCH_LABEL = epochLabel ?? EPOCH_LABEL,
-        _GNSS_WEEK = gnssWeek ?? GNSS_WEEK,
-        _HAS_GNSS_ROLLOVER_REFERENCE = hasGnssRolloverReference ?? HAS_GNSS_ROLLOVER_REFERENCE,
-        _GNSS_ROLLOVER_REFERENCE_ISO8601 = gnssRolloverReferenceIso8601 ?? GNSS_ROLLOVER_REFERENCE_ISO8601,
-        _CCSDS_TIME_CODE = ccsdsTimeCode ?? CCSDS_TIME_CODE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ISO8601Offset = _ISO8601 == null ? null
-        : fbBuilder.writeString(_ISO8601!);
-    final int? EPOCH_LABELOffset = _EPOCH_LABEL == null ? null
-        : fbBuilder.writeString(_EPOCH_LABEL!);
-    final int? GNSS_ROLLOVER_REFERENCE_ISO8601Offset = _GNSS_ROLLOVER_REFERENCE_ISO8601 == null ? null
-        : fbBuilder.writeString(_GNSS_ROLLOVER_REFERENCE_ISO8601!);
-    final int? CCSDS_TIME_CODEOffset = _CCSDS_TIME_CODE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(11);
-    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
-    fbBuilder.addInt8(1, _EPOCH_FORMAT?.value);
-    fbBuilder.addFloat64(2, _JULIAN_DATE);
-    fbBuilder.addFloat64(3, _SECONDS);
-    fbBuilder.addOffset(4, ISO8601Offset);
-    fbBuilder.addInt32(5, _SUBSECOND_NANOS);
-    fbBuilder.addOffset(6, EPOCH_LABELOffset);
-    fbBuilder.addInt32(7, _GNSS_WEEK);
-    fbBuilder.addBool(8, _HAS_GNSS_ROLLOVER_REFERENCE);
-    fbBuilder.addOffset(9, GNSS_ROLLOVER_REFERENCE_ISO8601Offset);
-    fbBuilder.addOffset(10, CCSDS_TIME_CODEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Request to convert one instant into another time system/representation.
-class TIMConversionRequest {
-  TIMConversionRequest._(this._bc, this._bcOffset);
-  factory TIMConversionRequest(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIMConversionRequest> reader = _TIMConversionRequestReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Source instant to convert.
-  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Target time system.
-  timingStandard get TARGET_TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  timingStandard get targetTimeSystem => TARGET_TIME_SYSTEM;
-  ///  Preferred target representation.
-  timEpochRepresentation get TARGET_EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  timEpochRepresentation get targetEpochFormat => TARGET_EPOCH_FORMAT;
-  ///  Optional TAI-UTC override in seconds for the source instant.
-  double get TAI_MINUS_UTC_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get taiMinusUtcSeconds => TAI_MINUS_UTC_SECONDS;
-  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
-  bool get HAS_TAI_MINUS_UTC => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
-  bool get hasTaiMinusUtc => HAS_TAI_MINUS_UTC;
-  ///  Optional UT1-UTC override in seconds for UT1 conversions.
-  double get DUT1_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get dut1Seconds => DUT1_SECONDS;
-  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
-  bool get HAS_DUT1 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  bool get hasDut1 => HAS_DUT1;
-  ///  Optional caller trace/correlation identifier.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get traceId => TRACE_ID;
-
-  @override
-  String toString() {
-    return 'TIMConversionRequest{SOURCE: ${SOURCE}, targetTimeSystem: ${targetTimeSystem}, targetEpochFormat: ${targetEpochFormat}, taiMinusUtcSeconds: ${taiMinusUtcSeconds}, hasTaiMinusUtc: ${hasTaiMinusUtc}, dut1Seconds: ${dut1Seconds}, hasDut1: ${hasDut1}, traceId: ${traceId}}';
-  }
-}
-
-class _TIMConversionRequestReader extends fb.TableReader<TIMConversionRequest> {
-  const _TIMConversionRequestReader();
-
-  @override
-  TIMConversionRequest createObject(fb.BufferContext bc, int offset) =>
-    TIMConversionRequest._(bc, offset);
-}
-
-class TIMConversionRequestBuilder {
-  TIMConversionRequestBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addSourceOffset(int? offset) {
+  int addEndpointIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addTargetTimeSystem(timingStandard? TARGET_TIME_SYSTEM) {
-    fbBuilder.addInt8(1, TARGET_TIME_SYSTEM?.value);
+  int addLinkIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addTargetEpochFormat(timEpochRepresentation? TARGET_EPOCH_FORMAT) {
-    fbBuilder.addInt8(2, TARGET_EPOCH_FORMAT?.value);
+  int addSelectionTerm(rflBudgetTerm? SELECTION_TERM) {
+    fbBuilder.addInt8(2, SELECTION_TERM?.value);
     return fbBuilder.offset;
   }
-  int addTaiMinusUtcSeconds(double? TAI_MINUS_UTC_SECONDS) {
-    fbBuilder.addFloat64(3, TAI_MINUS_UTC_SECONDS);
+  int addSelectionValue(double? SELECTION_VALUE) {
+    fbBuilder.addFloat64(3, SELECTION_VALUE);
     return fbBuilder.offset;
   }
-  int addHasTaiMinusUtc(bool? HAS_TAI_MINUS_UTC) {
-    fbBuilder.addBool(4, HAS_TAI_MINUS_UTC);
+  int addSelectionUnitsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addDut1Seconds(double? DUT1_SECONDS) {
-    fbBuilder.addFloat64(5, DUT1_SECONDS);
+  int addRunnerUpEndpointIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addHasDut1(bool? HAS_DUT1) {
-    fbBuilder.addBool(6, HAS_DUT1);
+  int addRunnerUpValue(double? RUNNER_UP_VALUE) {
+    fbBuilder.addFloat64(6, RUNNER_UP_VALUE);
     return fbBuilder.offset;
   }
-  int addTraceIdOffset(int? offset) {
+  int addTieBrokenByOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
+  int addCandidatesEvaluated(int? CANDIDATES_EVALUATED) {
+    fbBuilder.addUint32(8, CANDIDATES_EVALUATED);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
   }
 }
 
-class TIMConversionRequestObjectBuilder extends fb.ObjectBuilder {
-  final TIMInstantObjectBuilder? _SOURCE;
-  final timingStandard? _TARGET_TIME_SYSTEM;
-  final timEpochRepresentation? _TARGET_EPOCH_FORMAT;
-  final double? _TAI_MINUS_UTC_SECONDS;
-  final bool? _HAS_TAI_MINUS_UTC;
-  final double? _DUT1_SECONDS;
-  final bool? _HAS_DUT1;
-  final String? _TRACE_ID;
+class ACIBestServerObjectBuilder extends fb.ObjectBuilder {
+  final String? _ENDPOINT_ID;
+  final String? _LINK_ID;
+  final rflBudgetTerm? _SELECTION_TERM;
+  final double? _SELECTION_VALUE;
+  final String? _SELECTION_UNITS;
+  final String? _RUNNER_UP_ENDPOINT_ID;
+  final double? _RUNNER_UP_VALUE;
+  final String? _TIE_BROKEN_BY;
+  final int? _CANDIDATES_EVALUATED;
 
-  TIMConversionRequestObjectBuilder({
-    TIMInstantObjectBuilder? SOURCE,
-    timingStandard? TARGET_TIME_SYSTEM,
-    timingStandard? targetTimeSystem,
-    timEpochRepresentation? TARGET_EPOCH_FORMAT,
-    timEpochRepresentation? targetEpochFormat,
-    double? TAI_MINUS_UTC_SECONDS,
-    double? taiMinusUtcSeconds,
-    bool? HAS_TAI_MINUS_UTC,
-    bool? hasTaiMinusUtc,
-    double? DUT1_SECONDS,
-    double? dut1Seconds,
-    bool? HAS_DUT1,
-    bool? hasDut1,
-    String? TRACE_ID,
-    String? traceId,
+  ACIBestServerObjectBuilder({
+    String? ENDPOINT_ID,
+    String? endpointId,
+    String? LINK_ID,
+    String? linkId,
+    rflBudgetTerm? SELECTION_TERM,
+    rflBudgetTerm? selectionTerm,
+    double? SELECTION_VALUE,
+    double? selectionValue,
+    String? SELECTION_UNITS,
+    String? selectionUnits,
+    String? RUNNER_UP_ENDPOINT_ID,
+    String? runnerUpEndpointId,
+    double? RUNNER_UP_VALUE,
+    double? runnerUpValue,
+    String? TIE_BROKEN_BY,
+    String? tieBrokenBy,
+    int? CANDIDATES_EVALUATED,
+    int? candidatesEvaluated,
   })
-      : _SOURCE = SOURCE,
-        _TARGET_TIME_SYSTEM = targetTimeSystem ?? TARGET_TIME_SYSTEM,
-        _TARGET_EPOCH_FORMAT = targetEpochFormat ?? TARGET_EPOCH_FORMAT,
-        _TAI_MINUS_UTC_SECONDS = taiMinusUtcSeconds ?? TAI_MINUS_UTC_SECONDS,
-        _HAS_TAI_MINUS_UTC = hasTaiMinusUtc ?? HAS_TAI_MINUS_UTC,
-        _DUT1_SECONDS = dut1Seconds ?? DUT1_SECONDS,
-        _HAS_DUT1 = hasDut1 ?? HAS_DUT1,
-        _TRACE_ID = traceId ?? TRACE_ID;
+      : _ENDPOINT_ID = endpointId ?? ENDPOINT_ID,
+        _LINK_ID = linkId ?? LINK_ID,
+        _SELECTION_TERM = selectionTerm ?? SELECTION_TERM,
+        _SELECTION_VALUE = selectionValue ?? SELECTION_VALUE,
+        _SELECTION_UNITS = selectionUnits ?? SELECTION_UNITS,
+        _RUNNER_UP_ENDPOINT_ID = runnerUpEndpointId ?? RUNNER_UP_ENDPOINT_ID,
+        _RUNNER_UP_VALUE = runnerUpValue ?? RUNNER_UP_VALUE,
+        _TIE_BROKEN_BY = tieBrokenBy ?? TIE_BROKEN_BY,
+        _CANDIDATES_EVALUATED = candidatesEvaluated ?? CANDIDATES_EVALUATED;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, SOURCEOffset);
-    fbBuilder.addInt8(1, _TARGET_TIME_SYSTEM?.value);
-    fbBuilder.addInt8(2, _TARGET_EPOCH_FORMAT?.value);
-    fbBuilder.addFloat64(3, _TAI_MINUS_UTC_SECONDS);
-    fbBuilder.addBool(4, _HAS_TAI_MINUS_UTC);
-    fbBuilder.addFloat64(5, _DUT1_SECONDS);
-    fbBuilder.addBool(6, _HAS_DUT1);
-    fbBuilder.addOffset(7, TRACE_IDOffset);
+    final int? ENDPOINT_IDOffset = _ENDPOINT_ID == null ? null
+        : fbBuilder.writeString(_ENDPOINT_ID!);
+    final int? LINK_IDOffset = _LINK_ID == null ? null
+        : fbBuilder.writeString(_LINK_ID!);
+    final int? SELECTION_UNITSOffset = _SELECTION_UNITS == null ? null
+        : fbBuilder.writeString(_SELECTION_UNITS!);
+    final int? RUNNER_UP_ENDPOINT_IDOffset = _RUNNER_UP_ENDPOINT_ID == null ? null
+        : fbBuilder.writeString(_RUNNER_UP_ENDPOINT_ID!);
+    final int? TIE_BROKEN_BYOffset = _TIE_BROKEN_BY == null ? null
+        : fbBuilder.writeString(_TIE_BROKEN_BY!);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, ENDPOINT_IDOffset);
+    fbBuilder.addOffset(1, LINK_IDOffset);
+    fbBuilder.addInt8(2, _SELECTION_TERM?.value);
+    fbBuilder.addFloat64(3, _SELECTION_VALUE);
+    fbBuilder.addOffset(4, SELECTION_UNITSOffset);
+    fbBuilder.addOffset(5, RUNNER_UP_ENDPOINT_IDOffset);
+    fbBuilder.addFloat64(6, _RUNNER_UP_VALUE);
+    fbBuilder.addOffset(7, TIE_BROKEN_BYOffset);
+    fbBuilder.addUint32(8, _CANDIDATES_EVALUATED);
     return fbBuilder.endTable();
   }
 
@@ -699,203 +284,102 @@ class TIMConversionRequestObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Result of a time conversion request.
-class TIMConversionResult {
-  TIMConversionResult._(this._bc, this._bcOffset);
-  factory TIMConversionResult(List<int> bytes) {
+///  A transition of service between two links.
+class ACIHandover {
+  ACIHandover._(this._bc, this._bcOffset);
+  factory ACIHandover(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMConversionResult> reader = _TIMConversionResultReader();
+  static const fb.Reader<ACIHandover> reader = _ACIHandoverReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Original source instant.
-  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Converted target instant.
-  TIMInstant? get TARGET => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Target minus source offset in SI seconds for the requested conversion.
-  double get DELTA_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get deltaSeconds => DELTA_SECONDS;
-  ///  Conversion status.
-  timConversionStatus get STATUS => timConversionStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  ///  Optional error detail when STATUS is not OK.
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get errorMessage => ERROR_MESSAGE;
-  ///  Caller trace/correlation identifier copied from the request when present.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get traceId => TRACE_ID;
+  aciHandoverKind get HANDOVER_KIND => aciHandoverKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  aciHandoverKind get handoverKind => HANDOVER_KIND;
+  ///  Link service moved FROM.
+  String? get PREDECESSOR_LINK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get predecessorLinkId => PREDECESSOR_LINK_ID;
+  ///  Link service moved TO.
+  String? get SUCCESSOR_LINK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get successorLinkId => SUCCESSOR_LINK_ID;
+  String? get PREDECESSOR_ENDPOINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get predecessorEndpointId => PREDECESSOR_ENDPOINT_ID;
+  String? get SUCCESSOR_ENDPOINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get successorEndpointId => SUCCESSOR_ENDPOINT_ID;
+  ///  Seconds both links were usable together. Meaningful for
+  ///  MAKE_BEFORE_BREAK and SOFT.
+  double get OVERLAP_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get overlapS => OVERLAP_S;
+  ///  Seconds neither link was usable. Meaningful for BREAK_BEFORE_MAKE.
+  double get GAP_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get gapS => GAP_S;
+  ///  Condition that triggered the handover.
+  rflConstraint get TRIGGER => rflConstraint.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  ///  Epoch of the transition, seconds since 1970-01-01T00:00:00 in the
+  ///  record's TIME_SYSTEM.
+  double get EXECUTED_AT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get executedAt => EXECUTED_AT;
 
   @override
   String toString() {
-    return 'TIMConversionResult{SOURCE: ${SOURCE}, TARGET: ${TARGET}, deltaSeconds: ${deltaSeconds}, STATUS: ${STATUS}, errorMessage: ${errorMessage}, traceId: ${traceId}}';
+    return 'ACIHandover{handoverKind: ${handoverKind}, predecessorLinkId: ${predecessorLinkId}, successorLinkId: ${successorLinkId}, predecessorEndpointId: ${predecessorEndpointId}, successorEndpointId: ${successorEndpointId}, overlapS: ${overlapS}, gapS: ${gapS}, TRIGGER: ${TRIGGER}, executedAt: ${executedAt}}';
   }
 }
 
-class _TIMConversionResultReader extends fb.TableReader<TIMConversionResult> {
-  const _TIMConversionResultReader();
+class _ACIHandoverReader extends fb.TableReader<ACIHandover> {
+  const _ACIHandoverReader();
 
   @override
-  TIMConversionResult createObject(fb.BufferContext bc, int offset) =>
-    TIMConversionResult._(bc, offset);
+  ACIHandover createObject(fb.BufferContext bc, int offset) =>
+    ACIHandover._(bc, offset);
 }
 
-class TIMConversionResultBuilder {
-  TIMConversionResultBuilder(this.fbBuilder);
+class ACIHandoverBuilder {
+  ACIHandoverBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(9);
   }
 
-  int addSourceOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addHandoverKind(aciHandoverKind? HANDOVER_KIND) {
+    fbBuilder.addInt8(0, HANDOVER_KIND?.value);
     return fbBuilder.offset;
   }
-  int addTargetOffset(int? offset) {
+  int addPredecessorLinkIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDeltaSeconds(double? DELTA_SECONDS) {
-    fbBuilder.addFloat64(2, DELTA_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addStatus(timConversionStatus? STATUS) {
-    fbBuilder.addInt8(3, STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addErrorMessageOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMConversionResultObjectBuilder extends fb.ObjectBuilder {
-  final TIMInstantObjectBuilder? _SOURCE;
-  final TIMInstantObjectBuilder? _TARGET;
-  final double? _DELTA_SECONDS;
-  final timConversionStatus? _STATUS;
-  final String? _ERROR_MESSAGE;
-  final String? _TRACE_ID;
-
-  TIMConversionResultObjectBuilder({
-    TIMInstantObjectBuilder? SOURCE,
-    TIMInstantObjectBuilder? TARGET,
-    double? DELTA_SECONDS,
-    double? deltaSeconds,
-    timConversionStatus? STATUS,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
-    String? TRACE_ID,
-    String? traceId,
-  })
-      : _SOURCE = SOURCE,
-        _TARGET = TARGET,
-        _DELTA_SECONDS = deltaSeconds ?? DELTA_SECONDS,
-        _STATUS = STATUS,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
-        _TRACE_ID = traceId ?? TRACE_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
-    final int? TARGETOffset = _TARGET?.getOrCreateOffset(fbBuilder);
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, SOURCEOffset);
-    fbBuilder.addOffset(1, TARGETOffset);
-    fbBuilder.addFloat64(2, _DELTA_SECONDS);
-    fbBuilder.addInt8(3, _STATUS?.value);
-    fbBuilder.addOffset(4, ERROR_MESSAGEOffset);
-    fbBuilder.addOffset(5, TRACE_IDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Time System and time-conversion envelope.
-class TIM {
-  TIM._(this._bc, this._bcOffset);
-  factory TIM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIM> reader = _TIMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Legacy time-system selector retained for existing TIM consumers.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timingStandard get timeSystem => TIME_SYSTEM;
-  ///  A single tagged instant.
-  TIMInstant? get INSTANT => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Time conversion request.
-  TIMConversionRequest? get CONVERSION_REQUEST => TIMConversionRequest.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  TIMConversionRequest? get conversionRequest => CONVERSION_REQUEST;
-  ///  Time conversion result.
-  TIMConversionResult? get CONVERSION_RESULT => TIMConversionResult.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  TIMConversionResult? get conversionResult => CONVERSION_RESULT;
-
-  @override
-  String toString() {
-    return 'TIM{timeSystem: ${timeSystem}, INSTANT: ${INSTANT}, conversionRequest: ${conversionRequest}, conversionResult: ${conversionResult}}';
-  }
-}
-
-class _TIMReader extends fb.TableReader<TIM> {
-  const _TIMReader();
-
-  @override
-  TIM createObject(fb.BufferContext bc, int offset) =>
-    TIM._(bc, offset);
-}
-
-class TIMBuilder {
-  TIMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addInstantOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addConversionRequestOffset(int? offset) {
+  int addSuccessorLinkIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addConversionResultOffset(int? offset) {
+  int addPredecessorEndpointIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSuccessorEndpointIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addOverlapS(double? OVERLAP_S) {
+    fbBuilder.addFloat64(5, OVERLAP_S);
+    return fbBuilder.offset;
+  }
+  int addGapS(double? GAP_S) {
+    fbBuilder.addFloat64(6, GAP_S);
+    return fbBuilder.offset;
+  }
+  int addTrigger(rflConstraint? TRIGGER) {
+    fbBuilder.addInt8(7, TRIGGER?.value);
+    return fbBuilder.offset;
+  }
+  int addExecutedAt(double? EXECUTED_AT) {
+    fbBuilder.addFloat64(8, EXECUTED_AT);
     return fbBuilder.offset;
   }
 
@@ -904,37 +388,1287 @@ class TIMBuilder {
   }
 }
 
-class TIMObjectBuilder extends fb.ObjectBuilder {
-  final timingStandard? _TIME_SYSTEM;
-  final TIMInstantObjectBuilder? _INSTANT;
-  final TIMConversionRequestObjectBuilder? _CONVERSION_REQUEST;
-  final TIMConversionResultObjectBuilder? _CONVERSION_RESULT;
+class ACIHandoverObjectBuilder extends fb.ObjectBuilder {
+  final aciHandoverKind? _HANDOVER_KIND;
+  final String? _PREDECESSOR_LINK_ID;
+  final String? _SUCCESSOR_LINK_ID;
+  final String? _PREDECESSOR_ENDPOINT_ID;
+  final String? _SUCCESSOR_ENDPOINT_ID;
+  final double? _OVERLAP_S;
+  final double? _GAP_S;
+  final rflConstraint? _TRIGGER;
+  final double? _EXECUTED_AT;
 
-  TIMObjectBuilder({
-    timingStandard? TIME_SYSTEM,
-    timingStandard? timeSystem,
-    TIMInstantObjectBuilder? INSTANT,
-    TIMConversionRequestObjectBuilder? CONVERSION_REQUEST,
-    TIMConversionRequestObjectBuilder? conversionRequest,
-    TIMConversionResultObjectBuilder? CONVERSION_RESULT,
-    TIMConversionResultObjectBuilder? conversionResult,
+  ACIHandoverObjectBuilder({
+    aciHandoverKind? HANDOVER_KIND,
+    aciHandoverKind? handoverKind,
+    String? PREDECESSOR_LINK_ID,
+    String? predecessorLinkId,
+    String? SUCCESSOR_LINK_ID,
+    String? successorLinkId,
+    String? PREDECESSOR_ENDPOINT_ID,
+    String? predecessorEndpointId,
+    String? SUCCESSOR_ENDPOINT_ID,
+    String? successorEndpointId,
+    double? OVERLAP_S,
+    double? overlapS,
+    double? GAP_S,
+    double? gapS,
+    rflConstraint? TRIGGER,
+    double? EXECUTED_AT,
+    double? executedAt,
   })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
-        _INSTANT = INSTANT,
-        _CONVERSION_REQUEST = conversionRequest ?? CONVERSION_REQUEST,
-        _CONVERSION_RESULT = conversionResult ?? CONVERSION_RESULT;
+      : _HANDOVER_KIND = handoverKind ?? HANDOVER_KIND,
+        _PREDECESSOR_LINK_ID = predecessorLinkId ?? PREDECESSOR_LINK_ID,
+        _SUCCESSOR_LINK_ID = successorLinkId ?? SUCCESSOR_LINK_ID,
+        _PREDECESSOR_ENDPOINT_ID = predecessorEndpointId ?? PREDECESSOR_ENDPOINT_ID,
+        _SUCCESSOR_ENDPOINT_ID = successorEndpointId ?? SUCCESSOR_ENDPOINT_ID,
+        _OVERLAP_S = overlapS ?? OVERLAP_S,
+        _GAP_S = gapS ?? GAP_S,
+        _TRIGGER = TRIGGER,
+        _EXECUTED_AT = executedAt ?? EXECUTED_AT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? INSTANTOffset = _INSTANT?.getOrCreateOffset(fbBuilder);
-    final int? CONVERSION_REQUESTOffset = _CONVERSION_REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? CONVERSION_RESULTOffset = _CONVERSION_RESULT?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
-    fbBuilder.addOffset(1, INSTANTOffset);
-    fbBuilder.addOffset(2, CONVERSION_REQUESTOffset);
-    fbBuilder.addOffset(3, CONVERSION_RESULTOffset);
+    final int? PREDECESSOR_LINK_IDOffset = _PREDECESSOR_LINK_ID == null ? null
+        : fbBuilder.writeString(_PREDECESSOR_LINK_ID!);
+    final int? SUCCESSOR_LINK_IDOffset = _SUCCESSOR_LINK_ID == null ? null
+        : fbBuilder.writeString(_SUCCESSOR_LINK_ID!);
+    final int? PREDECESSOR_ENDPOINT_IDOffset = _PREDECESSOR_ENDPOINT_ID == null ? null
+        : fbBuilder.writeString(_PREDECESSOR_ENDPOINT_ID!);
+    final int? SUCCESSOR_ENDPOINT_IDOffset = _SUCCESSOR_ENDPOINT_ID == null ? null
+        : fbBuilder.writeString(_SUCCESSOR_ENDPOINT_ID!);
+    fbBuilder.startTable(9);
+    fbBuilder.addInt8(0, _HANDOVER_KIND?.value);
+    fbBuilder.addOffset(1, PREDECESSOR_LINK_IDOffset);
+    fbBuilder.addOffset(2, SUCCESSOR_LINK_IDOffset);
+    fbBuilder.addOffset(3, PREDECESSOR_ENDPOINT_IDOffset);
+    fbBuilder.addOffset(4, SUCCESSOR_ENDPOINT_IDOffset);
+    fbBuilder.addFloat64(5, _OVERLAP_S);
+    fbBuilder.addFloat64(6, _GAP_S);
+    fbBuilder.addInt8(7, _TRIGGER?.value);
+    fbBuilder.addFloat64(8, _EXECUTED_AT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One interval.
+class ACIInterval {
+  ACIInterval._(this._bc, this._bcOffset);
+  factory ACIInterval(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACIInterval> reader = _ACIIntervalReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Producer-stable identifier of this interval.
+  String? get INTERVAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get intervalId => INTERVAL_ID;
+  aciIntervalKind get INTERVAL_KIND => aciIntervalKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  aciIntervalKind get intervalKind => INTERVAL_KIND;
+  ///  `$RFL.RFLLink.LINK_ID` this interval belongs to.
+  String? get LINK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get linkId => LINK_ID;
+  ///  Endpoints, joined from the same `$RFL` set.
+  String? get TRANSMIT_ENDPOINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get transmitEndpointId => TRANSMIT_ENDPOINT_ID;
+  String? get RECEIVE_ENDPOINT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get receiveEndpointId => RECEIVE_ENDPOINT_ID;
+  ///  Acquisition of signal, seconds since 1970-01-01T00:00:00 in the record's
+  ///  TIME_SYSTEM. An interval with no start is not an interval: a producer that
+  ///  cannot state it MUST NOT emit the entry. FlatBuffers cannot mark a scalar
+  ///  required, so this is enforced by the producer, not by the wire.
+  double get ACQUISITION_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get acquisitionTime => ACQUISITION_TIME;
+  ///  Loss of signal, same encoding. NaN means the interval was still open at
+  ///  WINDOW_STOP and was NOT truncated to the window — a consumer must be able
+  ///  to tell an open pass from one that ended exactly at the boundary.
+  double get LOSS_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get lossTime => LOSS_TIME;
+  ///  Duration in seconds. Published rather than derived so a truncated or
+  ///  open-ended interval still states the span it actually covers.
+  double get DURATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get durationS => DURATION_S;
+  ///  Sub-interval over which the threshold was met, when it is narrower than
+  ///  ACQUISITION_TIME..LOSS_TIME. Absent when the whole interval met it or
+  ///  when no threshold was evaluated.
+  double get THRESHOLD_SATISFIED_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get thresholdSatisfiedStart => THRESHOLD_SATISFIED_START;
+  double get THRESHOLD_SATISFIED_STOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get thresholdSatisfiedStop => THRESHOLD_SATISFIED_STOP;
+  ///  The requirement this interval is stated against. A margin without these
+  ///  is a margin against nothing.
+  rflBudgetTerm get THRESHOLD_TERM => rflBudgetTerm.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+  rflBudgetTerm get thresholdTerm => THRESHOLD_TERM;
+  double get THRESHOLD_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get thresholdValue => THRESHOLD_VALUE;
+  String? get THRESHOLD_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get thresholdUnits => THRESHOLD_UNITS;
+  rflComparison get THRESHOLD_COMPARISON => rflComparison.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 30, 0));
+  rflComparison get thresholdComparison => THRESHOLD_COMPARISON;
+  ///  Margin statistics across the interval, dB.
+  double get MARGIN_MINIMUM_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get marginMinimumDb => MARGIN_MINIMUM_DB;
+  double get MARGIN_MEAN_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get marginMeanDb => MARGIN_MEAN_DB;
+  double get MARGIN_MAXIMUM_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get marginMaximumDb => MARGIN_MAXIMUM_DB;
+  ///  Epoch of MARGIN_MINIMUM_DB, same encoding as ACQUISITION_TIME. The worst
+  ///  instant of a pass is an operational fact, not a statistic.
+  double get MARGIN_MINIMUM_AT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get marginMinimumAt => MARGIN_MINIMUM_AT;
+  ///  Geometry extremes across the interval.
+  double get ELEVATION_MAXIMUM_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get elevationMaximumDeg => ELEVATION_MAXIMUM_DEG;
+  double get ELEVATION_AT_ACQUISITION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get elevationAtAcquisitionDeg => ELEVATION_AT_ACQUISITION_DEG;
+  double get ELEVATION_AT_LOSS_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get elevationAtLossDeg => ELEVATION_AT_LOSS_DEG;
+  double get RANGE_MINIMUM_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  double get rangeMinimumM => RANGE_MINIMUM_M;
+  ///  Data the interval could carry, bits. Bits, not bytes and not megabits:
+  ///  the rate columns of `$RFL` are bits per second.
+  double get DATA_VOLUME_BITS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  double get dataVolumeBits => DATA_VOLUME_BITS;
+  double get MEAN_DATA_RATE_BPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  double get meanDataRateBps => MEAN_DATA_RATE_BPS;
+  double get PEAK_DATA_RATE_BPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get peakDataRateBps => PEAK_DATA_RATE_BPS;
+  ///  The condition that bound this interval.
+  rflConstraint get LIMITING_CONSTRAINT => rflConstraint.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 54, 0));
+  rflConstraint get limitingConstraint => LIMITING_CONSTRAINT;
+  ///  Verbatim description, required when LIMITING_CONSTRAINT is OTHER.
+  String? get LIMITING_CONSTRAINT_NOTE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get limitingConstraintNote => LIMITING_CONSTRAINT_NOTE;
+  ///  Epoch at which LIMITING_CONSTRAINT bound, same encoding as
+  ///  ACQUISITION_TIME.
+  double get LIMITING_CONSTRAINT_AT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  double get limitingConstraintAt => LIMITING_CONSTRAINT_AT;
+  ///  Outages nested inside this interval.
+  int get OUTAGE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 60, 0);
+  int get outageCount => OUTAGE_COUNT;
+  double get OUTAGE_TOTAL_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get outageTotalS => OUTAGE_TOTAL_S;
+  double get OUTAGE_LONGEST_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get outageLongestS => OUTAGE_LONGEST_S;
+  ///  Fraction of the interval during which the threshold was met [0-1].
+  double get AVAILABILITY_FRACTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get availabilityFraction => AVAILABILITY_FRACTION;
+  ///  Best server across this interval.
+  ACIBestServer? get BEST_SERVER => ACIBestServer.reader.vTableGetNullable(_bc, _bcOffset, 68);
+  ACIBestServer? get bestServer => BEST_SERVER;
+  ///  Handover detail, when INTERVAL_KIND is HANDOVER.
+  ACIHandover? get HANDOVER => ACIHandover.reader.vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Join back to the samples this interval was derived from: the inclusive
+  ///  index range into the `$RFL` sample arrays named by ACI.RFL_ID.
+  int get RFL_SAMPLE_FIRST_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 72, 0);
+  int get rflSampleFirstIndex => RFL_SAMPLE_FIRST_INDEX;
+  int get RFL_SAMPLE_LAST_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 74, 0);
+  int get rflSampleLastIndex => RFL_SAMPLE_LAST_INDEX;
+  ///  Number of samples that contributed.
+  int get SAMPLE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 76, 0);
+  int get sampleCount => SAMPLE_COUNT;
+
+  @override
+  String toString() {
+    return 'ACIInterval{intervalId: ${intervalId}, intervalKind: ${intervalKind}, linkId: ${linkId}, transmitEndpointId: ${transmitEndpointId}, receiveEndpointId: ${receiveEndpointId}, acquisitionTime: ${acquisitionTime}, lossTime: ${lossTime}, durationS: ${durationS}, thresholdSatisfiedStart: ${thresholdSatisfiedStart}, thresholdSatisfiedStop: ${thresholdSatisfiedStop}, thresholdTerm: ${thresholdTerm}, thresholdValue: ${thresholdValue}, thresholdUnits: ${thresholdUnits}, thresholdComparison: ${thresholdComparison}, marginMinimumDb: ${marginMinimumDb}, marginMeanDb: ${marginMeanDb}, marginMaximumDb: ${marginMaximumDb}, marginMinimumAt: ${marginMinimumAt}, elevationMaximumDeg: ${elevationMaximumDeg}, elevationAtAcquisitionDeg: ${elevationAtAcquisitionDeg}, elevationAtLossDeg: ${elevationAtLossDeg}, rangeMinimumM: ${rangeMinimumM}, dataVolumeBits: ${dataVolumeBits}, meanDataRateBps: ${meanDataRateBps}, peakDataRateBps: ${peakDataRateBps}, limitingConstraint: ${limitingConstraint}, limitingConstraintNote: ${limitingConstraintNote}, limitingConstraintAt: ${limitingConstraintAt}, outageCount: ${outageCount}, outageTotalS: ${outageTotalS}, outageLongestS: ${outageLongestS}, availabilityFraction: ${availabilityFraction}, bestServer: ${bestServer}, HANDOVER: ${HANDOVER}, rflSampleFirstIndex: ${rflSampleFirstIndex}, rflSampleLastIndex: ${rflSampleLastIndex}, sampleCount: ${sampleCount}}';
+  }
+}
+
+class _ACIIntervalReader extends fb.TableReader<ACIInterval> {
+  const _ACIIntervalReader();
+
+  @override
+  ACIInterval createObject(fb.BufferContext bc, int offset) =>
+    ACIInterval._(bc, offset);
+}
+
+class ACIIntervalBuilder {
+  ACIIntervalBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(37);
+  }
+
+  int addIntervalIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addIntervalKind(aciIntervalKind? INTERVAL_KIND) {
+    fbBuilder.addInt8(1, INTERVAL_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addLinkIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitEndpointIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiveEndpointIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAcquisitionTime(double? ACQUISITION_TIME) {
+    fbBuilder.addFloat64(5, ACQUISITION_TIME);
+    return fbBuilder.offset;
+  }
+  int addLossTime(double? LOSS_TIME) {
+    fbBuilder.addFloat64(6, LOSS_TIME);
+    return fbBuilder.offset;
+  }
+  int addDurationS(double? DURATION_S) {
+    fbBuilder.addFloat64(7, DURATION_S);
+    return fbBuilder.offset;
+  }
+  int addThresholdSatisfiedStart(double? THRESHOLD_SATISFIED_START) {
+    fbBuilder.addFloat64(8, THRESHOLD_SATISFIED_START);
+    return fbBuilder.offset;
+  }
+  int addThresholdSatisfiedStop(double? THRESHOLD_SATISFIED_STOP) {
+    fbBuilder.addFloat64(9, THRESHOLD_SATISFIED_STOP);
+    return fbBuilder.offset;
+  }
+  int addThresholdTerm(rflBudgetTerm? THRESHOLD_TERM) {
+    fbBuilder.addInt8(10, THRESHOLD_TERM?.value);
+    return fbBuilder.offset;
+  }
+  int addThresholdValue(double? THRESHOLD_VALUE) {
+    fbBuilder.addFloat64(11, THRESHOLD_VALUE);
+    return fbBuilder.offset;
+  }
+  int addThresholdUnitsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addThresholdComparison(rflComparison? THRESHOLD_COMPARISON) {
+    fbBuilder.addInt8(13, THRESHOLD_COMPARISON?.value);
+    return fbBuilder.offset;
+  }
+  int addMarginMinimumDb(double? MARGIN_MINIMUM_DB) {
+    fbBuilder.addFloat64(14, MARGIN_MINIMUM_DB);
+    return fbBuilder.offset;
+  }
+  int addMarginMeanDb(double? MARGIN_MEAN_DB) {
+    fbBuilder.addFloat64(15, MARGIN_MEAN_DB);
+    return fbBuilder.offset;
+  }
+  int addMarginMaximumDb(double? MARGIN_MAXIMUM_DB) {
+    fbBuilder.addFloat64(16, MARGIN_MAXIMUM_DB);
+    return fbBuilder.offset;
+  }
+  int addMarginMinimumAt(double? MARGIN_MINIMUM_AT) {
+    fbBuilder.addFloat64(17, MARGIN_MINIMUM_AT);
+    return fbBuilder.offset;
+  }
+  int addElevationMaximumDeg(double? ELEVATION_MAXIMUM_DEG) {
+    fbBuilder.addFloat64(18, ELEVATION_MAXIMUM_DEG);
+    return fbBuilder.offset;
+  }
+  int addElevationAtAcquisitionDeg(double? ELEVATION_AT_ACQUISITION_DEG) {
+    fbBuilder.addFloat64(19, ELEVATION_AT_ACQUISITION_DEG);
+    return fbBuilder.offset;
+  }
+  int addElevationAtLossDeg(double? ELEVATION_AT_LOSS_DEG) {
+    fbBuilder.addFloat64(20, ELEVATION_AT_LOSS_DEG);
+    return fbBuilder.offset;
+  }
+  int addRangeMinimumM(double? RANGE_MINIMUM_M) {
+    fbBuilder.addFloat64(21, RANGE_MINIMUM_M);
+    return fbBuilder.offset;
+  }
+  int addDataVolumeBits(double? DATA_VOLUME_BITS) {
+    fbBuilder.addFloat64(22, DATA_VOLUME_BITS);
+    return fbBuilder.offset;
+  }
+  int addMeanDataRateBps(double? MEAN_DATA_RATE_BPS) {
+    fbBuilder.addFloat64(23, MEAN_DATA_RATE_BPS);
+    return fbBuilder.offset;
+  }
+  int addPeakDataRateBps(double? PEAK_DATA_RATE_BPS) {
+    fbBuilder.addFloat64(24, PEAK_DATA_RATE_BPS);
+    return fbBuilder.offset;
+  }
+  int addLimitingConstraint(rflConstraint? LIMITING_CONSTRAINT) {
+    fbBuilder.addInt8(25, LIMITING_CONSTRAINT?.value);
+    return fbBuilder.offset;
+  }
+  int addLimitingConstraintNoteOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addLimitingConstraintAt(double? LIMITING_CONSTRAINT_AT) {
+    fbBuilder.addFloat64(27, LIMITING_CONSTRAINT_AT);
+    return fbBuilder.offset;
+  }
+  int addOutageCount(int? OUTAGE_COUNT) {
+    fbBuilder.addUint32(28, OUTAGE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addOutageTotalS(double? OUTAGE_TOTAL_S) {
+    fbBuilder.addFloat64(29, OUTAGE_TOTAL_S);
+    return fbBuilder.offset;
+  }
+  int addOutageLongestS(double? OUTAGE_LONGEST_S) {
+    fbBuilder.addFloat64(30, OUTAGE_LONGEST_S);
+    return fbBuilder.offset;
+  }
+  int addAvailabilityFraction(double? AVAILABILITY_FRACTION) {
+    fbBuilder.addFloat64(31, AVAILABILITY_FRACTION);
+    return fbBuilder.offset;
+  }
+  int addBestServerOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addHandoverOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addRflSampleFirstIndex(int? RFL_SAMPLE_FIRST_INDEX) {
+    fbBuilder.addUint32(34, RFL_SAMPLE_FIRST_INDEX);
+    return fbBuilder.offset;
+  }
+  int addRflSampleLastIndex(int? RFL_SAMPLE_LAST_INDEX) {
+    fbBuilder.addUint32(35, RFL_SAMPLE_LAST_INDEX);
+    return fbBuilder.offset;
+  }
+  int addSampleCount(int? SAMPLE_COUNT) {
+    fbBuilder.addUint32(36, SAMPLE_COUNT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACIIntervalObjectBuilder extends fb.ObjectBuilder {
+  final String? _INTERVAL_ID;
+  final aciIntervalKind? _INTERVAL_KIND;
+  final String? _LINK_ID;
+  final String? _TRANSMIT_ENDPOINT_ID;
+  final String? _RECEIVE_ENDPOINT_ID;
+  final double? _ACQUISITION_TIME;
+  final double? _LOSS_TIME;
+  final double? _DURATION_S;
+  final double? _THRESHOLD_SATISFIED_START;
+  final double? _THRESHOLD_SATISFIED_STOP;
+  final rflBudgetTerm? _THRESHOLD_TERM;
+  final double? _THRESHOLD_VALUE;
+  final String? _THRESHOLD_UNITS;
+  final rflComparison? _THRESHOLD_COMPARISON;
+  final double? _MARGIN_MINIMUM_DB;
+  final double? _MARGIN_MEAN_DB;
+  final double? _MARGIN_MAXIMUM_DB;
+  final double? _MARGIN_MINIMUM_AT;
+  final double? _ELEVATION_MAXIMUM_DEG;
+  final double? _ELEVATION_AT_ACQUISITION_DEG;
+  final double? _ELEVATION_AT_LOSS_DEG;
+  final double? _RANGE_MINIMUM_M;
+  final double? _DATA_VOLUME_BITS;
+  final double? _MEAN_DATA_RATE_BPS;
+  final double? _PEAK_DATA_RATE_BPS;
+  final rflConstraint? _LIMITING_CONSTRAINT;
+  final String? _LIMITING_CONSTRAINT_NOTE;
+  final double? _LIMITING_CONSTRAINT_AT;
+  final int? _OUTAGE_COUNT;
+  final double? _OUTAGE_TOTAL_S;
+  final double? _OUTAGE_LONGEST_S;
+  final double? _AVAILABILITY_FRACTION;
+  final ACIBestServerObjectBuilder? _BEST_SERVER;
+  final ACIHandoverObjectBuilder? _HANDOVER;
+  final int? _RFL_SAMPLE_FIRST_INDEX;
+  final int? _RFL_SAMPLE_LAST_INDEX;
+  final int? _SAMPLE_COUNT;
+
+  ACIIntervalObjectBuilder({
+    String? INTERVAL_ID,
+    String? intervalId,
+    aciIntervalKind? INTERVAL_KIND,
+    aciIntervalKind? intervalKind,
+    String? LINK_ID,
+    String? linkId,
+    String? TRANSMIT_ENDPOINT_ID,
+    String? transmitEndpointId,
+    String? RECEIVE_ENDPOINT_ID,
+    String? receiveEndpointId,
+    double? ACQUISITION_TIME,
+    double? acquisitionTime,
+    double? LOSS_TIME,
+    double? lossTime,
+    double? DURATION_S,
+    double? durationS,
+    double? THRESHOLD_SATISFIED_START,
+    double? thresholdSatisfiedStart,
+    double? THRESHOLD_SATISFIED_STOP,
+    double? thresholdSatisfiedStop,
+    rflBudgetTerm? THRESHOLD_TERM,
+    rflBudgetTerm? thresholdTerm,
+    double? THRESHOLD_VALUE,
+    double? thresholdValue,
+    String? THRESHOLD_UNITS,
+    String? thresholdUnits,
+    rflComparison? THRESHOLD_COMPARISON,
+    rflComparison? thresholdComparison,
+    double? MARGIN_MINIMUM_DB,
+    double? marginMinimumDb,
+    double? MARGIN_MEAN_DB,
+    double? marginMeanDb,
+    double? MARGIN_MAXIMUM_DB,
+    double? marginMaximumDb,
+    double? MARGIN_MINIMUM_AT,
+    double? marginMinimumAt,
+    double? ELEVATION_MAXIMUM_DEG,
+    double? elevationMaximumDeg,
+    double? ELEVATION_AT_ACQUISITION_DEG,
+    double? elevationAtAcquisitionDeg,
+    double? ELEVATION_AT_LOSS_DEG,
+    double? elevationAtLossDeg,
+    double? RANGE_MINIMUM_M,
+    double? rangeMinimumM,
+    double? DATA_VOLUME_BITS,
+    double? dataVolumeBits,
+    double? MEAN_DATA_RATE_BPS,
+    double? meanDataRateBps,
+    double? PEAK_DATA_RATE_BPS,
+    double? peakDataRateBps,
+    rflConstraint? LIMITING_CONSTRAINT,
+    rflConstraint? limitingConstraint,
+    String? LIMITING_CONSTRAINT_NOTE,
+    String? limitingConstraintNote,
+    double? LIMITING_CONSTRAINT_AT,
+    double? limitingConstraintAt,
+    int? OUTAGE_COUNT,
+    int? outageCount,
+    double? OUTAGE_TOTAL_S,
+    double? outageTotalS,
+    double? OUTAGE_LONGEST_S,
+    double? outageLongestS,
+    double? AVAILABILITY_FRACTION,
+    double? availabilityFraction,
+    ACIBestServerObjectBuilder? BEST_SERVER,
+    ACIBestServerObjectBuilder? bestServer,
+    ACIHandoverObjectBuilder? HANDOVER,
+    int? RFL_SAMPLE_FIRST_INDEX,
+    int? rflSampleFirstIndex,
+    int? RFL_SAMPLE_LAST_INDEX,
+    int? rflSampleLastIndex,
+    int? SAMPLE_COUNT,
+    int? sampleCount,
+  })
+      : _INTERVAL_ID = intervalId ?? INTERVAL_ID,
+        _INTERVAL_KIND = intervalKind ?? INTERVAL_KIND,
+        _LINK_ID = linkId ?? LINK_ID,
+        _TRANSMIT_ENDPOINT_ID = transmitEndpointId ?? TRANSMIT_ENDPOINT_ID,
+        _RECEIVE_ENDPOINT_ID = receiveEndpointId ?? RECEIVE_ENDPOINT_ID,
+        _ACQUISITION_TIME = acquisitionTime ?? ACQUISITION_TIME,
+        _LOSS_TIME = lossTime ?? LOSS_TIME,
+        _DURATION_S = durationS ?? DURATION_S,
+        _THRESHOLD_SATISFIED_START = thresholdSatisfiedStart ?? THRESHOLD_SATISFIED_START,
+        _THRESHOLD_SATISFIED_STOP = thresholdSatisfiedStop ?? THRESHOLD_SATISFIED_STOP,
+        _THRESHOLD_TERM = thresholdTerm ?? THRESHOLD_TERM,
+        _THRESHOLD_VALUE = thresholdValue ?? THRESHOLD_VALUE,
+        _THRESHOLD_UNITS = thresholdUnits ?? THRESHOLD_UNITS,
+        _THRESHOLD_COMPARISON = thresholdComparison ?? THRESHOLD_COMPARISON,
+        _MARGIN_MINIMUM_DB = marginMinimumDb ?? MARGIN_MINIMUM_DB,
+        _MARGIN_MEAN_DB = marginMeanDb ?? MARGIN_MEAN_DB,
+        _MARGIN_MAXIMUM_DB = marginMaximumDb ?? MARGIN_MAXIMUM_DB,
+        _MARGIN_MINIMUM_AT = marginMinimumAt ?? MARGIN_MINIMUM_AT,
+        _ELEVATION_MAXIMUM_DEG = elevationMaximumDeg ?? ELEVATION_MAXIMUM_DEG,
+        _ELEVATION_AT_ACQUISITION_DEG = elevationAtAcquisitionDeg ?? ELEVATION_AT_ACQUISITION_DEG,
+        _ELEVATION_AT_LOSS_DEG = elevationAtLossDeg ?? ELEVATION_AT_LOSS_DEG,
+        _RANGE_MINIMUM_M = rangeMinimumM ?? RANGE_MINIMUM_M,
+        _DATA_VOLUME_BITS = dataVolumeBits ?? DATA_VOLUME_BITS,
+        _MEAN_DATA_RATE_BPS = meanDataRateBps ?? MEAN_DATA_RATE_BPS,
+        _PEAK_DATA_RATE_BPS = peakDataRateBps ?? PEAK_DATA_RATE_BPS,
+        _LIMITING_CONSTRAINT = limitingConstraint ?? LIMITING_CONSTRAINT,
+        _LIMITING_CONSTRAINT_NOTE = limitingConstraintNote ?? LIMITING_CONSTRAINT_NOTE,
+        _LIMITING_CONSTRAINT_AT = limitingConstraintAt ?? LIMITING_CONSTRAINT_AT,
+        _OUTAGE_COUNT = outageCount ?? OUTAGE_COUNT,
+        _OUTAGE_TOTAL_S = outageTotalS ?? OUTAGE_TOTAL_S,
+        _OUTAGE_LONGEST_S = outageLongestS ?? OUTAGE_LONGEST_S,
+        _AVAILABILITY_FRACTION = availabilityFraction ?? AVAILABILITY_FRACTION,
+        _BEST_SERVER = bestServer ?? BEST_SERVER,
+        _HANDOVER = HANDOVER,
+        _RFL_SAMPLE_FIRST_INDEX = rflSampleFirstIndex ?? RFL_SAMPLE_FIRST_INDEX,
+        _RFL_SAMPLE_LAST_INDEX = rflSampleLastIndex ?? RFL_SAMPLE_LAST_INDEX,
+        _SAMPLE_COUNT = sampleCount ?? SAMPLE_COUNT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INTERVAL_IDOffset = _INTERVAL_ID == null ? null
+        : fbBuilder.writeString(_INTERVAL_ID!);
+    final int? LINK_IDOffset = _LINK_ID == null ? null
+        : fbBuilder.writeString(_LINK_ID!);
+    final int? TRANSMIT_ENDPOINT_IDOffset = _TRANSMIT_ENDPOINT_ID == null ? null
+        : fbBuilder.writeString(_TRANSMIT_ENDPOINT_ID!);
+    final int? RECEIVE_ENDPOINT_IDOffset = _RECEIVE_ENDPOINT_ID == null ? null
+        : fbBuilder.writeString(_RECEIVE_ENDPOINT_ID!);
+    final int? THRESHOLD_UNITSOffset = _THRESHOLD_UNITS == null ? null
+        : fbBuilder.writeString(_THRESHOLD_UNITS!);
+    final int? LIMITING_CONSTRAINT_NOTEOffset = _LIMITING_CONSTRAINT_NOTE == null ? null
+        : fbBuilder.writeString(_LIMITING_CONSTRAINT_NOTE!);
+    final int? BEST_SERVEROffset = _BEST_SERVER?.getOrCreateOffset(fbBuilder);
+    final int? HANDOVEROffset = _HANDOVER?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(37);
+    fbBuilder.addOffset(0, INTERVAL_IDOffset);
+    fbBuilder.addInt8(1, _INTERVAL_KIND?.value);
+    fbBuilder.addOffset(2, LINK_IDOffset);
+    fbBuilder.addOffset(3, TRANSMIT_ENDPOINT_IDOffset);
+    fbBuilder.addOffset(4, RECEIVE_ENDPOINT_IDOffset);
+    fbBuilder.addFloat64(5, _ACQUISITION_TIME);
+    fbBuilder.addFloat64(6, _LOSS_TIME);
+    fbBuilder.addFloat64(7, _DURATION_S);
+    fbBuilder.addFloat64(8, _THRESHOLD_SATISFIED_START);
+    fbBuilder.addFloat64(9, _THRESHOLD_SATISFIED_STOP);
+    fbBuilder.addInt8(10, _THRESHOLD_TERM?.value);
+    fbBuilder.addFloat64(11, _THRESHOLD_VALUE);
+    fbBuilder.addOffset(12, THRESHOLD_UNITSOffset);
+    fbBuilder.addInt8(13, _THRESHOLD_COMPARISON?.value);
+    fbBuilder.addFloat64(14, _MARGIN_MINIMUM_DB);
+    fbBuilder.addFloat64(15, _MARGIN_MEAN_DB);
+    fbBuilder.addFloat64(16, _MARGIN_MAXIMUM_DB);
+    fbBuilder.addFloat64(17, _MARGIN_MINIMUM_AT);
+    fbBuilder.addFloat64(18, _ELEVATION_MAXIMUM_DEG);
+    fbBuilder.addFloat64(19, _ELEVATION_AT_ACQUISITION_DEG);
+    fbBuilder.addFloat64(20, _ELEVATION_AT_LOSS_DEG);
+    fbBuilder.addFloat64(21, _RANGE_MINIMUM_M);
+    fbBuilder.addFloat64(22, _DATA_VOLUME_BITS);
+    fbBuilder.addFloat64(23, _MEAN_DATA_RATE_BPS);
+    fbBuilder.addFloat64(24, _PEAK_DATA_RATE_BPS);
+    fbBuilder.addInt8(25, _LIMITING_CONSTRAINT?.value);
+    fbBuilder.addOffset(26, LIMITING_CONSTRAINT_NOTEOffset);
+    fbBuilder.addFloat64(27, _LIMITING_CONSTRAINT_AT);
+    fbBuilder.addUint32(28, _OUTAGE_COUNT);
+    fbBuilder.addFloat64(29, _OUTAGE_TOTAL_S);
+    fbBuilder.addFloat64(30, _OUTAGE_LONGEST_S);
+    fbBuilder.addFloat64(31, _AVAILABILITY_FRACTION);
+    fbBuilder.addOffset(32, BEST_SERVEROffset);
+    fbBuilder.addOffset(33, HANDOVEROffset);
+    fbBuilder.addUint32(34, _RFL_SAMPLE_FIRST_INDEX);
+    fbBuilder.addUint32(35, _RFL_SAMPLE_LAST_INDEX);
+    fbBuilder.addUint32(36, _SAMPLE_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Where this interval set came from.
+class ACIProvenance {
+  ACIProvenance._(this._bc, this._bcOffset);
+  factory ACIProvenance(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACIProvenance> reader = _ACIProvenanceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  rflMethod get METHOD => rflMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Producing system, dataset or campaign. Required.
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Replayable query or scenario reference.
+  String? get SOURCE_QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sourceQuery => SOURCE_QUERY;
+  ///  Propagator that produced the geometry the boundaries were found in. A
+  ///  MODELED or HYBRID interval set MUST name it: the propagator is a
+  ///  pluggable choice and never an assumed default.
+  String? get PROPAGATOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get propagatorId => PROPAGATOR_ID;
+  String? get PROPAGATOR_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get propagatorVersion => PROPAGATOR_VERSION;
+  String? get PROPAGATOR_CONFIGURATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get propagatorConfiguration => PROPAGATOR_CONFIGURATION;
+  ///  `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that computed the intervals.
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get moduleId => MODULE_ID;
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get moduleVersion => MODULE_VERSION;
+  String? get MODULE_CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get moduleContentHash => MODULE_CONTENT_HASH;
+  ///  Sampling step of the underlying grid, seconds.
+  double get SAMPLING_STEP_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get samplingStepS => SAMPLING_STEP_S;
+  ///  How a boundary between two samples was refined (e.g. "none", "linear",
+  ///  "bisection", "brent"). "none" means the boundary IS a grid epoch.
+  String? get BOUNDARY_REFINEMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get boundaryRefinement => BOUNDARY_REFINEMENT;
+  ///  Worst-case uncertainty of every boundary in this record, seconds. With
+  ///  no refinement this equals SAMPLING_STEP_S.
+  double get BOUNDARY_TOLERANCE_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get boundaryToleranceS => BOUNDARY_TOLERANCE_S;
+  ///  Minimum elevation applied, degrees, when a single mask governed the set.
+  double get MIN_ELEVATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get minElevationDeg => MIN_ELEVATION_DEG;
+  ///  Unix ms computed and retrieved.
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  int get computedAt => COMPUTED_AT;
+  int get RETRIEVED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 32, 0);
+  int get retrievedAt => RETRIEVED_AT;
+  ///  Licence terms. Empty means UNKNOWN TERMS — never a grant to
+  ///  redistribute.
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  bool get NON_COMMERCIAL_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
+  bool get nonCommercialOnly => NON_COMMERCIAL_ONLY;
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+
+  @override
+  String toString() {
+    return 'ACIProvenance{METHOD: ${METHOD}, SOURCE: ${SOURCE}, sourceQuery: ${sourceQuery}, propagatorId: ${propagatorId}, propagatorVersion: ${propagatorVersion}, propagatorConfiguration: ${propagatorConfiguration}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, moduleContentHash: ${moduleContentHash}, samplingStepS: ${samplingStepS}, boundaryRefinement: ${boundaryRefinement}, boundaryToleranceS: ${boundaryToleranceS}, minElevationDeg: ${minElevationDeg}, computedAt: ${computedAt}, retrievedAt: ${retrievedAt}, LICENSE: ${LICENSE}, nonCommercialOnly: ${nonCommercialOnly}, CITATION: ${CITATION}}';
+  }
+}
+
+class _ACIProvenanceReader extends fb.TableReader<ACIProvenance> {
+  const _ACIProvenanceReader();
+
+  @override
+  ACIProvenance createObject(fb.BufferContext bc, int offset) =>
+    ACIProvenance._(bc, offset);
+}
+
+class ACIProvenanceBuilder {
+  ACIProvenanceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(18);
+  }
+
+  int addMethod(rflMethod? METHOD) {
+    fbBuilder.addInt8(0, METHOD?.value);
+    return fbBuilder.offset;
+  }
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceQueryOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorVersionOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleContentHashOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addSamplingStepS(double? SAMPLING_STEP_S) {
+    fbBuilder.addFloat64(9, SAMPLING_STEP_S);
+    return fbBuilder.offset;
+  }
+  int addBoundaryRefinementOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addBoundaryToleranceS(double? BOUNDARY_TOLERANCE_S) {
+    fbBuilder.addFloat64(11, BOUNDARY_TOLERANCE_S);
+    return fbBuilder.offset;
+  }
+  int addMinElevationDeg(double? MIN_ELEVATION_DEG) {
+    fbBuilder.addFloat64(12, MIN_ELEVATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(13, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAt(int? RETRIEVED_AT) {
+    fbBuilder.addUint64(14, RETRIEVED_AT);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addNonCommercialOnly(bool? NON_COMMERCIAL_ONLY) {
+    fbBuilder.addBool(16, NON_COMMERCIAL_ONLY);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACIProvenanceObjectBuilder extends fb.ObjectBuilder {
+  final rflMethod? _METHOD;
+  final String? _SOURCE;
+  final String? _SOURCE_QUERY;
+  final String? _PROPAGATOR_ID;
+  final String? _PROPAGATOR_VERSION;
+  final String? _PROPAGATOR_CONFIGURATION;
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final String? _MODULE_CONTENT_HASH;
+  final double? _SAMPLING_STEP_S;
+  final String? _BOUNDARY_REFINEMENT;
+  final double? _BOUNDARY_TOLERANCE_S;
+  final double? _MIN_ELEVATION_DEG;
+  final int? _COMPUTED_AT;
+  final int? _RETRIEVED_AT;
+  final String? _LICENSE;
+  final bool? _NON_COMMERCIAL_ONLY;
+  final String? _CITATION;
+
+  ACIProvenanceObjectBuilder({
+    rflMethod? METHOD,
+    String? SOURCE,
+    String? SOURCE_QUERY,
+    String? sourceQuery,
+    String? PROPAGATOR_ID,
+    String? propagatorId,
+    String? PROPAGATOR_VERSION,
+    String? propagatorVersion,
+    String? PROPAGATOR_CONFIGURATION,
+    String? propagatorConfiguration,
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    String? MODULE_CONTENT_HASH,
+    String? moduleContentHash,
+    double? SAMPLING_STEP_S,
+    double? samplingStepS,
+    String? BOUNDARY_REFINEMENT,
+    String? boundaryRefinement,
+    double? BOUNDARY_TOLERANCE_S,
+    double? boundaryToleranceS,
+    double? MIN_ELEVATION_DEG,
+    double? minElevationDeg,
+    int? COMPUTED_AT,
+    int? computedAt,
+    int? RETRIEVED_AT,
+    int? retrievedAt,
+    String? LICENSE,
+    bool? NON_COMMERCIAL_ONLY,
+    bool? nonCommercialOnly,
+    String? CITATION,
+  })
+      : _METHOD = METHOD,
+        _SOURCE = SOURCE,
+        _SOURCE_QUERY = sourceQuery ?? SOURCE_QUERY,
+        _PROPAGATOR_ID = propagatorId ?? PROPAGATOR_ID,
+        _PROPAGATOR_VERSION = propagatorVersion ?? PROPAGATOR_VERSION,
+        _PROPAGATOR_CONFIGURATION = propagatorConfiguration ?? PROPAGATOR_CONFIGURATION,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _MODULE_CONTENT_HASH = moduleContentHash ?? MODULE_CONTENT_HASH,
+        _SAMPLING_STEP_S = samplingStepS ?? SAMPLING_STEP_S,
+        _BOUNDARY_REFINEMENT = boundaryRefinement ?? BOUNDARY_REFINEMENT,
+        _BOUNDARY_TOLERANCE_S = boundaryToleranceS ?? BOUNDARY_TOLERANCE_S,
+        _MIN_ELEVATION_DEG = minElevationDeg ?? MIN_ELEVATION_DEG,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
+        _LICENSE = LICENSE,
+        _NON_COMMERCIAL_ONLY = nonCommercialOnly ?? NON_COMMERCIAL_ONLY,
+        _CITATION = CITATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    final int? SOURCE_QUERYOffset = _SOURCE_QUERY == null ? null
+        : fbBuilder.writeString(_SOURCE_QUERY!);
+    final int? PROPAGATOR_IDOffset = _PROPAGATOR_ID == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_ID!);
+    final int? PROPAGATOR_VERSIONOffset = _PROPAGATOR_VERSION == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_VERSION!);
+    final int? PROPAGATOR_CONFIGURATIONOffset = _PROPAGATOR_CONFIGURATION == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_CONFIGURATION!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? MODULE_CONTENT_HASHOffset = _MODULE_CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_MODULE_CONTENT_HASH!);
+    final int? BOUNDARY_REFINEMENTOffset = _BOUNDARY_REFINEMENT == null ? null
+        : fbBuilder.writeString(_BOUNDARY_REFINEMENT!);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? CITATIONOffset = _CITATION == null ? null
+        : fbBuilder.writeString(_CITATION!);
+    fbBuilder.startTable(18);
+    fbBuilder.addInt8(0, _METHOD?.value);
+    fbBuilder.addOffset(1, SOURCEOffset);
+    fbBuilder.addOffset(2, SOURCE_QUERYOffset);
+    fbBuilder.addOffset(3, PROPAGATOR_IDOffset);
+    fbBuilder.addOffset(4, PROPAGATOR_VERSIONOffset);
+    fbBuilder.addOffset(5, PROPAGATOR_CONFIGURATIONOffset);
+    fbBuilder.addOffset(6, MODULE_IDOffset);
+    fbBuilder.addOffset(7, MODULE_VERSIONOffset);
+    fbBuilder.addOffset(8, MODULE_CONTENT_HASHOffset);
+    fbBuilder.addFloat64(9, _SAMPLING_STEP_S);
+    fbBuilder.addOffset(10, BOUNDARY_REFINEMENTOffset);
+    fbBuilder.addFloat64(11, _BOUNDARY_TOLERANCE_S);
+    fbBuilder.addFloat64(12, _MIN_ELEVATION_DEG);
+    fbBuilder.addUint64(13, _COMPUTED_AT);
+    fbBuilder.addUint64(14, _RETRIEVED_AT);
+    fbBuilder.addOffset(15, LICENSEOffset);
+    fbBuilder.addBool(16, _NON_COMMERCIAL_ONLY);
+    fbBuilder.addOffset(17, CITATIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Data carried by one modulation-and-coding choice during one interval.
+///  Entries are explicit rows so FlatSQL and `$RPT` can group volume by link,
+///  interval, or choice without decoding a producer-specific map.
+class ACIDataVolumeByModCod {
+  ACIDataVolumeByModCod._(this._bc, this._bcOffset);
+  factory ACIDataVolumeByModCod(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACIDataVolumeByModCod> reader = _ACIDataVolumeByModCodReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  ACIInterval.INTERVAL_ID this row summarizes.
+  String? get INTERVAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get intervalId => INTERVAL_ID;
+  ///  ACIInterval.LINK_ID / RFLLink.LINK_ID.
+  String? get LINK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get linkId => LINK_ID;
+  ///  Index into the link's RFLLink.MODCOD_SET.
+  int get MODCOD_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get modcodIndex => MODCOD_INDEX;
+  ///  Stable RFLModCod.MODCOD_ID copied for queryability across records.
+  String? get MODCOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get modcodId => MODCOD_ID;
+  double get DURATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get durationS => DURATION_S;
+  double get DATA_VOLUME_BITS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get dataVolumeBits => DATA_VOLUME_BITS;
+  double get MEAN_DATA_RATE_BPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get meanDataRateBps => MEAN_DATA_RATE_BPS;
+  int get SAMPLE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get sampleCount => SAMPLE_COUNT;
+
+  @override
+  String toString() {
+    return 'ACIDataVolumeByModCod{intervalId: ${intervalId}, linkId: ${linkId}, modcodIndex: ${modcodIndex}, modcodId: ${modcodId}, durationS: ${durationS}, dataVolumeBits: ${dataVolumeBits}, meanDataRateBps: ${meanDataRateBps}, sampleCount: ${sampleCount}}';
+  }
+}
+
+class _ACIDataVolumeByModCodReader extends fb.TableReader<ACIDataVolumeByModCod> {
+  const _ACIDataVolumeByModCodReader();
+
+  @override
+  ACIDataVolumeByModCod createObject(fb.BufferContext bc, int offset) =>
+    ACIDataVolumeByModCod._(bc, offset);
+}
+
+class ACIDataVolumeByModCodBuilder {
+  ACIDataVolumeByModCodBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addIntervalIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addLinkIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addModcodIndex(int? MODCOD_INDEX) {
+    fbBuilder.addUint32(2, MODCOD_INDEX);
+    return fbBuilder.offset;
+  }
+  int addModcodIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDurationS(double? DURATION_S) {
+    fbBuilder.addFloat64(4, DURATION_S);
+    return fbBuilder.offset;
+  }
+  int addDataVolumeBits(double? DATA_VOLUME_BITS) {
+    fbBuilder.addFloat64(5, DATA_VOLUME_BITS);
+    return fbBuilder.offset;
+  }
+  int addMeanDataRateBps(double? MEAN_DATA_RATE_BPS) {
+    fbBuilder.addFloat64(6, MEAN_DATA_RATE_BPS);
+    return fbBuilder.offset;
+  }
+  int addSampleCount(int? SAMPLE_COUNT) {
+    fbBuilder.addUint32(7, SAMPLE_COUNT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACIDataVolumeByModCodObjectBuilder extends fb.ObjectBuilder {
+  final String? _INTERVAL_ID;
+  final String? _LINK_ID;
+  final int? _MODCOD_INDEX;
+  final String? _MODCOD_ID;
+  final double? _DURATION_S;
+  final double? _DATA_VOLUME_BITS;
+  final double? _MEAN_DATA_RATE_BPS;
+  final int? _SAMPLE_COUNT;
+
+  ACIDataVolumeByModCodObjectBuilder({
+    String? INTERVAL_ID,
+    String? intervalId,
+    String? LINK_ID,
+    String? linkId,
+    int? MODCOD_INDEX,
+    int? modcodIndex,
+    String? MODCOD_ID,
+    String? modcodId,
+    double? DURATION_S,
+    double? durationS,
+    double? DATA_VOLUME_BITS,
+    double? dataVolumeBits,
+    double? MEAN_DATA_RATE_BPS,
+    double? meanDataRateBps,
+    int? SAMPLE_COUNT,
+    int? sampleCount,
+  })
+      : _INTERVAL_ID = intervalId ?? INTERVAL_ID,
+        _LINK_ID = linkId ?? LINK_ID,
+        _MODCOD_INDEX = modcodIndex ?? MODCOD_INDEX,
+        _MODCOD_ID = modcodId ?? MODCOD_ID,
+        _DURATION_S = durationS ?? DURATION_S,
+        _DATA_VOLUME_BITS = dataVolumeBits ?? DATA_VOLUME_BITS,
+        _MEAN_DATA_RATE_BPS = meanDataRateBps ?? MEAN_DATA_RATE_BPS,
+        _SAMPLE_COUNT = sampleCount ?? SAMPLE_COUNT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INTERVAL_IDOffset = _INTERVAL_ID == null ? null
+        : fbBuilder.writeString(_INTERVAL_ID!);
+    final int? LINK_IDOffset = _LINK_ID == null ? null
+        : fbBuilder.writeString(_LINK_ID!);
+    final int? MODCOD_IDOffset = _MODCOD_ID == null ? null
+        : fbBuilder.writeString(_MODCOD_ID!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, INTERVAL_IDOffset);
+    fbBuilder.addOffset(1, LINK_IDOffset);
+    fbBuilder.addUint32(2, _MODCOD_INDEX);
+    fbBuilder.addOffset(3, MODCOD_IDOffset);
+    fbBuilder.addFloat64(4, _DURATION_S);
+    fbBuilder.addFloat64(5, _DATA_VOLUME_BITS);
+    fbBuilder.addFloat64(6, _MEAN_DATA_RATE_BPS);
+    fbBuilder.addUint32(7, _SAMPLE_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Access Interval
+class ACI {
+  ACI._(this._bc, this._bcOffset);
+  factory ACI(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACI> reader = _ACIReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable identifier of this interval set.
+  String? get ACI_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get aciId => ACI_ID;
+  ///  Display name.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Analysis or scenario grouping identifier shared with the `$RFL` samples
+  ///  and `$CVP` geometry of the same study.
+  String? get SCENARIO_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get scenarioId => SCENARIO_ID;
+  ///  `$RFL.RFL_ID` these intervals were derived from, when they were derived
+  ///  from a published sample set. Absent for measured or scheduled intervals.
+  String? get RFL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get rflId => RFL_ID;
+  ///  The intervals.
+  List<ACIInterval>? get INTERVALS => const fb.ListReader<ACIInterval>(ACIInterval.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Analysis window, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM. An
+  ///  interval set states its window so "no intervals" can be distinguished
+  ///  from "not analysed".
+  double get WINDOW_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get windowStart => WINDOW_START;
+  double get WINDOW_STOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get windowStop => WINDOW_STOP;
+  ///  Time scale all epochs in this record are expressed in. Defaults to UTC
+  ///  explicitly: `timingStandard` ordinal 0 is GMST.
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 11));
+  timingStandard get timeSystem => TIME_SYSTEM;
+  ///  Provenance. Required.
+  ACIProvenance? get PROVENANCE => ACIProvenance.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Unix ms this record was serialized.
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get computedAt => COMPUTED_AT;
+  ///  `$EPM` identifier of the producing node.
+  String? get PRODUCER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get producerId => PRODUCER_ID;
+  ///  Ed25519 signature by the producing `$EPM` over the size-prefixed
+  ///  FlatBuffer projection with both 64-byte signature payloads zeroed while
+  ///  preserving their vectors and offsets.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  ///  field order, IDL capitalization, no insignificant whitespace, and both
+  ///  signature fields omitted.
+  List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 28);
+  List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
+  ///  Per-interval delivered volume grouped by selected modulation-and-coding
+  ///  entry. The sum for an interval equals ACIInterval.DATA_VOLUME_BITS.
+  List<ACIDataVolumeByModCod>? get DATA_VOLUME_BY_MODCOD => const fb.ListReader<ACIDataVolumeByModCod>(ACIDataVolumeByModCod.reader).vTableGetNullable(_bc, _bcOffset, 30);
+  List<ACIDataVolumeByModCod>? get dataVolumeByModcod => DATA_VOLUME_BY_MODCOD;
+
+  @override
+  String toString() {
+    return 'ACI{aciId: ${aciId}, NAME: ${NAME}, scenarioId: ${scenarioId}, rflId: ${rflId}, INTERVALS: ${INTERVALS}, windowStart: ${windowStart}, windowStop: ${windowStop}, timeSystem: ${timeSystem}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}, dataVolumeByModcod: ${dataVolumeByModcod}}';
+  }
+}
+
+class _ACIReader extends fb.TableReader<ACI> {
+  const _ACIReader();
+
+  @override
+  ACI createObject(fb.BufferContext bc, int offset) =>
+    ACI._(bc, offset);
+}
+
+class ACIBuilder {
+  ACIBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(14);
+  }
+
+  int addAciIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addScenarioIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRflIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addIntervalsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowStart(double? WINDOW_START) {
+    fbBuilder.addFloat64(5, WINDOW_START);
+    return fbBuilder.offset;
+  }
+  int addWindowStop(double? WINDOW_STOP) {
+    fbBuilder.addFloat64(6, WINDOW_STOP);
+    return fbBuilder.offset;
+  }
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
+    fbBuilder.addInt8(7, TIME_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(9, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addProducerIdOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalJsonSignatureOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addDataVolumeByModcodOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACIObjectBuilder extends fb.ObjectBuilder {
+  final String? _ACI_ID;
+  final String? _NAME;
+  final String? _SCENARIO_ID;
+  final String? _RFL_ID;
+  final List<ACIIntervalObjectBuilder>? _INTERVALS;
+  final double? _WINDOW_START;
+  final double? _WINDOW_STOP;
+  final timingStandard? _TIME_SYSTEM;
+  final ACIProvenanceObjectBuilder? _PROVENANCE;
+  final int? _COMPUTED_AT;
+  final String? _PRODUCER_ID;
+  final List<int>? _SIGNATURE;
+  final List<int>? _CANONICAL_JSON_SIGNATURE;
+  final List<ACIDataVolumeByModCodObjectBuilder>? _DATA_VOLUME_BY_MODCOD;
+
+  ACIObjectBuilder({
+    String? ACI_ID,
+    String? aciId,
+    String? NAME,
+    String? SCENARIO_ID,
+    String? scenarioId,
+    String? RFL_ID,
+    String? rflId,
+    List<ACIIntervalObjectBuilder>? INTERVALS,
+    double? WINDOW_START,
+    double? windowStart,
+    double? WINDOW_STOP,
+    double? windowStop,
+    timingStandard? TIME_SYSTEM,
+    timingStandard? timeSystem,
+    ACIProvenanceObjectBuilder? PROVENANCE,
+    int? COMPUTED_AT,
+    int? computedAt,
+    String? PRODUCER_ID,
+    String? producerId,
+    List<int>? SIGNATURE,
+    List<int>? CANONICAL_JSON_SIGNATURE,
+    List<int>? canonicalJsonSignature,
+    List<ACIDataVolumeByModCodObjectBuilder>? DATA_VOLUME_BY_MODCOD,
+    List<ACIDataVolumeByModCodObjectBuilder>? dataVolumeByModcod,
+  })
+      : _ACI_ID = aciId ?? ACI_ID,
+        _NAME = NAME,
+        _SCENARIO_ID = scenarioId ?? SCENARIO_ID,
+        _RFL_ID = rflId ?? RFL_ID,
+        _INTERVALS = INTERVALS,
+        _WINDOW_START = windowStart ?? WINDOW_START,
+        _WINDOW_STOP = windowStop ?? WINDOW_STOP,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _PROVENANCE = PROVENANCE,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _PRODUCER_ID = producerId ?? PRODUCER_ID,
+        _SIGNATURE = SIGNATURE,
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE,
+        _DATA_VOLUME_BY_MODCOD = dataVolumeByModcod ?? DATA_VOLUME_BY_MODCOD;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ACI_IDOffset = _ACI_ID == null ? null
+        : fbBuilder.writeString(_ACI_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? SCENARIO_IDOffset = _SCENARIO_ID == null ? null
+        : fbBuilder.writeString(_SCENARIO_ID!);
+    final int? RFL_IDOffset = _RFL_ID == null ? null
+        : fbBuilder.writeString(_RFL_ID!);
+    final int? INTERVALSOffset = _INTERVALS == null ? null
+        : fbBuilder.writeList(_INTERVALS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? PRODUCER_IDOffset = _PRODUCER_ID == null ? null
+        : fbBuilder.writeString(_PRODUCER_ID!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
+    final int? DATA_VOLUME_BY_MODCODOffset = _DATA_VOLUME_BY_MODCOD == null ? null
+        : fbBuilder.writeList(_DATA_VOLUME_BY_MODCOD!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(14);
+    fbBuilder.addOffset(0, ACI_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, SCENARIO_IDOffset);
+    fbBuilder.addOffset(3, RFL_IDOffset);
+    fbBuilder.addOffset(4, INTERVALSOffset);
+    fbBuilder.addFloat64(5, _WINDOW_START);
+    fbBuilder.addFloat64(6, _WINDOW_STOP);
+    fbBuilder.addInt8(7, _TIME_SYSTEM?.value);
+    fbBuilder.addOffset(8, PROVENANCEOffset);
+    fbBuilder.addUint64(9, _COMPUTED_AT);
+    fbBuilder.addOffset(10, PRODUCER_IDOffset);
+    fbBuilder.addOffset(11, SIGNATUREOffset);
+    fbBuilder.addOffset(12, CANONICAL_JSON_SIGNATUREOffset);
+    fbBuilder.addOffset(13, DATA_VOLUME_BY_MODCODOffset);
     return fbBuilder.endTable();
   }
 

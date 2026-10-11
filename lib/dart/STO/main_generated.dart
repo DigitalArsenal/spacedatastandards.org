@@ -5,149 +5,63 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  On-chain settlement mechanism a buyer's payment targets.
-enum settlementMechanism {
-  NativeTransfer(0),
-  Erc20Transfer(1),
-  EthSplitter(2),
-  SolSplitter(3),
-  DirectAddress(4);
-
-  final int value;
-  const settlementMechanism(this.value);
-
-  factory settlementMechanism.fromValue(int value) {
-    switch (value) {
-      case 0: return settlementMechanism.NativeTransfer;
-      case 1: return settlementMechanism.Erc20Transfer;
-      case 2: return settlementMechanism.EthSplitter;
-      case 3: return settlementMechanism.SolSplitter;
-      case 4: return settlementMechanism.DirectAddress;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static settlementMechanism? _createOrNull(int? value) =>
-      value == null ? null : settlementMechanism.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<settlementMechanism> reader = _settlementMechanismReader();
-}
-
-class _settlementMechanismReader extends fb.Reader<settlementMechanism> {
-  const _settlementMechanismReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  settlementMechanism read(fb.BufferContext bc, int offset) =>
-      settlementMechanism.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  How the purchase reference (`$PUR.REQUEST_ID`) is bound on-chain so a
-///  payment can be matched to an order replay-safely.
-enum memoBindingScheme {
-  NoMemo(0),
-  TxData(1),
-  SolMemo(2),
-  OpReturn(3);
-
-  final int value;
-  const memoBindingScheme(this.value);
-
-  factory memoBindingScheme.fromValue(int value) {
-    switch (value) {
-      case 0: return memoBindingScheme.NoMemo;
-      case 1: return memoBindingScheme.TxData;
-      case 2: return memoBindingScheme.SolMemo;
-      case 3: return memoBindingScheme.OpReturn;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static memoBindingScheme? _createOrNull(int? value) =>
-      value == null ? null : memoBindingScheme.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<memoBindingScheme> reader = _memoBindingSchemeReader();
-}
-
-class _memoBindingSchemeReader extends fb.Reader<memoBindingScheme> {
-  const _memoBindingSchemeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  memoBindingScheme read(fb.BufferContext bc, int offset) =>
-      memoBindingScheme.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Recipient of an on-chain revenue split. The identity binds to an `$EPM`
-///  via CHAIN_PROOFS so a payout address is provably the recipient's.
-class SplitRecipient {
-  SplitRecipient._(this._bc, this._bcOffset);
-  factory SplitRecipient(List<int> bytes) {
+///  Reference to the store module that runs a store.
+class STOModuleRef {
+  STOModuleRef._(this._bc, this._bcOffset);
+  factory STOModuleRef(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<SplitRecipient> reader = _SplitRecipientReader();
+  static const fb.Reader<STOModuleRef> reader = _STOModuleRefReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  IPFS CID of the recipient's Entity Profile Message (`$EPM`)
-  String? get EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get epmCid => EPM_CID;
-  ///  Settlement chain, e.g. "ethereum", "solana", "bitcoin"
-  String? get CHAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  On-chain payout address (EVM 0x / SOL base58 / BTC address)
-  String? get ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Account xpub the address derives from
-  String? get XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  `$PLG.PLUGIN_ID` of the store module
+  String? get PLUGIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get pluginId => PLUGIN_ID;
+  ///  Content hash of the (encrypted) store module artifact
+  String? get CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get contentHash => CONTENT_HASH;
+  ///  Module version
+  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
 
   @override
   String toString() {
-    return 'SplitRecipient{epmCid: ${epmCid}, CHAIN: ${CHAIN}, ADDRESS: ${ADDRESS}, XPUB: ${XPUB}}';
+    return 'STOModuleRef{pluginId: ${pluginId}, contentHash: ${contentHash}, VERSION: ${VERSION}}';
   }
 }
 
-class _SplitRecipientReader extends fb.TableReader<SplitRecipient> {
-  const _SplitRecipientReader();
+class _STOModuleRefReader extends fb.TableReader<STOModuleRef> {
+  const _STOModuleRefReader();
 
   @override
-  SplitRecipient createObject(fb.BufferContext bc, int offset) =>
-    SplitRecipient._(bc, offset);
+  STOModuleRef createObject(fb.BufferContext bc, int offset) =>
+    STOModuleRef._(bc, offset);
 }
 
-class SplitRecipientBuilder {
-  SplitRecipientBuilder(this.fbBuilder);
+class STOModuleRefBuilder {
+  STOModuleRefBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(3);
   }
 
-  int addEpmCidOffset(int? offset) {
+  int addPluginIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addChainOffset(int? offset) {
+  int addContentHashOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addAddressOffset(int? offset) {
+  int addVersionOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addXpubOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
 
@@ -156,40 +70,35 @@ class SplitRecipientBuilder {
   }
 }
 
-class SplitRecipientObjectBuilder extends fb.ObjectBuilder {
-  final String? _EPM_CID;
-  final String? _CHAIN;
-  final String? _ADDRESS;
-  final String? _XPUB;
+class STOModuleRefObjectBuilder extends fb.ObjectBuilder {
+  final String? _PLUGIN_ID;
+  final String? _CONTENT_HASH;
+  final String? _VERSION;
 
-  SplitRecipientObjectBuilder({
-    String? EPM_CID,
-    String? epmCid,
-    String? CHAIN,
-    String? ADDRESS,
-    String? XPUB,
+  STOModuleRefObjectBuilder({
+    String? PLUGIN_ID,
+    String? pluginId,
+    String? CONTENT_HASH,
+    String? contentHash,
+    String? VERSION,
   })
-      : _EPM_CID = epmCid ?? EPM_CID,
-        _CHAIN = CHAIN,
-        _ADDRESS = ADDRESS,
-        _XPUB = XPUB;
+      : _PLUGIN_ID = pluginId ?? PLUGIN_ID,
+        _CONTENT_HASH = contentHash ?? CONTENT_HASH,
+        _VERSION = VERSION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? EPM_CIDOffset = _EPM_CID == null ? null
-        : fbBuilder.writeString(_EPM_CID!);
-    final int? CHAINOffset = _CHAIN == null ? null
-        : fbBuilder.writeString(_CHAIN!);
-    final int? ADDRESSOffset = _ADDRESS == null ? null
-        : fbBuilder.writeString(_ADDRESS!);
-    final int? XPUBOffset = _XPUB == null ? null
-        : fbBuilder.writeString(_XPUB!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, EPM_CIDOffset);
-    fbBuilder.addOffset(1, CHAINOffset);
-    fbBuilder.addOffset(2, ADDRESSOffset);
-    fbBuilder.addOffset(3, XPUBOffset);
+    final int? PLUGIN_IDOffset = _PLUGIN_ID == null ? null
+        : fbBuilder.writeString(_PLUGIN_ID!);
+    final int? CONTENT_HASHOffset = _CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_CONTENT_HASH!);
+    final int? VERSIONOffset = _VERSION == null ? null
+        : fbBuilder.writeString(_VERSION!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, PLUGIN_IDOffset);
+    fbBuilder.addOffset(1, CONTENT_HASHOffset);
+    fbBuilder.addOffset(2, VERSIONOffset);
     return fbBuilder.endTable();
   }
 
@@ -201,135 +110,137 @@ class SplitRecipientObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Chain Settlement / Smart-Contract Descriptor. The forward description of the
-///  exact established splitter contract/program a buyer's wallet targets so
-///  payment and platform commission settle atomically on-chain. Referenced by
-///  `$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is
-///  realized by the splitter contract itself when the buyer pays it; there is no
-///  off-chain or manual settlement step.
-class SCX {
-  SCX._(this._bc, this._bcOffset);
-  factory SCX(List<int> bytes) {
+///  Store Descriptor — storefront identity
+class STO {
+  STO._(this._bc, this._bcOffset);
+  factory STO(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<SCX> reader = _SCXReader();
+  static const fb.Reader<STO> reader = _STOReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Settlement chain identifier, e.g. "ethereum", "solana", "bitcoin"
-  ///  (matches `$PUR.PAYMENT_CHAIN`)
-  String? get CHAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  EVM chainId; 0 for non-EVM chains
-  int get CHAIN_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get chainId => CHAIN_ID;
-  ///  On-chain settlement mechanism
-  settlementMechanism get SETTLEMENT_KIND => settlementMechanism.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  settlementMechanism get settlementKind => SETTLEMENT_KIND;
-  ///  Established split standard id, e.g. "0xsplits.v2" (ETH) or the SOL
-  ///  splitter program name. An audited off-the-shelf standard, not a custom
-  ///  contract.
-  String? get SPLITTER_STANDARD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get splitterStandard => SPLITTER_STANDARD;
-  ///  Deployed splitter contract address (ETH) or splitter program id (SOL) the
-  ///  buyer's payment routes into
-  String? get SPLITTER_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get splitterAddress => SPLITTER_ADDRESS;
-  ///  The specific split configuration (recipient set + basis points) registered
-  ///  with the splitter
-  String? get SPLIT_CONFIG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get splitConfigId => SPLIT_CONFIG_ID;
-  ///  ERC-20 / SPL mint address for stablecoin settlement; empty = native asset
-  String? get TOKEN_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get tokenAddress => TOKEN_ADDRESS;
-  ///  Token symbol, e.g. "USDC"
-  String? get TOKEN_SYMBOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get tokenSymbol => TOKEN_SYMBOL;
-  ///  Token decimals, e.g. 6 for USDC
-  int get TOKEN_DECIMALS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get tokenDecimals => TOKEN_DECIMALS;
-  ///  The recipient set the split configuration encodes (platform + publisher…),
-  ///  mirrored here for independent verification
-  List<SplitRecipient>? get SPLIT_RECIPIENTS => const fb.ListReader<SplitRecipient>(SplitRecipient.reader).vTableGetNullable(_bc, _bcOffset, 22);
-  List<SplitRecipient>? get splitRecipients => SPLIT_RECIPIENTS;
-  ///  Confirmations required before the payment is accepted
-  int get MIN_CONFIRMATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  int get minConfirmations => MIN_CONFIRMATIONS;
-  ///  How the order reference is bound on-chain for replay-safe matching
-  memoBindingScheme get MEMO_SCHEME => memoBindingScheme.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 26, 0));
-  memoBindingScheme get memoScheme => MEMO_SCHEME;
+  ///  Stable store identity
+  String? get STORE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get storeId => STORE_ID;
+  ///  Display name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Display description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  IPFS CID of the store operator's `$EPM`
+  String? get OPERATOR_EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get operatorEpmCid => OPERATOR_EPM_CID;
+  ///  The (encrypted) store MODULE that runs this store
+  STOModuleRef? get STORE_MODULE => STOModuleRef.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  STOModuleRef? get storeModule => STORE_MODULE;
+  ///  Optional `$APP.ID` when the store ships a UI app
+  String? get APP_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get appId => APP_ID;
+  ///  True only for the platform-signed official store, verifiable against the
+  ///  platform's well-known signing key
+  bool get IS_OFFICIAL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get isOfficial => IS_OFFICIAL;
+  ///  Store-default commission terms, embedded
+  CMT? get COMMISSION_TERMS => CMT.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  CMT? get commissionTerms => COMMISSION_TERMS;
+  ///  Alternative reference to store-default terms by `$CMT.TERMS_ID`
+  String? get COMMISSION_TERMS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get commissionTermsId => COMMISSION_TERMS_ID;
+  ///  Chains/tokens this store accepts, each with its splitter settlement
+  List<SCX>? get ACCEPTED_CHAINS => const fb.ListReader<SCX>(SCX.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  List<SCX>? get acceptedChains => ACCEPTED_CHAINS;
+  ///  IPFS CID of the store's catalog (a `$REC` of `$PLG`/`$STF` listings)
+  String? get CATALOG_ROOT_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get catalogRootCid => CATALOG_ROOT_CID;
+  ///  libp2p advertise/discovery key for reachability
+  String? get DISCOVERY_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get discoveryKey => DISCOVERY_KEY;
+  ///  libp2p protocol id the store answers on
+  String? get PROTOCOL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get protocolId => PROTOCOL_ID;
+  ///  Ed25519 signature by the operator `$EPM`
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 30);
 
   @override
   String toString() {
-    return 'SCX{CHAIN: ${CHAIN}, chainId: ${chainId}, settlementKind: ${settlementKind}, splitterStandard: ${splitterStandard}, splitterAddress: ${splitterAddress}, splitConfigId: ${splitConfigId}, tokenAddress: ${tokenAddress}, tokenSymbol: ${tokenSymbol}, tokenDecimals: ${tokenDecimals}, splitRecipients: ${splitRecipients}, minConfirmations: ${minConfirmations}, memoScheme: ${memoScheme}}';
+    return 'STO{storeId: ${storeId}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, operatorEpmCid: ${operatorEpmCid}, storeModule: ${storeModule}, appId: ${appId}, isOfficial: ${isOfficial}, commissionTerms: ${commissionTerms}, commissionTermsId: ${commissionTermsId}, acceptedChains: ${acceptedChains}, catalogRootCid: ${catalogRootCid}, discoveryKey: ${discoveryKey}, protocolId: ${protocolId}, SIGNATURE: ${SIGNATURE}}';
   }
 }
 
-class _SCXReader extends fb.TableReader<SCX> {
-  const _SCXReader();
+class _STOReader extends fb.TableReader<STO> {
+  const _STOReader();
 
   @override
-  SCX createObject(fb.BufferContext bc, int offset) =>
-    SCX._(bc, offset);
+  STO createObject(fb.BufferContext bc, int offset) =>
+    STO._(bc, offset);
 }
 
-class SCXBuilder {
-  SCXBuilder(this.fbBuilder);
+class STOBuilder {
+  STOBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(14);
   }
 
-  int addChainOffset(int? offset) {
+  int addStoreIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addChainId(int? CHAIN_ID) {
-    fbBuilder.addUint64(1, CHAIN_ID);
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSettlementKind(settlementMechanism? SETTLEMENT_KIND) {
-    fbBuilder.addInt8(2, SETTLEMENT_KIND?.value);
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addSplitterStandardOffset(int? offset) {
+  int addOperatorEpmCidOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addSplitterAddressOffset(int? offset) {
+  int addStoreModuleOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addSplitConfigIdOffset(int? offset) {
+  int addAppIdOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addTokenAddressOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addIsOfficial(bool? IS_OFFICIAL) {
+    fbBuilder.addBool(6, IS_OFFICIAL);
     return fbBuilder.offset;
   }
-  int addTokenSymbolOffset(int? offset) {
+  int addCommissionTermsOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addTokenDecimals(int? TOKEN_DECIMALS) {
-    fbBuilder.addUint8(8, TOKEN_DECIMALS);
+  int addCommissionTermsIdOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addSplitRecipientsOffset(int? offset) {
+  int addAcceptedChainsOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addMinConfirmations(int? MIN_CONFIRMATIONS) {
-    fbBuilder.addUint32(10, MIN_CONFIRMATIONS);
+  int addCatalogRootCidOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addMemoScheme(memoBindingScheme? MEMO_SCHEME) {
-    fbBuilder.addInt8(11, MEMO_SCHEME?.value);
+  int addDiscoveryKeyOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addProtocolIdOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
 
@@ -338,88 +249,106 @@ class SCXBuilder {
   }
 }
 
-class SCXObjectBuilder extends fb.ObjectBuilder {
-  final String? _CHAIN;
-  final int? _CHAIN_ID;
-  final settlementMechanism? _SETTLEMENT_KIND;
-  final String? _SPLITTER_STANDARD;
-  final String? _SPLITTER_ADDRESS;
-  final String? _SPLIT_CONFIG_ID;
-  final String? _TOKEN_ADDRESS;
-  final String? _TOKEN_SYMBOL;
-  final int? _TOKEN_DECIMALS;
-  final List<SplitRecipientObjectBuilder>? _SPLIT_RECIPIENTS;
-  final int? _MIN_CONFIRMATIONS;
-  final memoBindingScheme? _MEMO_SCHEME;
+class STOObjectBuilder extends fb.ObjectBuilder {
+  final String? _STORE_ID;
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final String? _OPERATOR_EPM_CID;
+  final STOModuleRefObjectBuilder? _STORE_MODULE;
+  final String? _APP_ID;
+  final bool? _IS_OFFICIAL;
+  final CMTObjectBuilder? _COMMISSION_TERMS;
+  final String? _COMMISSION_TERMS_ID;
+  final List<SCXObjectBuilder>? _ACCEPTED_CHAINS;
+  final String? _CATALOG_ROOT_CID;
+  final String? _DISCOVERY_KEY;
+  final String? _PROTOCOL_ID;
+  final List<int>? _SIGNATURE;
 
-  SCXObjectBuilder({
-    String? CHAIN,
-    int? CHAIN_ID,
-    int? chainId,
-    settlementMechanism? SETTLEMENT_KIND,
-    settlementMechanism? settlementKind,
-    String? SPLITTER_STANDARD,
-    String? splitterStandard,
-    String? SPLITTER_ADDRESS,
-    String? splitterAddress,
-    String? SPLIT_CONFIG_ID,
-    String? splitConfigId,
-    String? TOKEN_ADDRESS,
-    String? tokenAddress,
-    String? TOKEN_SYMBOL,
-    String? tokenSymbol,
-    int? TOKEN_DECIMALS,
-    int? tokenDecimals,
-    List<SplitRecipientObjectBuilder>? SPLIT_RECIPIENTS,
-    List<SplitRecipientObjectBuilder>? splitRecipients,
-    int? MIN_CONFIRMATIONS,
-    int? minConfirmations,
-    memoBindingScheme? MEMO_SCHEME,
-    memoBindingScheme? memoScheme,
+  STOObjectBuilder({
+    String? STORE_ID,
+    String? storeId,
+    String? NAME,
+    String? DESCRIPTION,
+    String? OPERATOR_EPM_CID,
+    String? operatorEpmCid,
+    STOModuleRefObjectBuilder? STORE_MODULE,
+    STOModuleRefObjectBuilder? storeModule,
+    String? APP_ID,
+    String? appId,
+    bool? IS_OFFICIAL,
+    bool? isOfficial,
+    CMTObjectBuilder? COMMISSION_TERMS,
+    CMTObjectBuilder? commissionTerms,
+    String? COMMISSION_TERMS_ID,
+    String? commissionTermsId,
+    List<SCXObjectBuilder>? ACCEPTED_CHAINS,
+    List<SCXObjectBuilder>? acceptedChains,
+    String? CATALOG_ROOT_CID,
+    String? catalogRootCid,
+    String? DISCOVERY_KEY,
+    String? discoveryKey,
+    String? PROTOCOL_ID,
+    String? protocolId,
+    List<int>? SIGNATURE,
   })
-      : _CHAIN = CHAIN,
-        _CHAIN_ID = chainId ?? CHAIN_ID,
-        _SETTLEMENT_KIND = settlementKind ?? SETTLEMENT_KIND,
-        _SPLITTER_STANDARD = splitterStandard ?? SPLITTER_STANDARD,
-        _SPLITTER_ADDRESS = splitterAddress ?? SPLITTER_ADDRESS,
-        _SPLIT_CONFIG_ID = splitConfigId ?? SPLIT_CONFIG_ID,
-        _TOKEN_ADDRESS = tokenAddress ?? TOKEN_ADDRESS,
-        _TOKEN_SYMBOL = tokenSymbol ?? TOKEN_SYMBOL,
-        _TOKEN_DECIMALS = tokenDecimals ?? TOKEN_DECIMALS,
-        _SPLIT_RECIPIENTS = splitRecipients ?? SPLIT_RECIPIENTS,
-        _MIN_CONFIRMATIONS = minConfirmations ?? MIN_CONFIRMATIONS,
-        _MEMO_SCHEME = memoScheme ?? MEMO_SCHEME;
+      : _STORE_ID = storeId ?? STORE_ID,
+        _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _OPERATOR_EPM_CID = operatorEpmCid ?? OPERATOR_EPM_CID,
+        _STORE_MODULE = storeModule ?? STORE_MODULE,
+        _APP_ID = appId ?? APP_ID,
+        _IS_OFFICIAL = isOfficial ?? IS_OFFICIAL,
+        _COMMISSION_TERMS = commissionTerms ?? COMMISSION_TERMS,
+        _COMMISSION_TERMS_ID = commissionTermsId ?? COMMISSION_TERMS_ID,
+        _ACCEPTED_CHAINS = acceptedChains ?? ACCEPTED_CHAINS,
+        _CATALOG_ROOT_CID = catalogRootCid ?? CATALOG_ROOT_CID,
+        _DISCOVERY_KEY = discoveryKey ?? DISCOVERY_KEY,
+        _PROTOCOL_ID = protocolId ?? PROTOCOL_ID,
+        _SIGNATURE = SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? CHAINOffset = _CHAIN == null ? null
-        : fbBuilder.writeString(_CHAIN!);
-    final int? SPLITTER_STANDARDOffset = _SPLITTER_STANDARD == null ? null
-        : fbBuilder.writeString(_SPLITTER_STANDARD!);
-    final int? SPLITTER_ADDRESSOffset = _SPLITTER_ADDRESS == null ? null
-        : fbBuilder.writeString(_SPLITTER_ADDRESS!);
-    final int? SPLIT_CONFIG_IDOffset = _SPLIT_CONFIG_ID == null ? null
-        : fbBuilder.writeString(_SPLIT_CONFIG_ID!);
-    final int? TOKEN_ADDRESSOffset = _TOKEN_ADDRESS == null ? null
-        : fbBuilder.writeString(_TOKEN_ADDRESS!);
-    final int? TOKEN_SYMBOLOffset = _TOKEN_SYMBOL == null ? null
-        : fbBuilder.writeString(_TOKEN_SYMBOL!);
-    final int? SPLIT_RECIPIENTSOffset = _SPLIT_RECIPIENTS == null ? null
-        : fbBuilder.writeList(_SPLIT_RECIPIENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(12);
-    fbBuilder.addOffset(0, CHAINOffset);
-    fbBuilder.addUint64(1, _CHAIN_ID);
-    fbBuilder.addInt8(2, _SETTLEMENT_KIND?.value);
-    fbBuilder.addOffset(3, SPLITTER_STANDARDOffset);
-    fbBuilder.addOffset(4, SPLITTER_ADDRESSOffset);
-    fbBuilder.addOffset(5, SPLIT_CONFIG_IDOffset);
-    fbBuilder.addOffset(6, TOKEN_ADDRESSOffset);
-    fbBuilder.addOffset(7, TOKEN_SYMBOLOffset);
-    fbBuilder.addUint8(8, _TOKEN_DECIMALS);
-    fbBuilder.addOffset(9, SPLIT_RECIPIENTSOffset);
-    fbBuilder.addUint32(10, _MIN_CONFIRMATIONS);
-    fbBuilder.addInt8(11, _MEMO_SCHEME?.value);
+    final int? STORE_IDOffset = _STORE_ID == null ? null
+        : fbBuilder.writeString(_STORE_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? OPERATOR_EPM_CIDOffset = _OPERATOR_EPM_CID == null ? null
+        : fbBuilder.writeString(_OPERATOR_EPM_CID!);
+    final int? STORE_MODULEOffset = _STORE_MODULE?.getOrCreateOffset(fbBuilder);
+    final int? APP_IDOffset = _APP_ID == null ? null
+        : fbBuilder.writeString(_APP_ID!);
+    final int? COMMISSION_TERMSOffset = _COMMISSION_TERMS?.getOrCreateOffset(fbBuilder);
+    final int? COMMISSION_TERMS_IDOffset = _COMMISSION_TERMS_ID == null ? null
+        : fbBuilder.writeString(_COMMISSION_TERMS_ID!);
+    final int? ACCEPTED_CHAINSOffset = _ACCEPTED_CHAINS == null ? null
+        : fbBuilder.writeList(_ACCEPTED_CHAINS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CATALOG_ROOT_CIDOffset = _CATALOG_ROOT_CID == null ? null
+        : fbBuilder.writeString(_CATALOG_ROOT_CID!);
+    final int? DISCOVERY_KEYOffset = _DISCOVERY_KEY == null ? null
+        : fbBuilder.writeString(_DISCOVERY_KEY!);
+    final int? PROTOCOL_IDOffset = _PROTOCOL_ID == null ? null
+        : fbBuilder.writeString(_PROTOCOL_ID!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    fbBuilder.startTable(14);
+    fbBuilder.addOffset(0, STORE_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, DESCRIPTIONOffset);
+    fbBuilder.addOffset(3, OPERATOR_EPM_CIDOffset);
+    fbBuilder.addOffset(4, STORE_MODULEOffset);
+    fbBuilder.addOffset(5, APP_IDOffset);
+    fbBuilder.addBool(6, _IS_OFFICIAL);
+    fbBuilder.addOffset(7, COMMISSION_TERMSOffset);
+    fbBuilder.addOffset(8, COMMISSION_TERMS_IDOffset);
+    fbBuilder.addOffset(9, ACCEPTED_CHAINSOffset);
+    fbBuilder.addOffset(10, CATALOG_ROOT_CIDOffset);
+    fbBuilder.addOffset(11, DISCOVERY_KEYOffset);
+    fbBuilder.addOffset(12, PROTOCOL_IDOffset);
+    fbBuilder.addOffset(13, SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

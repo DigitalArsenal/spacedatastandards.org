@@ -5,86 +5,95 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum meanElementSource {
-  SGP4(0),
-  SGP4XP(1),
-  DSST(2),
-  USM(3);
-
-  final int value;
-  const meanElementSource(this.value);
-
-  factory meanElementSource.fromValue(int value) {
-    switch (value) {
-      case 0: return meanElementSource.SGP4;
-      case 1: return meanElementSource.SGP4XP;
-      case 2: return meanElementSource.DSST;
-      case 3: return meanElementSource.USM;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static meanElementSource? _createOrNull(int? value) =>
-      value == null ? null : meanElementSource.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<meanElementSource> reader = _meanElementSourceReader();
-}
-
-class _meanElementSourceReader extends fb.Reader<meanElementSource> {
-  const _meanElementSourceReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  meanElementSource read(fb.BufferContext bc, int offset) =>
-      meanElementSource.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Mean Element Theory
-class MET {
-  MET._(this._bc, this._bcOffset);
-  factory MET(List<int> bytes) {
+///  One constraint in a maneuver-targeting problem and how well the converged
+///  solution satisfies it.
+class MPETargeterConstraint {
+  MPETargeterConstraint._(this._bc, this._bcOffset);
+  factory MPETargeterConstraint(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<MET> reader = _METReader();
+  static const fb.Reader<MPETargeterConstraint> reader = _MPETargeterConstraintReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  meanElementSource get meanElementTheory => MEAN_ELEMENT_THEORY;
+  ///  Constraint identifier, e.g. "SMA", "INC", "RIC_R"
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Reference frame the constraint is expressed in
+  String? get FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Epoch the constraint applies at (UNIX timestamp) [numeric seconds since
+  ///  1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT
+  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"
+  String? get EVENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Target value of the constrained quantity
+  double get TARGET_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get targetValue => TARGET_VALUE;
+  ///  Value achieved by the converged solution
+  double get ACHIEVED_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get achievedValue => ACHIEVED_VALUE;
+  ///  Acceptable tolerance on the constrained quantity
+  double get TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Relative weight of this constraint in the corrector
+  double get WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
 
   @override
   String toString() {
-    return 'MET{meanElementTheory: ${meanElementTheory}}';
+    return 'MPETargeterConstraint{NAME: ${NAME}, FRAME: ${FRAME}, EPOCH: ${EPOCH}, EVENT: ${EVENT}, targetValue: ${targetValue}, achievedValue: ${achievedValue}, TOLERANCE: ${TOLERANCE}, WEIGHT: ${WEIGHT}}';
   }
 }
 
-class _METReader extends fb.TableReader<MET> {
-  const _METReader();
+class _MPETargeterConstraintReader extends fb.TableReader<MPETargeterConstraint> {
+  const _MPETargeterConstraintReader();
 
   @override
-  MET createObject(fb.BufferContext bc, int offset) =>
-    MET._(bc, offset);
+  MPETargeterConstraint createObject(fb.BufferContext bc, int offset) =>
+    MPETargeterConstraint._(bc, offset);
 }
 
-class METBuilder {
-  METBuilder(this.fbBuilder);
+class MPETargeterConstraintBuilder {
+  MPETargeterConstraintBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(8);
   }
 
-  int addMeanElementTheory(meanElementSource? MEAN_ELEMENT_THEORY) {
-    fbBuilder.addInt8(0, MEAN_ELEMENT_THEORY?.value);
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFrameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addEpoch(double? EPOCH) {
+    fbBuilder.addFloat64(2, EPOCH);
+    return fbBuilder.offset;
+  }
+  int addEventOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetValue(double? TARGET_VALUE) {
+    fbBuilder.addFloat64(4, TARGET_VALUE);
+    return fbBuilder.offset;
+  }
+  int addAchievedValue(double? ACHIEVED_VALUE) {
+    fbBuilder.addFloat64(5, ACHIEVED_VALUE);
+    return fbBuilder.offset;
+  }
+  int addTolerance(double? TOLERANCE) {
+    fbBuilder.addFloat64(6, TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addWeight(double? WEIGHT) {
+    fbBuilder.addFloat64(7, WEIGHT);
     return fbBuilder.offset;
   }
 
@@ -93,20 +102,413 @@ class METBuilder {
   }
 }
 
-class METObjectBuilder extends fb.ObjectBuilder {
-  final meanElementSource? _MEAN_ELEMENT_THEORY;
+class MPETargeterConstraintObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _FRAME;
+  final double? _EPOCH;
+  final String? _EVENT;
+  final double? _TARGET_VALUE;
+  final double? _ACHIEVED_VALUE;
+  final double? _TOLERANCE;
+  final double? _WEIGHT;
 
-  METObjectBuilder({
-    meanElementSource? MEAN_ELEMENT_THEORY,
-    meanElementSource? meanElementTheory,
+  MPETargeterConstraintObjectBuilder({
+    String? NAME,
+    String? FRAME,
+    double? EPOCH,
+    String? EVENT,
+    double? TARGET_VALUE,
+    double? targetValue,
+    double? ACHIEVED_VALUE,
+    double? achievedValue,
+    double? TOLERANCE,
+    double? WEIGHT,
   })
-      : _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY;
+      : _NAME = NAME,
+        _FRAME = FRAME,
+        _EPOCH = EPOCH,
+        _EVENT = EVENT,
+        _TARGET_VALUE = targetValue ?? TARGET_VALUE,
+        _ACHIEVED_VALUE = achievedValue ?? ACHIEVED_VALUE,
+        _TOLERANCE = TOLERANCE,
+        _WEIGHT = WEIGHT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _MEAN_ELEMENT_THEORY?.value);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? FRAMEOffset = _FRAME == null ? null
+        : fbBuilder.writeString(_FRAME!);
+    final int? EVENTOffset = _EVENT == null ? null
+        : fbBuilder.writeString(_EVENT!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, FRAMEOffset);
+    fbBuilder.addFloat64(2, _EPOCH);
+    fbBuilder.addOffset(3, EVENTOffset);
+    fbBuilder.addFloat64(4, _TARGET_VALUE);
+    fbBuilder.addFloat64(5, _ACHIEVED_VALUE);
+    fbBuilder.addFloat64(6, _TOLERANCE);
+    fbBuilder.addFloat64(7, _WEIGHT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Maneuver-targeter solution and convergence metadata carried with an
+///  extended MPE: the solver that produced the targeted element set, its
+///  iteration/residual history, and the constraint set it satisfied.
+class MPETargeterSolution {
+  MPETargeterSolution._(this._bc, this._bcOffset);
+  factory MPETargeterSolution(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<MPETargeterSolution> reader = _MPETargeterSolutionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Solver used, e.g. "differential-corrector"
+  String? get SOLVER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  String? get DYNAMICS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Whether the corrector converged within tolerance
+  bool get CONVERGED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Number of corrector iterations executed
+  int get ITERATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  RMS of the final-iteration constraint residuals
+  double get RESIDUAL_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get residualRms => RESIDUAL_RMS;
+  ///  Final-iteration residual per constraint, aligned with CONSTRAINTS
+  List<double>? get RESIDUALS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  The constraint set the solution was targeted against
+  List<MPETargeterConstraint>? get CONSTRAINTS => const fb.ListReader<MPETargeterConstraint>(MPETargeterConstraint.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Total delta-v of the solved maneuver sequence in m/s
+  double get TOTAL_DELTA_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get totalDeltaV => TOTAL_DELTA_V;
+  ///  Unix ms the solution was produced
+  int get SOLVED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get solvedAt => SOLVED_AT;
+
+  @override
+  String toString() {
+    return 'MPETargeterSolution{SOLVER: ${SOLVER}, DYNAMICS: ${DYNAMICS}, CONVERGED: ${CONVERGED}, ITERATIONS: ${ITERATIONS}, residualRms: ${residualRms}, RESIDUALS: ${RESIDUALS}, CONSTRAINTS: ${CONSTRAINTS}, totalDeltaV: ${totalDeltaV}, solvedAt: ${solvedAt}}';
+  }
+}
+
+class _MPETargeterSolutionReader extends fb.TableReader<MPETargeterSolution> {
+  const _MPETargeterSolutionReader();
+
+  @override
+  MPETargeterSolution createObject(fb.BufferContext bc, int offset) =>
+    MPETargeterSolution._(bc, offset);
+}
+
+class MPETargeterSolutionBuilder {
+  MPETargeterSolutionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addSolverOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDynamicsOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addConverged(bool? CONVERGED) {
+    fbBuilder.addBool(2, CONVERGED);
+    return fbBuilder.offset;
+  }
+  int addIterations(int? ITERATIONS) {
+    fbBuilder.addUint32(3, ITERATIONS);
+    return fbBuilder.offset;
+  }
+  int addResidualRms(double? RESIDUAL_RMS) {
+    fbBuilder.addFloat64(4, RESIDUAL_RMS);
+    return fbBuilder.offset;
+  }
+  int addResidualsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addConstraintsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTotalDeltaV(double? TOTAL_DELTA_V) {
+    fbBuilder.addFloat64(7, TOTAL_DELTA_V);
+    return fbBuilder.offset;
+  }
+  int addSolvedAt(int? SOLVED_AT) {
+    fbBuilder.addUint64(8, SOLVED_AT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class MPETargeterSolutionObjectBuilder extends fb.ObjectBuilder {
+  final String? _SOLVER;
+  final String? _DYNAMICS;
+  final bool? _CONVERGED;
+  final int? _ITERATIONS;
+  final double? _RESIDUAL_RMS;
+  final List<double>? _RESIDUALS;
+  final List<MPETargeterConstraintObjectBuilder>? _CONSTRAINTS;
+  final double? _TOTAL_DELTA_V;
+  final int? _SOLVED_AT;
+
+  MPETargeterSolutionObjectBuilder({
+    String? SOLVER,
+    String? DYNAMICS,
+    bool? CONVERGED,
+    int? ITERATIONS,
+    double? RESIDUAL_RMS,
+    double? residualRms,
+    List<double>? RESIDUALS,
+    List<MPETargeterConstraintObjectBuilder>? CONSTRAINTS,
+    double? TOTAL_DELTA_V,
+    double? totalDeltaV,
+    int? SOLVED_AT,
+    int? solvedAt,
+  })
+      : _SOLVER = SOLVER,
+        _DYNAMICS = DYNAMICS,
+        _CONVERGED = CONVERGED,
+        _ITERATIONS = ITERATIONS,
+        _RESIDUAL_RMS = residualRms ?? RESIDUAL_RMS,
+        _RESIDUALS = RESIDUALS,
+        _CONSTRAINTS = CONSTRAINTS,
+        _TOTAL_DELTA_V = totalDeltaV ?? TOTAL_DELTA_V,
+        _SOLVED_AT = solvedAt ?? SOLVED_AT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOLVEROffset = _SOLVER == null ? null
+        : fbBuilder.writeString(_SOLVER!);
+    final int? DYNAMICSOffset = _DYNAMICS == null ? null
+        : fbBuilder.writeString(_DYNAMICS!);
+    final int? RESIDUALSOffset = _RESIDUALS == null ? null
+        : fbBuilder.writeListFloat64(_RESIDUALS!);
+    final int? CONSTRAINTSOffset = _CONSTRAINTS == null ? null
+        : fbBuilder.writeList(_CONSTRAINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, SOLVEROffset);
+    fbBuilder.addOffset(1, DYNAMICSOffset);
+    fbBuilder.addBool(2, _CONVERGED);
+    fbBuilder.addUint32(3, _ITERATIONS);
+    fbBuilder.addFloat64(4, _RESIDUAL_RMS);
+    fbBuilder.addOffset(5, RESIDUALSOffset);
+    fbBuilder.addOffset(6, CONSTRAINTSOffset);
+    fbBuilder.addFloat64(7, _TOTAL_DELTA_V);
+    fbBuilder.addUint64(8, _SOLVED_AT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Minimum Propagatable Element Set
+class MPE {
+  MPE._(this._bc, this._bcOffset);
+  factory MPE(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<MPE> reader = _MPEReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Unique ID as a String [no units]
+  String? get ENTITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get entityId => ENTITY_ID;
+  ///  Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
+  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
+  double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get meanMotion => MEAN_MOTION;
+  ///  Eccentricity (unitless)
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Inclination in degrees
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Right ascension of ascending node in degrees
+  double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get raOfAscNode => RA_OF_ASC_NODE;
+  ///  Argument of pericenter in degrees
+  double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get argOfPericenter => ARG_OF_PERICENTER;
+  ///  Mean anomaly in degrees
+  double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get meanAnomaly => MEAN_ANOMALY;
+  ///  SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
+  double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Description of the Mean Element Theory (SGP4, DSST, USM)
+  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  meanElementSource get meanElementTheory => MEAN_ELEMENT_THEORY;
+  ///  Targeter solution + convergence metadata when this element set is the
+  ///  product of maneuver targeting (absent for ordinary element sets)
+  MPETargeterSolution? get TARGETER => MPETargeterSolution.reader.vTableGetNullable(_bc, _bcOffset, 24);
+
+  @override
+  String toString() {
+    return 'MPE{entityId: ${entityId}, EPOCH: ${EPOCH}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BSTAR: ${BSTAR}, meanElementTheory: ${meanElementTheory}, TARGETER: ${TARGETER}}';
+  }
+}
+
+class _MPEReader extends fb.TableReader<MPE> {
+  const _MPEReader();
+
+  @override
+  MPE createObject(fb.BufferContext bc, int offset) =>
+    MPE._(bc, offset);
+}
+
+class MPEBuilder {
+  MPEBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addEntityIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEpoch(double? EPOCH) {
+    fbBuilder.addFloat64(1, EPOCH);
+    return fbBuilder.offset;
+  }
+  int addMeanMotion(double? MEAN_MOTION) {
+    fbBuilder.addFloat64(2, MEAN_MOTION);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(3, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(4, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addRaOfAscNode(double? RA_OF_ASC_NODE) {
+    fbBuilder.addFloat64(5, RA_OF_ASC_NODE);
+    return fbBuilder.offset;
+  }
+  int addArgOfPericenter(double? ARG_OF_PERICENTER) {
+    fbBuilder.addFloat64(6, ARG_OF_PERICENTER);
+    return fbBuilder.offset;
+  }
+  int addMeanAnomaly(double? MEAN_ANOMALY) {
+    fbBuilder.addFloat64(7, MEAN_ANOMALY);
+    return fbBuilder.offset;
+  }
+  int addBstar(double? BSTAR) {
+    fbBuilder.addFloat64(8, BSTAR);
+    return fbBuilder.offset;
+  }
+  int addMeanElementTheory(meanElementSource? MEAN_ELEMENT_THEORY) {
+    fbBuilder.addInt8(9, MEAN_ELEMENT_THEORY?.value);
+    return fbBuilder.offset;
+  }
+  int addTargeterOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class MPEObjectBuilder extends fb.ObjectBuilder {
+  final String? _ENTITY_ID;
+  final double? _EPOCH;
+  final double? _MEAN_MOTION;
+  final double? _ECCENTRICITY;
+  final double? _INCLINATION;
+  final double? _RA_OF_ASC_NODE;
+  final double? _ARG_OF_PERICENTER;
+  final double? _MEAN_ANOMALY;
+  final double? _BSTAR;
+  final meanElementSource? _MEAN_ELEMENT_THEORY;
+  final MPETargeterSolutionObjectBuilder? _TARGETER;
+
+  MPEObjectBuilder({
+    String? ENTITY_ID,
+    String? entityId,
+    double? EPOCH,
+    double? MEAN_MOTION,
+    double? meanMotion,
+    double? ECCENTRICITY,
+    double? INCLINATION,
+    double? RA_OF_ASC_NODE,
+    double? raOfAscNode,
+    double? ARG_OF_PERICENTER,
+    double? argOfPericenter,
+    double? MEAN_ANOMALY,
+    double? meanAnomaly,
+    double? BSTAR,
+    meanElementSource? MEAN_ELEMENT_THEORY,
+    meanElementSource? meanElementTheory,
+    MPETargeterSolutionObjectBuilder? TARGETER,
+  })
+      : _ENTITY_ID = entityId ?? ENTITY_ID,
+        _EPOCH = EPOCH,
+        _MEAN_MOTION = meanMotion ?? MEAN_MOTION,
+        _ECCENTRICITY = ECCENTRICITY,
+        _INCLINATION = INCLINATION,
+        _RA_OF_ASC_NODE = raOfAscNode ?? RA_OF_ASC_NODE,
+        _ARG_OF_PERICENTER = argOfPericenter ?? ARG_OF_PERICENTER,
+        _MEAN_ANOMALY = meanAnomaly ?? MEAN_ANOMALY,
+        _BSTAR = BSTAR,
+        _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY,
+        _TARGETER = TARGETER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ENTITY_IDOffset = _ENTITY_ID == null ? null
+        : fbBuilder.writeString(_ENTITY_ID!);
+    final int? TARGETEROffset = _TARGETER?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, ENTITY_IDOffset);
+    fbBuilder.addFloat64(1, _EPOCH);
+    fbBuilder.addFloat64(2, _MEAN_MOTION);
+    fbBuilder.addFloat64(3, _ECCENTRICITY);
+    fbBuilder.addFloat64(4, _INCLINATION);
+    fbBuilder.addFloat64(5, _RA_OF_ASC_NODE);
+    fbBuilder.addFloat64(6, _ARG_OF_PERICENTER);
+    fbBuilder.addFloat64(7, _MEAN_ANOMALY);
+    fbBuilder.addFloat64(8, _BSTAR);
+    fbBuilder.addInt8(9, _MEAN_ELEMENT_THEORY?.value);
+    fbBuilder.addOffset(10, TARGETEROffset);
     return fbBuilder.endTable();
   }
 

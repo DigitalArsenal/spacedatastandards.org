@@ -197,7 +197,7 @@ class mnvOrbitalState(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Position uncertainty U (km, 1-sigma)
+    # Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
     # mnvOrbitalState
     def SIGMA_U(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
@@ -205,7 +205,7 @@ class mnvOrbitalState(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Position uncertainty V (km, 1-sigma)
+    # Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
     # mnvOrbitalState
     def SIGMA_V(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -213,7 +213,7 @@ class mnvOrbitalState(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Position uncertainty W (km, 1-sigma)
+    # Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
     # mnvOrbitalState
     def SIGMA_W(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))

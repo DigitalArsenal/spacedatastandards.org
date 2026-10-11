@@ -1,6 +1,8 @@
-// Hash: 6245430eb6515f363baafa50fc2c523843407b8aea05e1fa5bc7383eff9a4257
-// Version: 0.0.3
+// Hash: b9627f39fe37ce1f7b4367055d0ab3f30504e95f794772ed890d7f473d0f9324
+// Version: 0.0.4
 // -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+
 enum maneuverStatus : byte {
   DETECTED,
   CONFIRMED,
@@ -68,15 +70,21 @@ table mnvOrbitalState {
   GEO_LONGITUDE:double;
   /// Longitude drift rate (degrees/day)
   DRIFT_RATE:double;
-  /// Position uncertainty U (km, 1-sigma)
+  /// Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
   SIGMA_U:double;
-  /// Position uncertainty V (km, 1-sigma)
+  /// Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
   SIGMA_V:double;
-  /// Position uncertainty W (km, 1-sigma)
+  /// Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
   SIGMA_W:double;
 }
 
 /// Spacecraft Maneuver
+///
+/// U, V and W are the UVW axes of an orbit state: U radial, along the position
+/// vector away from the central body; W cross-track, along the orbit normal
+/// (the direction of r x v); V in-track, W x U, completing the right-handed
+/// frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+/// pre-maneuver state at EVENT_START_TIME.
 table MNV {
   /// Unique identifier
   ID:string;
@@ -106,7 +114,8 @@ table MNV {
   ID_SENSOR:string;
   /// Original sensor identifier
   ORIG_SENSOR_ID:string;
-  /// Maneuver event identifier
+  /// Maneuver event identifier. Records of one event share it: a merged event
+  /// and the source records it combines.
   EVENT_ID:string;
   /// True if object is uncorrelated
   UCT:bool;
@@ -114,19 +123,19 @@ table MNV {
   MANEUVER_UNC:double;
   /// Total delta-V magnitude (km/s)
   DELTA_VEL:double;
-  /// Delta-V along-track/U component (km/s)
+  /// Delta-V along U, radial (km/s)
   DELTA_VEL_U:double;
-  /// Delta-V cross-track/V component (km/s)
+  /// Delta-V along V, in-track (km/s)
   DELTA_VEL_V:double;
-  /// Delta-V radial/W component (km/s)
+  /// Delta-V along W, cross-track (km/s)
   DELTA_VEL_W:double;
   /// Total delta position (km)
   DELTA_POS:double;
-  /// Delta position U component (km)
+  /// Delta position along U, radial (km)
   DELTA_POS_U:double;
-  /// Delta position V component (km)
+  /// Delta position along V, in-track (km)
   DELTA_POS_V:double;
-  /// Delta position W component (km)
+  /// Delta position along W, cross-track (km)
   DELTA_POS_W:double;
   /// Propellant mass consumed (kg)
   DELTA_MASS:double;
@@ -150,7 +159,8 @@ table MNV {
   NUM_ACCEL_POINTS:uint16;
   /// Acceleration profile times (ISO 8601)
   MNVR_ACCEL_TIMES:[string];
-  /// Acceleration values (km/s^2, 3 components per point)
+  /// Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+  /// the state at that point's MNVR_ACCEL_TIMES entry
   MNVR_ACCELS:[double];
   /// Acceleration uncertainties (km/s^2)
   MNVR_ACCEL_UNCS:[double];
@@ -162,12 +172,16 @@ table MNV {
   ALGORITHM:string;
   /// Associated tags
   TAGS:[string];
-  /// Sourced data references
+  /// Sourced data references: identifiers of the records this one was
+  /// determined from (CIDv1 for records of this network), such as the source
+  /// records a merged event combines
   SOURCED_DATA:[string];
   /// Sourced data types
   SOURCED_DATA_TYPES:string;
   /// Transaction identifier
   TRANSACTION_ID:string;
+  /// Where the maneuver's data comes from and the terms it travels under.
+  PROVENANCE:PVN;
 }
 
 root_type MNV;

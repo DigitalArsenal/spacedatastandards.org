@@ -1,7 +1,12 @@
-// Hash: 8de08061564e9e1f0c59d38be648e505bb3fdf77f14d6a51495da8b933ba71dc
-// Version: 1.0.2
+// Hash: 227e69a9f9e250a2831809daa898a913d81a9efb3ac3fae186583de7bf77fb79
+// Version: 1.0.3
 // -----------------------------------END_HEADER
-enum legacyCountryCode : byte {
+/// Owner and country codes of the public satellite catalog. An ordinal is a
+/// wire value: members are appended after ZWE, never inserted, so the ones
+/// after it are out of alphabetical order. Some owners have two codes, the
+/// catalog's older one and an ISO 3166-1 alpha-3 code the catalog also uses
+/// (CA and CAN); each code is its own member.
+enum legacyCountryCode : ubyte {
   /// Arab Satellite Communications Organization
   AB,
   /// Asia Broadcast Satellite
@@ -253,7 +258,37 @@ enum legacyCountryCode : byte {
   /// Vietnam
   VTNM,
   /// Republic of Zimbabwe
-  ZWE
+  ZWE,
+  /// Angola (ISO 3166-1 alpha-3; also ANG)
+  AGO,
+  /// Bulgaria (ISO 3166-1 alpha-3; also BUL)
+  BGR,
+  /// Bahrain
+  BHR,
+  /// Botswana
+  BWA,
+  /// Canada (ISO 3166-1 alpha-3; also CA)
+  CAN,
+  /// Czechia (ISO 3166-1 alpha-3; also CZCH)
+  CZE,
+  /// Croatia
+  HRV,
+  /// Jordan
+  JOR,
+  /// Kuwait
+  KWT,
+  /// Peru (ISO 3166-1 alpha-3; also PERU)
+  PER,
+  /// Puerto Rico
+  PRI,
+  /// Solomon Islands
+  SLB,
+  /// Slovakia
+  SVK,
+  /// Taiwan (ISO 3166-1 alpha-3; also ROC)
+  TWN,
+  /// Uganda
+  UGA
 }
 
 /// Legacy Country Code

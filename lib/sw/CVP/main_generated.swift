@@ -8,525 +8,1136 @@ import Common
 
 import FlatBuffers
 
-public enum timingStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Whether a ring bounds coverage or punches a hole in it.
+///
+///  `UNSPECIFIED` holds ordinal 0 deliberately, and a consumer MUST refuse a
+///  ring that does not state its role rather than assume OUTER: assuming turns
+///  a keep-out hole into a coverage claim.
+public enum cvpRingRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Greenwich Mean Sidereal Time
-  case gmst = 0
-  ///  Global Positioning System
-  case gps = 1
-  ///  Mission Elapsed Time
-  case met = 2
-  ///  Mission Relative Time
-  case mrt = 3
-  ///  Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  case sclk = 4
-  ///  International Atomic Time
-  case tai = 5
-  ///  Barycentric Coordinate Time
-  case tcb = 6
-  ///  Barycentric Dynamical Time
-  case tdb = 7
-  ///  Geocentric Coordinate Time
-  case tcg = 8
-  ///  Terrestrial Time
-  case tt = 9
-  ///  Universal Time
-  case ut1 = 10
-  ///  Coordinated Universal Time
-  case utc = 11
-  ///  GLONASS Time
-  case glonass = 12
-  ///  Galileo System Time
-  case gst = 13
-  ///  Quasi-Zenith Satellite System Time
-  case qzss = 14
-  ///  BeiDou Time
-  case bdt = 15
-  ///  Navigation with Indian Constellation Time
-  case navic = 16
-  ///  Satellite-Based Augmentation System Time
-  case sbas = 17
-  ///  Atomic time scale of the reference atomic-time network, offset from
-  ///  International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
-  ///  exactly. Appended last; never reorder or reuse existing values.
-  case a1 = 18
+  case unspecified = 0
+  case outer = 1
+  case inner = 2
 
-  public static var max: timingStandard { return .a1 }
-  public static var min: timingStandard { return .gmst }
+  public static var max: cvpRingRole { return .inner }
+  public static var min: cvpRingRole { return .unspecified }
 }
 
 
-public enum timEpochRepresentation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  What the polygons of this record represent.
+public enum cvpGeometryKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Julian Date day count.
-  case julianDate = 0
-  ///  Modified Julian Date day count (JD - 2400000.5).
-  case modifiedJulianDate = 1
-  ///  Seconds since 1970-01-01T00:00:00 UTC.
-  case unixSeconds = 2
-  ///  ISO 8601 timestamp text.
-  case iso8601 = 3
-  ///  Seconds since 1980-01-06T00:00:00 GPS.
-  case gpsSeconds = 4
-  ///  GNSS week number plus seconds within the week.
-  case gnssWeekSeconds = 5
-  ///  CCSDS binary time-code field with preamble metadata.
-  case ccsdsTimeCode = 6
-  ///  Seconds from an application-defined mission epoch.
-  case missionElapsedSeconds = 7
+  case unspecified = 0
+  ///  The boundary where the metric meets THRESHOLD_VALUE.
+  case thresholdContour = 1
+  ///  A set of iso-level contours; POLYGON_LEVEL_VALUES carries each level.
+  case isoMetricContour = 2
+  ///  The instantaneous beam or antenna footprint on the surface.
+  case footprint = 3
+  ///  The horizon or terrain mask boundary for one endpoint.
+  case horizonMask = 4
+  ///  The region in which a stated interference criterion is exceeded.
+  case interferenceZone = 5
+  ///  The union of many contributing footprints or contours.
+  case unionCoverage = 6
+  ///  The intersection of many contributing footprints or contours.
+  case intersectionCoverage = 7
+  ///  The region NOT covered — a gap, stated as geometry rather than left to
+  ///  be inferred by subtracting a coverage polygon from the globe.
+  case gapRegion = 8
+  ///  A region a transmitter is prohibited from illuminating.
+  case keepOutZone = 9
 
-  public static var max: timEpochRepresentation { return .missionElapsedSeconds }
-  public static var min: timEpochRepresentation { return .julianDate }
+  public static var max: cvpGeometryKind { return .keepOutZone }
+  public static var min: cvpGeometryKind { return .unspecified }
 }
 
 
-public enum timCcsdsTimeCodeKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  The surface the vertex altitudes are referenced to.
+public enum cvpAltitudeReference: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  No CCSDS time code selected.
-  case none_ = 0
-  ///  CCSDS Unsegmented Time Code (CUC).
-  case unsegmented = 1
-  ///  CCSDS Day Segmented Time Code (CDS).
-  case daySegmented = 2
-  ///  CCSDS Calendar Segmented Time Code (CCS).
-  case calendarSegmented = 3
+  case unspecified = 0
+  case wgs84Ellipsoid = 1
+  case meanSeaLevel = 2
+  ///  Draped on terrain from the dataset named in
+  ///  CVPProvenance.TERRAIN_DATASET.
+  case terrain = 3
+  ///  A constant altitude plane; the value is in FIXED_ALTITUDE_M.
+  case fixedAltitude = 4
 
-  public static var max: timCcsdsTimeCodeKind { return .calendarSegmented }
-  public static var min: timCcsdsTimeCodeKind { return .none_ }
+  public static var max: cvpAltitudeReference { return .fixedAltitude }
+  public static var min: cvpAltitudeReference { return .unspecified }
 }
 
 
-public enum timConversionStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  The part an emitter played in producing this geometry.
+public enum cvpEmitterRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Conversion completed.
-  case ok = 0
-  ///  Input epoch or requested representation is invalid.
-  case invalidInput = 1
-  ///  Requested source or target time system is not supported.
-  case unsupportedTimeSystem = 2
-  ///  Conversion requires leap-second data that was not available.
-  case leapSecondDataRequired = 3
-  ///  Conversion requires Earth-orientation data that was not available.
-  case eopDataRequired = 4
-  ///  Requested instant is outside the supported conversion range.
-  case outOfRange = 5
+  case unspecified = 0
+  ///  The wanted signal.
+  case wanted = 1
+  ///  An interferer degrading the wanted signal.
+  case interferer = 2
+  ///  An intermediate relay in a multi-hop chain.
+  case relay = 3
 
-  public static var max: timConversionStatus { return .outOfRange }
-  public static var min: timConversionStatus { return .ok }
+  public static var max: cvpEmitterRole { return .relay }
+  public static var min: cvpEmitterRole { return .unspecified }
 }
 
 
-///  CCSDS time-code payload and preamble metadata.
-public struct TIMCcsdsTimeCode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  An emitter that contributed to this geometry. Identity and the few
+///  parameters that determine the boundary; everything else is joined from
+///  `$RFB` and `$RFE`.
+public struct CVPEmitterRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMCcsdsTimeCode.id, addPrefix: prefix) }
+  public static var id: String { "$CVP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CVPEmitterRef.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE_KIND: VOffset = 4
-    static let PREAMBLE_FIELD1: VOffset = 6
-    static let PREAMBLE_FIELD2: VOffset = 8
-    static let TIME_FIELD: VOffset = 10
-    static let AGENCY_DEFINED_EPOCH_ISO8601: VOffset = 12
-    static let CCSDS_EPOCH_ISO8601: VOffset = 14
+    static let EMITTER_ID: VOffset = 4
+    static let EMITTER_ROLE: VOffset = 6
+    static let RFE_ID: VOffset = 8
+    static let RFB_ID: VOffset = 10
+    static let NORAD_CAT_ID: VOffset = 12
+    static let OBJECT_ID: VOffset = 14
+    static let TBS_SITE_ID: VOffset = 16
+    static let ID_BEAM: VOffset = 18
+    static let CHANNEL_ID: VOffset = 20
+    static let CENTER_FREQUENCY_MHZ: VOffset = 22
+    static let EIRP_DBW: VOffset = 24
+    static let POLARIZATION: VOffset = 26
+    static let LATITUDE_DEG: VOffset = 28
+    static let LONGITUDE_DEG: VOffset = 30
+    static let ALTITUDE_M: VOffset = 32
+    static let CONTRIBUTION_WEIGHT: VOffset = 34
   }
 
-  ///  CCSDS time-code family.
-  public var CODE_KIND: timCcsdsTimeCodeKind { let o = _accessor.offset(VT.CODE_KIND); return o == 0 ? .none_ : timCcsdsTimeCodeKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
-  ///  First CCSDS preamble field octet.
-  public var PREAMBLE_FIELD1: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
-  public var PREAMBLE_FIELD2: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD2); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Raw CCSDS time field octets.
-  public var TIME_FIELD: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.TIME_FIELD, byteSize: 1) }
-  public func withUnsafePointerToTimeField<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TIME_FIELD, body: body) }
-  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
-  public var AGENCY_DEFINED_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.AGENCY_DEFINED_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AGENCY_DEFINED_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
-  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
-  public var CCSDS_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.CCSDS_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CCSDS_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_EPOCH_ISO8601) }
-  public static func startTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(CODE_KIND: timCcsdsTimeCodeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE_KIND.rawValue, def: 0, at: VT.CODE_KIND) }
-  public static func add(PREAMBLE_FIELD1: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD1, def: 0, at: VT.PREAMBLE_FIELD1) }
-  public static func add(PREAMBLE_FIELD2: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD2, def: 0, at: VT.PREAMBLE_FIELD2) }
-  public static func addVectorOf(TIME_FIELD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_FIELD, at: VT.TIME_FIELD) }
-  public static func add(AGENCY_DEFINED_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGENCY_DEFINED_EPOCH_ISO8601, at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
-  public static func add(CCSDS_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_EPOCH_ISO8601, at: VT.CCSDS_EPOCH_ISO8601) }
-  public static func endTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMCcsdsTimeCode(
+  ///  Producer-stable emitter identifier within this record.
+  public var EMITTER_ID: String! { let o = _accessor.offset(VT.EMITTER_ID); return _accessor.string(at: o) }
+  public var EMITTER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.EMITTER_ID) }
+  public var EMITTER_ROLE: cvpEmitterRole { let o = _accessor.offset(VT.EMITTER_ROLE); return o == 0 ? .unspecified : cvpEmitterRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  `$RFE.ID` — the parametric emitter description.
+  public var RFE_ID: String? { let o = _accessor.offset(VT.RFE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFE_ID) }
+  ///  `$RFB.ID` — the band specification.
+  public var RFB_ID: String? { let o = _accessor.offset(VT.RFB_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFB_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFB_ID) }
+  ///  `$CAT.NORAD_CAT_ID` when the emitter is on orbit. 0 when unbound.
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  `$CAT.OBJECT_ID` international designator.
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  ///  `$TBS.SITE_ID` when the emitter is a terrestrial site.
+  public var TBS_SITE_ID: String? { let o = _accessor.offset(VT.TBS_SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TBS_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TBS_SITE_ID) }
+  ///  Beam and channel within the emitter.
+  public var ID_BEAM: String? { let o = _accessor.offset(VT.ID_BEAM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_BEAMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_BEAM) }
+  public var CHANNEL_ID: String? { let o = _accessor.offset(VT.CHANNEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANNEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHANNEL_ID) }
+  ///  Carrier centre frequency, megahertz — the `$RFB` convention.
+  public var CENTER_FREQUENCY_MHZ: Double { let o = _accessor.offset(VT.CENTER_FREQUENCY_MHZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  EIRP toward boresight used in the evaluation, dBW.
+  public var EIRP_DBW: Double { let o = _accessor.offset(VT.EIRP_DBW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Polarization, defaulted to UNKNOWN explicitly because `rfPolarization`
+  ///  ordinal 0 is LHCP.
+  public var POLARIZATION: rfPolarization { let o = _accessor.offset(VT.POLARIZATION); return o == 0 ? .unknown : rfPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Emitter position at EPOCH, when the geometry is instantaneous. Geodetic
+  ///  degrees and metres. Absent means "join it from the source record" — a
+  ///  stale copied position is worse than none.
+  public var LATITUDE_DEG: Double { let o = _accessor.offset(VT.LATITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE_DEG: Double { let o = _accessor.offset(VT.LONGITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Weight of this emitter's contribution to a union or aggregate [0-1].
+  public var CONTRIBUTION_WEIGHT: Double { let o = _accessor.offset(VT.CONTRIBUTION_WEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCVPEmitterRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  public static func add(EMITTER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMITTER_ID, at: VT.EMITTER_ID) }
+  public static func add(EMITTER_ROLE: cvpEmitterRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EMITTER_ROLE.rawValue, def: 0, at: VT.EMITTER_ROLE) }
+  public static func add(RFE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFE_ID, at: VT.RFE_ID) }
+  public static func add(RFB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFB_ID, at: VT.RFB_ID) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(TBS_SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TBS_SITE_ID, at: VT.TBS_SITE_ID) }
+  public static func add(ID_BEAM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BEAM, at: VT.ID_BEAM) }
+  public static func add(CHANNEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNEL_ID, at: VT.CHANNEL_ID) }
+  public static func add(CENTER_FREQUENCY_MHZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_FREQUENCY_MHZ, def: 0.0, at: VT.CENTER_FREQUENCY_MHZ) }
+  public static func add(EIRP_DBW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EIRP_DBW, def: 0.0, at: VT.EIRP_DBW) }
+  public static func add(POLARIZATION: rfPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION.rawValue, def: 6, at: VT.POLARIZATION) }
+  public static func add(LATITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE_DEG, def: 0.0, at: VT.LATITUDE_DEG) }
+  public static func add(LONGITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_DEG, def: 0.0, at: VT.LONGITUDE_DEG) }
+  public static func add(ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_M, def: 0.0, at: VT.ALTITUDE_M) }
+  public static func add(CONTRIBUTION_WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTRIBUTION_WEIGHT, def: 0.0, at: VT.CONTRIBUTION_WEIGHT) }
+  public static func endCVPEmitterRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCVPEmitterRef(
     _ fbb: inout FlatBufferBuilder,
-    CODE_KIND: timCcsdsTimeCodeKind = .none_,
-    PREAMBLE_FIELD1: UInt8 = 0,
-    PREAMBLE_FIELD2: UInt8 = 0,
-    TIME_FIELDVectorOffset TIME_FIELD: Offset = Offset(),
-    AGENCY_DEFINED_EPOCH_ISO8601Offset AGENCY_DEFINED_EPOCH_ISO8601: Offset = Offset(),
-    CCSDS_EPOCH_ISO8601Offset CCSDS_EPOCH_ISO8601: Offset = Offset()
+    EMITTER_IDOffset EMITTER_ID: Offset,
+    EMITTER_ROLE: cvpEmitterRole = .unspecified,
+    RFE_IDOffset RFE_ID: Offset = Offset(),
+    RFB_IDOffset RFB_ID: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    TBS_SITE_IDOffset TBS_SITE_ID: Offset = Offset(),
+    ID_BEAMOffset ID_BEAM: Offset = Offset(),
+    CHANNEL_IDOffset CHANNEL_ID: Offset = Offset(),
+    CENTER_FREQUENCY_MHZ: Double = 0.0,
+    EIRP_DBW: Double = 0.0,
+    POLARIZATION: rfPolarization = .unknown,
+    LATITUDE_DEG: Double = 0.0,
+    LONGITUDE_DEG: Double = 0.0,
+    ALTITUDE_M: Double = 0.0,
+    CONTRIBUTION_WEIGHT: Double = 0.0
   ) -> Offset {
-    let __start = TIMCcsdsTimeCode.startTIMCcsdsTimeCode(&fbb)
-    TIMCcsdsTimeCode.add(CODE_KIND: CODE_KIND, &fbb)
-    TIMCcsdsTimeCode.add(PREAMBLE_FIELD1: PREAMBLE_FIELD1, &fbb)
-    TIMCcsdsTimeCode.add(PREAMBLE_FIELD2: PREAMBLE_FIELD2, &fbb)
-    TIMCcsdsTimeCode.addVectorOf(TIME_FIELD: TIME_FIELD, &fbb)
-    TIMCcsdsTimeCode.add(AGENCY_DEFINED_EPOCH_ISO8601: AGENCY_DEFINED_EPOCH_ISO8601, &fbb)
-    TIMCcsdsTimeCode.add(CCSDS_EPOCH_ISO8601: CCSDS_EPOCH_ISO8601, &fbb)
-    return TIMCcsdsTimeCode.endTIMCcsdsTimeCode(&fbb, start: __start)
+    let __start = CVPEmitterRef.startCVPEmitterRef(&fbb)
+    CVPEmitterRef.add(EMITTER_ID: EMITTER_ID, &fbb)
+    CVPEmitterRef.add(EMITTER_ROLE: EMITTER_ROLE, &fbb)
+    CVPEmitterRef.add(RFE_ID: RFE_ID, &fbb)
+    CVPEmitterRef.add(RFB_ID: RFB_ID, &fbb)
+    CVPEmitterRef.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    CVPEmitterRef.add(OBJECT_ID: OBJECT_ID, &fbb)
+    CVPEmitterRef.add(TBS_SITE_ID: TBS_SITE_ID, &fbb)
+    CVPEmitterRef.add(ID_BEAM: ID_BEAM, &fbb)
+    CVPEmitterRef.add(CHANNEL_ID: CHANNEL_ID, &fbb)
+    CVPEmitterRef.add(CENTER_FREQUENCY_MHZ: CENTER_FREQUENCY_MHZ, &fbb)
+    CVPEmitterRef.add(EIRP_DBW: EIRP_DBW, &fbb)
+    CVPEmitterRef.add(POLARIZATION: POLARIZATION, &fbb)
+    CVPEmitterRef.add(LATITUDE_DEG: LATITUDE_DEG, &fbb)
+    CVPEmitterRef.add(LONGITUDE_DEG: LONGITUDE_DEG, &fbb)
+    CVPEmitterRef.add(ALTITUDE_M: ALTITUDE_M, &fbb)
+    CVPEmitterRef.add(CONTRIBUTION_WEIGHT: CONTRIBUTION_WEIGHT, &fbb)
+    return CVPEmitterRef.endCVPEmitterRef(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE_KIND, fieldName: "CODE_KIND", required: false, type: timCcsdsTimeCodeKind.self)
-    try _v.visit(field: VT.PREAMBLE_FIELD1, fieldName: "PREAMBLE_FIELD1", required: false, type: UInt8.self)
-    try _v.visit(field: VT.PREAMBLE_FIELD2, fieldName: "PREAMBLE_FIELD2", required: false, type: UInt8.self)
-    try _v.visit(field: VT.TIME_FIELD, fieldName: "TIME_FIELD", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.AGENCY_DEFINED_EPOCH_ISO8601, fieldName: "AGENCY_DEFINED_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CCSDS_EPOCH_ISO8601, fieldName: "CCSDS_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EMITTER_ID, fieldName: "EMITTER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EMITTER_ROLE, fieldName: "EMITTER_ROLE", required: false, type: cvpEmitterRole.self)
+    try _v.visit(field: VT.RFE_ID, fieldName: "RFE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFB_ID, fieldName: "RFB_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TBS_SITE_ID, fieldName: "TBS_SITE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_BEAM, fieldName: "ID_BEAM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANNEL_ID, fieldName: "CHANNEL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTER_FREQUENCY_MHZ, fieldName: "CENTER_FREQUENCY_MHZ", required: false, type: Double.self)
+    try _v.visit(field: VT.EIRP_DBW, fieldName: "EIRP_DBW", required: false, type: Double.self)
+    try _v.visit(field: VT.POLARIZATION, fieldName: "POLARIZATION", required: false, type: rfPolarization.self)
+    try _v.visit(field: VT.LATITUDE_DEG, fieldName: "LATITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE_DEG, fieldName: "LONGITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.CONTRIBUTION_WEIGHT, fieldName: "CONTRIBUTION_WEIGHT", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-///  Numeric or textual instant tagged with its time system and representation.
-public struct TIMInstant: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  A receiver the coverage was evaluated FOR. Coverage is never absolute: a
+///  -110 dBW contour means one thing for a 60 cm terminal and another for a
+///  12 m dish, so the assumed receiver is part of the record.
+public struct CVPReceiverRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMInstant.id, addPrefix: prefix) }
+  public static var id: String { "$CVP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CVPReceiverRef.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let TIME_SYSTEM: VOffset = 4
-    static let EPOCH_FORMAT: VOffset = 6
-    static let JULIAN_DATE: VOffset = 8
-    static let SECONDS: VOffset = 10
-    static let ISO8601: VOffset = 12
-    static let SUBSECOND_NANOS: VOffset = 14
-    static let EPOCH_LABEL: VOffset = 16
-    static let GNSS_WEEK: VOffset = 18
-    static let HAS_GNSS_ROLLOVER_REFERENCE: VOffset = 20
-    static let GNSS_ROLLOVER_REFERENCE_ISO8601: VOffset = 22
-    static let CCSDS_TIME_CODE: VOffset = 24
+    static let RECEIVER_ID: VOffset = 4
+    static let ENDPOINT_KIND: VOffset = 6
+    static let GST_STATION_ID: VOffset = 8
+    static let SIT_ID: VOffset = 10
+    static let TBS_SITE_ID: VOffset = 12
+    static let ANTENNA_GAIN_DBI: VOffset = 14
+    static let SYSTEM_NOISE_TEMPERATURE_K: VOffset = 16
+    static let GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: VOffset = 18
+    static let MIN_ELEVATION_DEG: VOffset = 20
+    static let POLARIZATION: VOffset = 22
+    static let RECEIVER_GROUP_ID: VOffset = 24
   }
 
-  ///  Time system for this instant.
-  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
-  public var EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
-  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
-  public var JULIAN_DATE: Double { let o = _accessor.offset(VT.JULIAN_DATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
-  public var SECONDS: Double { let o = _accessor.offset(VT.SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
-  public var ISO8601: String? { let o = _accessor.offset(VT.ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ISO8601) }
-  ///  Additional nanoseconds beyond the fractional scalar/text value.
-  public var SUBSECOND_NANOS: Int32 { let o = _accessor.offset(VT.SUBSECOND_NANOS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
-  public var EPOCH_LABEL: String? { let o = _accessor.offset(VT.EPOCH_LABEL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_LABEL) }
-  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
-  public var GNSS_WEEK: Int32 { let o = _accessor.offset(VT.GNSS_WEEK); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
-  public var HAS_GNSS_ROLLOVER_REFERENCE: Bool { let o = _accessor.offset(VT.HAS_GNSS_ROLLOVER_REFERENCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional Orekit-style GNSS week rollover reference timestamp.
-  public var GNSS_ROLLOVER_REFERENCE_ISO8601: String? { let o = _accessor.offset(VT.GNSS_ROLLOVER_REFERENCE_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GNSS_ROLLOVER_REFERENCE_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
-  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
-  public var CCSDS_TIME_CODE: TIMCcsdsTimeCode? { let o = _accessor.offset(VT.CCSDS_TIME_CODE); return o == 0 ? nil : TIMCcsdsTimeCode(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTIMInstant(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
-  public static func add(EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_FORMAT.rawValue, def: 0, at: VT.EPOCH_FORMAT) }
-  public static func add(JULIAN_DATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JULIAN_DATE, def: 0.0, at: VT.JULIAN_DATE) }
-  public static func add(SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDS, def: 0.0, at: VT.SECONDS) }
-  public static func add(ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISO8601, at: VT.ISO8601) }
-  public static func add(SUBSECOND_NANOS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSECOND_NANOS, def: 0, at: VT.SUBSECOND_NANOS) }
-  public static func add(EPOCH_LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_LABEL, at: VT.EPOCH_LABEL) }
-  public static func add(GNSS_WEEK: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNSS_WEEK, def: 0, at: VT.GNSS_WEEK) }
-  public static func add(HAS_GNSS_ROLLOVER_REFERENCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GNSS_ROLLOVER_REFERENCE, def: false,
-   at: VT.HAS_GNSS_ROLLOVER_REFERENCE) }
-  public static func add(GNSS_ROLLOVER_REFERENCE_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_ROLLOVER_REFERENCE_ISO8601, at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
-  public static func add(CCSDS_TIME_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_TIME_CODE, at: VT.CCSDS_TIME_CODE) }
-  public static func endTIMInstant(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMInstant(
+  public var RECEIVER_ID: String! { let o = _accessor.offset(VT.RECEIVER_ID); return _accessor.string(at: o) }
+  public var RECEIVER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.RECEIVER_ID) }
+  public var ENDPOINT_KIND: rflEndpointKind { let o = _accessor.offset(VT.ENDPOINT_KIND); return o == 0 ? .unspecified : rflEndpointKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  `$GST.STATION_ID`, `$SIT` or `$TBS.SITE_ID`, per ENDPOINT_KIND.
+  public var GST_STATION_ID: String? { let o = _accessor.offset(VT.GST_STATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GST_STATION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GST_STATION_ID) }
+  public var SIT_ID: String? { let o = _accessor.offset(VT.SIT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIT_ID) }
+  public var TBS_SITE_ID: String? { let o = _accessor.offset(VT.TBS_SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TBS_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TBS_SITE_ID) }
+  ///  Receive antenna gain assumed, dBi.
+  public var ANTENNA_GAIN_DBI: Double { let o = _accessor.offset(VT.ANTENNA_GAIN_DBI); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  System noise temperature assumed, kelvin.
+  public var SYSTEM_NOISE_TEMPERATURE_K: Double { let o = _accessor.offset(VT.SYSTEM_NOISE_TEMPERATURE_K); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Figure of merit assumed, dB/K.
+  public var GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: Double { let o = _accessor.offset(VT.GAIN_TO_NOISE_TEMPERATURE_DB_PER_K); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum elevation the receiver can work at, degrees.
+  public var MIN_ELEVATION_DEG: Double { let o = _accessor.offset(VT.MIN_ELEVATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Polarization, defaulted to UNKNOWN explicitly.
+  public var POLARIZATION: rfPolarization { let o = _accessor.offset(VT.POLARIZATION); return o == 0 ? .unknown : rfPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Receiver group this receiver belongs to, matching
+  ///  `$RFL.RFLLink.RECEIVER_GROUP_ID`.
+  public var RECEIVER_GROUP_ID: String? { let o = _accessor.offset(VT.RECEIVER_GROUP_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECEIVER_GROUP_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECEIVER_GROUP_ID) }
+  public static func startCVPReceiverRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(RECEIVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_ID, at: VT.RECEIVER_ID) }
+  public static func add(ENDPOINT_KIND: rflEndpointKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENDPOINT_KIND.rawValue, def: 0, at: VT.ENDPOINT_KIND) }
+  public static func add(GST_STATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GST_STATION_ID, at: VT.GST_STATION_ID) }
+  public static func add(SIT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIT_ID, at: VT.SIT_ID) }
+  public static func add(TBS_SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TBS_SITE_ID, at: VT.TBS_SITE_ID) }
+  public static func add(ANTENNA_GAIN_DBI: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANTENNA_GAIN_DBI, def: 0.0, at: VT.ANTENNA_GAIN_DBI) }
+  public static func add(SYSTEM_NOISE_TEMPERATURE_K: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYSTEM_NOISE_TEMPERATURE_K, def: 0.0, at: VT.SYSTEM_NOISE_TEMPERATURE_K) }
+  public static func add(GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, def: 0.0, at: VT.GAIN_TO_NOISE_TEMPERATURE_DB_PER_K) }
+  public static func add(MIN_ELEVATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ELEVATION_DEG, def: 0.0, at: VT.MIN_ELEVATION_DEG) }
+  public static func add(POLARIZATION: rfPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION.rawValue, def: 6, at: VT.POLARIZATION) }
+  public static func add(RECEIVER_GROUP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_GROUP_ID, at: VT.RECEIVER_GROUP_ID) }
+  public static func endCVPReceiverRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCVPReceiverRef(
     _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst,
-    EPOCH_FORMAT: timEpochRepresentation = .julianDate,
-    JULIAN_DATE: Double = 0.0,
-    SECONDS: Double = 0.0,
-    ISO8601Offset ISO8601: Offset = Offset(),
-    SUBSECOND_NANOS: Int32 = 0,
-    EPOCH_LABELOffset EPOCH_LABEL: Offset = Offset(),
-    GNSS_WEEK: Int32 = 0,
-    HAS_GNSS_ROLLOVER_REFERENCE: Bool = false,
-    GNSS_ROLLOVER_REFERENCE_ISO8601Offset GNSS_ROLLOVER_REFERENCE_ISO8601: Offset = Offset(),
-    CCSDS_TIME_CODEOffset CCSDS_TIME_CODE: Offset = Offset()
+    RECEIVER_IDOffset RECEIVER_ID: Offset,
+    ENDPOINT_KIND: rflEndpointKind = .unspecified,
+    GST_STATION_IDOffset GST_STATION_ID: Offset = Offset(),
+    SIT_IDOffset SIT_ID: Offset = Offset(),
+    TBS_SITE_IDOffset TBS_SITE_ID: Offset = Offset(),
+    ANTENNA_GAIN_DBI: Double = 0.0,
+    SYSTEM_NOISE_TEMPERATURE_K: Double = 0.0,
+    GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: Double = 0.0,
+    MIN_ELEVATION_DEG: Double = 0.0,
+    POLARIZATION: rfPolarization = .unknown,
+    RECEIVER_GROUP_IDOffset RECEIVER_GROUP_ID: Offset = Offset()
   ) -> Offset {
-    let __start = TIMInstant.startTIMInstant(&fbb)
-    TIMInstant.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    TIMInstant.add(EPOCH_FORMAT: EPOCH_FORMAT, &fbb)
-    TIMInstant.add(JULIAN_DATE: JULIAN_DATE, &fbb)
-    TIMInstant.add(SECONDS: SECONDS, &fbb)
-    TIMInstant.add(ISO8601: ISO8601, &fbb)
-    TIMInstant.add(SUBSECOND_NANOS: SUBSECOND_NANOS, &fbb)
-    TIMInstant.add(EPOCH_LABEL: EPOCH_LABEL, &fbb)
-    TIMInstant.add(GNSS_WEEK: GNSS_WEEK, &fbb)
-    TIMInstant.add(HAS_GNSS_ROLLOVER_REFERENCE: HAS_GNSS_ROLLOVER_REFERENCE, &fbb)
-    TIMInstant.add(GNSS_ROLLOVER_REFERENCE_ISO8601: GNSS_ROLLOVER_REFERENCE_ISO8601, &fbb)
-    TIMInstant.add(CCSDS_TIME_CODE: CCSDS_TIME_CODE, &fbb)
-    return TIMInstant.endTIMInstant(&fbb, start: __start)
+    let __start = CVPReceiverRef.startCVPReceiverRef(&fbb)
+    CVPReceiverRef.add(RECEIVER_ID: RECEIVER_ID, &fbb)
+    CVPReceiverRef.add(ENDPOINT_KIND: ENDPOINT_KIND, &fbb)
+    CVPReceiverRef.add(GST_STATION_ID: GST_STATION_ID, &fbb)
+    CVPReceiverRef.add(SIT_ID: SIT_ID, &fbb)
+    CVPReceiverRef.add(TBS_SITE_ID: TBS_SITE_ID, &fbb)
+    CVPReceiverRef.add(ANTENNA_GAIN_DBI: ANTENNA_GAIN_DBI, &fbb)
+    CVPReceiverRef.add(SYSTEM_NOISE_TEMPERATURE_K: SYSTEM_NOISE_TEMPERATURE_K, &fbb)
+    CVPReceiverRef.add(GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, &fbb)
+    CVPReceiverRef.add(MIN_ELEVATION_DEG: MIN_ELEVATION_DEG, &fbb)
+    CVPReceiverRef.add(POLARIZATION: POLARIZATION, &fbb)
+    CVPReceiverRef.add(RECEIVER_GROUP_ID: RECEIVER_GROUP_ID, &fbb)
+    return CVPReceiverRef.endCVPReceiverRef(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.EPOCH_FORMAT, fieldName: "EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
-    try _v.visit(field: VT.JULIAN_DATE, fieldName: "JULIAN_DATE", required: false, type: Double.self)
-    try _v.visit(field: VT.SECONDS, fieldName: "SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.ISO8601, fieldName: "ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUBSECOND_NANOS, fieldName: "SUBSECOND_NANOS", required: false, type: Int32.self)
-    try _v.visit(field: VT.EPOCH_LABEL, fieldName: "EPOCH_LABEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GNSS_WEEK, fieldName: "GNSS_WEEK", required: false, type: Int32.self)
-    try _v.visit(field: VT.HAS_GNSS_ROLLOVER_REFERENCE, fieldName: "HAS_GNSS_ROLLOVER_REFERENCE", required: false, type: Bool.self)
-    try _v.visit(field: VT.GNSS_ROLLOVER_REFERENCE_ISO8601, fieldName: "GNSS_ROLLOVER_REFERENCE_ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CCSDS_TIME_CODE, fieldName: "CCSDS_TIME_CODE", required: false, type: ForwardOffset<TIMCcsdsTimeCode>.self)
+    try _v.visit(field: VT.RECEIVER_ID, fieldName: "RECEIVER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENDPOINT_KIND, fieldName: "ENDPOINT_KIND", required: false, type: rflEndpointKind.self)
+    try _v.visit(field: VT.GST_STATION_ID, fieldName: "GST_STATION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIT_ID, fieldName: "SIT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TBS_SITE_ID, fieldName: "TBS_SITE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANTENNA_GAIN_DBI, fieldName: "ANTENNA_GAIN_DBI", required: false, type: Double.self)
+    try _v.visit(field: VT.SYSTEM_NOISE_TEMPERATURE_K, fieldName: "SYSTEM_NOISE_TEMPERATURE_K", required: false, type: Double.self)
+    try _v.visit(field: VT.GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, fieldName: "GAIN_TO_NOISE_TEMPERATURE_DB_PER_K", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_ELEVATION_DEG, fieldName: "MIN_ELEVATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.POLARIZATION, fieldName: "POLARIZATION", required: false, type: rfPolarization.self)
+    try _v.visit(field: VT.RECEIVER_GROUP_ID, fieldName: "RECEIVER_GROUP_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Request to convert one instant into another time system/representation.
-public struct TIMConversionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  A 3D obstacle that shaped this coverage boundary. A footprint clipped by
+///  buildings, a spacecraft structure or terrain is a claim about those
+///  objects; publishing the obstacle set with its `$RFS` materials is what
+///  makes the clipped boundary reproducible.
+public struct CVPObstacleRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionRequest.id, addPrefix: prefix) }
+  public static var id: String { "$CVP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CVPObstacleRef.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SOURCE: VOffset = 4
-    static let TARGET_TIME_SYSTEM: VOffset = 6
-    static let TARGET_EPOCH_FORMAT: VOffset = 8
-    static let TAI_MINUS_UTC_SECONDS: VOffset = 10
-    static let HAS_TAI_MINUS_UTC: VOffset = 12
-    static let DUT1_SECONDS: VOffset = 14
-    static let HAS_DUT1: VOffset = 16
-    static let TRACE_ID: VOffset = 18
+    static let OBSTACLE_ID: VOffset = 4
+    static let MATERIAL_ID: VOffset = 6
+    static let GEOMETRY_REF_ID: VOffset = 8
+    static let VAM_ID: VOffset = 10
+    static let VARIANT_ID: VOffset = 12
+    static let NORAD_CAT_ID: VOffset = 14
+    static let OBJECT_ID: VOffset = 16
+    static let TBS_SITE_ID: VOffset = 18
+    static let INTERACTION: VOffset = 20
+    static let LATITUDE_DEG: VOffset = 22
+    static let LONGITUDE_DEG: VOffset = 24
+    static let ALTITUDE_M: VOffset = 26
+    static let HEIGHT_M: VOffset = 28
   }
 
-  ///  Source instant to convert.
-  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Target time system.
-  public var TARGET_TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TARGET_TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Preferred target representation.
-  public var TARGET_EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.TARGET_EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
-  ///  Optional TAI-UTC override in seconds for the source instant.
-  public var TAI_MINUS_UTC_SECONDS: Double { let o = _accessor.offset(VT.TAI_MINUS_UTC_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
-  public var HAS_TAI_MINUS_UTC: Bool { let o = _accessor.offset(VT.HAS_TAI_MINUS_UTC); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional UT1-UTC override in seconds for UT1 conversions.
-  public var DUT1_SECONDS: Double { let o = _accessor.offset(VT.DUT1_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
-  public var HAS_DUT1: Bool { let o = _accessor.offset(VT.HAS_DUT1); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional caller trace/correlation identifier.
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startTIMConversionRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  ///  Producer's identifier for the obstacle instance.
+  public var OBSTACLE_ID: String! { let o = _accessor.offset(VT.OBSTACLE_ID); return _accessor.string(at: o) }
+  public var OBSTACLE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.OBSTACLE_ID) }
+  ///  `$RFS.MATERIAL_ID` of the surface. Absent means the obstacle was treated
+  ///  as an opaque blocker with no material physics — which a consumer is
+  ///  entitled to know.
+  public var MATERIAL_ID: String? { let o = _accessor.offset(VT.MATERIAL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MATERIAL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MATERIAL_ID) }
+  ///  `$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry used.
+  public var GEOMETRY_REF_ID: String? { let o = _accessor.offset(VT.GEOMETRY_REF_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GEOMETRY_REF_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GEOMETRY_REF_ID) }
+  ///  `$VAM` asset identity of the obstacle mesh.
+  public var VAM_ID: String? { let o = _accessor.offset(VT.VAM_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VAM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VAM_ID) }
+  public var VARIANT_ID: String? { let o = _accessor.offset(VT.VARIANT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VARIANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VARIANT_ID) }
+  ///  `$CAT` identity when the obstacle is a catalogued object. 0 when unbound.
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  ///  `$TBS.SITE_ID` when the obstacle is a structure at a terrestrial site.
+  public var TBS_SITE_ID: String? { let o = _accessor.offset(VT.TBS_SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TBS_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TBS_SITE_ID) }
+  ///  How the obstacle acted on the field.
+  public var INTERACTION: rflObstacleInteraction { let o = _accessor.offset(VT.INTERACTION); return o == 0 ? .unspecified : rflObstacleInteraction(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Geodetic placement of a fixed obstacle, degrees and metres.
+  public var LATITUDE_DEG: Double { let o = _accessor.offset(VT.LATITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE_DEG: Double { let o = _accessor.offset(VT.LONGITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEIGHT_M: Double { let o = _accessor.offset(VT.HEIGHT_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCVPObstacleRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(OBSTACLE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSTACLE_ID, at: VT.OBSTACLE_ID) }
+  public static func add(MATERIAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL_ID, at: VT.MATERIAL_ID) }
+  public static func add(GEOMETRY_REF_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY_REF_ID, at: VT.GEOMETRY_REF_ID) }
+  public static func add(VAM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VAM_ID, at: VT.VAM_ID) }
+  public static func add(VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT_ID, at: VT.VARIANT_ID) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(TBS_SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TBS_SITE_ID, at: VT.TBS_SITE_ID) }
+  public static func add(INTERACTION: rflObstacleInteraction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERACTION.rawValue, def: 0, at: VT.INTERACTION) }
+  public static func add(LATITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE_DEG, def: 0.0, at: VT.LATITUDE_DEG) }
+  public static func add(LONGITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_DEG, def: 0.0, at: VT.LONGITUDE_DEG) }
+  public static func add(ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_M, def: 0.0, at: VT.ALTITUDE_M) }
+  public static func add(HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_M, def: 0.0, at: VT.HEIGHT_M) }
+  public static func endCVPObstacleRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCVPObstacleRef(
+    _ fbb: inout FlatBufferBuilder,
+    OBSTACLE_IDOffset OBSTACLE_ID: Offset,
+    MATERIAL_IDOffset MATERIAL_ID: Offset = Offset(),
+    GEOMETRY_REF_IDOffset GEOMETRY_REF_ID: Offset = Offset(),
+    VAM_IDOffset VAM_ID: Offset = Offset(),
+    VARIANT_IDOffset VARIANT_ID: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    TBS_SITE_IDOffset TBS_SITE_ID: Offset = Offset(),
+    INTERACTION: rflObstacleInteraction = .unspecified,
+    LATITUDE_DEG: Double = 0.0,
+    LONGITUDE_DEG: Double = 0.0,
+    ALTITUDE_M: Double = 0.0,
+    HEIGHT_M: Double = 0.0
+  ) -> Offset {
+    let __start = CVPObstacleRef.startCVPObstacleRef(&fbb)
+    CVPObstacleRef.add(OBSTACLE_ID: OBSTACLE_ID, &fbb)
+    CVPObstacleRef.add(MATERIAL_ID: MATERIAL_ID, &fbb)
+    CVPObstacleRef.add(GEOMETRY_REF_ID: GEOMETRY_REF_ID, &fbb)
+    CVPObstacleRef.add(VAM_ID: VAM_ID, &fbb)
+    CVPObstacleRef.add(VARIANT_ID: VARIANT_ID, &fbb)
+    CVPObstacleRef.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    CVPObstacleRef.add(OBJECT_ID: OBJECT_ID, &fbb)
+    CVPObstacleRef.add(TBS_SITE_ID: TBS_SITE_ID, &fbb)
+    CVPObstacleRef.add(INTERACTION: INTERACTION, &fbb)
+    CVPObstacleRef.add(LATITUDE_DEG: LATITUDE_DEG, &fbb)
+    CVPObstacleRef.add(LONGITUDE_DEG: LONGITUDE_DEG, &fbb)
+    CVPObstacleRef.add(ALTITUDE_M: ALTITUDE_M, &fbb)
+    CVPObstacleRef.add(HEIGHT_M: HEIGHT_M, &fbb)
+    return CVPObstacleRef.endCVPObstacleRef(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OBSTACLE_ID, fieldName: "OBSTACLE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MATERIAL_ID, fieldName: "MATERIAL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOMETRY_REF_ID, fieldName: "GEOMETRY_REF_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VAM_ID, fieldName: "VAM_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VARIANT_ID, fieldName: "VARIANT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TBS_SITE_ID, fieldName: "TBS_SITE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERACTION, fieldName: "INTERACTION", required: false, type: rflObstacleInteraction.self)
+    try _v.visit(field: VT.LATITUDE_DEG, fieldName: "LATITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE_DEG, fieldName: "LONGITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_M, fieldName: "HEIGHT_M", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  How wrong this geometry can be. A contour with no uncertainty is a drawing,
+///  not a measurement.
+public struct CVPUncertainty: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CVP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CVPUncertainty.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let HORIZONTAL_POSITION_M: VOffset = 4
+    static let LEVEL_UNCERTAINTY: VOffset = 6
+    static let LEVEL_UNCERTAINTY_UNITS: VOffset = 8
+    static let CONFIDENCE: VOffset = 10
+    static let EXTRACTION_TOLERANCE: VOffset = 12
+    static let SIMPLIFICATION_TOLERANCE_M: VOffset = 14
+    static let METHOD: VOffset = 16
+  }
+
+  ///  1-sigma horizontal position uncertainty of the boundary, metres. Applies
+  ///  to every vertex unless VERTEX_POSITION_UNCERTAINTY_M is present.
+  public var HORIZONTAL_POSITION_M: Double { let o = _accessor.offset(VT.HORIZONTAL_POSITION_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  1-sigma uncertainty of the level the contour was drawn at, in
+  ///  LEVEL_UNCERTAINTY_UNITS.
+  public var LEVEL_UNCERTAINTY: Double { let o = _accessor.offset(VT.LEVEL_UNCERTAINTY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LEVEL_UNCERTAINTY_UNITS: String? { let o = _accessor.offset(VT.LEVEL_UNCERTAINTY_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LEVEL_UNCERTAINTY_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LEVEL_UNCERTAINTY_UNITS) }
+  ///  Confidence the stated uncertainties correspond to [0-1], e.g. 0.68.
+  public var CONFIDENCE: Double { let o = _accessor.offset(VT.CONFIDENCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Tolerance the contour extractor converged to, in the metric's units.
+  public var EXTRACTION_TOLERANCE: Double { let o = _accessor.offset(VT.EXTRACTION_TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Simplification tolerance applied to the rings, metres. A simplified ring
+  ///  is not the computed boundary and MUST say so.
+  public var SIMPLIFICATION_TOLERANCE_M: Double { let o = _accessor.offset(VT.SIMPLIFICATION_TOLERANCE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  How the uncertainty was established (e.g. "grid resolution bound",
+  ///  "Monte Carlo over emitter state covariance").
+  public var METHOD: String? { let o = _accessor.offset(VT.METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.METHOD) }
+  public static func startCVPUncertainty(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(HORIZONTAL_POSITION_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HORIZONTAL_POSITION_M, def: 0.0, at: VT.HORIZONTAL_POSITION_M) }
+  public static func add(LEVEL_UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEVEL_UNCERTAINTY, def: 0.0, at: VT.LEVEL_UNCERTAINTY) }
+  public static func add(LEVEL_UNCERTAINTY_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEVEL_UNCERTAINTY_UNITS, at: VT.LEVEL_UNCERTAINTY_UNITS) }
+  public static func add(CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONFIDENCE, def: 0.0, at: VT.CONFIDENCE) }
+  public static func add(EXTRACTION_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRACTION_TOLERANCE, def: 0.0, at: VT.EXTRACTION_TOLERANCE) }
+  public static func add(SIMPLIFICATION_TOLERANCE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIMPLIFICATION_TOLERANCE_M, def: 0.0, at: VT.SIMPLIFICATION_TOLERANCE_M) }
+  public static func add(METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD, at: VT.METHOD) }
+  public static func endCVPUncertainty(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCVPUncertainty(
+    _ fbb: inout FlatBufferBuilder,
+    HORIZONTAL_POSITION_M: Double = 0.0,
+    LEVEL_UNCERTAINTY: Double = 0.0,
+    LEVEL_UNCERTAINTY_UNITSOffset LEVEL_UNCERTAINTY_UNITS: Offset = Offset(),
+    CONFIDENCE: Double = 0.0,
+    EXTRACTION_TOLERANCE: Double = 0.0,
+    SIMPLIFICATION_TOLERANCE_M: Double = 0.0,
+    METHODOffset METHOD: Offset = Offset()
+  ) -> Offset {
+    let __start = CVPUncertainty.startCVPUncertainty(&fbb)
+    CVPUncertainty.add(HORIZONTAL_POSITION_M: HORIZONTAL_POSITION_M, &fbb)
+    CVPUncertainty.add(LEVEL_UNCERTAINTY: LEVEL_UNCERTAINTY, &fbb)
+    CVPUncertainty.add(LEVEL_UNCERTAINTY_UNITS: LEVEL_UNCERTAINTY_UNITS, &fbb)
+    CVPUncertainty.add(CONFIDENCE: CONFIDENCE, &fbb)
+    CVPUncertainty.add(EXTRACTION_TOLERANCE: EXTRACTION_TOLERANCE, &fbb)
+    CVPUncertainty.add(SIMPLIFICATION_TOLERANCE_M: SIMPLIFICATION_TOLERANCE_M, &fbb)
+    CVPUncertainty.add(METHOD: METHOD, &fbb)
+    return CVPUncertainty.endCVPUncertainty(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.HORIZONTAL_POSITION_M, fieldName: "HORIZONTAL_POSITION_M", required: false, type: Double.self)
+    try _v.visit(field: VT.LEVEL_UNCERTAINTY, fieldName: "LEVEL_UNCERTAINTY", required: false, type: Double.self)
+    try _v.visit(field: VT.LEVEL_UNCERTAINTY_UNITS, fieldName: "LEVEL_UNCERTAINTY_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONFIDENCE, fieldName: "CONFIDENCE", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTRACTION_TOLERANCE, fieldName: "EXTRACTION_TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SIMPLIFICATION_TOLERANCE_M, fieldName: "SIMPLIFICATION_TOLERANCE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.METHOD, fieldName: "METHOD", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Where this geometry came from.
+public struct CVPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CVP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CVPProvenance.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let METHOD: VOffset = 4
+    static let SOURCE: VOffset = 6
+    static let SOURCE_QUERY: VOffset = 8
+    static let PROPAGATOR_ID: VOffset = 10
+    static let PROPAGATOR_VERSION: VOffset = 12
+    static let PROPAGATOR_CONFIGURATION: VOffset = 14
+    static let MODULE_ID: VOffset = 16
+    static let MODULE_VERSION: VOffset = 18
+    static let MODULE_CONTENT_HASH: VOffset = 20
+    static let MODELS: VOffset = 22
+    static let CONTOUR_ALGORITHM: VOffset = 24
+    static let ENVIRONMENT_DATASET: VOffset = 26
+    static let TERRAIN_DATASET: VOffset = 28
+    static let OBSTACLE_DATASET: VOffset = 30
+    static let COMPUTED_AT: VOffset = 32
+    static let RETRIEVED_AT: VOffset = 34
+    static let LICENSE: VOffset = 36
+    static let NON_COMMERCIAL_ONLY: VOffset = 38
+    static let CITATION: VOffset = 40
+  }
+
+  public var METHOD: rflMethod { let o = _accessor.offset(VT.METHOD); return o == 0 ? .unspecified : rflMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Producing system, dataset or campaign. Required.
+  public var SOURCE: String! { let o = _accessor.offset(VT.SOURCE); return _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE) }
+  ///  Replayable query or scenario reference.
+  public var SOURCE_QUERY: String? { let o = _accessor.offset(VT.SOURCE_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_QUERY) }
+  ///  Propagator that produced the emitter geometry. A MODELED or HYBRID
+  ///  product MUST name it.
+  public var PROPAGATOR_ID: String? { let o = _accessor.offset(VT.PROPAGATOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_ID) }
+  public var PROPAGATOR_VERSION: String? { let o = _accessor.offset(VT.PROPAGATOR_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_VERSION) }
+  public var PROPAGATOR_CONFIGURATION: String? { let o = _accessor.offset(VT.PROPAGATOR_CONFIGURATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_CONFIGURATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_CONFIGURATION) }
+  ///  `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced the rings.
+  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
+  public var MODULE_CONTENT_HASH: String? { let o = _accessor.offset(VT.MODULE_CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_CONTENT_HASH) }
+  ///  Per-term model bindings for the metric that was contoured, reusing the
+  ///  `$RFL` binding so a footprint and the samples behind it cite the same
+  ///  models.
+  public var MODELS: FlatbufferVector<RFLModelBinding> { return _accessor.vector(at: VT.MODELS, byteSize: 4) }
+  ///  Algorithm that turned the sampled field into rings (e.g. "marching
+  ///  squares", "alpha shape", "H3 cell union").
+  public var CONTOUR_ALGORITHM: String? { let o = _accessor.offset(VT.CONTOUR_ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTOUR_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTOUR_ALGORITHM) }
+  ///  Environment and terrain datasets the evaluation used.
+  public var ENVIRONMENT_DATASET: String? { let o = _accessor.offset(VT.ENVIRONMENT_DATASET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENVIRONMENT_DATASETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENVIRONMENT_DATASET) }
+  public var TERRAIN_DATASET: String? { let o = _accessor.offset(VT.TERRAIN_DATASET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TERRAIN_DATASETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TERRAIN_DATASET) }
+  ///  Dataset the 3D obstacles and their materials were drawn from.
+  public var OBSTACLE_DATASET: String? { let o = _accessor.offset(VT.OBSTACLE_DATASET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSTACLE_DATASETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSTACLE_DATASET) }
+  ///  Unix ms computed and retrieved.
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var RETRIEVED_AT: UInt64 { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Licence terms. Empty means UNKNOWN TERMS.
+  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
+  public var NON_COMMERCIAL_ONLY: Bool { let o = _accessor.offset(VT.NON_COMMERCIAL_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
+  public static func startCVPProvenance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  public static func add(METHOD: rflMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METHOD.rawValue, def: 0, at: VT.METHOD) }
   public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(TARGET_TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_TIME_SYSTEM.rawValue, def: 0, at: VT.TARGET_TIME_SYSTEM) }
-  public static func add(TARGET_EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_EPOCH_FORMAT.rawValue, def: 0, at: VT.TARGET_EPOCH_FORMAT) }
-  public static func add(TAI_MINUS_UTC_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAI_MINUS_UTC_SECONDS, def: 0.0, at: VT.TAI_MINUS_UTC_SECONDS) }
-  public static func add(HAS_TAI_MINUS_UTC: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TAI_MINUS_UTC, def: false,
-   at: VT.HAS_TAI_MINUS_UTC) }
-  public static func add(DUT1_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DUT1_SECONDS, def: 0.0, at: VT.DUT1_SECONDS) }
-  public static func add(HAS_DUT1: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DUT1, def: false,
-   at: VT.HAS_DUT1) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endTIMConversionRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMConversionRequest(
+  public static func add(SOURCE_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_QUERY, at: VT.SOURCE_QUERY) }
+  public static func add(PROPAGATOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_ID, at: VT.PROPAGATOR_ID) }
+  public static func add(PROPAGATOR_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_VERSION, at: VT.PROPAGATOR_VERSION) }
+  public static func add(PROPAGATOR_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_CONFIGURATION, at: VT.PROPAGATOR_CONFIGURATION) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(MODULE_CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_CONTENT_HASH, at: VT.MODULE_CONTENT_HASH) }
+  public static func addVectorOf(MODELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODELS, at: VT.MODELS) }
+  public static func add(CONTOUR_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTOUR_ALGORITHM, at: VT.CONTOUR_ALGORITHM) }
+  public static func add(ENVIRONMENT_DATASET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENT_DATASET, at: VT.ENVIRONMENT_DATASET) }
+  public static func add(TERRAIN_DATASET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TERRAIN_DATASET, at: VT.TERRAIN_DATASET) }
+  public static func add(OBSTACLE_DATASET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSTACLE_DATASET, at: VT.OBSTACLE_DATASET) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func add(RETRIEVED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RETRIEVED_AT, def: 0, at: VT.RETRIEVED_AT) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(NON_COMMERCIAL_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NON_COMMERCIAL_ONLY, def: false,
+   at: VT.NON_COMMERCIAL_ONLY) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func endCVPProvenance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
+  public static func createCVPProvenance(
     _ fbb: inout FlatBufferBuilder,
-    SOURCEOffset SOURCE: Offset = Offset(),
-    TARGET_TIME_SYSTEM: timingStandard = .gmst,
-    TARGET_EPOCH_FORMAT: timEpochRepresentation = .julianDate,
-    TAI_MINUS_UTC_SECONDS: Double = 0.0,
-    HAS_TAI_MINUS_UTC: Bool = false,
-    DUT1_SECONDS: Double = 0.0,
-    HAS_DUT1: Bool = false,
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    METHOD: rflMethod = .unspecified,
+    SOURCEOffset SOURCE: Offset,
+    SOURCE_QUERYOffset SOURCE_QUERY: Offset = Offset(),
+    PROPAGATOR_IDOffset PROPAGATOR_ID: Offset = Offset(),
+    PROPAGATOR_VERSIONOffset PROPAGATOR_VERSION: Offset = Offset(),
+    PROPAGATOR_CONFIGURATIONOffset PROPAGATOR_CONFIGURATION: Offset = Offset(),
+    MODULE_IDOffset MODULE_ID: Offset = Offset(),
+    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
+    MODULE_CONTENT_HASHOffset MODULE_CONTENT_HASH: Offset = Offset(),
+    MODELSVectorOffset MODELS: Offset = Offset(),
+    CONTOUR_ALGORITHMOffset CONTOUR_ALGORITHM: Offset = Offset(),
+    ENVIRONMENT_DATASETOffset ENVIRONMENT_DATASET: Offset = Offset(),
+    TERRAIN_DATASETOffset TERRAIN_DATASET: Offset = Offset(),
+    OBSTACLE_DATASETOffset OBSTACLE_DATASET: Offset = Offset(),
+    COMPUTED_AT: UInt64 = 0,
+    RETRIEVED_AT: UInt64 = 0,
+    LICENSEOffset LICENSE: Offset = Offset(),
+    NON_COMMERCIAL_ONLY: Bool = false,
+    CITATIONOffset CITATION: Offset = Offset()
   ) -> Offset {
-    let __start = TIMConversionRequest.startTIMConversionRequest(&fbb)
-    TIMConversionRequest.add(SOURCE: SOURCE, &fbb)
-    TIMConversionRequest.add(TARGET_TIME_SYSTEM: TARGET_TIME_SYSTEM, &fbb)
-    TIMConversionRequest.add(TARGET_EPOCH_FORMAT: TARGET_EPOCH_FORMAT, &fbb)
-    TIMConversionRequest.add(TAI_MINUS_UTC_SECONDS: TAI_MINUS_UTC_SECONDS, &fbb)
-    TIMConversionRequest.add(HAS_TAI_MINUS_UTC: HAS_TAI_MINUS_UTC, &fbb)
-    TIMConversionRequest.add(DUT1_SECONDS: DUT1_SECONDS, &fbb)
-    TIMConversionRequest.add(HAS_DUT1: HAS_DUT1, &fbb)
-    TIMConversionRequest.add(TRACE_ID: TRACE_ID, &fbb)
-    return TIMConversionRequest.endTIMConversionRequest(&fbb, start: __start)
+    let __start = CVPProvenance.startCVPProvenance(&fbb)
+    CVPProvenance.add(METHOD: METHOD, &fbb)
+    CVPProvenance.add(SOURCE: SOURCE, &fbb)
+    CVPProvenance.add(SOURCE_QUERY: SOURCE_QUERY, &fbb)
+    CVPProvenance.add(PROPAGATOR_ID: PROPAGATOR_ID, &fbb)
+    CVPProvenance.add(PROPAGATOR_VERSION: PROPAGATOR_VERSION, &fbb)
+    CVPProvenance.add(PROPAGATOR_CONFIGURATION: PROPAGATOR_CONFIGURATION, &fbb)
+    CVPProvenance.add(MODULE_ID: MODULE_ID, &fbb)
+    CVPProvenance.add(MODULE_VERSION: MODULE_VERSION, &fbb)
+    CVPProvenance.add(MODULE_CONTENT_HASH: MODULE_CONTENT_HASH, &fbb)
+    CVPProvenance.addVectorOf(MODELS: MODELS, &fbb)
+    CVPProvenance.add(CONTOUR_ALGORITHM: CONTOUR_ALGORITHM, &fbb)
+    CVPProvenance.add(ENVIRONMENT_DATASET: ENVIRONMENT_DATASET, &fbb)
+    CVPProvenance.add(TERRAIN_DATASET: TERRAIN_DATASET, &fbb)
+    CVPProvenance.add(OBSTACLE_DATASET: OBSTACLE_DATASET, &fbb)
+    CVPProvenance.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    CVPProvenance.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
+    CVPProvenance.add(LICENSE: LICENSE, &fbb)
+    CVPProvenance.add(NON_COMMERCIAL_ONLY: NON_COMMERCIAL_ONLY, &fbb)
+    CVPProvenance.add(CITATION: CITATION, &fbb)
+    return CVPProvenance.endCVPProvenance(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.TARGET_TIME_SYSTEM, fieldName: "TARGET_TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.TARGET_EPOCH_FORMAT, fieldName: "TARGET_EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
-    try _v.visit(field: VT.TAI_MINUS_UTC_SECONDS, fieldName: "TAI_MINUS_UTC_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_TAI_MINUS_UTC, fieldName: "HAS_TAI_MINUS_UTC", required: false, type: Bool.self)
-    try _v.visit(field: VT.DUT1_SECONDS, fieldName: "DUT1_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_DUT1, fieldName: "HAS_DUT1", required: false, type: Bool.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.METHOD, fieldName: "METHOD", required: false, type: rflMethod.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_QUERY, fieldName: "SOURCE_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_ID, fieldName: "PROPAGATOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_VERSION, fieldName: "PROPAGATOR_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_CONFIGURATION, fieldName: "PROPAGATOR_CONFIGURATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_CONTENT_HASH, fieldName: "MODULE_CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODELS, fieldName: "MODELS", required: false, type: ForwardOffset<Vector<ForwardOffset<RFLModelBinding>, RFLModelBinding>>.self)
+    try _v.visit(field: VT.CONTOUR_ALGORITHM, fieldName: "CONTOUR_ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENVIRONMENT_DATASET, fieldName: "ENVIRONMENT_DATASET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TERRAIN_DATASET, fieldName: "TERRAIN_DATASET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBSTACLE_DATASET, fieldName: "OBSTACLE_DATASET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NON_COMMERCIAL_ONLY, fieldName: "NON_COMMERCIAL_ONLY", required: false, type: Bool.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Result of a time conversion request.
-public struct TIMConversionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Coverage Geometry
+public struct CVP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionResult.id, addPrefix: prefix) }
+  public static var id: String { "$CVP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CVP.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SOURCE: VOffset = 4
-    static let TARGET: VOffset = 6
-    static let DELTA_SECONDS: VOffset = 8
-    static let STATUS: VOffset = 10
-    static let ERROR_MESSAGE: VOffset = 12
-    static let TRACE_ID: VOffset = 14
+    static let COVERAGE_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let SCENARIO_ID: VOffset = 8
+    static let GEOMETRY_KIND: VOffset = 10
+    static let METRIC: VOffset = 12
+    static let METRIC_UNITS: VOffset = 14
+    static let THRESHOLD_VALUE: VOffset = 16
+    static let THRESHOLD_UNITS: VOffset = 18
+    static let THRESHOLD_COMPARISON: VOffset = 20
+    static let EPOCH: VOffset = 22
+    static let INTERVAL_START: VOffset = 24
+    static let INTERVAL_STOP: VOffset = 26
+    static let TIME_SYSTEM: VOffset = 28
+    static let GENERATION: VOffset = 30
+    static let SUPERSEDES_COVERAGE_ID: VOffset = 32
+    static let VERTEX_LONGITUDE_DEG: VOffset = 34
+    static let VERTEX_LATITUDE_DEG: VOffset = 36
+    static let VERTEX_ALTITUDE_M: VOffset = 38
+    static let ALTITUDE_REFERENCE: VOffset = 40
+    static let FIXED_ALTITUDE_M: VOffset = 42
+    static let RING_OFFSETS: VOffset = 44
+    static let RING_POLYGON_INDEXES: VOffset = 46
+    static let RING_ROLES: VOffset = 48
+    static let POLYGON_COUNT: VOffset = 50
+    static let POLYGON_LEVEL_VALUES: VOffset = 52
+    static let POLYGON_LEVEL_UNCERTAINTIES: VOffset = 54
+    static let POLYGON_AREA_KM2: VOffset = 56
+    static let VERTEX_POSITION_UNCERTAINTY_M: VOffset = 58
+    static let GRID_SCHEME: VOffset = 60
+    static let GRID_RESOLUTION: VOffset = 62
+    static let GRID_SPACING_DEG: VOffset = 64
+    static let GRID_CELL_COUNT: VOffset = 66
+    static let CVG_COVERAGE_ID: VOffset = 68
+    static let RFL_ID: VOffset = 70
+    static let ACI_ID: VOffset = 72
+    static let CONTRIBUTING_EMITTERS: VOffset = 74
+    static let RECEIVER_SET_ID: VOffset = 76
+    static let RECEIVERS: VOffset = 78
+    static let CONTRIBUTING_OBSTACLES: VOffset = 80
+    static let OBSTACLE_SET_ID: VOffset = 82
+    static let LIMITING_CONSTRAINT: VOffset = 84
+    static let LIMITING_CONSTRAINT_NOTE: VOffset = 86
+    static let UNCERTAINTY: VOffset = 88
+    static let PROVENANCE: VOffset = 90
+    static let COMPUTED_AT: VOffset = 92
+    static let PRODUCER_ID: VOffset = 94
+    static let SIGNATURE: VOffset = 96
   }
 
-  ///  Original source instant.
-  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Converted target instant.
-  public var TARGET: TIMInstant? { let o = _accessor.offset(VT.TARGET); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Target minus source offset in SI seconds for the requested conversion.
-  public var DELTA_SECONDS: Double { let o = _accessor.offset(VT.DELTA_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Conversion status.
-  public var STATUS: timConversionStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : timConversionStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ok }
-  ///  Optional error detail when STATUS is not OK.
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  ///  Caller trace/correlation identifier copied from the request when present.
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startTIMConversionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(TARGET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET, at: VT.TARGET) }
-  public static func add(DELTA_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_SECONDS, def: 0.0, at: VT.DELTA_SECONDS) }
-  public static func add(STATUS: timConversionStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endTIMConversionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMConversionResult(
+  ///  Stable identifier of this geometry product.
+  public var COVERAGE_ID: String! { let o = _accessor.offset(VT.COVERAGE_ID); return _accessor.string(at: o) }
+  public var COVERAGE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.COVERAGE_ID) }
+  ///  Display name.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Analysis or scenario grouping identifier shared with the `$RFL` samples
+  ///  and `$ACI` intervals of the same study.
+  public var SCENARIO_ID: String? { let o = _accessor.offset(VT.SCENARIO_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCENARIO_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCENARIO_ID) }
+  public var GEOMETRY_KIND: cvpGeometryKind { let o = _accessor.offset(VT.GEOMETRY_KIND); return o == 0 ? .unspecified : cvpGeometryKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  The metric the rings contour.
+  public var METRIC: rflBudgetTerm { let o = _accessor.offset(VT.METRIC); return o == 0 ? .unspecified : rflBudgetTerm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Units of the metric and of POLYGON_LEVEL_VALUES.
+  public var METRIC_UNITS: String? { let o = _accessor.offset(VT.METRIC_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var METRIC_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.METRIC_UNITS) }
+  ///  The threshold the boundary was drawn at, for a THRESHOLD_CONTOUR.
+  public var THRESHOLD_VALUE: Double { let o = _accessor.offset(VT.THRESHOLD_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var THRESHOLD_UNITS: String? { let o = _accessor.offset(VT.THRESHOLD_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var THRESHOLD_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.THRESHOLD_UNITS) }
+  public var THRESHOLD_COMPARISON: rflComparison { let o = _accessor.offset(VT.THRESHOLD_COMPARISON); return o == 0 ? .unspecified : rflComparison(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Instantaneous epoch, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM.
+  ///  Set for FOOTPRINT and other instantaneous products; NaN for aggregates.
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Interval this geometry holds over, same encoding. Set for aggregated
+  ///  products (union over a window, availability contour); NaN for
+  ///  instantaneous ones. A product that states neither EPOCH nor an interval
+  ///  is untethered in time and MUST be refused.
+  public var INTERVAL_START: Double { let o = _accessor.offset(VT.INTERVAL_START); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INTERVAL_STOP: Double { let o = _accessor.offset(VT.INTERVAL_STOP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time scale all epochs in this record are expressed in. Defaults to UTC
+  ///  explicitly: `timingStandard` ordinal 0 is GMST.
+  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .utc : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .utc }
+  ///  Monotonic generation of this coverage product within its COVERAGE_ID
+  ///  lineage. A streaming producer increments it per emission; a consumer
+  ///  holding a higher generation MUST NOT be overwritten by a lower one.
+  public var GENERATION: UInt64 { let o = _accessor.offset(VT.GENERATION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  COVERAGE_ID this record replaces, when the lineage was re-identified.
+  public var SUPERSEDES_COVERAGE_ID: String? { let o = _accessor.offset(VT.SUPERSEDES_COVERAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SUPERSEDES_COVERAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SUPERSEDES_COVERAGE_ID) }
+  ///  Vertex longitudes, geodetic degrees in [-180, 180].
+  public var VERTEX_LONGITUDE_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.VERTEX_LONGITUDE_DEG, byteSize: 8) }
+  public func withUnsafePointerToVertexLongitudeDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VERTEX_LONGITUDE_DEG, body: body) }
+  ///  Vertex latitudes, geodetic degrees in [-90, 90]. Same length as
+  ///  VERTEX_LONGITUDE_DEG.
+  public var VERTEX_LATITUDE_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.VERTEX_LATITUDE_DEG, byteSize: 8) }
+  public func withUnsafePointerToVertexLatitudeDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VERTEX_LATITUDE_DEG, body: body) }
+  ///  Vertex altitudes, metres above ALTITUDE_REFERENCE. Absent when the
+  ///  geometry lies on the reference surface.
+  public var VERTEX_ALTITUDE_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.VERTEX_ALTITUDE_M, byteSize: 8) }
+  public func withUnsafePointerToVertexAltitudeM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VERTEX_ALTITUDE_M, body: body) }
+  public var ALTITUDE_REFERENCE: cvpAltitudeReference { let o = _accessor.offset(VT.ALTITUDE_REFERENCE); return o == 0 ? .unspecified : cvpAltitudeReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  The constant altitude, metres, when ALTITUDE_REFERENCE is FIXED_ALTITUDE.
+  public var FIXED_ALTITUDE_M: Double { let o = _accessor.offset(VT.FIXED_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Ring start indexes; RING_COUNT + 1 entries, last equals the vertex count.
+  public var RING_OFFSETS: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.RING_OFFSETS, byteSize: 4) }
+  public func withUnsafePointerToRingOffsets<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RING_OFFSETS, body: body) }
+  ///  Polygon each ring belongs to. Same length as RING_COUNT.
+  public var RING_POLYGON_INDEXES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.RING_POLYGON_INDEXES, byteSize: 4) }
+  public func withUnsafePointerToRingPolygonIndexes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RING_POLYGON_INDEXES, body: body) }
+  ///  Role of each ring. Same length as RING_COUNT.
+  public var RING_ROLES: FlatbufferVector<cvpRingRole> { return _accessor.vector(at: VT.RING_ROLES, byteSize: 1) }
+  ///  Number of polygons; equals max(RING_POLYGON_INDEXES) + 1 and is published
+  ///  so an empty coverage field (zero polygons, zero rings) is representable
+  ///  and distinguishable from an unpopulated record.
+  public var POLYGON_COUNT: UInt32 { let o = _accessor.offset(VT.POLYGON_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Metric value each polygon is drawn at, in METRIC_UNITS. Same length as
+  ///  POLYGON_COUNT. Carried for ISO_METRIC_CONTOUR; for a THRESHOLD_CONTOUR
+  ///  every entry equals THRESHOLD_VALUE.
+  public var POLYGON_LEVEL_VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.POLYGON_LEVEL_VALUES, byteSize: 8) }
+  public func withUnsafePointerToPolygonLevelValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POLYGON_LEVEL_VALUES, body: body) }
+  ///  1-sigma uncertainty of each polygon's level, same units and length.
+  public var POLYGON_LEVEL_UNCERTAINTIES: FlatbufferVector<Double> { return _accessor.vector(at: VT.POLYGON_LEVEL_UNCERTAINTIES, byteSize: 8) }
+  public func withUnsafePointerToPolygonLevelUncertainties<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POLYGON_LEVEL_UNCERTAINTIES, body: body) }
+  ///  Surface area enclosed by each polygon, square kilometres.
+  public var POLYGON_AREA_KM2: FlatbufferVector<Double> { return _accessor.vector(at: VT.POLYGON_AREA_KM2, byteSize: 8) }
+  public func withUnsafePointerToPolygonAreaKm2<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POLYGON_AREA_KM2, body: body) }
+  ///  Per-vertex 1-sigma horizontal uncertainty, metres. Same length as the
+  ///  vertex arrays. Absent means CVPUncertainty.HORIZONTAL_POSITION_M governs
+  ///  the whole boundary.
+  public var VERTEX_POSITION_UNCERTAINTY_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.VERTEX_POSITION_UNCERTAINTY_M, byteSize: 8) }
+  public func withUnsafePointerToVertexPositionUncertaintyM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VERTEX_POSITION_UNCERTAINTY_M, body: body) }
+  ///  Grid the field was sampled on before contouring, e.g. "H3" or
+  ///  "GEODETIC_LATLON". A contour is never finer than the grid behind it.
+  public var GRID_SCHEME: String? { let o = _accessor.offset(VT.GRID_SCHEME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRID_SCHEMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRID_SCHEME) }
+  ///  Grid resolution in the scheme's own convention (H3 resolution 0-15).
+  public var GRID_RESOLUTION: UInt8 { let o = _accessor.offset(VT.GRID_RESOLUTION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Grid spacing in degrees, for a geodetic lat/lon grid.
+  public var GRID_SPACING_DEG: Double { let o = _accessor.offset(VT.GRID_SPACING_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of grid cells evaluated.
+  public var GRID_CELL_COUNT: UInt64 { let o = _accessor.offset(VT.GRID_CELL_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  `$CVG.COVERAGE_ID` of the figure-of-merit grid this geometry was
+  ///  contoured from, when one was published.
+  public var CVG_COVERAGE_ID: String? { let o = _accessor.offset(VT.CVG_COVERAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CVG_COVERAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CVG_COVERAGE_ID) }
+  ///  `$RFL.RFL_ID` of the sample set the field was evaluated from, when one
+  ///  was published.
+  public var RFL_ID: String? { let o = _accessor.offset(VT.RFL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFL_ID) }
+  ///  `$ACI.ACI_ID` of the interval set an availability or gap product was
+  ///  aggregated from, when one was published.
+  public var ACI_ID: String? { let o = _accessor.offset(VT.ACI_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ACI_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACI_ID) }
+  ///  Emitters that contributed. Required: coverage with no stated emitter is
+  ///  an unattributable claim about the sky.
+  public var CONTRIBUTING_EMITTERS: FlatbufferVector<CVPEmitterRef> { return _accessor.vector(at: VT.CONTRIBUTING_EMITTERS, byteSize: 4) }
+  ///  Identifier of the receiver set this coverage is stated for.
+  public var RECEIVER_SET_ID: String? { let o = _accessor.offset(VT.RECEIVER_SET_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECEIVER_SET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECEIVER_SET_ID) }
+  ///  The receivers themselves, when the set is enumerable.
+  public var RECEIVERS: FlatbufferVector<CVPReceiverRef> { return _accessor.vector(at: VT.RECEIVERS, byteSize: 4) }
+  ///  3D obstacles that clipped or shaped the boundary, each naming the `$RFS`
+  ///  material that produced its effect.
+  public var CONTRIBUTING_OBSTACLES: FlatbufferVector<CVPObstacleRef> { return _accessor.vector(at: VT.CONTRIBUTING_OBSTACLES, byteSize: 4) }
+  ///  Identifier of the obstacle set used, when it is published as a set rather
+  ///  than enumerated here.
+  public var OBSTACLE_SET_ID: String? { let o = _accessor.offset(VT.OBSTACLE_SET_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSTACLE_SET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSTACLE_SET_ID) }
+  ///  The condition that bounds the boundary — why the contour is where it is.
+  public var LIMITING_CONSTRAINT: rflConstraint { let o = _accessor.offset(VT.LIMITING_CONSTRAINT); return o == 0 ? .unspecified : rflConstraint(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Verbatim description, required when LIMITING_CONSTRAINT is OTHER.
+  public var LIMITING_CONSTRAINT_NOTE: String? { let o = _accessor.offset(VT.LIMITING_CONSTRAINT_NOTE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LIMITING_CONSTRAINT_NOTESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LIMITING_CONSTRAINT_NOTE) }
+  ///  Uncertainty of level and boundary.
+  public var UNCERTAINTY: CVPUncertainty? { let o = _accessor.offset(VT.UNCERTAINTY); return o == 0 ? nil : CVPUncertainty(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Provenance. Required.
+  public var PROVENANCE: CVPProvenance! { let o = _accessor.offset(VT.PROVENANCE); return CVPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Unix ms this record was serialized.
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  `$EPM` identifier of the producing node.
+  public var PRODUCER_ID: String? { let o = _accessor.offset(VT.PRODUCER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_ID) }
+  ///  Ed25519 signature by the producing `$EPM`.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  public static func startCVP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 47) }
+  public static func add(COVERAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVERAGE_ID, at: VT.COVERAGE_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
+  public static func add(GEOMETRY_KIND: cvpGeometryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOMETRY_KIND.rawValue, def: 0, at: VT.GEOMETRY_KIND) }
+  public static func add(METRIC: rflBudgetTerm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METRIC.rawValue, def: 0, at: VT.METRIC) }
+  public static func add(METRIC_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METRIC_UNITS, at: VT.METRIC_UNITS) }
+  public static func add(THRESHOLD_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_VALUE, def: 0.0, at: VT.THRESHOLD_VALUE) }
+  public static func add(THRESHOLD_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THRESHOLD_UNITS, at: VT.THRESHOLD_UNITS) }
+  public static func add(THRESHOLD_COMPARISON: rflComparison, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_COMPARISON.rawValue, def: 0, at: VT.THRESHOLD_COMPARISON) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
+  public static func add(INTERVAL_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERVAL_START, def: 0.0, at: VT.INTERVAL_START) }
+  public static func add(INTERVAL_STOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERVAL_STOP, def: 0.0, at: VT.INTERVAL_STOP) }
+  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 11, at: VT.TIME_SYSTEM) }
+  public static func add(GENERATION: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GENERATION, def: 0, at: VT.GENERATION) }
+  public static func add(SUPERSEDES_COVERAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUPERSEDES_COVERAGE_ID, at: VT.SUPERSEDES_COVERAGE_ID) }
+  public static func addVectorOf(VERTEX_LONGITUDE_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERTEX_LONGITUDE_DEG, at: VT.VERTEX_LONGITUDE_DEG) }
+  public static func addVectorOf(VERTEX_LATITUDE_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERTEX_LATITUDE_DEG, at: VT.VERTEX_LATITUDE_DEG) }
+  public static func addVectorOf(VERTEX_ALTITUDE_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERTEX_ALTITUDE_M, at: VT.VERTEX_ALTITUDE_M) }
+  public static func add(ALTITUDE_REFERENCE: cvpAltitudeReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_REFERENCE.rawValue, def: 0, at: VT.ALTITUDE_REFERENCE) }
+  public static func add(FIXED_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_ALTITUDE_M, def: 0.0, at: VT.FIXED_ALTITUDE_M) }
+  public static func addVectorOf(RING_OFFSETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RING_OFFSETS, at: VT.RING_OFFSETS) }
+  public static func addVectorOf(RING_POLYGON_INDEXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RING_POLYGON_INDEXES, at: VT.RING_POLYGON_INDEXES) }
+  public static func addVectorOf(RING_ROLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RING_ROLES, at: VT.RING_ROLES) }
+  public static func add(POLYGON_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLYGON_COUNT, def: 0, at: VT.POLYGON_COUNT) }
+  public static func addVectorOf(POLYGON_LEVEL_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_LEVEL_VALUES, at: VT.POLYGON_LEVEL_VALUES) }
+  public static func addVectorOf(POLYGON_LEVEL_UNCERTAINTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_LEVEL_UNCERTAINTIES, at: VT.POLYGON_LEVEL_UNCERTAINTIES) }
+  public static func addVectorOf(POLYGON_AREA_KM2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_AREA_KM2, at: VT.POLYGON_AREA_KM2) }
+  public static func addVectorOf(VERTEX_POSITION_UNCERTAINTY_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERTEX_POSITION_UNCERTAINTY_M, at: VT.VERTEX_POSITION_UNCERTAINTY_M) }
+  public static func add(GRID_SCHEME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRID_SCHEME, at: VT.GRID_SCHEME) }
+  public static func add(GRID_RESOLUTION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRID_RESOLUTION, def: 0, at: VT.GRID_RESOLUTION) }
+  public static func add(GRID_SPACING_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRID_SPACING_DEG, def: 0.0, at: VT.GRID_SPACING_DEG) }
+  public static func add(GRID_CELL_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRID_CELL_COUNT, def: 0, at: VT.GRID_CELL_COUNT) }
+  public static func add(CVG_COVERAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CVG_COVERAGE_ID, at: VT.CVG_COVERAGE_ID) }
+  public static func add(RFL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFL_ID, at: VT.RFL_ID) }
+  public static func add(ACI_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACI_ID, at: VT.ACI_ID) }
+  public static func addVectorOf(CONTRIBUTING_EMITTERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRIBUTING_EMITTERS, at: VT.CONTRIBUTING_EMITTERS) }
+  public static func add(RECEIVER_SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_SET_ID, at: VT.RECEIVER_SET_ID) }
+  public static func addVectorOf(RECEIVERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVERS, at: VT.RECEIVERS) }
+  public static func addVectorOf(CONTRIBUTING_OBSTACLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRIBUTING_OBSTACLES, at: VT.CONTRIBUTING_OBSTACLES) }
+  public static func add(OBSTACLE_SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSTACLE_SET_ID, at: VT.OBSTACLE_SET_ID) }
+  public static func add(LIMITING_CONSTRAINT: rflConstraint, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIMITING_CONSTRAINT.rawValue, def: 0, at: VT.LIMITING_CONSTRAINT) }
+  public static func add(LIMITING_CONSTRAINT_NOTE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIMITING_CONSTRAINT_NOTE, at: VT.LIMITING_CONSTRAINT_NOTE) }
+  public static func add(UNCERTAINTY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNCERTAINTY, at: VT.UNCERTAINTY) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func add(PRODUCER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_ID, at: VT.PRODUCER_ID) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func endCVP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 34, 36, 44, 46, 48, 74, 90]); return end }
+  public static func createCVP(
     _ fbb: inout FlatBufferBuilder,
-    SOURCEOffset SOURCE: Offset = Offset(),
-    TARGETOffset TARGET: Offset = Offset(),
-    DELTA_SECONDS: Double = 0.0,
-    STATUS: timConversionStatus = .ok,
-    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    COVERAGE_IDOffset COVERAGE_ID: Offset,
+    NAMEOffset NAME: Offset = Offset(),
+    SCENARIO_IDOffset SCENARIO_ID: Offset = Offset(),
+    GEOMETRY_KIND: cvpGeometryKind = .unspecified,
+    METRIC: rflBudgetTerm = .unspecified,
+    METRIC_UNITSOffset METRIC_UNITS: Offset = Offset(),
+    THRESHOLD_VALUE: Double = 0.0,
+    THRESHOLD_UNITSOffset THRESHOLD_UNITS: Offset = Offset(),
+    THRESHOLD_COMPARISON: rflComparison = .unspecified,
+    EPOCH: Double = 0.0,
+    INTERVAL_START: Double = 0.0,
+    INTERVAL_STOP: Double = 0.0,
+    TIME_SYSTEM: timingStandard = .utc,
+    GENERATION: UInt64 = 0,
+    SUPERSEDES_COVERAGE_IDOffset SUPERSEDES_COVERAGE_ID: Offset = Offset(),
+    VERTEX_LONGITUDE_DEGVectorOffset VERTEX_LONGITUDE_DEG: Offset,
+    VERTEX_LATITUDE_DEGVectorOffset VERTEX_LATITUDE_DEG: Offset,
+    VERTEX_ALTITUDE_MVectorOffset VERTEX_ALTITUDE_M: Offset = Offset(),
+    ALTITUDE_REFERENCE: cvpAltitudeReference = .unspecified,
+    FIXED_ALTITUDE_M: Double = 0.0,
+    RING_OFFSETSVectorOffset RING_OFFSETS: Offset,
+    RING_POLYGON_INDEXESVectorOffset RING_POLYGON_INDEXES: Offset,
+    RING_ROLESVectorOffset RING_ROLES: Offset,
+    POLYGON_COUNT: UInt32 = 0,
+    POLYGON_LEVEL_VALUESVectorOffset POLYGON_LEVEL_VALUES: Offset = Offset(),
+    POLYGON_LEVEL_UNCERTAINTIESVectorOffset POLYGON_LEVEL_UNCERTAINTIES: Offset = Offset(),
+    POLYGON_AREA_KM2VectorOffset POLYGON_AREA_KM2: Offset = Offset(),
+    VERTEX_POSITION_UNCERTAINTY_MVectorOffset VERTEX_POSITION_UNCERTAINTY_M: Offset = Offset(),
+    GRID_SCHEMEOffset GRID_SCHEME: Offset = Offset(),
+    GRID_RESOLUTION: UInt8 = 0,
+    GRID_SPACING_DEG: Double = 0.0,
+    GRID_CELL_COUNT: UInt64 = 0,
+    CVG_COVERAGE_IDOffset CVG_COVERAGE_ID: Offset = Offset(),
+    RFL_IDOffset RFL_ID: Offset = Offset(),
+    ACI_IDOffset ACI_ID: Offset = Offset(),
+    CONTRIBUTING_EMITTERSVectorOffset CONTRIBUTING_EMITTERS: Offset,
+    RECEIVER_SET_IDOffset RECEIVER_SET_ID: Offset = Offset(),
+    RECEIVERSVectorOffset RECEIVERS: Offset = Offset(),
+    CONTRIBUTING_OBSTACLESVectorOffset CONTRIBUTING_OBSTACLES: Offset = Offset(),
+    OBSTACLE_SET_IDOffset OBSTACLE_SET_ID: Offset = Offset(),
+    LIMITING_CONSTRAINT: rflConstraint = .unspecified,
+    LIMITING_CONSTRAINT_NOTEOffset LIMITING_CONSTRAINT_NOTE: Offset = Offset(),
+    UNCERTAINTYOffset UNCERTAINTY: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset,
+    COMPUTED_AT: UInt64 = 0,
+    PRODUCER_IDOffset PRODUCER_ID: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
   ) -> Offset {
-    let __start = TIMConversionResult.startTIMConversionResult(&fbb)
-    TIMConversionResult.add(SOURCE: SOURCE, &fbb)
-    TIMConversionResult.add(TARGET: TARGET, &fbb)
-    TIMConversionResult.add(DELTA_SECONDS: DELTA_SECONDS, &fbb)
-    TIMConversionResult.add(STATUS: STATUS, &fbb)
-    TIMConversionResult.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
-    TIMConversionResult.add(TRACE_ID: TRACE_ID, &fbb)
-    return TIMConversionResult.endTIMConversionResult(&fbb, start: __start)
+    let __start = CVP.startCVP(&fbb)
+    CVP.add(COVERAGE_ID: COVERAGE_ID, &fbb)
+    CVP.add(NAME: NAME, &fbb)
+    CVP.add(SCENARIO_ID: SCENARIO_ID, &fbb)
+    CVP.add(GEOMETRY_KIND: GEOMETRY_KIND, &fbb)
+    CVP.add(METRIC: METRIC, &fbb)
+    CVP.add(METRIC_UNITS: METRIC_UNITS, &fbb)
+    CVP.add(THRESHOLD_VALUE: THRESHOLD_VALUE, &fbb)
+    CVP.add(THRESHOLD_UNITS: THRESHOLD_UNITS, &fbb)
+    CVP.add(THRESHOLD_COMPARISON: THRESHOLD_COMPARISON, &fbb)
+    CVP.add(EPOCH: EPOCH, &fbb)
+    CVP.add(INTERVAL_START: INTERVAL_START, &fbb)
+    CVP.add(INTERVAL_STOP: INTERVAL_STOP, &fbb)
+    CVP.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    CVP.add(GENERATION: GENERATION, &fbb)
+    CVP.add(SUPERSEDES_COVERAGE_ID: SUPERSEDES_COVERAGE_ID, &fbb)
+    CVP.addVectorOf(VERTEX_LONGITUDE_DEG: VERTEX_LONGITUDE_DEG, &fbb)
+    CVP.addVectorOf(VERTEX_LATITUDE_DEG: VERTEX_LATITUDE_DEG, &fbb)
+    CVP.addVectorOf(VERTEX_ALTITUDE_M: VERTEX_ALTITUDE_M, &fbb)
+    CVP.add(ALTITUDE_REFERENCE: ALTITUDE_REFERENCE, &fbb)
+    CVP.add(FIXED_ALTITUDE_M: FIXED_ALTITUDE_M, &fbb)
+    CVP.addVectorOf(RING_OFFSETS: RING_OFFSETS, &fbb)
+    CVP.addVectorOf(RING_POLYGON_INDEXES: RING_POLYGON_INDEXES, &fbb)
+    CVP.addVectorOf(RING_ROLES: RING_ROLES, &fbb)
+    CVP.add(POLYGON_COUNT: POLYGON_COUNT, &fbb)
+    CVP.addVectorOf(POLYGON_LEVEL_VALUES: POLYGON_LEVEL_VALUES, &fbb)
+    CVP.addVectorOf(POLYGON_LEVEL_UNCERTAINTIES: POLYGON_LEVEL_UNCERTAINTIES, &fbb)
+    CVP.addVectorOf(POLYGON_AREA_KM2: POLYGON_AREA_KM2, &fbb)
+    CVP.addVectorOf(VERTEX_POSITION_UNCERTAINTY_M: VERTEX_POSITION_UNCERTAINTY_M, &fbb)
+    CVP.add(GRID_SCHEME: GRID_SCHEME, &fbb)
+    CVP.add(GRID_RESOLUTION: GRID_RESOLUTION, &fbb)
+    CVP.add(GRID_SPACING_DEG: GRID_SPACING_DEG, &fbb)
+    CVP.add(GRID_CELL_COUNT: GRID_CELL_COUNT, &fbb)
+    CVP.add(CVG_COVERAGE_ID: CVG_COVERAGE_ID, &fbb)
+    CVP.add(RFL_ID: RFL_ID, &fbb)
+    CVP.add(ACI_ID: ACI_ID, &fbb)
+    CVP.addVectorOf(CONTRIBUTING_EMITTERS: CONTRIBUTING_EMITTERS, &fbb)
+    CVP.add(RECEIVER_SET_ID: RECEIVER_SET_ID, &fbb)
+    CVP.addVectorOf(RECEIVERS: RECEIVERS, &fbb)
+    CVP.addVectorOf(CONTRIBUTING_OBSTACLES: CONTRIBUTING_OBSTACLES, &fbb)
+    CVP.add(OBSTACLE_SET_ID: OBSTACLE_SET_ID, &fbb)
+    CVP.add(LIMITING_CONSTRAINT: LIMITING_CONSTRAINT, &fbb)
+    CVP.add(LIMITING_CONSTRAINT_NOTE: LIMITING_CONSTRAINT_NOTE, &fbb)
+    CVP.add(UNCERTAINTY: UNCERTAINTY, &fbb)
+    CVP.add(PROVENANCE: PROVENANCE, &fbb)
+    CVP.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    CVP.add(PRODUCER_ID: PRODUCER_ID, &fbb)
+    CVP.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    return CVP.endCVP(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.DELTA_SECONDS, fieldName: "DELTA_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: timConversionStatus.self)
-    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Time System and time-conversion envelope.
-public struct TIM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let TIME_SYSTEM: VOffset = 4
-    static let INSTANT: VOffset = 6
-    static let CONVERSION_REQUEST: VOffset = 8
-    static let CONVERSION_RESULT: VOffset = 10
-  }
-
-  ///  Legacy time-system selector retained for existing TIM consumers.
-  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  A single tagged instant.
-  public var INSTANT: TIMInstant? { let o = _accessor.offset(VT.INSTANT); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time conversion request.
-  public var CONVERSION_REQUEST: TIMConversionRequest? { let o = _accessor.offset(VT.CONVERSION_REQUEST); return o == 0 ? nil : TIMConversionRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time conversion result.
-  public var CONVERSION_RESULT: TIMConversionResult? { let o = _accessor.offset(VT.CONVERSION_RESULT); return o == 0 ? nil : TIMConversionResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTIM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
-  public static func add(INSTANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANT, at: VT.INSTANT) }
-  public static func add(CONVERSION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_REQUEST, at: VT.CONVERSION_REQUEST) }
-  public static func add(CONVERSION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_RESULT, at: VT.CONVERSION_RESULT) }
-  public static func endTIM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIM(
-    _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst,
-    INSTANTOffset INSTANT: Offset = Offset(),
-    CONVERSION_REQUESTOffset CONVERSION_REQUEST: Offset = Offset(),
-    CONVERSION_RESULTOffset CONVERSION_RESULT: Offset = Offset()
-  ) -> Offset {
-    let __start = TIM.startTIM(&fbb)
-    TIM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    TIM.add(INSTANT: INSTANT, &fbb)
-    TIM.add(CONVERSION_REQUEST: CONVERSION_REQUEST, &fbb)
-    TIM.add(CONVERSION_RESULT: CONVERSION_RESULT, &fbb)
-    return TIM.endTIM(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COVERAGE_ID, fieldName: "COVERAGE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCENARIO_ID, fieldName: "SCENARIO_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOMETRY_KIND, fieldName: "GEOMETRY_KIND", required: false, type: cvpGeometryKind.self)
+    try _v.visit(field: VT.METRIC, fieldName: "METRIC", required: false, type: rflBudgetTerm.self)
+    try _v.visit(field: VT.METRIC_UNITS, fieldName: "METRIC_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THRESHOLD_VALUE, fieldName: "THRESHOLD_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.THRESHOLD_UNITS, fieldName: "THRESHOLD_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THRESHOLD_COMPARISON, fieldName: "THRESHOLD_COMPARISON", required: false, type: rflComparison.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.INTERVAL_START, fieldName: "INTERVAL_START", required: false, type: Double.self)
+    try _v.visit(field: VT.INTERVAL_STOP, fieldName: "INTERVAL_STOP", required: false, type: Double.self)
     try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.INSTANT, fieldName: "INSTANT", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.CONVERSION_REQUEST, fieldName: "CONVERSION_REQUEST", required: false, type: ForwardOffset<TIMConversionRequest>.self)
-    try _v.visit(field: VT.CONVERSION_RESULT, fieldName: "CONVERSION_RESULT", required: false, type: ForwardOffset<TIMConversionResult>.self)
+    try _v.visit(field: VT.GENERATION, fieldName: "GENERATION", required: false, type: UInt64.self)
+    try _v.visit(field: VT.SUPERSEDES_COVERAGE_ID, fieldName: "SUPERSEDES_COVERAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERTEX_LONGITUDE_DEG, fieldName: "VERTEX_LONGITUDE_DEG", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.VERTEX_LATITUDE_DEG, fieldName: "VERTEX_LATITUDE_DEG", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.VERTEX_ALTITUDE_M, fieldName: "VERTEX_ALTITUDE_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ALTITUDE_REFERENCE, fieldName: "ALTITUDE_REFERENCE", required: false, type: cvpAltitudeReference.self)
+    try _v.visit(field: VT.FIXED_ALTITUDE_M, fieldName: "FIXED_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.RING_OFFSETS, fieldName: "RING_OFFSETS", required: true, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.RING_POLYGON_INDEXES, fieldName: "RING_POLYGON_INDEXES", required: true, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.RING_ROLES, fieldName: "RING_ROLES", required: true, type: ForwardOffset<Vector<cvpRingRole, cvpRingRole>>.self)
+    try _v.visit(field: VT.POLYGON_COUNT, fieldName: "POLYGON_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.POLYGON_LEVEL_VALUES, fieldName: "POLYGON_LEVEL_VALUES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POLYGON_LEVEL_UNCERTAINTIES, fieldName: "POLYGON_LEVEL_UNCERTAINTIES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POLYGON_AREA_KM2, fieldName: "POLYGON_AREA_KM2", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.VERTEX_POSITION_UNCERTAINTY_M, fieldName: "VERTEX_POSITION_UNCERTAINTY_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.GRID_SCHEME, fieldName: "GRID_SCHEME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRID_RESOLUTION, fieldName: "GRID_RESOLUTION", required: false, type: UInt8.self)
+    try _v.visit(field: VT.GRID_SPACING_DEG, fieldName: "GRID_SPACING_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.GRID_CELL_COUNT, fieldName: "GRID_CELL_COUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CVG_COVERAGE_ID, fieldName: "CVG_COVERAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFL_ID, fieldName: "RFL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACI_ID, fieldName: "ACI_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTRIBUTING_EMITTERS, fieldName: "CONTRIBUTING_EMITTERS", required: true, type: ForwardOffset<Vector<ForwardOffset<CVPEmitterRef>, CVPEmitterRef>>.self)
+    try _v.visit(field: VT.RECEIVER_SET_ID, fieldName: "RECEIVER_SET_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECEIVERS, fieldName: "RECEIVERS", required: false, type: ForwardOffset<Vector<ForwardOffset<CVPReceiverRef>, CVPReceiverRef>>.self)
+    try _v.visit(field: VT.CONTRIBUTING_OBSTACLES, fieldName: "CONTRIBUTING_OBSTACLES", required: false, type: ForwardOffset<Vector<ForwardOffset<CVPObstacleRef>, CVPObstacleRef>>.self)
+    try _v.visit(field: VT.OBSTACLE_SET_ID, fieldName: "OBSTACLE_SET_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LIMITING_CONSTRAINT, fieldName: "LIMITING_CONSTRAINT", required: false, type: rflConstraint.self)
+    try _v.visit(field: VT.LIMITING_CONSTRAINT_NOTE, fieldName: "LIMITING_CONSTRAINT_NOTE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UNCERTAINTY, fieldName: "UNCERTAINTY", required: false, type: ForwardOffset<CVPUncertainty>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<CVPProvenance>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

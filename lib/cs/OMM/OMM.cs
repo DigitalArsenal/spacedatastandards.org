@@ -207,6 +207,10 @@ public struct OMM : IFlatbufferObject
   /// message that has no dedicated field above, in message order.
   public OMMUserDefinedParameter? USER_DEFINED_PARAMETERS(int j) { int o = __p.__offset(88); return o != 0 ? (OMMUserDefinedParameter?)(new OMMUserDefinedParameter()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int USER_DEFINED_PARAMETERSLength { get { int o = __p.__offset(88); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Where the element set comes from and the terms it travels under.
+  public PVN? PROVENANCE { get { int o = __p.__offset(90); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Realism of COVARIANCE.
+  public CVR? COV_REALISM { get { int o = __p.__offset(92); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<OMM> CreateOMM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS = 0.0,
@@ -251,8 +255,10 @@ public struct OMM : IFlatbufferObject
       double USER_DEFINED_MICROSECONDS = 0.0,
       StringOffset CLASSIFICATIONOffset = default(StringOffset),
       StringOffset MESSAGE_IDOffset = default(StringOffset),
-      VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset)) {
-    builder.StartTable(43);
+      VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset),
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>),
+      Offset<CVR> COV_REALISMOffset = default(Offset<CVR>)) {
+    builder.StartTable(45);
     OMM.AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS);
     OMM.AddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP);
     OMM.AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT);
@@ -273,6 +279,8 @@ public struct OMM : IFlatbufferObject
     OMM.AddMEAN_MOTION(builder, MEAN_MOTION);
     OMM.AddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS);
     OMM.AddCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS);
+    OMM.AddCOV_REALISM(builder, COV_REALISMOffset);
+    OMM.AddPROVENANCE(builder, PROVENANCEOffset);
     OMM.AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERSOffset);
     OMM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
     OMM.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
@@ -299,7 +307,7 @@ public struct OMM : IFlatbufferObject
     return OMM.EndOMM(builder);
   }
 
-  public static void StartOMM(FlatBufferBuilder builder) { builder.StartTable(43); }
+  public static void StartOMM(FlatBufferBuilder builder) { builder.StartTable(45); }
   public static void AddCCSDS_OMM_VERS(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.AddDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -353,6 +361,8 @@ public struct OMM : IFlatbufferObject
   public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OMMUserDefinedParameter>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OMMUserDefinedParameter>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(43, PROVENANCEOffset.Value, 0); }
+  public static void AddCOV_REALISM(FlatBufferBuilder builder, Offset<CVR> COV_REALISMOffset) { builder.AddOffset(44, COV_REALISMOffset.Value, 0); }
   public static Offset<OMM> EndOMM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OMM>(o);
@@ -410,6 +420,8 @@ public struct OMM : IFlatbufferObject
     _o.MESSAGE_ID = this.MESSAGE_ID;
     _o.USER_DEFINED_PARAMETERS = new List<OMMUserDefinedParameterT>();
     for (var _j = 0; _j < this.USER_DEFINED_PARAMETERSLength; ++_j) {_o.USER_DEFINED_PARAMETERS.Add(this.USER_DEFINED_PARAMETERS(_j).HasValue ? this.USER_DEFINED_PARAMETERS(_j).Value.UnPack() : null);}
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
+    _o.COV_REALISM = this.COV_REALISM.HasValue ? this.COV_REALISM.Value.UnPack() : null;
   }
   public static Offset<OMM> Pack(FlatBufferBuilder builder, OMMT _o) {
     if (_o == null) return default(Offset<OMM>);
@@ -439,6 +451,8 @@ public struct OMM : IFlatbufferObject
       for (var _j = 0; _j < __USER_DEFINED_PARAMETERS.Length; ++_j) { __USER_DEFINED_PARAMETERS[_j] = OMMUserDefinedParameter.Pack(builder, _o.USER_DEFINED_PARAMETERS[_j]); }
       _USER_DEFINED_PARAMETERS = CreateUSER_DEFINED_PARAMETERSVector(builder, __USER_DEFINED_PARAMETERS);
     }
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
+    var _COV_REALISM = _o.COV_REALISM == null ? default(Offset<CVR>) : CVR.Pack(builder, _o.COV_REALISM);
     return CreateOMM(
       builder,
       _o.CCSDS_OMM_VERS,
@@ -483,7 +497,9 @@ public struct OMM : IFlatbufferObject
       _o.USER_DEFINED_MICROSECONDS,
       _CLASSIFICATION,
       _MESSAGE_ID,
-      _USER_DEFINED_PARAMETERS);
+      _USER_DEFINED_PARAMETERS,
+      _PROVENANCE,
+      _COV_REALISM);
   }
 }
 
@@ -532,6 +548,8 @@ public class OMMT
   public string CLASSIFICATION { get; set; }
   public string MESSAGE_ID { get; set; }
   public List<OMMUserDefinedParameterT> USER_DEFINED_PARAMETERS { get; set; }
+  public PVNT PROVENANCE { get; set; }
+  public CVRT COV_REALISM { get; set; }
 
   public OMMT() {
     this.CCSDS_OMM_VERS = 0.0;
@@ -577,6 +595,8 @@ public class OMMT
     this.CLASSIFICATION = null;
     this.MESSAGE_ID = null;
     this.USER_DEFINED_PARAMETERS = null;
+    this.PROVENANCE = null;
+    this.COV_REALISM = null;
   }
   public static OMMT DeserializeFromBinary(byte[] fbBuffer) {
     return OMM.GetRootAsOMM(new ByteBuffer(fbBuffer)).UnPack();
@@ -637,6 +657,8 @@ static public class OMMVerify
       && verifier.VerifyString(tablePos, 84 /*CLASSIFICATION*/, false)
       && verifier.VerifyString(tablePos, 86 /*MESSAGE_ID*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 88 /*USER_DEFINED_PARAMETERS*/, OMMUserDefinedParameterVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 90 /*PROVENANCE*/, PVNVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 92 /*COV_REALISM*/, CVRVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

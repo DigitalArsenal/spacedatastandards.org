@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.245.0+1791742574195",
+  version: "1.246.0+1791759999293",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -91,8 +91,8 @@ var manifest_default = {
       ]
     },
     CAT: {
-      IDL: `// Hash: a5f3153c1b78c9583dc74b8671e0c4d1ee85b6dec5daff3d8dc415c6e26e682d
-// Version: 1.0.5
+      IDL: `// Hash: 30021c5ddd227c7fef49f91d971d5aa50fcce3300072ab411b18497476846a0a
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
@@ -156,6 +156,40 @@ enum orbitRegime: byte {
 enum massCategory: byte {
   DRY,
   WET
+}
+
+/// What a product the catalog selected for an object is.
+enum catalogProductKind: byte {
+  /// Not stated
+  Unspecified,
+  /// $OMM with MEAN_ELEMENT_THEORY SGP4
+  Sgp4Elements,
+  /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+  Sgp4XpElements,
+  /// $OCM: a state and its covariance
+  StateCovariance
+}
+
+/// One product the catalog selected for the object, by content identifier.
+table CATProduct {
+  /// What the product is.
+  KIND: catalogProductKind = Unspecified;
+  /// CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as
+  /// published, a size-prefixed FlatBuffer.
+  RECORD_CID: string;
+  /// The product's source: its PROVENANCE SOURCE_ID.
+  SOURCE_ID: string;
+  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
+  /// epoch.
+  EPOCH: string;
+  /// Why the catalog selected this product over the other candidates of its
+  /// KIND, as the selecting integrator states it (for example, the lowest
+  /// measured median error for the object's orbit regime and prediction
+  /// horizon).
+  SELECTION_REASON: string;
+  /// True when a maneuver after EPOCH retired the product and no product of its
+  /// KIND from after the maneuver has been selected yet.
+  STALE: bool = false;
 }
 
 /// Catalog Entity Message
@@ -225,6 +259,13 @@ table CAT {
   /// in a different namespace establishes that two records describe the same
   /// physical object. Publication provenance retains source and edition data.
   CATALOG_OBJECT_ID: string;
+  /// The products an integrating catalog selected for the object as of
+  /// PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+  /// the same source and epoch where there is one. The object's maneuvers are
+  /// its $MNV stream, not references here.
+  PRODUCTS: [CATProduct];
+  /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
+  PRODUCTS_AS_OF: string;
 }
 
 root_type CAT;
@@ -1100,7 +1141,194 @@ file_identifier "$RFO";`,
       ]
     },
     MNV: {
-      IDL: '// Hash: 6245430eb6515f363baafa50fc2c523843407b8aea05e1fa5bc7383eff9a4257\n// Version: 0.0.3\n// -----------------------------------END_HEADER\nenum maneuverStatus : byte {\n  DETECTED,\n  CONFIRMED,\n  PREDICTED,\n  PLANNED,\n  EXECUTED,\n  CANCELLED,\n  UNKNOWN\n}\n\nenum maneuverCharacterization : byte {\n  IN_PLANE,\n  OUT_OF_PLANE,\n  COMBINED,\n  STATION_KEEPING,\n  ORBIT_RAISING,\n  ORBIT_LOWERING,\n  PHASING,\n  DEORBIT,\n  COLLISION_AVOIDANCE,\n  UNKNOWN\n}\n\n/// Pre/post-maneuver orbital state\ntable mnvOrbitalState {\n  /// Element set identifier\n  ID_ELSET:string;\n  /// Element set data reference\n  ELSET:string;\n  /// State vector identifier\n  ID_STATE_VECTOR:string;\n  /// State vector data reference\n  STATE_VECTOR:string;\n  /// Position X (km)\n  POS_X:double;\n  /// Position Y (km)\n  POS_Y:double;\n  /// Position Z (km)\n  POS_Z:double;\n  /// Velocity X (km/s)\n  VEL_X:double;\n  /// Velocity Y (km/s)\n  VEL_Y:double;\n  /// Velocity Z (km/s)\n  VEL_Z:double;\n  /// Radiation pressure coefficient (Cr)\n  RADIATION_PRESS_COEFF:double;\n  /// Ballistic coefficient (m^2/kg)\n  BALLISTIC_COEFF:double;\n  /// Apogee altitude (km)\n  APOGEE:double;\n  /// Perigee altitude (km)\n  PERIGEE:double;\n  /// Inclination (degrees)\n  INCLINATION:double;\n  /// Eccentricity\n  ECCENTRICITY:double;\n  /// Orbital period (minutes)\n  PERIOD:double;\n  /// Right ascension of ascending node (degrees)\n  RAAN:double;\n  /// Semi-major axis (km)\n  SMA:double;\n  /// GEO longitude (degrees east)\n  GEO_LONGITUDE:double;\n  /// Longitude drift rate (degrees/day)\n  DRIFT_RATE:double;\n  /// Position uncertainty U (km, 1-sigma)\n  SIGMA_U:double;\n  /// Position uncertainty V (km, 1-sigma)\n  SIGMA_V:double;\n  /// Position uncertainty W (km, 1-sigma)\n  SIGMA_W:double;\n}\n\n/// Spacecraft Maneuver\ntable MNV {\n  /// Unique identifier\n  ID:string;\n  /// Satellite catalog number\n  SAT_NO:uint32;\n  /// International designator\n  ORIG_OBJECT_ID:string;\n  /// On-orbit reference\n  ON_ORBIT:string;\n  /// Maneuver status\n  STATUS:maneuverStatus;\n  /// Maneuver characterization\n  CHARACTERIZATION:maneuverCharacterization;\n  /// Characterization uncertainty (0-1)\n  CHARACTERIZATION_UNC:double;\n  /// Detection report time (ISO 8601)\n  REPORT_TIME:string;\n  /// Maneuver start time (ISO 8601)\n  EVENT_START_TIME:string;\n  /// Maneuver end time (ISO 8601)\n  EVENT_END_TIME:string;\n  /// Total burn time (seconds)\n  TOTAL_BURN_TIME:double;\n  /// OD fit end time (ISO 8601)\n  OD_FIT_END_TIME:string;\n  /// Detecting sensor identifier\n  ID_SENSOR:string;\n  /// Original sensor identifier\n  ORIG_SENSOR_ID:string;\n  /// Maneuver event identifier\n  EVENT_ID:string;\n  /// True if object is uncorrelated\n  UCT:bool;\n  /// Maneuver detection uncertainty (km)\n  MANEUVER_UNC:double;\n  /// Total delta-V magnitude (km/s)\n  DELTA_VEL:double;\n  /// Delta-V along-track/U component (km/s)\n  DELTA_VEL_U:double;\n  /// Delta-V cross-track/V component (km/s)\n  DELTA_VEL_V:double;\n  /// Delta-V radial/W component (km/s)\n  DELTA_VEL_W:double;\n  /// Total delta position (km)\n  DELTA_POS:double;\n  /// Delta position U component (km)\n  DELTA_POS_U:double;\n  /// Delta position V component (km)\n  DELTA_POS_V:double;\n  /// Delta position W component (km)\n  DELTA_POS_W:double;\n  /// Propellant mass consumed (kg)\n  DELTA_MASS:double;\n  /// Pre-maneuver orbital state\n  PRE_EVENT:mnvOrbitalState;\n  /// Post-maneuver orbital state\n  POST_EVENT:mnvOrbitalState;\n  /// Post-maneuver mass (kg)\n  POST_MASS:double;\n  /// Post-maneuver cross-sectional area (m^2)\n  POST_AREA:double;\n  /// 6x6 covariance matrix (upper triangle, row-major)\n  COV:[double];\n  /// Number of observations used\n  NUM_OBS:uint32;\n  /// State model used\n  STATE_MODEL:string;\n  /// State model version\n  STATE_MODEL_VERSION:double;\n  /// Number of acceleration profile points\n  NUM_ACCEL_POINTS:uint16;\n  /// Acceleration profile times (ISO 8601)\n  MNVR_ACCEL_TIMES:[string];\n  /// Acceleration values (km/s^2, 3 components per point)\n  MNVR_ACCELS:[double];\n  /// Acceleration uncertainties (km/s^2)\n  MNVR_ACCEL_UNCS:[double];\n  /// Description\n  DESCRIPTION:string;\n  /// Event descriptor\n  DESCRIPTOR:string;\n  /// Algorithm used for detection\n  ALGORITHM:string;\n  /// Associated tags\n  TAGS:[string];\n  /// Sourced data references\n  SOURCED_DATA:[string];\n  /// Sourced data types\n  SOURCED_DATA_TYPES:string;\n  /// Transaction identifier\n  TRANSACTION_ID:string;\n}\n\nroot_type MNV;\nfile_identifier "$MNV";',
+      IDL: `// Hash: b9627f39fe37ce1f7b4367055d0ab3f30504e95f794772ed890d7f473d0f9324
+// Version: 0.0.4
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+
+enum maneuverStatus : byte {
+  DETECTED,
+  CONFIRMED,
+  PREDICTED,
+  PLANNED,
+  EXECUTED,
+  CANCELLED,
+  UNKNOWN
+}
+
+enum maneuverCharacterization : byte {
+  IN_PLANE,
+  OUT_OF_PLANE,
+  COMBINED,
+  STATION_KEEPING,
+  ORBIT_RAISING,
+  ORBIT_LOWERING,
+  PHASING,
+  DEORBIT,
+  COLLISION_AVOIDANCE,
+  UNKNOWN
+}
+
+/// Pre/post-maneuver orbital state
+table mnvOrbitalState {
+  /// Element set identifier
+  ID_ELSET:string;
+  /// Element set data reference
+  ELSET:string;
+  /// State vector identifier
+  ID_STATE_VECTOR:string;
+  /// State vector data reference
+  STATE_VECTOR:string;
+  /// Position X (km)
+  POS_X:double;
+  /// Position Y (km)
+  POS_Y:double;
+  /// Position Z (km)
+  POS_Z:double;
+  /// Velocity X (km/s)
+  VEL_X:double;
+  /// Velocity Y (km/s)
+  VEL_Y:double;
+  /// Velocity Z (km/s)
+  VEL_Z:double;
+  /// Radiation pressure coefficient (Cr)
+  RADIATION_PRESS_COEFF:double;
+  /// Ballistic coefficient (m^2/kg)
+  BALLISTIC_COEFF:double;
+  /// Apogee altitude (km)
+  APOGEE:double;
+  /// Perigee altitude (km)
+  PERIGEE:double;
+  /// Inclination (degrees)
+  INCLINATION:double;
+  /// Eccentricity
+  ECCENTRICITY:double;
+  /// Orbital period (minutes)
+  PERIOD:double;
+  /// Right ascension of ascending node (degrees)
+  RAAN:double;
+  /// Semi-major axis (km)
+  SMA:double;
+  /// GEO longitude (degrees east)
+  GEO_LONGITUDE:double;
+  /// Longitude drift rate (degrees/day)
+  DRIFT_RATE:double;
+  /// Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)
+  SIGMA_U:double;
+  /// Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)
+  SIGMA_V:double;
+  /// Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)
+  SIGMA_W:double;
+}
+
+/// Spacecraft Maneuver
+///
+/// U, V and W are the UVW axes of an orbit state: U radial, along the position
+/// vector away from the central body; W cross-track, along the orbit normal
+/// (the direction of r x v); V in-track, W x U, completing the right-handed
+/// frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+/// pre-maneuver state at EVENT_START_TIME.
+table MNV {
+  /// Unique identifier
+  ID:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
+  ORIG_OBJECT_ID:string;
+  /// On-orbit reference
+  ON_ORBIT:string;
+  /// Maneuver status
+  STATUS:maneuverStatus;
+  /// Maneuver characterization
+  CHARACTERIZATION:maneuverCharacterization;
+  /// Characterization uncertainty (0-1)
+  CHARACTERIZATION_UNC:double;
+  /// Detection report time (ISO 8601)
+  REPORT_TIME:string;
+  /// Maneuver start time (ISO 8601)
+  EVENT_START_TIME:string;
+  /// Maneuver end time (ISO 8601)
+  EVENT_END_TIME:string;
+  /// Total burn time (seconds)
+  TOTAL_BURN_TIME:double;
+  /// OD fit end time (ISO 8601)
+  OD_FIT_END_TIME:string;
+  /// Detecting sensor identifier
+  ID_SENSOR:string;
+  /// Original sensor identifier
+  ORIG_SENSOR_ID:string;
+  /// Maneuver event identifier. Records of one event share it: a merged event
+  /// and the source records it combines.
+  EVENT_ID:string;
+  /// True if object is uncorrelated
+  UCT:bool;
+  /// Maneuver detection uncertainty (km)
+  MANEUVER_UNC:double;
+  /// Total delta-V magnitude (km/s)
+  DELTA_VEL:double;
+  /// Delta-V along U, radial (km/s)
+  DELTA_VEL_U:double;
+  /// Delta-V along V, in-track (km/s)
+  DELTA_VEL_V:double;
+  /// Delta-V along W, cross-track (km/s)
+  DELTA_VEL_W:double;
+  /// Total delta position (km)
+  DELTA_POS:double;
+  /// Delta position along U, radial (km)
+  DELTA_POS_U:double;
+  /// Delta position along V, in-track (km)
+  DELTA_POS_V:double;
+  /// Delta position along W, cross-track (km)
+  DELTA_POS_W:double;
+  /// Propellant mass consumed (kg)
+  DELTA_MASS:double;
+  /// Pre-maneuver orbital state
+  PRE_EVENT:mnvOrbitalState;
+  /// Post-maneuver orbital state
+  POST_EVENT:mnvOrbitalState;
+  /// Post-maneuver mass (kg)
+  POST_MASS:double;
+  /// Post-maneuver cross-sectional area (m^2)
+  POST_AREA:double;
+  /// 6x6 covariance matrix (upper triangle, row-major)
+  COV:[double];
+  /// Number of observations used
+  NUM_OBS:uint32;
+  /// State model used
+  STATE_MODEL:string;
+  /// State model version
+  STATE_MODEL_VERSION:double;
+  /// Number of acceleration profile points
+  NUM_ACCEL_POINTS:uint16;
+  /// Acceleration profile times (ISO 8601)
+  MNVR_ACCEL_TIMES:[string];
+  /// Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+  /// the state at that point's MNVR_ACCEL_TIMES entry
+  MNVR_ACCELS:[double];
+  /// Acceleration uncertainties (km/s^2)
+  MNVR_ACCEL_UNCS:[double];
+  /// Description
+  DESCRIPTION:string;
+  /// Event descriptor
+  DESCRIPTOR:string;
+  /// Algorithm used for detection
+  ALGORITHM:string;
+  /// Associated tags
+  TAGS:[string];
+  /// Sourced data references: identifiers of the records this one was
+  /// determined from (CIDv1 for records of this network), such as the source
+  /// records a merged event combines
+  SOURCED_DATA:[string];
+  /// Sourced data types
+  SOURCED_DATA_TYPES:string;
+  /// Transaction identifier
+  TRANSACTION_ID:string;
+  /// Where the maneuver's data comes from and the terms it travels under.
+  PROVENANCE:PVN;
+}
+
+root_type MNV;
+file_identifier "$MNV";`,
       files: [
         "./dist/MNV/MNV.sw.tar.gz",
         "./dist/MNV/MNV.py.tar.gz",
@@ -5752,6 +5980,97 @@ file_identifier "$LAM";`,
         "./dist/SEV/SEV.ts.tar.gz"
       ]
     },
+    PVN: {
+      IDL: `// Hash: 904856f84e3767926806d10f5fa47a3f53767bfc054793da697428e1ecfc9e3a
+// Version: 1.245.0
+// -----------------------------------END_HEADER
+// Product Provenance (PVN)
+//
+// Where a data product comes from and the terms it travels under: the source it
+// was made from and that source's originator, the provider that published it,
+// the software that made it, the class of its licence and the lineage its data
+// descends from. A product carries its PVN as PROVENANCE ($OMM, $OCM, $MNV); a
+// PVN on its own describes one source.
+//
+// Unknown terms are never a grant: a product whose LICENSE_CLASS is Unspecified
+// is computed on and cited, never republished.
+
+/// What kind of data a source supplies.
+enum pvnSourceKind : byte {
+  /// Not stated
+  Unspecified,
+  /// Element sets of a catalog
+  ElementSet,
+  /// Ephemerides: states over time, from an operator or a precise-orbit service
+  Ephemeris,
+  /// Observations (ranges, angles, other measurements) that states are
+  /// estimated from
+  Observation
+}
+
+/// What the terms of a product's source permit.
+enum pvnLicenseClass : byte {
+  /// Not stated. Never a grant: treated as CiteOnly.
+  Unspecified,
+  /// The records may be republished, with the credit the terms ask.
+  Reproducible,
+  /// The records are computed on and cited, never republished.
+  CiteOnly,
+  /// The records may be republished under the same terms, which every derived
+  /// record carries.
+  ShareAlike,
+  /// The records may be republished for non-commercial use only.
+  NonCommercial
+}
+
+/// Product Provenance
+table PVN {
+  /// Publisher-stable, lowercase identifier of the source in the provider's
+  /// registry of sources.
+  SOURCE_ID: string;
+  /// What kind of data the source supplies.
+  SOURCE_KIND: pvnSourceKind = Unspecified;
+  /// Agency, operator or catalog that created the source data, as it names
+  /// itself. Not a message's CCSDS ORIGINATOR, which names who created the
+  /// message.
+  ORIGINATOR: string;
+  /// Identifier of the provider that published the product, as the provider
+  /// names itself: the module, node or service that retrieved the source data.
+  PROVIDER_ID: string;
+  /// Identifier of the software that made the product from the source data,
+  /// with its version when it has one.
+  PRODUCER: string;
+  /// What the source's terms permit for the product.
+  LICENSE_CLASS: pvnLicenseClass = Unspecified;
+  /// Identifier of the terms LICENSE_CLASS was read from: an SPDX license
+  /// identifier where one applies, else the identifier of the terms in the
+  /// provider's licence register.
+  LICENSE_ID: string;
+  /// Identifier of the lineage the source's data descends from. Sources that
+  /// republish one upstream share its lineage, so their products are not
+  /// independent of each other.
+  LINEAGE: string;
+}
+
+root_type PVN;
+file_identifier "$PVN";`,
+      files: [
+        "./dist/PVN/PVN.sw.tar.gz",
+        "./dist/PVN/PVN.py.tar.gz",
+        "./dist/PVN/PVN.lob.tar.gz",
+        "./dist/PVN/PVN.go.tar.gz",
+        "./dist/PVN/PVN.js.tar.gz",
+        "./dist/PVN/PVN.dart.tar.gz",
+        "./dist/PVN/PVN.cs.tar.gz",
+        "./dist/PVN/PVN.java.tar.gz",
+        "./dist/PVN/PVN.rs.tar.gz",
+        "./dist/PVN/PVN.php.tar.gz",
+        "./dist/PVN/PVN.json.tar.gz",
+        "./dist/PVN/PVN.cpp.tar.gz",
+        "./dist/PVN/PVN.kt.tar.gz",
+        "./dist/PVN/PVN.ts.tar.gz"
+      ]
+    },
     LMO: {
       IDL: '// Hash: 19027b05bd8a42849998344c8d6f18266c27848db33c2be2ef7b1b498e0ffe2e\n// Version: 1.94.0\n// -----------------------------------END_HEADER\n/// Lambert solve status.\nenum lambertSolveState : byte {\n  OK = 0,\n  ERROR = 1,\n}\n\n/// Lambert solver branch kind.\nenum lambertBranchKind : byte {\n  SINGLE = 0,\n  MULTI_LONG_PERIOD = 1,\n  MULTI_SHORT_PERIOD = 2,\n}\n\n/// Three-component vector in the request frame.\nstruct lambertVector3 {\n  X:double;\n  Y:double;\n  Z:double;\n}\n\n/// One returned Lambert solution branch.\ntable lambertSolutionBranch {\n  /// Branch kind.\n  BRANCH_KIND:lambertBranchKind = SINGLE;\n  /// Complete revolution count for this branch. Zero for single-revolution.\n  N_REVS:uint16;\n  /// Departure velocity at r1 (km/s).\n  V1:lambertVector3;\n  /// Arrival velocity at r2 (km/s).\n  V2:lambertVector3;\n  /// Householder iteration count used to converge this branch.\n  ITERATIONS:uint32;\n}\n\n/// Lambert solve result.\ntable LMO {\n  /// Request identifier copied from LMS.REQUEST_ID.\n  REQUEST_ID:string;\n  /// Solve status.\n  STATUS:lambertSolveState = OK;\n  /// Structured error code when STATUS is ERROR.\n  ERROR_CODE:string;\n  /// Human-readable error message when STATUS is ERROR.\n  ERROR_MESSAGE:string;\n  /// Single-revolution solution when STATUS is OK.\n  SINGLE:lambertSolutionBranch;\n  /// Multi-revolution branches in ascending N_REVS order.\n  MULTI:[lambertSolutionBranch];\n  /// Highest revolution count that produced a feasible pair. Zero when no multi-rev branch is feasible.\n  MAX_FEASIBLE_REVS:uint16;\n  /// Result flags reserved for future compatibility.\n  FLAGS:uint16;\n}\n\nroot_type LMO;\nfile_identifier "$LMO";',
       files: [
@@ -9127,8 +9446,8 @@ file_identifier "$CES";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 5488387f24cfcb1bce091f9e3b111780bad649ca5b4dd08093511281f2c52fb7
-// Version: 1.44.79
+      IDL: `// Hash: d78ec00ba1a6e56d5501acda4e2933bcdd7a5631b9bcb60d5e7fdcd90a6c351a
+// Version: 1.44.80
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -9180,6 +9499,7 @@ include "../CSO/main.fbs";
 include "../CTR/main.fbs";
 include "../CVG/main.fbs";
 include "../CVP/main.fbs";
+include "../CVR/main.fbs";
 include "../CZM/main.fbs";
 include "../DFH/main.fbs";
 include "../DMG/main.fbs";
@@ -9301,6 +9621,7 @@ include "../PRR/main.fbs";
 include "../PRW/main.fbs";
 include "../PSS/main.fbs";
 include "../PUR/main.fbs";
+include "../PVN/main.fbs";
 include "../QEM/main.fbs";
 include "../QRP/main.fbs";
 include "../RAF/main.fbs";
@@ -9477,7 +9798,9 @@ union RecordType {
 /// Guard:    node scripts/checkRecordTypeOrdinals.mjs
 enum RecordTypeExtended : ushort {
   NONE = 0,
-  ABA = 256
+  ABA = 256,
+  CVR = 257,
+  PVN = 258
 }  // Wide record types
 
 /// Individual record wrapper for any standard type
@@ -11805,12 +12128,14 @@ file_identifier "$ABA";`,
       ]
     },
     OMM: {
-      IDL: `// Hash: 1c37f690faccf43ab53626283dc07431c57c903cbf4bf4bd96d80fe1ab629e0b
-// Version: 2.0.4
+      IDL: `// Hash: 7e9ecace0ebca05afa2963b7c6391569e7f7dfa59629782cff5e63893c284bec
+// Version: 2.0.5
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../MET/main.fbs";
+include "../CVR/main.fbs";
+include "../PVN/main.fbs";
 
 // Orbit Mean Elements Message (OMM)
 //
@@ -11946,6 +12271,10 @@ table OMM {
   /// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
   /// message that has no dedicated field above, in message order.
   USER_DEFINED_PARAMETERS:[OMMUserDefinedParameter];
+  /// Where the element set comes from and the terms it travels under.
+  PROVENANCE:PVN;
+  /// Realism of COVARIANCE.
+  COV_REALISM:CVR;
 }
 
 /// One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML
@@ -13813,6 +14142,120 @@ file_identifier "$XTC";`,
         "./dist/SKT/SKT.ts.tar.gz"
       ]
     },
+    CVR: {
+      IDL: `// Hash: 0db82e1753a41fbd3c6ed4a477ec8720efecaa487101f0dc10a0e2156ac51c51
+// Version: 1.245.0
+// -----------------------------------END_HEADER
+// Covariance Realism (CVR)
+//
+// How far one covariance can be trusted: the rule that produced it, the cell of
+// the error model it came from, and the realism test of that cell against
+// held-out reference states. A covariance carries its CVR beside it ($OMM and
+// $OCM COV_REALISM, $OCM covariance blocks); a CVR on its own states the test
+// of one cell.
+//
+// The test: for each held-out reference state, d2 = e' inv(P) e, where e is the
+// position error (reference minus prediction, 3 components) and P the position
+// block of the covariance, both in one frame. A realistic covariance gives a
+// mean d2/3 of 1 and holds 95 % of the errors inside its 95 % region, d2 <= 7.815
+// (the 95th percentile of the chi-square distribution with 3 degrees of
+// freedom).
+
+/// Whether a covariance's coverage was measured against independent reference
+/// states: the share of reference errors inside its confidence regions matched
+/// what the covariance claims, for the regime and prediction age it covers.
+enum covarianceCalibration : byte {
+  /// Calibration not stated
+  Unspecified,
+  /// Not measured against independent reference states, or measured and failed
+  Uncalibrated,
+  /// Measured against independent reference states and passed
+  Calibrated
+}
+
+/// The rule that produced a covariance. A producer applies the first rule it
+/// can, in this order.
+enum covarianceRule : byte {
+  /// Not stated
+  Unspecified,
+  /// The operator's covariance, as supplied
+  Operator,
+  /// The formal covariance of an orbit fit, multiplied by the realism factor
+  /// measured for the source and the fit's class (SCALE_FACTOR)
+  ScaledFit,
+  /// The source's own empirical model of its element sets' errors, by orbit
+  /// regime and element-set age
+  SourceModel,
+  /// The empirical model pooled over all sources, for a source without its own
+  /// model in the regime
+  PooledModel
+}
+
+/// Covariance Realism
+table CVR {
+  /// The rule that produced the covariance. In a CCSDS covariance block,
+  /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
+  /// SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+  RULE: covarianceRule = Unspecified;
+  /// Identifier of the error model (SourceModel, PooledModel) or of the
+  /// measured realism factor (ScaledFit) the covariance came from. Empty for
+  /// Operator.
+  MODEL_ID: string;
+  /// Orbit regime of the cell, as the model names it.
+  REGIME: string;
+  /// Age of the element set at the covariance's epoch, in days. NaN when the
+  /// covariance is not an element set's.
+  AGE_DAYS: double = nan;
+  /// Prediction horizon of the cell, in days: the element-set age its
+  /// statistics were measured at. NaN when no cell applies.
+  HORIZON_DAYS: double = nan;
+  /// Lineage of the reference data the cell was measured on (a PVN LINEAGE).
+  /// The test speaks for a covariance whose source has this lineage; for any
+  /// other lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.
+  MEASURED_LINEAGE: string;
+  /// Window of the held-out reference states the test used: an ISO 8601 UTC
+  /// interval, start/end.
+  TEST_WINDOW: string;
+  /// Mean of d2/3 over the held-out samples. NaN when not measured.
+  MEAN_D2_OVER_3: double = nan;
+  /// Share of the held-out samples inside the 95 % region, 0 to 1. NaN when
+  /// not measured.
+  COVERAGE_95: double = nan;
+  /// Number of held-out samples the test used.
+  SAMPLES: uint;
+  /// Number of distinct objects the samples came from.
+  OBJECTS: uint;
+  /// Factor the covariance was multiplied by to make it realistic. NaN when
+  /// none was applied.
+  SCALE_FACTOR: double = nan;
+  /// The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and
+  /// COVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3
+  /// objects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell
+  /// never measured.
+  CALIBRATION: covarianceCalibration = Unspecified;
+  /// Identifier of the report or record that holds the test.
+  EVIDENCE: string;
+}
+
+root_type CVR;
+file_identifier "$CVR";`,
+      files: [
+        "./dist/CVR/CVR.sw.tar.gz",
+        "./dist/CVR/CVR.py.tar.gz",
+        "./dist/CVR/CVR.lob.tar.gz",
+        "./dist/CVR/CVR.go.tar.gz",
+        "./dist/CVR/CVR.js.tar.gz",
+        "./dist/CVR/CVR.dart.tar.gz",
+        "./dist/CVR/CVR.cs.tar.gz",
+        "./dist/CVR/CVR.java.tar.gz",
+        "./dist/CVR/CVR.rs.tar.gz",
+        "./dist/CVR/CVR.php.tar.gz",
+        "./dist/CVR/CVR.json.tar.gz",
+        "./dist/CVR/CVR.cpp.tar.gz",
+        "./dist/CVR/CVR.kt.tar.gz",
+        "./dist/CVR/CVR.ts.tar.gz"
+      ]
+    },
     PRW: {
       IDL: "// Hash: e26a59dc1e86e6b9e6fd79aa5bbfa5e690a690541218196dbe260a502b1bfd8d\n// Version: 1.219.4\n// -----------------------------------END_HEADER\ninclude \"../FRM/main.fbs\";\ninclude \"../TIM/main.fbs\";\ninclude \"../PCE/main.fbs\";\ninclude \"../PPE/main.fbs\";\ninclude \"../NCD/main.fbs\";\ninclude \"../EOP/main.fbs\";\ninclude \"../SPW/main.fbs\";\n\n/// Propagator Runtime Wire \u2014 arena-addressed init / batch request / batch\n/// response envelopes for orbital propagators that produce state vectors\n/// into a shared memory arena.\n///\n/// Data interchange for the underlying content (state vectors, covariance,\n/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,\n/// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +\n/// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those\n/// across a JS \u2194 WASM boundary, not a substitute for any of them.\n\n/// Runtime state-flag bitfield (sized to match a single uint).\n/// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;\n/// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining\n/// flags live here because they describe runtime propagation health, not\n/// a persisted record.\nenum propagatorStateFlags : uint (bit_flags) {\n  /// State vector data is valid.\n  VALID,\n  /// Satellite is in Earth's shadow at this epoch.\n  IN_ECLIPSE,\n  /// Orbit has decayed (re-entry imminent or complete).\n  DECAYED,\n  /// Propagation extrapolated beyond the input epoch.\n  EXTRAPOLATED,\n  /// Reserved.\n  RESERVED_4,\n  /// Reserved.\n  RESERVED_5,\n  /// Reserved.\n  RESERVED_6,\n  /// Reserved.\n  RESERVED_7\n}\n\n/// Error codes surfaced by runtime propagation calls.\nenum propagatorErrorCode : int {\n  /// No error.\n  OK,\n  /// Unknown / unspecified error.\n  UNKNOWN,\n  /// One or more entity handles not found.\n  UNKNOWN_ENTITY,\n  /// Invalid epoch (NaN, out of range, before earliest init epoch, etc.).\n  INVALID_EPOCH,\n  /// Output buffer too small for the requested count.\n  OUTPUT_BUFFER_OVERFLOW,\n  /// Propagator not initialized.\n  NOT_INITIALIZED\n}\n\n/// Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\n/// polynomial inputs to entity handles.\n///\n/// The actual per-entity source record is carried inline as raw bytes\n/// tagged with SOURCE_KIND and, where useful, a SDS file_identifier.\n/// Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\n/// bytes verbatim; the propagator uses SOURCE_KIND to decide how to\n/// consume them.\ntable PRWInit {\n  /// Entity handles to assign results to (same order as SOURCES[]).\n  ENTITY_HANDLES:[uint];\n  /// Per-entity source records, encoded as SDS FlatBuffers.\n  SOURCES:[PRWInitSource];\n}\n\nenum prwSourceKind : ubyte {\n  /// Source is an OMM (CCSDS mean elements) FlatBuffer.\n  OMM,\n  /// Source is a raw TLE line pair (3LE supported via NAME).\n  TLE,\n  /// Source is an OCM FlatBuffer.\n  OCM,\n  /// Source is an OEM FlatBuffer.\n  OEM,\n  /// Source is a PPE (polynomial ephemeris) FlatBuffer.\n  PPE,\n  /// Source is a single classical Keplerian element set.\n  KEPLERIAN\n}\n\ntable PRWKeplerianElements {\n  /// Gravitational parameter of the central body (km^3 / s^2).\n  MU:double;\n  /// Semi-major axis (km).\n  SEMI_MAJOR_AXIS:double;\n  /// Eccentricity (0 = circular, <1 = ellipse).\n  ECCENTRICITY:double;\n  /// Inclination (radians).\n  INCLINATION:double;\n  /// Right ascension of the ascending node (radians).\n  RAAN:double;\n  /// Argument of periapsis (radians).\n  ARG_PERIAPSIS:double;\n  /// True anomaly (radians).\n  TRUE_ANOMALY:double;\n  /// Epoch as Julian date.\n  EPOCH:double;\n}\n\ntable PRWTleLines {\n  /// TLE line 1 (69 characters).\n  LINE1:string;\n  /// TLE line 2 (69 characters).\n  LINE2:string;\n  /// Satellite name (optional, line 0 of 3LE).\n  NAME:string;\n  /// NORAD catalog number parsed from the TLE.\n  NORAD_ID:uint;\n}\n\ntable PRWInitSource {\n  /// Wire kind identifier for BYTES.\n  KIND:prwSourceKind;\n  /// Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).\n  FILE_IDENTIFIER:string;\n  /// Encoded source record as a FlatBuffer (consumed per KIND).\n  BYTES:[uint8];\n  /// Convenience inline form when KIND == KEPLERIAN.\n  KEPLERIAN:PRWKeplerianElements;\n  /// Convenience inline form when KIND == TLE.\n  TLE:PRWTleLines;\n}\n\n/// Batch propagation request \u2014 propagate every entity in ENTITY_HANDLES[] to\n/// EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the\n/// shared arena.\ntable PRWBatchRequest {\n  /// Target epoch as a Julian date (TIME_SYSTEM is configured on the host).\n  EPOCH:double;\n  /// Entity handles to propagate (empty = all initialized entities).\n  ENTITY_HANDLES:[uint];\n  /// Output buffer offset in the arena where the StateVector stream begins.\n  OUTPUT_OFFSET:uint;\n  /// Maximum entities to process in this call (0 = unbounded).\n  MAX_COUNT:uint;\n  /// Target reference frame for the output state stream. Matches enum\n  /// values in SDS `RFM`. If zero, the propagator chooses its native frame.\n  TARGET_FRAME:string;\n}\n\n/// Batch propagation response header \u2014 describes the stream written to\n/// OUTPUT_OFFSET and reports errors. The stream itself is\n/// `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.\ntable PRWBatchResponse {\n  /// Number of state vectors written.\n  COUNT:uint;\n  /// Offset in the arena where the state-vector stream begins.\n  OUTPUT_OFFSET:uint;\n  /// Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.\n  STATE_VECTOR_SIZE:uint8;\n  /// Reference frame for the stream (SDS `RFM`-compatible string tag).\n  REFERENCE_FRAME:string;\n  /// Per-entity status flags (same cardinality as COUNT).\n  FLAGS:[propagatorStateFlags];\n  /// Error code (0 == OK).\n  ERROR_CODE:propagatorErrorCode;\n  /// Optional error message when ERROR_CODE != OK.\n  ERROR_MESSAGE:string;\n}\n\n/// Propagator Runtime Wire \u2014 envelope that carries either an init request,\n/// a batch request, or a batch response across a runtime boundary.\n/// New numeric choices are append-only and are not legacy C++ enum ordinals.\nenum prwSolverAlgorithm : ubyte {\n  UNSPECIFIED = 0, RK4 = 1, RKF45 = 2, RKF78 = 3, RK78 = 4,\n  RKDP87 = 5, ABM = 6, BS = 7, COWELL = 8, ENCKE = 9,\n  EQUINOCTIAL_VOP = 10\n}\nenum prwGravitySelection : ubyte {\n  INFER_FLAGS = 0, POINT_MASS = 1, J2_ONLY = 2, J2_TO_J4 = 3,\n  SPHERICAL_HARMONICS = 4, EGM2008 = 5,\n  /// NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.\n  EGM96 = 6\n}\nenum prwAtmosphereFamily : ubyte {\n  UNSPECIFIED = 0, NRLMSISE00 = 1, EXPONENTIAL = 2,\n  USSA1976 = 3, HARRIS_PRIESTER = 4,\n  /// Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form\n  /// evaluation of Jacchia's static diffusion model with the constants NASA\n  /// GTDS and GMAT use (inflection temperature, mean molecular mass and\n  /// 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:\n  /// F10.7 of the previous day, that day's 81-day centred average, and the\n  /// three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held\n  /// constant). A VCM's JACCHIA_70 is carried here.\n  JACCHIA_ROBERTS = 5,\n  /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and\n  /// Dst-derived temperature change from PRW.JB2008_INDICES.\n  JB2008 = 6\n}\nenum prwDerivativeTechnique : ubyte {\n  UNSPECIFIED = 0, ANALYTIC = 1, FINITE_DIFFERENCE = 2\n}\nenum prwDensityTreatment : ubyte {\n  UNSPECIFIED = 0, NEGLECTED = 1, FINITE_DIFFERENCE = 2\n}\nenum prwSteeringBasis : ubyte {\n  UNSPECIFIED = 0, INTEGRATION_FRAME = 1, RTN_AXES = 2, VNC_AXES = 3,\n  ALONG_VELOCITY = 4, OPPOSITE_VELOCITY = 5\n}\nenum prwThrustPrescription : ubyte {\n  UNSPECIFIED = 0, FORCE = 1, ACCELERATION = 2\n}\nenum prwQualityEvidence : ubyte {\n  UNMEASURED = 0, SAMPLED_RESIDUAL = 1, PROVEN_BOUND = 2\n}\n/// Process noise added to a propagated covariance. WHITE_ACCELERATION is\n/// zero-mean white acceleration noise (state noise compensation): over each\n/// discretization interval h it adds, per axis with spectral density q,\n/// q * [[h^3/3, h^2/2], [h^2/2, h]] to the position-velocity block, which the\n/// linearized dynamics then carry forward with the covariance.\nenum prwProcessNoiseModel : ubyte {\n  UNSPECIFIED = 0, NONE = 1, WHITE_ACCELERATION = 2\n}\n/// Axes of the process noise spectral densities.\nenum prwProcessNoiseAxes : ubyte {\n  UNSPECIFIED = 0, INERTIAL = 1, RADIAL_TRANSVERSE_NORMAL = 2\n}\nenum prwDensitySpecies : ubyte {\n  UNSPECIFIED = 0, HELIUM = 1, ATOMIC_OXYGEN = 2, MOLECULAR_NITROGEN = 3,\n  MOLECULAR_OXYGEN = 4, ARGON = 5, HYDROGEN = 6, ATOMIC_NITROGEN = 7,\n  ANOMALOUS_OXYGEN = 8\n}\n/// Solid Earth tide model for the central body's field. NONE leaves the\n/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2\n/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love\n/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the\n/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and\n/// the permanent tide handled for the field's own tide system. Pole tide is\n/// not included.\nenum prwSolidTideModel : ubyte {\n  NONE = 0, IERS_2010 = 1\n}\n/// Post-Newtonian corrections to the central body's acceleration (IERS\n/// Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the\n/// point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter\n/// (geodesic) precession.\nenum prwRelativityTerms : ubyte {\n  NONE = 0, SCHWARZSCHILD = 1, IERS_2010 = 2\n}\n/// Dynamical model parameters a covariance and STM may carry after the state\n/// (a VCM's B, BDOT, AGOM and T). Values are the request's FORCES, in SI:\n/// DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /\n/// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,\n/// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,\n/// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);\n/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).\nenum prwDynamicParameter : ubyte {\n  UNSPECIFIED = 0, DRAG_AREA_OVER_MASS = 1, DRAG_AREA_OVER_MASS_RATE = 2,\n  SRP_AREA_OVER_MASS = 3, IN_TRACK_ACCELERATION = 4,\n  /// ECOM2 coefficients (PRWEcom2), in their order there.\n  ECOM2_D0 = 5, ECOM2_Y0 = 6, ECOM2_B0 = 7, ECOM2_D2_COS = 8, ECOM2_D2_SIN = 9,\n  ECOM2_D4_COS = 10, ECOM2_D4_SIN = 11, ECOM2_B1_COS = 12, ECOM2_B1_SIN = 13,\n  ECOM2_B3_COS = 14, ECOM2_B3_SIN = 15\n}\n\n/// Solar radiation pressure model family. CANNONBALL uses the\n/// radiation-pressure coefficient and area-to-mass ratio of the force\n/// configuration; GNSS_BOX_WING is the a priori box-wing model of the\n/// spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and\n/// Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)\n/// under nominal yaw steering, with the mass INITIAL_MASS_KG.\nenum prwRadiationPressureFamily : ubyte { CANNONBALL = 0, GNSS_BOX_WING = 1, NONE = 2 }\n\n/// Earth radiation pressure: the sunlight the Earth reflects (albedo) and the\n/// infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE\n/// is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and\n/// emissivity zonal to the second Legendre degree with the annual term of\n/// the first, from the elements of the Earth's surface the spacecraft sees\n/// (as Orekit's KnockeRediffusedForceModel evaluates it).\nenum prwEarthRadiationModel : ubyte { NONE = 0, KNOCKE = 1 }\n\n/// Ocean tide model for the central body's field. FES2004 is IERS\n/// Conventions (2010) section 6.3: the variations of the normalized Stokes\n/// coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,\n/// eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.\n/// The ocean pole tide is not included.\nenum prwOceanTideModel : ubyte { NONE = 0, FES2004 = 1 }\n\n/// GNSS spacecraft block, selecting the box-wing surfaces.\nenum prwGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }\n\n/// ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,\n/// doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,\n/// added to the a priori model and scaled by the visible Sun fraction.\ntable PRWEcom2 {\n  D0_M_S2:double;\n  Y0_M_S2:double;\n  B0_M_S2:double;\n  D2_COS_M_S2:double;\n  D2_SIN_M_S2:double;\n  D4_COS_M_S2:double;\n  D4_SIN_M_S2:double;\n  B1_COS_M_S2:double;\n  B1_SIN_M_S2:double;\n  B3_COS_M_S2:double;\n  B3_SIN_M_S2:double;\n}\n\n/// Instance identity is host-provided, opaque, and not a physical quantity.\ntable PRWInstance {\n  MODULE_ID:string (required);\n  INSTANCE_ID:string (required);\n  /// Incremented on reinitialization or configuration invalidation.\n  GENERATION:ulong;\n}\n\n/// Units are SI. A scalar legacy tolerance must be expanded by the adapter.\ntable PRWIntegratorSettings {\n  ALGORITHM:prwSolverAlgorithm = UNSPECIFIED;\n  INITIAL_STEP_SECONDS:double = 60;\n  MINIMUM_STEP_SECONDS:double = 1;\n  MAXIMUM_STEP_SECONDS:double = 3600;\n  /// Six or seven positive tolerances, respectively m, m/s and optional kg.\n  ABSOLUTE_TOLERANCES:[double] (required);\n  RELATIVE_TOLERANCE:double = 1e-12;\n  MAXIMUM_STEPS:uint = 100000;\n}\n\n/// Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).\ntable PRWSpaceWeather {\n  EPOCH:TIMInstant (required);\n  F107:double = 150;\n  F107_AVERAGE:double = 150;\n  /// Conventional daily Ap and three-hour Kp index values; not accelerations.\n  AP_INDEX:double = 15;\n  KP_INDEX:double = 3;\n}\n\n/// Executable subset currently reachable through HPOP invoke. No implied\n/// support for coefficients, drag models or bodies the provider cannot supply.\ntable PRWForceConfiguration {\n  GRAVITY_CHOICE:prwGravitySelection = INFER_FLAGS;\n  ENABLE_POINT_MASS:bool = true;\n  /// m3/s2; required positive when a central gravity term is enabled.\n  GRAVITATIONAL_PARAMETER:double;\n  ENABLE_J2:bool = true;\n  ENABLE_J3:bool = false;\n  ENABLE_J4:bool = false;\n  ENABLE_HIGHER_ZONALS:bool = false;\n  /// Optional truncations; absent selects the explicitly reported model default.\n  MAXIMUM_DEGREE:ushort;\n  /// True when MAXIMUM_DEGREE carries a value; false means absent.\n  HAS_MAXIMUM_DEGREE:bool = false;\n  MAXIMUM_ORDER:ushort;\n  /// True when MAXIMUM_ORDER carries a value; false means absent.\n  HAS_MAXIMUM_ORDER:bool = false;\n  ENABLE_THIRD_BODY:bool = false;\n  /// NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.\n  THIRD_BODY_IDS:[int];\n  ENABLE_SRP:bool = false;\n  ENABLE_DRAG:bool = false;\n  INITIAL_MASS_KG:double = 1000;\n  AREA_M2:double = 10;\n  REFLECTIVITY_COEFFICIENT:double = 1.5;\n  DRAG_COEFFICIENT:double = 2.2;\n  ATMOSPHERE_MODEL:prwAtmosphereFamily = NRLMSISE00;\n  WEATHER:PRWSpaceWeather;\n  /// Actual configured source name, e.g. an analytic series or a planetary SPK kernel.\n  EPHEMERIS_SOURCE:string (required);\n  /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\n  /// orientation (PRW.EARTH_ORIENTATION) to apply them.\n  SOLID_TIDES:prwSolidTideModel = NONE;\n  RELATIVITY:prwRelativityTerms = NONE;\n  /// Constant acceleration along the in-track axis, m/s2: T of RTN,\n  /// N cross rhat with N = unit(r cross v) (the \"in-track thrust\" of a VCM).\n  IN_TRACK_ACCELERATION_M_S2:double;\n  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.\n  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;\n  /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the\n  /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).\n  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;\n  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.\n  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;\n  /// Highest degree of the tesseral and sectorial terms (order >= 1); the\n  /// zonals run to MAXIMUM_DEGREE. A VCM's \"mmZ,nnT\" is MAXIMUM_DEGREE mm,\n  /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.\n  MAXIMUM_TESSERAL_DEGREE:ushort;\n  /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.\n  HAS_MAXIMUM_TESSERAL_DEGREE:bool = false;\n  /// Solar radiation pressure model family (default: the cannonball).\n  RADIATION_PRESSURE_MODEL:prwRadiationPressureFamily = CANNONBALL;\n  /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.\n  GNSS_BLOCK:prwGnssSpacecraftBlock = UNSPECIFIED;\n  /// ECOM2 coefficients; absent means no ECOM2 term.\n  ECOM2:PRWEcom2;\n  /// Earth radiation pressure (albedo and infrared). It reads the Sun's\n  /// position from the request's ephemeris source.\n  EARTH_RADIATION:prwEarthRadiationModel = NONE;\n  /// Angular size of the Earth surface elements it sums, degrees.\n  EARTH_RADIATION_RESOLUTION_DEG:double = 15;\n  /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the\n  /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and\n  /// fitting SRP_AREA_OVER_MASS scales both.\n  EARTH_RADIATION_AREA_OVER_MASS_M2_KG:double;\n  /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.\n  HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG:bool = false;\n  /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth\n  /// orientation (PRW.EARTH_ORIENTATION) to apply them.\n  OCEAN_TIDES:prwOceanTideModel = NONE;\n  /// Truncation of the ocean tide field.\n  OCEAN_TIDE_MAXIMUM_DEGREE:ushort = 30;\n  OCEAN_TIDE_MAXIMUM_ORDER:ushort = 30;\n}\n\n/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\n/// request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\n/// Covariance entries have row*column units; STM entries row/column units;\n/// an STM's parameter rows are the identity (parameters are constant).\ntable PRWStateMatrix {\n  DIMENSION:ubyte;\n  VALUES:[double] (required);\n}\n\n/// The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.\ntable PRWProcessNoise {\n  MODEL:prwProcessNoiseModel = UNSPECIFIED;\n  AXES:prwProcessNoiseAxes = UNSPECIFIED;\n  /// Acceleration power spectral density per axis (x, y, z or R, T, N), m^2/s^3.\n  SPECTRAL_DENSITY_M2_S3:[double];\n  /// Interval over which each noise increment enters, seconds.\n  DISCRETIZATION_SECONDS:double;\n}\n\n/// Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.\ntable PRWResidentState {\n  INSTANCE:PRWInstance;\n  ENTITY_HANDLE:uint;\n  CATALOG_NUMBER:uint;\n  OBJECT_ID:string;\n  STATE:FRMStateVector (required);\n  COORDINATE_SYSTEM:RFMCoordinateSystem (required);\n  COVARIANCE:PRWStateMatrix;\n  /// Optional initial dynamical mass in kg; distinct from a missing mass.\n  MASS_KG:double;\n  /// True when MASS_KG carries a value; false means absent.\n  HAS_MASS_KG:bool = false;\n  /// Explicit SI concepts Cd*A/m and Cr*A/m. Do not infer these from legacy\n  /// ignored/underspecified coefficients; require a caller-provided mapping.\n  DRAG_AREA_OVER_MASS_M2_KG:double;\n  /// True when DRAG_AREA_OVER_MASS_M2_KG carries a value; false means absent.\n  HAS_DRAG_AREA_OVER_MASS_M2_KG:bool = false;\n  SRP_AREA_OVER_MASS_M2_KG:double;\n  /// True when SRP_AREA_OVER_MASS_M2_KG carries a value; false means absent.\n  HAS_SRP_AREA_OVER_MASS_M2_KG:bool = false;\n  VALID:bool = true;\n  /// Process noise for COVARIANCE: on input, what propagation adds; on\n  /// output, what the propagated COVARIANCE includes. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n  /// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch\n  /// (the BDOT of a VCM).\n  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;\n  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.\n  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;\n  /// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.\n  IN_TRACK_ACCELERATION_M_S2:double;\n  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.\n  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;\n}\n\n/// Impulsive change at TDB epoch; delta velocity is m/s in the named basis.\ntable PRWImpulse {\n  EPOCH:TIMInstant (required);\n  DELTA_V:FRMVector3 (required);\n  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;\n}\n\n/// Piecewise-linear throttle. Clock is seconds from initial propagation epoch.\ntable PRWThrottlePoint {\n  ELAPSED_SECONDS:double;\n  FRACTION:double;\n}\n\n/// Scheduled time gates an optional condition. At least one must be present.\ntable PRWBurnBoundary {\n  ELAPSED_SECONDS:double;\n  /// True when ELAPSED_SECONDS carries a value; false means absent.\n  HAS_ELAPSED_SECONDS:bool = false;\n  /// SI PCE predicate; direction and goal tolerance explicitly populated.\n  CONDITION:PCEParameterCondition;\n}\n\n/// Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).\n/// VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).\ntable PRWFiniteBurn {\n  START:PRWBurnBoundary (required);\n  STOP:PRWBurnBoundary (required);\n  THRUST_LAW:prwThrustPrescription = UNSPECIFIED;\n  FORCE_NEWTONS:double;\n  /// True when FORCE_NEWTONS carries a value; false means absent.\n  HAS_FORCE_NEWTONS:bool = false;\n  ACCELERATION_M_S2:double;\n  /// True when ACCELERATION_M_S2 carries a value; false means absent.\n  HAS_ACCELERATION_M_S2:bool = false;\n  SPECIFIC_IMPULSE_SECONDS:double;\n  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;\n  /// Dimensionless components; normalized after adding elapsed*time rate.\n  DIRECTION:FRMVector3;\n  /// Direction-component change per second, not radians/second.\n  DIRECTION_RATE:FRMVector3;\n  THROTTLE:[PRWThrottlePoint];\n}\n\n/// Fixed endpoint propagation. Provider selected by the host's connected port.\ntable PRWExecutionRequest {\n  INITIAL:PRWResidentState (required);\n  TARGET_EPOCH:TIMInstant (required);\n  INTEGRATOR:PRWIntegratorSettings (required);\n  FORCES:PRWForceConfiguration (required);\n  INCLUDE_STM:bool = false;\n  STM_TECHNIQUE:prwDerivativeTechnique = ANALYTIC;\n  DENSITY_TREATMENT:prwDensityTreatment = NEGLECTED;\n  INITIAL_COVARIANCE:PRWStateMatrix;\n  INITIAL_MASS_COVARIANCE:PRWStateMatrix;\n  SAMPLE_EPOCHS:[TIMInstant];\n  IMPULSES:[PRWImpulse];\n  /// Explicitly selects 7-state integration even if FINITE_BURNS is empty.\n  INCLUDE_MASS_DYNAMICS:bool = false;\n  FINITE_BURNS:[PRWFiniteBurn];\n  /// Process noise added to the propagated covariance. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n  /// Model parameters appended, in this order and without repeats, to\n  /// INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a\n  /// covariance carries their uncertainty and correlation (a VCM's 7x7 to\n  /// 10x10). Each must be active in FORCES. Empty means the state alone.\n  DYNAMIC_PARAMETERS:[prwDynamicParameter];\n}\n\n/// Burn times absent until reached; zero means an actual edge at initial epoch.\ntable PRWBurnReport {\n  BURN_INDEX:uint;\n  STARTED:bool;\n  STOPPED:bool;\n  START_BY_EVENT:bool;\n  STOP_BY_EVENT:bool;\n  START_SECONDS:double;\n  /// True when START_SECONDS carries a value; false means absent.\n  HAS_START_SECONDS:bool = false;\n  STOP_SECONDS:double;\n  /// True when STOP_SECONDS carries a value; false means absent.\n  HAS_STOP_SECONDS:bool = false;\n  START_EPOCH:TIMInstant;\n  STOP_EPOCH:TIMInstant;\n  /// Integral of thrust acceleration magnitude, m/s; not vector net delta-v.\n  DELTA_V_M_S:double;\n  PROPELLANT_KG:double;\n}\n\ntable PRWPropagationSample {\n  STATE:PRWResidentState (required);\n  /// Both STMs cumulative from request initial epoch; SI state units.\n  STM:PRWStateMatrix;\n  MASS_STM:PRWStateMatrix;\n  COVARIANCE:PRWStateMatrix;\n  MASS_COVARIANCE:PRWStateMatrix;\n  ACCEPTED_STEPS:ulong;\n  REJECTED_STEPS:ulong;\n  BURNS:[PRWBurnReport];\n  /// The process noise COVARIANCE includes. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n}\n\ntable PRWExecutionResult {\n  FINAL_SAMPLE:PRWPropagationSample (required);\n  SAMPLES:[PRWPropagationSample];\n  ELAPSED_SECONDS:double;\n  EPHEMERIS_SOURCE:string (required);\n  STM_TECHNIQUE:prwDerivativeTechnique = UNSPECIFIED;\n  DENSITY_TREATMENT:prwDensityTreatment = UNSPECIFIED;\n  /// The parameters the samples' STM and COVARIANCE carry after the state.\n  DYNAMIC_PARAMETERS:[prwDynamicParameter];\n}\n\n/// Portable batch request: no output pointer; state records returned via TAB.\ntable PRWResidentRequest {\n  INSTANCE:PRWInstance (required);\n  TARGET_EPOCH:TIMInstant (required);\n  ENTITY_HANDLES:[uint];\n  MAXIMUM_COUNT:uint;\n  TARGET_COORDINATE_SYSTEM:RFMCoordinateSystem (required);\n}\n\n/// All epochs explicit; duration seconds >=0; empty handles means all resident.\ntable PRWPrepareRequest {\n  INSTANCE:PRWInstance (required);\n  CATALOG_HANDLE:uint;\n  SOURCE_HANDLES:[uint];\n  START_EPOCH:TIMInstant (required);\n  DURATION_SECONDS:double;\n  /// Provider-advertised profile name; unrecognized nonempty values fail.\n  PROFILE:string;\n}\n\ntable PRWFitQuality {\n  EVIDENCE_KIND:prwQualityEvidence = UNMEASURED;\n  /// SI metres and metres/second; absent when UNMEASURED.\n  MAXIMUM_POSITION_ERROR_M:double;\n  /// True when MAXIMUM_POSITION_ERROR_M carries a value; false means absent.\n  HAS_MAXIMUM_POSITION_ERROR_M:bool = false;\n  MAXIMUM_VELOCITY_ERROR_M_S:double;\n  /// True when MAXIMUM_VELOCITY_ERROR_M_S carries a value; false means absent.\n  HAS_MAXIMUM_VELOCITY_ERROR_M_S:bool = false;\n  METHOD:string;\n  REFERENCE_CONTENT_ID:string;\n}\n\ntable PRWPrepareResult {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  COVERAGE_COMPLETE:bool;\n  QUALITY:PRWFitQuality (required);\n}\n\ntable PRWDescribeRequest {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  SOURCE_HANDLES:[uint];\n}\n\n/// Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.\ntable PRWTrajectorySource {\n  SOURCE_HANDLE:uint;\n  OBJECT_ID:string;\n  EPHEMERIS:PPE (required);\n  /// One quality record per PPE.POSITION_RECORDS entry, same order.\n  SEGMENT_QUALITY:[PRWFitQuality];\n}\n\ntable PRWDescribeResult {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  SOURCES:[PRWTrajectorySource];\n  /// Chunking indexes SOURCES; no partial polynomial coefficient vector.\n  SOURCE_OFFSET:ulong;\n  FINAL_CHUNK:bool = true;\n}\n\n/// Native container bytes wholly inside the FlatBuffer; not an NCD trailer.\ntable PRWNativeInput {\n  DESCRIPTOR:NCD (required);\n  /// Exactly DESCRIPTOR.SOURCE_BYTE_LENGTH bytes; verify declared hash.\n  CONTENT:[ubyte] (required);\n}\n\n/// Earth orientation for a propagation: one instantaneous row, or daily rows\n/// of one series (same SERIES, IAU_CONVENTION and data-set provenance) with\n/// strictly increasing MJD that cover the arc. A provider interpolates as\n/// published by the series and does not extrapolate.\ntable PRWEarthOrientation {\n  ROWS:[EOP] (required);\n}\n\n/// Daily space weather for a propagation, as published (`SPW`), with strictly\n/// increasing DATE covering the arc plus what the atmosphere model reads\n/// before it (NRLMSISE-00 reads the previous day's F10.7). A provider derives\n/// its model inputs from these rows and reports which ones it reads.\ntable PRWSpaceWeatherTable {\n  ROWS:[SPW] (required);\n}\n\n/// One UTC day of JB2008 drivers, as Space Environment Technologies publishes\n/// them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their\n/// 81-day centred averages, reported at 12 UT of DATE, and the hourly\n/// Dst-derived exospheric temperature change. A provider applies the model's\n/// own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier\n/// rows, and states how it interpolates between them.\ntable PRWJB2008Indices {\n  /// ISO 8601 calendar date (UTC) the row's values apply to.\n  DATE:string (required);\n  F10:double;\n  F10_CENTRED_81:double;\n  S10:double;\n  S10_CENTRED_81:double;\n  M10:double;\n  M10_CENTRED_81:double;\n  Y10:double;\n  Y10_CENTRED_81:double;\n  /// Exospheric temperature change from Dst (K), hours 00 through 23 UTC.\n  DTC_HOURLY_K:[double];\n  /// Source flags as published (SOLFSMY Ssrc), e.g. \"4B\".\n  SOURCE_FLAGS:string;\n}\n\n/// JB2008 drivers for a propagation: daily rows with strictly increasing\n/// DATE covering the arc plus the days the model's lags read before it.\ntable PRWJB2008IndicesTable {\n  ROWS:[PRWJB2008Indices] (required);\n}\n\n/// Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.\ntable PRWEphemerisRequest {\n  EPOCH:TIMInstant (required);\n  TARGET_NAIF_ID:int;\n  CENTER_NAIF_ID:int = 399;\n}\n\ntable PRWEphemerisResult {\n  TARGET_NAIF_ID:int;\n  CENTER_NAIF_ID:int;\n  /// Explicit ICRF axes and named NAIF origin; FRM state in SI m/m/s.\n  STATE:PRWResidentState (required);\n  EPHEMERIS_SOURCE:string (required);\n}\n\n/// Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.\ntable PRWAtmosphereRequest {\n  ATMOSPHERE_MODEL:prwAtmosphereFamily = NRLMSISE00;\n  EPOCH:TIMInstant (required);\n  ALTITUDE_M:double;\n  LATITUDE_RAD:double;\n  LONGITUDE_RAD:double;\n  /// Optional local solar time; hours [0,24); absent derives from UTC/longitude.\n  LOCAL_SOLAR_TIME_HOURS:double;\n  /// True when LOCAL_SOLAR_TIME_HOURS carries a value; false means absent.\n  HAS_LOCAL_SOLAR_TIME_HOURS:bool = false;\n  F107:double = 150;\n  F107_AVERAGE:double = 150;\n  AP_INDEX:double = 4;\n  INCLUDE_ANOMALOUS_OXYGEN:bool = false;\n}\n\ntable PRWSpeciesDensity {\n  CONSTITUENT:prwDensitySpecies = UNSPECIFIED;\n  NUMBER_PER_M3:double;\n}\n\ntable PRWAtmosphereResult {\n  ATMOSPHERE_MODEL:prwAtmosphereFamily = UNSPECIFIED;\n  VARIANT:string;\n  ALTITUDE_M:double;\n  DENSITY_KG_M3:double;\n  TEMPERATURE_K:double;\n  /// True when TEMPERATURE_K carries a value; false means absent.\n  HAS_TEMPERATURE_K:bool = false;\n  EXOSPHERIC_TEMPERATURE_K:double;\n  /// True when EXOSPHERIC_TEMPERATURE_K carries a value; false means absent.\n  HAS_EXOSPHERIC_TEMPERATURE_K:bool = false;\n  SCALE_HEIGHT_M:double;\n  /// True when SCALE_HEIGHT_M carries a value; false means absent.\n  HAS_SCALE_HEIGHT_M:bool = false;\n  NUMBER_DENSITIES:[PRWSpeciesDensity];\n}\n\n/// Runtime diagnostic version; PLG remains the authoritative manifest identity.\ntable PRWVersionResult {\n  VERSION:string (required);\n  MODULE_ID:string (required);\n}\n\n/// Exactly one arm per envelope. Existing three arms keep their ordinals.\ntable PRW {\n  INIT:PRWInit;\n  BATCH_REQUEST:PRWBatchRequest;\n  BATCH_RESPONSE:PRWBatchResponse;\n  /// Appended portable arms; each method names its permitted arm.\n  EXECUTION_REQUEST:PRWExecutionRequest;\n  EXECUTION_RESULT:PRWExecutionResult;\n  RESIDENT_STATE:PRWResidentState;\n  RESIDENT_REQUEST:PRWResidentRequest;\n  PREPARE_REQUEST:PRWPrepareRequest;\n  PREPARE_RESULT:PRWPrepareResult;\n  DESCRIBE_REQUEST:PRWDescribeRequest;\n  DESCRIBE_RESULT:PRWDescribeResult;\n  NATIVE_INPUT:PRWNativeInput;\n  EPHEMERIS_REQUEST:PRWEphemerisRequest;\n  EPHEMERIS_RESULT:PRWEphemerisResult;\n  ATMOSPHERE_REQUEST:PRWAtmosphereRequest;\n  ATMOSPHERE_RESULT:PRWAtmosphereResult;\n  VERSION_QUERY:bool = false;\n  VERSION_RESULT:PRWVersionResult;\n  EARTH_ORIENTATION:PRWEarthOrientation;\n  SPACE_WEATHER:PRWSpaceWeatherTable;\n  JB2008_INDICES:PRWJB2008IndicesTable;\n}\n\nroot_type PRW;\nfile_identifier \"$PRW\";",
       files: [
@@ -14302,10 +14745,15 @@ file_identifier "$EVL";`,
       ]
     },
     LCC: {
-      IDL: `// Hash: 8de08061564e9e1f0c59d38be648e505bb3fdf77f14d6a51495da8b933ba71dc
-// Version: 1.0.2
+      IDL: `// Hash: 227e69a9f9e250a2831809daa898a913d81a9efb3ac3fae186583de7bf77fb79
+// Version: 1.0.3
 // -----------------------------------END_HEADER
-enum legacyCountryCode : byte {
+/// Owner and country codes of the public satellite catalog. An ordinal is a
+/// wire value: members are appended after ZWE, never inserted, so the ones
+/// after it are out of alphabetical order. Some owners have two codes, the
+/// catalog's older one and an ISO 3166-1 alpha-3 code the catalog also uses
+/// (CA and CAN); each code is its own member.
+enum legacyCountryCode : ubyte {
   /// Arab Satellite Communications Organization
   AB,
   /// Asia Broadcast Satellite
@@ -14557,7 +15005,37 @@ enum legacyCountryCode : byte {
   /// Vietnam
   VTNM,
   /// Republic of Zimbabwe
-  ZWE
+  ZWE,
+  /// Angola (ISO 3166-1 alpha-3; also ANG)
+  AGO,
+  /// Bulgaria (ISO 3166-1 alpha-3; also BUL)
+  BGR,
+  /// Bahrain
+  BHR,
+  /// Botswana
+  BWA,
+  /// Canada (ISO 3166-1 alpha-3; also CA)
+  CAN,
+  /// Czechia (ISO 3166-1 alpha-3; also CZCH)
+  CZE,
+  /// Croatia
+  HRV,
+  /// Jordan
+  JOR,
+  /// Kuwait
+  KWT,
+  /// Peru (ISO 3166-1 alpha-3; also PERU)
+  PER,
+  /// Puerto Rico
+  PRI,
+  /// Solomon Islands
+  SLB,
+  /// Slovakia
+  SVK,
+  /// Taiwan (ISO 3166-1 alpha-3; also ROC)
+  TWN,
+  /// Uganda
+  UGA
 }
 
 /// Legacy Country Code
@@ -18830,11 +19308,13 @@ file_identifier "$TDM";`,
       ]
     },
     OCM: {
-      IDL: `// Hash: c334c75a3a9e57a8e7a956eee0c03113b66e753033daa04844c9c0038aa83305
-// Version: 2.1.7
+      IDL: `// Hash: 6b4149d1574ea8dc7d2a5713a6e0f1e1b1931539ea83702c22d4fd0c8fbad7e5
+// Version: 2.1.8
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
+include "../CVR/main.fbs";
 include "../PPE/main.fbs";
+include "../PVN/main.fbs";
 include "../RFM/main.fbs";
 
 // Orbit Comprehensive Message (OCM)
@@ -19329,18 +19809,6 @@ enum estimatorCategory : byte {
   Smoother
 }
 
-/// Whether a covariance's coverage was measured against independent reference
-/// states: the share of reference errors inside its confidence regions matched
-/// what the covariance claims, for the regime and prediction age it covers.
-enum covarianceCalibration : byte {
-  /// Calibration not stated
-  Unspecified,
-  /// Not measured against independent reference states, or measured and failed
-  Uncalibrated,
-  /// Measured against independent reference states and passed
-  Calibrated
-}
-
 /// Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
 enum covarianceOrdering : byte {
   /// Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
@@ -19558,6 +20026,9 @@ table OCMCovarianceBlock {
   COV_UNITS: string;
   /// The data lines, as written.
   LINES: [string];
+  /// Realism of the block's covariance: one entry per line of LINES, in order,
+  /// or one entry for every line.
+  COV_REALISM: [CVR];
 }
 
 table UserDefinedParameters {
@@ -19644,7 +20115,7 @@ table OCM {
   /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
   ORB_AVERAGING: string;
   /// Whether COVARIANCE_DATA's coverage was measured against independent
-  /// reference states.
+  /// reference states: Calibrated only when every COV_REALISM entry is.
   COV_CALIBRATION: covarianceCalibration = Unspecified;
   /// Identifier of that calibration evidence (a report or record).
   COV_CALIBRATION_REFERENCE: string;
@@ -19677,6 +20148,11 @@ table OCM {
   /// order. COVARIANCE_DATA and the fields that go with it above state the first
   /// block when it is one line.
   COVARIANCE_BLOCKS: [OCMCovarianceBlock];
+  /// Where the message's data comes from and the terms it travels under.
+  PROVENANCE: PVN;
+  /// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+  /// STATE_DATA epochs, or one entry for every epoch.
+  COV_REALISM: [CVR];
 }
 
 root_type OCM;
@@ -22997,7 +23473,22 @@ var json_default = {
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -23046,6 +23537,15 @@ var json_default = {
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         FrequencyRange: {
@@ -23288,6 +23788,37 @@ var json_default = {
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -23400,6 +23931,17 @@ var json_default = {
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -28616,6 +29158,25 @@ var json_default = {
     MNV: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         maneuverStatus: {
           type: "string",
           enum: [
@@ -28642,6 +29203,45 @@ var json_default = {
             "COLLISION_AVOIDANCE",
             "UNKNOWN"
           ]
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
         },
         mnvOrbitalState: {
           type: "object",
@@ -28733,22 +29333,22 @@ var json_default = {
             },
             SIGMA_U: {
               type: "number",
-              description: "Position uncertainty U (km, 1-sigma)"
+              description: "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)"
             },
             SIGMA_V: {
               type: "number",
-              description: "Position uncertainty V (km, 1-sigma)"
+              description: "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)"
             },
             SIGMA_W: {
               type: "number",
-              description: "Position uncertainty W (km, 1-sigma)"
+              description: "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)"
             }
           },
           additionalProperties: false
         },
         MNV: {
           type: "object",
-          description: "Spacecraft Maneuver",
+          description: "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
           properties: {
             ID: {
               type: "string",
@@ -28810,7 +29410,7 @@ var json_default = {
             },
             EVENT_ID: {
               type: "string",
-              description: "Maneuver event identifier"
+              description: "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines."
             },
             UCT: {
               type: "boolean",
@@ -28826,15 +29426,15 @@ var json_default = {
             },
             DELTA_VEL_U: {
               type: "number",
-              description: "Delta-V along-track/U component (km/s)"
+              description: "Delta-V along U, radial (km/s)"
             },
             DELTA_VEL_V: {
               type: "number",
-              description: "Delta-V cross-track/V component (km/s)"
+              description: "Delta-V along V, in-track (km/s)"
             },
             DELTA_VEL_W: {
               type: "number",
-              description: "Delta-V radial/W component (km/s)"
+              description: "Delta-V along W, cross-track (km/s)"
             },
             DELTA_POS: {
               type: "number",
@@ -28842,15 +29442,15 @@ var json_default = {
             },
             DELTA_POS_U: {
               type: "number",
-              description: "Delta position U component (km)"
+              description: "Delta position along U, radial (km)"
             },
             DELTA_POS_V: {
               type: "number",
-              description: "Delta position V component (km)"
+              description: "Delta position along V, in-track (km)"
             },
             DELTA_POS_W: {
               type: "number",
-              description: "Delta position W component (km)"
+              description: "Delta position along W, cross-track (km)"
             },
             DELTA_MASS: {
               type: "number",
@@ -28911,7 +29511,7 @@ var json_default = {
               items: {
                 type: "number"
               },
-              description: "Acceleration values (km/s^2, 3 components per point)"
+              description: "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry"
             },
             MNVR_ACCEL_UNCS: {
               type: "array",
@@ -28944,7 +29544,7 @@ var json_default = {
               items: {
                 type: "string"
               },
-              description: "Sourced data references"
+              description: "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines"
             },
             SOURCED_DATA_TYPES: {
               type: "string",
@@ -28953,6 +29553,10 @@ var json_default = {
             TRANSACTION_ID: {
               type: "string",
               description: "Transaction identifier"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the maneuver's data comes from and the terms it travels under."
             }
           },
           additionalProperties: false
@@ -29276,7 +29880,22 @@ var json_default = {
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -29325,6 +29944,15 @@ var json_default = {
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         KeyType: {
@@ -29828,6 +30456,37 @@ var json_default = {
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -29940,6 +30599,17 @@ var json_default = {
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -41835,7 +42505,22 @@ turned into a number.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -41886,6 +42571,15 @@ turned into a number.`
             "WET"
           ]
         },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ]
+        },
         polynomialBasisType: {
           type: "string",
           enum: [
@@ -41911,6 +42605,43 @@ turned into a number.`
             "R_PERIAPSIS"
           ]
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         trajectoryType: {
           type: "string",
           enum: [
@@ -41934,14 +42665,6 @@ turned into a number.`
             "ExtendedKalman",
             "UnscentedKalman",
             "Smoother"
-          ]
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
           ]
         },
         covarianceOrdering: {
@@ -42684,6 +43407,37 @@ turned into a number.`
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -42796,6 +43550,17 @@ turned into a number.`
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -43390,6 +44155,112 @@ turned into a number.`
             MESSAGE_ID: {
               type: "string",
               description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
             }
           },
           additionalProperties: false
@@ -44654,6 +45525,13 @@ turned into a number.`
                 type: "string"
               },
               description: "The data lines, as written."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
             }
           },
           additionalProperties: false
@@ -44784,7 +45662,7 @@ turned into a number.`
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is."
             },
             COV_CALIBRATION_REFERENCE: {
               type: "string",
@@ -44838,6 +45716,17 @@ turned into a number.`
                 $ref: "#/definitions/OCMCovarianceBlock"
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch."
             }
           },
           additionalProperties: false
@@ -49553,7 +50442,22 @@ verbatim what that source states about itself.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -49602,6 +50506,15 @@ verbatim what that source states about itself.`,
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         polynomialBasisType: {
@@ -50321,6 +51234,37 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -50433,6 +51377,17 @@ verbatim what that source states about itself.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -54092,7 +55047,22 @@ verbatim what that source states about itself.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -54143,6 +55113,15 @@ verbatim what that source states about itself.`,
             "WET"
           ]
         },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ]
+        },
         polynomialBasisType: {
           type: "string",
           enum: [
@@ -54168,6 +55147,43 @@ verbatim what that source states about itself.`,
             "R_PERIAPSIS"
           ]
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         trajectoryType: {
           type: "string",
           enum: [
@@ -54191,14 +55207,6 @@ verbatim what that source states about itself.`,
             "ExtendedKalman",
             "UnscentedKalman",
             "Smoother"
-          ]
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
           ]
         },
         covarianceOrdering: {
@@ -55124,6 +56132,37 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -55236,6 +56275,17 @@ verbatim what that source states about itself.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -55830,6 +56880,112 @@ verbatim what that source states about itself.`,
             MESSAGE_ID: {
               type: "string",
               description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
             }
           },
           additionalProperties: false
@@ -57094,6 +58250,13 @@ verbatim what that source states about itself.`,
                 type: "string"
               },
               description: "The data lines, as written."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
             }
           },
           additionalProperties: false
@@ -57224,7 +58387,7 @@ verbatim what that source states about itself.`,
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is."
             },
             COV_CALIBRATION_REFERENCE: {
               type: "string",
@@ -57278,6 +58441,17 @@ verbatim what that source states about itself.`,
                 $ref: "#/definitions/OCMCovarianceBlock"
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch."
             }
           },
           additionalProperties: false
@@ -60118,6 +61292,70 @@ to the wallet, not to a published record. ABSENT from published records.`
       },
       $ref: "#/definitions/SEV"
     },
+    PVN: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/PVN"
+    },
     LMO: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -61483,6 +62721,43 @@ to the wallet, not to a published record. ABSENT from published records.`
             "SGP4XP",
             "DSST",
             "USM"
+          ]
+        },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
           ]
         },
         ephemerisFormat: {
@@ -63113,6 +64388,112 @@ to the wallet, not to a published record. ABSENT from published records.`
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -63300,6 +64681,14 @@ to the wallet, not to a published record. ABSENT from published records.`
                 $ref: "#/definitions/OMMUserDefinedParameter"
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE."
             }
           },
           additionalProperties: false
@@ -63455,22 +64844,22 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGMA_U: {
               type: "number",
-              description: "Position uncertainty U (km, 1-sigma)"
+              description: "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)"
             },
             SIGMA_V: {
               type: "number",
-              description: "Position uncertainty V (km, 1-sigma)"
+              description: "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)"
             },
             SIGMA_W: {
               type: "number",
-              description: "Position uncertainty W (km, 1-sigma)"
+              description: "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)"
             }
           },
           additionalProperties: false
         },
         MNV: {
           type: "object",
-          description: "Spacecraft Maneuver",
+          description: "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
           properties: {
             ID: {
               type: "string",
@@ -63532,7 +64921,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             EVENT_ID: {
               type: "string",
-              description: "Maneuver event identifier"
+              description: "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines."
             },
             UCT: {
               type: "boolean",
@@ -63548,15 +64937,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             DELTA_VEL_U: {
               type: "number",
-              description: "Delta-V along-track/U component (km/s)"
+              description: "Delta-V along U, radial (km/s)"
             },
             DELTA_VEL_V: {
               type: "number",
-              description: "Delta-V cross-track/V component (km/s)"
+              description: "Delta-V along V, in-track (km/s)"
             },
             DELTA_VEL_W: {
               type: "number",
-              description: "Delta-V radial/W component (km/s)"
+              description: "Delta-V along W, cross-track (km/s)"
             },
             DELTA_POS: {
               type: "number",
@@ -63564,15 +64953,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             DELTA_POS_U: {
               type: "number",
-              description: "Delta position U component (km)"
+              description: "Delta position along U, radial (km)"
             },
             DELTA_POS_V: {
               type: "number",
-              description: "Delta position V component (km)"
+              description: "Delta position along V, in-track (km)"
             },
             DELTA_POS_W: {
               type: "number",
-              description: "Delta position W component (km)"
+              description: "Delta position along W, cross-track (km)"
             },
             DELTA_MASS: {
               type: "number",
@@ -63633,7 +65022,7 @@ to the wallet, not to a published record. ABSENT from published records.`
               items: {
                 type: "number"
               },
-              description: "Acceleration values (km/s^2, 3 components per point)"
+              description: "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry"
             },
             MNVR_ACCEL_UNCS: {
               type: "array",
@@ -63666,7 +65055,7 @@ to the wallet, not to a published record. ABSENT from published records.`
               items: {
                 type: "string"
               },
-              description: "Sourced data references"
+              description: "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines"
             },
             SOURCED_DATA_TYPES: {
               type: "string",
@@ -63675,6 +65064,10 @@ to the wallet, not to a published record. ABSENT from published records.`
             TRANSACTION_ID: {
               type: "string",
               description: "Transaction identifier"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the maneuver's data comes from and the terms it travels under."
             }
           },
           additionalProperties: false
@@ -77929,7 +79322,22 @@ Decoding applies the inverses from the last back.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -77978,6 +79386,15 @@ Decoding applies the inverses from the last back.`
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         polynomialBasisType: {
@@ -78697,6 +80114,37 @@ Decoding applies the inverses from the last back.`
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -78809,6 +80257,17 @@ Decoding applies the inverses from the last back.`
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -81283,7 +82742,22 @@ Decoding applies the inverses from the last back.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -81334,6 +82808,15 @@ Decoding applies the inverses from the last back.`
             "WET"
           ]
         },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ]
+        },
         polynomialBasisType: {
           type: "string",
           enum: [
@@ -81359,6 +82842,43 @@ Decoding applies the inverses from the last back.`
             "R_PERIAPSIS"
           ]
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         trajectoryType: {
           type: "string",
           enum: [
@@ -81382,14 +82902,6 @@ Decoding applies the inverses from the last back.`
             "ExtendedKalman",
             "UnscentedKalman",
             "Smoother"
-          ]
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
           ]
         },
         covarianceOrdering: {
@@ -82182,6 +83694,37 @@ Decoding applies the inverses from the last back.`
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -82294,6 +83837,17 @@ Decoding applies the inverses from the last back.`
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -82888,6 +84442,112 @@ Decoding applies the inverses from the last back.`
             MESSAGE_ID: {
               type: "string",
               description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
             }
           },
           additionalProperties: false
@@ -84152,6 +85812,13 @@ Decoding applies the inverses from the last back.`
                 type: "string"
               },
               description: "The data lines, as written."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
             }
           },
           additionalProperties: false
@@ -84282,7 +85949,7 @@ Decoding applies the inverses from the last back.`
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is."
             },
             COV_CALIBRATION_REFERENCE: {
               type: "string",
@@ -84336,6 +86003,17 @@ Decoding applies the inverses from the last back.`
                 $ref: "#/definitions/OCMCovarianceBlock"
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch."
             }
           },
           additionalProperties: false
@@ -89956,7 +91634,22 @@ Decoding applies the inverses from the last back.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -90005,6 +91698,15 @@ Decoding applies the inverses from the last back.`
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         KeyType: {
@@ -91265,6 +92967,43 @@ Decoding applies the inverses from the last back.`
             "USM"
           ]
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -91298,14 +93037,6 @@ Decoding applies the inverses from the last back.`
             "ExtendedKalman",
             "UnscentedKalman",
             "Smoother"
-          ]
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
           ]
         },
         covarianceOrdering: {
@@ -96623,7 +98354,9 @@ Decoding applies the inverses from the last back.`
           type: "string",
           enum: [
             "NONE",
-            "ABA"
+            "ABA",
+            "CVR",
+            "PVN"
           ]
         },
         ABA: {
@@ -105399,6 +107132,37 @@ Decoding applies the inverses from the last back.`
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -105511,6 +107275,17 @@ Decoding applies the inverses from the last back.`
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -110906,6 +112681,112 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -111093,6 +112974,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/OMMUserDefinedParameter"
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE."
             }
           },
           additionalProperties: false
@@ -112719,6 +114608,13 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 type: "string"
               },
               description: "The data lines, as written."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
             }
           },
           additionalProperties: false
@@ -112849,7 +114745,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is."
             },
             COV_CALIBRATION_REFERENCE: {
               type: "string",
@@ -112903,6 +114799,17 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/OCMCovarianceBlock"
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch."
             }
           },
           additionalProperties: false
@@ -131557,22 +133464,22 @@ Decoding applies the inverses from the last back.`
             },
             SIGMA_U: {
               type: "number",
-              description: "Position uncertainty U (km, 1-sigma)"
+              description: "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)"
             },
             SIGMA_V: {
               type: "number",
-              description: "Position uncertainty V (km, 1-sigma)"
+              description: "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)"
             },
             SIGMA_W: {
               type: "number",
-              description: "Position uncertainty W (km, 1-sigma)"
+              description: "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)"
             }
           },
           additionalProperties: false
         },
         MNV: {
           type: "object",
-          description: "Spacecraft Maneuver",
+          description: "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
           properties: {
             ID: {
               type: "string",
@@ -131634,7 +133541,7 @@ Decoding applies the inverses from the last back.`
             },
             EVENT_ID: {
               type: "string",
-              description: "Maneuver event identifier"
+              description: "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines."
             },
             UCT: {
               type: "boolean",
@@ -131650,15 +133557,15 @@ Decoding applies the inverses from the last back.`
             },
             DELTA_VEL_U: {
               type: "number",
-              description: "Delta-V along-track/U component (km/s)"
+              description: "Delta-V along U, radial (km/s)"
             },
             DELTA_VEL_V: {
               type: "number",
-              description: "Delta-V cross-track/V component (km/s)"
+              description: "Delta-V along V, in-track (km/s)"
             },
             DELTA_VEL_W: {
               type: "number",
-              description: "Delta-V radial/W component (km/s)"
+              description: "Delta-V along W, cross-track (km/s)"
             },
             DELTA_POS: {
               type: "number",
@@ -131666,15 +133573,15 @@ Decoding applies the inverses from the last back.`
             },
             DELTA_POS_U: {
               type: "number",
-              description: "Delta position U component (km)"
+              description: "Delta position along U, radial (km)"
             },
             DELTA_POS_V: {
               type: "number",
-              description: "Delta position V component (km)"
+              description: "Delta position along V, in-track (km)"
             },
             DELTA_POS_W: {
               type: "number",
-              description: "Delta position W component (km)"
+              description: "Delta position along W, cross-track (km)"
             },
             DELTA_MASS: {
               type: "number",
@@ -131735,7 +133642,7 @@ Decoding applies the inverses from the last back.`
               items: {
                 type: "number"
               },
-              description: "Acceleration values (km/s^2, 3 components per point)"
+              description: "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry"
             },
             MNVR_ACCEL_UNCS: {
               type: "array",
@@ -131768,7 +133675,7 @@ Decoding applies the inverses from the last back.`
               items: {
                 type: "string"
               },
-              description: "Sourced data references"
+              description: "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines"
             },
             SOURCED_DATA_TYPES: {
               type: "string",
@@ -131777,6 +133684,10 @@ Decoding applies the inverses from the last back.`
             TRANSACTION_ID: {
               type: "string",
               description: "Transaction identifier"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the maneuver's data comes from and the terms it travels under."
             }
           },
           additionalProperties: false
@@ -162180,6 +164091,43 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "USM"
           ]
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -162652,6 +164600,112 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -162839,6 +164893,14 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 $ref: "#/definitions/OMMUserDefinedParameter"
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE."
             }
           },
           additionalProperties: false
@@ -171925,6 +173987,97 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
       },
       $ref: "#/definitions/SKT"
     },
+    CVR: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CVR"
+    },
     PRW: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -172760,7 +174913,22 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -172809,6 +174977,15 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         polynomialBasisType: {
@@ -174546,6 +176723,37 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -174658,6 +176866,17 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -177303,7 +179522,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -177352,6 +179586,15 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         FrequencyRange: {
@@ -177594,6 +179837,37 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -177706,6 +179980,17 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -180297,7 +182582,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         LCC: {
@@ -193787,7 +196087,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -193836,6 +196151,15 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         ENGINE_TYPE: {
@@ -194483,6 +196807,37 @@ to the wallet, not to a published record. ABSENT from published records.`
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -194595,6 +196950,17 @@ to the wallet, not to a published record. ABSENT from published records.`
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -195969,7 +198335,22 @@ to the wallet, not to a published record. ABSENT from published records.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -196018,6 +198399,15 @@ to the wallet, not to a published record. ABSENT from published records.`
           enum: [
             "DRY",
             "WET"
+          ]
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
           ]
         },
         polynomialBasisType: {
@@ -196349,6 +198739,43 @@ to the wallet, not to a published record. ABSENT from published records.`
             "USM"
           ]
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -196404,14 +198831,6 @@ to the wallet, not to a published record. ABSENT from published records.`
             "ExtendedKalman",
             "UnscentedKalman",
             "Smoother"
-          ]
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
           ]
         },
         covarianceOrdering: {
@@ -198003,6 +200422,37 @@ to the wallet, not to a published record. ABSENT from published records.`
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -198115,6 +200565,17 @@ to the wallet, not to a published record. ABSENT from published records.`
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -200558,6 +203019,112 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -200745,6 +203312,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/OMMUserDefinedParameter"
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE."
             }
           },
           additionalProperties: false
@@ -202388,6 +204963,13 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 type: "string"
               },
               description: "The data lines, as written."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
             }
           },
           additionalProperties: false
@@ -202518,7 +205100,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is."
             },
             COV_CALIBRATION_REFERENCE: {
               type: "string",
@@ -202572,6 +205154,17 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/OCMCovarianceBlock"
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch."
             }
           },
           additionalProperties: false
@@ -205585,6 +208178,43 @@ assumptions".`
             "USM"
           ]
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -207242,6 +209872,112 @@ assumptions".`
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -207429,6 +210165,14 @@ assumptions".`
                 $ref: "#/definitions/OMMUserDefinedParameter"
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE."
             }
           },
           additionalProperties: false
@@ -207584,22 +210328,22 @@ assumptions".`
             },
             SIGMA_U: {
               type: "number",
-              description: "Position uncertainty U (km, 1-sigma)"
+              description: "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)"
             },
             SIGMA_V: {
               type: "number",
-              description: "Position uncertainty V (km, 1-sigma)"
+              description: "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)"
             },
             SIGMA_W: {
               type: "number",
-              description: "Position uncertainty W (km, 1-sigma)"
+              description: "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)"
             }
           },
           additionalProperties: false
         },
         MNV: {
           type: "object",
-          description: "Spacecraft Maneuver",
+          description: "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
           properties: {
             ID: {
               type: "string",
@@ -207661,7 +210405,7 @@ assumptions".`
             },
             EVENT_ID: {
               type: "string",
-              description: "Maneuver event identifier"
+              description: "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines."
             },
             UCT: {
               type: "boolean",
@@ -207677,15 +210421,15 @@ assumptions".`
             },
             DELTA_VEL_U: {
               type: "number",
-              description: "Delta-V along-track/U component (km/s)"
+              description: "Delta-V along U, radial (km/s)"
             },
             DELTA_VEL_V: {
               type: "number",
-              description: "Delta-V cross-track/V component (km/s)"
+              description: "Delta-V along V, in-track (km/s)"
             },
             DELTA_VEL_W: {
               type: "number",
-              description: "Delta-V radial/W component (km/s)"
+              description: "Delta-V along W, cross-track (km/s)"
             },
             DELTA_POS: {
               type: "number",
@@ -207693,15 +210437,15 @@ assumptions".`
             },
             DELTA_POS_U: {
               type: "number",
-              description: "Delta position U component (km)"
+              description: "Delta position along U, radial (km)"
             },
             DELTA_POS_V: {
               type: "number",
-              description: "Delta position V component (km)"
+              description: "Delta position along V, in-track (km)"
             },
             DELTA_POS_W: {
               type: "number",
-              description: "Delta position W component (km)"
+              description: "Delta position along W, cross-track (km)"
             },
             DELTA_MASS: {
               type: "number",
@@ -207762,7 +210506,7 @@ assumptions".`
               items: {
                 type: "number"
               },
-              description: "Acceleration values (km/s^2, 3 components per point)"
+              description: "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry"
             },
             MNVR_ACCEL_UNCS: {
               type: "array",
@@ -207795,7 +210539,7 @@ assumptions".`
               items: {
                 type: "string"
               },
-              description: "Sourced data references"
+              description: "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines"
             },
             SOURCED_DATA_TYPES: {
               type: "string",
@@ -207804,6 +210548,10 @@ assumptions".`
             TRANSACTION_ID: {
               type: "string",
               description: "Transaction identifier"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the maneuver's data comes from and the terms it travels under."
             }
           },
           additionalProperties: false
@@ -217666,6 +220414,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             "USSA_XX"
           ]
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ]
+        },
         CelestialFrame: {
           type: "string",
           enum: [
@@ -218110,7 +220876,22 @@ to the wallet, not to a published record. ABSENT from published records.`
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ]
         },
         spaceObjectClass: {
@@ -218161,6 +220942,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             "WET"
           ]
         },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ]
+        },
         polynomialBasisType: {
           type: "string",
           enum: [
@@ -218184,6 +220974,25 @@ to the wallet, not to a published record. ABSENT from published records.`
           enum: [
             "SMA",
             "R_PERIAPSIS"
+          ]
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
           ]
         },
         trajectoryType: {
@@ -218211,14 +221020,6 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Smoother"
           ]
         },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
-          ]
-        },
         covarianceOrdering: {
           type: "string",
           enum: [
@@ -218242,6 +221043,73 @@ to the wallet, not to a published record. ABSENT from published records.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)"
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
             }
           },
           additionalProperties: false
@@ -218938,6 +221806,37 @@ to the wallet, not to a published record. ABSENT from published records.`
           },
           additionalProperties: false
         },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+            }
+          },
+          additionalProperties: false
+        },
         CAT: {
           type: "object",
           description: "Catalog Entity Message",
@@ -219050,6 +221949,17 @@ to the wallet, not to a published record. ABSENT from published records.`
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at."
             }
           },
           additionalProperties: false
@@ -219297,6 +222207,45 @@ to the wallet, not to a published record. ABSENT from published records.`
               minimum: 0,
               maximum: 65535,
               description: "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
             }
           },
           additionalProperties: false
@@ -220561,6 +223510,13 @@ to the wallet, not to a published record. ABSENT from published records.`
                 type: "string"
               },
               description: "The data lines, as written."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
             }
           },
           additionalProperties: false
@@ -220691,7 +223647,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is."
             },
             COV_CALIBRATION_REFERENCE: {
               type: "string",
@@ -220745,6 +223701,17 @@ to the wallet, not to a published record. ABSENT from published records.`
                 $ref: "#/definitions/OCMCovarianceBlock"
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under."
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch."
             }
           },
           additionalProperties: false
@@ -233542,10 +236509,25 @@ var fbjson_default = {
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -234050,6 +237032,66 @@ var fbjson_default = {
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -234208,6 +237250,35 @@ var fbjson_default = {
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -234708,7 +237779,7 @@ var fbjson_default = {
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -235213,6 +238284,66 @@ var fbjson_default = {
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -235240,6 +238371,64 @@ var fbjson_default = {
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -235335,7 +238524,7 @@ var fbjson_default = {
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -235840,6 +239029,66 @@ var fbjson_default = {
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -235996,6 +239245,19 @@ var fbjson_default = {
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -251957,6 +255219,69 @@ var fbjson_default = {
     MNV: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         maneuverStatus: {
           type: "string",
           enum: [
@@ -252042,6 +255367,97 @@ var fbjson_default = {
               value: 9
             }
           }
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
         },
         mnvOrbitalState: {
           type: "object",
@@ -252154,17 +255570,17 @@ var fbjson_default = {
             },
             SIGMA_U: {
               type: "number",
-              description: "Position uncertainty U (km, 1-sigma)",
+              description: "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             },
             SIGMA_V: {
               type: "number",
-              description: "Position uncertainty V (km, 1-sigma)",
+              description: "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             },
             SIGMA_W: {
               type: "number",
-              description: "Position uncertainty W (km, 1-sigma)",
+              description: "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             }
           },
@@ -252172,7 +255588,7 @@ var fbjson_default = {
         },
         MNV: {
           type: "object",
-          description: "Spacecraft Maneuver",
+          description: "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
           properties: {
             ID: {
               type: "string",
@@ -252305,7 +255721,7 @@ var fbjson_default = {
             },
             EVENT_ID: {
               type: "string",
-              description: "Maneuver event identifier",
+              description: "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines.",
               "x-flatbuffer-type": "string"
             },
             UCT: {
@@ -252325,17 +255741,17 @@ var fbjson_default = {
             },
             DELTA_VEL_U: {
               type: "number",
-              description: "Delta-V along-track/U component (km/s)",
+              description: "Delta-V along U, radial (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_VEL_V: {
               type: "number",
-              description: "Delta-V cross-track/V component (km/s)",
+              description: "Delta-V along V, in-track (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_VEL_W: {
               type: "number",
-              description: "Delta-V radial/W component (km/s)",
+              description: "Delta-V along W, cross-track (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS: {
@@ -252345,17 +255761,17 @@ var fbjson_default = {
             },
             DELTA_POS_U: {
               type: "number",
-              description: "Delta position U component (km)",
+              description: "Delta position along U, radial (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS_V: {
               type: "number",
-              description: "Delta position V component (km)",
+              description: "Delta position along V, in-track (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS_W: {
               type: "number",
-              description: "Delta position W component (km)",
+              description: "Delta position along W, cross-track (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_MASS: {
@@ -252428,7 +255844,7 @@ var fbjson_default = {
               items: {
                 type: "number"
               },
-              description: "Acceleration values (km/s^2, 3 components per point)",
+              description: "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry",
               "x-flatbuffer-type": "[double]"
             },
             MNVR_ACCEL_UNCS: {
@@ -252467,7 +255883,7 @@ var fbjson_default = {
               items: {
                 type: "string"
               },
-              description: "Sourced data references",
+              description: "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines",
               "x-flatbuffer-type": "[string]"
             },
             SOURCED_DATA_TYPES: {
@@ -252479,6 +255895,11 @@ var fbjson_default = {
               type: "string",
               description: "Transaction identifier",
               "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the maneuver's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -253075,10 +256496,25 @@ var fbjson_default = {
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -253583,6 +257019,66 @@ var fbjson_default = {
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -253741,6 +257237,35 @@ var fbjson_default = {
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -255110,7 +258635,7 @@ var fbjson_default = {
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -255615,6 +259140,66 @@ var fbjson_default = {
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -255642,6 +259227,64 @@ var fbjson_default = {
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -255737,7 +259380,7 @@ var fbjson_default = {
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -256242,6 +259885,66 @@ var fbjson_default = {
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -256398,6 +260101,19 @@ var fbjson_default = {
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -280762,10 +284478,25 @@ turned into a number.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -281270,6 +285001,66 @@ turned into a number.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -281431,6 +285222,35 @@ turned into a number.`,
             }
           }
         },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
+            }
+          }
+        },
         polynomialBasisType: {
           type: "string",
           enum: [
@@ -281505,6 +285325,127 @@ turned into a number.`,
             R_PERIAPSIS: {
               value: 1,
               description: "Radius of periapsis (km). Preferred for hyperbolic orbits."
+            }
+          }
+        },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
             }
           }
         },
@@ -281598,30 +285539,6 @@ turned into a number.`,
             Smoother: {
               value: 4,
               description: "Smoothed sequential solution"
-            }
-          }
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Calibration not stated"
-            },
-            Uncalibrated: {
-              value: 1,
-              description: "Not measured against independent reference states, or measured and failed"
-            },
-            Calibrated: {
-              value: 2,
-              description: "Measured against independent reference states and passed"
             }
           }
         },
@@ -283792,7 +287709,7 @@ turned into a number.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -284297,6 +288214,66 @@ turned into a number.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -284324,6 +288301,64 @@ turned into a number.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -284419,7 +288454,7 @@ turned into a number.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -284924,6 +288959,66 @@ turned into a number.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -285080,6 +289175,19 @@ turned into a number.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -286044,6 +290152,223 @@ turned into a number.`,
             MESSAGE_ID: {
               type: "string",
               description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -287693,6 +292018,14 @@ turned into a number.`,
               },
               description: "The data lines, as written.",
               "x-flatbuffer-type": "[string]"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -287891,7 +292224,7 @@ turned into a number.`,
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states.",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -287996,6 +292329,19 @@ turned into a number.`,
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
               "x-flatbuffer-type": "[OCMCovarianceBlock]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -298104,10 +302450,25 @@ verbatim what that source states about itself.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -298612,6 +302973,66 @@ verbatim what that source states about itself.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -298770,6 +303191,35 @@ verbatim what that source states about itself.`,
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -300831,7 +305281,7 @@ verbatim what that source states about itself.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -301336,6 +305786,66 @@ verbatim what that source states about itself.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -301363,6 +305873,64 @@ verbatim what that source states about itself.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -301458,7 +306026,7 @@ verbatim what that source states about itself.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -301963,6 +306531,66 @@ verbatim what that source states about itself.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -302119,6 +306747,19 @@ verbatim what that source states about itself.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -318003,10 +322644,25 @@ verbatim what that source states about itself.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -318511,6 +323167,66 @@ verbatim what that source states about itself.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -318672,6 +323388,35 @@ verbatim what that source states about itself.`,
             }
           }
         },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
+            }
+          }
+        },
         polynomialBasisType: {
           type: "string",
           enum: [
@@ -318746,6 +323491,127 @@ verbatim what that source states about itself.`,
             R_PERIAPSIS: {
               value: 1,
               description: "Radius of periapsis (km). Preferred for hyperbolic orbits."
+            }
+          }
+        },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
             }
           }
         },
@@ -318839,30 +323705,6 @@ verbatim what that source states about itself.`,
             Smoother: {
               value: 4,
               description: "Smoothed sequential solution"
-            }
-          }
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Calibration not stated"
-            },
-            Uncalibrated: {
-              value: 1,
-              description: "Not measured against independent reference states, or measured and failed"
-            },
-            Calibrated: {
-              value: 2,
-              description: "Measured against independent reference states and passed"
             }
           }
         },
@@ -321534,7 +326376,7 @@ verbatim what that source states about itself.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -322039,6 +326881,66 @@ verbatim what that source states about itself.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -322066,6 +326968,64 @@ verbatim what that source states about itself.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -322161,7 +327121,7 @@ verbatim what that source states about itself.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -322666,6 +327626,66 @@ verbatim what that source states about itself.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -322822,6 +327842,19 @@ verbatim what that source states about itself.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -323786,6 +328819,223 @@ verbatim what that source states about itself.`,
             MESSAGE_ID: {
               type: "string",
               description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -325435,6 +330685,14 @@ verbatim what that source states about itself.`,
               },
               description: "The data lines, as written.",
               "x-flatbuffer-type": "[string]"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -325633,7 +330891,7 @@ verbatim what that source states about itself.`,
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states.",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -325738,6 +330996,19 @@ verbatim what that source states about itself.`,
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
               "x-flatbuffer-type": "[OCMCovarianceBlock]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -330098,6 +335369,168 @@ to the wallet, not to a published record. ABSENT from published records.`,
       "x-flatbuffer-root-type": "SEV",
       "x-flatbuffer-file-identifier": "$SEV"
     },
+    PVN: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/PVN",
+      "x-flatbuffer-root-type": "PVN",
+      "x-flatbuffer-file-identifier": "$PVN"
+    },
     LMO: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -333484,6 +338917,127 @@ to the wallet, not to a published record. ABSENT from published records.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            }
+          }
+        },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
             }
           }
         },
@@ -337228,6 +342782,223 @@ to the wallet, not to a published record. ABSENT from published records.`,
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -337582,6 +343353,16 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
               "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE.",
+              "x-flatbuffer-type": "CVR"
             }
           },
           additionalProperties: false
@@ -337770,17 +343551,17 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGMA_U: {
               type: "number",
-              description: "Position uncertainty U (km, 1-sigma)",
+              description: "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             },
             SIGMA_V: {
               type: "number",
-              description: "Position uncertainty V (km, 1-sigma)",
+              description: "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             },
             SIGMA_W: {
               type: "number",
-              description: "Position uncertainty W (km, 1-sigma)",
+              description: "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             }
           },
@@ -337788,7 +343569,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
         },
         MNV: {
           type: "object",
-          description: "Spacecraft Maneuver",
+          description: "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
           properties: {
             ID: {
               type: "string",
@@ -337921,7 +343702,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             EVENT_ID: {
               type: "string",
-              description: "Maneuver event identifier",
+              description: "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines.",
               "x-flatbuffer-type": "string"
             },
             UCT: {
@@ -337941,17 +343722,17 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             DELTA_VEL_U: {
               type: "number",
-              description: "Delta-V along-track/U component (km/s)",
+              description: "Delta-V along U, radial (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_VEL_V: {
               type: "number",
-              description: "Delta-V cross-track/V component (km/s)",
+              description: "Delta-V along V, in-track (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_VEL_W: {
               type: "number",
-              description: "Delta-V radial/W component (km/s)",
+              description: "Delta-V along W, cross-track (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS: {
@@ -337961,17 +343742,17 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             DELTA_POS_U: {
               type: "number",
-              description: "Delta position U component (km)",
+              description: "Delta position along U, radial (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS_V: {
               type: "number",
-              description: "Delta position V component (km)",
+              description: "Delta position along V, in-track (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS_W: {
               type: "number",
-              description: "Delta position W component (km)",
+              description: "Delta position along W, cross-track (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_MASS: {
@@ -338044,7 +343825,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
               items: {
                 type: "number"
               },
-              description: "Acceleration values (km/s^2, 3 components per point)",
+              description: "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry",
               "x-flatbuffer-type": "[double]"
             },
             MNVR_ACCEL_UNCS: {
@@ -338083,7 +343864,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
               items: {
                 type: "string"
               },
-              description: "Sourced data references",
+              description: "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines",
               "x-flatbuffer-type": "[string]"
             },
             SOURCED_DATA_TYPES: {
@@ -338095,6 +343876,11 @@ to the wallet, not to a published record. ABSENT from published records.`,
               type: "string",
               description: "Transaction identifier",
               "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the maneuver's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -366051,10 +371837,25 @@ Decoding applies the inverses from the last back.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -366559,6 +372360,66 @@ Decoding applies the inverses from the last back.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -366717,6 +372578,35 @@ Decoding applies the inverses from the last back.`,
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -368778,7 +374668,7 @@ Decoding applies the inverses from the last back.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -369283,6 +375173,66 @@ Decoding applies the inverses from the last back.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -369310,6 +375260,64 @@ Decoding applies the inverses from the last back.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -369405,7 +375413,7 @@ Decoding applies the inverses from the last back.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -369910,6 +375918,66 @@ Decoding applies the inverses from the last back.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -370066,6 +376134,19 @@ Decoding applies the inverses from the last back.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -374820,10 +380901,25 @@ Decoding applies the inverses from the last back.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -375328,6 +381424,66 @@ Decoding applies the inverses from the last back.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -375489,6 +381645,35 @@ Decoding applies the inverses from the last back.`,
             }
           }
         },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
+            }
+          }
+        },
         polynomialBasisType: {
           type: "string",
           enum: [
@@ -375563,6 +381748,127 @@ Decoding applies the inverses from the last back.`,
             R_PERIAPSIS: {
               value: 1,
               description: "Radius of periapsis (km). Preferred for hyperbolic orbits."
+            }
+          }
+        },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
             }
           }
         },
@@ -375656,30 +381962,6 @@ Decoding applies the inverses from the last back.`,
             Smoother: {
               value: 4,
               description: "Smoothed sequential solution"
-            }
-          }
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Calibration not stated"
-            },
-            Uncalibrated: {
-              value: 1,
-              description: "Not measured against independent reference states, or measured and failed"
-            },
-            Calibrated: {
-              value: 2,
-              description: "Measured against independent reference states and passed"
             }
           }
         },
@@ -377995,7 +384277,7 @@ Decoding applies the inverses from the last back.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -378500,6 +384782,66 @@ Decoding applies the inverses from the last back.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -378527,6 +384869,64 @@ Decoding applies the inverses from the last back.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -378622,7 +385022,7 @@ Decoding applies the inverses from the last back.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -379127,6 +385527,66 @@ Decoding applies the inverses from the last back.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -379283,6 +385743,19 @@ Decoding applies the inverses from the last back.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -380247,6 +386720,223 @@ Decoding applies the inverses from the last back.`,
             MESSAGE_ID: {
               type: "string",
               description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -381896,6 +388586,14 @@ Decoding applies the inverses from the last back.`,
               },
               description: "The data lines, as written.",
               "x-flatbuffer-type": "[string]"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -382094,7 +388792,7 @@ Decoding applies the inverses from the last back.`,
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states.",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -382199,6 +388897,19 @@ Decoding applies the inverses from the last back.`,
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
               "x-flatbuffer-type": "[OCMCovarianceBlock]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -394673,10 +401384,25 @@ Decoding applies the inverses from the last back.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -395181,6 +401907,66 @@ Decoding applies the inverses from the last back.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -395339,6 +402125,35 @@ Decoding applies the inverses from the last back.`,
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -399600,6 +406415,127 @@ Decoding applies the inverses from the last back.`,
             }
           }
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -399724,30 +406660,6 @@ Decoding applies the inverses from the last back.`,
             Smoother: {
               value: 4,
               description: "Smoothed sequential solution"
-            }
-          }
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Calibration not stated"
-            },
-            Uncalibrated: {
-              value: 1,
-              description: "Not measured against independent reference states, or measured and failed"
-            },
-            Calibrated: {
-              value: 2,
-              description: "Measured against independent reference states and passed"
             }
           }
         },
@@ -416036,7 +422948,9 @@ Decoding applies the inverses from the last back.`,
           type: "string",
           enum: [
             "NONE",
-            "ABA"
+            "ABA",
+            "CVR",
+            "PVN"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ushort",
@@ -416046,6 +422960,12 @@ Decoding applies the inverses from the last back.`,
             },
             ABA: {
               value: 256
+            },
+            CVR: {
+              value: 257
+            },
+            PVN: {
+              value: 258
             }
           }
         },
@@ -430798,7 +437718,7 @@ Decoding applies the inverses from the last back.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -431303,6 +438223,66 @@ Decoding applies the inverses from the last back.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -431330,6 +438310,64 @@ Decoding applies the inverses from the last back.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -431425,7 +438463,7 @@ Decoding applies the inverses from the last back.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -431930,6 +438968,66 @@ Decoding applies the inverses from the last back.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -432086,6 +439184,19 @@ Decoding applies the inverses from the last back.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -444316,6 +451427,223 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -444670,6 +451998,16 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
               "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE.",
+              "x-flatbuffer-type": "CVR"
             }
           },
           additionalProperties: false
@@ -446834,6 +454172,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "The data lines, as written.",
               "x-flatbuffer-type": "[string]"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -447032,7 +454378,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states.",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -447137,6 +454483,19 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
               "x-flatbuffer-type": "[OCMCovarianceBlock]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -476290,17 +483649,17 @@ Decoding applies the inverses from the last back.`,
             },
             SIGMA_U: {
               type: "number",
-              description: "Position uncertainty U (km, 1-sigma)",
+              description: "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             },
             SIGMA_V: {
               type: "number",
-              description: "Position uncertainty V (km, 1-sigma)",
+              description: "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             },
             SIGMA_W: {
               type: "number",
-              description: "Position uncertainty W (km, 1-sigma)",
+              description: "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             }
           },
@@ -476308,7 +483667,7 @@ Decoding applies the inverses from the last back.`,
         },
         MNV: {
           type: "object",
-          description: "Spacecraft Maneuver",
+          description: "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
           properties: {
             ID: {
               type: "string",
@@ -476441,7 +483800,7 @@ Decoding applies the inverses from the last back.`,
             },
             EVENT_ID: {
               type: "string",
-              description: "Maneuver event identifier",
+              description: "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines.",
               "x-flatbuffer-type": "string"
             },
             UCT: {
@@ -476461,17 +483820,17 @@ Decoding applies the inverses from the last back.`,
             },
             DELTA_VEL_U: {
               type: "number",
-              description: "Delta-V along-track/U component (km/s)",
+              description: "Delta-V along U, radial (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_VEL_V: {
               type: "number",
-              description: "Delta-V cross-track/V component (km/s)",
+              description: "Delta-V along V, in-track (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_VEL_W: {
               type: "number",
-              description: "Delta-V radial/W component (km/s)",
+              description: "Delta-V along W, cross-track (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS: {
@@ -476481,17 +483840,17 @@ Decoding applies the inverses from the last back.`,
             },
             DELTA_POS_U: {
               type: "number",
-              description: "Delta position U component (km)",
+              description: "Delta position along U, radial (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS_V: {
               type: "number",
-              description: "Delta position V component (km)",
+              description: "Delta position along V, in-track (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS_W: {
               type: "number",
-              description: "Delta position W component (km)",
+              description: "Delta position along W, cross-track (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_MASS: {
@@ -476564,7 +483923,7 @@ Decoding applies the inverses from the last back.`,
               items: {
                 type: "number"
               },
-              description: "Acceleration values (km/s^2, 3 components per point)",
+              description: "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry",
               "x-flatbuffer-type": "[double]"
             },
             MNVR_ACCEL_UNCS: {
@@ -476603,7 +483962,7 @@ Decoding applies the inverses from the last back.`,
               items: {
                 type: "string"
               },
-              description: "Sourced data references",
+              description: "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines",
               "x-flatbuffer-type": "[string]"
             },
             SOURCED_DATA_TYPES: {
@@ -476615,6 +483974,11 @@ Decoding applies the inverses from the last back.`,
               type: "string",
               description: "Transaction identifier",
               "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the maneuver's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -513396,6 +520760,12 @@ no provider, dataset, or site.`,
                 },
                 ABA: {
                   value: 256
+                },
+                CVR: {
+                  value: 257
+                },
+                PVN: {
+                  value: 258
                 }
               },
               "x-flatbuffer-default": "NONE"
@@ -534053,6 +541423,127 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             }
           }
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -535601,6 +543092,223 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -535955,6 +543663,16 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
               "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE.",
+              "x-flatbuffer-type": "CVR"
             }
           },
           additionalProperties: false
@@ -552797,6 +560515,198 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
       "x-flatbuffer-root-type": "SKT",
       "x-flatbuffer-file-identifier": "$SKT"
     },
+    CVR: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CVR",
+      "x-flatbuffer-root-type": "CVR",
+      "x-flatbuffer-file-identifier": "$CVR"
+    },
     PRW: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -555733,10 +563643,25 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -556241,6 +564166,66 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -556399,6 +564384,35 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -563944,7 +571958,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -564449,6 +572463,66 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -564476,6 +572550,64 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -564571,7 +572703,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -565076,6 +573208,66 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -565232,6 +573424,19 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -569308,10 +577513,25 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -569816,6 +578036,66 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -569974,6 +578254,35 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -570474,7 +578783,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -570979,6 +579288,66 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -571006,6 +579375,64 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -571101,7 +579528,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -571606,6 +580033,66 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -571762,6 +580249,19 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -582130,10 +590630,25 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -582638,6 +591153,66 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -582648,7 +591223,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -583153,6 +591728,66 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -607422,10 +616057,25 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -607930,6 +616580,66 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -608088,6 +616798,35 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -609170,7 +617909,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -609675,6 +618414,66 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -609702,6 +618501,64 @@ to the wallet, not to a published record. ABSENT from published records.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -609797,7 +618654,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -610302,6 +619159,66 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -610458,6 +619375,19 @@ to the wallet, not to a published record. ABSENT from published records.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -614167,10 +623097,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -614675,6 +623620,66 @@ to the wallet, not to a published record. ABSENT from published records.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -614833,6 +623838,35 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             WET: {
               value: 1
+            }
+          }
+        },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
             }
           }
         },
@@ -615673,6 +624707,127 @@ to the wallet, not to a published record. ABSENT from published records.`,
             }
           }
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -615891,30 +625046,6 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Smoother: {
               value: 4,
               description: "Smoothed sequential solution"
-            }
-          }
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Calibration not stated"
-            },
-            Uncalibrated: {
-              value: 1,
-              description: "Not measured against independent reference states, or measured and failed"
-            },
-            Calibrated: {
-              value: 2,
-              description: "Measured against independent reference states and passed"
             }
           }
         },
@@ -623098,7 +632229,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -623603,6 +632734,66 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -623630,6 +632821,64 @@ to the wallet, not to a published record. ABSENT from published records.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -623725,7 +632974,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -624230,6 +633479,66 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -624386,6 +633695,19 @@ to the wallet, not to a published record. ABSENT from published records.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -628038,6 +637360,223 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -628392,6 +637931,16 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
               "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE.",
+              "x-flatbuffer-type": "CVR"
             }
           },
           additionalProperties: false
@@ -630646,6 +640195,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "The data lines, as written.",
               "x-flatbuffer-type": "[string]"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -630844,7 +640401,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states.",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -630949,6 +640506,19 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
               "x-flatbuffer-type": "[OCMCovarianceBlock]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -636491,6 +646061,127 @@ assumptions".`,
             }
           }
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -640315,6 +650006,223 @@ assumptions".`,
           },
           additionalProperties: false
         },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -640669,6 +650577,16 @@ assumptions".`,
               },
               description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
               "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the element set comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "Realism of COVARIANCE.",
+              "x-flatbuffer-type": "CVR"
             }
           },
           additionalProperties: false
@@ -640857,17 +650775,17 @@ assumptions".`,
             },
             SIGMA_U: {
               type: "number",
-              description: "Position uncertainty U (km, 1-sigma)",
+              description: "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             },
             SIGMA_V: {
               type: "number",
-              description: "Position uncertainty V (km, 1-sigma)",
+              description: "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             },
             SIGMA_W: {
               type: "number",
-              description: "Position uncertainty W (km, 1-sigma)",
+              description: "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)",
               "x-flatbuffer-type": "double"
             }
           },
@@ -640875,7 +650793,7 @@ assumptions".`,
         },
         MNV: {
           type: "object",
-          description: "Spacecraft Maneuver",
+          description: "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
           properties: {
             ID: {
               type: "string",
@@ -641008,7 +650926,7 @@ assumptions".`,
             },
             EVENT_ID: {
               type: "string",
-              description: "Maneuver event identifier",
+              description: "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines.",
               "x-flatbuffer-type": "string"
             },
             UCT: {
@@ -641028,17 +650946,17 @@ assumptions".`,
             },
             DELTA_VEL_U: {
               type: "number",
-              description: "Delta-V along-track/U component (km/s)",
+              description: "Delta-V along U, radial (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_VEL_V: {
               type: "number",
-              description: "Delta-V cross-track/V component (km/s)",
+              description: "Delta-V along V, in-track (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_VEL_W: {
               type: "number",
-              description: "Delta-V radial/W component (km/s)",
+              description: "Delta-V along W, cross-track (km/s)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS: {
@@ -641048,17 +650966,17 @@ assumptions".`,
             },
             DELTA_POS_U: {
               type: "number",
-              description: "Delta position U component (km)",
+              description: "Delta position along U, radial (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS_V: {
               type: "number",
-              description: "Delta position V component (km)",
+              description: "Delta position along V, in-track (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_POS_W: {
               type: "number",
-              description: "Delta position W component (km)",
+              description: "Delta position along W, cross-track (km)",
               "x-flatbuffer-type": "double"
             },
             DELTA_MASS: {
@@ -641131,7 +651049,7 @@ assumptions".`,
               items: {
                 type: "number"
               },
-              description: "Acceleration values (km/s^2, 3 components per point)",
+              description: "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry",
               "x-flatbuffer-type": "[double]"
             },
             MNVR_ACCEL_UNCS: {
@@ -641170,7 +651088,7 @@ assumptions".`,
               items: {
                 type: "string"
               },
-              description: "Sourced data references",
+              description: "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines",
               "x-flatbuffer-type": "[string]"
             },
             SOURCED_DATA_TYPES: {
@@ -641182,6 +651100,11 @@ assumptions".`,
               type: "string",
               description: "Transaction identifier",
               "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the maneuver's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -660824,6 +670747,64 @@ to the wallet, not to a published record. ABSENT from published records.`,
             }
           }
         },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          }
+        },
         CelestialFrame: {
           type: "string",
           enum: [
@@ -662215,10 +672196,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "VAT",
             "VENZ",
             "VTNM",
-            "ZWE"
+            "ZWE",
+            "AGO",
+            "BGR",
+            "BHR",
+            "BWA",
+            "CAN",
+            "CZE",
+            "HRV",
+            "JOR",
+            "KWT",
+            "PER",
+            "PRI",
+            "SLB",
+            "SVK",
+            "TWN",
+            "UGA"
           ],
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
             AB: {
               value: 0,
@@ -662723,6 +672719,66 @@ to the wallet, not to a published record. ABSENT from published records.`,
             ZWE: {
               value: 125,
               description: "Republic of Zimbabwe"
+            },
+            AGO: {
+              value: 126,
+              description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+            },
+            BGR: {
+              value: 127,
+              description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+            },
+            BHR: {
+              value: 128,
+              description: "Bahrain"
+            },
+            BWA: {
+              value: 129,
+              description: "Botswana"
+            },
+            CAN: {
+              value: 130,
+              description: "Canada (ISO 3166-1 alpha-3; also CA)"
+            },
+            CZE: {
+              value: 131,
+              description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+            },
+            HRV: {
+              value: 132,
+              description: "Croatia"
+            },
+            JOR: {
+              value: 133,
+              description: "Jordan"
+            },
+            KWT: {
+              value: 134,
+              description: "Kuwait"
+            },
+            PER: {
+              value: 135,
+              description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+            },
+            PRI: {
+              value: 136,
+              description: "Puerto Rico"
+            },
+            SLB: {
+              value: 137,
+              description: "Solomon Islands"
+            },
+            SVK: {
+              value: 138,
+              description: "Slovakia"
+            },
+            TWN: {
+              value: 139,
+              description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+            },
+            UGA: {
+              value: 140,
+              description: "Uganda"
             }
           }
         },
@@ -662884,6 +672940,35 @@ to the wallet, not to a published record. ABSENT from published records.`,
             }
           }
         },
+        catalogProductKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Sgp4Elements",
+            "Sgp4XpElements",
+            "StateCovariance"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Sgp4Elements: {
+              value: 1,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+            },
+            Sgp4XpElements: {
+              value: 2,
+              description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+            },
+            StateCovariance: {
+              value: 3,
+              description: "$OCM: a state and its covariance"
+            }
+          }
+        },
         polynomialBasisType: {
           type: "string",
           enum: [
@@ -662958,6 +673043,69 @@ to the wallet, not to a published record. ABSENT from published records.`,
             R_PERIAPSIS: {
               value: 1,
               description: "Radius of periapsis (km). Preferred for hyperbolic orbits."
+            }
+          }
+        },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
             }
           }
         },
@@ -663051,30 +673199,6 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Smoother: {
               value: 4,
               description: "Smoothed sequential solution"
-            }
-          }
-        },
-        covarianceCalibration: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Uncalibrated",
-            "Calibrated"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Calibration not stated"
-            },
-            Uncalibrated: {
-              value: 1,
-              description: "Not measured against independent reference states, or measured and failed"
-            },
-            Calibrated: {
-              value: 2,
-              description: "Measured against independent reference states and passed"
             }
           }
         },
@@ -663198,6 +673322,132 @@ to the wallet, not to a published record. ABSENT from published records.`,
               maximum: 2147483647,
               description: "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)",
               "x-flatbuffer-type": "int"
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -665183,7 +675433,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             OWNER: {
               $ref: "#/definitions/legacyCountryCode",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -665688,6 +675938,66 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -665715,6 +676025,64 @@ to the wallet, not to a published record. ABSENT from published records.`,
               type: "string",
               description: "ISO 8601 UTC time the reference table was retrieved.",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CATProduct: {
+          type: "object",
+          description: "One product the catalog selected for the object, by content identifier.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/catalogProductKind",
+              description: "What the product is.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Sgp4Elements: {
+                  value: 1,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4"
+                },
+                Sgp4XpElements: {
+                  value: 2,
+                  description: "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+                },
+                StateCovariance: {
+                  value: 3,
+                  description: "$OCM: a state and its covariance"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_ID: {
+              type: "string",
+              description: "The product's source: its PROVENANCE SOURCE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            SELECTION_REASON: {
+              type: "string",
+              description: "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon).",
+              "x-flatbuffer-type": "string"
+            },
+            STALE: {
+              type: "boolean",
+              description: "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -665810,7 +676178,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
               $ref: "#/definitions/legacyCountryCode",
               description: "Ownership, typically country or company",
               "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 AB: {
                   value: 0,
@@ -666315,6 +676683,66 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 ZWE: {
                   value: 125,
                   description: "Republic of Zimbabwe"
+                },
+                AGO: {
+                  value: 126,
+                  description: "Angola (ISO 3166-1 alpha-3; also ANG)"
+                },
+                BGR: {
+                  value: 127,
+                  description: "Bulgaria (ISO 3166-1 alpha-3; also BUL)"
+                },
+                BHR: {
+                  value: 128,
+                  description: "Bahrain"
+                },
+                BWA: {
+                  value: 129,
+                  description: "Botswana"
+                },
+                CAN: {
+                  value: 130,
+                  description: "Canada (ISO 3166-1 alpha-3; also CA)"
+                },
+                CZE: {
+                  value: 131,
+                  description: "Czechia (ISO 3166-1 alpha-3; also CZCH)"
+                },
+                HRV: {
+                  value: 132,
+                  description: "Croatia"
+                },
+                JOR: {
+                  value: 133,
+                  description: "Jordan"
+                },
+                KWT: {
+                  value: 134,
+                  description: "Kuwait"
+                },
+                PER: {
+                  value: 135,
+                  description: "Peru (ISO 3166-1 alpha-3; also PERU)"
+                },
+                PRI: {
+                  value: 136,
+                  description: "Puerto Rico"
+                },
+                SLB: {
+                  value: 137,
+                  description: "Solomon Islands"
+                },
+                SVK: {
+                  value: 138,
+                  description: "Slovakia"
+                },
+                TWN: {
+                  value: 139,
+                  description: "Taiwan (ISO 3166-1 alpha-3; also ROC)"
+                },
+                UGA: {
+                  value: 140,
+                  description: "Uganda"
                 }
               }
             },
@@ -666471,6 +676899,19 @@ to the wallet, not to a published record. ABSENT from published records.`,
             CATALOG_OBJECT_ID: {
               type: "string",
               description: "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CATProduct"
+              },
+              description: "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here.",
+              "x-flatbuffer-type": "[CATProduct]"
+            },
+            PRODUCTS_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -666937,6 +677378,97 @@ to the wallet, not to a published record. ABSENT from published records.`,
               maximum: 65535,
               description: "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records.",
               "x-flatbuffer-type": "uint16"
+            }
+          },
+          additionalProperties: false
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -668585,6 +679117,14 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "The data lines, as written.",
               "x-flatbuffer-type": "[string]"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false
@@ -668783,7 +679323,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
-              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states.",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -668888,6 +679428,19 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
               "x-flatbuffer-type": "[OCMCovarianceBlock]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Where the message's data comes from and the terms it travels under.",
+              "x-flatbuffer-type": "PVN"
+            },
+            COV_REALISM: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CVR"
+              },
+              description: "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch.",
+              "x-flatbuffer-type": "[CVR]"
             }
           },
           additionalProperties: false

@@ -8,1035 +8,421 @@ import Common
 
 import FlatBuffers
 
-///  Material class, in the generic building-and-natural-material vocabulary of
-///  the reference physics. Capability classes only: a class is what the surface
-///  IS, never who made it. A branded product name belongs in NAME or in
-///  RFSProvenance.SOURCE as data, never in this enum.
-///
-///  ORDINALS ARE WIRE VALUES. New classes are APPENDED ONLY.
-public enum rfsMaterialClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Physical path by which aggressor energy reaches the victim.
+public enum emcCouplingPath: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case unspecified = 0
-  case concrete = 1
-  case brick = 2
-  case plasterboard = 3
-  case wood = 4
-  case glass = 5
-  ///  Glass treated to reflect infrared, which also attenuates RF strongly.
-  case coatedGlass = 6
-  case ceilingBoard = 7
-  case chipboard = 8
-  case floorboard = 9
-  case metal = 10
-  case stone = 11
-  case asphalt = 12
-  case roofingTile = 13
-  case veryDryGround = 14
-  case mediumDryGround = 15
-  case wetGround = 16
-  case soil = 17
-  case sand = 18
-  case vegetation = 19
-  case freshWater = 20
-  case seaWater = 21
-  case ice = 22
-  case snow = 23
-  ///  Fibre-reinforced polymer structure.
-  case composite = 24
-  ///  Carbon-fibre structure, electrically conductive along the fibres.
-  case carbonFiberComposite = 25
-  ///  Multi-layer insulation blanket.
-  case multiLayerInsulation = 26
-  case solarCell = 27
-  ///  Conductive or lossy surface coating.
-  case coating = 28
-  ///  Surface engineered to absorb incident RF energy.
-  case absorber = 29
-  ///  Frequency-selective or periodic structure whose response is not a bulk
-  ///  material property.
-  case engineeredSurface = 30
-  ///  The source states a material this enum cannot express. The verbatim name
-  ///  MUST be preserved in NAME.
-  case other = 31
+  case antennaToAntenna = 1
+  case freeSpaceRadiation = 2
+  case nearFieldElectric = 3
+  case nearFieldMagnetic = 4
+  case structuralConduction = 5
+  case cableConduction = 6
+  case commonImpedance = 7
+  case apertureLeakage = 8
 
-  public static var max: rfsMaterialClass { return .other }
-  public static var min: rfsMaterialClass { return .unspecified }
+  public static var max: emcCouplingPath { return .apertureLeakage }
+  public static var min: emcCouplingPath { return .unspecified }
 }
 
 
-///  How the surface redistributes energy it does not absorb or transmit.
-public enum rfsScatteringClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Analytical class of the interference mechanism.
+public enum emcMechanismCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case unspecified = 0
-  ///  Mirror-like; energy leaves at the reflection angle.
-  case specular = 1
-  ///  Energy is spread across angles.
-  case diffuse = 2
-  ///  A specular lobe over a diffuse background.
-  case mixed = 3
-  ///  Diffuse with a cosine angular distribution.
-  case lambertian = 4
-  ///  Direction-dependent scattering that a single coefficient cannot describe.
-  case anisotropic = 5
+  case fundamental = 1
+  case harmonic = 2
+  case spurious = 3
+  case outOfBand = 4
+  case broadbandNoise = 5
+  case activeIntermodulation = 6
+  case passiveIntermodulation = 7
+  case receiverBlocking = 8
+  case receiverDesensitization = 9
+  case receiverOverload = 10
 
-  public static var max: rfsScatteringClass { return .anisotropic }
-  public static var min: rfsScatteringClass { return .unspecified }
+  public static var max: emcMechanismCategory { return .receiverOverload }
+  public static var min: emcMechanismCategory { return .unspecified }
 }
 
 
-///  Polarization of the incident field, in the plane-of-incidence convention
-///  reflection coefficients require. Deliberately NOT `rfPolarization`: that
-///  enum describes an emitter's transmitted polarization (LHCP, LINEAR_V),
-///  while a reflection coefficient is stated per transverse mode, and conflating
-///  the two silently applies the wrong Fresnel coefficient.
-public enum rfsIncidencePolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Disposition of the assessed incompatibility.
+public enum emcResolutionState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case unspecified = 0
-  ///  Electric field perpendicular to the plane of incidence.
-  case transverseElectric = 1
-  ///  Electric field parallel to the plane of incidence.
-  case transverseMagnetic = 2
-  case circularLeft = 3
-  case circularRight = 4
-  ///  Averaged over polarization.
-  case unpolarized = 5
+  case noActionRequired = 1
+  case open_ = 2
+  case mitigated = 3
+  case acceptedRisk = 4
+  case notApplicable = 5
 
-  public static var max: rfsIncidencePolarization { return .unpolarized }
-  public static var min: rfsIncidencePolarization { return .unspecified }
+  public static var max: emcResolutionState { return .notApplicable }
+  public static var min: emcResolutionState { return .unspecified }
 }
 
 
-///  How a property value came to exist. `CLASS_DEFAULT` exists so a value taken
-///  from a published class table can be REFUSED where a measurement of THIS
-///  surface is required.
-public enum rfsPropertyMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case unspecified = 0
-  ///  Measured on this surface or a coupon of its material.
-  case measured = 1
-  ///  Computed from a physical model of the material's composition.
-  case modeled = 2
-  ///  Taken from a published table for the material class, not this surface.
-  case classDefault = 3
-  ///  Borrowed from a similar structure or bus family; visibly an
-  ///  approximation.
-  case inferredFromFamily = 4
-
-  public static var max: rfsPropertyMethod { return .inferredFromFamily }
-  public static var min: rfsPropertyMethod { return .unspecified }
-}
-
-
-///  What the material is attached to, which selects the standard it joins.
-public enum rfsGeometryKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case unspecified = 0
-  ///  A mesh or material slot inside a reviewed 3D asset; joins `$VAM`.
-  case assetMesh = 1
-  ///  A named surface of a catalogued object; joins `$OPP.OPPSurface`.
-  case objectSurface = 2
-  ///  An articulated panel; joins `$PNL`.
-  case panel = 3
-  ///  A whole catalogued object; joins `$CAT`.
-  case catalogObject = 4
-  ///  A structure at a terrestrial site; joins `$TBS`.
-  case siteStructure = 5
-  ///  A face of a building or other fixed structure.
-  case buildingFace = 6
-  ///  The ground or sea surface itself.
-  case terrainSurface = 7
-  ///  A primitive solved analytically rather than as a mesh.
-  case analyticShape = 8
-
-  public static var max: rfsGeometryKind { return .analyticShape }
-  public static var min: rfsGeometryKind { return .unspecified }
-}
-
-
-///  Analytic obstacle primitive, when the obstacle is not a mesh.
-public enum rfsAnalyticShape: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case unspecified = 0
-  case plane = 1
-  case disk = 2
-  case box = 3
-  case sphere = 4
-  case ellipsoid = 5
-  case cylinder = 6
-  case cone = 7
-  case paraboloid = 8
-  ///  Convex hull of a point set carried by the geometry it references.
-  case convexHull = 9
-
-  public static var max: rfsAnalyticShape { return .convexHull }
-  public static var min: rfsAnalyticShape { return .unspecified }
-}
-
-
-///  The material's electromagnetic properties at ONE frequency. A table of
-///  these beats the power-law fit wherever it covers the frequency.
-public struct RFSFrequencySample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Stable reference to one endpoint of the assessment.
+public struct EMCEndpointRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$RFS" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFSFrequencySample.id, addPrefix: prefix) }
+  public static var id: String { "$EMC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EMCEndpointRef.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let FREQUENCY_MHZ: VOffset = 4
-    static let RELATIVE_PERMITTIVITY_REAL: VOffset = 6
-    static let RELATIVE_PERMITTIVITY_IMAGINARY: VOffset = 8
-    static let CONDUCTIVITY_S_PER_M: VOffset = 10
-    static let LOSS_TANGENT: VOffset = 12
-    static let RELATIVE_PERMEABILITY_REAL: VOffset = 14
-    static let RELATIVE_PERMEABILITY_IMAGINARY: VOffset = 16
-    static let REFLECTIVITY: VOffset = 18
-    static let REFLECTION_LOSS_DB: VOffset = 20
-    static let TRANSMISSION_LOSS_DB: VOffset = 22
-    static let ATTENUATION_DB_PER_M: VOffset = 24
+    static let ENDPOINT_ID: VOffset = 4
+    static let ENDPOINT_KIND: VOffset = 6
+    static let RFE_ID: VOffset = 8
+    static let RFB_ID: VOffset = 10
+    static let NORAD_CAT_ID: VOffset = 12
+    static let OBJECT_ID: VOffset = 14
+    static let BEM_ID: VOffset = 16
+    static let PAP_ID: VOffset = 18
+    static let CHANNEL_ID: VOffset = 20
   }
 
-  ///  Frequency this sample is stated at, megahertz — the `$RFB` MHz
-  ///  convention. A join to `$IQC` (hertz) converts explicitly at the join.
-  public var FREQUENCY_MHZ: Double { let o = _accessor.offset(VT.FREQUENCY_MHZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Real part of the relative permittivity.
-  public var RELATIVE_PERMITTIVITY_REAL: Double { let o = _accessor.offset(VT.RELATIVE_PERMITTIVITY_REAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Imaginary part of the relative permittivity (loss term), stated as a
-  ///  POSITIVE magnitude.
-  public var RELATIVE_PERMITTIVITY_IMAGINARY: Double { let o = _accessor.offset(VT.RELATIVE_PERMITTIVITY_IMAGINARY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Conductivity, siemens per metre.
-  public var CONDUCTIVITY_S_PER_M: Double { let o = _accessor.offset(VT.CONDUCTIVITY_S_PER_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Loss tangent, dimensionless.
-  public var LOSS_TANGENT: Double { let o = _accessor.offset(VT.LOSS_TANGENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Real and imaginary relative permeability. 1.0 and 0.0 for non-magnetic
-  ///  materials — stated, not assumed.
-  public var RELATIVE_PERMEABILITY_REAL: Double { let o = _accessor.offset(VT.RELATIVE_PERMEABILITY_REAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RELATIVE_PERMEABILITY_IMAGINARY: Double { let o = _accessor.offset(VT.RELATIVE_PERMEABILITY_IMAGINARY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Power reflected at normal incidence as a ratio [0-1].
-  public var REFLECTIVITY: Double { let o = _accessor.offset(VT.REFLECTIVITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Reflection loss at normal incidence, dB (positive).
-  public var REFLECTION_LOSS_DB: Double { let o = _accessor.offset(VT.REFLECTION_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Loss through the material at THICKNESS_M, dB (positive).
-  public var TRANSMISSION_LOSS_DB: Double { let o = _accessor.offset(VT.TRANSMISSION_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Attenuation inside the material, dB per metre.
-  public var ATTENUATION_DB_PER_M: Double { let o = _accessor.offset(VT.ATTENUATION_DB_PER_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startRFSFrequencySample(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(FREQUENCY_MHZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY_MHZ, def: 0.0, at: VT.FREQUENCY_MHZ) }
-  public static func add(RELATIVE_PERMITTIVITY_REAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMITTIVITY_REAL, def: 0.0, at: VT.RELATIVE_PERMITTIVITY_REAL) }
-  public static func add(RELATIVE_PERMITTIVITY_IMAGINARY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMITTIVITY_IMAGINARY, def: 0.0, at: VT.RELATIVE_PERMITTIVITY_IMAGINARY) }
-  public static func add(CONDUCTIVITY_S_PER_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONDUCTIVITY_S_PER_M, def: 0.0, at: VT.CONDUCTIVITY_S_PER_M) }
-  public static func add(LOSS_TANGENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSS_TANGENT, def: 0.0, at: VT.LOSS_TANGENT) }
-  public static func add(RELATIVE_PERMEABILITY_REAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMEABILITY_REAL, def: 0.0, at: VT.RELATIVE_PERMEABILITY_REAL) }
-  public static func add(RELATIVE_PERMEABILITY_IMAGINARY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMEABILITY_IMAGINARY, def: 0.0, at: VT.RELATIVE_PERMEABILITY_IMAGINARY) }
-  public static func add(REFLECTIVITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTIVITY, def: 0.0, at: VT.REFLECTIVITY) }
-  public static func add(REFLECTION_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTION_LOSS_DB, def: 0.0, at: VT.REFLECTION_LOSS_DB) }
-  public static func add(TRANSMISSION_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMISSION_LOSS_DB, def: 0.0, at: VT.TRANSMISSION_LOSS_DB) }
-  public static func add(ATTENUATION_DB_PER_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTENUATION_DB_PER_M, def: 0.0, at: VT.ATTENUATION_DB_PER_M) }
-  public static func endRFSFrequencySample(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFSFrequencySample(
-    _ fbb: inout FlatBufferBuilder,
-    FREQUENCY_MHZ: Double = 0.0,
-    RELATIVE_PERMITTIVITY_REAL: Double = 0.0,
-    RELATIVE_PERMITTIVITY_IMAGINARY: Double = 0.0,
-    CONDUCTIVITY_S_PER_M: Double = 0.0,
-    LOSS_TANGENT: Double = 0.0,
-    RELATIVE_PERMEABILITY_REAL: Double = 0.0,
-    RELATIVE_PERMEABILITY_IMAGINARY: Double = 0.0,
-    REFLECTIVITY: Double = 0.0,
-    REFLECTION_LOSS_DB: Double = 0.0,
-    TRANSMISSION_LOSS_DB: Double = 0.0,
-    ATTENUATION_DB_PER_M: Double = 0.0
-  ) -> Offset {
-    let __start = RFSFrequencySample.startRFSFrequencySample(&fbb)
-    RFSFrequencySample.add(FREQUENCY_MHZ: FREQUENCY_MHZ, &fbb)
-    RFSFrequencySample.add(RELATIVE_PERMITTIVITY_REAL: RELATIVE_PERMITTIVITY_REAL, &fbb)
-    RFSFrequencySample.add(RELATIVE_PERMITTIVITY_IMAGINARY: RELATIVE_PERMITTIVITY_IMAGINARY, &fbb)
-    RFSFrequencySample.add(CONDUCTIVITY_S_PER_M: CONDUCTIVITY_S_PER_M, &fbb)
-    RFSFrequencySample.add(LOSS_TANGENT: LOSS_TANGENT, &fbb)
-    RFSFrequencySample.add(RELATIVE_PERMEABILITY_REAL: RELATIVE_PERMEABILITY_REAL, &fbb)
-    RFSFrequencySample.add(RELATIVE_PERMEABILITY_IMAGINARY: RELATIVE_PERMEABILITY_IMAGINARY, &fbb)
-    RFSFrequencySample.add(REFLECTIVITY: REFLECTIVITY, &fbb)
-    RFSFrequencySample.add(REFLECTION_LOSS_DB: REFLECTION_LOSS_DB, &fbb)
-    RFSFrequencySample.add(TRANSMISSION_LOSS_DB: TRANSMISSION_LOSS_DB, &fbb)
-    RFSFrequencySample.add(ATTENUATION_DB_PER_M: ATTENUATION_DB_PER_M, &fbb)
-    return RFSFrequencySample.endRFSFrequencySample(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.FREQUENCY_MHZ, fieldName: "FREQUENCY_MHZ", required: false, type: Double.self)
-    try _v.visit(field: VT.RELATIVE_PERMITTIVITY_REAL, fieldName: "RELATIVE_PERMITTIVITY_REAL", required: false, type: Double.self)
-    try _v.visit(field: VT.RELATIVE_PERMITTIVITY_IMAGINARY, fieldName: "RELATIVE_PERMITTIVITY_IMAGINARY", required: false, type: Double.self)
-    try _v.visit(field: VT.CONDUCTIVITY_S_PER_M, fieldName: "CONDUCTIVITY_S_PER_M", required: false, type: Double.self)
-    try _v.visit(field: VT.LOSS_TANGENT, fieldName: "LOSS_TANGENT", required: false, type: Double.self)
-    try _v.visit(field: VT.RELATIVE_PERMEABILITY_REAL, fieldName: "RELATIVE_PERMEABILITY_REAL", required: false, type: Double.self)
-    try _v.visit(field: VT.RELATIVE_PERMEABILITY_IMAGINARY, fieldName: "RELATIVE_PERMEABILITY_IMAGINARY", required: false, type: Double.self)
-    try _v.visit(field: VT.REFLECTIVITY, fieldName: "REFLECTIVITY", required: false, type: Double.self)
-    try _v.visit(field: VT.REFLECTION_LOSS_DB, fieldName: "REFLECTION_LOSS_DB", required: false, type: Double.self)
-    try _v.visit(field: VT.TRANSMISSION_LOSS_DB, fieldName: "TRANSMISSION_LOSS_DB", required: false, type: Double.self)
-    try _v.visit(field: VT.ATTENUATION_DB_PER_M, fieldName: "ATTENUATION_DB_PER_M", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
-///  Reflection and transmission at one incidence angle and polarization. The
-///  angular dependence of a real surface cannot be carried by a single
-///  normal-incidence number.
-public struct RFSReflectionEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFS" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFSReflectionEntry.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let FREQUENCY_MHZ: VOffset = 4
-    static let INCIDENCE_ANGLE_DEG: VOffset = 6
-    static let POLARIZATION: VOffset = 8
-    static let REFLECTION_COEFFICIENT_MAGNITUDE: VOffset = 10
-    static let REFLECTION_COEFFICIENT_PHASE_DEG: VOffset = 12
-    static let REFLECTION_LOSS_DB: VOffset = 14
-    static let TRANSMISSION_LOSS_DB: VOffset = 16
-    static let SCATTERING_LOSS_DB: VOffset = 18
-  }
-
-  ///  Frequency this entry is stated at, megahertz.
-  public var FREQUENCY_MHZ: Double { let o = _accessor.offset(VT.FREQUENCY_MHZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Angle from the surface normal, degrees [0-90).
-  public var INCIDENCE_ANGLE_DEG: Double { let o = _accessor.offset(VT.INCIDENCE_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POLARIZATION: rfsIncidencePolarization { let o = _accessor.offset(VT.POLARIZATION); return o == 0 ? .unspecified : rfsIncidencePolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Magnitude of the field reflection coefficient [0-1].
-  public var REFLECTION_COEFFICIENT_MAGNITUDE: Double { let o = _accessor.offset(VT.REFLECTION_COEFFICIENT_MAGNITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Phase of the field reflection coefficient, degrees.
-  public var REFLECTION_COEFFICIENT_PHASE_DEG: Double { let o = _accessor.offset(VT.REFLECTION_COEFFICIENT_PHASE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Reflection loss, dB (positive).
-  public var REFLECTION_LOSS_DB: Double { let o = _accessor.offset(VT.REFLECTION_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Loss through the material at this angle, dB (positive).
-  public var TRANSMISSION_LOSS_DB: Double { let o = _accessor.offset(VT.TRANSMISSION_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Power removed from the specular direction by surface roughness, dB.
-  public var SCATTERING_LOSS_DB: Double { let o = _accessor.offset(VT.SCATTERING_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startRFSReflectionEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(FREQUENCY_MHZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY_MHZ, def: 0.0, at: VT.FREQUENCY_MHZ) }
-  public static func add(INCIDENCE_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCIDENCE_ANGLE_DEG, def: 0.0, at: VT.INCIDENCE_ANGLE_DEG) }
-  public static func add(POLARIZATION: rfsIncidencePolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION.rawValue, def: 0, at: VT.POLARIZATION) }
-  public static func add(REFLECTION_COEFFICIENT_MAGNITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTION_COEFFICIENT_MAGNITUDE, def: 0.0, at: VT.REFLECTION_COEFFICIENT_MAGNITUDE) }
-  public static func add(REFLECTION_COEFFICIENT_PHASE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTION_COEFFICIENT_PHASE_DEG, def: 0.0, at: VT.REFLECTION_COEFFICIENT_PHASE_DEG) }
-  public static func add(REFLECTION_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTION_LOSS_DB, def: 0.0, at: VT.REFLECTION_LOSS_DB) }
-  public static func add(TRANSMISSION_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMISSION_LOSS_DB, def: 0.0, at: VT.TRANSMISSION_LOSS_DB) }
-  public static func add(SCATTERING_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCATTERING_LOSS_DB, def: 0.0, at: VT.SCATTERING_LOSS_DB) }
-  public static func endRFSReflectionEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFSReflectionEntry(
-    _ fbb: inout FlatBufferBuilder,
-    FREQUENCY_MHZ: Double = 0.0,
-    INCIDENCE_ANGLE_DEG: Double = 0.0,
-    POLARIZATION: rfsIncidencePolarization = .unspecified,
-    REFLECTION_COEFFICIENT_MAGNITUDE: Double = 0.0,
-    REFLECTION_COEFFICIENT_PHASE_DEG: Double = 0.0,
-    REFLECTION_LOSS_DB: Double = 0.0,
-    TRANSMISSION_LOSS_DB: Double = 0.0,
-    SCATTERING_LOSS_DB: Double = 0.0
-  ) -> Offset {
-    let __start = RFSReflectionEntry.startRFSReflectionEntry(&fbb)
-    RFSReflectionEntry.add(FREQUENCY_MHZ: FREQUENCY_MHZ, &fbb)
-    RFSReflectionEntry.add(INCIDENCE_ANGLE_DEG: INCIDENCE_ANGLE_DEG, &fbb)
-    RFSReflectionEntry.add(POLARIZATION: POLARIZATION, &fbb)
-    RFSReflectionEntry.add(REFLECTION_COEFFICIENT_MAGNITUDE: REFLECTION_COEFFICIENT_MAGNITUDE, &fbb)
-    RFSReflectionEntry.add(REFLECTION_COEFFICIENT_PHASE_DEG: REFLECTION_COEFFICIENT_PHASE_DEG, &fbb)
-    RFSReflectionEntry.add(REFLECTION_LOSS_DB: REFLECTION_LOSS_DB, &fbb)
-    RFSReflectionEntry.add(TRANSMISSION_LOSS_DB: TRANSMISSION_LOSS_DB, &fbb)
-    RFSReflectionEntry.add(SCATTERING_LOSS_DB: SCATTERING_LOSS_DB, &fbb)
-    return RFSReflectionEntry.endRFSReflectionEntry(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.FREQUENCY_MHZ, fieldName: "FREQUENCY_MHZ", required: false, type: Double.self)
-    try _v.visit(field: VT.INCIDENCE_ANGLE_DEG, fieldName: "INCIDENCE_ANGLE_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.POLARIZATION, fieldName: "POLARIZATION", required: false, type: rfsIncidencePolarization.self)
-    try _v.visit(field: VT.REFLECTION_COEFFICIENT_MAGNITUDE, fieldName: "REFLECTION_COEFFICIENT_MAGNITUDE", required: false, type: Double.self)
-    try _v.visit(field: VT.REFLECTION_COEFFICIENT_PHASE_DEG, fieldName: "REFLECTION_COEFFICIENT_PHASE_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.REFLECTION_LOSS_DB, fieldName: "REFLECTION_LOSS_DB", required: false, type: Double.self)
-    try _v.visit(field: VT.TRANSMISSION_LOSS_DB, fieldName: "TRANSMISSION_LOSS_DB", required: false, type: Double.self)
-    try _v.visit(field: VT.SCATTERING_LOSS_DB, fieldName: "SCATTERING_LOSS_DB", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
-///  Where and what this material is attached to. A material record with no
-///  geometry describes a substance; a material record WITH geometry describes
-///  an obstacle a solver can intersect.
-public struct RFSGeometryRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$RFS" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFSGeometryRef.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let GEOMETRY_REF_ID: VOffset = 4
-    static let GEOMETRY_KIND: VOffset = 6
-    static let VAM_ID: VOffset = 8
-    static let VARIANT_ID: VOffset = 10
-    static let ASSET_SHA256: VOffset = 12
-    static let MESH_NAME: VOffset = 14
-    static let PRIMITIVE_INDEX: VOffset = 16
-    static let GLTF_MATERIAL_NAME: VOffset = 18
-    static let GLTF_MATERIAL_INDEX: VOffset = 20
-    static let FACE_INDEXES: VOffset = 22
-    static let OPP_SURFACE_ID: VOffset = 24
-    static let PANEL_ID: VOffset = 26
-    static let NORAD_CAT_ID: VOffset = 28
-    static let OBJECT_ID: VOffset = 30
-    static let TBS_SITE_ID: VOffset = 32
-    static let FEATURE_ID: VOffset = 34
-    static let ANALYTIC_SHAPE: VOffset = 36
-    static let SHAPE_DIMENSIONS_M: VOffset = 38
-    static let SHAPE_DIMENSION_NAMES: VOffset = 40
-    static let LATITUDE_DEG: VOffset = 42
-    static let LONGITUDE_DEG: VOffset = 44
-    static let ALTITUDE_M: VOffset = 46
-    static let HEIGHT_M: VOffset = 48
-    static let NORMAL_AZIMUTH_DEG: VOffset = 50
-    static let NORMAL_ELEVATION_DEG: VOffset = 52
-  }
-
-  ///  Producer-stable identifier of this attachment.
-  public var GEOMETRY_REF_ID: String! { let o = _accessor.offset(VT.GEOMETRY_REF_ID); return _accessor.string(at: o) }
-  public var GEOMETRY_REF_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.GEOMETRY_REF_ID) }
-  public var GEOMETRY_KIND: rfsGeometryKind { let o = _accessor.offset(VT.GEOMETRY_KIND); return o == 0 ? .unspecified : rfsGeometryKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  `$VAM` asset identity, copied VERBATIM including the byte hash so the
-  ///  material can never drift onto a different revision of the mesh.
-  public var VAM_ID: String? { let o = _accessor.offset(VT.VAM_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VAM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VAM_ID) }
-  public var VARIANT_ID: String? { let o = _accessor.offset(VT.VARIANT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VARIANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VARIANT_ID) }
-  public var ASSET_SHA256: String? { let o = _accessor.offset(VT.ASSET_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ASSET_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ASSET_SHA256) }
-  ///  Mesh and primitive inside the asset.
-  public var MESH_NAME: String? { let o = _accessor.offset(VT.MESH_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MESH_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESH_NAME) }
-  public var PRIMITIVE_INDEX: Int32 { let o = _accessor.offset(VT.PRIMITIVE_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  glTF material slot the properties apply to, matching the
-  ///  `$OPP.OPPSurface` join fields.
-  public var GLTF_MATERIAL_NAME: String? { let o = _accessor.offset(VT.GLTF_MATERIAL_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GLTF_MATERIAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GLTF_MATERIAL_NAME) }
-  public var GLTF_MATERIAL_INDEX: Int32 { let o = _accessor.offset(VT.GLTF_MATERIAL_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Explicit face indexes, when the material covers part of a mesh.
-  public var FACE_INDEXES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.FACE_INDEXES, byteSize: 4) }
-  public func withUnsafePointerToFaceIndexes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FACE_INDEXES, body: body) }
-  ///  `$OPP.OPPSurface` surface identifier.
-  public var OPP_SURFACE_ID: String? { let o = _accessor.offset(VT.OPP_SURFACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OPP_SURFACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPP_SURFACE_ID) }
-  ///  `$PNL` panel identifier.
-  public var PANEL_ID: String? { let o = _accessor.offset(VT.PANEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PANEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PANEL_ID) }
-  ///  `$CAT` identity, when the obstacle is a catalogued object. 0 when
-  ///  unbound.
+  public var ENDPOINT_ID: String! { let o = _accessor.offset(VT.ENDPOINT_ID); return _accessor.string(at: o) }
+  public var ENDPOINT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ENDPOINT_ID) }
+  public var ENDPOINT_KIND: rflEndpointKind { let o = _accessor.offset(VT.ENDPOINT_KIND); return o == 0 ? .unspecified : rflEndpointKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var RFE_ID: String? { let o = _accessor.offset(VT.RFE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFE_ID) }
+  public var RFB_ID: String? { let o = _accessor.offset(VT.RFB_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFB_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFB_ID) }
   public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
-  ///  `$TBS.SITE_ID`, when the obstacle is a structure at a terrestrial site.
-  public var TBS_SITE_ID: String? { let o = _accessor.offset(VT.TBS_SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TBS_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TBS_SITE_ID) }
-  ///  Producer's own feature identifier for a building, wall or terrain patch.
-  public var FEATURE_ID: String? { let o = _accessor.offset(VT.FEATURE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FEATURE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FEATURE_ID) }
-  ///  Primitive and its dimensions in metres, when GEOMETRY_KIND is
-  ///  ANALYTIC_SHAPE. The dimension order is the primitive's own convention and
-  ///  MUST be stated in SHAPE_DIMENSION_NAMES.
-  public var ANALYTIC_SHAPE: rfsAnalyticShape { let o = _accessor.offset(VT.ANALYTIC_SHAPE); return o == 0 ? .unspecified : rfsAnalyticShape(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  public var SHAPE_DIMENSIONS_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.SHAPE_DIMENSIONS_M, byteSize: 8) }
-  public func withUnsafePointerToShapeDimensionsM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SHAPE_DIMENSIONS_M, body: body) }
-  public var SHAPE_DIMENSION_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.SHAPE_DIMENSION_NAMES, byteSize: 4) }
-  ///  Geodetic placement of a fixed obstacle, degrees and metres. Absent for
-  ///  an obstacle whose position is joined from `$CAT`, `$TBS` or `$VAM`.
-  public var LATITUDE_DEG: Double { let o = _accessor.offset(VT.LATITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LONGITUDE_DEG: Double { let o = _accessor.offset(VT.LONGITUDE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Height above ground of a fixed structure, metres.
-  public var HEIGHT_M: Double { let o = _accessor.offset(VT.HEIGHT_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Orientation of the surface normal, degrees east of north and above the
-  ///  horizon. A wall that faces the wrong way blocks the wrong link.
-  public var NORMAL_AZIMUTH_DEG: Double { let o = _accessor.offset(VT.NORMAL_AZIMUTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var NORMAL_ELEVATION_DEG: Double { let o = _accessor.offset(VT.NORMAL_ELEVATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startRFSGeometryRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 25) }
-  public static func add(GEOMETRY_REF_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY_REF_ID, at: VT.GEOMETRY_REF_ID) }
-  public static func add(GEOMETRY_KIND: rfsGeometryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOMETRY_KIND.rawValue, def: 0, at: VT.GEOMETRY_KIND) }
-  public static func add(VAM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VAM_ID, at: VT.VAM_ID) }
-  public static func add(VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT_ID, at: VT.VARIANT_ID) }
-  public static func add(ASSET_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSET_SHA256, at: VT.ASSET_SHA256) }
-  public static func add(MESH_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESH_NAME, at: VT.MESH_NAME) }
-  public static func add(PRIMITIVE_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMITIVE_INDEX, def: -1, at: VT.PRIMITIVE_INDEX) }
-  public static func add(GLTF_MATERIAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GLTF_MATERIAL_NAME, at: VT.GLTF_MATERIAL_NAME) }
-  public static func add(GLTF_MATERIAL_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GLTF_MATERIAL_INDEX, def: -1, at: VT.GLTF_MATERIAL_INDEX) }
-  public static func addVectorOf(FACE_INDEXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FACE_INDEXES, at: VT.FACE_INDEXES) }
-  public static func add(OPP_SURFACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPP_SURFACE_ID, at: VT.OPP_SURFACE_ID) }
-  public static func add(PANEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PANEL_ID, at: VT.PANEL_ID) }
+  public var BEM_ID: String? { let o = _accessor.offset(VT.BEM_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BEM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BEM_ID) }
+  public var PAP_ID: String? { let o = _accessor.offset(VT.PAP_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PAP_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAP_ID) }
+  public var CHANNEL_ID: String? { let o = _accessor.offset(VT.CHANNEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANNEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHANNEL_ID) }
+  public static func startEMCEndpointRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(ENDPOINT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENDPOINT_ID, at: VT.ENDPOINT_ID) }
+  public static func add(ENDPOINT_KIND: rflEndpointKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENDPOINT_KIND.rawValue, def: 0, at: VT.ENDPOINT_KIND) }
+  public static func add(RFE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFE_ID, at: VT.RFE_ID) }
+  public static func add(RFB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFB_ID, at: VT.RFB_ID) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
-  public static func add(TBS_SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TBS_SITE_ID, at: VT.TBS_SITE_ID) }
-  public static func add(FEATURE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEATURE_ID, at: VT.FEATURE_ID) }
-  public static func add(ANALYTIC_SHAPE: rfsAnalyticShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANALYTIC_SHAPE.rawValue, def: 0, at: VT.ANALYTIC_SHAPE) }
-  public static func addVectorOf(SHAPE_DIMENSIONS_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHAPE_DIMENSIONS_M, at: VT.SHAPE_DIMENSIONS_M) }
-  public static func addVectorOf(SHAPE_DIMENSION_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHAPE_DIMENSION_NAMES, at: VT.SHAPE_DIMENSION_NAMES) }
-  public static func add(LATITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE_DEG, def: 0.0, at: VT.LATITUDE_DEG) }
-  public static func add(LONGITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_DEG, def: 0.0, at: VT.LONGITUDE_DEG) }
-  public static func add(ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_M, def: 0.0, at: VT.ALTITUDE_M) }
-  public static func add(HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_M, def: 0.0, at: VT.HEIGHT_M) }
-  public static func add(NORMAL_AZIMUTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMAL_AZIMUTH_DEG, def: 0.0, at: VT.NORMAL_AZIMUTH_DEG) }
-  public static func add(NORMAL_ELEVATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMAL_ELEVATION_DEG, def: 0.0, at: VT.NORMAL_ELEVATION_DEG) }
-  public static func endRFSGeometryRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
-  public static func createRFSGeometryRef(
+  public static func add(BEM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEM_ID, at: VT.BEM_ID) }
+  public static func add(PAP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAP_ID, at: VT.PAP_ID) }
+  public static func add(CHANNEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNEL_ID, at: VT.CHANNEL_ID) }
+  public static func endEMCEndpointRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createEMCEndpointRef(
     _ fbb: inout FlatBufferBuilder,
-    GEOMETRY_REF_IDOffset GEOMETRY_REF_ID: Offset,
-    GEOMETRY_KIND: rfsGeometryKind = .unspecified,
-    VAM_IDOffset VAM_ID: Offset = Offset(),
-    VARIANT_IDOffset VARIANT_ID: Offset = Offset(),
-    ASSET_SHA256Offset ASSET_SHA256: Offset = Offset(),
-    MESH_NAMEOffset MESH_NAME: Offset = Offset(),
-    PRIMITIVE_INDEX: Int32 = -1,
-    GLTF_MATERIAL_NAMEOffset GLTF_MATERIAL_NAME: Offset = Offset(),
-    GLTF_MATERIAL_INDEX: Int32 = -1,
-    FACE_INDEXESVectorOffset FACE_INDEXES: Offset = Offset(),
-    OPP_SURFACE_IDOffset OPP_SURFACE_ID: Offset = Offset(),
-    PANEL_IDOffset PANEL_ID: Offset = Offset(),
+    ENDPOINT_IDOffset ENDPOINT_ID: Offset,
+    ENDPOINT_KIND: rflEndpointKind = .unspecified,
+    RFE_IDOffset RFE_ID: Offset = Offset(),
+    RFB_IDOffset RFB_ID: Offset = Offset(),
     NORAD_CAT_ID: UInt32 = 0,
     OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
-    TBS_SITE_IDOffset TBS_SITE_ID: Offset = Offset(),
-    FEATURE_IDOffset FEATURE_ID: Offset = Offset(),
-    ANALYTIC_SHAPE: rfsAnalyticShape = .unspecified,
-    SHAPE_DIMENSIONS_MVectorOffset SHAPE_DIMENSIONS_M: Offset = Offset(),
-    SHAPE_DIMENSION_NAMESVectorOffset SHAPE_DIMENSION_NAMES: Offset = Offset(),
-    LATITUDE_DEG: Double = 0.0,
-    LONGITUDE_DEG: Double = 0.0,
-    ALTITUDE_M: Double = 0.0,
-    HEIGHT_M: Double = 0.0,
-    NORMAL_AZIMUTH_DEG: Double = 0.0,
-    NORMAL_ELEVATION_DEG: Double = 0.0
+    BEM_IDOffset BEM_ID: Offset = Offset(),
+    PAP_IDOffset PAP_ID: Offset = Offset(),
+    CHANNEL_IDOffset CHANNEL_ID: Offset = Offset()
   ) -> Offset {
-    let __start = RFSGeometryRef.startRFSGeometryRef(&fbb)
-    RFSGeometryRef.add(GEOMETRY_REF_ID: GEOMETRY_REF_ID, &fbb)
-    RFSGeometryRef.add(GEOMETRY_KIND: GEOMETRY_KIND, &fbb)
-    RFSGeometryRef.add(VAM_ID: VAM_ID, &fbb)
-    RFSGeometryRef.add(VARIANT_ID: VARIANT_ID, &fbb)
-    RFSGeometryRef.add(ASSET_SHA256: ASSET_SHA256, &fbb)
-    RFSGeometryRef.add(MESH_NAME: MESH_NAME, &fbb)
-    RFSGeometryRef.add(PRIMITIVE_INDEX: PRIMITIVE_INDEX, &fbb)
-    RFSGeometryRef.add(GLTF_MATERIAL_NAME: GLTF_MATERIAL_NAME, &fbb)
-    RFSGeometryRef.add(GLTF_MATERIAL_INDEX: GLTF_MATERIAL_INDEX, &fbb)
-    RFSGeometryRef.addVectorOf(FACE_INDEXES: FACE_INDEXES, &fbb)
-    RFSGeometryRef.add(OPP_SURFACE_ID: OPP_SURFACE_ID, &fbb)
-    RFSGeometryRef.add(PANEL_ID: PANEL_ID, &fbb)
-    RFSGeometryRef.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
-    RFSGeometryRef.add(OBJECT_ID: OBJECT_ID, &fbb)
-    RFSGeometryRef.add(TBS_SITE_ID: TBS_SITE_ID, &fbb)
-    RFSGeometryRef.add(FEATURE_ID: FEATURE_ID, &fbb)
-    RFSGeometryRef.add(ANALYTIC_SHAPE: ANALYTIC_SHAPE, &fbb)
-    RFSGeometryRef.addVectorOf(SHAPE_DIMENSIONS_M: SHAPE_DIMENSIONS_M, &fbb)
-    RFSGeometryRef.addVectorOf(SHAPE_DIMENSION_NAMES: SHAPE_DIMENSION_NAMES, &fbb)
-    RFSGeometryRef.add(LATITUDE_DEG: LATITUDE_DEG, &fbb)
-    RFSGeometryRef.add(LONGITUDE_DEG: LONGITUDE_DEG, &fbb)
-    RFSGeometryRef.add(ALTITUDE_M: ALTITUDE_M, &fbb)
-    RFSGeometryRef.add(HEIGHT_M: HEIGHT_M, &fbb)
-    RFSGeometryRef.add(NORMAL_AZIMUTH_DEG: NORMAL_AZIMUTH_DEG, &fbb)
-    RFSGeometryRef.add(NORMAL_ELEVATION_DEG: NORMAL_ELEVATION_DEG, &fbb)
-    return RFSGeometryRef.endRFSGeometryRef(&fbb, start: __start)
+    let __start = EMCEndpointRef.startEMCEndpointRef(&fbb)
+    EMCEndpointRef.add(ENDPOINT_ID: ENDPOINT_ID, &fbb)
+    EMCEndpointRef.add(ENDPOINT_KIND: ENDPOINT_KIND, &fbb)
+    EMCEndpointRef.add(RFE_ID: RFE_ID, &fbb)
+    EMCEndpointRef.add(RFB_ID: RFB_ID, &fbb)
+    EMCEndpointRef.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    EMCEndpointRef.add(OBJECT_ID: OBJECT_ID, &fbb)
+    EMCEndpointRef.add(BEM_ID: BEM_ID, &fbb)
+    EMCEndpointRef.add(PAP_ID: PAP_ID, &fbb)
+    EMCEndpointRef.add(CHANNEL_ID: CHANNEL_ID, &fbb)
+    return EMCEndpointRef.endEMCEndpointRef(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.GEOMETRY_REF_ID, fieldName: "GEOMETRY_REF_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GEOMETRY_KIND, fieldName: "GEOMETRY_KIND", required: false, type: rfsGeometryKind.self)
-    try _v.visit(field: VT.VAM_ID, fieldName: "VAM_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.VARIANT_ID, fieldName: "VARIANT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ASSET_SHA256, fieldName: "ASSET_SHA256", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MESH_NAME, fieldName: "MESH_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PRIMITIVE_INDEX, fieldName: "PRIMITIVE_INDEX", required: false, type: Int32.self)
-    try _v.visit(field: VT.GLTF_MATERIAL_NAME, fieldName: "GLTF_MATERIAL_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GLTF_MATERIAL_INDEX, fieldName: "GLTF_MATERIAL_INDEX", required: false, type: Int32.self)
-    try _v.visit(field: VT.FACE_INDEXES, fieldName: "FACE_INDEXES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
-    try _v.visit(field: VT.OPP_SURFACE_ID, fieldName: "OPP_SURFACE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PANEL_ID, fieldName: "PANEL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENDPOINT_ID, fieldName: "ENDPOINT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENDPOINT_KIND, fieldName: "ENDPOINT_KIND", required: false, type: rflEndpointKind.self)
+    try _v.visit(field: VT.RFE_ID, fieldName: "RFE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFB_ID, fieldName: "RFB_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
     try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TBS_SITE_ID, fieldName: "TBS_SITE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FEATURE_ID, fieldName: "FEATURE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ANALYTIC_SHAPE, fieldName: "ANALYTIC_SHAPE", required: false, type: rfsAnalyticShape.self)
-    try _v.visit(field: VT.SHAPE_DIMENSIONS_M, fieldName: "SHAPE_DIMENSIONS_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.SHAPE_DIMENSION_NAMES, fieldName: "SHAPE_DIMENSION_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.LATITUDE_DEG, fieldName: "LATITUDE_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.LONGITUDE_DEG, fieldName: "LONGITUDE_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: Double.self)
-    try _v.visit(field: VT.HEIGHT_M, fieldName: "HEIGHT_M", required: false, type: Double.self)
-    try _v.visit(field: VT.NORMAL_AZIMUTH_DEG, fieldName: "NORMAL_AZIMUTH_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.NORMAL_ELEVATION_DEG, fieldName: "NORMAL_ELEVATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.BEM_ID, fieldName: "BEM_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAP_ID, fieldName: "PAP_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANNEL_ID, fieldName: "CHANNEL_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Where these properties came from.
-public struct RFSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One signed integer coefficient in an intermodulation product. The product
+///  frequency is the exact sum of COEFFICIENT * SOURCE_FREQUENCY_HZ terms.
+public struct EMCIntermodulationTerm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$RFS" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFSProvenance.id, addPrefix: prefix) }
+  public static var id: String { "$EMC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EMCIntermodulationTerm.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let METHOD: VOffset = 4
-    static let SOURCE: VOffset = 6
-    static let SOURCE_REFERENCE: VOffset = 8
-    static let SOURCE_QUERY: VOffset = 10
-    static let MEASUREMENT_TECHNIQUE: VOffset = 12
-    static let MODULE_ID: VOffset = 14
-    static let MODULE_VERSION: VOffset = 16
-    static let MODULE_CONTENT_HASH: VOffset = 18
-    static let MEASURED_AT: VOffset = 20
-    static let RETRIEVED_AT: VOffset = 22
-    static let RELATIVE_PERMITTIVITY_SIGMA: VOffset = 24
-    static let CONDUCTIVITY_SIGMA_S_PER_M: VOffset = 26
-    static let LICENSE: VOffset = 28
-    static let NON_COMMERCIAL_ONLY: VOffset = 30
-    static let CITATION: VOffset = 32
+    static let SOURCE_ENDPOINT_ID: VOffset = 4
+    static let SOURCE_FREQUENCY_HZ: VOffset = 6
+    static let COEFFICIENT: VOffset = 8
   }
 
-  public var METHOD: rfsPropertyMethod { let o = _accessor.offset(VT.METHOD); return o == 0 ? .unspecified : rfsPropertyMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  The measurement campaign, published table or model. Required: an
-  ///  unattributed permittivity is not publishable.
-  public var SOURCE: String! { let o = _accessor.offset(VT.SOURCE); return _accessor.string(at: o) }
-  public var SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE) }
-  ///  The specific table, recommendation or dataset entry within SOURCE.
-  public var SOURCE_REFERENCE: String? { let o = _accessor.offset(VT.SOURCE_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_REFERENCE) }
-  ///  Replayable query that retrieves the source value.
-  public var SOURCE_QUERY: String? { let o = _accessor.offset(VT.SOURCE_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_QUERY) }
-  ///  How it was measured (e.g. "free-space transmission", "coaxial probe",
-  ///  "resonant cavity").
-  public var MEASUREMENT_TECHNIQUE: String? { let o = _accessor.offset(VT.MEASUREMENT_TECHNIQUE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MEASUREMENT_TECHNIQUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MEASUREMENT_TECHNIQUE) }
-  ///  `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced modelled values.
-  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
-  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
-  public var MODULE_CONTENT_HASH: String? { let o = _accessor.offset(VT.MODULE_CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_CONTENT_HASH) }
-  ///  Unix ms measured and retrieved.
-  public var MEASURED_AT: UInt64 { let o = _accessor.offset(VT.MEASURED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public var RETRIEVED_AT: UInt64 { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  1-sigma uncertainty of the permittivity and conductivity values, in the
-  ///  units of the quantity they qualify.
-  public var RELATIVE_PERMITTIVITY_SIGMA: Double { let o = _accessor.offset(VT.RELATIVE_PERMITTIVITY_SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CONDUCTIVITY_SIGMA_S_PER_M: Double { let o = _accessor.offset(VT.CONDUCTIVITY_SIGMA_S_PER_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Licence terms. Empty means UNKNOWN TERMS — never public domain, never a
-  ///  grant to redistribute.
-  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
-  public var NON_COMMERCIAL_ONLY: Bool { let o = _accessor.offset(VT.NON_COMMERCIAL_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
-  public static func startRFSProvenance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
-  public static func add(METHOD: rfsPropertyMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METHOD.rawValue, def: 0, at: VT.METHOD) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(SOURCE_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_REFERENCE, at: VT.SOURCE_REFERENCE) }
-  public static func add(SOURCE_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_QUERY, at: VT.SOURCE_QUERY) }
-  public static func add(MEASUREMENT_TECHNIQUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEASUREMENT_TECHNIQUE, at: VT.MEASUREMENT_TECHNIQUE) }
-  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
-  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
-  public static func add(MODULE_CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_CONTENT_HASH, at: VT.MODULE_CONTENT_HASH) }
-  public static func add(MEASURED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEASURED_AT, def: 0, at: VT.MEASURED_AT) }
-  public static func add(RETRIEVED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RETRIEVED_AT, def: 0, at: VT.RETRIEVED_AT) }
-  public static func add(RELATIVE_PERMITTIVITY_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMITTIVITY_SIGMA, def: 0.0, at: VT.RELATIVE_PERMITTIVITY_SIGMA) }
-  public static func add(CONDUCTIVITY_SIGMA_S_PER_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONDUCTIVITY_SIGMA_S_PER_M, def: 0.0, at: VT.CONDUCTIVITY_SIGMA_S_PER_M) }
-  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
-  public static func add(NON_COMMERCIAL_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NON_COMMERCIAL_ONLY, def: false,
-   at: VT.NON_COMMERCIAL_ONLY) }
-  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
-  public static func endRFSProvenance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
-  public static func createRFSProvenance(
+  public var SOURCE_ENDPOINT_ID: String? { let o = _accessor.offset(VT.SOURCE_ENDPOINT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_ENDPOINT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_ENDPOINT_ID) }
+  public var SOURCE_FREQUENCY_HZ: Double { let o = _accessor.offset(VT.SOURCE_FREQUENCY_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COEFFICIENT: Int32 { let o = _accessor.offset(VT.COEFFICIENT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public static func startEMCIntermodulationTerm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(SOURCE_ENDPOINT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ENDPOINT_ID, at: VT.SOURCE_ENDPOINT_ID) }
+  public static func add(SOURCE_FREQUENCY_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_FREQUENCY_HZ, def: 0.0, at: VT.SOURCE_FREQUENCY_HZ) }
+  public static func add(COEFFICIENT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COEFFICIENT, def: 0, at: VT.COEFFICIENT) }
+  public static func endEMCIntermodulationTerm(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEMCIntermodulationTerm(
     _ fbb: inout FlatBufferBuilder,
-    METHOD: rfsPropertyMethod = .unspecified,
-    SOURCEOffset SOURCE: Offset,
-    SOURCE_REFERENCEOffset SOURCE_REFERENCE: Offset = Offset(),
-    SOURCE_QUERYOffset SOURCE_QUERY: Offset = Offset(),
-    MEASUREMENT_TECHNIQUEOffset MEASUREMENT_TECHNIQUE: Offset = Offset(),
-    MODULE_IDOffset MODULE_ID: Offset = Offset(),
-    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
-    MODULE_CONTENT_HASHOffset MODULE_CONTENT_HASH: Offset = Offset(),
-    MEASURED_AT: UInt64 = 0,
-    RETRIEVED_AT: UInt64 = 0,
-    RELATIVE_PERMITTIVITY_SIGMA: Double = 0.0,
-    CONDUCTIVITY_SIGMA_S_PER_M: Double = 0.0,
-    LICENSEOffset LICENSE: Offset = Offset(),
-    NON_COMMERCIAL_ONLY: Bool = false,
-    CITATIONOffset CITATION: Offset = Offset()
+    SOURCE_ENDPOINT_IDOffset SOURCE_ENDPOINT_ID: Offset = Offset(),
+    SOURCE_FREQUENCY_HZ: Double = 0.0,
+    COEFFICIENT: Int32 = 0
   ) -> Offset {
-    let __start = RFSProvenance.startRFSProvenance(&fbb)
-    RFSProvenance.add(METHOD: METHOD, &fbb)
-    RFSProvenance.add(SOURCE: SOURCE, &fbb)
-    RFSProvenance.add(SOURCE_REFERENCE: SOURCE_REFERENCE, &fbb)
-    RFSProvenance.add(SOURCE_QUERY: SOURCE_QUERY, &fbb)
-    RFSProvenance.add(MEASUREMENT_TECHNIQUE: MEASUREMENT_TECHNIQUE, &fbb)
-    RFSProvenance.add(MODULE_ID: MODULE_ID, &fbb)
-    RFSProvenance.add(MODULE_VERSION: MODULE_VERSION, &fbb)
-    RFSProvenance.add(MODULE_CONTENT_HASH: MODULE_CONTENT_HASH, &fbb)
-    RFSProvenance.add(MEASURED_AT: MEASURED_AT, &fbb)
-    RFSProvenance.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
-    RFSProvenance.add(RELATIVE_PERMITTIVITY_SIGMA: RELATIVE_PERMITTIVITY_SIGMA, &fbb)
-    RFSProvenance.add(CONDUCTIVITY_SIGMA_S_PER_M: CONDUCTIVITY_SIGMA_S_PER_M, &fbb)
-    RFSProvenance.add(LICENSE: LICENSE, &fbb)
-    RFSProvenance.add(NON_COMMERCIAL_ONLY: NON_COMMERCIAL_ONLY, &fbb)
-    RFSProvenance.add(CITATION: CITATION, &fbb)
-    return RFSProvenance.endRFSProvenance(&fbb, start: __start)
+    let __start = EMCIntermodulationTerm.startEMCIntermodulationTerm(&fbb)
+    EMCIntermodulationTerm.add(SOURCE_ENDPOINT_ID: SOURCE_ENDPOINT_ID, &fbb)
+    EMCIntermodulationTerm.add(SOURCE_FREQUENCY_HZ: SOURCE_FREQUENCY_HZ, &fbb)
+    EMCIntermodulationTerm.add(COEFFICIENT: COEFFICIENT, &fbb)
+    return EMCIntermodulationTerm.endEMCIntermodulationTerm(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.METHOD, fieldName: "METHOD", required: false, type: rfsPropertyMethod.self)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SOURCE_REFERENCE, fieldName: "SOURCE_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SOURCE_QUERY, fieldName: "SOURCE_QUERY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MEASUREMENT_TECHNIQUE, fieldName: "MEASUREMENT_TECHNIQUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MODULE_CONTENT_HASH, fieldName: "MODULE_CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MEASURED_AT, fieldName: "MEASURED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.RELATIVE_PERMITTIVITY_SIGMA, fieldName: "RELATIVE_PERMITTIVITY_SIGMA", required: false, type: Double.self)
-    try _v.visit(field: VT.CONDUCTIVITY_SIGMA_S_PER_M, fieldName: "CONDUCTIVITY_SIGMA_S_PER_M", required: false, type: Double.self)
-    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NON_COMMERCIAL_ONLY, fieldName: "NON_COMMERCIAL_ONLY", required: false, type: Bool.self)
-    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_ENDPOINT_ID, fieldName: "SOURCE_ENDPOINT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_FREQUENCY_HZ, fieldName: "SOURCE_FREQUENCY_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.COEFFICIENT, fieldName: "COEFFICIENT", required: false, type: Int32.self)
     _v.finish()
   }
 }
 
-///  RF Surface Material
-public struct RFS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Electromagnetic Compatibility Assessment
+public struct EMC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$RFS" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFS.id, addPrefix: prefix) }
+  public static var id: String { "$EMC" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EMC.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let MATERIAL_ID: VOffset = 4
+    static let EMC_ID: VOffset = 4
     static let NAME: VOffset = 6
-    static let MATERIAL_CLASS: VOffset = 8
-    static let DESCRIPTION: VOffset = 10
-    static let FREQUENCY_MIN_MHZ: VOffset = 12
-    static let FREQUENCY_MAX_MHZ: VOffset = 14
-    static let PERMITTIVITY_COEFFICIENT_A: VOffset = 16
-    static let PERMITTIVITY_EXPONENT_B: VOffset = 18
-    static let CONDUCTIVITY_COEFFICIENT_C: VOffset = 20
-    static let CONDUCTIVITY_EXPONENT_D: VOffset = 22
-    static let REFERENCE_FREQUENCY_MHZ: VOffset = 24
-    static let RELATIVE_PERMITTIVITY_REAL: VOffset = 26
-    static let RELATIVE_PERMITTIVITY_IMAGINARY: VOffset = 28
-    static let CONDUCTIVITY_S_PER_M: VOffset = 30
-    static let LOSS_TANGENT: VOffset = 32
-    static let RELATIVE_PERMEABILITY_REAL: VOffset = 34
-    static let RELATIVE_PERMEABILITY_IMAGINARY: VOffset = 36
-    static let REFLECTIVITY: VOffset = 38
-    static let REFLECTION_LOSS_DB: VOffset = 40
-    static let THICKNESS_M: VOffset = 42
-    static let TRANSMISSION_LOSS_DB: VOffset = 44
-    static let ATTENUATION_DB_PER_M: VOffset = 46
-    static let ABSORPTION_COEFFICIENT: VOffset = 48
-    static let SURFACE_ROUGHNESS_RMS_M: VOffset = 50
-    static let ROUGHNESS_CORRELATION_LENGTH_M: VOffset = 52
-    static let SCATTERING_CLASS: VOffset = 54
-    static let DIFFUSE_SCATTERING_COEFFICIENT: VOffset = 56
-    static let BACKSCATTER_COEFFICIENT_DB: VOffset = 58
-    static let TEMPERATURE_K: VOffset = 60
-    static let MOISTURE_CONTENT_FRACTION: VOffset = 62
-    static let SALINITY_PSU: VOffset = 64
-    static let FREQUENCY_SAMPLES: VOffset = 66
-    static let REFLECTION_TABLE: VOffset = 68
-    static let GEOMETRY: VOffset = 70
-    static let PROVENANCE: VOffset = 72
-    static let COMPUTED_AT: VOffset = 74
-    static let PRODUCER_ID: VOffset = 76
-    static let SIGNATURE: VOffset = 78
+    static let SCENARIO_ID: VOffset = 8
+    static let RFL_ID: VOffset = 10
+    static let VICTIM_ENDPOINT: VOffset = 12
+    static let AGGRESSOR_ENDPOINT: VOffset = 14
+    static let COUPLING_MECHANISM: VOffset = 16
+    static let MECHANISM_CLASS: VOffset = 18
+    static let INTERMODULATION_ORDER: VOffset = 20
+    static let INTERMODULATION_TERMS: VOffset = 22
+    static let INTERMODULATION_PRODUCT_FREQUENCY_HZ: VOffset = 24
+    static let HARMONIC_ORDER: VOffset = 26
+    static let EMISSION_MASK_ID: VOffset = 28
+    static let RFS_MATERIAL_ID: VOffset = 30
+    static let RFS_MATERIAL_CLASS: VOffset = 32
+    static let ISOLATION_DB: VOffset = 34
+    static let COUPLED_POWER_DBW: VOffset = 36
+    static let VICTIM_LIMIT_DBW: VOffset = 38
+    static let MARGIN_DB: VOffset = 40
+    static let EXCEEDANCE_DB: VOffset = 42
+    static let EXCEEDS_LIMIT: VOffset = 44
+    static let RESOLUTION: VOffset = 46
+    static let RESOLUTION_NOTE: VOffset = 48
+    static let PROVENANCE: VOffset = 50
+    static let COMPUTED_AT: VOffset = 52
+    static let PRODUCER_ID: VOffset = 54
+    static let SIGNATURE: VOffset = 56
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 58
   }
 
-  ///  Stable identifier of this material. Joined by
-  ///  `$RFL.RFLObstruction.MATERIAL_ID` and `$CVP.CVPObstacleRef.MATERIAL_ID`.
-  public var MATERIAL_ID: String! { let o = _accessor.offset(VT.MATERIAL_ID); return _accessor.string(at: o) }
-  public var MATERIAL_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MATERIAL_ID) }
-  ///  Name as its source states it, verbatim.
+  public var EMC_ID: String! { let o = _accessor.offset(VT.EMC_ID); return _accessor.string(at: o) }
+  public var EMC_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.EMC_ID) }
   public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  public var MATERIAL_CLASS: rfsMaterialClass { let o = _accessor.offset(VT.MATERIAL_CLASS); return o == 0 ? .unspecified : rfsMaterialClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Free-text description of the surface, not of its vendor.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Frequency range over which this record's parameters are valid,
-  ///  megahertz. A solver MUST refuse to evaluate outside it rather than
-  ///  extrapolate.
-  public var FREQUENCY_MIN_MHZ: Double { let o = _accessor.offset(VT.FREQUENCY_MIN_MHZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var FREQUENCY_MAX_MHZ: Double { let o = _accessor.offset(VT.FREQUENCY_MAX_MHZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  relative permittivity = PERMITTIVITY_COEFFICIENT_A * f^PERMITTIVITY_EXPONENT_B
-  public var PERMITTIVITY_COEFFICIENT_A: Double { let o = _accessor.offset(VT.PERMITTIVITY_COEFFICIENT_A); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PERMITTIVITY_EXPONENT_B: Double { let o = _accessor.offset(VT.PERMITTIVITY_EXPONENT_B); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  conductivity [S/m] = CONDUCTIVITY_COEFFICIENT_C * f^CONDUCTIVITY_EXPONENT_D
-  public var CONDUCTIVITY_COEFFICIENT_C: Double { let o = _accessor.offset(VT.CONDUCTIVITY_COEFFICIENT_C); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CONDUCTIVITY_EXPONENT_D: Double { let o = _accessor.offset(VT.CONDUCTIVITY_EXPONENT_D); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Frequency the scalar values below are stated at, megahertz. Without it
-  ///  they are uninterpretable.
-  public var REFERENCE_FREQUENCY_MHZ: Double { let o = _accessor.offset(VT.REFERENCE_FREQUENCY_MHZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RELATIVE_PERMITTIVITY_REAL: Double { let o = _accessor.offset(VT.RELATIVE_PERMITTIVITY_REAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Loss term, stated as a POSITIVE magnitude.
-  public var RELATIVE_PERMITTIVITY_IMAGINARY: Double { let o = _accessor.offset(VT.RELATIVE_PERMITTIVITY_IMAGINARY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CONDUCTIVITY_S_PER_M: Double { let o = _accessor.offset(VT.CONDUCTIVITY_S_PER_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LOSS_TANGENT: Double { let o = _accessor.offset(VT.LOSS_TANGENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  1.0 and 0.0 for non-magnetic materials — stated, not assumed.
-  public var RELATIVE_PERMEABILITY_REAL: Double { let o = _accessor.offset(VT.RELATIVE_PERMEABILITY_REAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RELATIVE_PERMEABILITY_IMAGINARY: Double { let o = _accessor.offset(VT.RELATIVE_PERMEABILITY_IMAGINARY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Power reflected at normal incidence as a ratio [0-1].
-  public var REFLECTIVITY: Double { let o = _accessor.offset(VT.REFLECTIVITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Reflection loss at normal incidence, dB (positive).
-  public var REFLECTION_LOSS_DB: Double { let o = _accessor.offset(VT.REFLECTION_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Thickness the transmission and penetration losses are stated for, metres.
-  ///  A transmission loss without a thickness cannot be rescaled.
-  public var THICKNESS_M: Double { let o = _accessor.offset(VT.THICKNESS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Loss through THICKNESS_M at normal incidence, dB (positive).
-  public var TRANSMISSION_LOSS_DB: Double { let o = _accessor.offset(VT.TRANSMISSION_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Attenuation inside the material, dB per metre.
-  public var ATTENUATION_DB_PER_M: Double { let o = _accessor.offset(VT.ATTENUATION_DB_PER_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Fraction of incident power absorbed at normal incidence [0-1].
-  public var ABSORPTION_COEFFICIENT: Double { let o = _accessor.offset(VT.ABSORPTION_COEFFICIENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  RMS surface roughness, metres. Roughness is what decides whether a
-  ///  surface is a mirror or a scatterer at a given wavelength.
-  public var SURFACE_ROUGHNESS_RMS_M: Double { let o = _accessor.offset(VT.SURFACE_ROUGHNESS_RMS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Correlation length of the roughness, metres.
-  public var ROUGHNESS_CORRELATION_LENGTH_M: Double { let o = _accessor.offset(VT.ROUGHNESS_CORRELATION_LENGTH_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SCATTERING_CLASS: rfsScatteringClass { let o = _accessor.offset(VT.SCATTERING_CLASS); return o == 0 ? .unspecified : rfsScatteringClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Fraction of non-absorbed power leaving diffusely [0-1].
-  public var DIFFUSE_SCATTERING_COEFFICIENT: Double { let o = _accessor.offset(VT.DIFFUSE_SCATTERING_COEFFICIENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Backscatter coefficient, dB.
-  public var BACKSCATTER_COEFFICIENT_DB: Double { let o = _accessor.offset(VT.BACKSCATTER_COEFFICIENT_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Temperature the properties were evaluated at, kelvin.
-  public var TEMPERATURE_K: Double { let o = _accessor.offset(VT.TEMPERATURE_K); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Volumetric moisture content [0-1]. Wet concrete and dry concrete are
-  ///  different materials at RF.
-  public var MOISTURE_CONTENT_FRACTION: Double { let o = _accessor.offset(VT.MOISTURE_CONTENT_FRACTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Salinity, practical salinity units, for water surfaces.
-  public var SALINITY_PSU: Double { let o = _accessor.offset(VT.SALINITY_PSU); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Per-frequency samples. Where present and covering the frequency, these
-  ///  take precedence over the power law.
-  public var FREQUENCY_SAMPLES: FlatbufferVector<RFSFrequencySample> { return _accessor.vector(at: VT.FREQUENCY_SAMPLES, byteSize: 4) }
-  ///  Angular and polarization dependence.
-  public var REFLECTION_TABLE: FlatbufferVector<RFSReflectionEntry> { return _accessor.vector(at: VT.REFLECTION_TABLE, byteSize: 4) }
-  ///  Geometry this material is attached to. A record may attach one material
-  ///  to several obstacles.
-  public var GEOMETRY: FlatbufferVector<RFSGeometryRef> { return _accessor.vector(at: VT.GEOMETRY, byteSize: 4) }
-  ///  Provenance. Required.
-  public var PROVENANCE: RFSProvenance! { let o = _accessor.offset(VT.PROVENANCE); return RFSProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Unix ms this record was serialized.
+  public var SCENARIO_ID: String? { let o = _accessor.offset(VT.SCENARIO_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCENARIO_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCENARIO_ID) }
+  public var RFL_ID: String? { let o = _accessor.offset(VT.RFL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFL_ID) }
+  public var VICTIM_ENDPOINT: EMCEndpointRef! { let o = _accessor.offset(VT.VICTIM_ENDPOINT); return EMCEndpointRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var AGGRESSOR_ENDPOINT: EMCEndpointRef! { let o = _accessor.offset(VT.AGGRESSOR_ENDPOINT); return EMCEndpointRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COUPLING_MECHANISM: emcCouplingPath { let o = _accessor.offset(VT.COUPLING_MECHANISM); return o == 0 ? .unspecified : emcCouplingPath(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var MECHANISM_CLASS: emcMechanismCategory { let o = _accessor.offset(VT.MECHANISM_CLASS); return o == 0 ? .unspecified : emcMechanismCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Order of the active or passive intermodulation product. 0 when the
+  ///  mechanism is not intermodulation.
+  public var INTERMODULATION_ORDER: UInt32 { let o = _accessor.offset(VT.INTERMODULATION_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INTERMODULATION_TERMS: FlatbufferVector<EMCIntermodulationTerm> { return _accessor.vector(at: VT.INTERMODULATION_TERMS, byteSize: 4) }
+  public var INTERMODULATION_PRODUCT_FREQUENCY_HZ: Double { let o = _accessor.offset(VT.INTERMODULATION_PRODUCT_FREQUENCY_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HARMONIC_ORDER: UInt32 { let o = _accessor.offset(VT.HARMONIC_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  RFEEmissionMask.MASK_ID used for an emission-limit comparison.
+  public var EMISSION_MASK_ID: String? { let o = _accessor.offset(VT.EMISSION_MASK_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EMISSION_MASK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EMISSION_MASK_ID) }
+  ///  `$RFS.MATERIAL_ID` and class used for structural coupling.
+  public var RFS_MATERIAL_ID: String? { let o = _accessor.offset(VT.RFS_MATERIAL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFS_MATERIAL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFS_MATERIAL_ID) }
+  public var RFS_MATERIAL_CLASS: rfsMaterialClass { let o = _accessor.offset(VT.RFS_MATERIAL_CLASS); return o == 0 ? .unspecified : rfsMaterialClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var ISOLATION_DB: Double { let o = _accessor.offset(VT.ISOLATION_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COUPLED_POWER_DBW: Double { let o = _accessor.offset(VT.COUPLED_POWER_DBW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VICTIM_LIMIT_DBW: Double { let o = _accessor.offset(VT.VICTIM_LIMIT_DBW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MARGIN_DB: Double { let o = _accessor.offset(VT.MARGIN_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Positive when the victim limit is exceeded.
+  public var EXCEEDANCE_DB: Double { let o = _accessor.offset(VT.EXCEEDANCE_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EXCEEDS_LIMIT: Bool { let o = _accessor.offset(VT.EXCEEDS_LIMIT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var RESOLUTION: emcResolutionState { let o = _accessor.offset(VT.RESOLUTION); return o == 0 ? .unspecified : emcResolutionState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var RESOLUTION_NOTE: String? { let o = _accessor.offset(VT.RESOLUTION_NOTE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RESOLUTION_NOTESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RESOLUTION_NOTE) }
+  public var PROVENANCE: RFLProvenance! { let o = _accessor.offset(VT.PROVENANCE); return RFLProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  `$EPM` identifier of the producing node.
-  public var PRODUCER_ID: String? { let o = _accessor.offset(VT.PRODUCER_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PRODUCER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_ID) }
-  ///  Ed25519 signature by the producing `$EPM`.
+  public var PRODUCER_ID: String! { let o = _accessor.offset(VT.PRODUCER_ID); return _accessor.string(at: o) }
+  public var PRODUCER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PRODUCER_ID) }
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
-  public static func startRFS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 38) }
-  public static func add(MATERIAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL_ID, at: VT.MATERIAL_ID) }
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  public static func startEMC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  public static func add(EMC_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMC_ID, at: VT.EMC_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(MATERIAL_CLASS: rfsMaterialClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MATERIAL_CLASS.rawValue, def: 0, at: VT.MATERIAL_CLASS) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(FREQUENCY_MIN_MHZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY_MIN_MHZ, def: 0.0, at: VT.FREQUENCY_MIN_MHZ) }
-  public static func add(FREQUENCY_MAX_MHZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY_MAX_MHZ, def: 0.0, at: VT.FREQUENCY_MAX_MHZ) }
-  public static func add(PERMITTIVITY_COEFFICIENT_A: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERMITTIVITY_COEFFICIENT_A, def: 0.0, at: VT.PERMITTIVITY_COEFFICIENT_A) }
-  public static func add(PERMITTIVITY_EXPONENT_B: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERMITTIVITY_EXPONENT_B, def: 0.0, at: VT.PERMITTIVITY_EXPONENT_B) }
-  public static func add(CONDUCTIVITY_COEFFICIENT_C: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONDUCTIVITY_COEFFICIENT_C, def: 0.0, at: VT.CONDUCTIVITY_COEFFICIENT_C) }
-  public static func add(CONDUCTIVITY_EXPONENT_D: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONDUCTIVITY_EXPONENT_D, def: 0.0, at: VT.CONDUCTIVITY_EXPONENT_D) }
-  public static func add(REFERENCE_FREQUENCY_MHZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FREQUENCY_MHZ, def: 0.0, at: VT.REFERENCE_FREQUENCY_MHZ) }
-  public static func add(RELATIVE_PERMITTIVITY_REAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMITTIVITY_REAL, def: 0.0, at: VT.RELATIVE_PERMITTIVITY_REAL) }
-  public static func add(RELATIVE_PERMITTIVITY_IMAGINARY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMITTIVITY_IMAGINARY, def: 0.0, at: VT.RELATIVE_PERMITTIVITY_IMAGINARY) }
-  public static func add(CONDUCTIVITY_S_PER_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONDUCTIVITY_S_PER_M, def: 0.0, at: VT.CONDUCTIVITY_S_PER_M) }
-  public static func add(LOSS_TANGENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSS_TANGENT, def: 0.0, at: VT.LOSS_TANGENT) }
-  public static func add(RELATIVE_PERMEABILITY_REAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMEABILITY_REAL, def: 0.0, at: VT.RELATIVE_PERMEABILITY_REAL) }
-  public static func add(RELATIVE_PERMEABILITY_IMAGINARY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_PERMEABILITY_IMAGINARY, def: 0.0, at: VT.RELATIVE_PERMEABILITY_IMAGINARY) }
-  public static func add(REFLECTIVITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTIVITY, def: 0.0, at: VT.REFLECTIVITY) }
-  public static func add(REFLECTION_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTION_LOSS_DB, def: 0.0, at: VT.REFLECTION_LOSS_DB) }
-  public static func add(THICKNESS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THICKNESS_M, def: 0.0, at: VT.THICKNESS_M) }
-  public static func add(TRANSMISSION_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMISSION_LOSS_DB, def: 0.0, at: VT.TRANSMISSION_LOSS_DB) }
-  public static func add(ATTENUATION_DB_PER_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTENUATION_DB_PER_M, def: 0.0, at: VT.ATTENUATION_DB_PER_M) }
-  public static func add(ABSORPTION_COEFFICIENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABSORPTION_COEFFICIENT, def: 0.0, at: VT.ABSORPTION_COEFFICIENT) }
-  public static func add(SURFACE_ROUGHNESS_RMS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SURFACE_ROUGHNESS_RMS_M, def: 0.0, at: VT.SURFACE_ROUGHNESS_RMS_M) }
-  public static func add(ROUGHNESS_CORRELATION_LENGTH_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROUGHNESS_CORRELATION_LENGTH_M, def: 0.0, at: VT.ROUGHNESS_CORRELATION_LENGTH_M) }
-  public static func add(SCATTERING_CLASS: rfsScatteringClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCATTERING_CLASS.rawValue, def: 0, at: VT.SCATTERING_CLASS) }
-  public static func add(DIFFUSE_SCATTERING_COEFFICIENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIFFUSE_SCATTERING_COEFFICIENT, def: 0.0, at: VT.DIFFUSE_SCATTERING_COEFFICIENT) }
-  public static func add(BACKSCATTER_COEFFICIENT_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKSCATTER_COEFFICIENT_DB, def: 0.0, at: VT.BACKSCATTER_COEFFICIENT_DB) }
-  public static func add(TEMPERATURE_K: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPERATURE_K, def: 0.0, at: VT.TEMPERATURE_K) }
-  public static func add(MOISTURE_CONTENT_FRACTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOISTURE_CONTENT_FRACTION, def: 0.0, at: VT.MOISTURE_CONTENT_FRACTION) }
-  public static func add(SALINITY_PSU: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SALINITY_PSU, def: 0.0, at: VT.SALINITY_PSU) }
-  public static func addVectorOf(FREQUENCY_SAMPLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FREQUENCY_SAMPLES, at: VT.FREQUENCY_SAMPLES) }
-  public static func addVectorOf(REFLECTION_TABLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFLECTION_TABLE, at: VT.REFLECTION_TABLE) }
-  public static func addVectorOf(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VT.GEOMETRY) }
+  public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
+  public static func add(RFL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFL_ID, at: VT.RFL_ID) }
+  public static func add(VICTIM_ENDPOINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VICTIM_ENDPOINT, at: VT.VICTIM_ENDPOINT) }
+  public static func add(AGGRESSOR_ENDPOINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGGRESSOR_ENDPOINT, at: VT.AGGRESSOR_ENDPOINT) }
+  public static func add(COUPLING_MECHANISM: emcCouplingPath, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUPLING_MECHANISM.rawValue, def: 0, at: VT.COUPLING_MECHANISM) }
+  public static func add(MECHANISM_CLASS: emcMechanismCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MECHANISM_CLASS.rawValue, def: 0, at: VT.MECHANISM_CLASS) }
+  public static func add(INTERMODULATION_ORDER: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERMODULATION_ORDER, def: 0, at: VT.INTERMODULATION_ORDER) }
+  public static func addVectorOf(INTERMODULATION_TERMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERMODULATION_TERMS, at: VT.INTERMODULATION_TERMS) }
+  public static func add(INTERMODULATION_PRODUCT_FREQUENCY_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERMODULATION_PRODUCT_FREQUENCY_HZ, def: 0.0, at: VT.INTERMODULATION_PRODUCT_FREQUENCY_HZ) }
+  public static func add(HARMONIC_ORDER: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HARMONIC_ORDER, def: 0, at: VT.HARMONIC_ORDER) }
+  public static func add(EMISSION_MASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMISSION_MASK_ID, at: VT.EMISSION_MASK_ID) }
+  public static func add(RFS_MATERIAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFS_MATERIAL_ID, at: VT.RFS_MATERIAL_ID) }
+  public static func add(RFS_MATERIAL_CLASS: rfsMaterialClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RFS_MATERIAL_CLASS.rawValue, def: 0, at: VT.RFS_MATERIAL_CLASS) }
+  public static func add(ISOLATION_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISOLATION_DB, def: 0.0, at: VT.ISOLATION_DB) }
+  public static func add(COUPLED_POWER_DBW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUPLED_POWER_DBW, def: 0.0, at: VT.COUPLED_POWER_DBW) }
+  public static func add(VICTIM_LIMIT_DBW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VICTIM_LIMIT_DBW, def: 0.0, at: VT.VICTIM_LIMIT_DBW) }
+  public static func add(MARGIN_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MARGIN_DB, def: 0.0, at: VT.MARGIN_DB) }
+  public static func add(EXCEEDANCE_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXCEEDANCE_DB, def: 0.0, at: VT.EXCEEDANCE_DB) }
+  public static func add(EXCEEDS_LIMIT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXCEEDS_LIMIT, def: false,
+   at: VT.EXCEEDS_LIMIT) }
+  public static func add(RESOLUTION: emcResolutionState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESOLUTION.rawValue, def: 0, at: VT.RESOLUTION) }
+  public static func add(RESOLUTION_NOTE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESOLUTION_NOTE, at: VT.RESOLUTION_NOTE) }
   public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
   public static func add(PRODUCER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_ID, at: VT.PRODUCER_ID) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
-  public static func endRFS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 72]); return end }
-  public static func createRFS(
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
+  public static func endEMC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 12, 14, 50, 54, 56, 58]); return end }
+  public static func createEMC(
     _ fbb: inout FlatBufferBuilder,
-    MATERIAL_IDOffset MATERIAL_ID: Offset,
+    EMC_IDOffset EMC_ID: Offset,
     NAMEOffset NAME: Offset = Offset(),
-    MATERIAL_CLASS: rfsMaterialClass = .unspecified,
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    FREQUENCY_MIN_MHZ: Double = 0.0,
-    FREQUENCY_MAX_MHZ: Double = 0.0,
-    PERMITTIVITY_COEFFICIENT_A: Double = 0.0,
-    PERMITTIVITY_EXPONENT_B: Double = 0.0,
-    CONDUCTIVITY_COEFFICIENT_C: Double = 0.0,
-    CONDUCTIVITY_EXPONENT_D: Double = 0.0,
-    REFERENCE_FREQUENCY_MHZ: Double = 0.0,
-    RELATIVE_PERMITTIVITY_REAL: Double = 0.0,
-    RELATIVE_PERMITTIVITY_IMAGINARY: Double = 0.0,
-    CONDUCTIVITY_S_PER_M: Double = 0.0,
-    LOSS_TANGENT: Double = 0.0,
-    RELATIVE_PERMEABILITY_REAL: Double = 0.0,
-    RELATIVE_PERMEABILITY_IMAGINARY: Double = 0.0,
-    REFLECTIVITY: Double = 0.0,
-    REFLECTION_LOSS_DB: Double = 0.0,
-    THICKNESS_M: Double = 0.0,
-    TRANSMISSION_LOSS_DB: Double = 0.0,
-    ATTENUATION_DB_PER_M: Double = 0.0,
-    ABSORPTION_COEFFICIENT: Double = 0.0,
-    SURFACE_ROUGHNESS_RMS_M: Double = 0.0,
-    ROUGHNESS_CORRELATION_LENGTH_M: Double = 0.0,
-    SCATTERING_CLASS: rfsScatteringClass = .unspecified,
-    DIFFUSE_SCATTERING_COEFFICIENT: Double = 0.0,
-    BACKSCATTER_COEFFICIENT_DB: Double = 0.0,
-    TEMPERATURE_K: Double = 0.0,
-    MOISTURE_CONTENT_FRACTION: Double = 0.0,
-    SALINITY_PSU: Double = 0.0,
-    FREQUENCY_SAMPLESVectorOffset FREQUENCY_SAMPLES: Offset = Offset(),
-    REFLECTION_TABLEVectorOffset REFLECTION_TABLE: Offset = Offset(),
-    GEOMETRYVectorOffset GEOMETRY: Offset = Offset(),
+    SCENARIO_IDOffset SCENARIO_ID: Offset = Offset(),
+    RFL_IDOffset RFL_ID: Offset = Offset(),
+    VICTIM_ENDPOINTOffset VICTIM_ENDPOINT: Offset,
+    AGGRESSOR_ENDPOINTOffset AGGRESSOR_ENDPOINT: Offset,
+    COUPLING_MECHANISM: emcCouplingPath = .unspecified,
+    MECHANISM_CLASS: emcMechanismCategory = .unspecified,
+    INTERMODULATION_ORDER: UInt32 = 0,
+    INTERMODULATION_TERMSVectorOffset INTERMODULATION_TERMS: Offset = Offset(),
+    INTERMODULATION_PRODUCT_FREQUENCY_HZ: Double = 0.0,
+    HARMONIC_ORDER: UInt32 = 0,
+    EMISSION_MASK_IDOffset EMISSION_MASK_ID: Offset = Offset(),
+    RFS_MATERIAL_IDOffset RFS_MATERIAL_ID: Offset = Offset(),
+    RFS_MATERIAL_CLASS: rfsMaterialClass = .unspecified,
+    ISOLATION_DB: Double = 0.0,
+    COUPLED_POWER_DBW: Double = 0.0,
+    VICTIM_LIMIT_DBW: Double = 0.0,
+    MARGIN_DB: Double = 0.0,
+    EXCEEDANCE_DB: Double = 0.0,
+    EXCEEDS_LIMIT: Bool = false,
+    RESOLUTION: emcResolutionState = .unspecified,
+    RESOLUTION_NOTEOffset RESOLUTION_NOTE: Offset = Offset(),
     PROVENANCEOffset PROVENANCE: Offset,
     COMPUTED_AT: UInt64 = 0,
-    PRODUCER_IDOffset PRODUCER_ID: Offset = Offset(),
-    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
+    PRODUCER_IDOffset PRODUCER_ID: Offset,
+    SIGNATUREVectorOffset SIGNATURE: Offset,
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset
   ) -> Offset {
-    let __start = RFS.startRFS(&fbb)
-    RFS.add(MATERIAL_ID: MATERIAL_ID, &fbb)
-    RFS.add(NAME: NAME, &fbb)
-    RFS.add(MATERIAL_CLASS: MATERIAL_CLASS, &fbb)
-    RFS.add(DESCRIPTION: DESCRIPTION, &fbb)
-    RFS.add(FREQUENCY_MIN_MHZ: FREQUENCY_MIN_MHZ, &fbb)
-    RFS.add(FREQUENCY_MAX_MHZ: FREQUENCY_MAX_MHZ, &fbb)
-    RFS.add(PERMITTIVITY_COEFFICIENT_A: PERMITTIVITY_COEFFICIENT_A, &fbb)
-    RFS.add(PERMITTIVITY_EXPONENT_B: PERMITTIVITY_EXPONENT_B, &fbb)
-    RFS.add(CONDUCTIVITY_COEFFICIENT_C: CONDUCTIVITY_COEFFICIENT_C, &fbb)
-    RFS.add(CONDUCTIVITY_EXPONENT_D: CONDUCTIVITY_EXPONENT_D, &fbb)
-    RFS.add(REFERENCE_FREQUENCY_MHZ: REFERENCE_FREQUENCY_MHZ, &fbb)
-    RFS.add(RELATIVE_PERMITTIVITY_REAL: RELATIVE_PERMITTIVITY_REAL, &fbb)
-    RFS.add(RELATIVE_PERMITTIVITY_IMAGINARY: RELATIVE_PERMITTIVITY_IMAGINARY, &fbb)
-    RFS.add(CONDUCTIVITY_S_PER_M: CONDUCTIVITY_S_PER_M, &fbb)
-    RFS.add(LOSS_TANGENT: LOSS_TANGENT, &fbb)
-    RFS.add(RELATIVE_PERMEABILITY_REAL: RELATIVE_PERMEABILITY_REAL, &fbb)
-    RFS.add(RELATIVE_PERMEABILITY_IMAGINARY: RELATIVE_PERMEABILITY_IMAGINARY, &fbb)
-    RFS.add(REFLECTIVITY: REFLECTIVITY, &fbb)
-    RFS.add(REFLECTION_LOSS_DB: REFLECTION_LOSS_DB, &fbb)
-    RFS.add(THICKNESS_M: THICKNESS_M, &fbb)
-    RFS.add(TRANSMISSION_LOSS_DB: TRANSMISSION_LOSS_DB, &fbb)
-    RFS.add(ATTENUATION_DB_PER_M: ATTENUATION_DB_PER_M, &fbb)
-    RFS.add(ABSORPTION_COEFFICIENT: ABSORPTION_COEFFICIENT, &fbb)
-    RFS.add(SURFACE_ROUGHNESS_RMS_M: SURFACE_ROUGHNESS_RMS_M, &fbb)
-    RFS.add(ROUGHNESS_CORRELATION_LENGTH_M: ROUGHNESS_CORRELATION_LENGTH_M, &fbb)
-    RFS.add(SCATTERING_CLASS: SCATTERING_CLASS, &fbb)
-    RFS.add(DIFFUSE_SCATTERING_COEFFICIENT: DIFFUSE_SCATTERING_COEFFICIENT, &fbb)
-    RFS.add(BACKSCATTER_COEFFICIENT_DB: BACKSCATTER_COEFFICIENT_DB, &fbb)
-    RFS.add(TEMPERATURE_K: TEMPERATURE_K, &fbb)
-    RFS.add(MOISTURE_CONTENT_FRACTION: MOISTURE_CONTENT_FRACTION, &fbb)
-    RFS.add(SALINITY_PSU: SALINITY_PSU, &fbb)
-    RFS.addVectorOf(FREQUENCY_SAMPLES: FREQUENCY_SAMPLES, &fbb)
-    RFS.addVectorOf(REFLECTION_TABLE: REFLECTION_TABLE, &fbb)
-    RFS.addVectorOf(GEOMETRY: GEOMETRY, &fbb)
-    RFS.add(PROVENANCE: PROVENANCE, &fbb)
-    RFS.add(COMPUTED_AT: COMPUTED_AT, &fbb)
-    RFS.add(PRODUCER_ID: PRODUCER_ID, &fbb)
-    RFS.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
-    return RFS.endRFS(&fbb, start: __start)
+    let __start = EMC.startEMC(&fbb)
+    EMC.add(EMC_ID: EMC_ID, &fbb)
+    EMC.add(NAME: NAME, &fbb)
+    EMC.add(SCENARIO_ID: SCENARIO_ID, &fbb)
+    EMC.add(RFL_ID: RFL_ID, &fbb)
+    EMC.add(VICTIM_ENDPOINT: VICTIM_ENDPOINT, &fbb)
+    EMC.add(AGGRESSOR_ENDPOINT: AGGRESSOR_ENDPOINT, &fbb)
+    EMC.add(COUPLING_MECHANISM: COUPLING_MECHANISM, &fbb)
+    EMC.add(MECHANISM_CLASS: MECHANISM_CLASS, &fbb)
+    EMC.add(INTERMODULATION_ORDER: INTERMODULATION_ORDER, &fbb)
+    EMC.addVectorOf(INTERMODULATION_TERMS: INTERMODULATION_TERMS, &fbb)
+    EMC.add(INTERMODULATION_PRODUCT_FREQUENCY_HZ: INTERMODULATION_PRODUCT_FREQUENCY_HZ, &fbb)
+    EMC.add(HARMONIC_ORDER: HARMONIC_ORDER, &fbb)
+    EMC.add(EMISSION_MASK_ID: EMISSION_MASK_ID, &fbb)
+    EMC.add(RFS_MATERIAL_ID: RFS_MATERIAL_ID, &fbb)
+    EMC.add(RFS_MATERIAL_CLASS: RFS_MATERIAL_CLASS, &fbb)
+    EMC.add(ISOLATION_DB: ISOLATION_DB, &fbb)
+    EMC.add(COUPLED_POWER_DBW: COUPLED_POWER_DBW, &fbb)
+    EMC.add(VICTIM_LIMIT_DBW: VICTIM_LIMIT_DBW, &fbb)
+    EMC.add(MARGIN_DB: MARGIN_DB, &fbb)
+    EMC.add(EXCEEDANCE_DB: EXCEEDANCE_DB, &fbb)
+    EMC.add(EXCEEDS_LIMIT: EXCEEDS_LIMIT, &fbb)
+    EMC.add(RESOLUTION: RESOLUTION, &fbb)
+    EMC.add(RESOLUTION_NOTE: RESOLUTION_NOTE, &fbb)
+    EMC.add(PROVENANCE: PROVENANCE, &fbb)
+    EMC.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    EMC.add(PRODUCER_ID: PRODUCER_ID, &fbb)
+    EMC.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    EMC.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
+    return EMC.endEMC(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.MATERIAL_ID, fieldName: "MATERIAL_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EMC_ID, fieldName: "EMC_ID", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MATERIAL_CLASS, fieldName: "MATERIAL_CLASS", required: false, type: rfsMaterialClass.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FREQUENCY_MIN_MHZ, fieldName: "FREQUENCY_MIN_MHZ", required: false, type: Double.self)
-    try _v.visit(field: VT.FREQUENCY_MAX_MHZ, fieldName: "FREQUENCY_MAX_MHZ", required: false, type: Double.self)
-    try _v.visit(field: VT.PERMITTIVITY_COEFFICIENT_A, fieldName: "PERMITTIVITY_COEFFICIENT_A", required: false, type: Double.self)
-    try _v.visit(field: VT.PERMITTIVITY_EXPONENT_B, fieldName: "PERMITTIVITY_EXPONENT_B", required: false, type: Double.self)
-    try _v.visit(field: VT.CONDUCTIVITY_COEFFICIENT_C, fieldName: "CONDUCTIVITY_COEFFICIENT_C", required: false, type: Double.self)
-    try _v.visit(field: VT.CONDUCTIVITY_EXPONENT_D, fieldName: "CONDUCTIVITY_EXPONENT_D", required: false, type: Double.self)
-    try _v.visit(field: VT.REFERENCE_FREQUENCY_MHZ, fieldName: "REFERENCE_FREQUENCY_MHZ", required: false, type: Double.self)
-    try _v.visit(field: VT.RELATIVE_PERMITTIVITY_REAL, fieldName: "RELATIVE_PERMITTIVITY_REAL", required: false, type: Double.self)
-    try _v.visit(field: VT.RELATIVE_PERMITTIVITY_IMAGINARY, fieldName: "RELATIVE_PERMITTIVITY_IMAGINARY", required: false, type: Double.self)
-    try _v.visit(field: VT.CONDUCTIVITY_S_PER_M, fieldName: "CONDUCTIVITY_S_PER_M", required: false, type: Double.self)
-    try _v.visit(field: VT.LOSS_TANGENT, fieldName: "LOSS_TANGENT", required: false, type: Double.self)
-    try _v.visit(field: VT.RELATIVE_PERMEABILITY_REAL, fieldName: "RELATIVE_PERMEABILITY_REAL", required: false, type: Double.self)
-    try _v.visit(field: VT.RELATIVE_PERMEABILITY_IMAGINARY, fieldName: "RELATIVE_PERMEABILITY_IMAGINARY", required: false, type: Double.self)
-    try _v.visit(field: VT.REFLECTIVITY, fieldName: "REFLECTIVITY", required: false, type: Double.self)
-    try _v.visit(field: VT.REFLECTION_LOSS_DB, fieldName: "REFLECTION_LOSS_DB", required: false, type: Double.self)
-    try _v.visit(field: VT.THICKNESS_M, fieldName: "THICKNESS_M", required: false, type: Double.self)
-    try _v.visit(field: VT.TRANSMISSION_LOSS_DB, fieldName: "TRANSMISSION_LOSS_DB", required: false, type: Double.self)
-    try _v.visit(field: VT.ATTENUATION_DB_PER_M, fieldName: "ATTENUATION_DB_PER_M", required: false, type: Double.self)
-    try _v.visit(field: VT.ABSORPTION_COEFFICIENT, fieldName: "ABSORPTION_COEFFICIENT", required: false, type: Double.self)
-    try _v.visit(field: VT.SURFACE_ROUGHNESS_RMS_M, fieldName: "SURFACE_ROUGHNESS_RMS_M", required: false, type: Double.self)
-    try _v.visit(field: VT.ROUGHNESS_CORRELATION_LENGTH_M, fieldName: "ROUGHNESS_CORRELATION_LENGTH_M", required: false, type: Double.self)
-    try _v.visit(field: VT.SCATTERING_CLASS, fieldName: "SCATTERING_CLASS", required: false, type: rfsScatteringClass.self)
-    try _v.visit(field: VT.DIFFUSE_SCATTERING_COEFFICIENT, fieldName: "DIFFUSE_SCATTERING_COEFFICIENT", required: false, type: Double.self)
-    try _v.visit(field: VT.BACKSCATTER_COEFFICIENT_DB, fieldName: "BACKSCATTER_COEFFICIENT_DB", required: false, type: Double.self)
-    try _v.visit(field: VT.TEMPERATURE_K, fieldName: "TEMPERATURE_K", required: false, type: Double.self)
-    try _v.visit(field: VT.MOISTURE_CONTENT_FRACTION, fieldName: "MOISTURE_CONTENT_FRACTION", required: false, type: Double.self)
-    try _v.visit(field: VT.SALINITY_PSU, fieldName: "SALINITY_PSU", required: false, type: Double.self)
-    try _v.visit(field: VT.FREQUENCY_SAMPLES, fieldName: "FREQUENCY_SAMPLES", required: false, type: ForwardOffset<Vector<ForwardOffset<RFSFrequencySample>, RFSFrequencySample>>.self)
-    try _v.visit(field: VT.REFLECTION_TABLE, fieldName: "REFLECTION_TABLE", required: false, type: ForwardOffset<Vector<ForwardOffset<RFSReflectionEntry>, RFSReflectionEntry>>.self)
-    try _v.visit(field: VT.GEOMETRY, fieldName: "GEOMETRY", required: false, type: ForwardOffset<Vector<ForwardOffset<RFSGeometryRef>, RFSGeometryRef>>.self)
-    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<RFSProvenance>.self)
+    try _v.visit(field: VT.SCENARIO_ID, fieldName: "SCENARIO_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFL_ID, fieldName: "RFL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VICTIM_ENDPOINT, fieldName: "VICTIM_ENDPOINT", required: true, type: ForwardOffset<EMCEndpointRef>.self)
+    try _v.visit(field: VT.AGGRESSOR_ENDPOINT, fieldName: "AGGRESSOR_ENDPOINT", required: true, type: ForwardOffset<EMCEndpointRef>.self)
+    try _v.visit(field: VT.COUPLING_MECHANISM, fieldName: "COUPLING_MECHANISM", required: false, type: emcCouplingPath.self)
+    try _v.visit(field: VT.MECHANISM_CLASS, fieldName: "MECHANISM_CLASS", required: false, type: emcMechanismCategory.self)
+    try _v.visit(field: VT.INTERMODULATION_ORDER, fieldName: "INTERMODULATION_ORDER", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INTERMODULATION_TERMS, fieldName: "INTERMODULATION_TERMS", required: false, type: ForwardOffset<Vector<ForwardOffset<EMCIntermodulationTerm>, EMCIntermodulationTerm>>.self)
+    try _v.visit(field: VT.INTERMODULATION_PRODUCT_FREQUENCY_HZ, fieldName: "INTERMODULATION_PRODUCT_FREQUENCY_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.HARMONIC_ORDER, fieldName: "HARMONIC_ORDER", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EMISSION_MASK_ID, fieldName: "EMISSION_MASK_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFS_MATERIAL_ID, fieldName: "RFS_MATERIAL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFS_MATERIAL_CLASS, fieldName: "RFS_MATERIAL_CLASS", required: false, type: rfsMaterialClass.self)
+    try _v.visit(field: VT.ISOLATION_DB, fieldName: "ISOLATION_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.COUPLED_POWER_DBW, fieldName: "COUPLED_POWER_DBW", required: false, type: Double.self)
+    try _v.visit(field: VT.VICTIM_LIMIT_DBW, fieldName: "VICTIM_LIMIT_DBW", required: false, type: Double.self)
+    try _v.visit(field: VT.MARGIN_DB, fieldName: "MARGIN_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.EXCEEDANCE_DB, fieldName: "EXCEEDANCE_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.EXCEEDS_LIMIT, fieldName: "EXCEEDS_LIMIT", required: false, type: Bool.self)
+    try _v.visit(field: VT.RESOLUTION, fieldName: "RESOLUTION", required: false, type: emcResolutionState.self)
+    try _v.visit(field: VT.RESOLUTION_NOTE, fieldName: "RESOLUTION_NOTE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<RFLProvenance>.self)
     try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

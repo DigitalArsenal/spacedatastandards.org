@@ -8,154 +8,202 @@ import Common
 
 import FlatBuffers
 
-///  Encryption Header for FlatBuffers field-level encryption
-///  Key exchange algorithm used to derive the shared secret
-public enum KeyExchange: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Licensing grant message type
+public enum licensingGrantMessageType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case x25519 = 0
-  case secp256k1 = 1
-  case p256 = 2
+  case request = 0
+  case granted = 1
+  case denied = 2
 
-  public static var max: KeyExchange { return .p256 }
-  public static var min: KeyExchange { return .x25519 }
+  public static var max: licensingGrantMessageType { return .denied }
+  public static var min: licensingGrantMessageType { return .request }
 }
 
 
-///  Symmetric encryption algorithm
-public enum SymmetricAlgo: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case aes256Ctr = 0
-
-  public static var max: SymmetricAlgo { return .aes256Ctr }
-  public static var min: SymmetricAlgo { return .aes256Ctr }
-}
-
-
-///  Key derivation function
-public enum KDF: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case hkdfSha256 = 0
-
-  public static var max: KDF { return .hkdfSha256 }
-  public static var min: KDF { return .hkdfSha256 }
-}
-
-
-///  Encryption Header containing all parameters needed for decryption
-public struct ENC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Licensing grant message
+public struct LGR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$ENC" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ENC.id, addPrefix: prefix) }
+  public static var id: String { "$LGR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LGR.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let VERSION: VOffset = 4
-    static let KEY_EXCHANGE: VOffset = 6
-    static let SYMMETRIC: VOffset = 8
-    static let KEY_DERIVATION: VOffset = 10
-    static let EPHEMERAL_PUBLIC_KEY: VOffset = 12
-    static let NONCE_START: VOffset = 14
-    static let RECIPIENT_KEY_ID: VOffset = 16
-    static let CONTEXT: VOffset = 18
-    static let SCHEMA_HASH: VOffset = 20
-    static let ROOT_TYPE: VOffset = 22
-    static let TIMESTAMP: VOffset = 24
+    static let MESSAGE_TYPE: VOffset = 4
+    static let REQUEST_ID: VOffset = 6
+    static let MODULE_ID: VOffset = 8
+    static let MODULE_VERSION: VOffset = 10
+    static let REQUESTER_PEER_ID: VOffset = 12
+    static let REQUESTER_XPUB: VOffset = 14
+    static let REQUESTED_DOMAIN: VOffset = 16
+    static let REQUESTED_TIMEOUT_MS: VOffset = 18
+    static let GRANTED_DOMAIN: VOffset = 20
+    static let GRANTED_TIMEOUT_MS: VOffset = 22
+    static let EXPIRES_AT: VOffset = 24
+    static let REQUIRED_SCOPE: VOffset = 26
+    static let GRANT_STATUS: VOffset = 28
+    static let DENIAL_REASON: VOffset = 30
+    static let CAPABILITY_TOKEN: VOffset = 32
+    static let MODULE_DESCRIPTOR: VOffset = 34
+    static let WRAPPED_CONTENT_KEY_HEADER: VOffset = 36
+    static let WRAPPED_CONTENT_KEY_PAYLOAD: VOffset = 38
+    static let GRANT_VERIFIER_PUBKEY: VOffset = 40
+    static let PROVIDER_SIGNATURE: VOffset = 42
   }
 
-  ///  Schema version for forward compatibility
-  public var VERSION: UInt8 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 1 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Key exchange algorithm used
-  public var KEY_EXCHANGE: KeyExchange { let o = _accessor.offset(VT.KEY_EXCHANGE); return o == 0 ? .x25519 : KeyExchange(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .x25519 }
-  ///  Symmetric encryption algorithm used
-  public var SYMMETRIC: SymmetricAlgo { let o = _accessor.offset(VT.SYMMETRIC); return o == 0 ? .aes256Ctr : SymmetricAlgo(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .aes256Ctr }
-  ///  Key derivation function used
-  public var KEY_DERIVATION: KDF { let o = _accessor.offset(VT.KEY_DERIVATION); return o == 0 ? .hkdfSha256 : KDF(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .hkdfSha256 }
-  ///  Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
-  public var EPHEMERAL_PUBLIC_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.EPHEMERAL_PUBLIC_KEY, byteSize: 1) }
-  public func withUnsafePointerToEphemeralPublicKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.EPHEMERAL_PUBLIC_KEY, body: body) }
-  ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
-  public var NONCE_START: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.NONCE_START, byteSize: 1) }
-  public func withUnsafePointerToNonceStart<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NONCE_START, body: body) }
-  ///  Optional identifier for the recipient's public key (up to 32 bytes)
-  public var RECIPIENT_KEY_ID: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RECIPIENT_KEY_ID, byteSize: 1) }
-  public func withUnsafePointerToRecipientKeyId<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RECIPIENT_KEY_ID, body: body) }
-  ///  Optional domain separation context string
-  public var CONTEXT: String? { let o = _accessor.offset(VT.CONTEXT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTEXT) }
-  ///  Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
-  public var SCHEMA_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SCHEMA_HASH, byteSize: 1) }
-  public func withUnsafePointerToSchemaHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SCHEMA_HASH, body: body) }
-  ///  Optional root type name from the schema
-  public var ROOT_TYPE: String? { let o = _accessor.offset(VT.ROOT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROOT_TYPE) }
-  ///  Optional Unix timestamp (milliseconds) when encryption was performed
-  public var TIMESTAMP: UInt64 { let o = _accessor.offset(VT.TIMESTAMP); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startENC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 1, at: VT.VERSION) }
-  public static func add(KEY_EXCHANGE: KeyExchange, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_EXCHANGE.rawValue, def: 0, at: VT.KEY_EXCHANGE) }
-  public static func add(SYMMETRIC: SymmetricAlgo, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYMMETRIC.rawValue, def: 0, at: VT.SYMMETRIC) }
-  public static func add(KEY_DERIVATION: KDF, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_DERIVATION.rawValue, def: 0, at: VT.KEY_DERIVATION) }
-  public static func addVectorOf(EPHEMERAL_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERAL_PUBLIC_KEY, at: VT.EPHEMERAL_PUBLIC_KEY) }
-  public static func addVectorOf(NONCE_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE_START, at: VT.NONCE_START) }
-  public static func addVectorOf(RECIPIENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECIPIENT_KEY_ID, at: VT.RECIPIENT_KEY_ID) }
-  public static func add(CONTEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT, at: VT.CONTEXT) }
-  public static func addVectorOf(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
-  public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VT.ROOT_TYPE) }
-  public static func add(TIMESTAMP: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP, def: 0, at: VT.TIMESTAMP) }
-  public static func endENC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [12, 14]); return end }
-  public static func createENC(
+  ///  Message type
+  public var MESSAGE_TYPE: licensingGrantMessageType { let o = _accessor.offset(VT.MESSAGE_TYPE); return o == 0 ? .request : licensingGrantMessageType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .request }
+  ///  Unique request identifier
+  public var REQUEST_ID: String! { let o = _accessor.offset(VT.REQUEST_ID); return _accessor.string(at: o) }
+  public var REQUEST_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REQUEST_ID) }
+  ///  Canonical module identifier
+  public var MODULE_ID: String! { let o = _accessor.offset(VT.MODULE_ID); return _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODULE_ID) }
+  ///  Optional module version
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
+  ///  Requester peer identifier
+  public var REQUESTER_PEER_ID: String? { let o = _accessor.offset(VT.REQUESTER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUESTER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUESTER_PEER_ID) }
+  ///  Requester account identity or wallet xpub
+  public var REQUESTER_XPUB: String? { let o = _accessor.offset(VT.REQUESTER_XPUB); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUESTER_XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUESTER_XPUB) }
+  ///  Requested domain
+  public var REQUESTED_DOMAIN: String? { let o = _accessor.offset(VT.REQUESTED_DOMAIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUESTED_DOMAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUESTED_DOMAIN) }
+  ///  Requested timeout in milliseconds
+  public var REQUESTED_TIMEOUT_MS: UInt64 { let o = _accessor.offset(VT.REQUESTED_TIMEOUT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Granted domain
+  public var GRANTED_DOMAIN: String? { let o = _accessor.offset(VT.GRANTED_DOMAIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRANTED_DOMAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRANTED_DOMAIN) }
+  ///  Granted timeout in milliseconds
+  public var GRANTED_TIMEOUT_MS: UInt64 { let o = _accessor.offset(VT.GRANTED_TIMEOUT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Grant expiration time in milliseconds since epoch
+  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Required scope for the publication
+  public var REQUIRED_SCOPE: String? { let o = _accessor.offset(VT.REQUIRED_SCOPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUIRED_SCOPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUIRED_SCOPE) }
+  ///  Grant status string
+  public var GRANT_STATUS: String? { let o = _accessor.offset(VT.GRANT_STATUS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRANT_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRANT_STATUS) }
+  ///  Structured denial reason
+  public var DENIAL_REASON: String? { let o = _accessor.offset(VT.DENIAL_REASON); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DENIAL_REASONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DENIAL_REASON) }
+  ///  Issued capability token bytes
+  public var CAPABILITY_TOKEN: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CAPABILITY_TOKEN, byteSize: 1) }
+  public func withUnsafePointerToCapabilityToken<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CAPABILITY_TOKEN, body: body) }
+  ///  Published module descriptor
+  public var MODULE_DESCRIPTOR: PLG? { let o = _accessor.offset(VT.MODULE_DESCRIPTOR); return o == 0 ? nil : PLG(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Encryption header for the recipient-specific wrapped content-key payload.
+  public var WRAPPED_CONTENT_KEY_HEADER: ENC? { let o = _accessor.offset(VT.WRAPPED_CONTENT_KEY_HEADER); return o == 0 ? nil : ENC(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Encrypted FlatBuffer payload containing the recipient-specific content key
+  ///  material. The payload currently uses `$KMF` semantics and is decrypted
+  ///  using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+  public var WRAPPED_CONTENT_KEY_PAYLOAD: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.WRAPPED_CONTENT_KEY_PAYLOAD, byteSize: 1) }
+  public func withUnsafePointerToWrappedContentKeyPayload<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.WRAPPED_CONTENT_KEY_PAYLOAD, body: body) }
+  ///  Provider public key used to verify the grant signature
+  public var GRANT_VERIFIER_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.GRANT_VERIFIER_PUBKEY, byteSize: 1) }
+  public func withUnsafePointerToGrantVerifierPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.GRANT_VERIFIER_PUBKEY, body: body) }
+  ///  Provider signature over the grant
+  public var PROVIDER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PROVIDER_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToProviderSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PROVIDER_SIGNATURE, body: body) }
+  public static func startLGR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  public static func add(MESSAGE_TYPE: licensingGrantMessageType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGE_TYPE.rawValue, def: 0, at: VT.MESSAGE_TYPE) }
+  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VT.REQUEST_ID) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(REQUESTER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_PEER_ID, at: VT.REQUESTER_PEER_ID) }
+  public static func add(REQUESTER_XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_XPUB, at: VT.REQUESTER_XPUB) }
+  public static func add(REQUESTED_DOMAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTED_DOMAIN, at: VT.REQUESTED_DOMAIN) }
+  public static func add(REQUESTED_TIMEOUT_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUESTED_TIMEOUT_MS, def: 0, at: VT.REQUESTED_TIMEOUT_MS) }
+  public static func add(GRANTED_DOMAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRANTED_DOMAIN, at: VT.GRANTED_DOMAIN) }
+  public static func add(GRANTED_TIMEOUT_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANTED_TIMEOUT_MS, def: 0, at: VT.GRANTED_TIMEOUT_MS) }
+  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VT.EXPIRES_AT) }
+  public static func add(REQUIRED_SCOPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUIRED_SCOPE, at: VT.REQUIRED_SCOPE) }
+  public static func add(GRANT_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRANT_STATUS, at: VT.GRANT_STATUS) }
+  public static func add(DENIAL_REASON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DENIAL_REASON, at: VT.DENIAL_REASON) }
+  public static func addVectorOf(CAPABILITY_TOKEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPABILITY_TOKEN, at: VT.CAPABILITY_TOKEN) }
+  public static func add(MODULE_DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_DESCRIPTOR, at: VT.MODULE_DESCRIPTOR) }
+  public static func add(WRAPPED_CONTENT_KEY_HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WRAPPED_CONTENT_KEY_HEADER, at: VT.WRAPPED_CONTENT_KEY_HEADER) }
+  public static func addVectorOf(WRAPPED_CONTENT_KEY_PAYLOAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WRAPPED_CONTENT_KEY_PAYLOAD, at: VT.WRAPPED_CONTENT_KEY_PAYLOAD) }
+  public static func addVectorOf(GRANT_VERIFIER_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRANT_VERIFIER_PUBKEY, at: VT.GRANT_VERIFIER_PUBKEY) }
+  public static func addVectorOf(PROVIDER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_SIGNATURE, at: VT.PROVIDER_SIGNATURE) }
+  public static func endLGR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8]); return end }
+  public static func createLGR(
     _ fbb: inout FlatBufferBuilder,
-    VERSION: UInt8 = 1,
-    KEY_EXCHANGE: KeyExchange = .x25519,
-    SYMMETRIC: SymmetricAlgo = .aes256Ctr,
-    KEY_DERIVATION: KDF = .hkdfSha256,
-    EPHEMERAL_PUBLIC_KEYVectorOffset EPHEMERAL_PUBLIC_KEY: Offset,
-    NONCE_STARTVectorOffset NONCE_START: Offset,
-    RECIPIENT_KEY_IDVectorOffset RECIPIENT_KEY_ID: Offset = Offset(),
-    CONTEXTOffset CONTEXT: Offset = Offset(),
-    SCHEMA_HASHVectorOffset SCHEMA_HASH: Offset = Offset(),
-    ROOT_TYPEOffset ROOT_TYPE: Offset = Offset(),
-    TIMESTAMP: UInt64 = 0
+    MESSAGE_TYPE: licensingGrantMessageType = .request,
+    REQUEST_IDOffset REQUEST_ID: Offset,
+    MODULE_IDOffset MODULE_ID: Offset,
+    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
+    REQUESTER_PEER_IDOffset REQUESTER_PEER_ID: Offset = Offset(),
+    REQUESTER_XPUBOffset REQUESTER_XPUB: Offset = Offset(),
+    REQUESTED_DOMAINOffset REQUESTED_DOMAIN: Offset = Offset(),
+    REQUESTED_TIMEOUT_MS: UInt64 = 0,
+    GRANTED_DOMAINOffset GRANTED_DOMAIN: Offset = Offset(),
+    GRANTED_TIMEOUT_MS: UInt64 = 0,
+    EXPIRES_AT: UInt64 = 0,
+    REQUIRED_SCOPEOffset REQUIRED_SCOPE: Offset = Offset(),
+    GRANT_STATUSOffset GRANT_STATUS: Offset = Offset(),
+    DENIAL_REASONOffset DENIAL_REASON: Offset = Offset(),
+    CAPABILITY_TOKENVectorOffset CAPABILITY_TOKEN: Offset = Offset(),
+    MODULE_DESCRIPTOROffset MODULE_DESCRIPTOR: Offset = Offset(),
+    WRAPPED_CONTENT_KEY_HEADEROffset WRAPPED_CONTENT_KEY_HEADER: Offset = Offset(),
+    WRAPPED_CONTENT_KEY_PAYLOADVectorOffset WRAPPED_CONTENT_KEY_PAYLOAD: Offset = Offset(),
+    GRANT_VERIFIER_PUBKEYVectorOffset GRANT_VERIFIER_PUBKEY: Offset = Offset(),
+    PROVIDER_SIGNATUREVectorOffset PROVIDER_SIGNATURE: Offset = Offset()
   ) -> Offset {
-    let __start = ENC.startENC(&fbb)
-    ENC.add(VERSION: VERSION, &fbb)
-    ENC.add(KEY_EXCHANGE: KEY_EXCHANGE, &fbb)
-    ENC.add(SYMMETRIC: SYMMETRIC, &fbb)
-    ENC.add(KEY_DERIVATION: KEY_DERIVATION, &fbb)
-    ENC.addVectorOf(EPHEMERAL_PUBLIC_KEY: EPHEMERAL_PUBLIC_KEY, &fbb)
-    ENC.addVectorOf(NONCE_START: NONCE_START, &fbb)
-    ENC.addVectorOf(RECIPIENT_KEY_ID: RECIPIENT_KEY_ID, &fbb)
-    ENC.add(CONTEXT: CONTEXT, &fbb)
-    ENC.addVectorOf(SCHEMA_HASH: SCHEMA_HASH, &fbb)
-    ENC.add(ROOT_TYPE: ROOT_TYPE, &fbb)
-    ENC.add(TIMESTAMP: TIMESTAMP, &fbb)
-    return ENC.endENC(&fbb, start: __start)
+    let __start = LGR.startLGR(&fbb)
+    LGR.add(MESSAGE_TYPE: MESSAGE_TYPE, &fbb)
+    LGR.add(REQUEST_ID: REQUEST_ID, &fbb)
+    LGR.add(MODULE_ID: MODULE_ID, &fbb)
+    LGR.add(MODULE_VERSION: MODULE_VERSION, &fbb)
+    LGR.add(REQUESTER_PEER_ID: REQUESTER_PEER_ID, &fbb)
+    LGR.add(REQUESTER_XPUB: REQUESTER_XPUB, &fbb)
+    LGR.add(REQUESTED_DOMAIN: REQUESTED_DOMAIN, &fbb)
+    LGR.add(REQUESTED_TIMEOUT_MS: REQUESTED_TIMEOUT_MS, &fbb)
+    LGR.add(GRANTED_DOMAIN: GRANTED_DOMAIN, &fbb)
+    LGR.add(GRANTED_TIMEOUT_MS: GRANTED_TIMEOUT_MS, &fbb)
+    LGR.add(EXPIRES_AT: EXPIRES_AT, &fbb)
+    LGR.add(REQUIRED_SCOPE: REQUIRED_SCOPE, &fbb)
+    LGR.add(GRANT_STATUS: GRANT_STATUS, &fbb)
+    LGR.add(DENIAL_REASON: DENIAL_REASON, &fbb)
+    LGR.addVectorOf(CAPABILITY_TOKEN: CAPABILITY_TOKEN, &fbb)
+    LGR.add(MODULE_DESCRIPTOR: MODULE_DESCRIPTOR, &fbb)
+    LGR.add(WRAPPED_CONTENT_KEY_HEADER: WRAPPED_CONTENT_KEY_HEADER, &fbb)
+    LGR.addVectorOf(WRAPPED_CONTENT_KEY_PAYLOAD: WRAPPED_CONTENT_KEY_PAYLOAD, &fbb)
+    LGR.addVectorOf(GRANT_VERIFIER_PUBKEY: GRANT_VERIFIER_PUBKEY, &fbb)
+    LGR.addVectorOf(PROVIDER_SIGNATURE: PROVIDER_SIGNATURE, &fbb)
+    return LGR.endLGR(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt8.self)
-    try _v.visit(field: VT.KEY_EXCHANGE, fieldName: "KEY_EXCHANGE", required: false, type: KeyExchange.self)
-    try _v.visit(field: VT.SYMMETRIC, fieldName: "SYMMETRIC", required: false, type: SymmetricAlgo.self)
-    try _v.visit(field: VT.KEY_DERIVATION, fieldName: "KEY_DERIVATION", required: false, type: KDF.self)
-    try _v.visit(field: VT.EPHEMERAL_PUBLIC_KEY, fieldName: "EPHEMERAL_PUBLIC_KEY", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.NONCE_START, fieldName: "NONCE_START", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.RECIPIENT_KEY_ID, fieldName: "RECIPIENT_KEY_ID", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.CONTEXT, fieldName: "CONTEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.ROOT_TYPE, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TIMESTAMP, fieldName: "TIMESTAMP", required: false, type: UInt64.self)
+    try _v.visit(field: VT.MESSAGE_TYPE, fieldName: "MESSAGE_TYPE", required: false, type: licensingGrantMessageType.self)
+    try _v.visit(field: VT.REQUEST_ID, fieldName: "REQUEST_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTER_PEER_ID, fieldName: "REQUESTER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTER_XPUB, fieldName: "REQUESTER_XPUB", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTED_DOMAIN, fieldName: "REQUESTED_DOMAIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTED_TIMEOUT_MS, fieldName: "REQUESTED_TIMEOUT_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.GRANTED_DOMAIN, fieldName: "GRANTED_DOMAIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRANTED_TIMEOUT_MS, fieldName: "GRANTED_TIMEOUT_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.REQUIRED_SCOPE, fieldName: "REQUIRED_SCOPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRANT_STATUS, fieldName: "GRANT_STATUS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DENIAL_REASON, fieldName: "DENIAL_REASON", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CAPABILITY_TOKEN, fieldName: "CAPABILITY_TOKEN", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.MODULE_DESCRIPTOR, fieldName: "MODULE_DESCRIPTOR", required: false, type: ForwardOffset<PLG>.self)
+    try _v.visit(field: VT.WRAPPED_CONTENT_KEY_HEADER, fieldName: "WRAPPED_CONTENT_KEY_HEADER", required: false, type: ForwardOffset<ENC>.self)
+    try _v.visit(field: VT.WRAPPED_CONTENT_KEY_PAYLOAD, fieldName: "WRAPPED_CONTENT_KEY_PAYLOAD", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.GRANT_VERIFIER_PUBKEY, fieldName: "GRANT_VERIFIER_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.PROVIDER_SIGNATURE, fieldName: "PROVIDER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

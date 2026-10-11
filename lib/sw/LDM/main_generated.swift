@@ -8,81 +8,243 @@ import Common
 
 import FlatBuffers
 
-///  Burn Out Vector Message
-public struct BOV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Launch Data Message
+public struct LDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$BOV" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BOV.id, addPrefix: prefix) }
+  public static var id: String { "$LDM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LDM.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let E_COORDINATE: VOffset = 4
-    static let F_COORDINATE: VOffset = 6
-    static let G_COORDINATE: VOffset = 8
-    static let E_DOT: VOffset = 10
-    static let F_DOT: VOffset = 12
-    static let G_DOT: VOffset = 14
-    static let EPOCH: VOffset = 16
-    static let TIME_FROM_LAUNCH: VOffset = 18
+    static let SITE: VOffset = 4
+    static let AZIMUTH: VOffset = 6
+    static let REFERENCES: VOffset = 8
+    static let AGENCY_NAME: VOffset = 10
+    static let POINTS_OF_CONTACT: VOffset = 12
+    static let OPERATIONS_POINTS_OF_CONTACT: VOffset = 14
+    static let NET: VOffset = 16
+    static let ROCKET_CONFIGURATION: VOffset = 18
+    static let MISSION_NAME: VOffset = 20
+    static let MISSION_DESCRIPTION: VOffset = 22
+    static let MISSION_TYPE: VOffset = 24
+    static let ORBIT_TYPE: VOffset = 26
+    static let WEATHER_CONDITIONS: VOffset = 28
+    static let LAUNCH_STATUS: VOffset = 30
+    static let WEBCAST_URL: VOffset = 32
+    static let MEDIA_LINKS: VOffset = 34
+    static let EARLIEST_LAUNCH_TIMES: VOffset = 36
+    static let LATEST_LAUNCH_TIMES: VOffset = 38
+    static let LCOLA_WINDOW_CLOSURES: VOffset = 40
+    static let OBJECTS: VOffset = 42
+    static let TRACKING_REQUIREMENTS: VOffset = 44
+    static let COLA_SCREEN_DURATION: VOffset = 46
+    static let PROBABILITY_OF_COLLISION_THRESHOLD: VOffset = 48
+    static let COLA_RUNS_REQUIRED: VOffset = 50
+    static let COLA_POINTS_OF_CONTACT: VOffset = 52
+    static let ORBITAL_PARAMETERS: VOffset = 54
+    static let BURN_OUT_VECTORS: VOffset = 56
+    static let ID: VOffset = 58
   }
 
-  public var E_COORDINATE: Double { let o = _accessor.offset(VT.E_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var F_COORDINATE: Double { let o = _accessor.offset(VT.F_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var G_COORDINATE: Double { let o = _accessor.offset(VT.G_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var E_DOT: Double { let o = _accessor.offset(VT.E_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var F_DOT: Double { let o = _accessor.offset(VT.F_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var G_DOT: Double { let o = _accessor.offset(VT.G_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
-  public var TIME_FROM_LAUNCH: Double { let o = _accessor.offset(VT.TIME_FROM_LAUNCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startBOV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(E_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_COORDINATE, def: 0.0, at: VT.E_COORDINATE) }
-  public static func add(F_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F_COORDINATE, def: 0.0, at: VT.F_COORDINATE) }
-  public static func add(G_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_COORDINATE, def: 0.0, at: VT.G_COORDINATE) }
-  public static func add(E_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_DOT, def: 0.0, at: VT.E_DOT) }
-  public static func add(F_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F_DOT, def: 0.0, at: VT.F_DOT) }
-  public static func add(G_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_DOT, def: 0.0, at: VT.G_DOT) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
-  public static func add(TIME_FROM_LAUNCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_FROM_LAUNCH, def: 0.0, at: VT.TIME_FROM_LAUNCH) }
-  public static func endBOV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createBOV(
+  ///  Launch Site Information
+  public var SITE: SIT? { let o = _accessor.offset(VT.SITE); return o == 0 ? nil : SIT(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Azimuth at Launch (in Degrees)
+  public var AZIMUTH: Float32 { let o = _accessor.offset(VT.AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  References for Launch Data
+  public var REFERENCES: String? { let o = _accessor.offset(VT.REFERENCES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCES) }
+  ///  Launching Agency Name
+  public var AGENCY_NAME: String? { let o = _accessor.offset(VT.AGENCY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AGENCY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGENCY_NAME) }
+  ///  Points of Contact for Launch
+  public var POINTS_OF_CONTACT: FlatbufferVector<EPM> { return _accessor.vector(at: VT.POINTS_OF_CONTACT, byteSize: 4) }
+  ///  Operations Points of Contact for Launch
+  public var OPERATIONS_POINTS_OF_CONTACT: FlatbufferVector<EPM> { return _accessor.vector(at: VT.OPERATIONS_POINTS_OF_CONTACT, byteSize: 4) }
+  ///  Net Launch Time (UTC Format)
+  public var NET: String? { let o = _accessor.offset(VT.NET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NET) }
+  ///  Rocket Configuration Details
+  public var ROCKET_CONFIGURATION: ROC? { let o = _accessor.offset(VT.ROCKET_CONFIGURATION); return o == 0 ? nil : ROC(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Mission Name
+  public var MISSION_NAME: String? { let o = _accessor.offset(VT.MISSION_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION_NAME) }
+  ///  Description of the Mission
+  public var MISSION_DESCRIPTION: String? { let o = _accessor.offset(VT.MISSION_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSION_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION_DESCRIPTION) }
+  ///  Type of the Mission (e.g., Test Flight, Satellite Deployment)
+  public var MISSION_TYPE: String? { let o = _accessor.offset(VT.MISSION_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION_TYPE) }
+  ///  Target Orbit Type (e.g., LEO, GEO)
+  public var ORBIT_TYPE: String? { let o = _accessor.offset(VT.ORBIT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORBIT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORBIT_TYPE) }
+  ///  Weather and Environmental Conditions at Launch
+  public var WEATHER_CONDITIONS: String? { let o = _accessor.offset(VT.WEATHER_CONDITIONS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WEATHER_CONDITIONSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WEATHER_CONDITIONS) }
+  ///  Launch Outcome and Status (e.g., Successful, Failed)
+  public var LAUNCH_STATUS: String? { let o = _accessor.offset(VT.LAUNCH_STATUS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_STATUS) }
+  ///  Webcast URL for the Launch
+  public var WEBCAST_URL: String? { let o = _accessor.offset(VT.WEBCAST_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WEBCAST_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WEBCAST_URL) }
+  ///  Media Links Related to the Launch
+  public var MEDIA_LINKS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MEDIA_LINKS, byteSize: 4) }
+  ///  Earliest Possible Launch Times
+  public var EARLIEST_LAUNCH_TIMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.EARLIEST_LAUNCH_TIMES, byteSize: 4) }
+  ///  Latest Possible Launch Times
+  public var LATEST_LAUNCH_TIMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.LATEST_LAUNCH_TIMES, byteSize: 4) }
+  ///  Launch Collision Avoidance Information
+  public var LCOLA_WINDOW_CLOSURES: FlatbufferVector<String?> { return _accessor.vector(at: VT.LCOLA_WINDOW_CLOSURES, byteSize: 4) }
+  ///  Payload Information (Catalog Entities)
+  public var OBJECTS: FlatbufferVector<CAT> { return _accessor.vector(at: VT.OBJECTS, byteSize: 4) }
+  ///  Tracking and Collision Avoidance Requirements
+  public var TRACKING_REQUIREMENTS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TRACKING_REQUIREMENTS, byteSize: 4) }
+  ///  Duration of Collision Avoidance Screen (in Seconds)
+  public var COLA_SCREEN_DURATION: String? { let o = _accessor.offset(VT.COLA_SCREEN_DURATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLA_SCREEN_DURATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLA_SCREEN_DURATION) }
+  ///  Probability of Collision Threshold (Percentage)
+  public var PROBABILITY_OF_COLLISION_THRESHOLD: String? { let o = _accessor.offset(VT.PROBABILITY_OF_COLLISION_THRESHOLD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROBABILITY_OF_COLLISION_THRESHOLDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROBABILITY_OF_COLLISION_THRESHOLD) }
+  ///  Number of Required Collision Avoidance Runs
+  public var COLA_RUNS_REQUIRED: String? { let o = _accessor.offset(VT.COLA_RUNS_REQUIRED); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLA_RUNS_REQUIREDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLA_RUNS_REQUIRED) }
+  ///  Points of Contact for Collision Avoidance
+  public var COLA_POINTS_OF_CONTACT: FlatbufferVector<EPM> { return _accessor.vector(at: VT.COLA_POINTS_OF_CONTACT, byteSize: 4) }
+  ///  Orbital Parameters of the Launch
+  public var ORBITAL_PARAMETERS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ORBITAL_PARAMETERS, byteSize: 4) }
+  ///  Burn Out Vectors for the Launch
+  public var BURN_OUT_VECTORS: FlatbufferVector<BOV> { return _accessor.vector(at: VT.BURN_OUT_VECTORS, byteSize: 4) }
+  ///  APPENDED. Stable identifier of this launch in the registry that
+  ///  published it; unchanged when the launch time or status changes.
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
+  public static func startLDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  public static func add(SITE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SITE, at: VT.SITE) }
+  public static func add(AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH, def: 0.0, at: VT.AZIMUTH) }
+  public static func add(REFERENCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCES, at: VT.REFERENCES) }
+  public static func add(AGENCY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGENCY_NAME, at: VT.AGENCY_NAME) }
+  public static func addVectorOf(POINTS_OF_CONTACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS_OF_CONTACT, at: VT.POINTS_OF_CONTACT) }
+  public static func addVectorOf(OPERATIONS_POINTS_OF_CONTACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATIONS_POINTS_OF_CONTACT, at: VT.OPERATIONS_POINTS_OF_CONTACT) }
+  public static func add(NET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NET, at: VT.NET) }
+  public static func add(ROCKET_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROCKET_CONFIGURATION, at: VT.ROCKET_CONFIGURATION) }
+  public static func add(MISSION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_NAME, at: VT.MISSION_NAME) }
+  public static func add(MISSION_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_DESCRIPTION, at: VT.MISSION_DESCRIPTION) }
+  public static func add(MISSION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_TYPE, at: VT.MISSION_TYPE) }
+  public static func add(ORBIT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_TYPE, at: VT.ORBIT_TYPE) }
+  public static func add(WEATHER_CONDITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEATHER_CONDITIONS, at: VT.WEATHER_CONDITIONS) }
+  public static func add(LAUNCH_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_STATUS, at: VT.LAUNCH_STATUS) }
+  public static func add(WEBCAST_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEBCAST_URL, at: VT.WEBCAST_URL) }
+  public static func addVectorOf(MEDIA_LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEDIA_LINKS, at: VT.MEDIA_LINKS) }
+  public static func addVectorOf(EARLIEST_LAUNCH_TIMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EARLIEST_LAUNCH_TIMES, at: VT.EARLIEST_LAUNCH_TIMES) }
+  public static func addVectorOf(LATEST_LAUNCH_TIMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LATEST_LAUNCH_TIMES, at: VT.LATEST_LAUNCH_TIMES) }
+  public static func addVectorOf(LCOLA_WINDOW_CLOSURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LCOLA_WINDOW_CLOSURES, at: VT.LCOLA_WINDOW_CLOSURES) }
+  public static func addVectorOf(OBJECTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECTS, at: VT.OBJECTS) }
+  public static func addVectorOf(TRACKING_REQUIREMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKING_REQUIREMENTS, at: VT.TRACKING_REQUIREMENTS) }
+  public static func add(COLA_SCREEN_DURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLA_SCREEN_DURATION, at: VT.COLA_SCREEN_DURATION) }
+  public static func add(PROBABILITY_OF_COLLISION_THRESHOLD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROBABILITY_OF_COLLISION_THRESHOLD, at: VT.PROBABILITY_OF_COLLISION_THRESHOLD) }
+  public static func add(COLA_RUNS_REQUIRED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLA_RUNS_REQUIRED, at: VT.COLA_RUNS_REQUIRED) }
+  public static func addVectorOf(COLA_POINTS_OF_CONTACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLA_POINTS_OF_CONTACT, at: VT.COLA_POINTS_OF_CONTACT) }
+  public static func addVectorOf(ORBITAL_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBITAL_PARAMETERS, at: VT.ORBITAL_PARAMETERS) }
+  public static func addVectorOf(BURN_OUT_VECTORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BURN_OUT_VECTORS, at: VT.BURN_OUT_VECTORS) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func endLDM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createLDM(
     _ fbb: inout FlatBufferBuilder,
-    E_COORDINATE: Double = 0.0,
-    F_COORDINATE: Double = 0.0,
-    G_COORDINATE: Double = 0.0,
-    E_DOT: Double = 0.0,
-    F_DOT: Double = 0.0,
-    G_DOT: Double = 0.0,
-    EPOCHOffset EPOCH: Offset = Offset(),
-    TIME_FROM_LAUNCH: Double = 0.0
+    SITEOffset SITE: Offset = Offset(),
+    AZIMUTH: Float32 = 0.0,
+    REFERENCESOffset REFERENCES: Offset = Offset(),
+    AGENCY_NAMEOffset AGENCY_NAME: Offset = Offset(),
+    POINTS_OF_CONTACTVectorOffset POINTS_OF_CONTACT: Offset = Offset(),
+    OPERATIONS_POINTS_OF_CONTACTVectorOffset OPERATIONS_POINTS_OF_CONTACT: Offset = Offset(),
+    NETOffset NET: Offset = Offset(),
+    ROCKET_CONFIGURATIONOffset ROCKET_CONFIGURATION: Offset = Offset(),
+    MISSION_NAMEOffset MISSION_NAME: Offset = Offset(),
+    MISSION_DESCRIPTIONOffset MISSION_DESCRIPTION: Offset = Offset(),
+    MISSION_TYPEOffset MISSION_TYPE: Offset = Offset(),
+    ORBIT_TYPEOffset ORBIT_TYPE: Offset = Offset(),
+    WEATHER_CONDITIONSOffset WEATHER_CONDITIONS: Offset = Offset(),
+    LAUNCH_STATUSOffset LAUNCH_STATUS: Offset = Offset(),
+    WEBCAST_URLOffset WEBCAST_URL: Offset = Offset(),
+    MEDIA_LINKSVectorOffset MEDIA_LINKS: Offset = Offset(),
+    EARLIEST_LAUNCH_TIMESVectorOffset EARLIEST_LAUNCH_TIMES: Offset = Offset(),
+    LATEST_LAUNCH_TIMESVectorOffset LATEST_LAUNCH_TIMES: Offset = Offset(),
+    LCOLA_WINDOW_CLOSURESVectorOffset LCOLA_WINDOW_CLOSURES: Offset = Offset(),
+    OBJECTSVectorOffset OBJECTS: Offset = Offset(),
+    TRACKING_REQUIREMENTSVectorOffset TRACKING_REQUIREMENTS: Offset = Offset(),
+    COLA_SCREEN_DURATIONOffset COLA_SCREEN_DURATION: Offset = Offset(),
+    PROBABILITY_OF_COLLISION_THRESHOLDOffset PROBABILITY_OF_COLLISION_THRESHOLD: Offset = Offset(),
+    COLA_RUNS_REQUIREDOffset COLA_RUNS_REQUIRED: Offset = Offset(),
+    COLA_POINTS_OF_CONTACTVectorOffset COLA_POINTS_OF_CONTACT: Offset = Offset(),
+    ORBITAL_PARAMETERSVectorOffset ORBITAL_PARAMETERS: Offset = Offset(),
+    BURN_OUT_VECTORSVectorOffset BURN_OUT_VECTORS: Offset = Offset(),
+    IDOffset ID: Offset = Offset()
   ) -> Offset {
-    let __start = BOV.startBOV(&fbb)
-    BOV.add(E_COORDINATE: E_COORDINATE, &fbb)
-    BOV.add(F_COORDINATE: F_COORDINATE, &fbb)
-    BOV.add(G_COORDINATE: G_COORDINATE, &fbb)
-    BOV.add(E_DOT: E_DOT, &fbb)
-    BOV.add(F_DOT: F_DOT, &fbb)
-    BOV.add(G_DOT: G_DOT, &fbb)
-    BOV.add(EPOCH: EPOCH, &fbb)
-    BOV.add(TIME_FROM_LAUNCH: TIME_FROM_LAUNCH, &fbb)
-    return BOV.endBOV(&fbb, start: __start)
+    let __start = LDM.startLDM(&fbb)
+    LDM.add(SITE: SITE, &fbb)
+    LDM.add(AZIMUTH: AZIMUTH, &fbb)
+    LDM.add(REFERENCES: REFERENCES, &fbb)
+    LDM.add(AGENCY_NAME: AGENCY_NAME, &fbb)
+    LDM.addVectorOf(POINTS_OF_CONTACT: POINTS_OF_CONTACT, &fbb)
+    LDM.addVectorOf(OPERATIONS_POINTS_OF_CONTACT: OPERATIONS_POINTS_OF_CONTACT, &fbb)
+    LDM.add(NET: NET, &fbb)
+    LDM.add(ROCKET_CONFIGURATION: ROCKET_CONFIGURATION, &fbb)
+    LDM.add(MISSION_NAME: MISSION_NAME, &fbb)
+    LDM.add(MISSION_DESCRIPTION: MISSION_DESCRIPTION, &fbb)
+    LDM.add(MISSION_TYPE: MISSION_TYPE, &fbb)
+    LDM.add(ORBIT_TYPE: ORBIT_TYPE, &fbb)
+    LDM.add(WEATHER_CONDITIONS: WEATHER_CONDITIONS, &fbb)
+    LDM.add(LAUNCH_STATUS: LAUNCH_STATUS, &fbb)
+    LDM.add(WEBCAST_URL: WEBCAST_URL, &fbb)
+    LDM.addVectorOf(MEDIA_LINKS: MEDIA_LINKS, &fbb)
+    LDM.addVectorOf(EARLIEST_LAUNCH_TIMES: EARLIEST_LAUNCH_TIMES, &fbb)
+    LDM.addVectorOf(LATEST_LAUNCH_TIMES: LATEST_LAUNCH_TIMES, &fbb)
+    LDM.addVectorOf(LCOLA_WINDOW_CLOSURES: LCOLA_WINDOW_CLOSURES, &fbb)
+    LDM.addVectorOf(OBJECTS: OBJECTS, &fbb)
+    LDM.addVectorOf(TRACKING_REQUIREMENTS: TRACKING_REQUIREMENTS, &fbb)
+    LDM.add(COLA_SCREEN_DURATION: COLA_SCREEN_DURATION, &fbb)
+    LDM.add(PROBABILITY_OF_COLLISION_THRESHOLD: PROBABILITY_OF_COLLISION_THRESHOLD, &fbb)
+    LDM.add(COLA_RUNS_REQUIRED: COLA_RUNS_REQUIRED, &fbb)
+    LDM.addVectorOf(COLA_POINTS_OF_CONTACT: COLA_POINTS_OF_CONTACT, &fbb)
+    LDM.addVectorOf(ORBITAL_PARAMETERS: ORBITAL_PARAMETERS, &fbb)
+    LDM.addVectorOf(BURN_OUT_VECTORS: BURN_OUT_VECTORS, &fbb)
+    LDM.add(ID: ID, &fbb)
+    return LDM.endLDM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.E_COORDINATE, fieldName: "E_COORDINATE", required: false, type: Double.self)
-    try _v.visit(field: VT.F_COORDINATE, fieldName: "F_COORDINATE", required: false, type: Double.self)
-    try _v.visit(field: VT.G_COORDINATE, fieldName: "G_COORDINATE", required: false, type: Double.self)
-    try _v.visit(field: VT.E_DOT, fieldName: "E_DOT", required: false, type: Double.self)
-    try _v.visit(field: VT.F_DOT, fieldName: "F_DOT", required: false, type: Double.self)
-    try _v.visit(field: VT.G_DOT, fieldName: "G_DOT", required: false, type: Double.self)
-    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TIME_FROM_LAUNCH, fieldName: "TIME_FROM_LAUNCH", required: false, type: Double.self)
+    try _v.visit(field: VT.SITE, fieldName: "SITE", required: false, type: ForwardOffset<SIT>.self)
+    try _v.visit(field: VT.AZIMUTH, fieldName: "AZIMUTH", required: false, type: Float32.self)
+    try _v.visit(field: VT.REFERENCES, fieldName: "REFERENCES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AGENCY_NAME, fieldName: "AGENCY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POINTS_OF_CONTACT, fieldName: "POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<EPM>, EPM>>.self)
+    try _v.visit(field: VT.OPERATIONS_POINTS_OF_CONTACT, fieldName: "OPERATIONS_POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<EPM>, EPM>>.self)
+    try _v.visit(field: VT.NET, fieldName: "NET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROCKET_CONFIGURATION, fieldName: "ROCKET_CONFIGURATION", required: false, type: ForwardOffset<ROC>.self)
+    try _v.visit(field: VT.MISSION_NAME, fieldName: "MISSION_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MISSION_DESCRIPTION, fieldName: "MISSION_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MISSION_TYPE, fieldName: "MISSION_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORBIT_TYPE, fieldName: "ORBIT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WEATHER_CONDITIONS, fieldName: "WEATHER_CONDITIONS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_STATUS, fieldName: "LAUNCH_STATUS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WEBCAST_URL, fieldName: "WEBCAST_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEDIA_LINKS, fieldName: "MEDIA_LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.EARLIEST_LAUNCH_TIMES, fieldName: "EARLIEST_LAUNCH_TIMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.LATEST_LAUNCH_TIMES, fieldName: "LATEST_LAUNCH_TIMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.LCOLA_WINDOW_CLOSURES, fieldName: "LCOLA_WINDOW_CLOSURES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OBJECTS, fieldName: "OBJECTS", required: false, type: ForwardOffset<Vector<ForwardOffset<CAT>, CAT>>.self)
+    try _v.visit(field: VT.TRACKING_REQUIREMENTS, fieldName: "TRACKING_REQUIREMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COLA_SCREEN_DURATION, fieldName: "COLA_SCREEN_DURATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROBABILITY_OF_COLLISION_THRESHOLD, fieldName: "PROBABILITY_OF_COLLISION_THRESHOLD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLA_RUNS_REQUIRED, fieldName: "COLA_RUNS_REQUIRED", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLA_POINTS_OF_CONTACT, fieldName: "COLA_POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<EPM>, EPM>>.self)
+    try _v.visit(field: VT.ORBITAL_PARAMETERS, fieldName: "ORBITAL_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.BURN_OUT_VECTORS, fieldName: "BURN_OUT_VECTORS", required: false, type: ForwardOffset<Vector<ForwardOffset<BOV>, BOV>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

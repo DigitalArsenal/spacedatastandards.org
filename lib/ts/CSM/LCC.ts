@@ -34,7 +34,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 
 OWNER():legacyCountryCode {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : legacyCountryCode.AB;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : legacyCountryCode.AB;
 }
 
 /**

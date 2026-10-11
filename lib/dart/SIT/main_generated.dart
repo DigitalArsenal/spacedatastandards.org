@@ -5,280 +5,110 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Different types of polarization in EMT
-enum PolarizationType {
-  linear(0),
-  circular(1),
-  elliptical(2),
-  unpolarized(3);
+///  Enum for the type of site
+enum SiteType {
+  LAUNCH_SITE(0),
+  OBSERVATION_STATION(1),
+  HOBBYIST_OBSERVER(2),
+  RESEARCH_FACILITY(3),
+  SATELLITE_GROUND_STATION(4),
+  SPACEPORT(5),
+  MILITARY_BASE(6),
+  WEATHER_STATION(7),
+  ASTRONOMICAL_OBSERVATORY(8),
+  EDUCATIONAL_INSTITUTE(9),
+  COMMUNICATION_HUB(10),
+  POWER_PLANT(11),
+  INDUSTRIAL_COMPLEX(12),
+  TRANSPORTATION_HUB(13),
+  URBAN_AREA(14),
+  NATIONAL_PARK(15),
+  HISTORICAL_SITE(16),
+  OTHER(17);
 
   final int value;
-  const PolarizationType(this.value);
+  const SiteType(this.value);
 
-  factory PolarizationType.fromValue(int value) {
+  factory SiteType.fromValue(int value) {
     switch (value) {
-      case 0: return PolarizationType.linear;
-      case 1: return PolarizationType.circular;
-      case 2: return PolarizationType.elliptical;
-      case 3: return PolarizationType.unpolarized;
+      case 0: return SiteType.LAUNCH_SITE;
+      case 1: return SiteType.OBSERVATION_STATION;
+      case 2: return SiteType.HOBBYIST_OBSERVER;
+      case 3: return SiteType.RESEARCH_FACILITY;
+      case 4: return SiteType.SATELLITE_GROUND_STATION;
+      case 5: return SiteType.SPACEPORT;
+      case 6: return SiteType.MILITARY_BASE;
+      case 7: return SiteType.WEATHER_STATION;
+      case 8: return SiteType.ASTRONOMICAL_OBSERVATORY;
+      case 9: return SiteType.EDUCATIONAL_INSTITUTE;
+      case 10: return SiteType.COMMUNICATION_HUB;
+      case 11: return SiteType.POWER_PLANT;
+      case 12: return SiteType.INDUSTRIAL_COMPLEX;
+      case 13: return SiteType.TRANSPORTATION_HUB;
+      case 14: return SiteType.URBAN_AREA;
+      case 15: return SiteType.NATIONAL_PARK;
+      case 16: return SiteType.HISTORICAL_SITE;
+      case 17: return SiteType.OTHER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static PolarizationType? _createOrNull(int? value) =>
-      value == null ? null : PolarizationType.fromValue(value);
+  static SiteType? _createOrNull(int? value) =>
+      value == null ? null : SiteType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<PolarizationType> reader = _PolarizationTypeReader();
+  static const int maxValue = 17;
+  static const fb.Reader<SiteType> reader = _SiteTypeReader();
 }
 
-class _PolarizationTypeReader extends fb.Reader<PolarizationType> {
-  const _PolarizationTypeReader();
+class _SiteTypeReader extends fb.Reader<SiteType> {
+  const _SiteTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  PolarizationType read(fb.BufferContext bc, int offset) =>
-      PolarizationType.fromValue(const fb.Int8Reader().read(bc, offset));
+  SiteType read(fb.BufferContext bc, int offset) =>
+      SiteType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Simple polarization types
-enum SimplePolarization {
-  vertical(0),
-  horizontal(1),
-  leftHandCircular(2),
-  rightHandCircular(3);
-
-  final int value;
-  const SimplePolarization(this.value);
-
-  factory SimplePolarization.fromValue(int value) {
-    switch (value) {
-      case 0: return SimplePolarization.vertical;
-      case 1: return SimplePolarization.horizontal;
-      case 2: return SimplePolarization.leftHandCircular;
-      case 3: return SimplePolarization.rightHandCircular;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static SimplePolarization? _createOrNull(int? value) =>
-      value == null ? null : SimplePolarization.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<SimplePolarization> reader = _SimplePolarizationReader();
-}
-
-class _SimplePolarizationReader extends fb.Reader<SimplePolarization> {
-  const _SimplePolarizationReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  SimplePolarization read(fb.BufferContext bc, int offset) =>
-      SimplePolarization.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Enum for the mode of data (real, simulated, synthetic)
-enum DataMode {
-  EXERCISE(0),
-  REAL(1),
-  SIMULATED(2),
-  TEST(3);
-
-  final int value;
-  const DataMode(this.value);
-
-  factory DataMode.fromValue(int value) {
-    switch (value) {
-      case 0: return DataMode.EXERCISE;
-      case 1: return DataMode.REAL;
-      case 2: return DataMode.SIMULATED;
-      case 3: return DataMode.TEST;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static DataMode? _createOrNull(int? value) =>
-      value == null ? null : DataMode.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<DataMode> reader = _DataModeReader();
-}
-
-class _DataModeReader extends fb.Reader<DataMode> {
-  const _DataModeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  DataMode read(fb.BufferContext bc, int offset) =>
-      DataMode.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-enum DeviceType {
-  UNKNOWN(0),
-  OPTICAL(1),
-  INFRARED_SENSOR(2),
-  ULTRAVIOLET_SENSOR(3),
-  X_RAY_SENSOR(4),
-  GAMMA_RAY_SENSOR(5),
-  RADAR(6),
-  PHASED_ARRAY_RADAR(7),
-  SYNTHETIC_APERTURE_RADAR(8),
-  BISTATIC_RADIO_TELESCOPE(9),
-  RADIO_TELESCOPE(10),
-  ATMOSPHERIC_SENSOR(11),
-  SPACE_WEATHER_SENSOR(12),
-  ENVIRONMENTAL_SENSOR(13),
-  SEISMIC_SENSOR(14),
-  GRAVIMETRIC_SENSOR(15),
-  MAGNETIC_SENSOR(16),
-  ELECTROMAGNETIC_SENSOR(17),
-  THERMAL_SENSOR(18),
-  CHEMICAL_SENSOR(19),
-  BIOLOGICAL_SENSOR(20),
-  RADIATION_SENSOR(21),
-  PARTICLE_DETECTOR(22),
-  LIDAR(23),
-  SONAR(24),
-  TELESCOPE(25),
-  SPECTROSCOPIC_SENSOR(26),
-  PHOTOMETRIC_SENSOR(27),
-  POLARIMETRIC_SENSOR(28),
-  INTERFEROMETRIC_SENSOR(29),
-  MULTISPECTRAL_SENSOR(30),
-  HYPERSPECTRAL_SENSOR(31),
-  GPS_RECEIVER(32),
-  RADIO_COMMUNICATIONS(33),
-  LASER_COMMUNICATIONS(34),
-  SATELLITE_COMMUNICATIONS(35),
-  LASER_INSTRUMENT(36),
-  RF_ANALYZER(37),
-  IONOSPHERIC_SENSOR(38),
-  LASER_IMAGING(39),
-  OPTICAL_TELESCOPE(40),
-  HIGH_RESOLUTION_OPTICAL(41),
-  RADIO(42),
-  MICROWAVE_TRANSMITTER(43),
-  RF_MONITOR(44),
-  HF_RADIO_COMMUNICATIONS(45);
-
-  final int value;
-  const DeviceType(this.value);
-
-  factory DeviceType.fromValue(int value) {
-    switch (value) {
-      case 0: return DeviceType.UNKNOWN;
-      case 1: return DeviceType.OPTICAL;
-      case 2: return DeviceType.INFRARED_SENSOR;
-      case 3: return DeviceType.ULTRAVIOLET_SENSOR;
-      case 4: return DeviceType.X_RAY_SENSOR;
-      case 5: return DeviceType.GAMMA_RAY_SENSOR;
-      case 6: return DeviceType.RADAR;
-      case 7: return DeviceType.PHASED_ARRAY_RADAR;
-      case 8: return DeviceType.SYNTHETIC_APERTURE_RADAR;
-      case 9: return DeviceType.BISTATIC_RADIO_TELESCOPE;
-      case 10: return DeviceType.RADIO_TELESCOPE;
-      case 11: return DeviceType.ATMOSPHERIC_SENSOR;
-      case 12: return DeviceType.SPACE_WEATHER_SENSOR;
-      case 13: return DeviceType.ENVIRONMENTAL_SENSOR;
-      case 14: return DeviceType.SEISMIC_SENSOR;
-      case 15: return DeviceType.GRAVIMETRIC_SENSOR;
-      case 16: return DeviceType.MAGNETIC_SENSOR;
-      case 17: return DeviceType.ELECTROMAGNETIC_SENSOR;
-      case 18: return DeviceType.THERMAL_SENSOR;
-      case 19: return DeviceType.CHEMICAL_SENSOR;
-      case 20: return DeviceType.BIOLOGICAL_SENSOR;
-      case 21: return DeviceType.RADIATION_SENSOR;
-      case 22: return DeviceType.PARTICLE_DETECTOR;
-      case 23: return DeviceType.LIDAR;
-      case 24: return DeviceType.SONAR;
-      case 25: return DeviceType.TELESCOPE;
-      case 26: return DeviceType.SPECTROSCOPIC_SENSOR;
-      case 27: return DeviceType.PHOTOMETRIC_SENSOR;
-      case 28: return DeviceType.POLARIMETRIC_SENSOR;
-      case 29: return DeviceType.INTERFEROMETRIC_SENSOR;
-      case 30: return DeviceType.MULTISPECTRAL_SENSOR;
-      case 31: return DeviceType.HYPERSPECTRAL_SENSOR;
-      case 32: return DeviceType.GPS_RECEIVER;
-      case 33: return DeviceType.RADIO_COMMUNICATIONS;
-      case 34: return DeviceType.LASER_COMMUNICATIONS;
-      case 35: return DeviceType.SATELLITE_COMMUNICATIONS;
-      case 36: return DeviceType.LASER_INSTRUMENT;
-      case 37: return DeviceType.RF_ANALYZER;
-      case 38: return DeviceType.IONOSPHERIC_SENSOR;
-      case 39: return DeviceType.LASER_IMAGING;
-      case 40: return DeviceType.OPTICAL_TELESCOPE;
-      case 41: return DeviceType.HIGH_RESOLUTION_OPTICAL;
-      case 42: return DeviceType.RADIO;
-      case 43: return DeviceType.MICROWAVE_TRANSMITTER;
-      case 44: return DeviceType.RF_MONITOR;
-      case 45: return DeviceType.HF_RADIO_COMMUNICATIONS;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static DeviceType? _createOrNull(int? value) =>
-      value == null ? null : DeviceType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 45;
-  static const fb.Reader<DeviceType> reader = _DeviceTypeReader();
-}
-
-class _DeviceTypeReader extends fb.Reader<DeviceType> {
-  const _DeviceTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  DeviceType read(fb.BufferContext bc, int offset) =>
-      DeviceType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Frequency range with lower and upper limits
-class FrequencyRange {
-  FrequencyRange._(this._bc, this._bcOffset);
-  factory FrequencyRange(List<int> bytes) {
+///  Geometry table with information about geometric properties
+class Geometry {
+  Geometry._(this._bc, this._bcOffset);
+  factory Geometry(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<FrequencyRange> reader = _FrequencyRangeReader();
+  static const fb.Reader<Geometry> reader = _GeometryReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Lower frequency in MHz
-  double get LOWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Upper frequency in MHz
-  double get UPPER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Type of geometry
+  String? get GEOMETRY_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get geometryType => GEOMETRY_TYPE;
+  ///  Coordinates of the geometry
+  List<double>? get COORDINATES => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 6);
 
   @override
   String toString() {
-    return 'FrequencyRange{LOWER: ${LOWER}, UPPER: ${UPPER}}';
+    return 'Geometry{geometryType: ${geometryType}, COORDINATES: ${COORDINATES}}';
   }
 }
 
-class _FrequencyRangeReader extends fb.TableReader<FrequencyRange> {
-  const _FrequencyRangeReader();
+class _GeometryReader extends fb.TableReader<Geometry> {
+  const _GeometryReader();
 
   @override
-  FrequencyRange createObject(fb.BufferContext bc, int offset) =>
-    FrequencyRange._(bc, offset);
+  Geometry createObject(fb.BufferContext bc, int offset) =>
+    Geometry._(bc, offset);
 }
 
-class FrequencyRangeBuilder {
-  FrequencyRangeBuilder(this.fbBuilder);
+class GeometryBuilder {
+  GeometryBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -286,198 +116,11 @@ class FrequencyRangeBuilder {
     fbBuilder.startTable(2);
   }
 
-  int addLower(double? LOWER) {
-    fbBuilder.addFloat64(0, LOWER);
-    return fbBuilder.offset;
-  }
-  int addUpper(double? UPPER) {
-    fbBuilder.addFloat64(1, UPPER);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FrequencyRangeObjectBuilder extends fb.ObjectBuilder {
-  final double? _LOWER;
-  final double? _UPPER;
-
-  FrequencyRangeObjectBuilder({
-    double? LOWER,
-    double? UPPER,
-  })
-      : _LOWER = LOWER,
-        _UPPER = UPPER;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
-    fbBuilder.addFloat64(0, _LOWER);
-    fbBuilder.addFloat64(1, _UPPER);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Stokes parameters, representing different aspects of polarization
-class StokesParameters {
-  StokesParameters._(this._bc, this._bcOffset);
-  factory StokesParameters(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<StokesParameters> reader = _StokesParametersReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Intensity
-  double get I => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Linear polarization
-  double get Q => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  ///  Another linear polarization, orthogonal to Q
-  double get U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///  Circular polarization
-  double get V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-
-  @override
-  String toString() {
-    return 'StokesParameters{I: ${I}, Q: ${Q}, U: ${U}, V: ${V}}';
-  }
-}
-
-class _StokesParametersReader extends fb.TableReader<StokesParameters> {
-  const _StokesParametersReader();
-
-  @override
-  StokesParameters createObject(fb.BufferContext bc, int offset) =>
-    StokesParameters._(bc, offset);
-}
-
-class StokesParametersBuilder {
-  StokesParametersBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addI(double? I) {
-    fbBuilder.addFloat64(0, I);
-    return fbBuilder.offset;
-  }
-  int addQ(double? Q) {
-    fbBuilder.addFloat64(1, Q);
-    return fbBuilder.offset;
-  }
-  int addU(double? U) {
-    fbBuilder.addFloat64(2, U);
-    return fbBuilder.offset;
-  }
-  int addV(double? V) {
-    fbBuilder.addFloat64(3, V);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class StokesParametersObjectBuilder extends fb.ObjectBuilder {
-  final double? _I;
-  final double? _Q;
-  final double? _U;
-  final double? _V;
-
-  StokesParametersObjectBuilder({
-    double? I,
-    double? Q,
-    double? U,
-    double? V,
-  })
-      : _I = I,
-        _Q = Q,
-        _U = U,
-        _V = V;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(4);
-    fbBuilder.addFloat64(0, _I);
-    fbBuilder.addFloat64(1, _Q);
-    fbBuilder.addFloat64(2, _U);
-    fbBuilder.addFloat64(3, _V);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Table representing a frequency band with a name and frequency range
-class Band {
-  Band._(this._bc, this._bcOffset);
-  factory Band(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<Band> reader = _BandReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Name of the band
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Frequency range of the band
-  FrequencyRange? get FREQUENCY_RANGE => FrequencyRange.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  FrequencyRange? get frequencyRange => FREQUENCY_RANGE;
-
-  @override
-  String toString() {
-    return 'Band{NAME: ${NAME}, frequencyRange: ${frequencyRange}}';
-  }
-}
-
-class _BandReader extends fb.TableReader<Band> {
-  const _BandReader();
-
-  @override
-  Band createObject(fb.BufferContext bc, int offset) =>
-    Band._(bc, offset);
-}
-
-class BandBuilder {
-  BandBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addNameOffset(int? offset) {
+  int addGeometryTypeOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addFrequencyRangeOffset(int? offset) {
+  int addCoordinatesOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
@@ -487,27 +130,28 @@ class BandBuilder {
   }
 }
 
-class BandObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final FrequencyRangeObjectBuilder? _FREQUENCY_RANGE;
+class GeometryObjectBuilder extends fb.ObjectBuilder {
+  final String? _GEOMETRY_TYPE;
+  final List<double>? _COORDINATES;
 
-  BandObjectBuilder({
-    String? NAME,
-    FrequencyRangeObjectBuilder? FREQUENCY_RANGE,
-    FrequencyRangeObjectBuilder? frequencyRange,
+  GeometryObjectBuilder({
+    String? GEOMETRY_TYPE,
+    String? geometryType,
+    List<double>? COORDINATES,
   })
-      : _NAME = NAME,
-        _FREQUENCY_RANGE = frequencyRange ?? FREQUENCY_RANGE;
+      : _GEOMETRY_TYPE = geometryType ?? GEOMETRY_TYPE,
+        _COORDINATES = COORDINATES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? FREQUENCY_RANGEOffset = _FREQUENCY_RANGE?.getOrCreateOffset(fbBuilder);
+    final int? GEOMETRY_TYPEOffset = _GEOMETRY_TYPE == null ? null
+        : fbBuilder.writeString(_GEOMETRY_TYPE!);
+    final int? COORDINATESOffset = _COORDINATES == null ? null
+        : fbBuilder.writeListFloat32(_COORDINATES!);
     fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, FREQUENCY_RANGEOffset);
+    fbBuilder.addOffset(0, GEOMETRY_TYPEOffset);
+    fbBuilder.addOffset(1, COORDINATESOffset);
     return fbBuilder.endTable();
   }
 
@@ -519,118 +163,100 @@ class BandObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Integrated Device Message
-class IDM {
-  IDM._(this._bc, this._bcOffset);
-  factory IDM(List<int> bytes) {
+///  Site Information Message
+class SIT {
+  SIT._(this._bc, this._bcOffset);
+  factory SIT(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<IDM> reader = _IDMReader();
+  static const fb.Reader<SIT> reader = _SITReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Unique identifier for the EMT
+  ///  Unique identifier for the site, BE_NUMBER
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Name of the EMT
+  ///  Name of the site
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Mode of the data (real, simulated, synthetic)
-  DataMode get DATA_MODE => DataMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  DataMode get dataMode => DATA_MODE;
-  ///  Uplink frequency range
-  FrequencyRange? get UPLINK => FrequencyRange.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Downlink frequency range
-  FrequencyRange? get DOWNLINK => FrequencyRange.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Beacon frequency range
-  FrequencyRange? get BEACON => FrequencyRange.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Bands associated with the EMT
-  List<Band>? get BAND => const fb.ListReader<Band>(Band.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  ///  Type of polarization used
-  PolarizationType get POLARIZATION_TYPE => PolarizationType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  PolarizationType get polarizationType => POLARIZATION_TYPE;
-  ///  Simple polarization configuration
-  SimplePolarization get SIMPLE_POLARIZATION => SimplePolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  SimplePolarization get simplePolarization => SIMPLE_POLARIZATION;
-  ///  Stokes parameters for polarization characterization
-  StokesParameters? get STOKES_PARAMETERS => StokesParameters.reader.vTableGetNullable(_bc, _bcOffset, 22);
-  StokesParameters? get stokesParameters => STOKES_PARAMETERS;
-  ///  Power required in Watts
-  double get POWER_REQUIRED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get powerRequired => POWER_REQUIRED;
-  ///  Type of power (eg. AC or DC)
-  String? get POWER_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get powerType => POWER_TYPE;
-  ///  Indicates if the EMT can transmit
-  bool get TRANSMIT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
-  ///  Indicates if the EMT can receive
-  bool get RECEIVE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
-  ///  Type of the sensor
-  DeviceType get SENSOR_TYPE => DeviceType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0));
-  DeviceType get sensorType => SENSOR_TYPE;
-  ///  Source of the data
-  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  ///  Timestamp of the last observation
-  String? get LAST_OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  String? get lastObTime => LAST_OB_TIME;
-  ///  Lower left elevation limit
-  double get LOWER_LEFT_ELEVATION_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get lowerLeftElevationLimit => LOWER_LEFT_ELEVATION_LIMIT;
-  ///  Upper left azimuth limit
-  double get UPPER_LEFT_AZIMUTH_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  double get upperLeftAzimuthLimit => UPPER_LEFT_AZIMUTH_LIMIT;
-  ///  Lower right elevation limit
-  double get LOWER_RIGHT_ELEVATION_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  double get lowerRightElevationLimit => LOWER_RIGHT_ELEVATION_LIMIT;
-  ///  Lower left azimuth limit
-  double get LOWER_LEFT_AZIMUTH_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get lowerLeftAzimuthLimit => LOWER_LEFT_AZIMUTH_LIMIT;
-  ///  Upper right elevation limit
-  double get UPPER_RIGHT_ELEVATION_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get upperRightElevationLimit => UPPER_RIGHT_ELEVATION_LIMIT;
-  ///  Upper right azimuth limit
-  double get UPPER_RIGHT_AZIMUTH_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get upperRightAzimuthLimit => UPPER_RIGHT_AZIMUTH_LIMIT;
-  ///  Lower right azimuth limit
-  double get LOWER_RIGHT_AZIMUTH_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  double get lowerRightAzimuthLimit => LOWER_RIGHT_AZIMUTH_LIMIT;
-  ///  Upper left elevation limit
-  double get UPPER_LEFT_ELEVATION_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  double get upperLeftElevationLimit => UPPER_LEFT_ELEVATION_LIMIT;
-  ///  Right geostationary belt limit
-  double get RIGHT_GEO_BELT_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  double get rightGeoBeltLimit => RIGHT_GEO_BELT_LIMIT;
-  ///  Left geostationary belt limit
-  double get LEFT_GEO_BELT_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  double get leftGeoBeltLimit => LEFT_GEO_BELT_LIMIT;
-  ///  Magnitude limit of the sensor
-  double get MAGNITUDE_LIMIT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  double get magnitudeLimit => MAGNITUDE_LIMIT;
+  ///  Abbreviation
+  String? get ABBREVIATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Site type as defined in SiteType enum
+  SiteType get SITE_TYPE => SiteType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  SiteType get siteType => SITE_TYPE;
+  ///  Site type CATCODE
+  String? get CATCODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Network identifier
+  String? get NETWORK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Latitude of the site
+  double get LATITUDE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Longitude of the site
+  double get LONGITUDE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Altitude of the site
+  double get ALTITUDE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Geometry of the site
+  Geometry? get GEOMETRY => Geometry.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Center point geometry coordinates
+  List<double>? get CENTER_POINT_GEOMETRY => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<double>? get centerPointGeometry => CENTER_POINT_GEOMETRY;
+  ///  Classification marking of the site
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  CTR ISO 3166 Numeric code as string
+  String? get CTR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get ctrId => CTR_ID;
+  ///  Identifier of the user who created the site data
+  String? get CREATED_BY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get createdBy => CREATED_BY;
+  ///  Description of the site
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  URL for the 3D model of the site
+  String? get MODEL_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get modelUrl => MODEL_URL;
+  ///  Source of the site data
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
   ///  Indicates if the site is taskable
-  bool get TASKABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 60, false);
+  bool get TASKABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 38, false);
+  ///  Operational status of the site (e.g., active, inactive, under construction)
+  String? get OPERATIONAL_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get operationalStatus => OPERATIONAL_STATUS;
+  ///  Date of establishment
+  String? get ESTABLISHMENT_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get establishmentDate => ESTABLISHMENT_DATE;
+  ///  Contact information for the site
+  String? get CONTACT_INFO => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get contactInfo => CONTACT_INFO;
+  ///  Environmental impact or considerations
+  String? get ENVIRONMENTAL_IMPACT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get environmentalImpact => ENVIRONMENTAL_IMPACT;
+  ///  Accessibility and infrastructure details
+  String? get ACCESSIBILITY_INFRA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get accessibilityInfra => ACCESSIBILITY_INFRA;
+  ///  Vector of Integrated Devices (IDM)
+  List<IDM>? get INTEGRATED_DEVICES => const fb.ListReader<IDM>(IDM.reader).vTableGetNullable(_bc, _bcOffset, 50);
+  List<IDM>? get integratedDevices => INTEGRATED_DEVICES;
 
   @override
   String toString() {
-    return 'IDM{ID: ${ID}, NAME: ${NAME}, dataMode: ${dataMode}, UPLINK: ${UPLINK}, DOWNLINK: ${DOWNLINK}, BEACON: ${BEACON}, BAND: ${BAND}, polarizationType: ${polarizationType}, simplePolarization: ${simplePolarization}, stokesParameters: ${stokesParameters}, powerRequired: ${powerRequired}, powerType: ${powerType}, TRANSMIT: ${TRANSMIT}, RECEIVE: ${RECEIVE}, sensorType: ${sensorType}, SOURCE: ${SOURCE}, lastObTime: ${lastObTime}, lowerLeftElevationLimit: ${lowerLeftElevationLimit}, upperLeftAzimuthLimit: ${upperLeftAzimuthLimit}, lowerRightElevationLimit: ${lowerRightElevationLimit}, lowerLeftAzimuthLimit: ${lowerLeftAzimuthLimit}, upperRightElevationLimit: ${upperRightElevationLimit}, upperRightAzimuthLimit: ${upperRightAzimuthLimit}, lowerRightAzimuthLimit: ${lowerRightAzimuthLimit}, upperLeftElevationLimit: ${upperLeftElevationLimit}, rightGeoBeltLimit: ${rightGeoBeltLimit}, leftGeoBeltLimit: ${leftGeoBeltLimit}, magnitudeLimit: ${magnitudeLimit}, TASKABLE: ${TASKABLE}}';
+    return 'SIT{ID: ${ID}, NAME: ${NAME}, ABBREVIATION: ${ABBREVIATION}, siteType: ${siteType}, CATCODE: ${CATCODE}, NETWORK: ${NETWORK}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALTITUDE: ${ALTITUDE}, GEOMETRY: ${GEOMETRY}, centerPointGeometry: ${centerPointGeometry}, CLASSIFICATION: ${CLASSIFICATION}, ctrId: ${ctrId}, createdBy: ${createdBy}, DESCRIPTION: ${DESCRIPTION}, modelUrl: ${modelUrl}, SOURCE: ${SOURCE}, TASKABLE: ${TASKABLE}, operationalStatus: ${operationalStatus}, establishmentDate: ${establishmentDate}, contactInfo: ${contactInfo}, environmentalImpact: ${environmentalImpact}, accessibilityInfra: ${accessibilityInfra}, integratedDevices: ${integratedDevices}}';
   }
 }
 
-class _IDMReader extends fb.TableReader<IDM> {
-  const _IDMReader();
+class _SITReader extends fb.TableReader<SIT> {
+  const _SITReader();
 
   @override
-  IDM createObject(fb.BufferContext bc, int offset) =>
-    IDM._(bc, offset);
+  SIT createObject(fb.BufferContext bc, int offset) =>
+    SIT._(bc, offset);
 }
 
-class IDMBuilder {
-  IDMBuilder(this.fbBuilder);
+class SITBuilder {
+  SITBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(29);
+    fbBuilder.startTable(24);
   }
 
   int addIdOffset(int? offset) {
@@ -641,112 +267,92 @@ class IDMBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDataMode(DataMode? DATA_MODE) {
-    fbBuilder.addInt8(2, DATA_MODE?.value);
+  int addAbbreviationOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addUplinkOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addSiteType(SiteType? SITE_TYPE) {
+    fbBuilder.addInt8(3, SITE_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addDownlinkOffset(int? offset) {
+  int addCatcodeOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addBeaconOffset(int? offset) {
+  int addNetworkOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addBandOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addLatitude(double? LATITUDE) {
+    fbBuilder.addFloat32(6, LATITUDE);
     return fbBuilder.offset;
   }
-  int addPolarizationType(PolarizationType? POLARIZATION_TYPE) {
-    fbBuilder.addInt8(7, POLARIZATION_TYPE?.value);
+  int addLongitude(double? LONGITUDE) {
+    fbBuilder.addFloat32(7, LONGITUDE);
     return fbBuilder.offset;
   }
-  int addSimplePolarization(SimplePolarization? SIMPLE_POLARIZATION) {
-    fbBuilder.addInt8(8, SIMPLE_POLARIZATION?.value);
+  int addAltitude(double? ALTITUDE) {
+    fbBuilder.addFloat32(8, ALTITUDE);
     return fbBuilder.offset;
   }
-  int addStokesParametersOffset(int? offset) {
+  int addGeometryOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addPowerRequired(double? POWER_REQUIRED) {
-    fbBuilder.addFloat64(10, POWER_REQUIRED);
+  int addCenterPointGeometryOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addPowerTypeOffset(int? offset) {
+  int addClassificationOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addTransmit(bool? TRANSMIT) {
-    fbBuilder.addBool(12, TRANSMIT);
+  int addCtrIdOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addReceive(bool? RECEIVE) {
-    fbBuilder.addBool(13, RECEIVE);
+  int addCreatedByOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addSensorType(DeviceType? SENSOR_TYPE) {
-    fbBuilder.addInt8(14, SENSOR_TYPE?.value);
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
-  int addSourceOffset(int? offset) {
+  int addModelUrlOffset(int? offset) {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
-  int addLastObTimeOffset(int? offset) {
+  int addSourceOffset(int? offset) {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
-  int addLowerLeftElevationLimit(double? LOWER_LEFT_ELEVATION_LIMIT) {
-    fbBuilder.addFloat64(17, LOWER_LEFT_ELEVATION_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addUpperLeftAzimuthLimit(double? UPPER_LEFT_AZIMUTH_LIMIT) {
-    fbBuilder.addFloat64(18, UPPER_LEFT_AZIMUTH_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addLowerRightElevationLimit(double? LOWER_RIGHT_ELEVATION_LIMIT) {
-    fbBuilder.addFloat64(19, LOWER_RIGHT_ELEVATION_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addLowerLeftAzimuthLimit(double? LOWER_LEFT_AZIMUTH_LIMIT) {
-    fbBuilder.addFloat64(20, LOWER_LEFT_AZIMUTH_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addUpperRightElevationLimit(double? UPPER_RIGHT_ELEVATION_LIMIT) {
-    fbBuilder.addFloat64(21, UPPER_RIGHT_ELEVATION_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addUpperRightAzimuthLimit(double? UPPER_RIGHT_AZIMUTH_LIMIT) {
-    fbBuilder.addFloat64(22, UPPER_RIGHT_AZIMUTH_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addLowerRightAzimuthLimit(double? LOWER_RIGHT_AZIMUTH_LIMIT) {
-    fbBuilder.addFloat64(23, LOWER_RIGHT_AZIMUTH_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addUpperLeftElevationLimit(double? UPPER_LEFT_ELEVATION_LIMIT) {
-    fbBuilder.addFloat64(24, UPPER_LEFT_ELEVATION_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addRightGeoBeltLimit(double? RIGHT_GEO_BELT_LIMIT) {
-    fbBuilder.addFloat64(25, RIGHT_GEO_BELT_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addLeftGeoBeltLimit(double? LEFT_GEO_BELT_LIMIT) {
-    fbBuilder.addFloat64(26, LEFT_GEO_BELT_LIMIT);
-    return fbBuilder.offset;
-  }
-  int addMagnitudeLimit(double? MAGNITUDE_LIMIT) {
-    fbBuilder.addFloat64(27, MAGNITUDE_LIMIT);
-    return fbBuilder.offset;
-  }
   int addTaskable(bool? TASKABLE) {
-    fbBuilder.addBool(28, TASKABLE);
+    fbBuilder.addBool(17, TASKABLE);
+    return fbBuilder.offset;
+  }
+  int addOperationalStatusOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addEstablishmentDateOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addContactInfoOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addEnvironmentalImpactOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addAccessibilityInfraOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addIntegratedDevicesOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
 
@@ -755,116 +361,93 @@ class IDMBuilder {
   }
 }
 
-class IDMObjectBuilder extends fb.ObjectBuilder {
+class SITObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _NAME;
-  final DataMode? _DATA_MODE;
-  final FrequencyRangeObjectBuilder? _UPLINK;
-  final FrequencyRangeObjectBuilder? _DOWNLINK;
-  final FrequencyRangeObjectBuilder? _BEACON;
-  final List<BandObjectBuilder>? _BAND;
-  final PolarizationType? _POLARIZATION_TYPE;
-  final SimplePolarization? _SIMPLE_POLARIZATION;
-  final StokesParametersObjectBuilder? _STOKES_PARAMETERS;
-  final double? _POWER_REQUIRED;
-  final String? _POWER_TYPE;
-  final bool? _TRANSMIT;
-  final bool? _RECEIVE;
-  final DeviceType? _SENSOR_TYPE;
+  final String? _ABBREVIATION;
+  final SiteType? _SITE_TYPE;
+  final String? _CATCODE;
+  final String? _NETWORK;
+  final double? _LATITUDE;
+  final double? _LONGITUDE;
+  final double? _ALTITUDE;
+  final GeometryObjectBuilder? _GEOMETRY;
+  final List<double>? _CENTER_POINT_GEOMETRY;
+  final String? _CLASSIFICATION;
+  final String? _CTR_ID;
+  final String? _CREATED_BY;
+  final String? _DESCRIPTION;
+  final String? _MODEL_URL;
   final String? _SOURCE;
-  final String? _LAST_OB_TIME;
-  final double? _LOWER_LEFT_ELEVATION_LIMIT;
-  final double? _UPPER_LEFT_AZIMUTH_LIMIT;
-  final double? _LOWER_RIGHT_ELEVATION_LIMIT;
-  final double? _LOWER_LEFT_AZIMUTH_LIMIT;
-  final double? _UPPER_RIGHT_ELEVATION_LIMIT;
-  final double? _UPPER_RIGHT_AZIMUTH_LIMIT;
-  final double? _LOWER_RIGHT_AZIMUTH_LIMIT;
-  final double? _UPPER_LEFT_ELEVATION_LIMIT;
-  final double? _RIGHT_GEO_BELT_LIMIT;
-  final double? _LEFT_GEO_BELT_LIMIT;
-  final double? _MAGNITUDE_LIMIT;
   final bool? _TASKABLE;
+  final String? _OPERATIONAL_STATUS;
+  final String? _ESTABLISHMENT_DATE;
+  final String? _CONTACT_INFO;
+  final String? _ENVIRONMENTAL_IMPACT;
+  final String? _ACCESSIBILITY_INFRA;
+  final List<IDMObjectBuilder>? _INTEGRATED_DEVICES;
 
-  IDMObjectBuilder({
+  SITObjectBuilder({
     String? ID,
     String? NAME,
-    DataMode? DATA_MODE,
-    DataMode? dataMode,
-    FrequencyRangeObjectBuilder? UPLINK,
-    FrequencyRangeObjectBuilder? DOWNLINK,
-    FrequencyRangeObjectBuilder? BEACON,
-    List<BandObjectBuilder>? BAND,
-    PolarizationType? POLARIZATION_TYPE,
-    PolarizationType? polarizationType,
-    SimplePolarization? SIMPLE_POLARIZATION,
-    SimplePolarization? simplePolarization,
-    StokesParametersObjectBuilder? STOKES_PARAMETERS,
-    StokesParametersObjectBuilder? stokesParameters,
-    double? POWER_REQUIRED,
-    double? powerRequired,
-    String? POWER_TYPE,
-    String? powerType,
-    bool? TRANSMIT,
-    bool? RECEIVE,
-    DeviceType? SENSOR_TYPE,
-    DeviceType? sensorType,
+    String? ABBREVIATION,
+    SiteType? SITE_TYPE,
+    SiteType? siteType,
+    String? CATCODE,
+    String? NETWORK,
+    double? LATITUDE,
+    double? LONGITUDE,
+    double? ALTITUDE,
+    GeometryObjectBuilder? GEOMETRY,
+    List<double>? CENTER_POINT_GEOMETRY,
+    List<double>? centerPointGeometry,
+    String? CLASSIFICATION,
+    String? CTR_ID,
+    String? ctrId,
+    String? CREATED_BY,
+    String? createdBy,
+    String? DESCRIPTION,
+    String? MODEL_URL,
+    String? modelUrl,
     String? SOURCE,
-    String? LAST_OB_TIME,
-    String? lastObTime,
-    double? LOWER_LEFT_ELEVATION_LIMIT,
-    double? lowerLeftElevationLimit,
-    double? UPPER_LEFT_AZIMUTH_LIMIT,
-    double? upperLeftAzimuthLimit,
-    double? LOWER_RIGHT_ELEVATION_LIMIT,
-    double? lowerRightElevationLimit,
-    double? LOWER_LEFT_AZIMUTH_LIMIT,
-    double? lowerLeftAzimuthLimit,
-    double? UPPER_RIGHT_ELEVATION_LIMIT,
-    double? upperRightElevationLimit,
-    double? UPPER_RIGHT_AZIMUTH_LIMIT,
-    double? upperRightAzimuthLimit,
-    double? LOWER_RIGHT_AZIMUTH_LIMIT,
-    double? lowerRightAzimuthLimit,
-    double? UPPER_LEFT_ELEVATION_LIMIT,
-    double? upperLeftElevationLimit,
-    double? RIGHT_GEO_BELT_LIMIT,
-    double? rightGeoBeltLimit,
-    double? LEFT_GEO_BELT_LIMIT,
-    double? leftGeoBeltLimit,
-    double? MAGNITUDE_LIMIT,
-    double? magnitudeLimit,
     bool? TASKABLE,
+    String? OPERATIONAL_STATUS,
+    String? operationalStatus,
+    String? ESTABLISHMENT_DATE,
+    String? establishmentDate,
+    String? CONTACT_INFO,
+    String? contactInfo,
+    String? ENVIRONMENTAL_IMPACT,
+    String? environmentalImpact,
+    String? ACCESSIBILITY_INFRA,
+    String? accessibilityInfra,
+    List<IDMObjectBuilder>? INTEGRATED_DEVICES,
+    List<IDMObjectBuilder>? integratedDevices,
   })
       : _ID = ID,
         _NAME = NAME,
-        _DATA_MODE = dataMode ?? DATA_MODE,
-        _UPLINK = UPLINK,
-        _DOWNLINK = DOWNLINK,
-        _BEACON = BEACON,
-        _BAND = BAND,
-        _POLARIZATION_TYPE = polarizationType ?? POLARIZATION_TYPE,
-        _SIMPLE_POLARIZATION = simplePolarization ?? SIMPLE_POLARIZATION,
-        _STOKES_PARAMETERS = stokesParameters ?? STOKES_PARAMETERS,
-        _POWER_REQUIRED = powerRequired ?? POWER_REQUIRED,
-        _POWER_TYPE = powerType ?? POWER_TYPE,
-        _TRANSMIT = TRANSMIT,
-        _RECEIVE = RECEIVE,
-        _SENSOR_TYPE = sensorType ?? SENSOR_TYPE,
+        _ABBREVIATION = ABBREVIATION,
+        _SITE_TYPE = siteType ?? SITE_TYPE,
+        _CATCODE = CATCODE,
+        _NETWORK = NETWORK,
+        _LATITUDE = LATITUDE,
+        _LONGITUDE = LONGITUDE,
+        _ALTITUDE = ALTITUDE,
+        _GEOMETRY = GEOMETRY,
+        _CENTER_POINT_GEOMETRY = centerPointGeometry ?? CENTER_POINT_GEOMETRY,
+        _CLASSIFICATION = CLASSIFICATION,
+        _CTR_ID = ctrId ?? CTR_ID,
+        _CREATED_BY = createdBy ?? CREATED_BY,
+        _DESCRIPTION = DESCRIPTION,
+        _MODEL_URL = modelUrl ?? MODEL_URL,
         _SOURCE = SOURCE,
-        _LAST_OB_TIME = lastObTime ?? LAST_OB_TIME,
-        _LOWER_LEFT_ELEVATION_LIMIT = lowerLeftElevationLimit ?? LOWER_LEFT_ELEVATION_LIMIT,
-        _UPPER_LEFT_AZIMUTH_LIMIT = upperLeftAzimuthLimit ?? UPPER_LEFT_AZIMUTH_LIMIT,
-        _LOWER_RIGHT_ELEVATION_LIMIT = lowerRightElevationLimit ?? LOWER_RIGHT_ELEVATION_LIMIT,
-        _LOWER_LEFT_AZIMUTH_LIMIT = lowerLeftAzimuthLimit ?? LOWER_LEFT_AZIMUTH_LIMIT,
-        _UPPER_RIGHT_ELEVATION_LIMIT = upperRightElevationLimit ?? UPPER_RIGHT_ELEVATION_LIMIT,
-        _UPPER_RIGHT_AZIMUTH_LIMIT = upperRightAzimuthLimit ?? UPPER_RIGHT_AZIMUTH_LIMIT,
-        _LOWER_RIGHT_AZIMUTH_LIMIT = lowerRightAzimuthLimit ?? LOWER_RIGHT_AZIMUTH_LIMIT,
-        _UPPER_LEFT_ELEVATION_LIMIT = upperLeftElevationLimit ?? UPPER_LEFT_ELEVATION_LIMIT,
-        _RIGHT_GEO_BELT_LIMIT = rightGeoBeltLimit ?? RIGHT_GEO_BELT_LIMIT,
-        _LEFT_GEO_BELT_LIMIT = leftGeoBeltLimit ?? LEFT_GEO_BELT_LIMIT,
-        _MAGNITUDE_LIMIT = magnitudeLimit ?? MAGNITUDE_LIMIT,
-        _TASKABLE = TASKABLE;
+        _TASKABLE = TASKABLE,
+        _OPERATIONAL_STATUS = operationalStatus ?? OPERATIONAL_STATUS,
+        _ESTABLISHMENT_DATE = establishmentDate ?? ESTABLISHMENT_DATE,
+        _CONTACT_INFO = contactInfo ?? CONTACT_INFO,
+        _ENVIRONMENTAL_IMPACT = environmentalImpact ?? ENVIRONMENTAL_IMPACT,
+        _ACCESSIBILITY_INFRA = accessibilityInfra ?? ACCESSIBILITY_INFRA,
+        _INTEGRATED_DEVICES = integratedDevices ?? INTEGRATED_DEVICES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -873,48 +456,64 @@ class IDMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID!);
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
-    final int? UPLINKOffset = _UPLINK?.getOrCreateOffset(fbBuilder);
-    final int? DOWNLINKOffset = _DOWNLINK?.getOrCreateOffset(fbBuilder);
-    final int? BEACONOffset = _BEACON?.getOrCreateOffset(fbBuilder);
-    final int? BANDOffset = _BAND == null ? null
-        : fbBuilder.writeList(_BAND!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? STOKES_PARAMETERSOffset = _STOKES_PARAMETERS?.getOrCreateOffset(fbBuilder);
-    final int? POWER_TYPEOffset = _POWER_TYPE == null ? null
-        : fbBuilder.writeString(_POWER_TYPE!);
+    final int? ABBREVIATIONOffset = _ABBREVIATION == null ? null
+        : fbBuilder.writeString(_ABBREVIATION!);
+    final int? CATCODEOffset = _CATCODE == null ? null
+        : fbBuilder.writeString(_CATCODE!);
+    final int? NETWORKOffset = _NETWORK == null ? null
+        : fbBuilder.writeString(_NETWORK!);
+    final int? GEOMETRYOffset = _GEOMETRY?.getOrCreateOffset(fbBuilder);
+    final int? CENTER_POINT_GEOMETRYOffset = _CENTER_POINT_GEOMETRY == null ? null
+        : fbBuilder.writeListFloat32(_CENTER_POINT_GEOMETRY!);
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
+    final int? CTR_IDOffset = _CTR_ID == null ? null
+        : fbBuilder.writeString(_CTR_ID!);
+    final int? CREATED_BYOffset = _CREATED_BY == null ? null
+        : fbBuilder.writeString(_CREATED_BY!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? MODEL_URLOffset = _MODEL_URL == null ? null
+        : fbBuilder.writeString(_MODEL_URL!);
     final int? SOURCEOffset = _SOURCE == null ? null
         : fbBuilder.writeString(_SOURCE!);
-    final int? LAST_OB_TIMEOffset = _LAST_OB_TIME == null ? null
-        : fbBuilder.writeString(_LAST_OB_TIME!);
-    fbBuilder.startTable(29);
+    final int? OPERATIONAL_STATUSOffset = _OPERATIONAL_STATUS == null ? null
+        : fbBuilder.writeString(_OPERATIONAL_STATUS!);
+    final int? ESTABLISHMENT_DATEOffset = _ESTABLISHMENT_DATE == null ? null
+        : fbBuilder.writeString(_ESTABLISHMENT_DATE!);
+    final int? CONTACT_INFOOffset = _CONTACT_INFO == null ? null
+        : fbBuilder.writeString(_CONTACT_INFO!);
+    final int? ENVIRONMENTAL_IMPACTOffset = _ENVIRONMENTAL_IMPACT == null ? null
+        : fbBuilder.writeString(_ENVIRONMENTAL_IMPACT!);
+    final int? ACCESSIBILITY_INFRAOffset = _ACCESSIBILITY_INFRA == null ? null
+        : fbBuilder.writeString(_ACCESSIBILITY_INFRA!);
+    final int? INTEGRATED_DEVICESOffset = _INTEGRATED_DEVICES == null ? null
+        : fbBuilder.writeList(_INTEGRATED_DEVICES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(24);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addInt8(2, _DATA_MODE?.value);
-    fbBuilder.addOffset(3, UPLINKOffset);
-    fbBuilder.addOffset(4, DOWNLINKOffset);
-    fbBuilder.addOffset(5, BEACONOffset);
-    fbBuilder.addOffset(6, BANDOffset);
-    fbBuilder.addInt8(7, _POLARIZATION_TYPE?.value);
-    fbBuilder.addInt8(8, _SIMPLE_POLARIZATION?.value);
-    fbBuilder.addOffset(9, STOKES_PARAMETERSOffset);
-    fbBuilder.addFloat64(10, _POWER_REQUIRED);
-    fbBuilder.addOffset(11, POWER_TYPEOffset);
-    fbBuilder.addBool(12, _TRANSMIT);
-    fbBuilder.addBool(13, _RECEIVE);
-    fbBuilder.addInt8(14, _SENSOR_TYPE?.value);
-    fbBuilder.addOffset(15, SOURCEOffset);
-    fbBuilder.addOffset(16, LAST_OB_TIMEOffset);
-    fbBuilder.addFloat64(17, _LOWER_LEFT_ELEVATION_LIMIT);
-    fbBuilder.addFloat64(18, _UPPER_LEFT_AZIMUTH_LIMIT);
-    fbBuilder.addFloat64(19, _LOWER_RIGHT_ELEVATION_LIMIT);
-    fbBuilder.addFloat64(20, _LOWER_LEFT_AZIMUTH_LIMIT);
-    fbBuilder.addFloat64(21, _UPPER_RIGHT_ELEVATION_LIMIT);
-    fbBuilder.addFloat64(22, _UPPER_RIGHT_AZIMUTH_LIMIT);
-    fbBuilder.addFloat64(23, _LOWER_RIGHT_AZIMUTH_LIMIT);
-    fbBuilder.addFloat64(24, _UPPER_LEFT_ELEVATION_LIMIT);
-    fbBuilder.addFloat64(25, _RIGHT_GEO_BELT_LIMIT);
-    fbBuilder.addFloat64(26, _LEFT_GEO_BELT_LIMIT);
-    fbBuilder.addFloat64(27, _MAGNITUDE_LIMIT);
-    fbBuilder.addBool(28, _TASKABLE);
+    fbBuilder.addOffset(2, ABBREVIATIONOffset);
+    fbBuilder.addInt8(3, _SITE_TYPE?.value);
+    fbBuilder.addOffset(4, CATCODEOffset);
+    fbBuilder.addOffset(5, NETWORKOffset);
+    fbBuilder.addFloat32(6, _LATITUDE);
+    fbBuilder.addFloat32(7, _LONGITUDE);
+    fbBuilder.addFloat32(8, _ALTITUDE);
+    fbBuilder.addOffset(9, GEOMETRYOffset);
+    fbBuilder.addOffset(10, CENTER_POINT_GEOMETRYOffset);
+    fbBuilder.addOffset(11, CLASSIFICATIONOffset);
+    fbBuilder.addOffset(12, CTR_IDOffset);
+    fbBuilder.addOffset(13, CREATED_BYOffset);
+    fbBuilder.addOffset(14, DESCRIPTIONOffset);
+    fbBuilder.addOffset(15, MODEL_URLOffset);
+    fbBuilder.addOffset(16, SOURCEOffset);
+    fbBuilder.addBool(17, _TASKABLE);
+    fbBuilder.addOffset(18, OPERATIONAL_STATUSOffset);
+    fbBuilder.addOffset(19, ESTABLISHMENT_DATEOffset);
+    fbBuilder.addOffset(20, CONTACT_INFOOffset);
+    fbBuilder.addOffset(21, ENVIRONMENTAL_IMPACTOffset);
+    fbBuilder.addOffset(22, ACCESSIBILITY_INFRAOffset);
+    fbBuilder.addOffset(23, INTEGRATED_DEVICESOffset);
     return fbBuilder.endTable();
   }
 

@@ -5,224 +5,125 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
-///  through an arena-backed plugin stream. Carries enough identity for a
-///  receiver to dispatch on schema without inspecting the payload bytes.
-///  Logical payload wire format for a stream frame or an accepted port type.
-enum payloadWireFormat {
-  FLATBUFFER(0),
-  ALIGNED_BINARY(1);
+///  Coarse envelope status for an invoke response. Per-method numeric
+///  return codes travel in STATUS_CODE; STATUS categorizes the outcome
+///  for host routing (retry, yield-and-resume, fail-closed) without the
+///  host having to decode method-specific numbers.
+enum pivStatus {
+  OK(0),
+  NOT_FOUND(1),
+  YIELDED(2),
+  FAILED(3);
 
   final int value;
-  const payloadWireFormat(this.value);
+  const pivStatus(this.value);
 
-  factory payloadWireFormat.fromValue(int value) {
+  factory pivStatus.fromValue(int value) {
     switch (value) {
-      case 0: return payloadWireFormat.FLATBUFFER;
-      case 1: return payloadWireFormat.ALIGNED_BINARY;
+      case 0: return pivStatus.OK;
+      case 1: return pivStatus.NOT_FOUND;
+      case 2: return pivStatus.YIELDED;
+      case 3: return pivStatus.FAILED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static payloadWireFormat? _createOrNull(int? value) =>
-      value == null ? null : payloadWireFormat.fromValue(value);
+  static pivStatus? _createOrNull(int? value) =>
+      value == null ? null : pivStatus.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<payloadWireFormat> reader = _payloadWireFormatReader();
+  static const int maxValue = 3;
+  static const fb.Reader<pivStatus> reader = _pivStatusReader();
 }
 
-class _payloadWireFormatReader extends fb.Reader<payloadWireFormat> {
-  const _payloadWireFormatReader();
+class _pivStatusReader extends fb.Reader<pivStatus> {
+  const _pivStatusReader();
 
   @override
-  int get size => 1;
+  int get size => 4;
 
   @override
-  payloadWireFormat read(fb.BufferContext bc, int offset) =>
-      payloadWireFormat.fromValue(const fb.Uint8Reader().read(bc, offset));
+  pivStatus read(fb.BufferContext bc, int offset) =>
+      pivStatus.fromValue(const fb.Int32Reader().read(bc, offset));
 }
 
-///  Buffer mutability contract advertised by a stream port.
-enum bufferMutability {
-  IMMUTABLE(0),
-  SINGLE_WRITER_MUTABLE(1),
-  APPEND_ONLY(2);
-
-  final int value;
-  const bufferMutability(this.value);
-
-  factory bufferMutability.fromValue(int value) {
-    switch (value) {
-      case 0: return bufferMutability.IMMUTABLE;
-      case 1: return bufferMutability.SINGLE_WRITER_MUTABLE;
-      case 2: return bufferMutability.APPEND_ONLY;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static bufferMutability? _createOrNull(int? value) =>
-      value == null ? null : bufferMutability.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<bufferMutability> reader = _bufferMutabilityReader();
-}
-
-class _bufferMutabilityReader extends fb.Reader<bufferMutability> {
-  const _bufferMutabilityReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  bufferMutability read(fb.BufferContext bc, int offset) =>
-      bufferMutability.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Buffer ownership contract advertised by a stream port.
-enum bufferOwnership {
-  HOST_OWNED(0),
-  PLUGIN_OWNED(1),
-  TRANSFERRED(2);
-
-  final int value;
-  const bufferOwnership(this.value);
-
-  factory bufferOwnership.fromValue(int value) {
-    switch (value) {
-      case 0: return bufferOwnership.HOST_OWNED;
-      case 1: return bufferOwnership.PLUGIN_OWNED;
-      case 2: return bufferOwnership.TRANSFERRED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static bufferOwnership? _createOrNull(int? value) =>
-      value == null ? null : bufferOwnership.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<bufferOwnership> reader = _bufferOwnershipReader();
-}
-
-class _bufferOwnershipReader extends fb.Reader<bufferOwnership> {
-  const _bufferOwnershipReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  bufferOwnership read(fb.BufferContext bc, int offset) =>
-      bufferOwnership.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-///  Payload-schema identity for a stream frame or an accepted port type.
-class FlatBufferTypeRef {
-  FlatBufferTypeRef._(this._bc, this._bcOffset);
-  factory FlatBufferTypeRef(List<int> bytes) {
+///  Request envelope carried by `plugin_invoke_stream`.
+class PIVRequest {
+  PIVRequest._(this._bc, this._bcOffset);
+  factory PIVRequest(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<FlatBufferTypeRef> reader = _FlatBufferTypeRefReader();
+  static const fb.Reader<PIVRequest> reader = _PIVRequestReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
-  String? get SCHEMA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get schemaName => SCHEMA_NAME;
-  ///  Optional 4-byte FlatBuffer file identifier.
-  String? get FILE_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get fileIdentifier => FILE_IDENTIFIER;
-  ///  Optional semver or schema revision string.
-  String? get SCHEMA_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get schemaVersion => SCHEMA_VERSION;
-  ///  Optional root type name within the schema.
-  String? get ROOT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get rootType => ROOT_TYPE;
-  ///  Optional schema hash bytes for stronger compatibility checks.
-  List<int>? get SCHEMA_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
-  List<int>? get schemaHash => SCHEMA_HASH;
-  ///  True when this port/type set accepts any FlatBuffer frame.
-  bool get ACCEPTS_ANY_FLATBUFFER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
-  bool get acceptsAnyFlatbuffer => ACCEPTS_ANY_FLATBUFFER;
-  ///  Logical wire format for this accepted type.
-  payloadWireFormat get WIRE_FORMAT => payloadWireFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
-  payloadWireFormat get wireFormat => WIRE_FORMAT;
-  ///  Fixed string length for aligned-binary string fields, when applicable.
-  int get FIXED_STRING_LENGTH => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get fixedStringLength => FIXED_STRING_LENGTH;
-  ///  Byte length for fixed-size aligned-binary records, when applicable.
-  int get BYTE_LENGTH => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get byteLength => BYTE_LENGTH;
-  ///  Required start alignment for aligned-binary records, when applicable.
-  int get REQUIRED_ALIGNMENT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get requiredAlignment => REQUIRED_ALIGNMENT;
+  ///  Stable method identifier from PLG.METHODS[].METHOD_ID.
+  String? get METHOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get methodId => METHOD_ID;
+  ///  Input frames. Each TAB.TYPE_REF names the payload schema and each
+  ///  TAB.WIRE_FORMAT selects FLATBUFFER or ALIGNED_BINARY. TAB.OFFSET
+  ///  is arena-relative into PAYLOAD_ARENA (or an absolute pointer when
+  ///  PAYLOAD_ARENA is empty).
+  List<TAB>? get INPUTS => const fb.ListReader<TAB>(TAB.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Optional arena backing the INPUTS payload bodies. Empty means the
+  ///  caller manages arena state out-of-band.
+  List<int>? get PAYLOAD_ARENA => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  List<int>? get payloadArena => PAYLOAD_ARENA;
+  ///  Optional trace identifier for request correlation.
+  int get TRACE_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get traceId => TRACE_ID;
+  ///  Optional yield-budget hint. Plugins MAY pause queued work after
+  ///  draining this many output frames and return YIELDED for the caller
+  ///  to resume. 0 = no hint.
+  int get OUTPUT_STREAM_CAP => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get outputStreamCap => OUTPUT_STREAM_CAP;
 
   @override
   String toString() {
-    return 'FlatBufferTypeRef{schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, schemaVersion: ${schemaVersion}, rootType: ${rootType}, schemaHash: ${schemaHash}, acceptsAnyFlatbuffer: ${acceptsAnyFlatbuffer}, wireFormat: ${wireFormat}, fixedStringLength: ${fixedStringLength}, byteLength: ${byteLength}, requiredAlignment: ${requiredAlignment}}';
+    return 'PIVRequest{methodId: ${methodId}, INPUTS: ${INPUTS}, payloadArena: ${payloadArena}, traceId: ${traceId}, outputStreamCap: ${outputStreamCap}}';
   }
 }
 
-class _FlatBufferTypeRefReader extends fb.TableReader<FlatBufferTypeRef> {
-  const _FlatBufferTypeRefReader();
+class _PIVRequestReader extends fb.TableReader<PIVRequest> {
+  const _PIVRequestReader();
 
   @override
-  FlatBufferTypeRef createObject(fb.BufferContext bc, int offset) =>
-    FlatBufferTypeRef._(bc, offset);
+  PIVRequest createObject(fb.BufferContext bc, int offset) =>
+    PIVRequest._(bc, offset);
 }
 
-class FlatBufferTypeRefBuilder {
-  FlatBufferTypeRefBuilder(this.fbBuilder);
+class PIVRequestBuilder {
+  PIVRequestBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(5);
   }
 
-  int addSchemaNameOffset(int? offset) {
+  int addMethodIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addFileIdentifierOffset(int? offset) {
+  int addInputsOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSchemaVersionOffset(int? offset) {
+  int addPayloadArenaOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addRootTypeOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addTraceId(int? TRACE_ID) {
+    fbBuilder.addUint64(3, TRACE_ID);
     return fbBuilder.offset;
   }
-  int addSchemaHashOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addAcceptsAnyFlatbuffer(bool? ACCEPTS_ANY_FLATBUFFER) {
-    fbBuilder.addBool(5, ACCEPTS_ANY_FLATBUFFER);
-    return fbBuilder.offset;
-  }
-  int addWireFormat(payloadWireFormat? WIRE_FORMAT) {
-    fbBuilder.addUint8(6, WIRE_FORMAT?.value);
-    return fbBuilder.offset;
-  }
-  int addFixedStringLength(int? FIXED_STRING_LENGTH) {
-    fbBuilder.addUint16(7, FIXED_STRING_LENGTH);
-    return fbBuilder.offset;
-  }
-  int addByteLength(int? BYTE_LENGTH) {
-    fbBuilder.addUint32(8, BYTE_LENGTH);
-    return fbBuilder.offset;
-  }
-  int addRequiredAlignment(int? REQUIRED_ALIGNMENT) {
-    fbBuilder.addUint16(9, REQUIRED_ALIGNMENT);
+  int addOutputStreamCap(int? OUTPUT_STREAM_CAP) {
+    fbBuilder.addUint32(4, OUTPUT_STREAM_CAP);
     return fbBuilder.offset;
   }
 
@@ -231,75 +132,45 @@ class FlatBufferTypeRefBuilder {
   }
 }
 
-class FlatBufferTypeRefObjectBuilder extends fb.ObjectBuilder {
-  final String? _SCHEMA_NAME;
-  final String? _FILE_IDENTIFIER;
-  final String? _SCHEMA_VERSION;
-  final String? _ROOT_TYPE;
-  final List<int>? _SCHEMA_HASH;
-  final bool? _ACCEPTS_ANY_FLATBUFFER;
-  final payloadWireFormat? _WIRE_FORMAT;
-  final int? _FIXED_STRING_LENGTH;
-  final int? _BYTE_LENGTH;
-  final int? _REQUIRED_ALIGNMENT;
+class PIVRequestObjectBuilder extends fb.ObjectBuilder {
+  final String? _METHOD_ID;
+  final List<TABObjectBuilder>? _INPUTS;
+  final List<int>? _PAYLOAD_ARENA;
+  final int? _TRACE_ID;
+  final int? _OUTPUT_STREAM_CAP;
 
-  FlatBufferTypeRefObjectBuilder({
-    String? SCHEMA_NAME,
-    String? schemaName,
-    String? FILE_IDENTIFIER,
-    String? fileIdentifier,
-    String? SCHEMA_VERSION,
-    String? schemaVersion,
-    String? ROOT_TYPE,
-    String? rootType,
-    List<int>? SCHEMA_HASH,
-    List<int>? schemaHash,
-    bool? ACCEPTS_ANY_FLATBUFFER,
-    bool? acceptsAnyFlatbuffer,
-    payloadWireFormat? WIRE_FORMAT,
-    payloadWireFormat? wireFormat,
-    int? FIXED_STRING_LENGTH,
-    int? fixedStringLength,
-    int? BYTE_LENGTH,
-    int? byteLength,
-    int? REQUIRED_ALIGNMENT,
-    int? requiredAlignment,
+  PIVRequestObjectBuilder({
+    String? METHOD_ID,
+    String? methodId,
+    List<TABObjectBuilder>? INPUTS,
+    List<int>? PAYLOAD_ARENA,
+    List<int>? payloadArena,
+    int? TRACE_ID,
+    int? traceId,
+    int? OUTPUT_STREAM_CAP,
+    int? outputStreamCap,
   })
-      : _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
-        _FILE_IDENTIFIER = fileIdentifier ?? FILE_IDENTIFIER,
-        _SCHEMA_VERSION = schemaVersion ?? SCHEMA_VERSION,
-        _ROOT_TYPE = rootType ?? ROOT_TYPE,
-        _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
-        _ACCEPTS_ANY_FLATBUFFER = acceptsAnyFlatbuffer ?? ACCEPTS_ANY_FLATBUFFER,
-        _WIRE_FORMAT = wireFormat ?? WIRE_FORMAT,
-        _FIXED_STRING_LENGTH = fixedStringLength ?? FIXED_STRING_LENGTH,
-        _BYTE_LENGTH = byteLength ?? BYTE_LENGTH,
-        _REQUIRED_ALIGNMENT = requiredAlignment ?? REQUIRED_ALIGNMENT;
+      : _METHOD_ID = methodId ?? METHOD_ID,
+        _INPUTS = INPUTS,
+        _PAYLOAD_ARENA = payloadArena ?? PAYLOAD_ARENA,
+        _TRACE_ID = traceId ?? TRACE_ID,
+        _OUTPUT_STREAM_CAP = outputStreamCap ?? OUTPUT_STREAM_CAP;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? SCHEMA_NAMEOffset = _SCHEMA_NAME == null ? null
-        : fbBuilder.writeString(_SCHEMA_NAME!);
-    final int? FILE_IDENTIFIEROffset = _FILE_IDENTIFIER == null ? null
-        : fbBuilder.writeString(_FILE_IDENTIFIER!);
-    final int? SCHEMA_VERSIONOffset = _SCHEMA_VERSION == null ? null
-        : fbBuilder.writeString(_SCHEMA_VERSION!);
-    final int? ROOT_TYPEOffset = _ROOT_TYPE == null ? null
-        : fbBuilder.writeString(_ROOT_TYPE!);
-    final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
-        : fbBuilder.writeListUint8(_SCHEMA_HASH!);
-    fbBuilder.startTable(10);
-    fbBuilder.addOffset(0, SCHEMA_NAMEOffset);
-    fbBuilder.addOffset(1, FILE_IDENTIFIEROffset);
-    fbBuilder.addOffset(2, SCHEMA_VERSIONOffset);
-    fbBuilder.addOffset(3, ROOT_TYPEOffset);
-    fbBuilder.addOffset(4, SCHEMA_HASHOffset);
-    fbBuilder.addBool(5, _ACCEPTS_ANY_FLATBUFFER);
-    fbBuilder.addUint8(6, _WIRE_FORMAT?.value);
-    fbBuilder.addUint16(7, _FIXED_STRING_LENGTH);
-    fbBuilder.addUint32(8, _BYTE_LENGTH);
-    fbBuilder.addUint16(9, _REQUIRED_ALIGNMENT);
+    final int? METHOD_IDOffset = _METHOD_ID == null ? null
+        : fbBuilder.writeString(_METHOD_ID!);
+    final int? INPUTSOffset = _INPUTS == null ? null
+        : fbBuilder.writeList(_INPUTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PAYLOAD_ARENAOffset = _PAYLOAD_ARENA == null ? null
+        : fbBuilder.writeListUint8(_PAYLOAD_ARENA!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, METHOD_IDOffset);
+    fbBuilder.addOffset(1, INPUTSOffset);
+    fbBuilder.addOffset(2, PAYLOAD_ARENAOffset);
+    fbBuilder.addUint64(3, _TRACE_ID);
+    fbBuilder.addUint32(4, _OUTPUT_STREAM_CAP);
     return fbBuilder.endTable();
   }
 
@@ -311,61 +182,61 @@ class FlatBufferTypeRefObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-class TAB {
-  TAB._(this._bc, this._bcOffset);
-  factory TAB(List<int> bytes) {
+///  Response envelope emitted by `plugin_invoke_stream`.
+class PIVResponse {
+  PIVResponse._(this._bc, this._bcOffset);
+  factory PIVResponse(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TAB> reader = _TABReader();
+  static const fb.Reader<PIVResponse> reader = _PIVResponseReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Byte offset of the payload body within the arena.
-  int get OFFSET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  ///  Byte length of the payload body.
-  int get SIZE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  ///  Required start alignment of the payload body (in bytes).
-  int get ALIGNMENT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  ///  Wire format for the body.
-  payloadWireFormat get WIRE_FORMAT => payloadWireFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  payloadWireFormat get wireFormat => WIRE_FORMAT;
-  ///  Optional payload schema identity.
-  FlatBufferTypeRef? get TYPE_REF => FlatBufferTypeRef.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  FlatBufferTypeRef? get typeRef => TYPE_REF;
-  ///  Mutability contract for the slot.
-  bufferMutability get MUTABILITY => bufferMutability.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ///  Ownership contract for the slot.
-  bufferOwnership get OWNERSHIP => bufferOwnership.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
-  ///  Optional opaque frame identifier for stream bookkeeping.
-  int get FRAME_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get frameId => FRAME_ID;
-  ///  Optional port identifier for frames that route to/from a named
-  ///  input or output port on a method (maps to
-  ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
-  ///  no port routing hint.
-  String? get PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get portId => PORT_ID;
+  ///  Method-specific status code. Zero conventionally indicates success.
+  int get STATUS_CODE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get statusCode => STATUS_CODE;
+  ///  Coarse envelope status.
+  pivStatus get STATUS => pivStatus.fromValue(const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  True when the method yielded before fully draining queued work.
+  bool get YIELDED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Outstanding frame count remaining after this response. Non-zero
+  ///  only when STATUS == YIELDED.
+  int get BACKLOG_REMAINING => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get backlogRemaining => BACKLOG_REMAINING;
+  ///  Output frames. Each TAB carries schema identity and wire format.
+  List<TAB>? get OUTPUTS => const fb.ListReader<TAB>(TAB.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Optional arena backing OUTPUTS payload bodies.
+  List<int>? get PAYLOAD_ARENA => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
+  List<int>? get payloadArena => PAYLOAD_ARENA;
+  ///  Stable machine-readable error code when STATUS == FAILED.
+  String? get ERROR_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get errorCode => ERROR_CODE;
+  ///  Human-readable diagnostic when STATUS == FAILED.
+  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get errorMessage => ERROR_MESSAGE;
+  ///  Echo of the request's TRACE_ID for correlation.
+  int get TRACE_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get traceId => TRACE_ID;
 
   @override
   String toString() {
-    return 'TAB{OFFSET: ${OFFSET}, SIZE: ${SIZE}, ALIGNMENT: ${ALIGNMENT}, wireFormat: ${wireFormat}, typeRef: ${typeRef}, MUTABILITY: ${MUTABILITY}, OWNERSHIP: ${OWNERSHIP}, frameId: ${frameId}, portId: ${portId}}';
+    return 'PIVResponse{statusCode: ${statusCode}, STATUS: ${STATUS}, YIELDED: ${YIELDED}, backlogRemaining: ${backlogRemaining}, OUTPUTS: ${OUTPUTS}, payloadArena: ${payloadArena}, errorCode: ${errorCode}, errorMessage: ${errorMessage}, traceId: ${traceId}}';
   }
 }
 
-class _TABReader extends fb.TableReader<TAB> {
-  const _TABReader();
+class _PIVResponseReader extends fb.TableReader<PIVResponse> {
+  const _PIVResponseReader();
 
   @override
-  TAB createObject(fb.BufferContext bc, int offset) =>
-    TAB._(bc, offset);
+  PIVResponse createObject(fb.BufferContext bc, int offset) =>
+    PIVResponse._(bc, offset);
 }
 
-class TABBuilder {
-  TABBuilder(this.fbBuilder);
+class PIVResponseBuilder {
+  PIVResponseBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -373,40 +244,40 @@ class TABBuilder {
     fbBuilder.startTable(9);
   }
 
-  int addOffset(int? OFFSET) {
-    fbBuilder.addUint32(0, OFFSET);
+  int addStatusCode(int? STATUS_CODE) {
+    fbBuilder.addInt32(0, STATUS_CODE);
     return fbBuilder.offset;
   }
-  int addSize(int? SIZE) {
-    fbBuilder.addUint32(1, SIZE);
+  int addStatus(pivStatus? STATUS) {
+    fbBuilder.addInt32(1, STATUS?.value);
     return fbBuilder.offset;
   }
-  int addAlignment(int? ALIGNMENT) {
-    fbBuilder.addUint32(2, ALIGNMENT);
+  int addYielded(bool? YIELDED) {
+    fbBuilder.addBool(2, YIELDED);
     return fbBuilder.offset;
   }
-  int addWireFormat(payloadWireFormat? WIRE_FORMAT) {
-    fbBuilder.addUint8(3, WIRE_FORMAT?.value);
+  int addBacklogRemaining(int? BACKLOG_REMAINING) {
+    fbBuilder.addUint32(3, BACKLOG_REMAINING);
     return fbBuilder.offset;
   }
-  int addTypeRefOffset(int? offset) {
+  int addOutputsOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addMutability(bufferMutability? MUTABILITY) {
-    fbBuilder.addUint8(5, MUTABILITY?.value);
+  int addPayloadArenaOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addOwnership(bufferOwnership? OWNERSHIP) {
-    fbBuilder.addUint8(6, OWNERSHIP?.value);
+  int addErrorCodeOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addFrameId(int? FRAME_ID) {
-    fbBuilder.addUint64(7, FRAME_ID);
+  int addErrorMessageOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addPortIdOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+  int addTraceId(int? TRACE_ID) {
+    fbBuilder.addUint64(8, TRACE_ID);
     return fbBuilder.offset;
   }
 
@@ -415,58 +286,149 @@ class TABBuilder {
   }
 }
 
-class TABObjectBuilder extends fb.ObjectBuilder {
-  final int? _OFFSET;
-  final int? _SIZE;
-  final int? _ALIGNMENT;
-  final payloadWireFormat? _WIRE_FORMAT;
-  final FlatBufferTypeRefObjectBuilder? _TYPE_REF;
-  final bufferMutability? _MUTABILITY;
-  final bufferOwnership? _OWNERSHIP;
-  final int? _FRAME_ID;
-  final String? _PORT_ID;
+class PIVResponseObjectBuilder extends fb.ObjectBuilder {
+  final int? _STATUS_CODE;
+  final pivStatus? _STATUS;
+  final bool? _YIELDED;
+  final int? _BACKLOG_REMAINING;
+  final List<TABObjectBuilder>? _OUTPUTS;
+  final List<int>? _PAYLOAD_ARENA;
+  final String? _ERROR_CODE;
+  final String? _ERROR_MESSAGE;
+  final int? _TRACE_ID;
 
-  TABObjectBuilder({
-    int? OFFSET,
-    int? SIZE,
-    int? ALIGNMENT,
-    payloadWireFormat? WIRE_FORMAT,
-    payloadWireFormat? wireFormat,
-    FlatBufferTypeRefObjectBuilder? TYPE_REF,
-    FlatBufferTypeRefObjectBuilder? typeRef,
-    bufferMutability? MUTABILITY,
-    bufferOwnership? OWNERSHIP,
-    int? FRAME_ID,
-    int? frameId,
-    String? PORT_ID,
-    String? portId,
+  PIVResponseObjectBuilder({
+    int? STATUS_CODE,
+    int? statusCode,
+    pivStatus? STATUS,
+    bool? YIELDED,
+    int? BACKLOG_REMAINING,
+    int? backlogRemaining,
+    List<TABObjectBuilder>? OUTPUTS,
+    List<int>? PAYLOAD_ARENA,
+    List<int>? payloadArena,
+    String? ERROR_CODE,
+    String? errorCode,
+    String? ERROR_MESSAGE,
+    String? errorMessage,
+    int? TRACE_ID,
+    int? traceId,
   })
-      : _OFFSET = OFFSET,
-        _SIZE = SIZE,
-        _ALIGNMENT = ALIGNMENT,
-        _WIRE_FORMAT = wireFormat ?? WIRE_FORMAT,
-        _TYPE_REF = typeRef ?? TYPE_REF,
-        _MUTABILITY = MUTABILITY,
-        _OWNERSHIP = OWNERSHIP,
-        _FRAME_ID = frameId ?? FRAME_ID,
-        _PORT_ID = portId ?? PORT_ID;
+      : _STATUS_CODE = statusCode ?? STATUS_CODE,
+        _STATUS = STATUS,
+        _YIELDED = YIELDED,
+        _BACKLOG_REMAINING = backlogRemaining ?? BACKLOG_REMAINING,
+        _OUTPUTS = OUTPUTS,
+        _PAYLOAD_ARENA = payloadArena ?? PAYLOAD_ARENA,
+        _ERROR_CODE = errorCode ?? ERROR_CODE,
+        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
+        _TRACE_ID = traceId ?? TRACE_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? TYPE_REFOffset = _TYPE_REF?.getOrCreateOffset(fbBuilder);
-    final int? PORT_IDOffset = _PORT_ID == null ? null
-        : fbBuilder.writeString(_PORT_ID!);
+    final int? OUTPUTSOffset = _OUTPUTS == null ? null
+        : fbBuilder.writeList(_OUTPUTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PAYLOAD_ARENAOffset = _PAYLOAD_ARENA == null ? null
+        : fbBuilder.writeListUint8(_PAYLOAD_ARENA!);
+    final int? ERROR_CODEOffset = _ERROR_CODE == null ? null
+        : fbBuilder.writeString(_ERROR_CODE!);
+    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
+        : fbBuilder.writeString(_ERROR_MESSAGE!);
     fbBuilder.startTable(9);
-    fbBuilder.addUint32(0, _OFFSET);
-    fbBuilder.addUint32(1, _SIZE);
-    fbBuilder.addUint32(2, _ALIGNMENT);
-    fbBuilder.addUint8(3, _WIRE_FORMAT?.value);
-    fbBuilder.addOffset(4, TYPE_REFOffset);
-    fbBuilder.addUint8(5, _MUTABILITY?.value);
-    fbBuilder.addUint8(6, _OWNERSHIP?.value);
-    fbBuilder.addUint64(7, _FRAME_ID);
-    fbBuilder.addOffset(8, PORT_IDOffset);
+    fbBuilder.addInt32(0, _STATUS_CODE);
+    fbBuilder.addInt32(1, _STATUS?.value);
+    fbBuilder.addBool(2, _YIELDED);
+    fbBuilder.addUint32(3, _BACKLOG_REMAINING);
+    fbBuilder.addOffset(4, OUTPUTSOffset);
+    fbBuilder.addOffset(5, PAYLOAD_ARENAOffset);
+    fbBuilder.addOffset(6, ERROR_CODEOffset);
+    fbBuilder.addOffset(7, ERROR_MESSAGEOffset);
+    fbBuilder.addUint64(8, _TRACE_ID);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Envelope — carries either a request or a response. Either REQUEST or
+///  RESPONSE is populated per message; both populated is undefined.
+class PIV {
+  PIV._(this._bc, this._bcOffset);
+  factory PIV(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PIV> reader = _PIVReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  PIVRequest? get REQUEST => PIVRequest.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  PIVResponse? get RESPONSE => PIVResponse.reader.vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'PIV{REQUEST: ${REQUEST}, RESPONSE: ${RESPONSE}}';
+  }
+}
+
+class _PIVReader extends fb.TableReader<PIV> {
+  const _PIVReader();
+
+  @override
+  PIV createObject(fb.BufferContext bc, int offset) =>
+    PIV._(bc, offset);
+}
+
+class PIVBuilder {
+  PIVBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addRequestOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addResponseOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PIVObjectBuilder extends fb.ObjectBuilder {
+  final PIVRequestObjectBuilder? _REQUEST;
+  final PIVResponseObjectBuilder? _RESPONSE;
+
+  PIVObjectBuilder({
+    PIVRequestObjectBuilder? REQUEST,
+    PIVResponseObjectBuilder? RESPONSE,
+  })
+      : _REQUEST = REQUEST,
+        _RESPONSE = RESPONSE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REQUESTOffset = _REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? RESPONSEOffset = _RESPONSE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, REQUESTOffset);
+    fbBuilder.addOffset(1, RESPONSEOffset);
     return fbBuilder.endTable();
   }
 

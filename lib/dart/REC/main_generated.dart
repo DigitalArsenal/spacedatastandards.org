@@ -5,656 +5,1322 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-
-///  Comparison operators for match criteria and conditions
-enum ComparisonOperator {
-  EQ(0),
-  NE(1),
-  GT(2),
-  LT(3),
-  GE(4),
-  LE(5),
-  STARTS_WITH(6),
-  ENDS_WITH(7),
-  CONTAINS(8),
-  NOT_STARTS_WITH(9),
-  NOT_ENDS_WITH(10),
-  NOT_CONTAINS(11);
-
-  final int value;
-  const ComparisonOperator(this.value);
-
-  factory ComparisonOperator.fromValue(int value) {
-    switch (value) {
-      case 0: return ComparisonOperator.EQ;
-      case 1: return ComparisonOperator.NE;
-      case 2: return ComparisonOperator.GT;
-      case 3: return ComparisonOperator.LT;
-      case 4: return ComparisonOperator.GE;
-      case 5: return ComparisonOperator.LE;
-      case 6: return ComparisonOperator.STARTS_WITH;
-      case 7: return ComparisonOperator.ENDS_WITH;
-      case 8: return ComparisonOperator.CONTAINS;
-      case 9: return ComparisonOperator.NOT_STARTS_WITH;
-      case 10: return ComparisonOperator.NOT_ENDS_WITH;
-      case 11: return ComparisonOperator.NOT_CONTAINS;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static ComparisonOperator? _createOrNull(int? value) =>
-      value == null ? null : ComparisonOperator.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 11;
-  static const fb.Reader<ComparisonOperator> reader = _ComparisonOperatorReader();
-}
-
-class _ComparisonOperatorReader extends fb.Reader<ComparisonOperator> {
-  const _ComparisonOperatorReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  ComparisonOperator read(fb.BufferContext bc, int offset) =>
-      ComparisonOperator.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Data source types for telemetry parameters
-enum DataSourceType {
-  TELEMETERED(0),
-  DERIVED(1),
-  CONSTANT(2),
-  LOCAL(3),
-  GROUND(4);
-
-  final int value;
-  const DataSourceType(this.value);
-
-  factory DataSourceType.fromValue(int value) {
-    switch (value) {
-      case 0: return DataSourceType.TELEMETERED;
-      case 1: return DataSourceType.DERIVED;
-      case 2: return DataSourceType.CONSTANT;
-      case 3: return DataSourceType.LOCAL;
-      case 4: return DataSourceType.GROUND;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static DataSourceType? _createOrNull(int? value) =>
-      value == null ? null : DataSourceType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<DataSourceType> reader = _DataSourceTypeReader();
-}
-
-class _DataSourceTypeReader extends fb.Reader<DataSourceType> {
-  const _DataSourceTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  DataSourceType read(fb.BufferContext bc, int offset) =>
-      DataSourceType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Boolean operators for combining conditions
-enum BooleanOperatorType {
-  AND(0),
-  OR(1),
-  XOR(2);
-
-  final int value;
-  const BooleanOperatorType(this.value);
-
-  factory BooleanOperatorType.fromValue(int value) {
-    switch (value) {
-      case 0: return BooleanOperatorType.AND;
-      case 1: return BooleanOperatorType.OR;
-      case 2: return BooleanOperatorType.XOR;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static BooleanOperatorType? _createOrNull(int? value) =>
-      value == null ? null : BooleanOperatorType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<BooleanOperatorType> reader = _BooleanOperatorTypeReader();
-}
-
-class _BooleanOperatorTypeReader extends fb.Reader<BooleanOperatorType> {
-  const _BooleanOperatorTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  BooleanOperatorType read(fb.BufferContext bc, int offset) =>
-      BooleanOperatorType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Reference location for positioning within containers
-enum ReferenceLocationType {
-  CONTAINER_START(0),
-  CONTAINER_END(1),
-  PREVIOUS_ENTRY(2),
-  NEXT_ENTRY(3);
-
-  final int value;
-  const ReferenceLocationType(this.value);
-
-  factory ReferenceLocationType.fromValue(int value) {
-    switch (value) {
-      case 0: return ReferenceLocationType.CONTAINER_START;
-      case 1: return ReferenceLocationType.CONTAINER_END;
-      case 2: return ReferenceLocationType.PREVIOUS_ENTRY;
-      case 3: return ReferenceLocationType.NEXT_ENTRY;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static ReferenceLocationType? _createOrNull(int? value) =>
-      value == null ? null : ReferenceLocationType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<ReferenceLocationType> reader = _ReferenceLocationTypeReader();
-}
-
-class _ReferenceLocationTypeReader extends fb.Reader<ReferenceLocationType> {
-  const _ReferenceLocationTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  ReferenceLocationType read(fb.BufferContext bc, int offset) =>
-      ReferenceLocationType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Rate basis for stream rate specifications
-enum RateBasisType {
-  PER_SECOND(0),
-  PER_CONTAINER(1);
-
-  final int value;
-  const RateBasisType(this.value);
-
-  factory RateBasisType.fromValue(int value) {
-    switch (value) {
-      case 0: return RateBasisType.PER_SECOND;
-      case 1: return RateBasisType.PER_CONTAINER;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static RateBasisType? _createOrNull(int? value) =>
-      value == null ? null : RateBasisType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<RateBasisType> reader = _RateBasisTypeReader();
-}
-
-class _RateBasisTypeReader extends fb.Reader<RateBasisType> {
-  const _RateBasisTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  RateBasisType read(fb.BufferContext bc, int offset) =>
-      RateBasisType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Byte ordering for data encoding
-enum ByteOrderType {
-  BIG_ENDIAN(0),
-  LITTLE_ENDIAN(1);
-
-  final int value;
-  const ByteOrderType(this.value);
-
-  factory ByteOrderType.fromValue(int value) {
-    switch (value) {
-      case 0: return ByteOrderType.BIG_ENDIAN;
-      case 1: return ByteOrderType.LITTLE_ENDIAN;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static ByteOrderType? _createOrNull(int? value) =>
-      value == null ? null : ByteOrderType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<ByteOrderType> reader = _ByteOrderTypeReader();
-}
-
-class _ByteOrderTypeReader extends fb.Reader<ByteOrderType> {
-  const _ByteOrderTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  ByteOrderType read(fb.BufferContext bc, int offset) =>
-      ByteOrderType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Integer encoding types
-enum IntegerEncodingType {
-  UNSIGNED(0),
-  TWOS_COMPLEMENT(1),
-  SIGN_MAGNITUDE(2),
-  ONES_COMPLEMENT(3),
-  BCD(4),
-  PACKED_BCD(5);
-
-  final int value;
-  const IntegerEncodingType(this.value);
-
-  factory IntegerEncodingType.fromValue(int value) {
-    switch (value) {
-      case 0: return IntegerEncodingType.UNSIGNED;
-      case 1: return IntegerEncodingType.TWOS_COMPLEMENT;
-      case 2: return IntegerEncodingType.SIGN_MAGNITUDE;
-      case 3: return IntegerEncodingType.ONES_COMPLEMENT;
-      case 4: return IntegerEncodingType.BCD;
-      case 5: return IntegerEncodingType.PACKED_BCD;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static IntegerEncodingType? _createOrNull(int? value) =>
-      value == null ? null : IntegerEncodingType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<IntegerEncodingType> reader = _IntegerEncodingTypeReader();
-}
-
-class _IntegerEncodingTypeReader extends fb.Reader<IntegerEncodingType> {
-  const _IntegerEncodingTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  IntegerEncodingType read(fb.BufferContext bc, int offset) =>
-      IntegerEncodingType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Float encoding formats
-enum FloatEncodingType {
-  IEEE754_1985(0),
-  MILSTD_1750A(1),
-  DEC(2),
-  IBM(3),
-  TI(4);
-
-  final int value;
-  const FloatEncodingType(this.value);
-
-  factory FloatEncodingType.fromValue(int value) {
-    switch (value) {
-      case 0: return FloatEncodingType.IEEE754_1985;
-      case 1: return FloatEncodingType.MILSTD_1750A;
-      case 2: return FloatEncodingType.DEC;
-      case 3: return FloatEncodingType.IBM;
-      case 4: return FloatEncodingType.TI;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static FloatEncodingType? _createOrNull(int? value) =>
-      value == null ? null : FloatEncodingType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<FloatEncodingType> reader = _FloatEncodingTypeReader();
-}
-
-class _FloatEncodingTypeReader extends fb.Reader<FloatEncodingType> {
-  const _FloatEncodingTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  FloatEncodingType read(fb.BufferContext bc, int offset) =>
-      FloatEncodingType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  String encoding character sets
-enum StringEncodingType {
-  US_ASCII(0),
-  ISO_8859_1(1),
-  WINDOWS_1252(2),
-  UTF_8(3),
-  UTF_16(4),
-  UTF_16BE(5),
-  UTF_16LE(6);
-
-  final int value;
-  const StringEncodingType(this.value);
-
-  factory StringEncodingType.fromValue(int value) {
-    switch (value) {
-      case 0: return StringEncodingType.US_ASCII;
-      case 1: return StringEncodingType.ISO_8859_1;
-      case 2: return StringEncodingType.WINDOWS_1252;
-      case 3: return StringEncodingType.UTF_8;
-      case 4: return StringEncodingType.UTF_16;
-      case 5: return StringEncodingType.UTF_16BE;
-      case 6: return StringEncodingType.UTF_16LE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static StringEncodingType? _createOrNull(int? value) =>
-      value == null ? null : StringEncodingType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 6;
-  static const fb.Reader<StringEncodingType> reader = _StringEncodingTypeReader();
-}
-
-class _StringEncodingTypeReader extends fb.Reader<StringEncodingType> {
-  const _StringEncodingTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  StringEncodingType read(fb.BufferContext bc, int offset) =>
-      StringEncodingType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  String size specification type
-enum StringSizeType {
-  FIXED(0),
-  LEADING_SIZE(1),
-  TERMINATION_CHAR(2);
-
-  final int value;
-  const StringSizeType(this.value);
-
-  factory StringSizeType.fromValue(int value) {
-    switch (value) {
-      case 0: return StringSizeType.FIXED;
-      case 1: return StringSizeType.LEADING_SIZE;
-      case 2: return StringSizeType.TERMINATION_CHAR;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static StringSizeType? _createOrNull(int? value) =>
-      value == null ? null : StringSizeType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<StringSizeType> reader = _StringSizeTypeReader();
-}
-
-class _StringSizeTypeReader extends fb.Reader<StringSizeType> {
-  const _StringSizeTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  StringSizeType read(fb.BufferContext bc, int offset) =>
-      StringSizeType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Alarm severity levels
-enum AlarmSeverityType {
-  NORMAL(0),
-  WATCH(1),
-  WARNING(2),
-  DISTRESS(3),
-  CRITICAL(4),
-  SEVERE(5);
-
-  final int value;
-  const AlarmSeverityType(this.value);
-
-  factory AlarmSeverityType.fromValue(int value) {
-    switch (value) {
-      case 0: return AlarmSeverityType.NORMAL;
-      case 1: return AlarmSeverityType.WATCH;
-      case 2: return AlarmSeverityType.WARNING;
-      case 3: return AlarmSeverityType.DISTRESS;
-      case 4: return AlarmSeverityType.CRITICAL;
-      case 5: return AlarmSeverityType.SEVERE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static AlarmSeverityType? _createOrNull(int? value) =>
-      value == null ? null : AlarmSeverityType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<AlarmSeverityType> reader = _AlarmSeverityTypeReader();
-}
-
-class _AlarmSeverityTypeReader extends fb.Reader<AlarmSeverityType> {
-  const _AlarmSeverityTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  AlarmSeverityType read(fb.BufferContext bc, int offset) =>
-      AlarmSeverityType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Verifier type for command verification
-enum VerifierType {
-  START(0),
-  PROGRESS(1),
-  COMPLETE(2),
-  FAILED(3);
-
-  final int value;
-  const VerifierType(this.value);
-
-  factory VerifierType.fromValue(int value) {
-    switch (value) {
-      case 0: return VerifierType.START;
-      case 1: return VerifierType.PROGRESS;
-      case 2: return VerifierType.COMPLETE;
-      case 3: return VerifierType.FAILED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static VerifierType? _createOrNull(int? value) =>
-      value == null ? null : VerifierType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<VerifierType> reader = _VerifierTypeReader();
-}
-
-class _VerifierTypeReader extends fb.Reader<VerifierType> {
-  const _VerifierTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  VerifierType read(fb.BufferContext bc, int offset) =>
-      VerifierType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Time window reference for command verification
-enum TimeWindowRefType {
-  COMMAND_RELEASE(0),
-  TIME_LAST_VERIFIER_PASSED(1);
-
-  final int value;
-  const TimeWindowRefType(this.value);
-
-  factory TimeWindowRefType.fromValue(int value) {
-    switch (value) {
-      case 0: return TimeWindowRefType.COMMAND_RELEASE;
-      case 1: return TimeWindowRefType.TIME_LAST_VERIFIER_PASSED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static TimeWindowRefType? _createOrNull(int? value) =>
-      value == null ? null : TimeWindowRefType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<TimeWindowRefType> reader = _TimeWindowRefTypeReader();
-}
-
-class _TimeWindowRefTypeReader extends fb.Reader<TimeWindowRefType> {
-  const _TimeWindowRefTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  TimeWindowRefType read(fb.BufferContext bc, int offset) =>
-      TimeWindowRefType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Epoch reference for absolute time
-enum EpochType {
-  TAI(0),
-  J2000(1),
-  UNIX(2),
-  GPS(3),
-  CUSTOM(4);
-
-  final int value;
-  const EpochType(this.value);
-
-  factory EpochType.fromValue(int value) {
-    switch (value) {
-      case 0: return EpochType.TAI;
-      case 1: return EpochType.J2000;
-      case 2: return EpochType.UNIX;
-      case 3: return EpochType.GPS;
-      case 4: return EpochType.CUSTOM;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static EpochType? _createOrNull(int? value) =>
-      value == null ? null : EpochType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<EpochType> reader = _EpochTypeReader();
-}
-
-class _EpochTypeReader extends fb.Reader<EpochType> {
-  const _EpochTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  EpochType read(fb.BufferContext bc, int offset) =>
-      EpochType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Error detection/correction algorithms
-enum ErrorDetectionType {
+import './main_generated.dart';
+
+///  ORDINAL FREEZE -- APPEND ONLY, FOREVER.
+///  A member's position IS its wire value: flatc writes it into the
+///  Record.value_type byte of every $REC ever serialized, including the
+///  publication trailer of every protected module artifact. Inserting,
+///  reordering or removing a member silently re-points every record ever
+///  written at the wrong standard. This has already happened three times;
+///  inserting $PGM mid-union (c1580d4700, 2026-07-08) moved $PNM 113 -> 114
+///  and broke protected-plugin decryption fleet-wide for three weeks.
+///  New standards are APPENDED at the end. A retired standard is deprecated
+///  in place, never deleted -- an ordinal is never reused.
+///  Contract: schema/REC/RECORDTYPE_ORDINALS.json
+///  Guard:    node scripts/checkRecordTypeOrdinals.mjs
+///  Records written before 2026-07-08 are only decodable via Record.standard,
+///  which is the sole discriminator that has never shifted.
+enum RecordTypeTypeId {
   NONE(0),
-  CRC(1),
-  CHECKSUM(2),
-  PARITY(3);
+  ACL(1),
+  ACM(2),
+  ACR(3),
+  ACW(4),
+  AEM(5),
+  ANI(6),
+  AOF(7),
+  APM(8),
+  ARM(9),
+  AST(10),
+  ATD(11),
+  ATM(12),
+  BAL(13),
+  BEM(14),
+  BMC(15),
+  BOV(16),
+  BSP(17),
+  BUS(18),
+  CAQ(19),
+  CAT(20),
+  CDM(21),
+  CFP(22),
+  CHN(23),
+  CLT(24),
+  CMS(25),
+  COM(26),
+  COT(27),
+  CRD(28),
+  CRM(29),
+  CSM(30),
+  CTR(31),
+  CZM(32),
+  DFH(33),
+  DMG(34),
+  DOA(35),
+  DPM(36),
+  DSS(37),
+  EME(38),
+  ENC(39),
+  ENV(40),
+  EOO(41),
+  EOP(42),
+  EPM(43),
+  ESL(44),
+  ETM(45),
+  EWR(46),
+  FCS(47),
+  FPC(48),
+  FRM(49),
+  GDI(50),
+  GEO(51),
+  GJN(52),
+  GNO(53),
+  GPX(54),
+  GRV(55),
+  GVH(56),
+  HEL(57),
+  HFC(58),
+  HYP(59),
+  IDM(60),
+  ION(61),
+  IRO(62),
+  KMF(63),
+  KML(64),
+  KRF(65),
+  LAM(66),
+  LCC(67),
+  LCF(68),
+  LCH(69),
+  LDM(70),
+  LGR(71),
+  LKS(72),
+  LMO(73),
+  LMR(74),
+  LMS(75),
+  LND(76),
+  LNE(77),
+  LPF(78),
+  LWK(79),
+  MBL(80),
+  MET(81),
+  MFE(82),
+  MNF(83),
+  MNV(84),
+  MPE(85),
+  MSL(86),
+  MST(87),
+  MTI(88),
+  NAV(89),
+  NUM(90),
+  OBD(91),
+  OBT(92),
+  OCM(93),
+  OEM(94),
+  OMM(95),
+  OOA(96),
+  OOB(97),
+  OOD(98),
+  OOE(99),
+  OOI(100),
+  OOL(101),
+  OON(102),
+  OOS(103),
+  OOT(104),
+  OPM(105),
+  OSM(106),
+  PCF(107),
+  PHY(108),
+  PGM(109),
+  PIV(110),
+  PLD(111),
+  PLG(112),
+  PLK(113),
+  PNM(114),
+  PPE(115),
+  PRG(116),
+  PRR(117),
+  PRW(118),
+  PUR(119),
+  RAF(120),
+  RBK(121),
+  RCF(122),
+  RDM(123),
+  RDO(124),
+  REM(125),
+  REV(126),
+  RFB(127),
+  RFE(128),
+  RFM(129),
+  RFO(130),
+  ROC(131),
+  SAR(132),
+  SCM(133),
+  SDF(134),
+  SDL(135),
+  SDR(136),
+  SEN(137),
+  SEO(138),
+  SEV(139),
+  SHW(140),
+  SIT(141),
+  SKI(142),
+  SNR(143),
+  SNW(144),
+  SOI(145),
+  SON(146),
+  SPP(147),
+  SPW(148),
+  SRI(149),
+  STF(150),
+  STR(151),
+  STV(152),
+  SWR(153),
+  TAB(154),
+  TCF(155),
+  TDM(156),
+  TIM(157),
+  TKG(158),
+  TME(159),
+  TMF(160),
+  TNR(161),
+  TPN(162),
+  TRE(163),
+  TRK(164),
+  TRN(165),
+  VCM(166),
+  WPN(167),
+  WTH(168),
+  XTC(169),
+  SCV(170),
+  FSM(171),
+  FSP(172),
+  SCC(173),
+  SCN(174),
+  VST(175),
+  ENT(176),
+  VAM(177),
+  APP(178),
+  CMT(179),
+  SCX(180),
+  CVG(181),
+  PKB(182),
+  RPT(183),
+  STO(184),
+  SUB(185),
+  WKS(186),
+  CPS(187),
+  FSB(188),
+  FSO(189),
+  GST(190),
+  MDP(191),
+  MDS(192),
+  PNL(193),
+  SHC(194),
+  CES(195),
+  QEM(196),
+  SBM(197),
+  PMM(198),
+  OPP(199),
+  IQC(200),
+  CNP(201),
+  CMR(202),
+  TBS(203),
+  CCT(204),
+  ACI(205),
+  CVP(206),
+  RFL(207),
+  RFS(208),
+  TRS(209),
+  GNP(210),
+  DTT(211),
+  AVL(212),
+  TFN(213),
+  TMS(214),
+  VEP(215),
+  EGP(216),
+  APL(217),
+  EMC(218),
+  EPF(219),
+  GEL(220),
+  PAP(221),
+  RSD(222),
+  IRM(223),
+  VCF(224),
+  STX(225),
+  TXS(226),
+  BPF(227),
+  EVL(228),
+  PCE(229),
+  NCD(230),
+  MEM(231),
+  ODR(232),
+  TRH(233),
+  SLP(234),
+  PSS(235),
+  ICN(236),
+  TRP(237),
+  TRV(238),
+  ACT(239),
+  AGR(240),
+  NDS(241),
+  NST(242),
+  QRP(243),
+  TCT(244),
+  WXF(245),
+  CLM(246),
+  GCT(247),
+  CQR(248),
+  RPC(249),
+  CSO(250),
+  PHB(251),
+  SKT(252),
+  SKQ(253),
+  SKR(254),
+  ETS(255);
 
   final int value;
-  const ErrorDetectionType(this.value);
+  const RecordTypeTypeId(this.value);
 
-  factory ErrorDetectionType.fromValue(int value) {
+  factory RecordTypeTypeId.fromValue(int value) {
     switch (value) {
-      case 0: return ErrorDetectionType.NONE;
-      case 1: return ErrorDetectionType.CRC;
-      case 2: return ErrorDetectionType.CHECKSUM;
-      case 3: return ErrorDetectionType.PARITY;
+      case 0: return RecordTypeTypeId.NONE;
+      case 1: return RecordTypeTypeId.ACL;
+      case 2: return RecordTypeTypeId.ACM;
+      case 3: return RecordTypeTypeId.ACR;
+      case 4: return RecordTypeTypeId.ACW;
+      case 5: return RecordTypeTypeId.AEM;
+      case 6: return RecordTypeTypeId.ANI;
+      case 7: return RecordTypeTypeId.AOF;
+      case 8: return RecordTypeTypeId.APM;
+      case 9: return RecordTypeTypeId.ARM;
+      case 10: return RecordTypeTypeId.AST;
+      case 11: return RecordTypeTypeId.ATD;
+      case 12: return RecordTypeTypeId.ATM;
+      case 13: return RecordTypeTypeId.BAL;
+      case 14: return RecordTypeTypeId.BEM;
+      case 15: return RecordTypeTypeId.BMC;
+      case 16: return RecordTypeTypeId.BOV;
+      case 17: return RecordTypeTypeId.BSP;
+      case 18: return RecordTypeTypeId.BUS;
+      case 19: return RecordTypeTypeId.CAQ;
+      case 20: return RecordTypeTypeId.CAT;
+      case 21: return RecordTypeTypeId.CDM;
+      case 22: return RecordTypeTypeId.CFP;
+      case 23: return RecordTypeTypeId.CHN;
+      case 24: return RecordTypeTypeId.CLT;
+      case 25: return RecordTypeTypeId.CMS;
+      case 26: return RecordTypeTypeId.COM;
+      case 27: return RecordTypeTypeId.COT;
+      case 28: return RecordTypeTypeId.CRD;
+      case 29: return RecordTypeTypeId.CRM;
+      case 30: return RecordTypeTypeId.CSM;
+      case 31: return RecordTypeTypeId.CTR;
+      case 32: return RecordTypeTypeId.CZM;
+      case 33: return RecordTypeTypeId.DFH;
+      case 34: return RecordTypeTypeId.DMG;
+      case 35: return RecordTypeTypeId.DOA;
+      case 36: return RecordTypeTypeId.DPM;
+      case 37: return RecordTypeTypeId.DSS;
+      case 38: return RecordTypeTypeId.EME;
+      case 39: return RecordTypeTypeId.ENC;
+      case 40: return RecordTypeTypeId.ENV;
+      case 41: return RecordTypeTypeId.EOO;
+      case 42: return RecordTypeTypeId.EOP;
+      case 43: return RecordTypeTypeId.EPM;
+      case 44: return RecordTypeTypeId.ESL;
+      case 45: return RecordTypeTypeId.ETM;
+      case 46: return RecordTypeTypeId.EWR;
+      case 47: return RecordTypeTypeId.FCS;
+      case 48: return RecordTypeTypeId.FPC;
+      case 49: return RecordTypeTypeId.FRM;
+      case 50: return RecordTypeTypeId.GDI;
+      case 51: return RecordTypeTypeId.GEO;
+      case 52: return RecordTypeTypeId.GJN;
+      case 53: return RecordTypeTypeId.GNO;
+      case 54: return RecordTypeTypeId.GPX;
+      case 55: return RecordTypeTypeId.GRV;
+      case 56: return RecordTypeTypeId.GVH;
+      case 57: return RecordTypeTypeId.HEL;
+      case 58: return RecordTypeTypeId.HFC;
+      case 59: return RecordTypeTypeId.HYP;
+      case 60: return RecordTypeTypeId.IDM;
+      case 61: return RecordTypeTypeId.ION;
+      case 62: return RecordTypeTypeId.IRO;
+      case 63: return RecordTypeTypeId.KMF;
+      case 64: return RecordTypeTypeId.KML;
+      case 65: return RecordTypeTypeId.KRF;
+      case 66: return RecordTypeTypeId.LAM;
+      case 67: return RecordTypeTypeId.LCC;
+      case 68: return RecordTypeTypeId.LCF;
+      case 69: return RecordTypeTypeId.LCH;
+      case 70: return RecordTypeTypeId.LDM;
+      case 71: return RecordTypeTypeId.LGR;
+      case 72: return RecordTypeTypeId.LKS;
+      case 73: return RecordTypeTypeId.LMO;
+      case 74: return RecordTypeTypeId.LMR;
+      case 75: return RecordTypeTypeId.LMS;
+      case 76: return RecordTypeTypeId.LND;
+      case 77: return RecordTypeTypeId.LNE;
+      case 78: return RecordTypeTypeId.LPF;
+      case 79: return RecordTypeTypeId.LWK;
+      case 80: return RecordTypeTypeId.MBL;
+      case 81: return RecordTypeTypeId.MET;
+      case 82: return RecordTypeTypeId.MFE;
+      case 83: return RecordTypeTypeId.MNF;
+      case 84: return RecordTypeTypeId.MNV;
+      case 85: return RecordTypeTypeId.MPE;
+      case 86: return RecordTypeTypeId.MSL;
+      case 87: return RecordTypeTypeId.MST;
+      case 88: return RecordTypeTypeId.MTI;
+      case 89: return RecordTypeTypeId.NAV;
+      case 90: return RecordTypeTypeId.NUM;
+      case 91: return RecordTypeTypeId.OBD;
+      case 92: return RecordTypeTypeId.OBT;
+      case 93: return RecordTypeTypeId.OCM;
+      case 94: return RecordTypeTypeId.OEM;
+      case 95: return RecordTypeTypeId.OMM;
+      case 96: return RecordTypeTypeId.OOA;
+      case 97: return RecordTypeTypeId.OOB;
+      case 98: return RecordTypeTypeId.OOD;
+      case 99: return RecordTypeTypeId.OOE;
+      case 100: return RecordTypeTypeId.OOI;
+      case 101: return RecordTypeTypeId.OOL;
+      case 102: return RecordTypeTypeId.OON;
+      case 103: return RecordTypeTypeId.OOS;
+      case 104: return RecordTypeTypeId.OOT;
+      case 105: return RecordTypeTypeId.OPM;
+      case 106: return RecordTypeTypeId.OSM;
+      case 107: return RecordTypeTypeId.PCF;
+      case 108: return RecordTypeTypeId.PHY;
+      case 109: return RecordTypeTypeId.PGM;
+      case 110: return RecordTypeTypeId.PIV;
+      case 111: return RecordTypeTypeId.PLD;
+      case 112: return RecordTypeTypeId.PLG;
+      case 113: return RecordTypeTypeId.PLK;
+      case 114: return RecordTypeTypeId.PNM;
+      case 115: return RecordTypeTypeId.PPE;
+      case 116: return RecordTypeTypeId.PRG;
+      case 117: return RecordTypeTypeId.PRR;
+      case 118: return RecordTypeTypeId.PRW;
+      case 119: return RecordTypeTypeId.PUR;
+      case 120: return RecordTypeTypeId.RAF;
+      case 121: return RecordTypeTypeId.RBK;
+      case 122: return RecordTypeTypeId.RCF;
+      case 123: return RecordTypeTypeId.RDM;
+      case 124: return RecordTypeTypeId.RDO;
+      case 125: return RecordTypeTypeId.REM;
+      case 126: return RecordTypeTypeId.REV;
+      case 127: return RecordTypeTypeId.RFB;
+      case 128: return RecordTypeTypeId.RFE;
+      case 129: return RecordTypeTypeId.RFM;
+      case 130: return RecordTypeTypeId.RFO;
+      case 131: return RecordTypeTypeId.ROC;
+      case 132: return RecordTypeTypeId.SAR;
+      case 133: return RecordTypeTypeId.SCM;
+      case 134: return RecordTypeTypeId.SDF;
+      case 135: return RecordTypeTypeId.SDL;
+      case 136: return RecordTypeTypeId.SDR;
+      case 137: return RecordTypeTypeId.SEN;
+      case 138: return RecordTypeTypeId.SEO;
+      case 139: return RecordTypeTypeId.SEV;
+      case 140: return RecordTypeTypeId.SHW;
+      case 141: return RecordTypeTypeId.SIT;
+      case 142: return RecordTypeTypeId.SKI;
+      case 143: return RecordTypeTypeId.SNR;
+      case 144: return RecordTypeTypeId.SNW;
+      case 145: return RecordTypeTypeId.SOI;
+      case 146: return RecordTypeTypeId.SON;
+      case 147: return RecordTypeTypeId.SPP;
+      case 148: return RecordTypeTypeId.SPW;
+      case 149: return RecordTypeTypeId.SRI;
+      case 150: return RecordTypeTypeId.STF;
+      case 151: return RecordTypeTypeId.STR;
+      case 152: return RecordTypeTypeId.STV;
+      case 153: return RecordTypeTypeId.SWR;
+      case 154: return RecordTypeTypeId.TAB;
+      case 155: return RecordTypeTypeId.TCF;
+      case 156: return RecordTypeTypeId.TDM;
+      case 157: return RecordTypeTypeId.TIM;
+      case 158: return RecordTypeTypeId.TKG;
+      case 159: return RecordTypeTypeId.TME;
+      case 160: return RecordTypeTypeId.TMF;
+      case 161: return RecordTypeTypeId.TNR;
+      case 162: return RecordTypeTypeId.TPN;
+      case 163: return RecordTypeTypeId.TRE;
+      case 164: return RecordTypeTypeId.TRK;
+      case 165: return RecordTypeTypeId.TRN;
+      case 166: return RecordTypeTypeId.VCM;
+      case 167: return RecordTypeTypeId.WPN;
+      case 168: return RecordTypeTypeId.WTH;
+      case 169: return RecordTypeTypeId.XTC;
+      case 170: return RecordTypeTypeId.SCV;
+      case 171: return RecordTypeTypeId.FSM;
+      case 172: return RecordTypeTypeId.FSP;
+      case 173: return RecordTypeTypeId.SCC;
+      case 174: return RecordTypeTypeId.SCN;
+      case 175: return RecordTypeTypeId.VST;
+      case 176: return RecordTypeTypeId.ENT;
+      case 177: return RecordTypeTypeId.VAM;
+      case 178: return RecordTypeTypeId.APP;
+      case 179: return RecordTypeTypeId.CMT;
+      case 180: return RecordTypeTypeId.SCX;
+      case 181: return RecordTypeTypeId.CVG;
+      case 182: return RecordTypeTypeId.PKB;
+      case 183: return RecordTypeTypeId.RPT;
+      case 184: return RecordTypeTypeId.STO;
+      case 185: return RecordTypeTypeId.SUB;
+      case 186: return RecordTypeTypeId.WKS;
+      case 187: return RecordTypeTypeId.CPS;
+      case 188: return RecordTypeTypeId.FSB;
+      case 189: return RecordTypeTypeId.FSO;
+      case 190: return RecordTypeTypeId.GST;
+      case 191: return RecordTypeTypeId.MDP;
+      case 192: return RecordTypeTypeId.MDS;
+      case 193: return RecordTypeTypeId.PNL;
+      case 194: return RecordTypeTypeId.SHC;
+      case 195: return RecordTypeTypeId.CES;
+      case 196: return RecordTypeTypeId.QEM;
+      case 197: return RecordTypeTypeId.SBM;
+      case 198: return RecordTypeTypeId.PMM;
+      case 199: return RecordTypeTypeId.OPP;
+      case 200: return RecordTypeTypeId.IQC;
+      case 201: return RecordTypeTypeId.CNP;
+      case 202: return RecordTypeTypeId.CMR;
+      case 203: return RecordTypeTypeId.TBS;
+      case 204: return RecordTypeTypeId.CCT;
+      case 205: return RecordTypeTypeId.ACI;
+      case 206: return RecordTypeTypeId.CVP;
+      case 207: return RecordTypeTypeId.RFL;
+      case 208: return RecordTypeTypeId.RFS;
+      case 209: return RecordTypeTypeId.TRS;
+      case 210: return RecordTypeTypeId.GNP;
+      case 211: return RecordTypeTypeId.DTT;
+      case 212: return RecordTypeTypeId.AVL;
+      case 213: return RecordTypeTypeId.TFN;
+      case 214: return RecordTypeTypeId.TMS;
+      case 215: return RecordTypeTypeId.VEP;
+      case 216: return RecordTypeTypeId.EGP;
+      case 217: return RecordTypeTypeId.APL;
+      case 218: return RecordTypeTypeId.EMC;
+      case 219: return RecordTypeTypeId.EPF;
+      case 220: return RecordTypeTypeId.GEL;
+      case 221: return RecordTypeTypeId.PAP;
+      case 222: return RecordTypeTypeId.RSD;
+      case 223: return RecordTypeTypeId.IRM;
+      case 224: return RecordTypeTypeId.VCF;
+      case 225: return RecordTypeTypeId.STX;
+      case 226: return RecordTypeTypeId.TXS;
+      case 227: return RecordTypeTypeId.BPF;
+      case 228: return RecordTypeTypeId.EVL;
+      case 229: return RecordTypeTypeId.PCE;
+      case 230: return RecordTypeTypeId.NCD;
+      case 231: return RecordTypeTypeId.MEM;
+      case 232: return RecordTypeTypeId.ODR;
+      case 233: return RecordTypeTypeId.TRH;
+      case 234: return RecordTypeTypeId.SLP;
+      case 235: return RecordTypeTypeId.PSS;
+      case 236: return RecordTypeTypeId.ICN;
+      case 237: return RecordTypeTypeId.TRP;
+      case 238: return RecordTypeTypeId.TRV;
+      case 239: return RecordTypeTypeId.ACT;
+      case 240: return RecordTypeTypeId.AGR;
+      case 241: return RecordTypeTypeId.NDS;
+      case 242: return RecordTypeTypeId.NST;
+      case 243: return RecordTypeTypeId.QRP;
+      case 244: return RecordTypeTypeId.TCT;
+      case 245: return RecordTypeTypeId.WXF;
+      case 246: return RecordTypeTypeId.CLM;
+      case 247: return RecordTypeTypeId.GCT;
+      case 248: return RecordTypeTypeId.CQR;
+      case 249: return RecordTypeTypeId.RPC;
+      case 250: return RecordTypeTypeId.CSO;
+      case 251: return RecordTypeTypeId.PHB;
+      case 252: return RecordTypeTypeId.SKT;
+      case 253: return RecordTypeTypeId.SKQ;
+      case 254: return RecordTypeTypeId.SKR;
+      case 255: return RecordTypeTypeId.ETS;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static ErrorDetectionType? _createOrNull(int? value) =>
-      value == null ? null : ErrorDetectionType.fromValue(value);
+  static RecordTypeTypeId? _createOrNull(int? value) =>
+      value == null ? null : RecordTypeTypeId.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<ErrorDetectionType> reader = _ErrorDetectionTypeReader();
+  static const int maxValue = 255;
+  static const fb.Reader<RecordTypeTypeId> reader = _RecordTypeTypeIdReader();
 }
 
-class _ErrorDetectionTypeReader extends fb.Reader<ErrorDetectionType> {
-  const _ErrorDetectionTypeReader();
+class _RecordTypeTypeIdReader extends fb.Reader<RecordTypeTypeId> {
+  const _RecordTypeTypeIdReader();
 
   @override
   int get size => 1;
 
   @override
-  ErrorDetectionType read(fb.BufferContext bc, int offset) =>
-      ErrorDetectionType.fromValue(const fb.Int8Reader().read(bc, offset));
+  RecordTypeTypeId read(fb.BufferContext bc, int offset) =>
+      RecordTypeTypeId.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Integer data encoding specification
-class IntegerDataEncoding {
-  IntegerDataEncoding._(this._bc, this._bcOffset);
-  factory IntegerDataEncoding(List<int> bytes) {
+///  WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
+///  union RecordType holds at most 255 members (a FlatBuffers union tag is
+///  one byte). Every later standard gets an ordinal here, from 256, and its
+///  records carry it in Record.EXTENDED_TYPE with the record's own
+///  FlatBuffer in Record.EXTENDED_VALUE (Record.value stays NONE).
+///  Contract: schema/REC/RECORDTYPE_ORDINALS.json (extended_ordinals)
+///  Guard:    node scripts/checkRecordTypeOrdinals.mjs
+enum RecordTypeExtended {
+  NONE(0),
+  ABA(256),
+  CVR(257),
+  PVN(258);
+
+  final int value;
+  const RecordTypeExtended(this.value);
+
+  factory RecordTypeExtended.fromValue(int value) {
+    switch (value) {
+      case 0: return RecordTypeExtended.NONE;
+      case 256: return RecordTypeExtended.ABA;
+      case 257: return RecordTypeExtended.CVR;
+      case 258: return RecordTypeExtended.PVN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static RecordTypeExtended? _createOrNull(int? value) =>
+      value == null ? null : RecordTypeExtended.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 258;
+  static const fb.Reader<RecordTypeExtended> reader = _RecordTypeExtendedReader();
+}
+
+class _RecordTypeExtendedReader extends fb.Reader<RecordTypeExtended> {
+  const _RecordTypeExtendedReader();
+
+  @override
+  int get size => 2;
+
+  @override
+  RecordTypeExtended read(fb.BufferContext bc, int offset) =>
+      RecordTypeExtended.fromValue(const fb.Uint16Reader().read(bc, offset));
+}
+
+/// Field-encryption format 3: encrypts or decrypts, in place, every
+/// (encrypted) field instance of a buffer exactly as the C++ walker
+/// (flatbuffers::EncryptBuffer/DecryptBuffer, version 3) and flatc-wasm do.
+/// The record's key is
+/// K = HKDF-SHA256(key, no salt, "flatbuffers-buffer-v3" || BE32(recordIndex)),
+/// and each instance is AES-256-CTR encrypted with K and the IV
+/// BE32(position of its first byte in the buffer) || 12 zero bytes, so no two
+/// instances share a key stream. (key, recordIndex) must be unique per buffer.
+/// Generated tables call it with their walk program.
+class _FlatbuffersEncryption {
+  static const List<int> _sbox = [
+    0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
+    0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
+    0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
+    0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
+    0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84,
+    0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf,
+    0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8,
+    0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2,
+    0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73,
+    0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb,
+    0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79,
+    0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08,
+    0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
+    0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
+    0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
+    0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16,
+  ];
+
+  static const List<int> _k = [
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+  ];
+
+  static int _rotr(int x, int n) => ((x >> n) | (x << (32 - n))) & 0xFFFFFFFF;
+
+  static Uint8List _sha256(List<int> message) {
+    final h = <int>[
+      0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+      0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
+    ];
+    final length = message.length;
+    final data = Uint8List(((length + 8) ~/ 64 + 1) * 64);
+    data.setRange(0, length, message);
+    data[length] = 0x80;
+    final bits = length * 8;
+    for (var i = 0; i < 4; i++) {
+      data[data.length - 1 - i] = (bits >> (8 * i)) & 0xFF;
+    }
+    final w = List<int>.filled(64, 0);
+    for (var chunk = 0; chunk < data.length; chunk += 64) {
+      for (var i = 0; i < 16; i++) {
+        final j = chunk + 4 * i;
+        w[i] = (data[j] << 24) | (data[j + 1] << 16) | (data[j + 2] << 8) | data[j + 3];
+      }
+      for (var i = 16; i < 64; i++) {
+        final s0 = _rotr(w[i - 15], 7) ^ _rotr(w[i - 15], 18) ^ (w[i - 15] >> 3);
+        final s1 = _rotr(w[i - 2], 17) ^ _rotr(w[i - 2], 19) ^ (w[i - 2] >> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) & 0xFFFFFFFF;
+      }
+      var a = h[0], b = h[1], c = h[2], d = h[3];
+      var e = h[4], f = h[5], g = h[6], hh = h[7];
+      for (var i = 0; i < 64; i++) {
+        final s1 = _rotr(e, 6) ^ _rotr(e, 11) ^ _rotr(e, 25);
+        final ch = (e & f) ^ ((~e & 0xFFFFFFFF) & g);
+        final t1 = (hh + s1 + ch + _k[i] + w[i]) & 0xFFFFFFFF;
+        final s0 = _rotr(a, 2) ^ _rotr(a, 13) ^ _rotr(a, 22);
+        final maj = (a & b) ^ (a & c) ^ (b & c);
+        final t2 = (s0 + maj) & 0xFFFFFFFF;
+        hh = g;
+        g = f;
+        f = e;
+        e = (d + t1) & 0xFFFFFFFF;
+        d = c;
+        c = b;
+        b = a;
+        a = (t1 + t2) & 0xFFFFFFFF;
+      }
+      h[0] = (h[0] + a) & 0xFFFFFFFF;
+      h[1] = (h[1] + b) & 0xFFFFFFFF;
+      h[2] = (h[2] + c) & 0xFFFFFFFF;
+      h[3] = (h[3] + d) & 0xFFFFFFFF;
+      h[4] = (h[4] + e) & 0xFFFFFFFF;
+      h[5] = (h[5] + f) & 0xFFFFFFFF;
+      h[6] = (h[6] + g) & 0xFFFFFFFF;
+      h[7] = (h[7] + hh) & 0xFFFFFFFF;
+    }
+    final out = Uint8List(32);
+    for (var i = 0; i < 8; i++) {
+      out[4 * i] = (h[i] >> 24) & 0xFF;
+      out[4 * i + 1] = (h[i] >> 16) & 0xFF;
+      out[4 * i + 2] = (h[i] >> 8) & 0xFF;
+      out[4 * i + 3] = h[i] & 0xFF;
+    }
+    return out;
+  }
+
+  static Uint8List _hmac(List<int> key, List<int> message) {
+    final block = Uint8List(64)..setRange(0, key.length, key);
+    final inner = Uint8List(64 + message.length);
+    final outer = Uint8List(64 + 32);
+    for (var i = 0; i < 64; i++) {
+      inner[i] = block[i] ^ 0x36;
+      outer[i] = block[i] ^ 0x5c;
+    }
+    inner.setRange(64, inner.length, message);
+    outer.setRange(64, 96, _sha256(inner));
+    return _sha256(outer);
+  }
+
+  /// HKDF-SHA256(key, no salt, "flatbuffers-buffer-v3" || BE32(recordIndex)).
+  static Uint8List bufferKey(List<int> key, int recordIndex) {
+    final prk = _hmac(Uint8List(32), key);
+    final info = <int>[...'flatbuffers-buffer-v3'.codeUnits,
+      (recordIndex >> 24) & 0xFF, (recordIndex >> 16) & 0xFF,
+      (recordIndex >> 8) & 0xFF, recordIndex & 0xFF, 1];
+    return _hmac(prk, info);
+  }
+
+  static int _xtime(int a) => ((a << 1) ^ ((a & 0x80) != 0 ? 0x1b : 0)) & 0xFF;
+
+  static List<int> _expandKey(List<int> key) {
+    final w = List<int>.filled(240, 0)..setRange(0, 32, key);
+    var rcon = 1;
+    for (var i = 32; i < 240; i += 4) {
+      var t0 = w[i - 4], t1 = w[i - 3], t2 = w[i - 2], t3 = w[i - 1];
+      if (i % 32 == 0) {
+        final r0 = _sbox[t1] ^ rcon;
+        t1 = _sbox[t2];
+        t2 = _sbox[t3];
+        t3 = _sbox[t0];
+        t0 = r0;
+        rcon = _xtime(rcon);
+      } else if (i % 32 == 16) {
+        t0 = _sbox[t0];
+        t1 = _sbox[t1];
+        t2 = _sbox[t2];
+        t3 = _sbox[t3];
+      }
+      w[i] = w[i - 32] ^ t0;
+      w[i + 1] = w[i - 31] ^ t1;
+      w[i + 2] = w[i - 30] ^ t2;
+      w[i + 3] = w[i - 29] ^ t3;
+    }
+    return w;
+  }
+
+  static List<int> _encryptBlock(List<int> w, List<int> block) {
+    var s = List<int>.generate(16, (i) => block[i] ^ w[i]);
+    for (var round = 1; round < 15; round++) {
+      final t = List<int>.generate(16, (i) => _sbox[s[i]]);
+      s = [t[0], t[5], t[10], t[15], t[4], t[9], t[14], t[3],
+           t[8], t[13], t[2], t[7], t[12], t[1], t[6], t[11]];
+      if (round < 14) {
+        for (var c = 0; c < 16; c += 4) {
+          final a0 = s[c], a1 = s[c + 1], a2 = s[c + 2], a3 = s[c + 3];
+          final x = a0 ^ a1 ^ a2 ^ a3;
+          s[c] = a0 ^ x ^ _xtime(a0 ^ a1);
+          s[c + 1] = a1 ^ x ^ _xtime(a1 ^ a2);
+          s[c + 2] = a2 ^ x ^ _xtime(a2 ^ a3);
+          s[c + 3] = a3 ^ x ^ _xtime(a3 ^ a0);
+        }
+      }
+      for (var i = 0; i < 16; i++) {
+        s[i] ^= w[16 * round + i];
+      }
+    }
+    return s;
+  }
+
+  /// Encrypts or decrypts (the same operation), in place, every (encrypted)
+  /// field instance of bytes by a table's walk program. Throws ArgumentError,
+  /// before any byte changes, for a bad key or a malformed buffer.
+  static void cryptBuffer(
+      Uint8List bytes, List<int> key, int recordIndex, List<int> program) {
+    if (key.length != 32) {
+      throw ArgumentError('FlatbuffersEncryption: the key must be 32 bytes');
+    }
+    if (recordIndex < 0 || recordIndex > 0xFFFFFFFF) {
+      throw ArgumentError('FlatbuffersEncryption: recordIndex must fit in 32 bits');
+    }
+    if (bytes.length < 4 || bytes.length > 0x7FFFFFFF) {
+      throw ArgumentError('FlatbuffersEncryption: invalid buffer');
+    }
+    final dry = _FlatbuffersEncryptionWalk(bytes, program, null);
+    final root = dry.u32(0);
+    dry.check(root, 4);
+    dry.walk(0, root, 0);
+    _FlatbuffersEncryptionWalk(
+            bytes, program, _expandKey(bufferKey(key, recordIndex)))
+        .walk(0, root, 0);
+  }
+}
+
+class _FlatbuffersEncryptionWalk {
+  _FlatbuffersEncryptionWalk(this.buf, this.program, this.roundKeys);
+
+  final Uint8List buf;
+  final List<int> program;
+  final List<int>? roundKeys; // null: a dry run that only checks the buffer
+  final Set<int> tables = <int>{};
+  final Set<int> regions = <int>{};
+
+  Never fail(String what) =>
+      throw ArgumentError('FlatbuffersEncryption: ' + what);
+
+  void check(int pos, int length) {
+    if (pos < 0 || length < 0 || pos > buf.length || length > buf.length - pos) {
+      fail('the buffer is malformed (offset $pos out of bounds)');
+    }
+  }
+
+  int u8(int pos) {
+    check(pos, 1);
+    return buf[pos];
+  }
+
+  int u16(int pos) {
+    check(pos, 2);
+    return buf[pos] | (buf[pos + 1] << 8);
+  }
+
+  int u32(int pos) {
+    check(pos, 4);
+    return u16(pos) + u16(pos + 2) * 65536;
+  }
+
+  int follow(int pos) {
+    final target = pos + u32(pos);
+    check(target, 4);
+    return target;
+  }
+
+  int count(int pos, int elementSize) {
+    final n = u32(pos);
+    check(pos + 4, n * elementSize);
+    return n;
+  }
+
+  void crypt(int start, int length) {
+    final keys = roundKeys;
+    if (length == 0 || !regions.add(start) || keys == null) return;
+    final counter = List<int>.filled(16, 0);
+    counter[0] = (start >> 24) & 0xFF;
+    counter[1] = (start >> 16) & 0xFF;
+    counter[2] = (start >> 8) & 0xFF;
+    counter[3] = start & 0xFF;
+    for (var done = 0; done < length; done += 16) {
+      final stream = _FlatbuffersEncryption._encryptBlock(keys, counter);
+      for (var i = 0; i < 16 && done + i < length; i++) {
+        buf[start + done + i] ^= stream[i];
+      }
+      for (var k = 15; k >= 0; k--) {
+        counter[k] = (counter[k] + 1) & 0xFF;
+        if (counter[k] != 0) break;
+      }
+    }
+  }
+
+  void string(int pos) {
+    final s = follow(pos);
+    final n = u32(s);
+    check(s + 4, n + 1);
+    crypt(s + 4, n);
+  }
+
+  int vtable(int table) {
+    final soffset = u32(table);
+    return table - (soffset >= 0x80000000 ? soffset - 0x100000000 : soffset);
+  }
+
+  int field(int table, int slot) {
+    final vt = vtable(table);
+    if (slot + 2 > u16(vt)) return 0;
+    final offset = u16(vt + slot);
+    return offset == 0 ? 0 : table + offset;
+  }
+
+  bool enter(int table, int depth) {
+    if (depth > 64) fail('tables nested deeper than 64 levels');
+    if (!tables.add(table)) return false;
+    final vt = vtable(table);
+    check(vt, 4);
+    final vtableSize = u16(vt);
+    final tableSize = u16(vt + 2);
+    if (vtableSize < 4 || vtableSize.isOdd) {
+      fail('the buffer is malformed (bad vtable)');
+    }
+    check(vt, vtableSize);
+    check(table, tableSize);
+    for (var slot = 4; slot < vtableSize; slot += 2) {
+      final offset = u16(vt + slot);
+      if (offset != 0 && offset >= tableSize) {
+        fail('the buffer is malformed (bad field offset)');
+      }
+    }
+    return true;
+  }
+
+  int member(int at, int n, int unionType) {
+    for (var i = 0; i < n; i++) {
+      if (program[at + 2 * i] == unionType) return program[at + 2 * i + 1];
+    }
+    return -1;
+  }
+
+  void walk(int index, int table, int depth) {
+    if (!enter(table, depth)) return;
+    final p = program;
+    var at = p[1 + index];
+    final ops = p[at++];
+    for (var op = 0; op < ops; op++) {
+      final kind = p[at];
+      final slot = p[at + 1];
+      at += 2;
+      var arg = 0, typeSlot = 0, members = 0, n = 0;
+      if (kind == 0 || kind == 2 || kind == 4 || kind == 5) {
+        arg = p[at++];
+      } else if (kind == 6 || kind == 7) {
+        typeSlot = p[at];
+        n = p[at + 1];
+        members = at + 2;
+        at += 2 + 2 * n;
+      }
+      final loc = field(table, slot);
+      if (loc == 0) continue;
+      switch (kind) {
+        case 0:
+          check(loc, arg);
+          crypt(loc, arg);
+          break;
+        case 1:
+          string(loc);
+          break;
+        case 2:
+          final v = follow(loc);
+          crypt(v + 4, count(v, arg) * arg);
+          break;
+        case 3:
+          final v = follow(loc);
+          final c = count(v, 4);
+          for (var i = 0; i < c; i++) {
+            string(v + 4 + 4 * i);
+          }
+          break;
+        case 4:
+          walk(arg, follow(loc), depth + 1);
+          break;
+        case 5:
+          final v = follow(loc);
+          final c = count(v, 4);
+          for (var i = 0; i < c; i++) {
+            walk(arg, follow(v + 4 + 4 * i), depth + 1);
+          }
+          break;
+        case 6:
+          final typeLoc = field(table, typeSlot);
+          if (typeLoc == 0) break;
+          final m = member(members, n, u8(typeLoc));
+          if (m >= 0) walk(m, follow(loc), depth + 1);
+          break;
+        case 7:
+          final typeLoc = field(table, typeSlot);
+          if (typeLoc == 0) break;
+          final types = follow(typeLoc);
+          final c = count(types, 1);
+          final values = follow(loc);
+          if (count(values, 4) != c) {
+            fail('the buffer is malformed (union vectors differ)');
+          }
+          for (var i = 0; i < c; i++) {
+            final m = member(members, n, u8(types + 4 + i));
+            if (m >= 0) walk(m, follow(values + 4 + 4 * i), depth + 1);
+          }
+          break;
+        default:
+          fail('unknown walk program op $kind');
+      }
+    }
+  }
+}
+
+///  Individual record wrapper for any standard type
+class Record {
+  Record._(this._bc, this._bcOffset);
+  factory Record(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<IntegerDataEncoding> reader = _IntegerDataEncodingReader();
+  static const fb.Reader<Record> reader = _RecordReader();
+
+  // Field-encryption format 3 walk program of Record (see _FlatbuffersEncryption).
+  static const List<int> _flatbuffersEncryptionProgram = [
+    2, 3, 10, 1, 6, 6, 4, 1, 63, 1, 1, 2, 12, 1,
+  ];
+
+  /// Encrypts, in place, the (encrypted) fields of a Record buffer with
+  /// field-encryption format 3 (key: 32 bytes; recordIndex: unique per
+  /// buffer under the key). Throws ArgumentError, before any byte changes,
+  /// for a bad key or a malformed buffer.
+  static void encryptBuffer(Uint8List bytes, List<int> key, [int recordIndex = 0]) =>
+      _FlatbuffersEncryption.cryptBuffer(
+          bytes, key, recordIndex, _flatbuffersEncryptionProgram);
+
+  /// Decrypts, in place, the (encrypted) fields of a Record buffer with
+  /// field-encryption format 3 (key: 32 bytes; recordIndex: unique per
+  /// buffer under the key). Throws ArgumentError, before any byte changes,
+  /// for a bad key or a malformed buffer.
+  static void decryptBuffer(Uint8List bytes, List<int> key, [int recordIndex = 0]) =>
+      _FlatbuffersEncryption.cryptBuffer(
+          bytes, key, recordIndex, _flatbuffersEncryptionProgram);
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Number of bits for this integer
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Byte ordering
-  ByteOrderType get BYTE_ORDER => ByteOrderType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ByteOrderType get byteOrder => BYTE_ORDER;
-  ///  Integer encoding type
-  IntegerEncodingType get ENCODING => IntegerEncodingType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  Default calibrator reference
-  String? get DEFAULT_CALIBRATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get defaultCalibrator => DEFAULT_CALIBRATOR;
-  ///  Context-dependent calibrators
-  List<ContextCalibrator>? get CONTEXT_CALIBRATOR_LIST => const fb.ListReader<ContextCalibrator>(ContextCalibrator.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  List<ContextCalibrator>? get contextCalibratorList => CONTEXT_CALIBRATOR_LIST;
+  RecordTypeTypeId? get value_type => RecordTypeTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 4));
+  RecordTypeTypeId? get valueType => value_type;
+  ///  The record data (union of all supported standards)
+  dynamic get value {
+    switch (valueType?.value) {
+      case 1: return ACL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 2: return ACM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 3: return ACR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 4: return ACW.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 5: return AEM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 6: return ANI.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 7: return AOF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 8: return APM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 9: return ARM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 10: return AST.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 11: return ATD.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 12: return ATM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 13: return BAL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 14: return BEM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 15: return BMC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 16: return BOV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 17: return BSP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 18: return BUS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 19: return CAQ.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 20: return CAT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 21: return CDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 22: return CFP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 23: return CHN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 24: return CLT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 25: return CMS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 26: return COM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 27: return COT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 28: return CRD.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 29: return CRM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 30: return CSM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 31: return CTR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 32: return CZM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 33: return DFH.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 34: return DMG.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 35: return DOA.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 36: return DPM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 37: return DSS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 38: return EME.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 39: return ENC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 40: return ENV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 41: return EOO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 42: return EOP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 43: return EPM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 44: return ESL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 45: return ETM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 46: return EWR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 47: return FCS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 48: return FPC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 49: return FRM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 50: return GDI.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 51: return GEO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 52: return GJN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 53: return GNO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 54: return GPX.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 55: return GRV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 56: return GVH.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 57: return HEL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 58: return HFC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 59: return HYP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 60: return IDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 61: return ION.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 62: return IRO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 63: return KMF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 64: return KML.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 65: return KRF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 66: return LAM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 67: return LCC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 68: return LCF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 69: return LCH.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 70: return LDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 71: return LGR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 72: return LKS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 73: return LMO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 74: return LMR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 75: return LMS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 76: return LND.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 77: return LNE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 78: return LPF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 79: return LWK.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 80: return MBL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 81: return MET.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 82: return MFE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 83: return MNF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 84: return MNV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 85: return MPE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 86: return MSL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 87: return MST.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 88: return MTI.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 89: return NAV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 90: return NUM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 91: return OBD.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 92: return OBT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 93: return OCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 94: return OEM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 95: return OMM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 96: return OOA.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 97: return OOB.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 98: return OOD.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 99: return OOE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 100: return OOI.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 101: return OOL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 102: return OON.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 103: return OOS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 104: return OOT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 105: return OPM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 106: return OSM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 107: return PCF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 108: return PHY.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 109: return PGM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 110: return PIV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 111: return PLD.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 112: return PLG.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 113: return PLK.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 114: return PNM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 115: return PPE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 116: return PRG.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 117: return PRR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 118: return PRW.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 119: return PUR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 120: return RAF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 121: return RBK.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 122: return RCF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 123: return RDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 124: return RDO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 125: return REM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 126: return REV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 127: return RFB.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 128: return RFE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 129: return RFM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 130: return RFO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 131: return ROC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 132: return SAR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 133: return SCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 134: return SDF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 135: return SDL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 136: return SDR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 137: return SEN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 138: return SEO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 139: return SEV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 140: return SHW.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 141: return SIT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 142: return SKI.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 143: return SNR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 144: return SNW.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 145: return SOI.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 146: return SON.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 147: return SPP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 148: return SPW.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 149: return SRI.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 150: return STF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 151: return STR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 152: return STV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 153: return SWR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 154: return TAB.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 155: return TCF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 156: return TDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 157: return TIM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 158: return TKG.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 159: return TME.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 160: return TMF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 161: return TNR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 162: return TPN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 163: return TRE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 164: return TRK.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 165: return TRN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 166: return VCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 167: return WPN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 168: return WTH.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 169: return XTC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 170: return SCV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 171: return FSM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 172: return FSP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 173: return SCC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 174: return SCN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 175: return VST.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 176: return ENT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 177: return VAM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 178: return APP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 179: return CMT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 180: return SCX.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 181: return CVG.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 182: return PKB.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 183: return RPT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 184: return STO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 185: return SUB.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 186: return WKS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 187: return CPS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 188: return FSB.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 189: return FSO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 190: return GST.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 191: return MDP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 192: return MDS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 193: return PNL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 194: return SHC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 195: return CES.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 196: return QEM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 197: return SBM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 198: return PMM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 199: return OPP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 200: return IQC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 201: return CNP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 202: return CMR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 203: return TBS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 204: return CCT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 205: return ACI.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 206: return CVP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 207: return RFL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 208: return RFS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 209: return TRS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 210: return GNP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 211: return DTT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 212: return AVL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 213: return TFN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 214: return TMS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 215: return VEP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 216: return EGP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 217: return APL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 218: return EMC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 219: return EPF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 220: return GEL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 221: return PAP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 222: return RSD.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 223: return IRM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 224: return VCF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 225: return STX.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 226: return TXS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 227: return BPF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 228: return EVL.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 229: return PCE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 230: return NCD.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 231: return MEM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 232: return ODR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 233: return TRH.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 234: return SLP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 235: return PSS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 236: return ICN.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 237: return TRP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 238: return TRV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 239: return ACT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 240: return AGR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 241: return NDS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 242: return NST.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 243: return QRP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 244: return TCT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 245: return WXF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 246: return CLM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 247: return GCT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 248: return CQR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 249: return RPC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 250: return CSO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 251: return PHB.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 252: return SKT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 253: return SKQ.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 254: return SKR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 255: return ETS.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      default: return null;
+    }
+  }
+  ///  Standard identifier (e.g., "OMM", "CDM", "CAT")
+  String? get standard => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Wide record type, for a standard numbered in RecordTypeExtended
+  ///  (ordinals 256 and up) because union RecordType has no room for it.
+  ///  value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+  RecordTypeExtended get EXTENDED_TYPE => RecordTypeExtended.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  RecordTypeExtended get extendedType => EXTENDED_TYPE;
+  ///  The record's root FlatBuffer, with its file identifier, when
+  ///  EXTENDED_TYPE is set.
+  List<int>? get EXTENDED_VALUE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get extendedValue => EXTENDED_VALUE;
 
   @override
   String toString() {
-    return 'IntegerDataEncoding{sizeInBits: ${sizeInBits}, byteOrder: ${byteOrder}, ENCODING: ${ENCODING}, defaultCalibrator: ${defaultCalibrator}, contextCalibratorList: ${contextCalibratorList}}';
+    return 'Record{valueType: ${valueType}, value: ${value}, standard: ${standard}, extendedType: ${extendedType}, extendedValue: ${extendedValue}}';
   }
 }
 
-class _IntegerDataEncodingReader extends fb.TableReader<IntegerDataEncoding> {
-  const _IntegerDataEncodingReader();
+class _RecordReader extends fb.TableReader<Record> {
+  const _RecordReader();
 
   @override
-  IntegerDataEncoding createObject(fb.BufferContext bc, int offset) =>
-    IntegerDataEncoding._(bc, offset);
+  Record createObject(fb.BufferContext bc, int offset) =>
+    Record._(bc, offset);
 }
 
-class IntegerDataEncodingBuilder {
-  IntegerDataEncodingBuilder(this.fbBuilder);
+class RecordBuilder {
+  RecordBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -662,9471 +1328,149 @@ class IntegerDataEncodingBuilder {
     fbBuilder.startTable(5);
   }
 
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(0, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addByteOrder(ByteOrderType? BYTE_ORDER) {
-    fbBuilder.addInt8(1, BYTE_ORDER?.value);
-    return fbBuilder.offset;
-  }
-  int addEncoding(IntegerEncodingType? ENCODING) {
-    fbBuilder.addInt8(2, ENCODING?.value);
-    return fbBuilder.offset;
-  }
-  int addDefaultCalibratorOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addContextCalibratorListOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class IntegerDataEncodingObjectBuilder extends fb.ObjectBuilder {
-  final int? _SIZE_IN_BITS;
-  final ByteOrderType? _BYTE_ORDER;
-  final IntegerEncodingType? _ENCODING;
-  final String? _DEFAULT_CALIBRATOR;
-  final List<ContextCalibratorObjectBuilder>? _CONTEXT_CALIBRATOR_LIST;
-
-  IntegerDataEncodingObjectBuilder({
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    ByteOrderType? BYTE_ORDER,
-    ByteOrderType? byteOrder,
-    IntegerEncodingType? ENCODING,
-    String? DEFAULT_CALIBRATOR,
-    String? defaultCalibrator,
-    List<ContextCalibratorObjectBuilder>? CONTEXT_CALIBRATOR_LIST,
-    List<ContextCalibratorObjectBuilder>? contextCalibratorList,
-  })
-      : _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _BYTE_ORDER = byteOrder ?? BYTE_ORDER,
-        _ENCODING = ENCODING,
-        _DEFAULT_CALIBRATOR = defaultCalibrator ?? DEFAULT_CALIBRATOR,
-        _CONTEXT_CALIBRATOR_LIST = contextCalibratorList ?? CONTEXT_CALIBRATOR_LIST;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? DEFAULT_CALIBRATOROffset = _DEFAULT_CALIBRATOR == null ? null
-        : fbBuilder.writeString(_DEFAULT_CALIBRATOR!);
-    final int? CONTEXT_CALIBRATOR_LISTOffset = _CONTEXT_CALIBRATOR_LIST == null ? null
-        : fbBuilder.writeList(_CONTEXT_CALIBRATOR_LIST!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(5);
-    fbBuilder.addUint16(0, _SIZE_IN_BITS);
-    fbBuilder.addInt8(1, _BYTE_ORDER?.value);
-    fbBuilder.addInt8(2, _ENCODING?.value);
-    fbBuilder.addOffset(3, DEFAULT_CALIBRATOROffset);
-    fbBuilder.addOffset(4, CONTEXT_CALIBRATOR_LISTOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Float data encoding specification
-class FloatDataEncoding {
-  FloatDataEncoding._(this._bc, this._bcOffset);
-  factory FloatDataEncoding(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FloatDataEncoding> reader = _FloatDataEncodingReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Number of bits (typically 32 or 64)
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Byte ordering
-  ByteOrderType get BYTE_ORDER => ByteOrderType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ByteOrderType get byteOrder => BYTE_ORDER;
-  ///  Float encoding format
-  FloatEncodingType get ENCODING => FloatEncodingType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  Default calibrator reference
-  String? get DEFAULT_CALIBRATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get defaultCalibrator => DEFAULT_CALIBRATOR;
-  ///  Context-dependent calibrators
-  List<ContextCalibrator>? get CONTEXT_CALIBRATOR_LIST => const fb.ListReader<ContextCalibrator>(ContextCalibrator.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  List<ContextCalibrator>? get contextCalibratorList => CONTEXT_CALIBRATOR_LIST;
-
-  @override
-  String toString() {
-    return 'FloatDataEncoding{sizeInBits: ${sizeInBits}, byteOrder: ${byteOrder}, ENCODING: ${ENCODING}, defaultCalibrator: ${defaultCalibrator}, contextCalibratorList: ${contextCalibratorList}}';
-  }
-}
-
-class _FloatDataEncodingReader extends fb.TableReader<FloatDataEncoding> {
-  const _FloatDataEncodingReader();
-
-  @override
-  FloatDataEncoding createObject(fb.BufferContext bc, int offset) =>
-    FloatDataEncoding._(bc, offset);
-}
-
-class FloatDataEncodingBuilder {
-  FloatDataEncodingBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(0, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addByteOrder(ByteOrderType? BYTE_ORDER) {
-    fbBuilder.addInt8(1, BYTE_ORDER?.value);
-    return fbBuilder.offset;
-  }
-  int addEncoding(FloatEncodingType? ENCODING) {
-    fbBuilder.addInt8(2, ENCODING?.value);
-    return fbBuilder.offset;
-  }
-  int addDefaultCalibratorOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addContextCalibratorListOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FloatDataEncodingObjectBuilder extends fb.ObjectBuilder {
-  final int? _SIZE_IN_BITS;
-  final ByteOrderType? _BYTE_ORDER;
-  final FloatEncodingType? _ENCODING;
-  final String? _DEFAULT_CALIBRATOR;
-  final List<ContextCalibratorObjectBuilder>? _CONTEXT_CALIBRATOR_LIST;
-
-  FloatDataEncodingObjectBuilder({
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    ByteOrderType? BYTE_ORDER,
-    ByteOrderType? byteOrder,
-    FloatEncodingType? ENCODING,
-    String? DEFAULT_CALIBRATOR,
-    String? defaultCalibrator,
-    List<ContextCalibratorObjectBuilder>? CONTEXT_CALIBRATOR_LIST,
-    List<ContextCalibratorObjectBuilder>? contextCalibratorList,
-  })
-      : _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _BYTE_ORDER = byteOrder ?? BYTE_ORDER,
-        _ENCODING = ENCODING,
-        _DEFAULT_CALIBRATOR = defaultCalibrator ?? DEFAULT_CALIBRATOR,
-        _CONTEXT_CALIBRATOR_LIST = contextCalibratorList ?? CONTEXT_CALIBRATOR_LIST;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? DEFAULT_CALIBRATOROffset = _DEFAULT_CALIBRATOR == null ? null
-        : fbBuilder.writeString(_DEFAULT_CALIBRATOR!);
-    final int? CONTEXT_CALIBRATOR_LISTOffset = _CONTEXT_CALIBRATOR_LIST == null ? null
-        : fbBuilder.writeList(_CONTEXT_CALIBRATOR_LIST!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(5);
-    fbBuilder.addUint16(0, _SIZE_IN_BITS);
-    fbBuilder.addInt8(1, _BYTE_ORDER?.value);
-    fbBuilder.addInt8(2, _ENCODING?.value);
-    fbBuilder.addOffset(3, DEFAULT_CALIBRATOROffset);
-    fbBuilder.addOffset(4, CONTEXT_CALIBRATOR_LISTOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  String data encoding specification
-class StringDataEncoding {
-  StringDataEncoding._(this._bc, this._bcOffset);
-  factory StringDataEncoding(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<StringDataEncoding> reader = _StringDataEncodingReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Character encoding
-  StringEncodingType get ENCODING => StringEncodingType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 3));
-  ///  Size type specification
-  StringSizeType get SIZE_TYPE => StringSizeType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  StringSizeType get sizeType => SIZE_TYPE;
-  ///  Fixed size in bits (when SIZE_TYPE=FIXED)
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Termination character (when SIZE_TYPE=TERMINATION_CHAR)
-  int get TERMINATION_CHAR => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get terminationChar => TERMINATION_CHAR;
-  ///  Maximum size in bits (for variable length)
-  int get MAX_SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get maxSizeInBits => MAX_SIZE_IN_BITS;
-  ///  Leading size field bits (when SIZE_TYPE=LEADING_SIZE)
-  int get LEADING_SIZE_BITS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get leadingSizeBits => LEADING_SIZE_BITS;
-
-  @override
-  String toString() {
-    return 'StringDataEncoding{ENCODING: ${ENCODING}, sizeType: ${sizeType}, sizeInBits: ${sizeInBits}, terminationChar: ${terminationChar}, maxSizeInBits: ${maxSizeInBits}, leadingSizeBits: ${leadingSizeBits}}';
-  }
-}
-
-class _StringDataEncodingReader extends fb.TableReader<StringDataEncoding> {
-  const _StringDataEncodingReader();
-
-  @override
-  StringDataEncoding createObject(fb.BufferContext bc, int offset) =>
-    StringDataEncoding._(bc, offset);
-}
-
-class StringDataEncodingBuilder {
-  StringDataEncodingBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addEncoding(StringEncodingType? ENCODING) {
-    fbBuilder.addInt8(0, ENCODING?.value);
-    return fbBuilder.offset;
-  }
-  int addSizeType(StringSizeType? SIZE_TYPE) {
-    fbBuilder.addInt8(1, SIZE_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(2, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addTerminationChar(int? TERMINATION_CHAR) {
-    fbBuilder.addUint8(3, TERMINATION_CHAR);
-    return fbBuilder.offset;
-  }
-  int addMaxSizeInBits(int? MAX_SIZE_IN_BITS) {
-    fbBuilder.addUint16(4, MAX_SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addLeadingSizeBits(int? LEADING_SIZE_BITS) {
-    fbBuilder.addUint8(5, LEADING_SIZE_BITS);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class StringDataEncodingObjectBuilder extends fb.ObjectBuilder {
-  final StringEncodingType? _ENCODING;
-  final StringSizeType? _SIZE_TYPE;
-  final int? _SIZE_IN_BITS;
-  final int? _TERMINATION_CHAR;
-  final int? _MAX_SIZE_IN_BITS;
-  final int? _LEADING_SIZE_BITS;
-
-  StringDataEncodingObjectBuilder({
-    StringEncodingType? ENCODING,
-    StringSizeType? SIZE_TYPE,
-    StringSizeType? sizeType,
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    int? TERMINATION_CHAR,
-    int? terminationChar,
-    int? MAX_SIZE_IN_BITS,
-    int? maxSizeInBits,
-    int? LEADING_SIZE_BITS,
-    int? leadingSizeBits,
-  })
-      : _ENCODING = ENCODING,
-        _SIZE_TYPE = sizeType ?? SIZE_TYPE,
-        _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _TERMINATION_CHAR = terminationChar ?? TERMINATION_CHAR,
-        _MAX_SIZE_IN_BITS = maxSizeInBits ?? MAX_SIZE_IN_BITS,
-        _LEADING_SIZE_BITS = leadingSizeBits ?? LEADING_SIZE_BITS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _ENCODING?.value);
-    fbBuilder.addInt8(1, _SIZE_TYPE?.value);
-    fbBuilder.addUint16(2, _SIZE_IN_BITS);
-    fbBuilder.addUint8(3, _TERMINATION_CHAR);
-    fbBuilder.addUint16(4, _MAX_SIZE_IN_BITS);
-    fbBuilder.addUint8(5, _LEADING_SIZE_BITS);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Binary data encoding specification
-class BinaryDataEncoding {
-  BinaryDataEncoding._(this._bc, this._bcOffset);
-  factory BinaryDataEncoding(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<BinaryDataEncoding> reader = _BinaryDataEncodingReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Fixed size in bits
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Maximum size in bits (for variable length)
-  int get MAX_SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get maxSizeInBits => MAX_SIZE_IN_BITS;
-  ///  Leading size field bits (for variable length)
-  int get LEADING_SIZE_BITS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get leadingSizeBits => LEADING_SIZE_BITS;
-
-  @override
-  String toString() {
-    return 'BinaryDataEncoding{sizeInBits: ${sizeInBits}, maxSizeInBits: ${maxSizeInBits}, leadingSizeBits: ${leadingSizeBits}}';
-  }
-}
-
-class _BinaryDataEncodingReader extends fb.TableReader<BinaryDataEncoding> {
-  const _BinaryDataEncodingReader();
-
-  @override
-  BinaryDataEncoding createObject(fb.BufferContext bc, int offset) =>
-    BinaryDataEncoding._(bc, offset);
-}
-
-class BinaryDataEncodingBuilder {
-  BinaryDataEncodingBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(0, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addMaxSizeInBits(int? MAX_SIZE_IN_BITS) {
-    fbBuilder.addUint16(1, MAX_SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addLeadingSizeBits(int? LEADING_SIZE_BITS) {
-    fbBuilder.addUint8(2, LEADING_SIZE_BITS);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class BinaryDataEncodingObjectBuilder extends fb.ObjectBuilder {
-  final int? _SIZE_IN_BITS;
-  final int? _MAX_SIZE_IN_BITS;
-  final int? _LEADING_SIZE_BITS;
-
-  BinaryDataEncodingObjectBuilder({
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    int? MAX_SIZE_IN_BITS,
-    int? maxSizeInBits,
-    int? LEADING_SIZE_BITS,
-    int? leadingSizeBits,
-  })
-      : _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _MAX_SIZE_IN_BITS = maxSizeInBits ?? MAX_SIZE_IN_BITS,
-        _LEADING_SIZE_BITS = leadingSizeBits ?? LEADING_SIZE_BITS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(3);
-    fbBuilder.addUint16(0, _SIZE_IN_BITS);
-    fbBuilder.addUint16(1, _MAX_SIZE_IN_BITS);
-    fbBuilder.addUint8(2, _LEADING_SIZE_BITS);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Polynomial calibrator - converts raw to engineering using polynomial
-class PolynomialCalibrator {
-  PolynomialCalibrator._(this._bc, this._bcOffset);
-  factory PolynomialCalibrator(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PolynomialCalibrator> reader = _PolynomialCalibratorReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Polynomial terms (index is power, value is coefficient)
-  List<double>? get COEFFICIENTS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 4);
-
-  @override
-  String toString() {
-    return 'PolynomialCalibrator{COEFFICIENTS: ${COEFFICIENTS}}';
-  }
-}
-
-class _PolynomialCalibratorReader extends fb.TableReader<PolynomialCalibrator> {
-  const _PolynomialCalibratorReader();
-
-  @override
-  PolynomialCalibrator createObject(fb.BufferContext bc, int offset) =>
-    PolynomialCalibrator._(bc, offset);
-}
-
-class PolynomialCalibratorBuilder {
-  PolynomialCalibratorBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addCoefficientsOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PolynomialCalibratorObjectBuilder extends fb.ObjectBuilder {
-  final List<double>? _COEFFICIENTS;
-
-  PolynomialCalibratorObjectBuilder({
-    List<double>? COEFFICIENTS,
-  })
-      : _COEFFICIENTS = COEFFICIENTS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? COEFFICIENTSOffset = _COEFFICIENTS == null ? null
-        : fbBuilder.writeListFloat64(_COEFFICIENTS!);
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, COEFFICIENTSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Spline point for spline calibration
-class SplinePoint {
-  SplinePoint._(this._bc, this._bcOffset);
-  factory SplinePoint(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SplinePoint> reader = _SplinePointReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Raw value
-  double get RAW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Calibrated/engineering value
-  double get CALIBRATED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-
-  @override
-  String toString() {
-    return 'SplinePoint{RAW: ${RAW}, CALIBRATED: ${CALIBRATED}}';
-  }
-}
-
-class _SplinePointReader extends fb.TableReader<SplinePoint> {
-  const _SplinePointReader();
-
-  @override
-  SplinePoint createObject(fb.BufferContext bc, int offset) =>
-    SplinePoint._(bc, offset);
-}
-
-class SplinePointBuilder {
-  SplinePointBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addRaw(double? RAW) {
-    fbBuilder.addFloat64(0, RAW);
-    return fbBuilder.offset;
-  }
-  int addCalibrated(double? CALIBRATED) {
-    fbBuilder.addFloat64(1, CALIBRATED);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SplinePointObjectBuilder extends fb.ObjectBuilder {
-  final double? _RAW;
-  final double? _CALIBRATED;
-
-  SplinePointObjectBuilder({
-    double? RAW,
-    double? CALIBRATED,
-  })
-      : _RAW = RAW,
-        _CALIBRATED = CALIBRATED;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
-    fbBuilder.addFloat64(0, _RAW);
-    fbBuilder.addFloat64(1, _CALIBRATED);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Spline calibrator - piecewise linear interpolation
-class SplineCalibrator {
-  SplineCalibrator._(this._bc, this._bcOffset);
-  factory SplineCalibrator(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SplineCalibrator> reader = _SplineCalibratorReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Spline points ordered by raw value
-  List<SplinePoint>? get POINTS => const fb.ListReader<SplinePoint>(SplinePoint.reader).vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Extrapolate below minimum point
-  bool get EXTRAPOLATE_LOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
-  bool get extrapolateLow => EXTRAPOLATE_LOW;
-  ///  Extrapolate above maximum point
-  bool get EXTRAPOLATE_HIGH => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
-  bool get extrapolateHigh => EXTRAPOLATE_HIGH;
-
-  @override
-  String toString() {
-    return 'SplineCalibrator{POINTS: ${POINTS}, extrapolateLow: ${extrapolateLow}, extrapolateHigh: ${extrapolateHigh}}';
-  }
-}
-
-class _SplineCalibratorReader extends fb.TableReader<SplineCalibrator> {
-  const _SplineCalibratorReader();
-
-  @override
-  SplineCalibrator createObject(fb.BufferContext bc, int offset) =>
-    SplineCalibrator._(bc, offset);
-}
-
-class SplineCalibratorBuilder {
-  SplineCalibratorBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addPointsOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addExtrapolateLow(bool? EXTRAPOLATE_LOW) {
-    fbBuilder.addBool(1, EXTRAPOLATE_LOW);
-    return fbBuilder.offset;
-  }
-  int addExtrapolateHigh(bool? EXTRAPOLATE_HIGH) {
-    fbBuilder.addBool(2, EXTRAPOLATE_HIGH);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SplineCalibratorObjectBuilder extends fb.ObjectBuilder {
-  final List<SplinePointObjectBuilder>? _POINTS;
-  final bool? _EXTRAPOLATE_LOW;
-  final bool? _EXTRAPOLATE_HIGH;
-
-  SplineCalibratorObjectBuilder({
-    List<SplinePointObjectBuilder>? POINTS,
-    bool? EXTRAPOLATE_LOW,
-    bool? extrapolateLow,
-    bool? EXTRAPOLATE_HIGH,
-    bool? extrapolateHigh,
-  })
-      : _POINTS = POINTS,
-        _EXTRAPOLATE_LOW = extrapolateLow ?? EXTRAPOLATE_LOW,
-        _EXTRAPOLATE_HIGH = extrapolateHigh ?? EXTRAPOLATE_HIGH;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? POINTSOffset = _POINTS == null ? null
-        : fbBuilder.writeList(_POINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, POINTSOffset);
-    fbBuilder.addBool(1, _EXTRAPOLATE_LOW);
-    fbBuilder.addBool(2, _EXTRAPOLATE_HIGH);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Mathematical operation for math operation calibrator
-class MathOperation {
-  MathOperation._(this._bc, this._bcOffset);
-  factory MathOperation(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<MathOperation> reader = _MathOperationReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Operation in Reverse Polish Notation (RPN)
-  String? get RPN_EXPRESSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get rpnExpression => RPN_EXPRESSION;
-
-  @override
-  String toString() {
-    return 'MathOperation{rpnExpression: ${rpnExpression}}';
-  }
-}
-
-class _MathOperationReader extends fb.TableReader<MathOperation> {
-  const _MathOperationReader();
-
-  @override
-  MathOperation createObject(fb.BufferContext bc, int offset) =>
-    MathOperation._(bc, offset);
-}
-
-class MathOperationBuilder {
-  MathOperationBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addRpnExpressionOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class MathOperationObjectBuilder extends fb.ObjectBuilder {
-  final String? _RPN_EXPRESSION;
-
-  MathOperationObjectBuilder({
-    String? RPN_EXPRESSION,
-    String? rpnExpression,
-  })
-      : _RPN_EXPRESSION = rpnExpression ?? RPN_EXPRESSION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? RPN_EXPRESSIONOffset = _RPN_EXPRESSION == null ? null
-        : fbBuilder.writeString(_RPN_EXPRESSION!);
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, RPN_EXPRESSIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Context-dependent calibrator selection
-class ContextCalibrator {
-  ContextCalibrator._(this._bc, this._bcOffset);
-  factory ContextCalibrator(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ContextCalibrator> reader = _ContextCalibratorReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Match criteria for selecting this calibrator
-  MatchCriteria? get MATCH_CRITERIA => MatchCriteria.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  MatchCriteria? get matchCriteria => MATCH_CRITERIA;
-  ///  Polynomial calibrator (if used)
-  PolynomialCalibrator? get POLYNOMIAL => PolynomialCalibrator.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Spline calibrator (if used)
-  SplineCalibrator? get SPLINE => SplineCalibrator.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Math operation calibrator (if used)
-  MathOperation? get MATH_OPERATION => MathOperation.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  MathOperation? get mathOperation => MATH_OPERATION;
-
-  @override
-  String toString() {
-    return 'ContextCalibrator{matchCriteria: ${matchCriteria}, POLYNOMIAL: ${POLYNOMIAL}, SPLINE: ${SPLINE}, mathOperation: ${mathOperation}}';
-  }
-}
-
-class _ContextCalibratorReader extends fb.TableReader<ContextCalibrator> {
-  const _ContextCalibratorReader();
-
-  @override
-  ContextCalibrator createObject(fb.BufferContext bc, int offset) =>
-    ContextCalibrator._(bc, offset);
-}
-
-class ContextCalibratorBuilder {
-  ContextCalibratorBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addMatchCriteriaOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addPolynomialOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addSplineOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addMathOperationOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ContextCalibratorObjectBuilder extends fb.ObjectBuilder {
-  final MatchCriteriaObjectBuilder? _MATCH_CRITERIA;
-  final PolynomialCalibratorObjectBuilder? _POLYNOMIAL;
-  final SplineCalibratorObjectBuilder? _SPLINE;
-  final MathOperationObjectBuilder? _MATH_OPERATION;
-
-  ContextCalibratorObjectBuilder({
-    MatchCriteriaObjectBuilder? MATCH_CRITERIA,
-    MatchCriteriaObjectBuilder? matchCriteria,
-    PolynomialCalibratorObjectBuilder? POLYNOMIAL,
-    SplineCalibratorObjectBuilder? SPLINE,
-    MathOperationObjectBuilder? MATH_OPERATION,
-    MathOperationObjectBuilder? mathOperation,
-  })
-      : _MATCH_CRITERIA = matchCriteria ?? MATCH_CRITERIA,
-        _POLYNOMIAL = POLYNOMIAL,
-        _SPLINE = SPLINE,
-        _MATH_OPERATION = mathOperation ?? MATH_OPERATION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? MATCH_CRITERIAOffset = _MATCH_CRITERIA?.getOrCreateOffset(fbBuilder);
-    final int? POLYNOMIALOffset = _POLYNOMIAL?.getOrCreateOffset(fbBuilder);
-    final int? SPLINEOffset = _SPLINE?.getOrCreateOffset(fbBuilder);
-    final int? MATH_OPERATIONOffset = _MATH_OPERATION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, MATCH_CRITERIAOffset);
-    fbBuilder.addOffset(1, POLYNOMIALOffset);
-    fbBuilder.addOffset(2, SPLINEOffset);
-    fbBuilder.addOffset(3, MATH_OPERATIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Numeric alarm range
-class AlarmRange {
-  AlarmRange._(this._bc, this._bcOffset);
-  factory AlarmRange(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AlarmRange> reader = _AlarmRangeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Minimum value (inclusive)
-  double get MIN_INCLUSIVE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get minInclusive => MIN_INCLUSIVE;
-  ///  Maximum value (inclusive)
-  double get MAX_INCLUSIVE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get maxInclusive => MAX_INCLUSIVE;
-  ///  Minimum value (exclusive)
-  double get MIN_EXCLUSIVE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get minExclusive => MIN_EXCLUSIVE;
-  ///  Maximum value (exclusive)
-  double get MAX_EXCLUSIVE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get maxExclusive => MAX_EXCLUSIVE;
-
-  @override
-  String toString() {
-    return 'AlarmRange{minInclusive: ${minInclusive}, maxInclusive: ${maxInclusive}, minExclusive: ${minExclusive}, maxExclusive: ${maxExclusive}}';
-  }
-}
-
-class _AlarmRangeReader extends fb.TableReader<AlarmRange> {
-  const _AlarmRangeReader();
-
-  @override
-  AlarmRange createObject(fb.BufferContext bc, int offset) =>
-    AlarmRange._(bc, offset);
-}
-
-class AlarmRangeBuilder {
-  AlarmRangeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addMinInclusive(double? MIN_INCLUSIVE) {
-    fbBuilder.addFloat64(0, MIN_INCLUSIVE);
-    return fbBuilder.offset;
-  }
-  int addMaxInclusive(double? MAX_INCLUSIVE) {
-    fbBuilder.addFloat64(1, MAX_INCLUSIVE);
-    return fbBuilder.offset;
-  }
-  int addMinExclusive(double? MIN_EXCLUSIVE) {
-    fbBuilder.addFloat64(2, MIN_EXCLUSIVE);
-    return fbBuilder.offset;
-  }
-  int addMaxExclusive(double? MAX_EXCLUSIVE) {
-    fbBuilder.addFloat64(3, MAX_EXCLUSIVE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AlarmRangeObjectBuilder extends fb.ObjectBuilder {
-  final double? _MIN_INCLUSIVE;
-  final double? _MAX_INCLUSIVE;
-  final double? _MIN_EXCLUSIVE;
-  final double? _MAX_EXCLUSIVE;
-
-  AlarmRangeObjectBuilder({
-    double? MIN_INCLUSIVE,
-    double? minInclusive,
-    double? MAX_INCLUSIVE,
-    double? maxInclusive,
-    double? MIN_EXCLUSIVE,
-    double? minExclusive,
-    double? MAX_EXCLUSIVE,
-    double? maxExclusive,
-  })
-      : _MIN_INCLUSIVE = minInclusive ?? MIN_INCLUSIVE,
-        _MAX_INCLUSIVE = maxInclusive ?? MAX_INCLUSIVE,
-        _MIN_EXCLUSIVE = minExclusive ?? MIN_EXCLUSIVE,
-        _MAX_EXCLUSIVE = maxExclusive ?? MAX_EXCLUSIVE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(4);
-    fbBuilder.addFloat64(0, _MIN_INCLUSIVE);
-    fbBuilder.addFloat64(1, _MAX_INCLUSIVE);
-    fbBuilder.addFloat64(2, _MIN_EXCLUSIVE);
-    fbBuilder.addFloat64(3, _MAX_EXCLUSIVE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Static numeric alarm levels
-class StaticAlarmRanges {
-  StaticAlarmRanges._(this._bc, this._bcOffset);
-  factory StaticAlarmRanges(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<StaticAlarmRanges> reader = _StaticAlarmRangesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Watch range
-  AlarmRange? get WATCH_RANGE => AlarmRange.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  AlarmRange? get watchRange => WATCH_RANGE;
-  ///  Warning range
-  AlarmRange? get WARNING_RANGE => AlarmRange.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  AlarmRange? get warningRange => WARNING_RANGE;
-  ///  Distress range
-  AlarmRange? get DISTRESS_RANGE => AlarmRange.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  AlarmRange? get distressRange => DISTRESS_RANGE;
-  ///  Critical range
-  AlarmRange? get CRITICAL_RANGE => AlarmRange.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  AlarmRange? get criticalRange => CRITICAL_RANGE;
-  ///  Severe range
-  AlarmRange? get SEVERE_RANGE => AlarmRange.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  AlarmRange? get severeRange => SEVERE_RANGE;
-
-  @override
-  String toString() {
-    return 'StaticAlarmRanges{watchRange: ${watchRange}, warningRange: ${warningRange}, distressRange: ${distressRange}, criticalRange: ${criticalRange}, severeRange: ${severeRange}}';
-  }
-}
-
-class _StaticAlarmRangesReader extends fb.TableReader<StaticAlarmRanges> {
-  const _StaticAlarmRangesReader();
-
-  @override
-  StaticAlarmRanges createObject(fb.BufferContext bc, int offset) =>
-    StaticAlarmRanges._(bc, offset);
-}
-
-class StaticAlarmRangesBuilder {
-  StaticAlarmRangesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addWatchRangeOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addWarningRangeOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addDistressRangeOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addCriticalRangeOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addSevereRangeOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class StaticAlarmRangesObjectBuilder extends fb.ObjectBuilder {
-  final AlarmRangeObjectBuilder? _WATCH_RANGE;
-  final AlarmRangeObjectBuilder? _WARNING_RANGE;
-  final AlarmRangeObjectBuilder? _DISTRESS_RANGE;
-  final AlarmRangeObjectBuilder? _CRITICAL_RANGE;
-  final AlarmRangeObjectBuilder? _SEVERE_RANGE;
-
-  StaticAlarmRangesObjectBuilder({
-    AlarmRangeObjectBuilder? WATCH_RANGE,
-    AlarmRangeObjectBuilder? watchRange,
-    AlarmRangeObjectBuilder? WARNING_RANGE,
-    AlarmRangeObjectBuilder? warningRange,
-    AlarmRangeObjectBuilder? DISTRESS_RANGE,
-    AlarmRangeObjectBuilder? distressRange,
-    AlarmRangeObjectBuilder? CRITICAL_RANGE,
-    AlarmRangeObjectBuilder? criticalRange,
-    AlarmRangeObjectBuilder? SEVERE_RANGE,
-    AlarmRangeObjectBuilder? severeRange,
-  })
-      : _WATCH_RANGE = watchRange ?? WATCH_RANGE,
-        _WARNING_RANGE = warningRange ?? WARNING_RANGE,
-        _DISTRESS_RANGE = distressRange ?? DISTRESS_RANGE,
-        _CRITICAL_RANGE = criticalRange ?? CRITICAL_RANGE,
-        _SEVERE_RANGE = severeRange ?? SEVERE_RANGE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? WATCH_RANGEOffset = _WATCH_RANGE?.getOrCreateOffset(fbBuilder);
-    final int? WARNING_RANGEOffset = _WARNING_RANGE?.getOrCreateOffset(fbBuilder);
-    final int? DISTRESS_RANGEOffset = _DISTRESS_RANGE?.getOrCreateOffset(fbBuilder);
-    final int? CRITICAL_RANGEOffset = _CRITICAL_RANGE?.getOrCreateOffset(fbBuilder);
-    final int? SEVERE_RANGEOffset = _SEVERE_RANGE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, WATCH_RANGEOffset);
-    fbBuilder.addOffset(1, WARNING_RANGEOffset);
-    fbBuilder.addOffset(2, DISTRESS_RANGEOffset);
-    fbBuilder.addOffset(3, CRITICAL_RANGEOffset);
-    fbBuilder.addOffset(4, SEVERE_RANGEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Enumerated alarm
-class EnumerationAlarm {
-  EnumerationAlarm._(this._bc, this._bcOffset);
-  factory EnumerationAlarm(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<EnumerationAlarm> reader = _EnumerationAlarmReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Enumerated value label
-  String? get LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Alarm level for this value
-  AlarmSeverityType get ALARM_LEVEL => AlarmSeverityType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  AlarmSeverityType get alarmLevel => ALARM_LEVEL;
-
-  @override
-  String toString() {
-    return 'EnumerationAlarm{LABEL: ${LABEL}, alarmLevel: ${alarmLevel}}';
-  }
-}
-
-class _EnumerationAlarmReader extends fb.TableReader<EnumerationAlarm> {
-  const _EnumerationAlarmReader();
-
-  @override
-  EnumerationAlarm createObject(fb.BufferContext bc, int offset) =>
-    EnumerationAlarm._(bc, offset);
-}
-
-class EnumerationAlarmBuilder {
-  EnumerationAlarmBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addLabelOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addAlarmLevel(AlarmSeverityType? ALARM_LEVEL) {
-    fbBuilder.addInt8(1, ALARM_LEVEL?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class EnumerationAlarmObjectBuilder extends fb.ObjectBuilder {
-  final String? _LABEL;
-  final AlarmSeverityType? _ALARM_LEVEL;
-
-  EnumerationAlarmObjectBuilder({
-    String? LABEL,
-    AlarmSeverityType? ALARM_LEVEL,
-    AlarmSeverityType? alarmLevel,
-  })
-      : _LABEL = LABEL,
-        _ALARM_LEVEL = alarmLevel ?? ALARM_LEVEL;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? LABELOffset = _LABEL == null ? null
-        : fbBuilder.writeString(_LABEL!);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, LABELOffset);
-    fbBuilder.addInt8(1, _ALARM_LEVEL?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Default alarm definition
-class DefaultAlarm {
-  DefaultAlarm._(this._bc, this._bcOffset);
-  factory DefaultAlarm(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<DefaultAlarm> reader = _DefaultAlarmReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Minimum violations before alarm triggers
-  int get MIN_VIOLATIONS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get minViolations => MIN_VIOLATIONS;
-  ///  Static numeric alarm ranges
-  StaticAlarmRanges? get STATIC_ALARM_RANGES => StaticAlarmRanges.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  StaticAlarmRanges? get staticAlarmRanges => STATIC_ALARM_RANGES;
-  ///  Enumeration alarms for enumerated types
-  List<EnumerationAlarm>? get ENUMERATION_ALARMS => const fb.ListReader<EnumerationAlarm>(EnumerationAlarm.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  List<EnumerationAlarm>? get enumerationAlarms => ENUMERATION_ALARMS;
-
-  @override
-  String toString() {
-    return 'DefaultAlarm{minViolations: ${minViolations}, staticAlarmRanges: ${staticAlarmRanges}, enumerationAlarms: ${enumerationAlarms}}';
-  }
-}
-
-class _DefaultAlarmReader extends fb.TableReader<DefaultAlarm> {
-  const _DefaultAlarmReader();
-
-  @override
-  DefaultAlarm createObject(fb.BufferContext bc, int offset) =>
-    DefaultAlarm._(bc, offset);
-}
-
-class DefaultAlarmBuilder {
-  DefaultAlarmBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addMinViolations(int? MIN_VIOLATIONS) {
-    fbBuilder.addUint16(0, MIN_VIOLATIONS);
-    return fbBuilder.offset;
-  }
-  int addStaticAlarmRangesOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addEnumerationAlarmsOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class DefaultAlarmObjectBuilder extends fb.ObjectBuilder {
-  final int? _MIN_VIOLATIONS;
-  final StaticAlarmRangesObjectBuilder? _STATIC_ALARM_RANGES;
-  final List<EnumerationAlarmObjectBuilder>? _ENUMERATION_ALARMS;
-
-  DefaultAlarmObjectBuilder({
-    int? MIN_VIOLATIONS,
-    int? minViolations,
-    StaticAlarmRangesObjectBuilder? STATIC_ALARM_RANGES,
-    StaticAlarmRangesObjectBuilder? staticAlarmRanges,
-    List<EnumerationAlarmObjectBuilder>? ENUMERATION_ALARMS,
-    List<EnumerationAlarmObjectBuilder>? enumerationAlarms,
-  })
-      : _MIN_VIOLATIONS = minViolations ?? MIN_VIOLATIONS,
-        _STATIC_ALARM_RANGES = staticAlarmRanges ?? STATIC_ALARM_RANGES,
-        _ENUMERATION_ALARMS = enumerationAlarms ?? ENUMERATION_ALARMS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? STATIC_ALARM_RANGESOffset = _STATIC_ALARM_RANGES?.getOrCreateOffset(fbBuilder);
-    final int? ENUMERATION_ALARMSOffset = _ENUMERATION_ALARMS == null ? null
-        : fbBuilder.writeList(_ENUMERATION_ALARMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(3);
-    fbBuilder.addUint16(0, _MIN_VIOLATIONS);
-    fbBuilder.addOffset(1, STATIC_ALARM_RANGESOffset);
-    fbBuilder.addOffset(2, ENUMERATION_ALARMSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Context-dependent alarm
-class ContextAlarm {
-  ContextAlarm._(this._bc, this._bcOffset);
-  factory ContextAlarm(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ContextAlarm> reader = _ContextAlarmReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Match criteria for this alarm context
-  MatchCriteria? get MATCH_CRITERIA => MatchCriteria.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  MatchCriteria? get matchCriteria => MATCH_CRITERIA;
-  ///  Alarm definition for this context
-  DefaultAlarm? get ALARM => DefaultAlarm.reader.vTableGetNullable(_bc, _bcOffset, 6);
-
-  @override
-  String toString() {
-    return 'ContextAlarm{matchCriteria: ${matchCriteria}, ALARM: ${ALARM}}';
-  }
-}
-
-class _ContextAlarmReader extends fb.TableReader<ContextAlarm> {
-  const _ContextAlarmReader();
-
-  @override
-  ContextAlarm createObject(fb.BufferContext bc, int offset) =>
-    ContextAlarm._(bc, offset);
-}
-
-class ContextAlarmBuilder {
-  ContextAlarmBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addMatchCriteriaOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addAlarmOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ContextAlarmObjectBuilder extends fb.ObjectBuilder {
-  final MatchCriteriaObjectBuilder? _MATCH_CRITERIA;
-  final DefaultAlarmObjectBuilder? _ALARM;
-
-  ContextAlarmObjectBuilder({
-    MatchCriteriaObjectBuilder? MATCH_CRITERIA,
-    MatchCriteriaObjectBuilder? matchCriteria,
-    DefaultAlarmObjectBuilder? ALARM,
-  })
-      : _MATCH_CRITERIA = matchCriteria ?? MATCH_CRITERIA,
-        _ALARM = ALARM;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? MATCH_CRITERIAOffset = _MATCH_CRITERIA?.getOrCreateOffset(fbBuilder);
-    final int? ALARMOffset = _ALARM?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, MATCH_CRITERIAOffset);
-    fbBuilder.addOffset(1, ALARMOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Parameter comparison for match criteria
-class ParameterComparison {
-  ParameterComparison._(this._bc, this._bcOffset);
-  factory ParameterComparison(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ParameterComparison> reader = _ParameterComparisonReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter reference path
-  String? get PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get parameterRef => PARAMETER_REF;
-  ///  Comparison operator
-  ComparisonOperator get OPERATOR => ComparisonOperator.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ///  Value to compare against
-  String? get VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Use calibrated value (true) or raw value (false)
-  bool get USE_CALIBRATED_VALUE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, true);
-  bool get useCalibratedValue => USE_CALIBRATED_VALUE;
-
-  @override
-  String toString() {
-    return 'ParameterComparison{parameterRef: ${parameterRef}, OPERATOR: ${OPERATOR}, VALUE: ${VALUE}, useCalibratedValue: ${useCalibratedValue}}';
-  }
-}
-
-class _ParameterComparisonReader extends fb.TableReader<ParameterComparison> {
-  const _ParameterComparisonReader();
-
-  @override
-  ParameterComparison createObject(fb.BufferContext bc, int offset) =>
-    ParameterComparison._(bc, offset);
-}
-
-class ParameterComparisonBuilder {
-  ParameterComparisonBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addOperator(ComparisonOperator? OPERATOR) {
-    fbBuilder.addInt8(1, OPERATOR?.value);
-    return fbBuilder.offset;
-  }
-  int addValueOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addUseCalibratedValue(bool? USE_CALIBRATED_VALUE) {
-    fbBuilder.addBool(3, USE_CALIBRATED_VALUE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ParameterComparisonObjectBuilder extends fb.ObjectBuilder {
-  final String? _PARAMETER_REF;
-  final ComparisonOperator? _OPERATOR;
-  final String? _VALUE;
-  final bool? _USE_CALIBRATED_VALUE;
-
-  ParameterComparisonObjectBuilder({
-    String? PARAMETER_REF,
-    String? parameterRef,
-    ComparisonOperator? OPERATOR,
-    String? VALUE,
-    bool? USE_CALIBRATED_VALUE,
-    bool? useCalibratedValue,
-  })
-      : _PARAMETER_REF = parameterRef ?? PARAMETER_REF,
-        _OPERATOR = OPERATOR,
-        _VALUE = VALUE,
-        _USE_CALIBRATED_VALUE = useCalibratedValue ?? USE_CALIBRATED_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_REFOffset = _PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_PARAMETER_REF!);
-    final int? VALUEOffset = _VALUE == null ? null
-        : fbBuilder.writeString(_VALUE!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, PARAMETER_REFOffset);
-    fbBuilder.addInt8(1, _OPERATOR?.value);
-    fbBuilder.addOffset(2, VALUEOffset);
-    fbBuilder.addBool(3, _USE_CALIBRATED_VALUE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Boolean expression combining comparisons
-class BooleanExpression {
-  BooleanExpression._(this._bc, this._bcOffset);
-  factory BooleanExpression(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<BooleanExpression> reader = _BooleanExpressionReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Boolean operator
-  BooleanOperatorType get OPERATOR => BooleanOperatorType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Comparison conditions
-  List<ParameterComparison>? get CONDITIONS => const fb.ListReader<ParameterComparison>(ParameterComparison.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Nested expressions
-  List<BooleanExpression>? get EXPRESSIONS => const fb.ListReader<BooleanExpression>(BooleanExpression.reader).vTableGetNullable(_bc, _bcOffset, 8);
-
-  @override
-  String toString() {
-    return 'BooleanExpression{OPERATOR: ${OPERATOR}, CONDITIONS: ${CONDITIONS}, EXPRESSIONS: ${EXPRESSIONS}}';
-  }
-}
-
-class _BooleanExpressionReader extends fb.TableReader<BooleanExpression> {
-  const _BooleanExpressionReader();
-
-  @override
-  BooleanExpression createObject(fb.BufferContext bc, int offset) =>
-    BooleanExpression._(bc, offset);
-}
-
-class BooleanExpressionBuilder {
-  BooleanExpressionBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addOperator(BooleanOperatorType? OPERATOR) {
-    fbBuilder.addInt8(0, OPERATOR?.value);
-    return fbBuilder.offset;
-  }
-  int addConditionsOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addExpressionsOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class BooleanExpressionObjectBuilder extends fb.ObjectBuilder {
-  final BooleanOperatorType? _OPERATOR;
-  final List<ParameterComparisonObjectBuilder>? _CONDITIONS;
-  final List<BooleanExpressionObjectBuilder>? _EXPRESSIONS;
-
-  BooleanExpressionObjectBuilder({
-    BooleanOperatorType? OPERATOR,
-    List<ParameterComparisonObjectBuilder>? CONDITIONS,
-    List<BooleanExpressionObjectBuilder>? EXPRESSIONS,
-  })
-      : _OPERATOR = OPERATOR,
-        _CONDITIONS = CONDITIONS,
-        _EXPRESSIONS = EXPRESSIONS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CONDITIONSOffset = _CONDITIONS == null ? null
-        : fbBuilder.writeList(_CONDITIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? EXPRESSIONSOffset = _EXPRESSIONS == null ? null
-        : fbBuilder.writeList(_EXPRESSIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(3);
-    fbBuilder.addInt8(0, _OPERATOR?.value);
-    fbBuilder.addOffset(1, CONDITIONSOffset);
-    fbBuilder.addOffset(2, EXPRESSIONSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Match criteria for conditional logic
-class MatchCriteria {
-  MatchCriteria._(this._bc, this._bcOffset);
-  factory MatchCriteria(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<MatchCriteria> reader = _MatchCriteriaReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Single comparison
-  ParameterComparison? get COMPARISON => ParameterComparison.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  List of comparisons (implicit AND)
-  List<ParameterComparison>? get COMPARISON_LIST => const fb.ListReader<ParameterComparison>(ParameterComparison.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<ParameterComparison>? get comparisonList => COMPARISON_LIST;
-  ///  Boolean expression
-  BooleanExpression? get BOOLEAN_EXPRESSION => BooleanExpression.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  BooleanExpression? get booleanExpression => BOOLEAN_EXPRESSION;
-  ///  Custom algorithm reference
-  String? get CUSTOM_ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get customAlgorithm => CUSTOM_ALGORITHM;
-
-  @override
-  String toString() {
-    return 'MatchCriteria{COMPARISON: ${COMPARISON}, comparisonList: ${comparisonList}, booleanExpression: ${booleanExpression}, customAlgorithm: ${customAlgorithm}}';
-  }
-}
-
-class _MatchCriteriaReader extends fb.TableReader<MatchCriteria> {
-  const _MatchCriteriaReader();
-
-  @override
-  MatchCriteria createObject(fb.BufferContext bc, int offset) =>
-    MatchCriteria._(bc, offset);
-}
-
-class MatchCriteriaBuilder {
-  MatchCriteriaBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addComparisonOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addComparisonListOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addBooleanExpressionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addCustomAlgorithmOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class MatchCriteriaObjectBuilder extends fb.ObjectBuilder {
-  final ParameterComparisonObjectBuilder? _COMPARISON;
-  final List<ParameterComparisonObjectBuilder>? _COMPARISON_LIST;
-  final BooleanExpressionObjectBuilder? _BOOLEAN_EXPRESSION;
-  final String? _CUSTOM_ALGORITHM;
-
-  MatchCriteriaObjectBuilder({
-    ParameterComparisonObjectBuilder? COMPARISON,
-    List<ParameterComparisonObjectBuilder>? COMPARISON_LIST,
-    List<ParameterComparisonObjectBuilder>? comparisonList,
-    BooleanExpressionObjectBuilder? BOOLEAN_EXPRESSION,
-    BooleanExpressionObjectBuilder? booleanExpression,
-    String? CUSTOM_ALGORITHM,
-    String? customAlgorithm,
-  })
-      : _COMPARISON = COMPARISON,
-        _COMPARISON_LIST = comparisonList ?? COMPARISON_LIST,
-        _BOOLEAN_EXPRESSION = booleanExpression ?? BOOLEAN_EXPRESSION,
-        _CUSTOM_ALGORITHM = customAlgorithm ?? CUSTOM_ALGORITHM;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? COMPARISONOffset = _COMPARISON?.getOrCreateOffset(fbBuilder);
-    final int? COMPARISON_LISTOffset = _COMPARISON_LIST == null ? null
-        : fbBuilder.writeList(_COMPARISON_LIST!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? BOOLEAN_EXPRESSIONOffset = _BOOLEAN_EXPRESSION?.getOrCreateOffset(fbBuilder);
-    final int? CUSTOM_ALGORITHMOffset = _CUSTOM_ALGORITHM == null ? null
-        : fbBuilder.writeString(_CUSTOM_ALGORITHM!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, COMPARISONOffset);
-    fbBuilder.addOffset(1, COMPARISON_LISTOffset);
-    fbBuilder.addOffset(2, BOOLEAN_EXPRESSIONOffset);
-    fbBuilder.addOffset(3, CUSTOM_ALGORITHMOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Unit specification
-class Unit {
-  Unit._(this._bc, this._bcOffset);
-  factory Unit(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<Unit> reader = _UnitReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Unit description (e.g., "meters per second")
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Unit symbol (e.g., "m/s")
-  String? get SYMBOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Power/exponent for this unit
-  double get POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///  Factor multiplier
-  double get FACTOR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-
-  @override
-  String toString() {
-    return 'Unit{DESCRIPTION: ${DESCRIPTION}, SYMBOL: ${SYMBOL}, POWER: ${POWER}, FACTOR: ${FACTOR}}';
-  }
-}
-
-class _UnitReader extends fb.TableReader<Unit> {
-  const _UnitReader();
-
-  @override
-  Unit createObject(fb.BufferContext bc, int offset) =>
-    Unit._(bc, offset);
-}
-
-class UnitBuilder {
-  UnitBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addSymbolOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addPower(double? POWER) {
-    fbBuilder.addFloat64(2, POWER);
-    return fbBuilder.offset;
-  }
-  int addFactor(double? FACTOR) {
-    fbBuilder.addFloat64(3, FACTOR);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class UnitObjectBuilder extends fb.ObjectBuilder {
-  final String? _DESCRIPTION;
-  final String? _SYMBOL;
-  final double? _POWER;
-  final double? _FACTOR;
-
-  UnitObjectBuilder({
-    String? DESCRIPTION,
-    String? SYMBOL,
-    double? POWER,
-    double? FACTOR,
-  })
-      : _DESCRIPTION = DESCRIPTION,
-        _SYMBOL = SYMBOL,
-        _POWER = POWER,
-        _FACTOR = FACTOR;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? SYMBOLOffset = _SYMBOL == null ? null
-        : fbBuilder.writeString(_SYMBOL!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, DESCRIPTIONOffset);
-    fbBuilder.addOffset(1, SYMBOLOffset);
-    fbBuilder.addFloat64(2, _POWER);
-    fbBuilder.addFloat64(3, _FACTOR);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Enumeration value mapping
-class EnumerationValue {
-  EnumerationValue._(this._bc, this._bcOffset);
-  factory EnumerationValue(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<EnumerationValue> reader = _EnumerationValueReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Label/name for this value
-  String? get LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Numeric value
-  int get VALUE => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  ///  Maximum value (for ranges)
-  int get MAX_VALUE => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get maxValue => MAX_VALUE;
-  ///  Description of this enumeration value
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'EnumerationValue{LABEL: ${LABEL}, VALUE: ${VALUE}, maxValue: ${maxValue}, DESCRIPTION: ${DESCRIPTION}}';
-  }
-}
-
-class _EnumerationValueReader extends fb.TableReader<EnumerationValue> {
-  const _EnumerationValueReader();
-
-  @override
-  EnumerationValue createObject(fb.BufferContext bc, int offset) =>
-    EnumerationValue._(bc, offset);
-}
-
-class EnumerationValueBuilder {
-  EnumerationValueBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addLabelOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addValue(int? VALUE) {
-    fbBuilder.addInt64(1, VALUE);
-    return fbBuilder.offset;
-  }
-  int addMaxValue(int? MAX_VALUE) {
-    fbBuilder.addInt64(2, MAX_VALUE);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class EnumerationValueObjectBuilder extends fb.ObjectBuilder {
-  final String? _LABEL;
-  final int? _VALUE;
-  final int? _MAX_VALUE;
-  final String? _DESCRIPTION;
-
-  EnumerationValueObjectBuilder({
-    String? LABEL,
-    int? VALUE,
-    int? MAX_VALUE,
-    int? maxValue,
-    String? DESCRIPTION,
-  })
-      : _LABEL = LABEL,
-        _VALUE = VALUE,
-        _MAX_VALUE = maxValue ?? MAX_VALUE,
-        _DESCRIPTION = DESCRIPTION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? LABELOffset = _LABEL == null ? null
-        : fbBuilder.writeString(_LABEL!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, LABELOffset);
-    fbBuilder.addInt64(1, _VALUE);
-    fbBuilder.addInt64(2, _MAX_VALUE);
-    fbBuilder.addOffset(3, DESCRIPTIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Integer parameter type
-class IntegerParameterType {
-  IntegerParameterType._(this._bc, this._bcOffset);
-  factory IntegerParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<IntegerParameterType> reader = _IntegerParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Units
-  List<Unit>? get UNITS => const fb.ListReader<Unit>(Unit.reader).vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Data encoding
-  IntegerDataEncoding? get DATA_ENCODING => IntegerDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  IntegerDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Default alarm
-  DefaultAlarm? get DEFAULT_ALARM => DefaultAlarm.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  DefaultAlarm? get defaultAlarm => DEFAULT_ALARM;
-  ///  Context alarms
-  List<ContextAlarm>? get CONTEXT_ALARMS => const fb.ListReader<ContextAlarm>(ContextAlarm.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  List<ContextAlarm>? get contextAlarms => CONTEXT_ALARMS;
-  ///  Minimum valid value
-  int get VALID_MIN => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get validMin => VALID_MIN;
-  ///  Maximum valid value
-  int get VALID_MAX => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get validMax => VALID_MAX;
-  ///  Signed integer (true) or unsigned (false)
-  bool get SIGNED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
-  ///  Size in bits
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Initial/default value
-  int get INITIAL_VALUE => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 26, 0);
-  int get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'IntegerParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, UNITS: ${UNITS}, dataEncoding: ${dataEncoding}, defaultAlarm: ${defaultAlarm}, contextAlarms: ${contextAlarms}, validMin: ${validMin}, validMax: ${validMax}, SIGNED: ${SIGNED}, sizeInBits: ${sizeInBits}, initialValue: ${initialValue}}';
-  }
-}
-
-class _IntegerParameterTypeReader extends fb.TableReader<IntegerParameterType> {
-  const _IntegerParameterTypeReader();
-
-  @override
-  IntegerParameterType createObject(fb.BufferContext bc, int offset) =>
-    IntegerParameterType._(bc, offset);
-}
-
-class IntegerParameterTypeBuilder {
-  IntegerParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(12);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addUnitsOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addDefaultAlarmOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addContextAlarmsOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addValidMin(int? VALID_MIN) {
-    fbBuilder.addInt64(7, VALID_MIN);
-    return fbBuilder.offset;
-  }
-  int addValidMax(int? VALID_MAX) {
-    fbBuilder.addInt64(8, VALID_MAX);
-    return fbBuilder.offset;
-  }
-  int addSigned(bool? SIGNED) {
-    fbBuilder.addBool(9, SIGNED);
-    return fbBuilder.offset;
-  }
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(10, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addInitialValue(int? INITIAL_VALUE) {
-    fbBuilder.addInt64(11, INITIAL_VALUE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class IntegerParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final List<UnitObjectBuilder>? _UNITS;
-  final IntegerDataEncodingObjectBuilder? _DATA_ENCODING;
-  final DefaultAlarmObjectBuilder? _DEFAULT_ALARM;
-  final List<ContextAlarmObjectBuilder>? _CONTEXT_ALARMS;
-  final int? _VALID_MIN;
-  final int? _VALID_MAX;
-  final bool? _SIGNED;
-  final int? _SIZE_IN_BITS;
-  final int? _INITIAL_VALUE;
-
-  IntegerParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    List<UnitObjectBuilder>? UNITS,
-    IntegerDataEncodingObjectBuilder? DATA_ENCODING,
-    IntegerDataEncodingObjectBuilder? dataEncoding,
-    DefaultAlarmObjectBuilder? DEFAULT_ALARM,
-    DefaultAlarmObjectBuilder? defaultAlarm,
-    List<ContextAlarmObjectBuilder>? CONTEXT_ALARMS,
-    List<ContextAlarmObjectBuilder>? contextAlarms,
-    int? VALID_MIN,
-    int? validMin,
-    int? VALID_MAX,
-    int? validMax,
-    bool? SIGNED,
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    int? INITIAL_VALUE,
-    int? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _UNITS = UNITS,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _DEFAULT_ALARM = defaultAlarm ?? DEFAULT_ALARM,
-        _CONTEXT_ALARMS = contextAlarms ?? CONTEXT_ALARMS,
-        _VALID_MIN = validMin ?? VALID_MIN,
-        _VALID_MAX = validMax ?? VALID_MAX,
-        _SIGNED = SIGNED,
-        _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? UNITSOffset = _UNITS == null ? null
-        : fbBuilder.writeList(_UNITS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? DEFAULT_ALARMOffset = _DEFAULT_ALARM?.getOrCreateOffset(fbBuilder);
-    final int? CONTEXT_ALARMSOffset = _CONTEXT_ALARMS == null ? null
-        : fbBuilder.writeList(_CONTEXT_ALARMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(12);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, UNITSOffset);
-    fbBuilder.addOffset(4, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(5, DEFAULT_ALARMOffset);
-    fbBuilder.addOffset(6, CONTEXT_ALARMSOffset);
-    fbBuilder.addInt64(7, _VALID_MIN);
-    fbBuilder.addInt64(8, _VALID_MAX);
-    fbBuilder.addBool(9, _SIGNED);
-    fbBuilder.addUint16(10, _SIZE_IN_BITS);
-    fbBuilder.addInt64(11, _INITIAL_VALUE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Float parameter type
-class FloatParameterType {
-  FloatParameterType._(this._bc, this._bcOffset);
-  factory FloatParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FloatParameterType> reader = _FloatParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Units
-  List<Unit>? get UNITS => const fb.ListReader<Unit>(Unit.reader).vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Data encoding
-  FloatDataEncoding? get DATA_ENCODING => FloatDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  FloatDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Default alarm
-  DefaultAlarm? get DEFAULT_ALARM => DefaultAlarm.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  DefaultAlarm? get defaultAlarm => DEFAULT_ALARM;
-  ///  Context alarms
-  List<ContextAlarm>? get CONTEXT_ALARMS => const fb.ListReader<ContextAlarm>(ContextAlarm.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  List<ContextAlarm>? get contextAlarms => CONTEXT_ALARMS;
-  ///  Minimum valid value
-  double get VALID_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get validMin => VALID_MIN;
-  ///  Maximum valid value
-  double get VALID_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get validMax => VALID_MAX;
-  ///  Size in bits (32 or 64)
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Initial/default value
-  double get INITIAL_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'FloatParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, UNITS: ${UNITS}, dataEncoding: ${dataEncoding}, defaultAlarm: ${defaultAlarm}, contextAlarms: ${contextAlarms}, validMin: ${validMin}, validMax: ${validMax}, sizeInBits: ${sizeInBits}, initialValue: ${initialValue}}';
-  }
-}
-
-class _FloatParameterTypeReader extends fb.TableReader<FloatParameterType> {
-  const _FloatParameterTypeReader();
-
-  @override
-  FloatParameterType createObject(fb.BufferContext bc, int offset) =>
-    FloatParameterType._(bc, offset);
-}
-
-class FloatParameterTypeBuilder {
-  FloatParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(11);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addUnitsOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addDefaultAlarmOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addContextAlarmsOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addValidMin(double? VALID_MIN) {
-    fbBuilder.addFloat64(7, VALID_MIN);
-    return fbBuilder.offset;
-  }
-  int addValidMax(double? VALID_MAX) {
-    fbBuilder.addFloat64(8, VALID_MAX);
-    return fbBuilder.offset;
-  }
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(9, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addInitialValue(double? INITIAL_VALUE) {
-    fbBuilder.addFloat64(10, INITIAL_VALUE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FloatParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final List<UnitObjectBuilder>? _UNITS;
-  final FloatDataEncodingObjectBuilder? _DATA_ENCODING;
-  final DefaultAlarmObjectBuilder? _DEFAULT_ALARM;
-  final List<ContextAlarmObjectBuilder>? _CONTEXT_ALARMS;
-  final double? _VALID_MIN;
-  final double? _VALID_MAX;
-  final int? _SIZE_IN_BITS;
-  final double? _INITIAL_VALUE;
-
-  FloatParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    List<UnitObjectBuilder>? UNITS,
-    FloatDataEncodingObjectBuilder? DATA_ENCODING,
-    FloatDataEncodingObjectBuilder? dataEncoding,
-    DefaultAlarmObjectBuilder? DEFAULT_ALARM,
-    DefaultAlarmObjectBuilder? defaultAlarm,
-    List<ContextAlarmObjectBuilder>? CONTEXT_ALARMS,
-    List<ContextAlarmObjectBuilder>? contextAlarms,
-    double? VALID_MIN,
-    double? validMin,
-    double? VALID_MAX,
-    double? validMax,
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    double? INITIAL_VALUE,
-    double? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _UNITS = UNITS,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _DEFAULT_ALARM = defaultAlarm ?? DEFAULT_ALARM,
-        _CONTEXT_ALARMS = contextAlarms ?? CONTEXT_ALARMS,
-        _VALID_MIN = validMin ?? VALID_MIN,
-        _VALID_MAX = validMax ?? VALID_MAX,
-        _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? UNITSOffset = _UNITS == null ? null
-        : fbBuilder.writeList(_UNITS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? DEFAULT_ALARMOffset = _DEFAULT_ALARM?.getOrCreateOffset(fbBuilder);
-    final int? CONTEXT_ALARMSOffset = _CONTEXT_ALARMS == null ? null
-        : fbBuilder.writeList(_CONTEXT_ALARMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(11);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, UNITSOffset);
-    fbBuilder.addOffset(4, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(5, DEFAULT_ALARMOffset);
-    fbBuilder.addOffset(6, CONTEXT_ALARMSOffset);
-    fbBuilder.addFloat64(7, _VALID_MIN);
-    fbBuilder.addFloat64(8, _VALID_MAX);
-    fbBuilder.addUint16(9, _SIZE_IN_BITS);
-    fbBuilder.addFloat64(10, _INITIAL_VALUE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  String parameter type
-class StringParameterType {
-  StringParameterType._(this._bc, this._bcOffset);
-  factory StringParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<StringParameterType> reader = _StringParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Data encoding
-  StringDataEncoding? get DATA_ENCODING => StringDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  StringDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Default alarm
-  DefaultAlarm? get DEFAULT_ALARM => DefaultAlarm.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  DefaultAlarm? get defaultAlarm => DEFAULT_ALARM;
-  ///  Context alarms
-  List<ContextAlarm>? get CONTEXT_ALARMS => const fb.ListReader<ContextAlarm>(ContextAlarm.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  List<ContextAlarm>? get contextAlarms => CONTEXT_ALARMS;
-  ///  Initial/default value
-  String? get INITIAL_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get initialValue => INITIAL_VALUE;
-  ///  Restriction pattern (regex)
-  String? get RESTRICTION_PATTERN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get restrictionPattern => RESTRICTION_PATTERN;
-
-  @override
-  String toString() {
-    return 'StringParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, dataEncoding: ${dataEncoding}, defaultAlarm: ${defaultAlarm}, contextAlarms: ${contextAlarms}, initialValue: ${initialValue}, restrictionPattern: ${restrictionPattern}}';
-  }
-}
-
-class _StringParameterTypeReader extends fb.TableReader<StringParameterType> {
-  const _StringParameterTypeReader();
-
-  @override
-  StringParameterType createObject(fb.BufferContext bc, int offset) =>
-    StringParameterType._(bc, offset);
-}
-
-class StringParameterTypeBuilder {
-  StringParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDefaultAlarmOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addContextAlarmsOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValueOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addRestrictionPatternOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class StringParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final StringDataEncodingObjectBuilder? _DATA_ENCODING;
-  final DefaultAlarmObjectBuilder? _DEFAULT_ALARM;
-  final List<ContextAlarmObjectBuilder>? _CONTEXT_ALARMS;
-  final String? _INITIAL_VALUE;
-  final String? _RESTRICTION_PATTERN;
-
-  StringParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    StringDataEncodingObjectBuilder? DATA_ENCODING,
-    StringDataEncodingObjectBuilder? dataEncoding,
-    DefaultAlarmObjectBuilder? DEFAULT_ALARM,
-    DefaultAlarmObjectBuilder? defaultAlarm,
-    List<ContextAlarmObjectBuilder>? CONTEXT_ALARMS,
-    List<ContextAlarmObjectBuilder>? contextAlarms,
-    String? INITIAL_VALUE,
-    String? initialValue,
-    String? RESTRICTION_PATTERN,
-    String? restrictionPattern,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _DEFAULT_ALARM = defaultAlarm ?? DEFAULT_ALARM,
-        _CONTEXT_ALARMS = contextAlarms ?? CONTEXT_ALARMS,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE,
-        _RESTRICTION_PATTERN = restrictionPattern ?? RESTRICTION_PATTERN;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? DEFAULT_ALARMOffset = _DEFAULT_ALARM?.getOrCreateOffset(fbBuilder);
-    final int? CONTEXT_ALARMSOffset = _CONTEXT_ALARMS == null ? null
-        : fbBuilder.writeList(_CONTEXT_ALARMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? INITIAL_VALUEOffset = _INITIAL_VALUE == null ? null
-        : fbBuilder.writeString(_INITIAL_VALUE!);
-    final int? RESTRICTION_PATTERNOffset = _RESTRICTION_PATTERN == null ? null
-        : fbBuilder.writeString(_RESTRICTION_PATTERN!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(4, DEFAULT_ALARMOffset);
-    fbBuilder.addOffset(5, CONTEXT_ALARMSOffset);
-    fbBuilder.addOffset(6, INITIAL_VALUEOffset);
-    fbBuilder.addOffset(7, RESTRICTION_PATTERNOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Boolean parameter type
-class BooleanParameterType {
-  BooleanParameterType._(this._bc, this._bcOffset);
-  factory BooleanParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<BooleanParameterType> reader = _BooleanParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Data encoding (typically IntegerDataEncoding with 1 bit)
-  IntegerDataEncoding? get DATA_ENCODING => IntegerDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  IntegerDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  String representation of true value
-  String? get ONE_STRING_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get oneStringValue => ONE_STRING_VALUE;
-  ///  String representation of false value
-  String? get ZERO_STRING_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get zeroStringValue => ZERO_STRING_VALUE;
-  ///  Initial/default value
-  bool get INITIAL_VALUE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  bool get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'BooleanParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, dataEncoding: ${dataEncoding}, oneStringValue: ${oneStringValue}, zeroStringValue: ${zeroStringValue}, initialValue: ${initialValue}}';
-  }
-}
-
-class _BooleanParameterTypeReader extends fb.TableReader<BooleanParameterType> {
-  const _BooleanParameterTypeReader();
-
-  @override
-  BooleanParameterType createObject(fb.BufferContext bc, int offset) =>
-    BooleanParameterType._(bc, offset);
-}
-
-class BooleanParameterTypeBuilder {
-  BooleanParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addOneStringValueOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addZeroStringValueOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValue(bool? INITIAL_VALUE) {
-    fbBuilder.addBool(6, INITIAL_VALUE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class BooleanParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final IntegerDataEncodingObjectBuilder? _DATA_ENCODING;
-  final String? _ONE_STRING_VALUE;
-  final String? _ZERO_STRING_VALUE;
-  final bool? _INITIAL_VALUE;
-
-  BooleanParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    IntegerDataEncodingObjectBuilder? DATA_ENCODING,
-    IntegerDataEncodingObjectBuilder? dataEncoding,
-    String? ONE_STRING_VALUE,
-    String? oneStringValue,
-    String? ZERO_STRING_VALUE,
-    String? zeroStringValue,
-    bool? INITIAL_VALUE,
-    bool? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _ONE_STRING_VALUE = oneStringValue ?? ONE_STRING_VALUE,
-        _ZERO_STRING_VALUE = zeroStringValue ?? ZERO_STRING_VALUE,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? ONE_STRING_VALUEOffset = _ONE_STRING_VALUE == null ? null
-        : fbBuilder.writeString(_ONE_STRING_VALUE!);
-    final int? ZERO_STRING_VALUEOffset = _ZERO_STRING_VALUE == null ? null
-        : fbBuilder.writeString(_ZERO_STRING_VALUE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(4, ONE_STRING_VALUEOffset);
-    fbBuilder.addOffset(5, ZERO_STRING_VALUEOffset);
-    fbBuilder.addBool(6, _INITIAL_VALUE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Enumerated parameter type
-class EnumeratedParameterType {
-  EnumeratedParameterType._(this._bc, this._bcOffset);
-  factory EnumeratedParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<EnumeratedParameterType> reader = _EnumeratedParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Data encoding
-  IntegerDataEncoding? get DATA_ENCODING => IntegerDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  IntegerDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Default alarm
-  DefaultAlarm? get DEFAULT_ALARM => DefaultAlarm.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  DefaultAlarm? get defaultAlarm => DEFAULT_ALARM;
-  ///  Context alarms
-  List<ContextAlarm>? get CONTEXT_ALARMS => const fb.ListReader<ContextAlarm>(ContextAlarm.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  List<ContextAlarm>? get contextAlarms => CONTEXT_ALARMS;
-  ///  Enumeration values list
-  List<EnumerationValue>? get ENUMERATION_LIST => const fb.ListReader<EnumerationValue>(EnumerationValue.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  List<EnumerationValue>? get enumerationList => ENUMERATION_LIST;
-  ///  Initial/default value label
-  String? get INITIAL_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'EnumeratedParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, dataEncoding: ${dataEncoding}, defaultAlarm: ${defaultAlarm}, contextAlarms: ${contextAlarms}, enumerationList: ${enumerationList}, initialValue: ${initialValue}}';
-  }
-}
-
-class _EnumeratedParameterTypeReader extends fb.TableReader<EnumeratedParameterType> {
-  const _EnumeratedParameterTypeReader();
-
-  @override
-  EnumeratedParameterType createObject(fb.BufferContext bc, int offset) =>
-    EnumeratedParameterType._(bc, offset);
-}
-
-class EnumeratedParameterTypeBuilder {
-  EnumeratedParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDefaultAlarmOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addContextAlarmsOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addEnumerationListOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValueOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class EnumeratedParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final IntegerDataEncodingObjectBuilder? _DATA_ENCODING;
-  final DefaultAlarmObjectBuilder? _DEFAULT_ALARM;
-  final List<ContextAlarmObjectBuilder>? _CONTEXT_ALARMS;
-  final List<EnumerationValueObjectBuilder>? _ENUMERATION_LIST;
-  final String? _INITIAL_VALUE;
-
-  EnumeratedParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    IntegerDataEncodingObjectBuilder? DATA_ENCODING,
-    IntegerDataEncodingObjectBuilder? dataEncoding,
-    DefaultAlarmObjectBuilder? DEFAULT_ALARM,
-    DefaultAlarmObjectBuilder? defaultAlarm,
-    List<ContextAlarmObjectBuilder>? CONTEXT_ALARMS,
-    List<ContextAlarmObjectBuilder>? contextAlarms,
-    List<EnumerationValueObjectBuilder>? ENUMERATION_LIST,
-    List<EnumerationValueObjectBuilder>? enumerationList,
-    String? INITIAL_VALUE,
-    String? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _DEFAULT_ALARM = defaultAlarm ?? DEFAULT_ALARM,
-        _CONTEXT_ALARMS = contextAlarms ?? CONTEXT_ALARMS,
-        _ENUMERATION_LIST = enumerationList ?? ENUMERATION_LIST,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? DEFAULT_ALARMOffset = _DEFAULT_ALARM?.getOrCreateOffset(fbBuilder);
-    final int? CONTEXT_ALARMSOffset = _CONTEXT_ALARMS == null ? null
-        : fbBuilder.writeList(_CONTEXT_ALARMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ENUMERATION_LISTOffset = _ENUMERATION_LIST == null ? null
-        : fbBuilder.writeList(_ENUMERATION_LIST!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? INITIAL_VALUEOffset = _INITIAL_VALUE == null ? null
-        : fbBuilder.writeString(_INITIAL_VALUE!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(4, DEFAULT_ALARMOffset);
-    fbBuilder.addOffset(5, CONTEXT_ALARMSOffset);
-    fbBuilder.addOffset(6, ENUMERATION_LISTOffset);
-    fbBuilder.addOffset(7, INITIAL_VALUEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Binary parameter type
-class BinaryParameterType {
-  BinaryParameterType._(this._bc, this._bcOffset);
-  factory BinaryParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<BinaryParameterType> reader = _BinaryParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Data encoding
-  BinaryDataEncoding? get DATA_ENCODING => BinaryDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  BinaryDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Initial/default value (hex string)
-  String? get INITIAL_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'BinaryParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, dataEncoding: ${dataEncoding}, initialValue: ${initialValue}}';
-  }
-}
-
-class _BinaryParameterTypeReader extends fb.TableReader<BinaryParameterType> {
-  const _BinaryParameterTypeReader();
-
-  @override
-  BinaryParameterType createObject(fb.BufferContext bc, int offset) =>
-    BinaryParameterType._(bc, offset);
-}
-
-class BinaryParameterTypeBuilder {
-  BinaryParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValueOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class BinaryParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final BinaryDataEncodingObjectBuilder? _DATA_ENCODING;
-  final String? _INITIAL_VALUE;
-
-  BinaryParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    BinaryDataEncodingObjectBuilder? DATA_ENCODING,
-    BinaryDataEncodingObjectBuilder? dataEncoding,
-    String? INITIAL_VALUE,
-    String? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? INITIAL_VALUEOffset = _INITIAL_VALUE == null ? null
-        : fbBuilder.writeString(_INITIAL_VALUE!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(4, INITIAL_VALUEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Absolute time parameter type
-class AbsoluteTimeParameterType {
-  AbsoluteTimeParameterType._(this._bc, this._bcOffset);
-  factory AbsoluteTimeParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AbsoluteTimeParameterType> reader = _AbsoluteTimeParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Reference epoch
-  EpochType get EPOCH => EpochType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 2));
-  ///  Custom epoch date (ISO 8601) when EPOCH=CUSTOM
-  String? get EPOCH_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get epochDate => EPOCH_DATE;
-  ///  Data encoding
-  IntegerDataEncoding? get DATA_ENCODING => IntegerDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  IntegerDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Time unit scale factor
-  double get SCALE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  ///  Time unit offset
-  double get OFFSET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  ///  Default alarm
-  DefaultAlarm? get DEFAULT_ALARM => DefaultAlarm.reader.vTableGetNullable(_bc, _bcOffset, 20);
-  DefaultAlarm? get defaultAlarm => DEFAULT_ALARM;
-  ///  Context alarms
-  List<ContextAlarm>? get CONTEXT_ALARMS => const fb.ListReader<ContextAlarm>(ContextAlarm.reader).vTableGetNullable(_bc, _bcOffset, 22);
-  List<ContextAlarm>? get contextAlarms => CONTEXT_ALARMS;
-
-  @override
-  String toString() {
-    return 'AbsoluteTimeParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, EPOCH: ${EPOCH}, epochDate: ${epochDate}, dataEncoding: ${dataEncoding}, SCALE: ${SCALE}, OFFSET: ${OFFSET}, defaultAlarm: ${defaultAlarm}, contextAlarms: ${contextAlarms}}';
-  }
-}
-
-class _AbsoluteTimeParameterTypeReader extends fb.TableReader<AbsoluteTimeParameterType> {
-  const _AbsoluteTimeParameterTypeReader();
-
-  @override
-  AbsoluteTimeParameterType createObject(fb.BufferContext bc, int offset) =>
-    AbsoluteTimeParameterType._(bc, offset);
-}
-
-class AbsoluteTimeParameterTypeBuilder {
-  AbsoluteTimeParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(10);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addEpoch(EpochType? EPOCH) {
-    fbBuilder.addInt8(3, EPOCH?.value);
-    return fbBuilder.offset;
-  }
-  int addEpochDateOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addScale(double? SCALE) {
-    fbBuilder.addFloat64(6, SCALE);
-    return fbBuilder.offset;
-  }
-  int addOffset(double? OFFSET) {
-    fbBuilder.addFloat64(7, OFFSET);
-    return fbBuilder.offset;
-  }
-  int addDefaultAlarmOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addContextAlarmsOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AbsoluteTimeParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final EpochType? _EPOCH;
-  final String? _EPOCH_DATE;
-  final IntegerDataEncodingObjectBuilder? _DATA_ENCODING;
-  final double? _SCALE;
-  final double? _OFFSET;
-  final DefaultAlarmObjectBuilder? _DEFAULT_ALARM;
-  final List<ContextAlarmObjectBuilder>? _CONTEXT_ALARMS;
-
-  AbsoluteTimeParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    EpochType? EPOCH,
-    String? EPOCH_DATE,
-    String? epochDate,
-    IntegerDataEncodingObjectBuilder? DATA_ENCODING,
-    IntegerDataEncodingObjectBuilder? dataEncoding,
-    double? SCALE,
-    double? OFFSET,
-    DefaultAlarmObjectBuilder? DEFAULT_ALARM,
-    DefaultAlarmObjectBuilder? defaultAlarm,
-    List<ContextAlarmObjectBuilder>? CONTEXT_ALARMS,
-    List<ContextAlarmObjectBuilder>? contextAlarms,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _EPOCH = EPOCH,
-        _EPOCH_DATE = epochDate ?? EPOCH_DATE,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _SCALE = SCALE,
-        _OFFSET = OFFSET,
-        _DEFAULT_ALARM = defaultAlarm ?? DEFAULT_ALARM,
-        _CONTEXT_ALARMS = contextAlarms ?? CONTEXT_ALARMS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? EPOCH_DATEOffset = _EPOCH_DATE == null ? null
-        : fbBuilder.writeString(_EPOCH_DATE!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? DEFAULT_ALARMOffset = _DEFAULT_ALARM?.getOrCreateOffset(fbBuilder);
-    final int? CONTEXT_ALARMSOffset = _CONTEXT_ALARMS == null ? null
-        : fbBuilder.writeList(_CONTEXT_ALARMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(10);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addInt8(3, _EPOCH?.value);
-    fbBuilder.addOffset(4, EPOCH_DATEOffset);
-    fbBuilder.addOffset(5, DATA_ENCODINGOffset);
-    fbBuilder.addFloat64(6, _SCALE);
-    fbBuilder.addFloat64(7, _OFFSET);
-    fbBuilder.addOffset(8, DEFAULT_ALARMOffset);
-    fbBuilder.addOffset(9, CONTEXT_ALARMSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Relative time parameter type
-class RelativeTimeParameterType {
-  RelativeTimeParameterType._(this._bc, this._bcOffset);
-  factory RelativeTimeParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RelativeTimeParameterType> reader = _RelativeTimeParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Units
-  List<Unit>? get UNITS => const fb.ListReader<Unit>(Unit.reader).vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Data encoding
-  IntegerDataEncoding? get DATA_ENCODING => IntegerDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  IntegerDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Default alarm
-  DefaultAlarm? get DEFAULT_ALARM => DefaultAlarm.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  DefaultAlarm? get defaultAlarm => DEFAULT_ALARM;
-  ///  Context alarms
-  List<ContextAlarm>? get CONTEXT_ALARMS => const fb.ListReader<ContextAlarm>(ContextAlarm.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  List<ContextAlarm>? get contextAlarms => CONTEXT_ALARMS;
-
-  @override
-  String toString() {
-    return 'RelativeTimeParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, UNITS: ${UNITS}, dataEncoding: ${dataEncoding}, defaultAlarm: ${defaultAlarm}, contextAlarms: ${contextAlarms}}';
-  }
-}
-
-class _RelativeTimeParameterTypeReader extends fb.TableReader<RelativeTimeParameterType> {
-  const _RelativeTimeParameterTypeReader();
-
-  @override
-  RelativeTimeParameterType createObject(fb.BufferContext bc, int offset) =>
-    RelativeTimeParameterType._(bc, offset);
-}
-
-class RelativeTimeParameterTypeBuilder {
-  RelativeTimeParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addUnitsOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addDefaultAlarmOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addContextAlarmsOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RelativeTimeParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final List<UnitObjectBuilder>? _UNITS;
-  final IntegerDataEncodingObjectBuilder? _DATA_ENCODING;
-  final DefaultAlarmObjectBuilder? _DEFAULT_ALARM;
-  final List<ContextAlarmObjectBuilder>? _CONTEXT_ALARMS;
-
-  RelativeTimeParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    List<UnitObjectBuilder>? UNITS,
-    IntegerDataEncodingObjectBuilder? DATA_ENCODING,
-    IntegerDataEncodingObjectBuilder? dataEncoding,
-    DefaultAlarmObjectBuilder? DEFAULT_ALARM,
-    DefaultAlarmObjectBuilder? defaultAlarm,
-    List<ContextAlarmObjectBuilder>? CONTEXT_ALARMS,
-    List<ContextAlarmObjectBuilder>? contextAlarms,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _UNITS = UNITS,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _DEFAULT_ALARM = defaultAlarm ?? DEFAULT_ALARM,
-        _CONTEXT_ALARMS = contextAlarms ?? CONTEXT_ALARMS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? UNITSOffset = _UNITS == null ? null
-        : fbBuilder.writeList(_UNITS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? DEFAULT_ALARMOffset = _DEFAULT_ALARM?.getOrCreateOffset(fbBuilder);
-    final int? CONTEXT_ALARMSOffset = _CONTEXT_ALARMS == null ? null
-        : fbBuilder.writeList(_CONTEXT_ALARMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, UNITSOffset);
-    fbBuilder.addOffset(4, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(5, DEFAULT_ALARMOffset);
-    fbBuilder.addOffset(6, CONTEXT_ALARMSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Array dimension specification
-class ArrayDimension {
-  ArrayDimension._(this._bc, this._bcOffset);
-  factory ArrayDimension(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ArrayDimension> reader = _ArrayDimensionReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Fixed size of this dimension
-  int get SIZE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  ///  Dynamic size from parameter reference
-  String? get SIZE_PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get sizeParameterRef => SIZE_PARAMETER_REF;
-
-  @override
-  String toString() {
-    return 'ArrayDimension{SIZE: ${SIZE}, sizeParameterRef: ${sizeParameterRef}}';
-  }
-}
-
-class _ArrayDimensionReader extends fb.TableReader<ArrayDimension> {
-  const _ArrayDimensionReader();
-
-  @override
-  ArrayDimension createObject(fb.BufferContext bc, int offset) =>
-    ArrayDimension._(bc, offset);
-}
-
-class ArrayDimensionBuilder {
-  ArrayDimensionBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addSize(int? SIZE) {
-    fbBuilder.addUint32(0, SIZE);
-    return fbBuilder.offset;
-  }
-  int addSizeParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ArrayDimensionObjectBuilder extends fb.ObjectBuilder {
-  final int? _SIZE;
-  final String? _SIZE_PARAMETER_REF;
-
-  ArrayDimensionObjectBuilder({
-    int? SIZE,
-    String? SIZE_PARAMETER_REF,
-    String? sizeParameterRef,
-  })
-      : _SIZE = SIZE,
-        _SIZE_PARAMETER_REF = sizeParameterRef ?? SIZE_PARAMETER_REF;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SIZE_PARAMETER_REFOffset = _SIZE_PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_SIZE_PARAMETER_REF!);
-    fbBuilder.startTable(2);
-    fbBuilder.addUint32(0, _SIZE);
-    fbBuilder.addOffset(1, SIZE_PARAMETER_REFOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Array parameter type
-class ArrayParameterType {
-  ArrayParameterType._(this._bc, this._bcOffset);
-  factory ArrayParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ArrayParameterType> reader = _ArrayParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Reference to the array element type
-  String? get ARRAY_TYPE_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get arrayTypeRef => ARRAY_TYPE_REF;
-  ///  Dimension list
-  List<ArrayDimension>? get DIMENSIONS => const fb.ListReader<ArrayDimension>(ArrayDimension.reader).vTableGetNullable(_bc, _bcOffset, 12);
-
-  @override
-  String toString() {
-    return 'ArrayParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, arrayTypeRef: ${arrayTypeRef}, DIMENSIONS: ${DIMENSIONS}}';
-  }
-}
-
-class _ArrayParameterTypeReader extends fb.TableReader<ArrayParameterType> {
-  const _ArrayParameterTypeReader();
-
-  @override
-  ArrayParameterType createObject(fb.BufferContext bc, int offset) =>
-    ArrayParameterType._(bc, offset);
-}
-
-class ArrayParameterTypeBuilder {
-  ArrayParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addArrayTypeRefOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDimensionsOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ArrayParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final String? _ARRAY_TYPE_REF;
-  final List<ArrayDimensionObjectBuilder>? _DIMENSIONS;
-
-  ArrayParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    String? ARRAY_TYPE_REF,
-    String? arrayTypeRef,
-    List<ArrayDimensionObjectBuilder>? DIMENSIONS,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _ARRAY_TYPE_REF = arrayTypeRef ?? ARRAY_TYPE_REF,
-        _DIMENSIONS = DIMENSIONS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? ARRAY_TYPE_REFOffset = _ARRAY_TYPE_REF == null ? null
-        : fbBuilder.writeString(_ARRAY_TYPE_REF!);
-    final int? DIMENSIONSOffset = _DIMENSIONS == null ? null
-        : fbBuilder.writeList(_DIMENSIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, ARRAY_TYPE_REFOffset);
-    fbBuilder.addOffset(4, DIMENSIONSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Aggregate member definition
-class AggregateMember {
-  AggregateMember._(this._bc, this._bcOffset);
-  factory AggregateMember(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AggregateMember> reader = _AggregateMemberReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Member name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Reference to parameter type
-  String? get TYPE_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get typeRef => TYPE_REF;
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get shortDescription => SHORT_DESCRIPTION;
-
-  @override
-  String toString() {
-    return 'AggregateMember{NAME: ${NAME}, typeRef: ${typeRef}, shortDescription: ${shortDescription}}';
-  }
-}
-
-class _AggregateMemberReader extends fb.TableReader<AggregateMember> {
-  const _AggregateMemberReader();
-
-  @override
-  AggregateMember createObject(fb.BufferContext bc, int offset) =>
-    AggregateMember._(bc, offset);
-}
-
-class AggregateMemberBuilder {
-  AggregateMemberBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addTypeRefOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AggregateMemberObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _TYPE_REF;
-  final String? _SHORT_DESCRIPTION;
-
-  AggregateMemberObjectBuilder({
-    String? NAME,
-    String? TYPE_REF,
-    String? typeRef,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-  })
-      : _NAME = NAME,
-        _TYPE_REF = typeRef ?? TYPE_REF,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? TYPE_REFOffset = _TYPE_REF == null ? null
-        : fbBuilder.writeString(_TYPE_REF!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, TYPE_REFOffset);
-    fbBuilder.addOffset(2, SHORT_DESCRIPTIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Aggregate parameter type (structure)
-class AggregateParameterType {
-  AggregateParameterType._(this._bc, this._bcOffset);
-  factory AggregateParameterType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AggregateParameterType> reader = _AggregateParameterTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Member list
-  List<AggregateMember>? get MEMBERS => const fb.ListReader<AggregateMember>(AggregateMember.reader).vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'AggregateParameterType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, MEMBERS: ${MEMBERS}}';
-  }
-}
-
-class _AggregateParameterTypeReader extends fb.TableReader<AggregateParameterType> {
-  const _AggregateParameterTypeReader();
-
-  @override
-  AggregateParameterType createObject(fb.BufferContext bc, int offset) =>
-    AggregateParameterType._(bc, offset);
-}
-
-class AggregateParameterTypeBuilder {
-  AggregateParameterTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addMembersOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AggregateParameterTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final List<AggregateMemberObjectBuilder>? _MEMBERS;
-
-  AggregateParameterTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    List<AggregateMemberObjectBuilder>? MEMBERS,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _MEMBERS = MEMBERS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? MEMBERSOffset = _MEMBERS == null ? null
-        : fbBuilder.writeList(_MEMBERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, MEMBERSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Collection of all parameter types
-class ParameterTypeSet {
-  ParameterTypeSet._(this._bc, this._bcOffset);
-  factory ParameterTypeSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ParameterTypeSet> reader = _ParameterTypeSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Integer parameter types
-  List<IntegerParameterType>? get INTEGER_TYPES => const fb.ListReader<IntegerParameterType>(IntegerParameterType.reader).vTableGetNullable(_bc, _bcOffset, 4);
-  List<IntegerParameterType>? get integerTypes => INTEGER_TYPES;
-  ///  Float parameter types
-  List<FloatParameterType>? get FLOAT_TYPES => const fb.ListReader<FloatParameterType>(FloatParameterType.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<FloatParameterType>? get floatTypes => FLOAT_TYPES;
-  ///  String parameter types
-  List<StringParameterType>? get STRING_TYPES => const fb.ListReader<StringParameterType>(StringParameterType.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  List<StringParameterType>? get stringTypes => STRING_TYPES;
-  ///  Boolean parameter types
-  List<BooleanParameterType>? get BOOLEAN_TYPES => const fb.ListReader<BooleanParameterType>(BooleanParameterType.reader).vTableGetNullable(_bc, _bcOffset, 10);
-  List<BooleanParameterType>? get booleanTypes => BOOLEAN_TYPES;
-  ///  Enumerated parameter types
-  List<EnumeratedParameterType>? get ENUMERATED_TYPES => const fb.ListReader<EnumeratedParameterType>(EnumeratedParameterType.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  List<EnumeratedParameterType>? get enumeratedTypes => ENUMERATED_TYPES;
-  ///  Binary parameter types
-  List<BinaryParameterType>? get BINARY_TYPES => const fb.ListReader<BinaryParameterType>(BinaryParameterType.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  List<BinaryParameterType>? get binaryTypes => BINARY_TYPES;
-  ///  Absolute time parameter types
-  List<AbsoluteTimeParameterType>? get ABSOLUTE_TIME_TYPES => const fb.ListReader<AbsoluteTimeParameterType>(AbsoluteTimeParameterType.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  List<AbsoluteTimeParameterType>? get absoluteTimeTypes => ABSOLUTE_TIME_TYPES;
-  ///  Relative time parameter types
-  List<RelativeTimeParameterType>? get RELATIVE_TIME_TYPES => const fb.ListReader<RelativeTimeParameterType>(RelativeTimeParameterType.reader).vTableGetNullable(_bc, _bcOffset, 18);
-  List<RelativeTimeParameterType>? get relativeTimeTypes => RELATIVE_TIME_TYPES;
-  ///  Array parameter types
-  List<ArrayParameterType>? get ARRAY_TYPES => const fb.ListReader<ArrayParameterType>(ArrayParameterType.reader).vTableGetNullable(_bc, _bcOffset, 20);
-  List<ArrayParameterType>? get arrayTypes => ARRAY_TYPES;
-  ///  Aggregate parameter types
-  List<AggregateParameterType>? get AGGREGATE_TYPES => const fb.ListReader<AggregateParameterType>(AggregateParameterType.reader).vTableGetNullable(_bc, _bcOffset, 22);
-  List<AggregateParameterType>? get aggregateTypes => AGGREGATE_TYPES;
-
-  @override
-  String toString() {
-    return 'ParameterTypeSet{integerTypes: ${integerTypes}, floatTypes: ${floatTypes}, stringTypes: ${stringTypes}, booleanTypes: ${booleanTypes}, enumeratedTypes: ${enumeratedTypes}, binaryTypes: ${binaryTypes}, absoluteTimeTypes: ${absoluteTimeTypes}, relativeTimeTypes: ${relativeTimeTypes}, arrayTypes: ${arrayTypes}, aggregateTypes: ${aggregateTypes}}';
-  }
-}
-
-class _ParameterTypeSetReader extends fb.TableReader<ParameterTypeSet> {
-  const _ParameterTypeSetReader();
-
-  @override
-  ParameterTypeSet createObject(fb.BufferContext bc, int offset) =>
-    ParameterTypeSet._(bc, offset);
-}
-
-class ParameterTypeSetBuilder {
-  ParameterTypeSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(10);
-  }
-
-  int addIntegerTypesOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addFloatTypesOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addStringTypesOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addBooleanTypesOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addEnumeratedTypesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addBinaryTypesOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addAbsoluteTimeTypesOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addRelativeTimeTypesOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addArrayTypesOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addAggregateTypesOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ParameterTypeSetObjectBuilder extends fb.ObjectBuilder {
-  final List<IntegerParameterTypeObjectBuilder>? _INTEGER_TYPES;
-  final List<FloatParameterTypeObjectBuilder>? _FLOAT_TYPES;
-  final List<StringParameterTypeObjectBuilder>? _STRING_TYPES;
-  final List<BooleanParameterTypeObjectBuilder>? _BOOLEAN_TYPES;
-  final List<EnumeratedParameterTypeObjectBuilder>? _ENUMERATED_TYPES;
-  final List<BinaryParameterTypeObjectBuilder>? _BINARY_TYPES;
-  final List<AbsoluteTimeParameterTypeObjectBuilder>? _ABSOLUTE_TIME_TYPES;
-  final List<RelativeTimeParameterTypeObjectBuilder>? _RELATIVE_TIME_TYPES;
-  final List<ArrayParameterTypeObjectBuilder>? _ARRAY_TYPES;
-  final List<AggregateParameterTypeObjectBuilder>? _AGGREGATE_TYPES;
-
-  ParameterTypeSetObjectBuilder({
-    List<IntegerParameterTypeObjectBuilder>? INTEGER_TYPES,
-    List<IntegerParameterTypeObjectBuilder>? integerTypes,
-    List<FloatParameterTypeObjectBuilder>? FLOAT_TYPES,
-    List<FloatParameterTypeObjectBuilder>? floatTypes,
-    List<StringParameterTypeObjectBuilder>? STRING_TYPES,
-    List<StringParameterTypeObjectBuilder>? stringTypes,
-    List<BooleanParameterTypeObjectBuilder>? BOOLEAN_TYPES,
-    List<BooleanParameterTypeObjectBuilder>? booleanTypes,
-    List<EnumeratedParameterTypeObjectBuilder>? ENUMERATED_TYPES,
-    List<EnumeratedParameterTypeObjectBuilder>? enumeratedTypes,
-    List<BinaryParameterTypeObjectBuilder>? BINARY_TYPES,
-    List<BinaryParameterTypeObjectBuilder>? binaryTypes,
-    List<AbsoluteTimeParameterTypeObjectBuilder>? ABSOLUTE_TIME_TYPES,
-    List<AbsoluteTimeParameterTypeObjectBuilder>? absoluteTimeTypes,
-    List<RelativeTimeParameterTypeObjectBuilder>? RELATIVE_TIME_TYPES,
-    List<RelativeTimeParameterTypeObjectBuilder>? relativeTimeTypes,
-    List<ArrayParameterTypeObjectBuilder>? ARRAY_TYPES,
-    List<ArrayParameterTypeObjectBuilder>? arrayTypes,
-    List<AggregateParameterTypeObjectBuilder>? AGGREGATE_TYPES,
-    List<AggregateParameterTypeObjectBuilder>? aggregateTypes,
-  })
-      : _INTEGER_TYPES = integerTypes ?? INTEGER_TYPES,
-        _FLOAT_TYPES = floatTypes ?? FLOAT_TYPES,
-        _STRING_TYPES = stringTypes ?? STRING_TYPES,
-        _BOOLEAN_TYPES = booleanTypes ?? BOOLEAN_TYPES,
-        _ENUMERATED_TYPES = enumeratedTypes ?? ENUMERATED_TYPES,
-        _BINARY_TYPES = binaryTypes ?? BINARY_TYPES,
-        _ABSOLUTE_TIME_TYPES = absoluteTimeTypes ?? ABSOLUTE_TIME_TYPES,
-        _RELATIVE_TIME_TYPES = relativeTimeTypes ?? RELATIVE_TIME_TYPES,
-        _ARRAY_TYPES = arrayTypes ?? ARRAY_TYPES,
-        _AGGREGATE_TYPES = aggregateTypes ?? AGGREGATE_TYPES;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? INTEGER_TYPESOffset = _INTEGER_TYPES == null ? null
-        : fbBuilder.writeList(_INTEGER_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? FLOAT_TYPESOffset = _FLOAT_TYPES == null ? null
-        : fbBuilder.writeList(_FLOAT_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? STRING_TYPESOffset = _STRING_TYPES == null ? null
-        : fbBuilder.writeList(_STRING_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? BOOLEAN_TYPESOffset = _BOOLEAN_TYPES == null ? null
-        : fbBuilder.writeList(_BOOLEAN_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ENUMERATED_TYPESOffset = _ENUMERATED_TYPES == null ? null
-        : fbBuilder.writeList(_ENUMERATED_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? BINARY_TYPESOffset = _BINARY_TYPES == null ? null
-        : fbBuilder.writeList(_BINARY_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ABSOLUTE_TIME_TYPESOffset = _ABSOLUTE_TIME_TYPES == null ? null
-        : fbBuilder.writeList(_ABSOLUTE_TIME_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? RELATIVE_TIME_TYPESOffset = _RELATIVE_TIME_TYPES == null ? null
-        : fbBuilder.writeList(_RELATIVE_TIME_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ARRAY_TYPESOffset = _ARRAY_TYPES == null ? null
-        : fbBuilder.writeList(_ARRAY_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? AGGREGATE_TYPESOffset = _AGGREGATE_TYPES == null ? null
-        : fbBuilder.writeList(_AGGREGATE_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(10);
-    fbBuilder.addOffset(0, INTEGER_TYPESOffset);
-    fbBuilder.addOffset(1, FLOAT_TYPESOffset);
-    fbBuilder.addOffset(2, STRING_TYPESOffset);
-    fbBuilder.addOffset(3, BOOLEAN_TYPESOffset);
-    fbBuilder.addOffset(4, ENUMERATED_TYPESOffset);
-    fbBuilder.addOffset(5, BINARY_TYPESOffset);
-    fbBuilder.addOffset(6, ABSOLUTE_TIME_TYPESOffset);
-    fbBuilder.addOffset(7, RELATIVE_TIME_TYPESOffset);
-    fbBuilder.addOffset(8, ARRAY_TYPESOffset);
-    fbBuilder.addOffset(9, AGGREGATE_TYPESOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Parameter properties
-class ParameterProperties {
-  ParameterProperties._(this._bc, this._bcOffset);
-  factory ParameterProperties(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ParameterProperties> reader = _ParameterPropertiesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Data source type
-  DataSourceType get DATA_SOURCE => DataSourceType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  DataSourceType get dataSource => DATA_SOURCE;
-  ///  Read-only parameter
-  bool get READ_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, true);
-  bool get readOnly => READ_ONLY;
-  ///  System/subsystem name
-  String? get SYSTEM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get systemName => SYSTEM_NAME;
-  ///  Validity condition
-  MatchCriteria? get VALIDITY_CONDITION => MatchCriteria.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  MatchCriteria? get validityCondition => VALIDITY_CONDITION;
-
-  @override
-  String toString() {
-    return 'ParameterProperties{dataSource: ${dataSource}, readOnly: ${readOnly}, systemName: ${systemName}, validityCondition: ${validityCondition}}';
-  }
-}
-
-class _ParameterPropertiesReader extends fb.TableReader<ParameterProperties> {
-  const _ParameterPropertiesReader();
-
-  @override
-  ParameterProperties createObject(fb.BufferContext bc, int offset) =>
-    ParameterProperties._(bc, offset);
-}
-
-class ParameterPropertiesBuilder {
-  ParameterPropertiesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addDataSource(DataSourceType? DATA_SOURCE) {
-    fbBuilder.addInt8(0, DATA_SOURCE?.value);
-    return fbBuilder.offset;
-  }
-  int addReadOnly(bool? READ_ONLY) {
-    fbBuilder.addBool(1, READ_ONLY);
-    return fbBuilder.offset;
-  }
-  int addSystemNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addValidityConditionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ParameterPropertiesObjectBuilder extends fb.ObjectBuilder {
-  final DataSourceType? _DATA_SOURCE;
-  final bool? _READ_ONLY;
-  final String? _SYSTEM_NAME;
-  final MatchCriteriaObjectBuilder? _VALIDITY_CONDITION;
-
-  ParameterPropertiesObjectBuilder({
-    DataSourceType? DATA_SOURCE,
-    DataSourceType? dataSource,
-    bool? READ_ONLY,
-    bool? readOnly,
-    String? SYSTEM_NAME,
-    String? systemName,
-    MatchCriteriaObjectBuilder? VALIDITY_CONDITION,
-    MatchCriteriaObjectBuilder? validityCondition,
-  })
-      : _DATA_SOURCE = dataSource ?? DATA_SOURCE,
-        _READ_ONLY = readOnly ?? READ_ONLY,
-        _SYSTEM_NAME = systemName ?? SYSTEM_NAME,
-        _VALIDITY_CONDITION = validityCondition ?? VALIDITY_CONDITION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SYSTEM_NAMEOffset = _SYSTEM_NAME == null ? null
-        : fbBuilder.writeString(_SYSTEM_NAME!);
-    final int? VALIDITY_CONDITIONOffset = _VALIDITY_CONDITION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addInt8(0, _DATA_SOURCE?.value);
-    fbBuilder.addBool(1, _READ_ONLY);
-    fbBuilder.addOffset(2, SYSTEM_NAMEOffset);
-    fbBuilder.addOffset(3, VALIDITY_CONDITIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Parameter definition
-class Parameter {
-  Parameter._(this._bc, this._bcOffset);
-  factory Parameter(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<Parameter> reader = _ParameterReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Reference to parameter type
-  String? get PARAMETER_TYPE_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get parameterTypeRef => PARAMETER_TYPE_REF;
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Parameter properties
-  ParameterProperties? get PROPERTIES => ParameterProperties.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Physical address mapping
-  String? get PHYSICAL_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get physicalAddress => PHYSICAL_ADDRESS;
-  ///  Initial/default value
-  String? get INITIAL_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'Parameter{NAME: ${NAME}, parameterTypeRef: ${parameterTypeRef}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, PROPERTIES: ${PROPERTIES}, physicalAddress: ${physicalAddress}, initialValue: ${initialValue}}';
-  }
-}
-
-class _ParameterReader extends fb.TableReader<Parameter> {
-  const _ParameterReader();
-
-  @override
-  Parameter createObject(fb.BufferContext bc, int offset) =>
-    Parameter._(bc, offset);
-}
-
-class ParameterBuilder {
-  ParameterBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addParameterTypeRefOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addPropertiesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addPhysicalAddressOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValueOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ParameterObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _PARAMETER_TYPE_REF;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final ParameterPropertiesObjectBuilder? _PROPERTIES;
-  final String? _PHYSICAL_ADDRESS;
-  final String? _INITIAL_VALUE;
-
-  ParameterObjectBuilder({
-    String? NAME,
-    String? PARAMETER_TYPE_REF,
-    String? parameterTypeRef,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    ParameterPropertiesObjectBuilder? PROPERTIES,
-    String? PHYSICAL_ADDRESS,
-    String? physicalAddress,
-    String? INITIAL_VALUE,
-    String? initialValue,
-  })
-      : _NAME = NAME,
-        _PARAMETER_TYPE_REF = parameterTypeRef ?? PARAMETER_TYPE_REF,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _PROPERTIES = PROPERTIES,
-        _PHYSICAL_ADDRESS = physicalAddress ?? PHYSICAL_ADDRESS,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? PARAMETER_TYPE_REFOffset = _PARAMETER_TYPE_REF == null ? null
-        : fbBuilder.writeString(_PARAMETER_TYPE_REF!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? PROPERTIESOffset = _PROPERTIES?.getOrCreateOffset(fbBuilder);
-    final int? PHYSICAL_ADDRESSOffset = _PHYSICAL_ADDRESS == null ? null
-        : fbBuilder.writeString(_PHYSICAL_ADDRESS!);
-    final int? INITIAL_VALUEOffset = _INITIAL_VALUE == null ? null
-        : fbBuilder.writeString(_INITIAL_VALUE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, PARAMETER_TYPE_REFOffset);
-    fbBuilder.addOffset(2, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(4, PROPERTIESOffset);
-    fbBuilder.addOffset(5, PHYSICAL_ADDRESSOffset);
-    fbBuilder.addOffset(6, INITIAL_VALUEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Collection of parameters
-class ParameterSet {
-  ParameterSet._(this._bc, this._bcOffset);
-  factory ParameterSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ParameterSet> reader = _ParameterSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameters
-  List<Parameter>? get PARAMETERS => const fb.ListReader<Parameter>(Parameter.reader).vTableGetNullable(_bc, _bcOffset, 4);
-
-  @override
-  String toString() {
-    return 'ParameterSet{PARAMETERS: ${PARAMETERS}}';
-  }
-}
-
-class _ParameterSetReader extends fb.TableReader<ParameterSet> {
-  const _ParameterSetReader();
-
-  @override
-  ParameterSet createObject(fb.BufferContext bc, int offset) =>
-    ParameterSet._(bc, offset);
-}
-
-class ParameterSetBuilder {
-  ParameterSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addParametersOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ParameterSetObjectBuilder extends fb.ObjectBuilder {
-  final List<ParameterObjectBuilder>? _PARAMETERS;
-
-  ParameterSetObjectBuilder({
-    List<ParameterObjectBuilder>? PARAMETERS,
-  })
-      : _PARAMETERS = PARAMETERS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETERSOffset = _PARAMETERS == null ? null
-        : fbBuilder.writeList(_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, PARAMETERSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Location specification within a container
-class LocationInContainer {
-  LocationInContainer._(this._bc, this._bcOffset);
-  factory LocationInContainer(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<LocationInContainer> reader = _LocationInContainerReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Reference location type
-  ReferenceLocationType get REFERENCE_LOCATION => ReferenceLocationType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 2));
-  ReferenceLocationType get referenceLocation => REFERENCE_LOCATION;
-  ///  Offset in bits from reference location
-  int get OFFSET_IN_BITS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get offsetInBits => OFFSET_IN_BITS;
-
-  @override
-  String toString() {
-    return 'LocationInContainer{referenceLocation: ${referenceLocation}, offsetInBits: ${offsetInBits}}';
-  }
-}
-
-class _LocationInContainerReader extends fb.TableReader<LocationInContainer> {
-  const _LocationInContainerReader();
-
-  @override
-  LocationInContainer createObject(fb.BufferContext bc, int offset) =>
-    LocationInContainer._(bc, offset);
-}
-
-class LocationInContainerBuilder {
-  LocationInContainerBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addReferenceLocation(ReferenceLocationType? REFERENCE_LOCATION) {
-    fbBuilder.addInt8(0, REFERENCE_LOCATION?.value);
-    return fbBuilder.offset;
-  }
-  int addOffsetInBits(int? OFFSET_IN_BITS) {
-    fbBuilder.addInt32(1, OFFSET_IN_BITS);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class LocationInContainerObjectBuilder extends fb.ObjectBuilder {
-  final ReferenceLocationType? _REFERENCE_LOCATION;
-  final int? _OFFSET_IN_BITS;
-
-  LocationInContainerObjectBuilder({
-    ReferenceLocationType? REFERENCE_LOCATION,
-    ReferenceLocationType? referenceLocation,
-    int? OFFSET_IN_BITS,
-    int? offsetInBits,
-  })
-      : _REFERENCE_LOCATION = referenceLocation ?? REFERENCE_LOCATION,
-        _OFFSET_IN_BITS = offsetInBits ?? OFFSET_IN_BITS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
-    fbBuilder.addInt8(0, _REFERENCE_LOCATION?.value);
-    fbBuilder.addInt32(1, _OFFSET_IN_BITS);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Repeat entry specification
-class RepeatEntry {
-  RepeatEntry._(this._bc, this._bcOffset);
-  factory RepeatEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RepeatEntry> reader = _RepeatEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Fixed repeat count
-  int get COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  ///  Dynamic count from parameter reference
-  String? get COUNT_PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get countParameterRef => COUNT_PARAMETER_REF;
-  ///  Offset in bits between repetitions
-  int get OFFSET_IN_BITS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get offsetInBits => OFFSET_IN_BITS;
-
-  @override
-  String toString() {
-    return 'RepeatEntry{COUNT: ${COUNT}, countParameterRef: ${countParameterRef}, offsetInBits: ${offsetInBits}}';
-  }
-}
-
-class _RepeatEntryReader extends fb.TableReader<RepeatEntry> {
-  const _RepeatEntryReader();
-
-  @override
-  RepeatEntry createObject(fb.BufferContext bc, int offset) =>
-    RepeatEntry._(bc, offset);
-}
-
-class RepeatEntryBuilder {
-  RepeatEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addCount(int? COUNT) {
-    fbBuilder.addUint32(0, COUNT);
-    return fbBuilder.offset;
-  }
-  int addCountParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addOffsetInBits(int? OFFSET_IN_BITS) {
-    fbBuilder.addInt32(2, OFFSET_IN_BITS);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RepeatEntryObjectBuilder extends fb.ObjectBuilder {
-  final int? _COUNT;
-  final String? _COUNT_PARAMETER_REF;
-  final int? _OFFSET_IN_BITS;
-
-  RepeatEntryObjectBuilder({
-    int? COUNT,
-    String? COUNT_PARAMETER_REF,
-    String? countParameterRef,
-    int? OFFSET_IN_BITS,
-    int? offsetInBits,
-  })
-      : _COUNT = COUNT,
-        _COUNT_PARAMETER_REF = countParameterRef ?? COUNT_PARAMETER_REF,
-        _OFFSET_IN_BITS = offsetInBits ?? OFFSET_IN_BITS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? COUNT_PARAMETER_REFOffset = _COUNT_PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_COUNT_PARAMETER_REF!);
-    fbBuilder.startTable(3);
-    fbBuilder.addUint32(0, _COUNT);
-    fbBuilder.addOffset(1, COUNT_PARAMETER_REFOffset);
-    fbBuilder.addInt32(2, _OFFSET_IN_BITS);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Parameter reference entry in container
-class ParameterRefEntry {
-  ParameterRefEntry._(this._bc, this._bcOffset);
-  factory ParameterRefEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ParameterRefEntry> reader = _ParameterRefEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter reference path
-  String? get PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get parameterRef => PARAMETER_REF;
-  ///  Location in container
-  LocationInContainer? get LOCATION => LocationInContainer.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Repeat specification
-  RepeatEntry? get REPEAT => RepeatEntry.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Include condition
-  MatchCriteria? get INCLUDE_CONDITION => MatchCriteria.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  MatchCriteria? get includeCondition => INCLUDE_CONDITION;
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get shortDescription => SHORT_DESCRIPTION;
-
-  @override
-  String toString() {
-    return 'ParameterRefEntry{parameterRef: ${parameterRef}, LOCATION: ${LOCATION}, REPEAT: ${REPEAT}, includeCondition: ${includeCondition}, shortDescription: ${shortDescription}}';
-  }
-}
-
-class _ParameterRefEntryReader extends fb.TableReader<ParameterRefEntry> {
-  const _ParameterRefEntryReader();
-
-  @override
-  ParameterRefEntry createObject(fb.BufferContext bc, int offset) =>
-    ParameterRefEntry._(bc, offset);
-}
-
-class ParameterRefEntryBuilder {
-  ParameterRefEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addLocationOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addRepeatOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addIncludeConditionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ParameterRefEntryObjectBuilder extends fb.ObjectBuilder {
-  final String? _PARAMETER_REF;
-  final LocationInContainerObjectBuilder? _LOCATION;
-  final RepeatEntryObjectBuilder? _REPEAT;
-  final MatchCriteriaObjectBuilder? _INCLUDE_CONDITION;
-  final String? _SHORT_DESCRIPTION;
-
-  ParameterRefEntryObjectBuilder({
-    String? PARAMETER_REF,
-    String? parameterRef,
-    LocationInContainerObjectBuilder? LOCATION,
-    RepeatEntryObjectBuilder? REPEAT,
-    MatchCriteriaObjectBuilder? INCLUDE_CONDITION,
-    MatchCriteriaObjectBuilder? includeCondition,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-  })
-      : _PARAMETER_REF = parameterRef ?? PARAMETER_REF,
-        _LOCATION = LOCATION,
-        _REPEAT = REPEAT,
-        _INCLUDE_CONDITION = includeCondition ?? INCLUDE_CONDITION,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_REFOffset = _PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_PARAMETER_REF!);
-    final int? LOCATIONOffset = _LOCATION?.getOrCreateOffset(fbBuilder);
-    final int? REPEATOffset = _REPEAT?.getOrCreateOffset(fbBuilder);
-    final int? INCLUDE_CONDITIONOffset = _INCLUDE_CONDITION?.getOrCreateOffset(fbBuilder);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, PARAMETER_REFOffset);
-    fbBuilder.addOffset(1, LOCATIONOffset);
-    fbBuilder.addOffset(2, REPEATOffset);
-    fbBuilder.addOffset(3, INCLUDE_CONDITIONOffset);
-    fbBuilder.addOffset(4, SHORT_DESCRIPTIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Container reference entry (nested container)
-class ContainerRefEntry {
-  ContainerRefEntry._(this._bc, this._bcOffset);
-  factory ContainerRefEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ContainerRefEntry> reader = _ContainerRefEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Container reference path
-  String? get CONTAINER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get containerRef => CONTAINER_REF;
-  ///  Location in container
-  LocationInContainer? get LOCATION => LocationInContainer.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Repeat specification
-  RepeatEntry? get REPEAT => RepeatEntry.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Include condition
-  MatchCriteria? get INCLUDE_CONDITION => MatchCriteria.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  MatchCriteria? get includeCondition => INCLUDE_CONDITION;
-
-  @override
-  String toString() {
-    return 'ContainerRefEntry{containerRef: ${containerRef}, LOCATION: ${LOCATION}, REPEAT: ${REPEAT}, includeCondition: ${includeCondition}}';
-  }
-}
-
-class _ContainerRefEntryReader extends fb.TableReader<ContainerRefEntry> {
-  const _ContainerRefEntryReader();
-
-  @override
-  ContainerRefEntry createObject(fb.BufferContext bc, int offset) =>
-    ContainerRefEntry._(bc, offset);
-}
-
-class ContainerRefEntryBuilder {
-  ContainerRefEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addContainerRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addLocationOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addRepeatOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addIncludeConditionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ContainerRefEntryObjectBuilder extends fb.ObjectBuilder {
-  final String? _CONTAINER_REF;
-  final LocationInContainerObjectBuilder? _LOCATION;
-  final RepeatEntryObjectBuilder? _REPEAT;
-  final MatchCriteriaObjectBuilder? _INCLUDE_CONDITION;
-
-  ContainerRefEntryObjectBuilder({
-    String? CONTAINER_REF,
-    String? containerRef,
-    LocationInContainerObjectBuilder? LOCATION,
-    RepeatEntryObjectBuilder? REPEAT,
-    MatchCriteriaObjectBuilder? INCLUDE_CONDITION,
-    MatchCriteriaObjectBuilder? includeCondition,
-  })
-      : _CONTAINER_REF = containerRef ?? CONTAINER_REF,
-        _LOCATION = LOCATION,
-        _REPEAT = REPEAT,
-        _INCLUDE_CONDITION = includeCondition ?? INCLUDE_CONDITION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CONTAINER_REFOffset = _CONTAINER_REF == null ? null
-        : fbBuilder.writeString(_CONTAINER_REF!);
-    final int? LOCATIONOffset = _LOCATION?.getOrCreateOffset(fbBuilder);
-    final int? REPEATOffset = _REPEAT?.getOrCreateOffset(fbBuilder);
-    final int? INCLUDE_CONDITIONOffset = _INCLUDE_CONDITION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, CONTAINER_REFOffset);
-    fbBuilder.addOffset(1, LOCATIONOffset);
-    fbBuilder.addOffset(2, REPEATOffset);
-    fbBuilder.addOffset(3, INCLUDE_CONDITIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Fixed value entry (static padding/header)
-class FixedValueEntry {
-  FixedValueEntry._(this._bc, this._bcOffset);
-  factory FixedValueEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FixedValueEntry> reader = _FixedValueEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Binary value (hex string)
-  String? get BINARY_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get binaryValue => BINARY_VALUE;
-  ///  Size in bits
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Name/description
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Location in container
-  LocationInContainer? get LOCATION => LocationInContainer.reader.vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'FixedValueEntry{binaryValue: ${binaryValue}, sizeInBits: ${sizeInBits}, NAME: ${NAME}, LOCATION: ${LOCATION}}';
-  }
-}
-
-class _FixedValueEntryReader extends fb.TableReader<FixedValueEntry> {
-  const _FixedValueEntryReader();
-
-  @override
-  FixedValueEntry createObject(fb.BufferContext bc, int offset) =>
-    FixedValueEntry._(bc, offset);
-}
-
-class FixedValueEntryBuilder {
-  FixedValueEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addBinaryValueOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(1, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addLocationOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FixedValueEntryObjectBuilder extends fb.ObjectBuilder {
-  final String? _BINARY_VALUE;
-  final int? _SIZE_IN_BITS;
-  final String? _NAME;
-  final LocationInContainerObjectBuilder? _LOCATION;
-
-  FixedValueEntryObjectBuilder({
-    String? BINARY_VALUE,
-    String? binaryValue,
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    String? NAME,
-    LocationInContainerObjectBuilder? LOCATION,
-  })
-      : _BINARY_VALUE = binaryValue ?? BINARY_VALUE,
-        _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _NAME = NAME,
-        _LOCATION = LOCATION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? BINARY_VALUEOffset = _BINARY_VALUE == null ? null
-        : fbBuilder.writeString(_BINARY_VALUE!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? LOCATIONOffset = _LOCATION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, BINARY_VALUEOffset);
-    fbBuilder.addUint16(1, _SIZE_IN_BITS);
-    fbBuilder.addOffset(2, NAMEOffset);
-    fbBuilder.addOffset(3, LOCATIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Array parameter reference entry
-class ArrayParameterRefEntry {
-  ArrayParameterRefEntry._(this._bc, this._bcOffset);
-  factory ArrayParameterRefEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ArrayParameterRefEntry> reader = _ArrayParameterRefEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter reference path
-  String? get PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get parameterRef => PARAMETER_REF;
-  ///  Location in container
-  LocationInContainer? get LOCATION => LocationInContainer.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  First index to include
-  int get FIRST_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get firstIndex => FIRST_INDEX;
-  ///  Last index to include
-  int get LAST_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get lastIndex => LAST_INDEX;
-
-  @override
-  String toString() {
-    return 'ArrayParameterRefEntry{parameterRef: ${parameterRef}, LOCATION: ${LOCATION}, firstIndex: ${firstIndex}, lastIndex: ${lastIndex}}';
-  }
-}
-
-class _ArrayParameterRefEntryReader extends fb.TableReader<ArrayParameterRefEntry> {
-  const _ArrayParameterRefEntryReader();
-
-  @override
-  ArrayParameterRefEntry createObject(fb.BufferContext bc, int offset) =>
-    ArrayParameterRefEntry._(bc, offset);
-}
-
-class ArrayParameterRefEntryBuilder {
-  ArrayParameterRefEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addLocationOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addFirstIndex(int? FIRST_INDEX) {
-    fbBuilder.addUint32(2, FIRST_INDEX);
-    return fbBuilder.offset;
-  }
-  int addLastIndex(int? LAST_INDEX) {
-    fbBuilder.addUint32(3, LAST_INDEX);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ArrayParameterRefEntryObjectBuilder extends fb.ObjectBuilder {
-  final String? _PARAMETER_REF;
-  final LocationInContainerObjectBuilder? _LOCATION;
-  final int? _FIRST_INDEX;
-  final int? _LAST_INDEX;
-
-  ArrayParameterRefEntryObjectBuilder({
-    String? PARAMETER_REF,
-    String? parameterRef,
-    LocationInContainerObjectBuilder? LOCATION,
-    int? FIRST_INDEX,
-    int? firstIndex,
-    int? LAST_INDEX,
-    int? lastIndex,
-  })
-      : _PARAMETER_REF = parameterRef ?? PARAMETER_REF,
-        _LOCATION = LOCATION,
-        _FIRST_INDEX = firstIndex ?? FIRST_INDEX,
-        _LAST_INDEX = lastIndex ?? LAST_INDEX;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_REFOffset = _PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_PARAMETER_REF!);
-    final int? LOCATIONOffset = _LOCATION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, PARAMETER_REFOffset);
-    fbBuilder.addOffset(1, LOCATIONOffset);
-    fbBuilder.addUint32(2, _FIRST_INDEX);
-    fbBuilder.addUint32(3, _LAST_INDEX);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Container entry list item (union of entry types)
-class ContainerEntry {
-  ContainerEntry._(this._bc, this._bcOffset);
-  factory ContainerEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ContainerEntry> reader = _ContainerEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter reference entry
-  ParameterRefEntry? get PARAMETER_REF_ENTRY => ParameterRefEntry.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ParameterRefEntry? get parameterRefEntry => PARAMETER_REF_ENTRY;
-  ///  Container reference entry
-  ContainerRefEntry? get CONTAINER_REF_ENTRY => ContainerRefEntry.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ContainerRefEntry? get containerRefEntry => CONTAINER_REF_ENTRY;
-  ///  Fixed value entry
-  FixedValueEntry? get FIXED_VALUE_ENTRY => FixedValueEntry.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  FixedValueEntry? get fixedValueEntry => FIXED_VALUE_ENTRY;
-  ///  Array parameter reference entry
-  ArrayParameterRefEntry? get ARRAY_PARAMETER_REF_ENTRY => ArrayParameterRefEntry.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  ArrayParameterRefEntry? get arrayParameterRefEntry => ARRAY_PARAMETER_REF_ENTRY;
-
-  @override
-  String toString() {
-    return 'ContainerEntry{parameterRefEntry: ${parameterRefEntry}, containerRefEntry: ${containerRefEntry}, fixedValueEntry: ${fixedValueEntry}, arrayParameterRefEntry: ${arrayParameterRefEntry}}';
-  }
-}
-
-class _ContainerEntryReader extends fb.TableReader<ContainerEntry> {
-  const _ContainerEntryReader();
-
-  @override
-  ContainerEntry createObject(fb.BufferContext bc, int offset) =>
-    ContainerEntry._(bc, offset);
-}
-
-class ContainerEntryBuilder {
-  ContainerEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addParameterRefEntryOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addContainerRefEntryOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addFixedValueEntryOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addArrayParameterRefEntryOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ContainerEntryObjectBuilder extends fb.ObjectBuilder {
-  final ParameterRefEntryObjectBuilder? _PARAMETER_REF_ENTRY;
-  final ContainerRefEntryObjectBuilder? _CONTAINER_REF_ENTRY;
-  final FixedValueEntryObjectBuilder? _FIXED_VALUE_ENTRY;
-  final ArrayParameterRefEntryObjectBuilder? _ARRAY_PARAMETER_REF_ENTRY;
-
-  ContainerEntryObjectBuilder({
-    ParameterRefEntryObjectBuilder? PARAMETER_REF_ENTRY,
-    ParameterRefEntryObjectBuilder? parameterRefEntry,
-    ContainerRefEntryObjectBuilder? CONTAINER_REF_ENTRY,
-    ContainerRefEntryObjectBuilder? containerRefEntry,
-    FixedValueEntryObjectBuilder? FIXED_VALUE_ENTRY,
-    FixedValueEntryObjectBuilder? fixedValueEntry,
-    ArrayParameterRefEntryObjectBuilder? ARRAY_PARAMETER_REF_ENTRY,
-    ArrayParameterRefEntryObjectBuilder? arrayParameterRefEntry,
-  })
-      : _PARAMETER_REF_ENTRY = parameterRefEntry ?? PARAMETER_REF_ENTRY,
-        _CONTAINER_REF_ENTRY = containerRefEntry ?? CONTAINER_REF_ENTRY,
-        _FIXED_VALUE_ENTRY = fixedValueEntry ?? FIXED_VALUE_ENTRY,
-        _ARRAY_PARAMETER_REF_ENTRY = arrayParameterRefEntry ?? ARRAY_PARAMETER_REF_ENTRY;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_REF_ENTRYOffset = _PARAMETER_REF_ENTRY?.getOrCreateOffset(fbBuilder);
-    final int? CONTAINER_REF_ENTRYOffset = _CONTAINER_REF_ENTRY?.getOrCreateOffset(fbBuilder);
-    final int? FIXED_VALUE_ENTRYOffset = _FIXED_VALUE_ENTRY?.getOrCreateOffset(fbBuilder);
-    final int? ARRAY_PARAMETER_REF_ENTRYOffset = _ARRAY_PARAMETER_REF_ENTRY?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, PARAMETER_REF_ENTRYOffset);
-    fbBuilder.addOffset(1, CONTAINER_REF_ENTRYOffset);
-    fbBuilder.addOffset(2, FIXED_VALUE_ENTRYOffset);
-    fbBuilder.addOffset(3, ARRAY_PARAMETER_REF_ENTRYOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Base container reference with restriction
-class BaseContainer {
-  BaseContainer._(this._bc, this._bcOffset);
-  factory BaseContainer(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<BaseContainer> reader = _BaseContainerReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Container reference path
-  String? get CONTAINER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get containerRef => CONTAINER_REF;
-  ///  Restriction criteria
-  MatchCriteria? get RESTRICTION_CRITERIA => MatchCriteria.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  MatchCriteria? get restrictionCriteria => RESTRICTION_CRITERIA;
-
-  @override
-  String toString() {
-    return 'BaseContainer{containerRef: ${containerRef}, restrictionCriteria: ${restrictionCriteria}}';
-  }
-}
-
-class _BaseContainerReader extends fb.TableReader<BaseContainer> {
-  const _BaseContainerReader();
-
-  @override
-  BaseContainer createObject(fb.BufferContext bc, int offset) =>
-    BaseContainer._(bc, offset);
-}
-
-class BaseContainerBuilder {
-  BaseContainerBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addContainerRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addRestrictionCriteriaOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class BaseContainerObjectBuilder extends fb.ObjectBuilder {
-  final String? _CONTAINER_REF;
-  final MatchCriteriaObjectBuilder? _RESTRICTION_CRITERIA;
-
-  BaseContainerObjectBuilder({
-    String? CONTAINER_REF,
-    String? containerRef,
-    MatchCriteriaObjectBuilder? RESTRICTION_CRITERIA,
-    MatchCriteriaObjectBuilder? restrictionCriteria,
-  })
-      : _CONTAINER_REF = containerRef ?? CONTAINER_REF,
-        _RESTRICTION_CRITERIA = restrictionCriteria ?? RESTRICTION_CRITERIA;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CONTAINER_REFOffset = _CONTAINER_REF == null ? null
-        : fbBuilder.writeString(_CONTAINER_REF!);
-    final int? RESTRICTION_CRITERIAOffset = _RESTRICTION_CRITERIA?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, CONTAINER_REFOffset);
-    fbBuilder.addOffset(1, RESTRICTION_CRITERIAOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Rate specification for container in stream
-class RateInStream {
-  RateInStream._(this._bc, this._bcOffset);
-  factory RateInStream(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RateInStream> reader = _RateInStreamReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stream reference
-  String? get STREAM_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get streamRef => STREAM_REF;
-  ///  Rate value
-  double get RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  ///  Rate basis
-  RateBasisType get BASIS => RateBasisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-
-  @override
-  String toString() {
-    return 'RateInStream{streamRef: ${streamRef}, RATE: ${RATE}, BASIS: ${BASIS}}';
-  }
-}
-
-class _RateInStreamReader extends fb.TableReader<RateInStream> {
-  const _RateInStreamReader();
-
-  @override
-  RateInStream createObject(fb.BufferContext bc, int offset) =>
-    RateInStream._(bc, offset);
-}
-
-class RateInStreamBuilder {
-  RateInStreamBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addStreamRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addRate(double? RATE) {
-    fbBuilder.addFloat64(1, RATE);
-    return fbBuilder.offset;
-  }
-  int addBasis(RateBasisType? BASIS) {
-    fbBuilder.addInt8(2, BASIS?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RateInStreamObjectBuilder extends fb.ObjectBuilder {
-  final String? _STREAM_REF;
-  final double? _RATE;
-  final RateBasisType? _BASIS;
-
-  RateInStreamObjectBuilder({
-    String? STREAM_REF,
-    String? streamRef,
-    double? RATE,
-    RateBasisType? BASIS,
-  })
-      : _STREAM_REF = streamRef ?? STREAM_REF,
-        _RATE = RATE,
-        _BASIS = BASIS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? STREAM_REFOffset = _STREAM_REF == null ? null
-        : fbBuilder.writeString(_STREAM_REF!);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, STREAM_REFOffset);
-    fbBuilder.addFloat64(1, _RATE);
-    fbBuilder.addInt8(2, _BASIS?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Binary encoding specification for container
-class ContainerBinaryEncoding {
-  ContainerBinaryEncoding._(this._bc, this._bcOffset);
-  factory ContainerBinaryEncoding(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ContainerBinaryEncoding> reader = _ContainerBinaryEncodingReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Error detection type
-  ErrorDetectionType get ERROR_DETECTION => ErrorDetectionType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ErrorDetectionType get errorDetection => ERROR_DETECTION;
-  ///  CRC polynomial (for CRC error detection)
-  String? get CRC_POLYNOMIAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get crcPolynomial => CRC_POLYNOMIAL;
-  ///  Size in bits
-  int get SIZE_IN_BITS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-
-  @override
-  String toString() {
-    return 'ContainerBinaryEncoding{errorDetection: ${errorDetection}, crcPolynomial: ${crcPolynomial}, sizeInBits: ${sizeInBits}}';
-  }
-}
-
-class _ContainerBinaryEncodingReader extends fb.TableReader<ContainerBinaryEncoding> {
-  const _ContainerBinaryEncodingReader();
-
-  @override
-  ContainerBinaryEncoding createObject(fb.BufferContext bc, int offset) =>
-    ContainerBinaryEncoding._(bc, offset);
-}
-
-class ContainerBinaryEncodingBuilder {
-  ContainerBinaryEncodingBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addErrorDetection(ErrorDetectionType? ERROR_DETECTION) {
-    fbBuilder.addInt8(0, ERROR_DETECTION?.value);
-    return fbBuilder.offset;
-  }
-  int addCrcPolynomialOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint32(2, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ContainerBinaryEncodingObjectBuilder extends fb.ObjectBuilder {
-  final ErrorDetectionType? _ERROR_DETECTION;
-  final String? _CRC_POLYNOMIAL;
-  final int? _SIZE_IN_BITS;
-
-  ContainerBinaryEncodingObjectBuilder({
-    ErrorDetectionType? ERROR_DETECTION,
-    ErrorDetectionType? errorDetection,
-    String? CRC_POLYNOMIAL,
-    String? crcPolynomial,
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-  })
-      : _ERROR_DETECTION = errorDetection ?? ERROR_DETECTION,
-        _CRC_POLYNOMIAL = crcPolynomial ?? CRC_POLYNOMIAL,
-        _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CRC_POLYNOMIALOffset = _CRC_POLYNOMIAL == null ? null
-        : fbBuilder.writeString(_CRC_POLYNOMIAL!);
-    fbBuilder.startTable(3);
-    fbBuilder.addInt8(0, _ERROR_DETECTION?.value);
-    fbBuilder.addOffset(1, CRC_POLYNOMIALOffset);
-    fbBuilder.addUint32(2, _SIZE_IN_BITS);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Sequence container (packet definition)
-class SequenceContainer {
-  SequenceContainer._(this._bc, this._bcOffset);
-  factory SequenceContainer(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SequenceContainer> reader = _SequenceContainerReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Container name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Abstract container (used as base only)
-  bool get ABSTRACT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
-  ///  Container entry list
-  List<ContainerEntry>? get ENTRY_LIST => const fb.ListReader<ContainerEntry>(ContainerEntry.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  List<ContainerEntry>? get entryList => ENTRY_LIST;
-  ///  Base container (inheritance)
-  BaseContainer? get BASE_CONTAINER => BaseContainer.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  BaseContainer? get baseContainer => BASE_CONTAINER;
-  ///  Binary encoding
-  ContainerBinaryEncoding? get BINARY_ENCODING => ContainerBinaryEncoding.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  ContainerBinaryEncoding? get binaryEncoding => BINARY_ENCODING;
-  ///  Rate in stream
-  RateInStream? get RATE_IN_STREAM => RateInStream.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  RateInStream? get rateInStream => RATE_IN_STREAM;
-  ///  Idle pattern (hex string for padding)
-  String? get IDLE_PATTERN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get idlePattern => IDLE_PATTERN;
-
-  @override
-  String toString() {
-    return 'SequenceContainer{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, ABSTRACT: ${ABSTRACT}, entryList: ${entryList}, baseContainer: ${baseContainer}, binaryEncoding: ${binaryEncoding}, rateInStream: ${rateInStream}, idlePattern: ${idlePattern}}';
-  }
-}
-
-class _SequenceContainerReader extends fb.TableReader<SequenceContainer> {
-  const _SequenceContainerReader();
-
-  @override
-  SequenceContainer createObject(fb.BufferContext bc, int offset) =>
-    SequenceContainer._(bc, offset);
-}
-
-class SequenceContainerBuilder {
-  SequenceContainerBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(9);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addAbstract(bool? ABSTRACT) {
-    fbBuilder.addBool(3, ABSTRACT);
-    return fbBuilder.offset;
-  }
-  int addEntryListOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addBaseContainerOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addBinaryEncodingOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addRateInStreamOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addIdlePatternOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SequenceContainerObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final bool? _ABSTRACT;
-  final List<ContainerEntryObjectBuilder>? _ENTRY_LIST;
-  final BaseContainerObjectBuilder? _BASE_CONTAINER;
-  final ContainerBinaryEncodingObjectBuilder? _BINARY_ENCODING;
-  final RateInStreamObjectBuilder? _RATE_IN_STREAM;
-  final String? _IDLE_PATTERN;
-
-  SequenceContainerObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    bool? ABSTRACT,
-    List<ContainerEntryObjectBuilder>? ENTRY_LIST,
-    List<ContainerEntryObjectBuilder>? entryList,
-    BaseContainerObjectBuilder? BASE_CONTAINER,
-    BaseContainerObjectBuilder? baseContainer,
-    ContainerBinaryEncodingObjectBuilder? BINARY_ENCODING,
-    ContainerBinaryEncodingObjectBuilder? binaryEncoding,
-    RateInStreamObjectBuilder? RATE_IN_STREAM,
-    RateInStreamObjectBuilder? rateInStream,
-    String? IDLE_PATTERN,
-    String? idlePattern,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _ABSTRACT = ABSTRACT,
-        _ENTRY_LIST = entryList ?? ENTRY_LIST,
-        _BASE_CONTAINER = baseContainer ?? BASE_CONTAINER,
-        _BINARY_ENCODING = binaryEncoding ?? BINARY_ENCODING,
-        _RATE_IN_STREAM = rateInStream ?? RATE_IN_STREAM,
-        _IDLE_PATTERN = idlePattern ?? IDLE_PATTERN;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? ENTRY_LISTOffset = _ENTRY_LIST == null ? null
-        : fbBuilder.writeList(_ENTRY_LIST!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? BASE_CONTAINEROffset = _BASE_CONTAINER?.getOrCreateOffset(fbBuilder);
-    final int? BINARY_ENCODINGOffset = _BINARY_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? RATE_IN_STREAMOffset = _RATE_IN_STREAM?.getOrCreateOffset(fbBuilder);
-    final int? IDLE_PATTERNOffset = _IDLE_PATTERN == null ? null
-        : fbBuilder.writeString(_IDLE_PATTERN!);
-    fbBuilder.startTable(9);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addBool(3, _ABSTRACT);
-    fbBuilder.addOffset(4, ENTRY_LISTOffset);
-    fbBuilder.addOffset(5, BASE_CONTAINEROffset);
-    fbBuilder.addOffset(6, BINARY_ENCODINGOffset);
-    fbBuilder.addOffset(7, RATE_IN_STREAMOffset);
-    fbBuilder.addOffset(8, IDLE_PATTERNOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Collection of sequence containers
-class ContainerSet {
-  ContainerSet._(this._bc, this._bcOffset);
-  factory ContainerSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ContainerSet> reader = _ContainerSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Sequence containers
-  List<SequenceContainer>? get CONTAINERS => const fb.ListReader<SequenceContainer>(SequenceContainer.reader).vTableGetNullable(_bc, _bcOffset, 4);
-
-  @override
-  String toString() {
-    return 'ContainerSet{CONTAINERS: ${CONTAINERS}}';
-  }
-}
-
-class _ContainerSetReader extends fb.TableReader<ContainerSet> {
-  const _ContainerSetReader();
-
-  @override
-  ContainerSet createObject(fb.BufferContext bc, int offset) =>
-    ContainerSet._(bc, offset);
-}
-
-class ContainerSetBuilder {
-  ContainerSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addContainersOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ContainerSetObjectBuilder extends fb.ObjectBuilder {
-  final List<SequenceContainerObjectBuilder>? _CONTAINERS;
-
-  ContainerSetObjectBuilder({
-    List<SequenceContainerObjectBuilder>? CONTAINERS,
-  })
-      : _CONTAINERS = CONTAINERS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CONTAINERSOffset = _CONTAINERS == null ? null
-        : fbBuilder.writeList(_CONTAINERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, CONTAINERSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Algorithm input binding
-class AlgorithmInput {
-  AlgorithmInput._(this._bc, this._bcOffset);
-  factory AlgorithmInput(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AlgorithmInput> reader = _AlgorithmInputReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter reference
-  String? get PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get parameterRef => PARAMETER_REF;
-  ///  Input name in algorithm
-  String? get INPUT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get inputName => INPUT_NAME;
-
-  @override
-  String toString() {
-    return 'AlgorithmInput{parameterRef: ${parameterRef}, inputName: ${inputName}}';
-  }
-}
-
-class _AlgorithmInputReader extends fb.TableReader<AlgorithmInput> {
-  const _AlgorithmInputReader();
-
-  @override
-  AlgorithmInput createObject(fb.BufferContext bc, int offset) =>
-    AlgorithmInput._(bc, offset);
-}
-
-class AlgorithmInputBuilder {
-  AlgorithmInputBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addInputNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AlgorithmInputObjectBuilder extends fb.ObjectBuilder {
-  final String? _PARAMETER_REF;
-  final String? _INPUT_NAME;
-
-  AlgorithmInputObjectBuilder({
-    String? PARAMETER_REF,
-    String? parameterRef,
-    String? INPUT_NAME,
-    String? inputName,
-  })
-      : _PARAMETER_REF = parameterRef ?? PARAMETER_REF,
-        _INPUT_NAME = inputName ?? INPUT_NAME;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_REFOffset = _PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_PARAMETER_REF!);
-    final int? INPUT_NAMEOffset = _INPUT_NAME == null ? null
-        : fbBuilder.writeString(_INPUT_NAME!);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, PARAMETER_REFOffset);
-    fbBuilder.addOffset(1, INPUT_NAMEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Algorithm output binding
-class AlgorithmOutput {
-  AlgorithmOutput._(this._bc, this._bcOffset);
-  factory AlgorithmOutput(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AlgorithmOutput> reader = _AlgorithmOutputReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter reference
-  String? get PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get parameterRef => PARAMETER_REF;
-  ///  Output name in algorithm
-  String? get OUTPUT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get outputName => OUTPUT_NAME;
-
-  @override
-  String toString() {
-    return 'AlgorithmOutput{parameterRef: ${parameterRef}, outputName: ${outputName}}';
-  }
-}
-
-class _AlgorithmOutputReader extends fb.TableReader<AlgorithmOutput> {
-  const _AlgorithmOutputReader();
-
-  @override
-  AlgorithmOutput createObject(fb.BufferContext bc, int offset) =>
-    AlgorithmOutput._(bc, offset);
-}
-
-class AlgorithmOutputBuilder {
-  AlgorithmOutputBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addOutputNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AlgorithmOutputObjectBuilder extends fb.ObjectBuilder {
-  final String? _PARAMETER_REF;
-  final String? _OUTPUT_NAME;
-
-  AlgorithmOutputObjectBuilder({
-    String? PARAMETER_REF,
-    String? parameterRef,
-    String? OUTPUT_NAME,
-    String? outputName,
-  })
-      : _PARAMETER_REF = parameterRef ?? PARAMETER_REF,
-        _OUTPUT_NAME = outputName ?? OUTPUT_NAME;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_REFOffset = _PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_PARAMETER_REF!);
-    final int? OUTPUT_NAMEOffset = _OUTPUT_NAME == null ? null
-        : fbBuilder.writeString(_OUTPUT_NAME!);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, PARAMETER_REFOffset);
-    fbBuilder.addOffset(1, OUTPUT_NAMEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Trigger condition for algorithm execution
-class AlgorithmTrigger {
-  AlgorithmTrigger._(this._bc, this._bcOffset);
-  factory AlgorithmTrigger(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AlgorithmTrigger> reader = _AlgorithmTriggerReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Trigger on parameter update
-  String? get PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get parameterRef => PARAMETER_REF;
-  ///  Trigger on container reception
-  String? get CONTAINER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get containerRef => CONTAINER_REF;
-  ///  Trigger rate (per second)
-  double get RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-
-  @override
-  String toString() {
-    return 'AlgorithmTrigger{parameterRef: ${parameterRef}, containerRef: ${containerRef}, RATE: ${RATE}}';
-  }
-}
-
-class _AlgorithmTriggerReader extends fb.TableReader<AlgorithmTrigger> {
-  const _AlgorithmTriggerReader();
-
-  @override
-  AlgorithmTrigger createObject(fb.BufferContext bc, int offset) =>
-    AlgorithmTrigger._(bc, offset);
-}
-
-class AlgorithmTriggerBuilder {
-  AlgorithmTriggerBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addContainerRefOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addRate(double? RATE) {
-    fbBuilder.addFloat64(2, RATE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AlgorithmTriggerObjectBuilder extends fb.ObjectBuilder {
-  final String? _PARAMETER_REF;
-  final String? _CONTAINER_REF;
-  final double? _RATE;
-
-  AlgorithmTriggerObjectBuilder({
-    String? PARAMETER_REF,
-    String? parameterRef,
-    String? CONTAINER_REF,
-    String? containerRef,
-    double? RATE,
-  })
-      : _PARAMETER_REF = parameterRef ?? PARAMETER_REF,
-        _CONTAINER_REF = containerRef ?? CONTAINER_REF,
-        _RATE = RATE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_REFOffset = _PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_PARAMETER_REF!);
-    final int? CONTAINER_REFOffset = _CONTAINER_REF == null ? null
-        : fbBuilder.writeString(_CONTAINER_REF!);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, PARAMETER_REFOffset);
-    fbBuilder.addOffset(1, CONTAINER_REFOffset);
-    fbBuilder.addFloat64(2, _RATE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Custom algorithm definition
-class CustomAlgorithm {
-  CustomAlgorithm._(this._bc, this._bcOffset);
-  factory CustomAlgorithm(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CustomAlgorithm> reader = _CustomAlgorithmReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Algorithm name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Programming language
-  String? get LANGUAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Algorithm text/code
-  String? get ALGORITHM_TEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get algorithmText => ALGORITHM_TEXT;
-  ///  External algorithm reference
-  String? get EXTERNAL_ALGORITHM_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get externalAlgorithmRef => EXTERNAL_ALGORITHM_REF;
-  ///  Input bindings
-  List<AlgorithmInput>? get INPUTS => const fb.ListReader<AlgorithmInput>(AlgorithmInput.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  ///  Output bindings
-  List<AlgorithmOutput>? get OUTPUTS => const fb.ListReader<AlgorithmOutput>(AlgorithmOutput.reader).vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Trigger conditions
-  List<AlgorithmTrigger>? get TRIGGERS => const fb.ListReader<AlgorithmTrigger>(AlgorithmTrigger.reader).vTableGetNullable(_bc, _bcOffset, 20);
-
-  @override
-  String toString() {
-    return 'CustomAlgorithm{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, LANGUAGE: ${LANGUAGE}, algorithmText: ${algorithmText}, externalAlgorithmRef: ${externalAlgorithmRef}, INPUTS: ${INPUTS}, OUTPUTS: ${OUTPUTS}, TRIGGERS: ${TRIGGERS}}';
-  }
-}
-
-class _CustomAlgorithmReader extends fb.TableReader<CustomAlgorithm> {
-  const _CustomAlgorithmReader();
-
-  @override
-  CustomAlgorithm createObject(fb.BufferContext bc, int offset) =>
-    CustomAlgorithm._(bc, offset);
-}
-
-class CustomAlgorithmBuilder {
-  CustomAlgorithmBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(9);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addLanguageOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addAlgorithmTextOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addExternalAlgorithmRefOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addInputsOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addOutputsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addTriggersOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CustomAlgorithmObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final String? _LANGUAGE;
-  final String? _ALGORITHM_TEXT;
-  final String? _EXTERNAL_ALGORITHM_REF;
-  final List<AlgorithmInputObjectBuilder>? _INPUTS;
-  final List<AlgorithmOutputObjectBuilder>? _OUTPUTS;
-  final List<AlgorithmTriggerObjectBuilder>? _TRIGGERS;
-
-  CustomAlgorithmObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    String? LANGUAGE,
-    String? ALGORITHM_TEXT,
-    String? algorithmText,
-    String? EXTERNAL_ALGORITHM_REF,
-    String? externalAlgorithmRef,
-    List<AlgorithmInputObjectBuilder>? INPUTS,
-    List<AlgorithmOutputObjectBuilder>? OUTPUTS,
-    List<AlgorithmTriggerObjectBuilder>? TRIGGERS,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _LANGUAGE = LANGUAGE,
-        _ALGORITHM_TEXT = algorithmText ?? ALGORITHM_TEXT,
-        _EXTERNAL_ALGORITHM_REF = externalAlgorithmRef ?? EXTERNAL_ALGORITHM_REF,
-        _INPUTS = INPUTS,
-        _OUTPUTS = OUTPUTS,
-        _TRIGGERS = TRIGGERS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? LANGUAGEOffset = _LANGUAGE == null ? null
-        : fbBuilder.writeString(_LANGUAGE!);
-    final int? ALGORITHM_TEXTOffset = _ALGORITHM_TEXT == null ? null
-        : fbBuilder.writeString(_ALGORITHM_TEXT!);
-    final int? EXTERNAL_ALGORITHM_REFOffset = _EXTERNAL_ALGORITHM_REF == null ? null
-        : fbBuilder.writeString(_EXTERNAL_ALGORITHM_REF!);
-    final int? INPUTSOffset = _INPUTS == null ? null
-        : fbBuilder.writeList(_INPUTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? OUTPUTSOffset = _OUTPUTS == null ? null
-        : fbBuilder.writeList(_OUTPUTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? TRIGGERSOffset = _TRIGGERS == null ? null
-        : fbBuilder.writeList(_TRIGGERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(9);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, LANGUAGEOffset);
-    fbBuilder.addOffset(4, ALGORITHM_TEXTOffset);
-    fbBuilder.addOffset(5, EXTERNAL_ALGORITHM_REFOffset);
-    fbBuilder.addOffset(6, INPUTSOffset);
-    fbBuilder.addOffset(7, OUTPUTSOffset);
-    fbBuilder.addOffset(8, TRIGGERSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Math algorithm (inline calculation)
-class MathAlgorithm {
-  MathAlgorithm._(this._bc, this._bcOffset);
-  factory MathAlgorithm(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<MathAlgorithm> reader = _MathAlgorithmReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Algorithm name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Math operation in RPN
-  String? get MATH_OPERATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get mathOperation => MATH_OPERATION;
-  ///  Output parameter reference
-  String? get OUTPUT_PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get outputParameterRef => OUTPUT_PARAMETER_REF;
-  ///  Trigger conditions
-  List<AlgorithmTrigger>? get TRIGGERS => const fb.ListReader<AlgorithmTrigger>(AlgorithmTrigger.reader).vTableGetNullable(_bc, _bcOffset, 12);
-
-  @override
-  String toString() {
-    return 'MathAlgorithm{NAME: ${NAME}, shortDescription: ${shortDescription}, mathOperation: ${mathOperation}, outputParameterRef: ${outputParameterRef}, TRIGGERS: ${TRIGGERS}}';
-  }
-}
-
-class _MathAlgorithmReader extends fb.TableReader<MathAlgorithm> {
-  const _MathAlgorithmReader();
-
-  @override
-  MathAlgorithm createObject(fb.BufferContext bc, int offset) =>
-    MathAlgorithm._(bc, offset);
-}
-
-class MathAlgorithmBuilder {
-  MathAlgorithmBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addMathOperationOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addOutputParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addTriggersOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class MathAlgorithmObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _MATH_OPERATION;
-  final String? _OUTPUT_PARAMETER_REF;
-  final List<AlgorithmTriggerObjectBuilder>? _TRIGGERS;
-
-  MathAlgorithmObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? MATH_OPERATION,
-    String? mathOperation,
-    String? OUTPUT_PARAMETER_REF,
-    String? outputParameterRef,
-    List<AlgorithmTriggerObjectBuilder>? TRIGGERS,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _MATH_OPERATION = mathOperation ?? MATH_OPERATION,
-        _OUTPUT_PARAMETER_REF = outputParameterRef ?? OUTPUT_PARAMETER_REF,
-        _TRIGGERS = TRIGGERS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? MATH_OPERATIONOffset = _MATH_OPERATION == null ? null
-        : fbBuilder.writeString(_MATH_OPERATION!);
-    final int? OUTPUT_PARAMETER_REFOffset = _OUTPUT_PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_OUTPUT_PARAMETER_REF!);
-    final int? TRIGGERSOffset = _TRIGGERS == null ? null
-        : fbBuilder.writeList(_TRIGGERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, MATH_OPERATIONOffset);
-    fbBuilder.addOffset(3, OUTPUT_PARAMETER_REFOffset);
-    fbBuilder.addOffset(4, TRIGGERSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Collection of algorithms
-class AlgorithmSet {
-  AlgorithmSet._(this._bc, this._bcOffset);
-  factory AlgorithmSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AlgorithmSet> reader = _AlgorithmSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Custom algorithms
-  List<CustomAlgorithm>? get CUSTOM_ALGORITHMS => const fb.ListReader<CustomAlgorithm>(CustomAlgorithm.reader).vTableGetNullable(_bc, _bcOffset, 4);
-  List<CustomAlgorithm>? get customAlgorithms => CUSTOM_ALGORITHMS;
-  ///  Math algorithms
-  List<MathAlgorithm>? get MATH_ALGORITHMS => const fb.ListReader<MathAlgorithm>(MathAlgorithm.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<MathAlgorithm>? get mathAlgorithms => MATH_ALGORITHMS;
-
-  @override
-  String toString() {
-    return 'AlgorithmSet{customAlgorithms: ${customAlgorithms}, mathAlgorithms: ${mathAlgorithms}}';
-  }
-}
-
-class _AlgorithmSetReader extends fb.TableReader<AlgorithmSet> {
-  const _AlgorithmSetReader();
-
-  @override
-  AlgorithmSet createObject(fb.BufferContext bc, int offset) =>
-    AlgorithmSet._(bc, offset);
-}
-
-class AlgorithmSetBuilder {
-  AlgorithmSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addCustomAlgorithmsOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addMathAlgorithmsOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AlgorithmSetObjectBuilder extends fb.ObjectBuilder {
-  final List<CustomAlgorithmObjectBuilder>? _CUSTOM_ALGORITHMS;
-  final List<MathAlgorithmObjectBuilder>? _MATH_ALGORITHMS;
-
-  AlgorithmSetObjectBuilder({
-    List<CustomAlgorithmObjectBuilder>? CUSTOM_ALGORITHMS,
-    List<CustomAlgorithmObjectBuilder>? customAlgorithms,
-    List<MathAlgorithmObjectBuilder>? MATH_ALGORITHMS,
-    List<MathAlgorithmObjectBuilder>? mathAlgorithms,
-  })
-      : _CUSTOM_ALGORITHMS = customAlgorithms ?? CUSTOM_ALGORITHMS,
-        _MATH_ALGORITHMS = mathAlgorithms ?? MATH_ALGORITHMS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CUSTOM_ALGORITHMSOffset = _CUSTOM_ALGORITHMS == null ? null
-        : fbBuilder.writeList(_CUSTOM_ALGORITHMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? MATH_ALGORITHMSOffset = _MATH_ALGORITHMS == null ? null
-        : fbBuilder.writeList(_MATH_ALGORITHMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, CUSTOM_ALGORITHMSOffset);
-    fbBuilder.addOffset(1, MATH_ALGORITHMSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Integer argument type
-class IntegerArgumentType {
-  IntegerArgumentType._(this._bc, this._bcOffset);
-  factory IntegerArgumentType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<IntegerArgumentType> reader = _IntegerArgumentTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Units
-  List<Unit>? get UNITS => const fb.ListReader<Unit>(Unit.reader).vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Data encoding
-  IntegerDataEncoding? get DATA_ENCODING => IntegerDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  IntegerDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Minimum valid value
-  int get VALID_MIN => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get validMin => VALID_MIN;
-  ///  Maximum valid value
-  int get VALID_MAX => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get validMax => VALID_MAX;
-  ///  Signed integer (true) or unsigned (false)
-  bool get SIGNED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
-  ///  Size in bits
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Initial/default value
-  int get INITIAL_VALUE => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'IntegerArgumentType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, UNITS: ${UNITS}, dataEncoding: ${dataEncoding}, validMin: ${validMin}, validMax: ${validMax}, SIGNED: ${SIGNED}, sizeInBits: ${sizeInBits}, initialValue: ${initialValue}}';
-  }
-}
-
-class _IntegerArgumentTypeReader extends fb.TableReader<IntegerArgumentType> {
-  const _IntegerArgumentTypeReader();
-
-  @override
-  IntegerArgumentType createObject(fb.BufferContext bc, int offset) =>
-    IntegerArgumentType._(bc, offset);
-}
-
-class IntegerArgumentTypeBuilder {
-  IntegerArgumentTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(10);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addUnitsOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addValidMin(int? VALID_MIN) {
-    fbBuilder.addInt64(5, VALID_MIN);
-    return fbBuilder.offset;
-  }
-  int addValidMax(int? VALID_MAX) {
-    fbBuilder.addInt64(6, VALID_MAX);
-    return fbBuilder.offset;
-  }
-  int addSigned(bool? SIGNED) {
-    fbBuilder.addBool(7, SIGNED);
-    return fbBuilder.offset;
-  }
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(8, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addInitialValue(int? INITIAL_VALUE) {
-    fbBuilder.addInt64(9, INITIAL_VALUE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class IntegerArgumentTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final List<UnitObjectBuilder>? _UNITS;
-  final IntegerDataEncodingObjectBuilder? _DATA_ENCODING;
-  final int? _VALID_MIN;
-  final int? _VALID_MAX;
-  final bool? _SIGNED;
-  final int? _SIZE_IN_BITS;
-  final int? _INITIAL_VALUE;
-
-  IntegerArgumentTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    List<UnitObjectBuilder>? UNITS,
-    IntegerDataEncodingObjectBuilder? DATA_ENCODING,
-    IntegerDataEncodingObjectBuilder? dataEncoding,
-    int? VALID_MIN,
-    int? validMin,
-    int? VALID_MAX,
-    int? validMax,
-    bool? SIGNED,
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    int? INITIAL_VALUE,
-    int? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _UNITS = UNITS,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _VALID_MIN = validMin ?? VALID_MIN,
-        _VALID_MAX = validMax ?? VALID_MAX,
-        _SIGNED = SIGNED,
-        _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? UNITSOffset = _UNITS == null ? null
-        : fbBuilder.writeList(_UNITS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(10);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, UNITSOffset);
-    fbBuilder.addOffset(4, DATA_ENCODINGOffset);
-    fbBuilder.addInt64(5, _VALID_MIN);
-    fbBuilder.addInt64(6, _VALID_MAX);
-    fbBuilder.addBool(7, _SIGNED);
-    fbBuilder.addUint16(8, _SIZE_IN_BITS);
-    fbBuilder.addInt64(9, _INITIAL_VALUE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Float argument type
-class FloatArgumentType {
-  FloatArgumentType._(this._bc, this._bcOffset);
-  factory FloatArgumentType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FloatArgumentType> reader = _FloatArgumentTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Units
-  List<Unit>? get UNITS => const fb.ListReader<Unit>(Unit.reader).vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Data encoding
-  FloatDataEncoding? get DATA_ENCODING => FloatDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  FloatDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Minimum valid value
-  double get VALID_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get validMin => VALID_MIN;
-  ///  Maximum valid value
-  double get VALID_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get validMax => VALID_MAX;
-  ///  Size in bits
-  int get SIZE_IN_BITS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get sizeInBits => SIZE_IN_BITS;
-  ///  Initial/default value
-  double get INITIAL_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'FloatArgumentType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, UNITS: ${UNITS}, dataEncoding: ${dataEncoding}, validMin: ${validMin}, validMax: ${validMax}, sizeInBits: ${sizeInBits}, initialValue: ${initialValue}}';
-  }
-}
-
-class _FloatArgumentTypeReader extends fb.TableReader<FloatArgumentType> {
-  const _FloatArgumentTypeReader();
-
-  @override
-  FloatArgumentType createObject(fb.BufferContext bc, int offset) =>
-    FloatArgumentType._(bc, offset);
-}
-
-class FloatArgumentTypeBuilder {
-  FloatArgumentTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(9);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addUnitsOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addValidMin(double? VALID_MIN) {
-    fbBuilder.addFloat64(5, VALID_MIN);
-    return fbBuilder.offset;
-  }
-  int addValidMax(double? VALID_MAX) {
-    fbBuilder.addFloat64(6, VALID_MAX);
-    return fbBuilder.offset;
-  }
-  int addSizeInBits(int? SIZE_IN_BITS) {
-    fbBuilder.addUint16(7, SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addInitialValue(double? INITIAL_VALUE) {
-    fbBuilder.addFloat64(8, INITIAL_VALUE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FloatArgumentTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final List<UnitObjectBuilder>? _UNITS;
-  final FloatDataEncodingObjectBuilder? _DATA_ENCODING;
-  final double? _VALID_MIN;
-  final double? _VALID_MAX;
-  final int? _SIZE_IN_BITS;
-  final double? _INITIAL_VALUE;
-
-  FloatArgumentTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    List<UnitObjectBuilder>? UNITS,
-    FloatDataEncodingObjectBuilder? DATA_ENCODING,
-    FloatDataEncodingObjectBuilder? dataEncoding,
-    double? VALID_MIN,
-    double? validMin,
-    double? VALID_MAX,
-    double? validMax,
-    int? SIZE_IN_BITS,
-    int? sizeInBits,
-    double? INITIAL_VALUE,
-    double? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _UNITS = UNITS,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _VALID_MIN = validMin ?? VALID_MIN,
-        _VALID_MAX = validMax ?? VALID_MAX,
-        _SIZE_IN_BITS = sizeInBits ?? SIZE_IN_BITS,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? UNITSOffset = _UNITS == null ? null
-        : fbBuilder.writeList(_UNITS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(9);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, UNITSOffset);
-    fbBuilder.addOffset(4, DATA_ENCODINGOffset);
-    fbBuilder.addFloat64(5, _VALID_MIN);
-    fbBuilder.addFloat64(6, _VALID_MAX);
-    fbBuilder.addUint16(7, _SIZE_IN_BITS);
-    fbBuilder.addFloat64(8, _INITIAL_VALUE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  String argument type
-class StringArgumentType {
-  StringArgumentType._(this._bc, this._bcOffset);
-  factory StringArgumentType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<StringArgumentType> reader = _StringArgumentTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Data encoding
-  StringDataEncoding? get DATA_ENCODING => StringDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  StringDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Initial/default value
-  String? get INITIAL_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get initialValue => INITIAL_VALUE;
-  ///  Restriction pattern (regex)
-  String? get RESTRICTION_PATTERN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get restrictionPattern => RESTRICTION_PATTERN;
-
-  @override
-  String toString() {
-    return 'StringArgumentType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, dataEncoding: ${dataEncoding}, initialValue: ${initialValue}, restrictionPattern: ${restrictionPattern}}';
-  }
-}
-
-class _StringArgumentTypeReader extends fb.TableReader<StringArgumentType> {
-  const _StringArgumentTypeReader();
-
-  @override
-  StringArgumentType createObject(fb.BufferContext bc, int offset) =>
-    StringArgumentType._(bc, offset);
-}
-
-class StringArgumentTypeBuilder {
-  StringArgumentTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValueOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addRestrictionPatternOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class StringArgumentTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final StringDataEncodingObjectBuilder? _DATA_ENCODING;
-  final String? _INITIAL_VALUE;
-  final String? _RESTRICTION_PATTERN;
-
-  StringArgumentTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    StringDataEncodingObjectBuilder? DATA_ENCODING,
-    StringDataEncodingObjectBuilder? dataEncoding,
-    String? INITIAL_VALUE,
-    String? initialValue,
-    String? RESTRICTION_PATTERN,
-    String? restrictionPattern,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE,
-        _RESTRICTION_PATTERN = restrictionPattern ?? RESTRICTION_PATTERN;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? INITIAL_VALUEOffset = _INITIAL_VALUE == null ? null
-        : fbBuilder.writeString(_INITIAL_VALUE!);
-    final int? RESTRICTION_PATTERNOffset = _RESTRICTION_PATTERN == null ? null
-        : fbBuilder.writeString(_RESTRICTION_PATTERN!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(4, INITIAL_VALUEOffset);
-    fbBuilder.addOffset(5, RESTRICTION_PATTERNOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Boolean argument type
-class BooleanArgumentType {
-  BooleanArgumentType._(this._bc, this._bcOffset);
-  factory BooleanArgumentType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<BooleanArgumentType> reader = _BooleanArgumentTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Data encoding
-  IntegerDataEncoding? get DATA_ENCODING => IntegerDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  IntegerDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  String representation of true value
-  String? get ONE_STRING_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get oneStringValue => ONE_STRING_VALUE;
-  ///  String representation of false value
-  String? get ZERO_STRING_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get zeroStringValue => ZERO_STRING_VALUE;
-  ///  Initial/default value
-  bool get INITIAL_VALUE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  bool get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'BooleanArgumentType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, dataEncoding: ${dataEncoding}, oneStringValue: ${oneStringValue}, zeroStringValue: ${zeroStringValue}, initialValue: ${initialValue}}';
-  }
-}
-
-class _BooleanArgumentTypeReader extends fb.TableReader<BooleanArgumentType> {
-  const _BooleanArgumentTypeReader();
-
-  @override
-  BooleanArgumentType createObject(fb.BufferContext bc, int offset) =>
-    BooleanArgumentType._(bc, offset);
-}
-
-class BooleanArgumentTypeBuilder {
-  BooleanArgumentTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addOneStringValueOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addZeroStringValueOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValue(bool? INITIAL_VALUE) {
-    fbBuilder.addBool(6, INITIAL_VALUE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class BooleanArgumentTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final IntegerDataEncodingObjectBuilder? _DATA_ENCODING;
-  final String? _ONE_STRING_VALUE;
-  final String? _ZERO_STRING_VALUE;
-  final bool? _INITIAL_VALUE;
-
-  BooleanArgumentTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    IntegerDataEncodingObjectBuilder? DATA_ENCODING,
-    IntegerDataEncodingObjectBuilder? dataEncoding,
-    String? ONE_STRING_VALUE,
-    String? oneStringValue,
-    String? ZERO_STRING_VALUE,
-    String? zeroStringValue,
-    bool? INITIAL_VALUE,
-    bool? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _ONE_STRING_VALUE = oneStringValue ?? ONE_STRING_VALUE,
-        _ZERO_STRING_VALUE = zeroStringValue ?? ZERO_STRING_VALUE,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? ONE_STRING_VALUEOffset = _ONE_STRING_VALUE == null ? null
-        : fbBuilder.writeString(_ONE_STRING_VALUE!);
-    final int? ZERO_STRING_VALUEOffset = _ZERO_STRING_VALUE == null ? null
-        : fbBuilder.writeString(_ZERO_STRING_VALUE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(4, ONE_STRING_VALUEOffset);
-    fbBuilder.addOffset(5, ZERO_STRING_VALUEOffset);
-    fbBuilder.addBool(6, _INITIAL_VALUE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Enumerated argument type
-class EnumeratedArgumentType {
-  EnumeratedArgumentType._(this._bc, this._bcOffset);
-  factory EnumeratedArgumentType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<EnumeratedArgumentType> reader = _EnumeratedArgumentTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Data encoding
-  IntegerDataEncoding? get DATA_ENCODING => IntegerDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  IntegerDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Enumeration values list
-  List<EnumerationValue>? get ENUMERATION_LIST => const fb.ListReader<EnumerationValue>(EnumerationValue.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  List<EnumerationValue>? get enumerationList => ENUMERATION_LIST;
-  ///  Initial/default value label
-  String? get INITIAL_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'EnumeratedArgumentType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, dataEncoding: ${dataEncoding}, enumerationList: ${enumerationList}, initialValue: ${initialValue}}';
-  }
-}
-
-class _EnumeratedArgumentTypeReader extends fb.TableReader<EnumeratedArgumentType> {
-  const _EnumeratedArgumentTypeReader();
-
-  @override
-  EnumeratedArgumentType createObject(fb.BufferContext bc, int offset) =>
-    EnumeratedArgumentType._(bc, offset);
-}
-
-class EnumeratedArgumentTypeBuilder {
-  EnumeratedArgumentTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addEnumerationListOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValueOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class EnumeratedArgumentTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final IntegerDataEncodingObjectBuilder? _DATA_ENCODING;
-  final List<EnumerationValueObjectBuilder>? _ENUMERATION_LIST;
-  final String? _INITIAL_VALUE;
-
-  EnumeratedArgumentTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    IntegerDataEncodingObjectBuilder? DATA_ENCODING,
-    IntegerDataEncodingObjectBuilder? dataEncoding,
-    List<EnumerationValueObjectBuilder>? ENUMERATION_LIST,
-    List<EnumerationValueObjectBuilder>? enumerationList,
-    String? INITIAL_VALUE,
-    String? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _ENUMERATION_LIST = enumerationList ?? ENUMERATION_LIST,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? ENUMERATION_LISTOffset = _ENUMERATION_LIST == null ? null
-        : fbBuilder.writeList(_ENUMERATION_LIST!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? INITIAL_VALUEOffset = _INITIAL_VALUE == null ? null
-        : fbBuilder.writeString(_INITIAL_VALUE!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(4, ENUMERATION_LISTOffset);
-    fbBuilder.addOffset(5, INITIAL_VALUEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Binary argument type
-class BinaryArgumentType {
-  BinaryArgumentType._(this._bc, this._bcOffset);
-  factory BinaryArgumentType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<BinaryArgumentType> reader = _BinaryArgumentTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Data encoding
-  BinaryDataEncoding? get DATA_ENCODING => BinaryDataEncoding.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  BinaryDataEncoding? get dataEncoding => DATA_ENCODING;
-  ///  Initial/default value (hex string)
-  String? get INITIAL_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'BinaryArgumentType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, dataEncoding: ${dataEncoding}, initialValue: ${initialValue}}';
-  }
-}
-
-class _BinaryArgumentTypeReader extends fb.TableReader<BinaryArgumentType> {
-  const _BinaryArgumentTypeReader();
-
-  @override
-  BinaryArgumentType createObject(fb.BufferContext bc, int offset) =>
-    BinaryArgumentType._(bc, offset);
-}
-
-class BinaryArgumentTypeBuilder {
-  BinaryArgumentTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDataEncodingOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValueOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class BinaryArgumentTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final BinaryDataEncodingObjectBuilder? _DATA_ENCODING;
-  final String? _INITIAL_VALUE;
-
-  BinaryArgumentTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    BinaryDataEncodingObjectBuilder? DATA_ENCODING,
-    BinaryDataEncodingObjectBuilder? dataEncoding,
-    String? INITIAL_VALUE,
-    String? initialValue,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _DATA_ENCODING = dataEncoding ?? DATA_ENCODING,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? DATA_ENCODINGOffset = _DATA_ENCODING?.getOrCreateOffset(fbBuilder);
-    final int? INITIAL_VALUEOffset = _INITIAL_VALUE == null ? null
-        : fbBuilder.writeString(_INITIAL_VALUE!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, DATA_ENCODINGOffset);
-    fbBuilder.addOffset(4, INITIAL_VALUEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Aggregate argument type
-class AggregateArgumentType {
-  AggregateArgumentType._(this._bc, this._bcOffset);
-  factory AggregateArgumentType(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AggregateArgumentType> reader = _AggregateArgumentTypeReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Type name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Member list
-  List<AggregateMember>? get MEMBERS => const fb.ListReader<AggregateMember>(AggregateMember.reader).vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'AggregateArgumentType{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, MEMBERS: ${MEMBERS}}';
-  }
-}
-
-class _AggregateArgumentTypeReader extends fb.TableReader<AggregateArgumentType> {
-  const _AggregateArgumentTypeReader();
-
-  @override
-  AggregateArgumentType createObject(fb.BufferContext bc, int offset) =>
-    AggregateArgumentType._(bc, offset);
-}
-
-class AggregateArgumentTypeBuilder {
-  AggregateArgumentTypeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addMembersOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AggregateArgumentTypeObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final List<AggregateMemberObjectBuilder>? _MEMBERS;
-
-  AggregateArgumentTypeObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    List<AggregateMemberObjectBuilder>? MEMBERS,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _MEMBERS = MEMBERS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? MEMBERSOffset = _MEMBERS == null ? null
-        : fbBuilder.writeList(_MEMBERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, MEMBERSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Collection of argument types
-class ArgumentTypeSet {
-  ArgumentTypeSet._(this._bc, this._bcOffset);
-  factory ArgumentTypeSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ArgumentTypeSet> reader = _ArgumentTypeSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Integer argument types
-  List<IntegerArgumentType>? get INTEGER_TYPES => const fb.ListReader<IntegerArgumentType>(IntegerArgumentType.reader).vTableGetNullable(_bc, _bcOffset, 4);
-  List<IntegerArgumentType>? get integerTypes => INTEGER_TYPES;
-  ///  Float argument types
-  List<FloatArgumentType>? get FLOAT_TYPES => const fb.ListReader<FloatArgumentType>(FloatArgumentType.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<FloatArgumentType>? get floatTypes => FLOAT_TYPES;
-  ///  String argument types
-  List<StringArgumentType>? get STRING_TYPES => const fb.ListReader<StringArgumentType>(StringArgumentType.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  List<StringArgumentType>? get stringTypes => STRING_TYPES;
-  ///  Boolean argument types
-  List<BooleanArgumentType>? get BOOLEAN_TYPES => const fb.ListReader<BooleanArgumentType>(BooleanArgumentType.reader).vTableGetNullable(_bc, _bcOffset, 10);
-  List<BooleanArgumentType>? get booleanTypes => BOOLEAN_TYPES;
-  ///  Enumerated argument types
-  List<EnumeratedArgumentType>? get ENUMERATED_TYPES => const fb.ListReader<EnumeratedArgumentType>(EnumeratedArgumentType.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  List<EnumeratedArgumentType>? get enumeratedTypes => ENUMERATED_TYPES;
-  ///  Binary argument types
-  List<BinaryArgumentType>? get BINARY_TYPES => const fb.ListReader<BinaryArgumentType>(BinaryArgumentType.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  List<BinaryArgumentType>? get binaryTypes => BINARY_TYPES;
-  ///  Aggregate argument types
-  List<AggregateArgumentType>? get AGGREGATE_TYPES => const fb.ListReader<AggregateArgumentType>(AggregateArgumentType.reader).vTableGetNullable(_bc, _bcOffset, 16);
-  List<AggregateArgumentType>? get aggregateTypes => AGGREGATE_TYPES;
-
-  @override
-  String toString() {
-    return 'ArgumentTypeSet{integerTypes: ${integerTypes}, floatTypes: ${floatTypes}, stringTypes: ${stringTypes}, booleanTypes: ${booleanTypes}, enumeratedTypes: ${enumeratedTypes}, binaryTypes: ${binaryTypes}, aggregateTypes: ${aggregateTypes}}';
-  }
-}
-
-class _ArgumentTypeSetReader extends fb.TableReader<ArgumentTypeSet> {
-  const _ArgumentTypeSetReader();
-
-  @override
-  ArgumentTypeSet createObject(fb.BufferContext bc, int offset) =>
-    ArgumentTypeSet._(bc, offset);
-}
-
-class ArgumentTypeSetBuilder {
-  ArgumentTypeSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addIntegerTypesOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addFloatTypesOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addStringTypesOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addBooleanTypesOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addEnumeratedTypesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addBinaryTypesOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addAggregateTypesOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ArgumentTypeSetObjectBuilder extends fb.ObjectBuilder {
-  final List<IntegerArgumentTypeObjectBuilder>? _INTEGER_TYPES;
-  final List<FloatArgumentTypeObjectBuilder>? _FLOAT_TYPES;
-  final List<StringArgumentTypeObjectBuilder>? _STRING_TYPES;
-  final List<BooleanArgumentTypeObjectBuilder>? _BOOLEAN_TYPES;
-  final List<EnumeratedArgumentTypeObjectBuilder>? _ENUMERATED_TYPES;
-  final List<BinaryArgumentTypeObjectBuilder>? _BINARY_TYPES;
-  final List<AggregateArgumentTypeObjectBuilder>? _AGGREGATE_TYPES;
-
-  ArgumentTypeSetObjectBuilder({
-    List<IntegerArgumentTypeObjectBuilder>? INTEGER_TYPES,
-    List<IntegerArgumentTypeObjectBuilder>? integerTypes,
-    List<FloatArgumentTypeObjectBuilder>? FLOAT_TYPES,
-    List<FloatArgumentTypeObjectBuilder>? floatTypes,
-    List<StringArgumentTypeObjectBuilder>? STRING_TYPES,
-    List<StringArgumentTypeObjectBuilder>? stringTypes,
-    List<BooleanArgumentTypeObjectBuilder>? BOOLEAN_TYPES,
-    List<BooleanArgumentTypeObjectBuilder>? booleanTypes,
-    List<EnumeratedArgumentTypeObjectBuilder>? ENUMERATED_TYPES,
-    List<EnumeratedArgumentTypeObjectBuilder>? enumeratedTypes,
-    List<BinaryArgumentTypeObjectBuilder>? BINARY_TYPES,
-    List<BinaryArgumentTypeObjectBuilder>? binaryTypes,
-    List<AggregateArgumentTypeObjectBuilder>? AGGREGATE_TYPES,
-    List<AggregateArgumentTypeObjectBuilder>? aggregateTypes,
-  })
-      : _INTEGER_TYPES = integerTypes ?? INTEGER_TYPES,
-        _FLOAT_TYPES = floatTypes ?? FLOAT_TYPES,
-        _STRING_TYPES = stringTypes ?? STRING_TYPES,
-        _BOOLEAN_TYPES = booleanTypes ?? BOOLEAN_TYPES,
-        _ENUMERATED_TYPES = enumeratedTypes ?? ENUMERATED_TYPES,
-        _BINARY_TYPES = binaryTypes ?? BINARY_TYPES,
-        _AGGREGATE_TYPES = aggregateTypes ?? AGGREGATE_TYPES;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? INTEGER_TYPESOffset = _INTEGER_TYPES == null ? null
-        : fbBuilder.writeList(_INTEGER_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? FLOAT_TYPESOffset = _FLOAT_TYPES == null ? null
-        : fbBuilder.writeList(_FLOAT_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? STRING_TYPESOffset = _STRING_TYPES == null ? null
-        : fbBuilder.writeList(_STRING_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? BOOLEAN_TYPESOffset = _BOOLEAN_TYPES == null ? null
-        : fbBuilder.writeList(_BOOLEAN_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? ENUMERATED_TYPESOffset = _ENUMERATED_TYPES == null ? null
-        : fbBuilder.writeList(_ENUMERATED_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? BINARY_TYPESOffset = _BINARY_TYPES == null ? null
-        : fbBuilder.writeList(_BINARY_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? AGGREGATE_TYPESOffset = _AGGREGATE_TYPES == null ? null
-        : fbBuilder.writeList(_AGGREGATE_TYPES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, INTEGER_TYPESOffset);
-    fbBuilder.addOffset(1, FLOAT_TYPESOffset);
-    fbBuilder.addOffset(2, STRING_TYPESOffset);
-    fbBuilder.addOffset(3, BOOLEAN_TYPESOffset);
-    fbBuilder.addOffset(4, ENUMERATED_TYPESOffset);
-    fbBuilder.addOffset(5, BINARY_TYPESOffset);
-    fbBuilder.addOffset(6, AGGREGATE_TYPESOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Command argument definition
-class Argument {
-  Argument._(this._bc, this._bcOffset);
-  factory Argument(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<Argument> reader = _ArgumentReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Argument name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Reference to argument type
-  String? get ARGUMENT_TYPE_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get argumentTypeRef => ARGUMENT_TYPE_REF;
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Initial/default value
-  String? get INITIAL_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get initialValue => INITIAL_VALUE;
-
-  @override
-  String toString() {
-    return 'Argument{NAME: ${NAME}, argumentTypeRef: ${argumentTypeRef}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, initialValue: ${initialValue}}';
-  }
-}
-
-class _ArgumentReader extends fb.TableReader<Argument> {
-  const _ArgumentReader();
-
-  @override
-  Argument createObject(fb.BufferContext bc, int offset) =>
-    Argument._(bc, offset);
-}
-
-class ArgumentBuilder {
-  ArgumentBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addArgumentTypeRefOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialValueOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ArgumentObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _ARGUMENT_TYPE_REF;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final String? _INITIAL_VALUE;
-
-  ArgumentObjectBuilder({
-    String? NAME,
-    String? ARGUMENT_TYPE_REF,
-    String? argumentTypeRef,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    String? INITIAL_VALUE,
-    String? initialValue,
-  })
-      : _NAME = NAME,
-        _ARGUMENT_TYPE_REF = argumentTypeRef ?? ARGUMENT_TYPE_REF,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _INITIAL_VALUE = initialValue ?? INITIAL_VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? ARGUMENT_TYPE_REFOffset = _ARGUMENT_TYPE_REF == null ? null
-        : fbBuilder.writeString(_ARGUMENT_TYPE_REF!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? INITIAL_VALUEOffset = _INITIAL_VALUE == null ? null
-        : fbBuilder.writeString(_INITIAL_VALUE!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, ARGUMENT_TYPE_REFOffset);
-    fbBuilder.addOffset(2, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(4, INITIAL_VALUEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Argument reference entry in command container
-class ArgumentRefEntry {
-  ArgumentRefEntry._(this._bc, this._bcOffset);
-  factory ArgumentRefEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ArgumentRefEntry> reader = _ArgumentRefEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Argument reference
-  String? get ARGUMENT_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get argumentRef => ARGUMENT_REF;
-  ///  Location in container
-  LocationInContainer? get LOCATION => LocationInContainer.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get shortDescription => SHORT_DESCRIPTION;
-
-  @override
-  String toString() {
-    return 'ArgumentRefEntry{argumentRef: ${argumentRef}, LOCATION: ${LOCATION}, shortDescription: ${shortDescription}}';
-  }
-}
-
-class _ArgumentRefEntryReader extends fb.TableReader<ArgumentRefEntry> {
-  const _ArgumentRefEntryReader();
-
-  @override
-  ArgumentRefEntry createObject(fb.BufferContext bc, int offset) =>
-    ArgumentRefEntry._(bc, offset);
-}
-
-class ArgumentRefEntryBuilder {
-  ArgumentRefEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addArgumentRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addLocationOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ArgumentRefEntryObjectBuilder extends fb.ObjectBuilder {
-  final String? _ARGUMENT_REF;
-  final LocationInContainerObjectBuilder? _LOCATION;
-  final String? _SHORT_DESCRIPTION;
-
-  ArgumentRefEntryObjectBuilder({
-    String? ARGUMENT_REF,
-    String? argumentRef,
-    LocationInContainerObjectBuilder? LOCATION,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-  })
-      : _ARGUMENT_REF = argumentRef ?? ARGUMENT_REF,
-        _LOCATION = LOCATION,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ARGUMENT_REFOffset = _ARGUMENT_REF == null ? null
-        : fbBuilder.writeString(_ARGUMENT_REF!);
-    final int? LOCATIONOffset = _LOCATION?.getOrCreateOffset(fbBuilder);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, ARGUMENT_REFOffset);
-    fbBuilder.addOffset(1, LOCATIONOffset);
-    fbBuilder.addOffset(2, SHORT_DESCRIPTIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Command container entry
-class CommandContainerEntry {
-  CommandContainerEntry._(this._bc, this._bcOffset);
-  factory CommandContainerEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CommandContainerEntry> reader = _CommandContainerEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Argument reference entry
-  ArgumentRefEntry? get ARGUMENT_REF_ENTRY => ArgumentRefEntry.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ArgumentRefEntry? get argumentRefEntry => ARGUMENT_REF_ENTRY;
-  ///  Parameter reference entry
-  ParameterRefEntry? get PARAMETER_REF_ENTRY => ParameterRefEntry.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ParameterRefEntry? get parameterRefEntry => PARAMETER_REF_ENTRY;
-  ///  Fixed value entry
-  FixedValueEntry? get FIXED_VALUE_ENTRY => FixedValueEntry.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  FixedValueEntry? get fixedValueEntry => FIXED_VALUE_ENTRY;
-
-  @override
-  String toString() {
-    return 'CommandContainerEntry{argumentRefEntry: ${argumentRefEntry}, parameterRefEntry: ${parameterRefEntry}, fixedValueEntry: ${fixedValueEntry}}';
-  }
-}
-
-class _CommandContainerEntryReader extends fb.TableReader<CommandContainerEntry> {
-  const _CommandContainerEntryReader();
-
-  @override
-  CommandContainerEntry createObject(fb.BufferContext bc, int offset) =>
-    CommandContainerEntry._(bc, offset);
-}
-
-class CommandContainerEntryBuilder {
-  CommandContainerEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addArgumentRefEntryOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addParameterRefEntryOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addFixedValueEntryOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CommandContainerEntryObjectBuilder extends fb.ObjectBuilder {
-  final ArgumentRefEntryObjectBuilder? _ARGUMENT_REF_ENTRY;
-  final ParameterRefEntryObjectBuilder? _PARAMETER_REF_ENTRY;
-  final FixedValueEntryObjectBuilder? _FIXED_VALUE_ENTRY;
-
-  CommandContainerEntryObjectBuilder({
-    ArgumentRefEntryObjectBuilder? ARGUMENT_REF_ENTRY,
-    ArgumentRefEntryObjectBuilder? argumentRefEntry,
-    ParameterRefEntryObjectBuilder? PARAMETER_REF_ENTRY,
-    ParameterRefEntryObjectBuilder? parameterRefEntry,
-    FixedValueEntryObjectBuilder? FIXED_VALUE_ENTRY,
-    FixedValueEntryObjectBuilder? fixedValueEntry,
-  })
-      : _ARGUMENT_REF_ENTRY = argumentRefEntry ?? ARGUMENT_REF_ENTRY,
-        _PARAMETER_REF_ENTRY = parameterRefEntry ?? PARAMETER_REF_ENTRY,
-        _FIXED_VALUE_ENTRY = fixedValueEntry ?? FIXED_VALUE_ENTRY;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ARGUMENT_REF_ENTRYOffset = _ARGUMENT_REF_ENTRY?.getOrCreateOffset(fbBuilder);
-    final int? PARAMETER_REF_ENTRYOffset = _PARAMETER_REF_ENTRY?.getOrCreateOffset(fbBuilder);
-    final int? FIXED_VALUE_ENTRYOffset = _FIXED_VALUE_ENTRY?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, ARGUMENT_REF_ENTRYOffset);
-    fbBuilder.addOffset(1, PARAMETER_REF_ENTRYOffset);
-    fbBuilder.addOffset(2, FIXED_VALUE_ENTRYOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Command container definition
-class CommandContainer {
-  CommandContainer._(this._bc, this._bcOffset);
-  factory CommandContainer(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CommandContainer> reader = _CommandContainerReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Container name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Entry list
-  List<CommandContainerEntry>? get ENTRY_LIST => const fb.ListReader<CommandContainerEntry>(CommandContainerEntry.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<CommandContainerEntry>? get entryList => ENTRY_LIST;
-  ///  Base container reference
-  BaseContainer? get BASE_CONTAINER => BaseContainer.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  BaseContainer? get baseContainer => BASE_CONTAINER;
-
-  @override
-  String toString() {
-    return 'CommandContainer{NAME: ${NAME}, entryList: ${entryList}, baseContainer: ${baseContainer}}';
-  }
-}
-
-class _CommandContainerReader extends fb.TableReader<CommandContainer> {
-  const _CommandContainerReader();
-
-  @override
-  CommandContainer createObject(fb.BufferContext bc, int offset) =>
-    CommandContainer._(bc, offset);
-}
-
-class CommandContainerBuilder {
-  CommandContainerBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addEntryListOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addBaseContainerOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CommandContainerObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final List<CommandContainerEntryObjectBuilder>? _ENTRY_LIST;
-  final BaseContainerObjectBuilder? _BASE_CONTAINER;
-
-  CommandContainerObjectBuilder({
-    String? NAME,
-    List<CommandContainerEntryObjectBuilder>? ENTRY_LIST,
-    List<CommandContainerEntryObjectBuilder>? entryList,
-    BaseContainerObjectBuilder? BASE_CONTAINER,
-    BaseContainerObjectBuilder? baseContainer,
-  })
-      : _NAME = NAME,
-        _ENTRY_LIST = entryList ?? ENTRY_LIST,
-        _BASE_CONTAINER = baseContainer ?? BASE_CONTAINER;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? ENTRY_LISTOffset = _ENTRY_LIST == null ? null
-        : fbBuilder.writeList(_ENTRY_LIST!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? BASE_CONTAINEROffset = _BASE_CONTAINER?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, ENTRY_LISTOffset);
-    fbBuilder.addOffset(2, BASE_CONTAINEROffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Command verifier definition
-class CommandVerifier {
-  CommandVerifier._(this._bc, this._bcOffset);
-  factory CommandVerifier(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CommandVerifier> reader = _CommandVerifierReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Verifier name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Verifier type
-  VerifierType get VERIFIER_TYPE => VerifierType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  VerifierType get verifierType => VERIFIER_TYPE;
-  ///  Verification condition
-  MatchCriteria? get CONDITION => MatchCriteria.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Container reference for verification
-  String? get CONTAINER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get containerRef => CONTAINER_REF;
-  ///  Time window start (seconds)
-  double get TIME_WINDOW_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get timeWindowStart => TIME_WINDOW_START;
-  ///  Time window stop (seconds)
-  double get TIME_WINDOW_STOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get timeWindowStop => TIME_WINDOW_STOP;
-  ///  Time window reference type
-  TimeWindowRefType get TIME_WINDOW_REF => TimeWindowRefType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
-  TimeWindowRefType get timeWindowRef => TIME_WINDOW_REF;
-
-  @override
-  String toString() {
-    return 'CommandVerifier{NAME: ${NAME}, verifierType: ${verifierType}, CONDITION: ${CONDITION}, containerRef: ${containerRef}, timeWindowStart: ${timeWindowStart}, timeWindowStop: ${timeWindowStop}, timeWindowRef: ${timeWindowRef}}';
-  }
-}
-
-class _CommandVerifierReader extends fb.TableReader<CommandVerifier> {
-  const _CommandVerifierReader();
-
-  @override
-  CommandVerifier createObject(fb.BufferContext bc, int offset) =>
-    CommandVerifier._(bc, offset);
-}
-
-class CommandVerifierBuilder {
-  CommandVerifierBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addVerifierType(VerifierType? VERIFIER_TYPE) {
-    fbBuilder.addInt8(1, VERIFIER_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addConditionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addContainerRefOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addTimeWindowStart(double? TIME_WINDOW_START) {
-    fbBuilder.addFloat64(4, TIME_WINDOW_START);
-    return fbBuilder.offset;
-  }
-  int addTimeWindowStop(double? TIME_WINDOW_STOP) {
-    fbBuilder.addFloat64(5, TIME_WINDOW_STOP);
-    return fbBuilder.offset;
-  }
-  int addTimeWindowRef(TimeWindowRefType? TIME_WINDOW_REF) {
-    fbBuilder.addInt8(6, TIME_WINDOW_REF?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CommandVerifierObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final VerifierType? _VERIFIER_TYPE;
-  final MatchCriteriaObjectBuilder? _CONDITION;
-  final String? _CONTAINER_REF;
-  final double? _TIME_WINDOW_START;
-  final double? _TIME_WINDOW_STOP;
-  final TimeWindowRefType? _TIME_WINDOW_REF;
-
-  CommandVerifierObjectBuilder({
-    String? NAME,
-    VerifierType? VERIFIER_TYPE,
-    VerifierType? verifierType,
-    MatchCriteriaObjectBuilder? CONDITION,
-    String? CONTAINER_REF,
-    String? containerRef,
-    double? TIME_WINDOW_START,
-    double? timeWindowStart,
-    double? TIME_WINDOW_STOP,
-    double? timeWindowStop,
-    TimeWindowRefType? TIME_WINDOW_REF,
-    TimeWindowRefType? timeWindowRef,
-  })
-      : _NAME = NAME,
-        _VERIFIER_TYPE = verifierType ?? VERIFIER_TYPE,
-        _CONDITION = CONDITION,
-        _CONTAINER_REF = containerRef ?? CONTAINER_REF,
-        _TIME_WINDOW_START = timeWindowStart ?? TIME_WINDOW_START,
-        _TIME_WINDOW_STOP = timeWindowStop ?? TIME_WINDOW_STOP,
-        _TIME_WINDOW_REF = timeWindowRef ?? TIME_WINDOW_REF;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? CONDITIONOffset = _CONDITION?.getOrCreateOffset(fbBuilder);
-    final int? CONTAINER_REFOffset = _CONTAINER_REF == null ? null
-        : fbBuilder.writeString(_CONTAINER_REF!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addInt8(1, _VERIFIER_TYPE?.value);
-    fbBuilder.addOffset(2, CONDITIONOffset);
-    fbBuilder.addOffset(3, CONTAINER_REFOffset);
-    fbBuilder.addFloat64(4, _TIME_WINDOW_START);
-    fbBuilder.addFloat64(5, _TIME_WINDOW_STOP);
-    fbBuilder.addInt8(6, _TIME_WINDOW_REF?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Significance of command execution
-class CommandSignificance {
-  CommandSignificance._(this._bc, this._bcOffset);
-  factory CommandSignificance(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CommandSignificance> reader = _CommandSignificanceReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Consequence level (1=lowest, higher=more severe)
-  int get CONSEQUENCE_LEVEL => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get consequenceLevel => CONSEQUENCE_LEVEL;
-  ///  Reason for significance
-  String? get REASON_FOR_WARNING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get reasonForWarning => REASON_FOR_WARNING;
-
-  @override
-  String toString() {
-    return 'CommandSignificance{consequenceLevel: ${consequenceLevel}, reasonForWarning: ${reasonForWarning}}';
-  }
-}
-
-class _CommandSignificanceReader extends fb.TableReader<CommandSignificance> {
-  const _CommandSignificanceReader();
-
-  @override
-  CommandSignificance createObject(fb.BufferContext bc, int offset) =>
-    CommandSignificance._(bc, offset);
-}
-
-class CommandSignificanceBuilder {
-  CommandSignificanceBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addConsequenceLevel(int? CONSEQUENCE_LEVEL) {
-    fbBuilder.addUint8(0, CONSEQUENCE_LEVEL);
-    return fbBuilder.offset;
-  }
-  int addReasonForWarningOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CommandSignificanceObjectBuilder extends fb.ObjectBuilder {
-  final int? _CONSEQUENCE_LEVEL;
-  final String? _REASON_FOR_WARNING;
-
-  CommandSignificanceObjectBuilder({
-    int? CONSEQUENCE_LEVEL,
-    int? consequenceLevel,
-    String? REASON_FOR_WARNING,
-    String? reasonForWarning,
-  })
-      : _CONSEQUENCE_LEVEL = consequenceLevel ?? CONSEQUENCE_LEVEL,
-        _REASON_FOR_WARNING = reasonForWarning ?? REASON_FOR_WARNING;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? REASON_FOR_WARNINGOffset = _REASON_FOR_WARNING == null ? null
-        : fbBuilder.writeString(_REASON_FOR_WARNING!);
-    fbBuilder.startTable(2);
-    fbBuilder.addUint8(0, _CONSEQUENCE_LEVEL);
-    fbBuilder.addOffset(1, REASON_FOR_WARNINGOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Base metacommand reference
-class BaseMetaCommand {
-  BaseMetaCommand._(this._bc, this._bcOffset);
-  factory BaseMetaCommand(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<BaseMetaCommand> reader = _BaseMetaCommandReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  MetaCommand reference
-  String? get META_COMMAND_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get metaCommandRef => META_COMMAND_REF;
-  ///  Argument assignments for inherited arguments
-  List<ArgumentAssignment>? get ARGUMENT_ASSIGNMENTS => const fb.ListReader<ArgumentAssignment>(ArgumentAssignment.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<ArgumentAssignment>? get argumentAssignments => ARGUMENT_ASSIGNMENTS;
-
-  @override
-  String toString() {
-    return 'BaseMetaCommand{metaCommandRef: ${metaCommandRef}, argumentAssignments: ${argumentAssignments}}';
-  }
-}
-
-class _BaseMetaCommandReader extends fb.TableReader<BaseMetaCommand> {
-  const _BaseMetaCommandReader();
-
-  @override
-  BaseMetaCommand createObject(fb.BufferContext bc, int offset) =>
-    BaseMetaCommand._(bc, offset);
-}
-
-class BaseMetaCommandBuilder {
-  BaseMetaCommandBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addMetaCommandRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addArgumentAssignmentsOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class BaseMetaCommandObjectBuilder extends fb.ObjectBuilder {
-  final String? _META_COMMAND_REF;
-  final List<ArgumentAssignmentObjectBuilder>? _ARGUMENT_ASSIGNMENTS;
-
-  BaseMetaCommandObjectBuilder({
-    String? META_COMMAND_REF,
-    String? metaCommandRef,
-    List<ArgumentAssignmentObjectBuilder>? ARGUMENT_ASSIGNMENTS,
-    List<ArgumentAssignmentObjectBuilder>? argumentAssignments,
-  })
-      : _META_COMMAND_REF = metaCommandRef ?? META_COMMAND_REF,
-        _ARGUMENT_ASSIGNMENTS = argumentAssignments ?? ARGUMENT_ASSIGNMENTS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? META_COMMAND_REFOffset = _META_COMMAND_REF == null ? null
-        : fbBuilder.writeString(_META_COMMAND_REF!);
-    final int? ARGUMENT_ASSIGNMENTSOffset = _ARGUMENT_ASSIGNMENTS == null ? null
-        : fbBuilder.writeList(_ARGUMENT_ASSIGNMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, META_COMMAND_REFOffset);
-    fbBuilder.addOffset(1, ARGUMENT_ASSIGNMENTSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Argument assignment (value binding)
-class ArgumentAssignment {
-  ArgumentAssignment._(this._bc, this._bcOffset);
-  factory ArgumentAssignment(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ArgumentAssignment> reader = _ArgumentAssignmentReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Argument name
-  String? get ARGUMENT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get argumentName => ARGUMENT_NAME;
-  ///  Assigned value
-  String? get VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-
-  @override
-  String toString() {
-    return 'ArgumentAssignment{argumentName: ${argumentName}, VALUE: ${VALUE}}';
-  }
-}
-
-class _ArgumentAssignmentReader extends fb.TableReader<ArgumentAssignment> {
-  const _ArgumentAssignmentReader();
-
-  @override
-  ArgumentAssignment createObject(fb.BufferContext bc, int offset) =>
-    ArgumentAssignment._(bc, offset);
-}
-
-class ArgumentAssignmentBuilder {
-  ArgumentAssignmentBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addArgumentNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addValueType(RecordTypeTypeId? value_type) {
+    fbBuilder.addUint8(0, value_type?.value);
     return fbBuilder.offset;
   }
   int addValueOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
+  int addStandardOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addExtendedType(RecordTypeExtended? EXTENDED_TYPE) {
+    fbBuilder.addUint16(3, EXTENDED_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addExtendedValueOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
   }
 }
 
-class ArgumentAssignmentObjectBuilder extends fb.ObjectBuilder {
-  final String? _ARGUMENT_NAME;
-  final String? _VALUE;
+class RecordObjectBuilder extends fb.ObjectBuilder {
+  final RecordTypeTypeId? _value_type;
+  final dynamic _value;
+  final String? _standard;
+  final RecordTypeExtended? _EXTENDED_TYPE;
+  final List<int>? _EXTENDED_VALUE;
 
-  ArgumentAssignmentObjectBuilder({
-    String? ARGUMENT_NAME,
-    String? argumentName,
-    String? VALUE,
+  RecordObjectBuilder({
+    RecordTypeTypeId? value_type,
+    RecordTypeTypeId? valueType,
+    dynamic value,
+    String? standard,
+    RecordTypeExtended? EXTENDED_TYPE,
+    RecordTypeExtended? extendedType,
+    List<int>? EXTENDED_VALUE,
+    List<int>? extendedValue,
   })
-      : _ARGUMENT_NAME = argumentName ?? ARGUMENT_NAME,
-        _VALUE = VALUE;
+      : _value_type = valueType ?? value_type,
+        _value = value,
+        _standard = standard,
+        _EXTENDED_TYPE = extendedType ?? EXTENDED_TYPE,
+        _EXTENDED_VALUE = extendedValue ?? EXTENDED_VALUE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? ARGUMENT_NAMEOffset = _ARGUMENT_NAME == null ? null
-        : fbBuilder.writeString(_ARGUMENT_NAME!);
-    final int? VALUEOffset = _VALUE == null ? null
-        : fbBuilder.writeString(_VALUE!);
+    final int? valueOffset = _value?.getOrCreateOffset(fbBuilder);
+    final int? standardOffset = _standard == null ? null
+        : fbBuilder.writeString(_standard!);
+    final int? EXTENDED_VALUEOffset = _EXTENDED_VALUE == null ? null
+        : fbBuilder.writeListUint8(_EXTENDED_VALUE!);
+    fbBuilder.startTable(5);
+    fbBuilder.addUint8(0, _value_type?.value);
+    fbBuilder.addOffset(1, valueOffset);
+    fbBuilder.addOffset(2, standardOffset);
+    fbBuilder.addUint16(3, _EXTENDED_TYPE?.value);
+    fbBuilder.addOffset(4, EXTENDED_VALUEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Collection of Standard Records
+class REC {
+  REC._(this._bc, this._bcOffset);
+  factory REC(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<REC> reader = _RECReader();
+
+  // Field-encryption format 3 walk program of REC (see _FlatbuffersEncryption).
+  static const List<int> _flatbuffersEncryptionProgram = [
+    3, 4, 8, 15, 1, 5, 6, 1, 1, 6, 6, 4, 1, 63, 2, 1,
+    2, 12, 1,
+  ];
+
+  /// Encrypts, in place, the (encrypted) fields of a REC buffer with
+  /// field-encryption format 3 (key: 32 bytes; recordIndex: unique per
+  /// buffer under the key). Throws ArgumentError, before any byte changes,
+  /// for a bad key or a malformed buffer.
+  static void encryptBuffer(Uint8List bytes, List<int> key, [int recordIndex = 0]) =>
+      _FlatbuffersEncryption.cryptBuffer(
+          bytes, key, recordIndex, _flatbuffersEncryptionProgram);
+
+  /// Decrypts, in place, the (encrypted) fields of a REC buffer with
+  /// field-encryption format 3 (key: 32 bytes; recordIndex: unique per
+  /// buffer under the key). Throws ArgumentError, before any byte changes,
+  /// for a bad key or a malformed buffer.
+  static void decryptBuffer(Uint8List bytes, List<int> key, [int recordIndex = 0]) =>
+      _FlatbuffersEncryption.cryptBuffer(
+          bytes, key, recordIndex, _flatbuffersEncryptionProgram);
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Schema version identifier
+  String? get version => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Array of heterogeneous records from any supported standard
+  List<Record>? get RECORDS => const fb.ListReader<Record>(Record.reader).vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'REC{version: ${version}, RECORDS: ${RECORDS}}';
+  }
+}
+
+class _RECReader extends fb.TableReader<REC> {
+  const _RECReader();
+
+  @override
+  REC createObject(fb.BufferContext bc, int offset) =>
+    REC._(bc, offset);
+}
+
+class RECBuilder {
+  RECBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
     fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, ARGUMENT_NAMEOffset);
-    fbBuilder.addOffset(1, VALUEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Interlock constraint
-class Interlock {
-  Interlock._(this._bc, this._bcOffset);
-  factory Interlock(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<Interlock> reader = _InterlockReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter reference
-  String? get PARAMETER_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get parameterRef => PARAMETER_REF;
-  ///  Required value
-  String? get VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Operator for comparison
-  ComparisonOperator get OPERATOR => ComparisonOperator.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-
-  @override
-  String toString() {
-    return 'Interlock{parameterRef: ${parameterRef}, VALUE: ${VALUE}, OPERATOR: ${OPERATOR}}';
-  }
-}
-
-class _InterlockReader extends fb.TableReader<Interlock> {
-  const _InterlockReader();
-
-  @override
-  Interlock createObject(fb.BufferContext bc, int offset) =>
-    Interlock._(bc, offset);
-}
-
-class InterlockBuilder {
-  InterlockBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addParameterRefOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addValueOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addOperator(ComparisonOperator? OPERATOR) {
-    fbBuilder.addInt8(2, OPERATOR?.value);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class InterlockObjectBuilder extends fb.ObjectBuilder {
-  final String? _PARAMETER_REF;
-  final String? _VALUE;
-  final ComparisonOperator? _OPERATOR;
-
-  InterlockObjectBuilder({
-    String? PARAMETER_REF,
-    String? parameterRef,
-    String? VALUE,
-    ComparisonOperator? OPERATOR,
-  })
-      : _PARAMETER_REF = parameterRef ?? PARAMETER_REF,
-        _VALUE = VALUE,
-        _OPERATOR = OPERATOR;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_REFOffset = _PARAMETER_REF == null ? null
-        : fbBuilder.writeString(_PARAMETER_REF!);
-    final int? VALUEOffset = _VALUE == null ? null
-        : fbBuilder.writeString(_VALUE!);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, PARAMETER_REFOffset);
-    fbBuilder.addOffset(1, VALUEOffset);
-    fbBuilder.addInt8(2, _OPERATOR?.value);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  MetaCommand definition
-class MetaCommand {
-  MetaCommand._(this._bc, this._bcOffset);
-  factory MetaCommand(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<MetaCommand> reader = _MetaCommandReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Command name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Abstract command (base only)
-  bool get ABSTRACT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
-  ///  Argument list
-  List<Argument>? get ARGUMENTS => const fb.ListReader<Argument>(Argument.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Command container
-  CommandContainer? get COMMAND_CONTAINER => CommandContainer.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  CommandContainer? get commandContainer => COMMAND_CONTAINER;
-  ///  Base metacommand (inheritance)
-  BaseMetaCommand? get BASE_META_COMMAND => BaseMetaCommand.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  BaseMetaCommand? get baseMetaCommand => BASE_META_COMMAND;
-  ///  Command verifiers
-  List<CommandVerifier>? get VERIFIERS => const fb.ListReader<CommandVerifier>(CommandVerifier.reader).vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Command significance
-  CommandSignificance? get SIGNIFICANCE => CommandSignificance.reader.vTableGetNullable(_bc, _bcOffset, 20);
-  ///  Interlock constraints
-  List<Interlock>? get INTERLOCKS => const fb.ListReader<Interlock>(Interlock.reader).vTableGetNullable(_bc, _bcOffset, 22);
-  ///  Default significance
-  CommandSignificance? get DEFAULT_SIGNIFICANCE => CommandSignificance.reader.vTableGetNullable(_bc, _bcOffset, 24);
-  CommandSignificance? get defaultSignificance => DEFAULT_SIGNIFICANCE;
-
-  @override
-  String toString() {
-    return 'MetaCommand{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, ABSTRACT: ${ABSTRACT}, ARGUMENTS: ${ARGUMENTS}, commandContainer: ${commandContainer}, baseMetaCommand: ${baseMetaCommand}, VERIFIERS: ${VERIFIERS}, SIGNIFICANCE: ${SIGNIFICANCE}, INTERLOCKS: ${INTERLOCKS}, defaultSignificance: ${defaultSignificance}}';
-  }
-}
-
-class _MetaCommandReader extends fb.TableReader<MetaCommand> {
-  const _MetaCommandReader();
-
-  @override
-  MetaCommand createObject(fb.BufferContext bc, int offset) =>
-    MetaCommand._(bc, offset);
-}
-
-class MetaCommandBuilder {
-  MetaCommandBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(11);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addAbstract(bool? ABSTRACT) {
-    fbBuilder.addBool(3, ABSTRACT);
-    return fbBuilder.offset;
-  }
-  int addArgumentsOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addCommandContainerOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addBaseMetaCommandOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addVerifiersOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addSignificanceOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addInterlocksOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addDefaultSignificanceOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class MetaCommandObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final bool? _ABSTRACT;
-  final List<ArgumentObjectBuilder>? _ARGUMENTS;
-  final CommandContainerObjectBuilder? _COMMAND_CONTAINER;
-  final BaseMetaCommandObjectBuilder? _BASE_META_COMMAND;
-  final List<CommandVerifierObjectBuilder>? _VERIFIERS;
-  final CommandSignificanceObjectBuilder? _SIGNIFICANCE;
-  final List<InterlockObjectBuilder>? _INTERLOCKS;
-  final CommandSignificanceObjectBuilder? _DEFAULT_SIGNIFICANCE;
-
-  MetaCommandObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    bool? ABSTRACT,
-    List<ArgumentObjectBuilder>? ARGUMENTS,
-    CommandContainerObjectBuilder? COMMAND_CONTAINER,
-    CommandContainerObjectBuilder? commandContainer,
-    BaseMetaCommandObjectBuilder? BASE_META_COMMAND,
-    BaseMetaCommandObjectBuilder? baseMetaCommand,
-    List<CommandVerifierObjectBuilder>? VERIFIERS,
-    CommandSignificanceObjectBuilder? SIGNIFICANCE,
-    List<InterlockObjectBuilder>? INTERLOCKS,
-    CommandSignificanceObjectBuilder? DEFAULT_SIGNIFICANCE,
-    CommandSignificanceObjectBuilder? defaultSignificance,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _ABSTRACT = ABSTRACT,
-        _ARGUMENTS = ARGUMENTS,
-        _COMMAND_CONTAINER = commandContainer ?? COMMAND_CONTAINER,
-        _BASE_META_COMMAND = baseMetaCommand ?? BASE_META_COMMAND,
-        _VERIFIERS = VERIFIERS,
-        _SIGNIFICANCE = SIGNIFICANCE,
-        _INTERLOCKS = INTERLOCKS,
-        _DEFAULT_SIGNIFICANCE = defaultSignificance ?? DEFAULT_SIGNIFICANCE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? ARGUMENTSOffset = _ARGUMENTS == null ? null
-        : fbBuilder.writeList(_ARGUMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? COMMAND_CONTAINEROffset = _COMMAND_CONTAINER?.getOrCreateOffset(fbBuilder);
-    final int? BASE_META_COMMANDOffset = _BASE_META_COMMAND?.getOrCreateOffset(fbBuilder);
-    final int? VERIFIERSOffset = _VERIFIERS == null ? null
-        : fbBuilder.writeList(_VERIFIERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? SIGNIFICANCEOffset = _SIGNIFICANCE?.getOrCreateOffset(fbBuilder);
-    final int? INTERLOCKSOffset = _INTERLOCKS == null ? null
-        : fbBuilder.writeList(_INTERLOCKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? DEFAULT_SIGNIFICANCEOffset = _DEFAULT_SIGNIFICANCE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(11);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addBool(3, _ABSTRACT);
-    fbBuilder.addOffset(4, ARGUMENTSOffset);
-    fbBuilder.addOffset(5, COMMAND_CONTAINEROffset);
-    fbBuilder.addOffset(6, BASE_META_COMMANDOffset);
-    fbBuilder.addOffset(7, VERIFIERSOffset);
-    fbBuilder.addOffset(8, SIGNIFICANCEOffset);
-    fbBuilder.addOffset(9, INTERLOCKSOffset);
-    fbBuilder.addOffset(10, DEFAULT_SIGNIFICANCEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Collection of metacommands
-class MetaCommandSet {
-  MetaCommandSet._(this._bc, this._bcOffset);
-  factory MetaCommandSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<MetaCommandSet> reader = _MetaCommandSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  MetaCommands
-  List<MetaCommand>? get META_COMMANDS => const fb.ListReader<MetaCommand>(MetaCommand.reader).vTableGetNullable(_bc, _bcOffset, 4);
-  List<MetaCommand>? get metaCommands => META_COMMANDS;
-
-  @override
-  String toString() {
-    return 'MetaCommandSet{metaCommands: ${metaCommands}}';
-  }
-}
-
-class _MetaCommandSetReader extends fb.TableReader<MetaCommandSet> {
-  const _MetaCommandSetReader();
-
-  @override
-  MetaCommandSet createObject(fb.BufferContext bc, int offset) =>
-    MetaCommandSet._(bc, offset);
-}
-
-class MetaCommandSetBuilder {
-  MetaCommandSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addMetaCommandsOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class MetaCommandSetObjectBuilder extends fb.ObjectBuilder {
-  final List<MetaCommandObjectBuilder>? _META_COMMANDS;
-
-  MetaCommandSetObjectBuilder({
-    List<MetaCommandObjectBuilder>? META_COMMANDS,
-    List<MetaCommandObjectBuilder>? metaCommands,
-  })
-      : _META_COMMANDS = metaCommands ?? META_COMMANDS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? META_COMMANDSOffset = _META_COMMANDS == null ? null
-        : fbBuilder.writeList(_META_COMMANDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, META_COMMANDSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Fixed frame stream
-class FixedFrameStream {
-  FixedFrameStream._(this._bc, this._bcOffset);
-  factory FixedFrameStream(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<FixedFrameStream> reader = _FixedFrameStreamReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stream name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Frame size in bits
-  int get FRAME_SIZE_IN_BITS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get frameSizeInBits => FRAME_SIZE_IN_BITS;
-  ///  Sync pattern (hex string)
-  String? get SYNC_PATTERN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get syncPattern => SYNC_PATTERN;
-
-  @override
-  String toString() {
-    return 'FixedFrameStream{NAME: ${NAME}, shortDescription: ${shortDescription}, frameSizeInBits: ${frameSizeInBits}, syncPattern: ${syncPattern}}';
-  }
-}
-
-class _FixedFrameStreamReader extends fb.TableReader<FixedFrameStream> {
-  const _FixedFrameStreamReader();
-
-  @override
-  FixedFrameStream createObject(fb.BufferContext bc, int offset) =>
-    FixedFrameStream._(bc, offset);
-}
-
-class FixedFrameStreamBuilder {
-  FixedFrameStreamBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addFrameSizeInBits(int? FRAME_SIZE_IN_BITS) {
-    fbBuilder.addUint32(2, FRAME_SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addSyncPatternOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class FixedFrameStreamObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final int? _FRAME_SIZE_IN_BITS;
-  final String? _SYNC_PATTERN;
-
-  FixedFrameStreamObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    int? FRAME_SIZE_IN_BITS,
-    int? frameSizeInBits,
-    String? SYNC_PATTERN,
-    String? syncPattern,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _FRAME_SIZE_IN_BITS = frameSizeInBits ?? FRAME_SIZE_IN_BITS,
-        _SYNC_PATTERN = syncPattern ?? SYNC_PATTERN;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? SYNC_PATTERNOffset = _SYNC_PATTERN == null ? null
-        : fbBuilder.writeString(_SYNC_PATTERN!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addUint32(2, _FRAME_SIZE_IN_BITS);
-    fbBuilder.addOffset(3, SYNC_PATTERNOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Variable frame stream
-class VariableFrameStream {
-  VariableFrameStream._(this._bc, this._bcOffset);
-  factory VariableFrameStream(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<VariableFrameStream> reader = _VariableFrameStreamReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stream name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Minimum frame size in bits
-  int get MIN_FRAME_SIZE_IN_BITS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get minFrameSizeInBits => MIN_FRAME_SIZE_IN_BITS;
-  ///  Maximum frame size in bits
-  int get MAX_FRAME_SIZE_IN_BITS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get maxFrameSizeInBits => MAX_FRAME_SIZE_IN_BITS;
-  ///  Size field location in bits
-  int get SIZE_FIELD_OFFSET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get sizeFieldOffset => SIZE_FIELD_OFFSET;
-  ///  Size field size in bits
-  int get SIZE_FIELD_SIZE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get sizeFieldSize => SIZE_FIELD_SIZE;
-
-  @override
-  String toString() {
-    return 'VariableFrameStream{NAME: ${NAME}, shortDescription: ${shortDescription}, minFrameSizeInBits: ${minFrameSizeInBits}, maxFrameSizeInBits: ${maxFrameSizeInBits}, sizeFieldOffset: ${sizeFieldOffset}, sizeFieldSize: ${sizeFieldSize}}';
-  }
-}
-
-class _VariableFrameStreamReader extends fb.TableReader<VariableFrameStream> {
-  const _VariableFrameStreamReader();
-
-  @override
-  VariableFrameStream createObject(fb.BufferContext bc, int offset) =>
-    VariableFrameStream._(bc, offset);
-}
-
-class VariableFrameStreamBuilder {
-  VariableFrameStreamBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addMinFrameSizeInBits(int? MIN_FRAME_SIZE_IN_BITS) {
-    fbBuilder.addUint32(2, MIN_FRAME_SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addMaxFrameSizeInBits(int? MAX_FRAME_SIZE_IN_BITS) {
-    fbBuilder.addUint32(3, MAX_FRAME_SIZE_IN_BITS);
-    return fbBuilder.offset;
-  }
-  int addSizeFieldOffset(int? SIZE_FIELD_OFFSET) {
-    fbBuilder.addUint32(4, SIZE_FIELD_OFFSET);
-    return fbBuilder.offset;
-  }
-  int addSizeFieldSize(int? SIZE_FIELD_SIZE) {
-    fbBuilder.addUint16(5, SIZE_FIELD_SIZE);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class VariableFrameStreamObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final int? _MIN_FRAME_SIZE_IN_BITS;
-  final int? _MAX_FRAME_SIZE_IN_BITS;
-  final int? _SIZE_FIELD_OFFSET;
-  final int? _SIZE_FIELD_SIZE;
-
-  VariableFrameStreamObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    int? MIN_FRAME_SIZE_IN_BITS,
-    int? minFrameSizeInBits,
-    int? MAX_FRAME_SIZE_IN_BITS,
-    int? maxFrameSizeInBits,
-    int? SIZE_FIELD_OFFSET,
-    int? sizeFieldOffset,
-    int? SIZE_FIELD_SIZE,
-    int? sizeFieldSize,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _MIN_FRAME_SIZE_IN_BITS = minFrameSizeInBits ?? MIN_FRAME_SIZE_IN_BITS,
-        _MAX_FRAME_SIZE_IN_BITS = maxFrameSizeInBits ?? MAX_FRAME_SIZE_IN_BITS,
-        _SIZE_FIELD_OFFSET = sizeFieldOffset ?? SIZE_FIELD_OFFSET,
-        _SIZE_FIELD_SIZE = sizeFieldSize ?? SIZE_FIELD_SIZE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addUint32(2, _MIN_FRAME_SIZE_IN_BITS);
-    fbBuilder.addUint32(3, _MAX_FRAME_SIZE_IN_BITS);
-    fbBuilder.addUint32(4, _SIZE_FIELD_OFFSET);
-    fbBuilder.addUint16(5, _SIZE_FIELD_SIZE);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Custom stream
-class CustomStream {
-  CustomStream._(this._bc, this._bcOffset);
-  factory CustomStream(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CustomStream> reader = _CustomStreamReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stream name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Algorithm reference for parsing
-  String? get ALGORITHM_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get algorithmRef => ALGORITHM_REF;
-
-  @override
-  String toString() {
-    return 'CustomStream{NAME: ${NAME}, shortDescription: ${shortDescription}, algorithmRef: ${algorithmRef}}';
-  }
-}
-
-class _CustomStreamReader extends fb.TableReader<CustomStream> {
-  const _CustomStreamReader();
-
-  @override
-  CustomStream createObject(fb.BufferContext bc, int offset) =>
-    CustomStream._(bc, offset);
-}
-
-class CustomStreamBuilder {
-  CustomStreamBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addAlgorithmRefOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CustomStreamObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _ALGORITHM_REF;
-
-  CustomStreamObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? ALGORITHM_REF,
-    String? algorithmRef,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _ALGORITHM_REF = algorithmRef ?? ALGORITHM_REF;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? ALGORITHM_REFOffset = _ALGORITHM_REF == null ? null
-        : fbBuilder.writeString(_ALGORITHM_REF!);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, ALGORITHM_REFOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Collection of streams
-class StreamSet {
-  StreamSet._(this._bc, this._bcOffset);
-  factory StreamSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<StreamSet> reader = _StreamSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Fixed frame streams
-  List<FixedFrameStream>? get FIXED_FRAME_STREAMS => const fb.ListReader<FixedFrameStream>(FixedFrameStream.reader).vTableGetNullable(_bc, _bcOffset, 4);
-  List<FixedFrameStream>? get fixedFrameStreams => FIXED_FRAME_STREAMS;
-  ///  Variable frame streams
-  List<VariableFrameStream>? get VARIABLE_FRAME_STREAMS => const fb.ListReader<VariableFrameStream>(VariableFrameStream.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<VariableFrameStream>? get variableFrameStreams => VARIABLE_FRAME_STREAMS;
-  ///  Custom streams
-  List<CustomStream>? get CUSTOM_STREAMS => const fb.ListReader<CustomStream>(CustomStream.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  List<CustomStream>? get customStreams => CUSTOM_STREAMS;
-
-  @override
-  String toString() {
-    return 'StreamSet{fixedFrameStreams: ${fixedFrameStreams}, variableFrameStreams: ${variableFrameStreams}, customStreams: ${customStreams}}';
-  }
-}
-
-class _StreamSetReader extends fb.TableReader<StreamSet> {
-  const _StreamSetReader();
-
-  @override
-  StreamSet createObject(fb.BufferContext bc, int offset) =>
-    StreamSet._(bc, offset);
-}
-
-class StreamSetBuilder {
-  StreamSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(3);
-  }
-
-  int addFixedFrameStreamsOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addVariableFrameStreamsOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addCustomStreamsOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class StreamSetObjectBuilder extends fb.ObjectBuilder {
-  final List<FixedFrameStreamObjectBuilder>? _FIXED_FRAME_STREAMS;
-  final List<VariableFrameStreamObjectBuilder>? _VARIABLE_FRAME_STREAMS;
-  final List<CustomStreamObjectBuilder>? _CUSTOM_STREAMS;
-
-  StreamSetObjectBuilder({
-    List<FixedFrameStreamObjectBuilder>? FIXED_FRAME_STREAMS,
-    List<FixedFrameStreamObjectBuilder>? fixedFrameStreams,
-    List<VariableFrameStreamObjectBuilder>? VARIABLE_FRAME_STREAMS,
-    List<VariableFrameStreamObjectBuilder>? variableFrameStreams,
-    List<CustomStreamObjectBuilder>? CUSTOM_STREAMS,
-    List<CustomStreamObjectBuilder>? customStreams,
-  })
-      : _FIXED_FRAME_STREAMS = fixedFrameStreams ?? FIXED_FRAME_STREAMS,
-        _VARIABLE_FRAME_STREAMS = variableFrameStreams ?? VARIABLE_FRAME_STREAMS,
-        _CUSTOM_STREAMS = customStreams ?? CUSTOM_STREAMS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? FIXED_FRAME_STREAMSOffset = _FIXED_FRAME_STREAMS == null ? null
-        : fbBuilder.writeList(_FIXED_FRAME_STREAMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? VARIABLE_FRAME_STREAMSOffset = _VARIABLE_FRAME_STREAMS == null ? null
-        : fbBuilder.writeList(_VARIABLE_FRAME_STREAMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? CUSTOM_STREAMSOffset = _CUSTOM_STREAMS == null ? null
-        : fbBuilder.writeList(_CUSTOM_STREAMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, FIXED_FRAME_STREAMSOffset);
-    fbBuilder.addOffset(1, VARIABLE_FRAME_STREAMSOffset);
-    fbBuilder.addOffset(2, CUSTOM_STREAMSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Service definition
-class Service {
-  Service._(this._bc, this._bcOffset);
-  factory Service(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<Service> reader = _ServiceReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Service name
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Container references provided by this service
-  List<String>? get CONTAINER_REFS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 10);
-  List<String>? get containerRefs => CONTAINER_REFS;
-  ///  Command references accepted by this service
-  List<String>? get COMMAND_REFS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 12);
-  List<String>? get commandRefs => COMMAND_REFS;
-
-  @override
-  String toString() {
-    return 'Service{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, containerRefs: ${containerRefs}, commandRefs: ${commandRefs}}';
-  }
-}
-
-class _ServiceReader extends fb.TableReader<Service> {
-  const _ServiceReader();
-
-  @override
-  Service createObject(fb.BufferContext bc, int offset) =>
-    Service._(bc, offset);
-}
-
-class ServiceBuilder {
-  ServiceBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addContainerRefsOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addCommandRefsOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ServiceObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final List<String>? _CONTAINER_REFS;
-  final List<String>? _COMMAND_REFS;
-
-  ServiceObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    List<String>? CONTAINER_REFS,
-    List<String>? containerRefs,
-    List<String>? COMMAND_REFS,
-    List<String>? commandRefs,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _CONTAINER_REFS = containerRefs ?? CONTAINER_REFS,
-        _COMMAND_REFS = commandRefs ?? COMMAND_REFS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? CONTAINER_REFSOffset = _CONTAINER_REFS == null ? null
-        : fbBuilder.writeList(_CONTAINER_REFS!.map(fbBuilder.writeString).toList());
-    final int? COMMAND_REFSOffset = _COMMAND_REFS == null ? null
-        : fbBuilder.writeList(_COMMAND_REFS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, CONTAINER_REFSOffset);
-    fbBuilder.addOffset(4, COMMAND_REFSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Collection of services
-class ServiceSet {
-  ServiceSet._(this._bc, this._bcOffset);
-  factory ServiceSet(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ServiceSet> reader = _ServiceSetReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Services
-  List<Service>? get SERVICES => const fb.ListReader<Service>(Service.reader).vTableGetNullable(_bc, _bcOffset, 4);
-
-  @override
-  String toString() {
-    return 'ServiceSet{SERVICES: ${SERVICES}}';
-  }
-}
-
-class _ServiceSetReader extends fb.TableReader<ServiceSet> {
-  const _ServiceSetReader();
-
-  @override
-  ServiceSet createObject(fb.BufferContext bc, int offset) =>
-    ServiceSet._(bc, offset);
-}
-
-class ServiceSetBuilder {
-  ServiceSetBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addServicesOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ServiceSetObjectBuilder extends fb.ObjectBuilder {
-  final List<ServiceObjectBuilder>? _SERVICES;
-
-  ServiceSetObjectBuilder({
-    List<ServiceObjectBuilder>? SERVICES,
-  })
-      : _SERVICES = SERVICES;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SERVICESOffset = _SERVICES == null ? null
-        : fbBuilder.writeList(_SERVICES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, SERVICESOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Document header information
-class XTCHeader {
-  XTCHeader._(this._bc, this._bcOffset);
-  factory XTCHeader(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<XTCHeader> reader = _XTCHeaderReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Version of this XTCE document
-  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Date of document creation (ISO 8601)
-  String? get DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Classification level
-  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Validation status
-  String? get VALIDATION_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get validationStatus => VALIDATION_STATUS;
-  ///  Author information
-  String? get AUTHOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Notes/comments
-  List<String>? get NOTES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
-
-  @override
-  String toString() {
-    return 'XTCHeader{VERSION: ${VERSION}, DATE: ${DATE}, CLASSIFICATION: ${CLASSIFICATION}, validationStatus: ${validationStatus}, AUTHOR: ${AUTHOR}, NOTES: ${NOTES}}';
-  }
-}
-
-class _XTCHeaderReader extends fb.TableReader<XTCHeader> {
-  const _XTCHeaderReader();
-
-  @override
-  XTCHeader createObject(fb.BufferContext bc, int offset) =>
-    XTCHeader._(bc, offset);
-}
-
-class XTCHeaderBuilder {
-  XTCHeaderBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
   }
 
   int addVersionOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addDateOffset(int? offset) {
+  int addRecordsOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addClassificationOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addValidationStatusOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addAuthorOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addNotesOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
 
@@ -10135,518 +1479,27 @@ class XTCHeaderBuilder {
   }
 }
 
-class XTCHeaderObjectBuilder extends fb.ObjectBuilder {
-  final String? _VERSION;
-  final String? _DATE;
-  final String? _CLASSIFICATION;
-  final String? _VALIDATION_STATUS;
-  final String? _AUTHOR;
-  final List<String>? _NOTES;
+class RECObjectBuilder extends fb.ObjectBuilder {
+  final String? _version;
+  final List<RecordObjectBuilder>? _RECORDS;
 
-  XTCHeaderObjectBuilder({
-    String? VERSION,
-    String? DATE,
-    String? CLASSIFICATION,
-    String? VALIDATION_STATUS,
-    String? validationStatus,
-    String? AUTHOR,
-    List<String>? NOTES,
+  RECObjectBuilder({
+    String? version,
+    List<RecordObjectBuilder>? RECORDS,
   })
-      : _VERSION = VERSION,
-        _DATE = DATE,
-        _CLASSIFICATION = CLASSIFICATION,
-        _VALIDATION_STATUS = validationStatus ?? VALIDATION_STATUS,
-        _AUTHOR = AUTHOR,
-        _NOTES = NOTES;
+      : _version = version,
+        _RECORDS = RECORDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? VERSIONOffset = _VERSION == null ? null
-        : fbBuilder.writeString(_VERSION!);
-    final int? DATEOffset = _DATE == null ? null
-        : fbBuilder.writeString(_DATE!);
-    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
-        : fbBuilder.writeString(_CLASSIFICATION!);
-    final int? VALIDATION_STATUSOffset = _VALIDATION_STATUS == null ? null
-        : fbBuilder.writeString(_VALIDATION_STATUS!);
-    final int? AUTHOROffset = _AUTHOR == null ? null
-        : fbBuilder.writeString(_AUTHOR!);
-    final int? NOTESOffset = _NOTES == null ? null
-        : fbBuilder.writeList(_NOTES!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, VERSIONOffset);
-    fbBuilder.addOffset(1, DATEOffset);
-    fbBuilder.addOffset(2, CLASSIFICATIONOffset);
-    fbBuilder.addOffset(3, VALIDATION_STATUSOffset);
-    fbBuilder.addOffset(4, AUTHOROffset);
-    fbBuilder.addOffset(5, NOTESOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Telemetry metadata collection
-class TelemetryMetaData {
-  TelemetryMetaData._(this._bc, this._bcOffset);
-  factory TelemetryMetaData(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TelemetryMetaData> reader = _TelemetryMetaDataReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Parameter type definitions
-  ParameterTypeSet? get PARAMETER_TYPE_SET => ParameterTypeSet.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ParameterTypeSet? get parameterTypeSet => PARAMETER_TYPE_SET;
-  ///  Parameter definitions
-  ParameterSet? get PARAMETER_SET => ParameterSet.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ParameterSet? get parameterSet => PARAMETER_SET;
-  ///  Container definitions
-  ContainerSet? get CONTAINER_SET => ContainerSet.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ContainerSet? get containerSet => CONTAINER_SET;
-  ///  Algorithm definitions
-  AlgorithmSet? get ALGORITHM_SET => AlgorithmSet.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  AlgorithmSet? get algorithmSet => ALGORITHM_SET;
-  ///  Stream definitions
-  StreamSet? get STREAM_SET => StreamSet.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  StreamSet? get streamSet => STREAM_SET;
-
-  @override
-  String toString() {
-    return 'TelemetryMetaData{parameterTypeSet: ${parameterTypeSet}, parameterSet: ${parameterSet}, containerSet: ${containerSet}, algorithmSet: ${algorithmSet}, streamSet: ${streamSet}}';
-  }
-}
-
-class _TelemetryMetaDataReader extends fb.TableReader<TelemetryMetaData> {
-  const _TelemetryMetaDataReader();
-
-  @override
-  TelemetryMetaData createObject(fb.BufferContext bc, int offset) =>
-    TelemetryMetaData._(bc, offset);
-}
-
-class TelemetryMetaDataBuilder {
-  TelemetryMetaDataBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addParameterTypeSetOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addParameterSetOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addContainerSetOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addAlgorithmSetOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addStreamSetOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TelemetryMetaDataObjectBuilder extends fb.ObjectBuilder {
-  final ParameterTypeSetObjectBuilder? _PARAMETER_TYPE_SET;
-  final ParameterSetObjectBuilder? _PARAMETER_SET;
-  final ContainerSetObjectBuilder? _CONTAINER_SET;
-  final AlgorithmSetObjectBuilder? _ALGORITHM_SET;
-  final StreamSetObjectBuilder? _STREAM_SET;
-
-  TelemetryMetaDataObjectBuilder({
-    ParameterTypeSetObjectBuilder? PARAMETER_TYPE_SET,
-    ParameterTypeSetObjectBuilder? parameterTypeSet,
-    ParameterSetObjectBuilder? PARAMETER_SET,
-    ParameterSetObjectBuilder? parameterSet,
-    ContainerSetObjectBuilder? CONTAINER_SET,
-    ContainerSetObjectBuilder? containerSet,
-    AlgorithmSetObjectBuilder? ALGORITHM_SET,
-    AlgorithmSetObjectBuilder? algorithmSet,
-    StreamSetObjectBuilder? STREAM_SET,
-    StreamSetObjectBuilder? streamSet,
-  })
-      : _PARAMETER_TYPE_SET = parameterTypeSet ?? PARAMETER_TYPE_SET,
-        _PARAMETER_SET = parameterSet ?? PARAMETER_SET,
-        _CONTAINER_SET = containerSet ?? CONTAINER_SET,
-        _ALGORITHM_SET = algorithmSet ?? ALGORITHM_SET,
-        _STREAM_SET = streamSet ?? STREAM_SET;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? PARAMETER_TYPE_SETOffset = _PARAMETER_TYPE_SET?.getOrCreateOffset(fbBuilder);
-    final int? PARAMETER_SETOffset = _PARAMETER_SET?.getOrCreateOffset(fbBuilder);
-    final int? CONTAINER_SETOffset = _CONTAINER_SET?.getOrCreateOffset(fbBuilder);
-    final int? ALGORITHM_SETOffset = _ALGORITHM_SET?.getOrCreateOffset(fbBuilder);
-    final int? STREAM_SETOffset = _STREAM_SET?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, PARAMETER_TYPE_SETOffset);
-    fbBuilder.addOffset(1, PARAMETER_SETOffset);
-    fbBuilder.addOffset(2, CONTAINER_SETOffset);
-    fbBuilder.addOffset(3, ALGORITHM_SETOffset);
-    fbBuilder.addOffset(4, STREAM_SETOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Command metadata collection
-class CommandMetaData {
-  CommandMetaData._(this._bc, this._bcOffset);
-  factory CommandMetaData(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<CommandMetaData> reader = _CommandMetaDataReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Argument type definitions
-  ArgumentTypeSet? get ARGUMENT_TYPE_SET => ArgumentTypeSet.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ArgumentTypeSet? get argumentTypeSet => ARGUMENT_TYPE_SET;
-  ///  Parameter types used by commands
-  ParameterTypeSet? get PARAMETER_TYPE_SET => ParameterTypeSet.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ParameterTypeSet? get parameterTypeSet => PARAMETER_TYPE_SET;
-  ///  Parameters used by commands
-  ParameterSet? get PARAMETER_SET => ParameterSet.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  ParameterSet? get parameterSet => PARAMETER_SET;
-  ///  MetaCommand definitions
-  MetaCommandSet? get META_COMMAND_SET => MetaCommandSet.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  MetaCommandSet? get metaCommandSet => META_COMMAND_SET;
-  ///  Command container set
-  ContainerSet? get COMMAND_CONTAINER_SET => ContainerSet.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  ContainerSet? get commandContainerSet => COMMAND_CONTAINER_SET;
-  ///  Algorithm definitions
-  AlgorithmSet? get ALGORITHM_SET => AlgorithmSet.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  AlgorithmSet? get algorithmSet => ALGORITHM_SET;
-  ///  Stream definitions
-  StreamSet? get STREAM_SET => StreamSet.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  StreamSet? get streamSet => STREAM_SET;
-
-  @override
-  String toString() {
-    return 'CommandMetaData{argumentTypeSet: ${argumentTypeSet}, parameterTypeSet: ${parameterTypeSet}, parameterSet: ${parameterSet}, metaCommandSet: ${metaCommandSet}, commandContainerSet: ${commandContainerSet}, algorithmSet: ${algorithmSet}, streamSet: ${streamSet}}';
-  }
-}
-
-class _CommandMetaDataReader extends fb.TableReader<CommandMetaData> {
-  const _CommandMetaDataReader();
-
-  @override
-  CommandMetaData createObject(fb.BufferContext bc, int offset) =>
-    CommandMetaData._(bc, offset);
-}
-
-class CommandMetaDataBuilder {
-  CommandMetaDataBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addArgumentTypeSetOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addParameterTypeSetOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addParameterSetOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addMetaCommandSetOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addCommandContainerSetOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addAlgorithmSetOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addStreamSetOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class CommandMetaDataObjectBuilder extends fb.ObjectBuilder {
-  final ArgumentTypeSetObjectBuilder? _ARGUMENT_TYPE_SET;
-  final ParameterTypeSetObjectBuilder? _PARAMETER_TYPE_SET;
-  final ParameterSetObjectBuilder? _PARAMETER_SET;
-  final MetaCommandSetObjectBuilder? _META_COMMAND_SET;
-  final ContainerSetObjectBuilder? _COMMAND_CONTAINER_SET;
-  final AlgorithmSetObjectBuilder? _ALGORITHM_SET;
-  final StreamSetObjectBuilder? _STREAM_SET;
-
-  CommandMetaDataObjectBuilder({
-    ArgumentTypeSetObjectBuilder? ARGUMENT_TYPE_SET,
-    ArgumentTypeSetObjectBuilder? argumentTypeSet,
-    ParameterTypeSetObjectBuilder? PARAMETER_TYPE_SET,
-    ParameterTypeSetObjectBuilder? parameterTypeSet,
-    ParameterSetObjectBuilder? PARAMETER_SET,
-    ParameterSetObjectBuilder? parameterSet,
-    MetaCommandSetObjectBuilder? META_COMMAND_SET,
-    MetaCommandSetObjectBuilder? metaCommandSet,
-    ContainerSetObjectBuilder? COMMAND_CONTAINER_SET,
-    ContainerSetObjectBuilder? commandContainerSet,
-    AlgorithmSetObjectBuilder? ALGORITHM_SET,
-    AlgorithmSetObjectBuilder? algorithmSet,
-    StreamSetObjectBuilder? STREAM_SET,
-    StreamSetObjectBuilder? streamSet,
-  })
-      : _ARGUMENT_TYPE_SET = argumentTypeSet ?? ARGUMENT_TYPE_SET,
-        _PARAMETER_TYPE_SET = parameterTypeSet ?? PARAMETER_TYPE_SET,
-        _PARAMETER_SET = parameterSet ?? PARAMETER_SET,
-        _META_COMMAND_SET = metaCommandSet ?? META_COMMAND_SET,
-        _COMMAND_CONTAINER_SET = commandContainerSet ?? COMMAND_CONTAINER_SET,
-        _ALGORITHM_SET = algorithmSet ?? ALGORITHM_SET,
-        _STREAM_SET = streamSet ?? STREAM_SET;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? ARGUMENT_TYPE_SETOffset = _ARGUMENT_TYPE_SET?.getOrCreateOffset(fbBuilder);
-    final int? PARAMETER_TYPE_SETOffset = _PARAMETER_TYPE_SET?.getOrCreateOffset(fbBuilder);
-    final int? PARAMETER_SETOffset = _PARAMETER_SET?.getOrCreateOffset(fbBuilder);
-    final int? META_COMMAND_SETOffset = _META_COMMAND_SET?.getOrCreateOffset(fbBuilder);
-    final int? COMMAND_CONTAINER_SETOffset = _COMMAND_CONTAINER_SET?.getOrCreateOffset(fbBuilder);
-    final int? ALGORITHM_SETOffset = _ALGORITHM_SET?.getOrCreateOffset(fbBuilder);
-    final int? STREAM_SETOffset = _STREAM_SET?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, ARGUMENT_TYPE_SETOffset);
-    fbBuilder.addOffset(1, PARAMETER_TYPE_SETOffset);
-    fbBuilder.addOffset(2, PARAMETER_SETOffset);
-    fbBuilder.addOffset(3, META_COMMAND_SETOffset);
-    fbBuilder.addOffset(4, COMMAND_CONTAINER_SETOffset);
-    fbBuilder.addOffset(5, ALGORITHM_SETOffset);
-    fbBuilder.addOffset(6, STREAM_SETOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  SpaceSystem - Root element for XTCE document
-///  A SpaceSystem defines the telemetry and command configuration for a space
-///  vehicle or subsystem. SpaceSystems can be nested hierarchically to represent
-///  the structure of a spacecraft (e.g., spacecraft -> subsystem -> payload).
-class XTC {
-  XTC._(this._bc, this._bcOffset);
-  factory XTC(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<XTC> reader = _XTCReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Name of this space system
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Short description
-  String? get SHORT_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get shortDescription => SHORT_DESCRIPTION;
-  ///  Long description
-  String? get LONG_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get longDescription => LONG_DESCRIPTION;
-  ///  Operational status
-  String? get OPERATIONAL_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get operationalStatus => OPERATIONAL_STATUS;
-  ///  Document header
-  XTCHeader? get HEADER => XTCHeader.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Telemetry metadata
-  TelemetryMetaData? get TELEMETRY_META_DATA => TelemetryMetaData.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  TelemetryMetaData? get telemetryMetaData => TELEMETRY_META_DATA;
-  ///  Command metadata
-  CommandMetaData? get COMMAND_META_DATA => CommandMetaData.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  CommandMetaData? get commandMetaData => COMMAND_META_DATA;
-  ///  Service definitions
-  ServiceSet? get SERVICE_SET => ServiceSet.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  ServiceSet? get serviceSet => SERVICE_SET;
-  ///  Child space systems (hierarchical structure)
-  List<XTC>? get CHILD_SYSTEMS => const fb.ListReader<XTC>(XTC.reader).vTableGetNullable(_bc, _bcOffset, 20);
-  List<XTC>? get childSystems => CHILD_SYSTEMS;
-
-  @override
-  String toString() {
-    return 'XTC{NAME: ${NAME}, shortDescription: ${shortDescription}, longDescription: ${longDescription}, operationalStatus: ${operationalStatus}, HEADER: ${HEADER}, telemetryMetaData: ${telemetryMetaData}, commandMetaData: ${commandMetaData}, serviceSet: ${serviceSet}, childSystems: ${childSystems}}';
-  }
-}
-
-class _XTCReader extends fb.TableReader<XTC> {
-  const _XTCReader();
-
-  @override
-  XTC createObject(fb.BufferContext bc, int offset) =>
-    XTC._(bc, offset);
-}
-
-class XTCBuilder {
-  XTCBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(9);
-  }
-
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addShortDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addLongDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addOperationalStatusOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addHeaderOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addTelemetryMetaDataOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addCommandMetaDataOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addServiceSetOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addChildSystemsOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class XTCObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final String? _SHORT_DESCRIPTION;
-  final String? _LONG_DESCRIPTION;
-  final String? _OPERATIONAL_STATUS;
-  final XTCHeaderObjectBuilder? _HEADER;
-  final TelemetryMetaDataObjectBuilder? _TELEMETRY_META_DATA;
-  final CommandMetaDataObjectBuilder? _COMMAND_META_DATA;
-  final ServiceSetObjectBuilder? _SERVICE_SET;
-  final List<XTCObjectBuilder>? _CHILD_SYSTEMS;
-
-  XTCObjectBuilder({
-    String? NAME,
-    String? SHORT_DESCRIPTION,
-    String? shortDescription,
-    String? LONG_DESCRIPTION,
-    String? longDescription,
-    String? OPERATIONAL_STATUS,
-    String? operationalStatus,
-    XTCHeaderObjectBuilder? HEADER,
-    TelemetryMetaDataObjectBuilder? TELEMETRY_META_DATA,
-    TelemetryMetaDataObjectBuilder? telemetryMetaData,
-    CommandMetaDataObjectBuilder? COMMAND_META_DATA,
-    CommandMetaDataObjectBuilder? commandMetaData,
-    ServiceSetObjectBuilder? SERVICE_SET,
-    ServiceSetObjectBuilder? serviceSet,
-    List<XTCObjectBuilder>? CHILD_SYSTEMS,
-    List<XTCObjectBuilder>? childSystems,
-  })
-      : _NAME = NAME,
-        _SHORT_DESCRIPTION = shortDescription ?? SHORT_DESCRIPTION,
-        _LONG_DESCRIPTION = longDescription ?? LONG_DESCRIPTION,
-        _OPERATIONAL_STATUS = operationalStatus ?? OPERATIONAL_STATUS,
-        _HEADER = HEADER,
-        _TELEMETRY_META_DATA = telemetryMetaData ?? TELEMETRY_META_DATA,
-        _COMMAND_META_DATA = commandMetaData ?? COMMAND_META_DATA,
-        _SERVICE_SET = serviceSet ?? SERVICE_SET,
-        _CHILD_SYSTEMS = childSystems ?? CHILD_SYSTEMS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? SHORT_DESCRIPTIONOffset = _SHORT_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_SHORT_DESCRIPTION!);
-    final int? LONG_DESCRIPTIONOffset = _LONG_DESCRIPTION == null ? null
-        : fbBuilder.writeString(_LONG_DESCRIPTION!);
-    final int? OPERATIONAL_STATUSOffset = _OPERATIONAL_STATUS == null ? null
-        : fbBuilder.writeString(_OPERATIONAL_STATUS!);
-    final int? HEADEROffset = _HEADER?.getOrCreateOffset(fbBuilder);
-    final int? TELEMETRY_META_DATAOffset = _TELEMETRY_META_DATA?.getOrCreateOffset(fbBuilder);
-    final int? COMMAND_META_DATAOffset = _COMMAND_META_DATA?.getOrCreateOffset(fbBuilder);
-    final int? SERVICE_SETOffset = _SERVICE_SET?.getOrCreateOffset(fbBuilder);
-    final int? CHILD_SYSTEMSOffset = _CHILD_SYSTEMS == null ? null
-        : fbBuilder.writeList(_CHILD_SYSTEMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(9);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, SHORT_DESCRIPTIONOffset);
-    fbBuilder.addOffset(2, LONG_DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, OPERATIONAL_STATUSOffset);
-    fbBuilder.addOffset(4, HEADEROffset);
-    fbBuilder.addOffset(5, TELEMETRY_META_DATAOffset);
-    fbBuilder.addOffset(6, COMMAND_META_DATAOffset);
-    fbBuilder.addOffset(7, SERVICE_SETOffset);
-    fbBuilder.addOffset(8, CHILD_SYSTEMSOffset);
+    final int? versionOffset = _version == null ? null
+        : fbBuilder.writeString(_version!);
+    final int? RECORDSOffset = _RECORDS == null ? null
+        : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, versionOffset);
+    fbBuilder.addOffset(1, RECORDSOffset);
     return fbBuilder.endTable();
   }
 

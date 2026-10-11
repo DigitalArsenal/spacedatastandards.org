@@ -5,86 +5,535 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum meanElementSource {
-  SGP4(0),
-  SGP4XP(1),
-  DSST(2),
-  USM(3);
+enum elementType {
+  OSCULATING(0),
+  MEAN(1);
 
   final int value;
-  const meanElementSource(this.value);
+  const elementType(this.value);
 
-  factory meanElementSource.fromValue(int value) {
+  factory elementType.fromValue(int value) {
     switch (value) {
-      case 0: return meanElementSource.SGP4;
-      case 1: return meanElementSource.SGP4XP;
-      case 2: return meanElementSource.DSST;
-      case 3: return meanElementSource.USM;
+      case 0: return elementType.OSCULATING;
+      case 1: return elementType.MEAN;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static meanElementSource? _createOrNull(int? value) =>
-      value == null ? null : meanElementSource.fromValue(value);
+  static elementType? _createOrNull(int? value) =>
+      value == null ? null : elementType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<meanElementSource> reader = _meanElementSourceReader();
+  static const int maxValue = 1;
+  static const fb.Reader<elementType> reader = _elementTypeReader();
 }
 
-class _meanElementSourceReader extends fb.Reader<meanElementSource> {
-  const _meanElementSourceReader();
+class _elementTypeReader extends fb.Reader<elementType> {
+  const _elementTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  meanElementSource read(fb.BufferContext bc, int offset) =>
-      meanElementSource.fromValue(const fb.Int8Reader().read(bc, offset));
+  elementType read(fb.BufferContext bc, int offset) =>
+      elementType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Mean Element Theory
-class MET {
-  MET._(this._bc, this._bcOffset);
-  factory MET(List<int> bytes) {
+enum anomalyConvention {
+  TRUE_ANOMALY(0),
+  MEAN_ANOMALY(1);
+
+  final int value;
+  const anomalyConvention(this.value);
+
+  factory anomalyConvention.fromValue(int value) {
+    switch (value) {
+      case 0: return anomalyConvention.TRUE_ANOMALY;
+      case 1: return anomalyConvention.MEAN_ANOMALY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static anomalyConvention? _createOrNull(int? value) =>
+      value == null ? null : anomalyConvention.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<anomalyConvention> reader = _anomalyConventionReader();
+}
+
+class _anomalyConventionReader extends fb.Reader<anomalyConvention> {
+  const _anomalyConventionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  anomalyConvention read(fb.BufferContext bc, int offset) =>
+      anomalyConvention.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent common atmospheric models
+enum atmosphericSource {
+  NONE(0),
+  JACCHIA_70(1),
+  JB2008(2),
+  NRLMSISE_00(3),
+  DTM_2000(4),
+  HWM14(5),
+  HASDM(6);
+
+  final int value;
+  const atmosphericSource(this.value);
+
+  factory atmosphericSource.fromValue(int value) {
+    switch (value) {
+      case 0: return atmosphericSource.NONE;
+      case 1: return atmosphericSource.JACCHIA_70;
+      case 2: return atmosphericSource.JB2008;
+      case 3: return atmosphericSource.NRLMSISE_00;
+      case 4: return atmosphericSource.DTM_2000;
+      case 5: return atmosphericSource.HWM14;
+      case 6: return atmosphericSource.HASDM;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static atmosphericSource? _createOrNull(int? value) =>
+      value == null ? null : atmosphericSource.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static const fb.Reader<atmosphericSource> reader = _atmosphericSourceReader();
+}
+
+class _atmosphericSourceReader extends fb.Reader<atmosphericSource> {
+  const _atmosphericSourceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  atmosphericSource read(fb.BufferContext bc, int offset) =>
+      atmosphericSource.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent common geopotential models
+enum geopotentialSource {
+  NONE(0),
+  EGM96(1),
+  WGS84(2),
+  JGM2(3),
+  GEMT3(4),
+  EGM96_J5(5);
+
+  final int value;
+  const geopotentialSource(this.value);
+
+  factory geopotentialSource.fromValue(int value) {
+    switch (value) {
+      case 0: return geopotentialSource.NONE;
+      case 1: return geopotentialSource.EGM96;
+      case 2: return geopotentialSource.WGS84;
+      case 3: return geopotentialSource.JGM2;
+      case 4: return geopotentialSource.GEMT3;
+      case 5: return geopotentialSource.EGM96_J5;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static geopotentialSource? _createOrNull(int? value) =>
+      value == null ? null : geopotentialSource.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<geopotentialSource> reader = _geopotentialSourceReader();
+}
+
+class _geopotentialSourceReader extends fb.Reader<geopotentialSource> {
+  const _geopotentialSourceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  geopotentialSource read(fb.BufferContext bc, int offset) =>
+      geopotentialSource.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent zonal harmonics
+enum zonalHarmonic {
+  NONE(0),
+  J2(1),
+  J3(2),
+  J4(3),
+  J5(4),
+  J6(5),
+  J7(6),
+  J8(7),
+  J9(8),
+  J10(9),
+  J11(10),
+  J12(11);
+
+  final int value;
+  const zonalHarmonic(this.value);
+
+  factory zonalHarmonic.fromValue(int value) {
+    switch (value) {
+      case 0: return zonalHarmonic.NONE;
+      case 1: return zonalHarmonic.J2;
+      case 2: return zonalHarmonic.J3;
+      case 3: return zonalHarmonic.J4;
+      case 4: return zonalHarmonic.J5;
+      case 5: return zonalHarmonic.J6;
+      case 6: return zonalHarmonic.J7;
+      case 7: return zonalHarmonic.J8;
+      case 8: return zonalHarmonic.J9;
+      case 9: return zonalHarmonic.J10;
+      case 10: return zonalHarmonic.J11;
+      case 11: return zonalHarmonic.J12;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static zonalHarmonic? _createOrNull(int? value) =>
+      value == null ? null : zonalHarmonic.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 11;
+  static const fb.Reader<zonalHarmonic> reader = _zonalHarmonicReader();
+}
+
+class _zonalHarmonicReader extends fb.Reader<zonalHarmonic> {
+  const _zonalHarmonicReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  zonalHarmonic read(fb.BufferContext bc, int offset) =>
+      zonalHarmonic.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent solar radiation pressure models
+enum solarRadiationPressureModel {
+  NONE(0),
+  SPHERICAL_MODEL(1),
+  FLAT_PLATE_MODEL(2);
+
+  final int value;
+  const solarRadiationPressureModel(this.value);
+
+  factory solarRadiationPressureModel.fromValue(int value) {
+    switch (value) {
+      case 0: return solarRadiationPressureModel.NONE;
+      case 1: return solarRadiationPressureModel.SPHERICAL_MODEL;
+      case 2: return solarRadiationPressureModel.FLAT_PLATE_MODEL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static solarRadiationPressureModel? _createOrNull(int? value) =>
+      value == null ? null : solarRadiationPressureModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<solarRadiationPressureModel> reader = _solarRadiationPressureModelReader();
+}
+
+class _solarRadiationPressureModelReader extends fb.Reader<solarRadiationPressureModel> {
+  const _solarRadiationPressureModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  solarRadiationPressureModel read(fb.BufferContext bc, int offset) =>
+      solarRadiationPressureModel.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent common lunar perturbation models
+enum lunarPerturbationSource {
+  NONE(0),
+  DE430(1),
+  DE431(2),
+  LP150Q(3);
+
+  final int value;
+  const lunarPerturbationSource(this.value);
+
+  factory lunarPerturbationSource.fromValue(int value) {
+    switch (value) {
+      case 0: return lunarPerturbationSource.NONE;
+      case 1: return lunarPerturbationSource.DE430;
+      case 2: return lunarPerturbationSource.DE431;
+      case 3: return lunarPerturbationSource.LP150Q;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static lunarPerturbationSource? _createOrNull(int? value) =>
+      value == null ? null : lunarPerturbationSource.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<lunarPerturbationSource> reader = _lunarPerturbationSourceReader();
+}
+
+class _lunarPerturbationSourceReader extends fb.Reader<lunarPerturbationSource> {
+  const _lunarPerturbationSourceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  lunarPerturbationSource read(fb.BufferContext bc, int offset) =>
+      lunarPerturbationSource.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent various solar perturbation models
+enum solarPerturbationSource {
+  NONE(0),
+  DE430(1),
+  DE431(2);
+
+  final int value;
+  const solarPerturbationSource(this.value);
+
+  factory solarPerturbationSource.fromValue(int value) {
+    switch (value) {
+      case 0: return solarPerturbationSource.NONE;
+      case 1: return solarPerturbationSource.DE430;
+      case 2: return solarPerturbationSource.DE431;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static solarPerturbationSource? _createOrNull(int? value) =>
+      value == null ? null : solarPerturbationSource.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<solarPerturbationSource> reader = _solarPerturbationSourceReader();
+}
+
+class _solarPerturbationSourceReader extends fb.Reader<solarPerturbationSource> {
+  const _solarPerturbationSourceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  solarPerturbationSource read(fb.BufferContext bc, int offset) =>
+      solarPerturbationSource.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent resonance models
+enum resonanceSource {
+  NONE(0),
+  HIGH_ALTITUDE_RESONANCE(1),
+  LOW_ALTITUDE_RESONANCE(2),
+  LUNAR_RESONANCE(3),
+  SOLAR_RESONANCE(4);
+
+  final int value;
+  const resonanceSource(this.value);
+
+  factory resonanceSource.fromValue(int value) {
+    switch (value) {
+      case 0: return resonanceSource.NONE;
+      case 1: return resonanceSource.HIGH_ALTITUDE_RESONANCE;
+      case 2: return resonanceSource.LOW_ALTITUDE_RESONANCE;
+      case 3: return resonanceSource.LUNAR_RESONANCE;
+      case 4: return resonanceSource.SOLAR_RESONANCE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static resonanceSource? _createOrNull(int? value) =>
+      value == null ? null : resonanceSource.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<resonanceSource> reader = _resonanceSourceReader();
+}
+
+class _resonanceSourceReader extends fb.Reader<resonanceSource> {
+  const _resonanceSourceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  resonanceSource read(fb.BufferContext bc, int offset) =>
+      resonanceSource.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent the status of various perturbations (ON/OFF)
+enum perturbationStatus {
+  OFF(0),
+  ON(1);
+
+  final int value;
+  const perturbationStatus(this.value);
+
+  factory perturbationStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return perturbationStatus.OFF;
+      case 1: return perturbationStatus.ON;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static perturbationStatus? _createOrNull(int? value) =>
+      value == null ? null : perturbationStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<perturbationStatus> reader = _perturbationStatusReader();
+}
+
+class _perturbationStatusReader extends fb.Reader<perturbationStatus> {
+  const _perturbationStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  perturbationStatus read(fb.BufferContext bc, int offset) =>
+      perturbationStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Enum to represent propagator types
+enum propagatorFamily {
+  NONE(0),
+  SEMI_ANALYTICAL(1),
+  VINTI(2),
+  SGP4(3),
+  COWELL(4),
+  RK4(5),
+  NYX(6),
+  GMAT(7),
+  SPICE(8),
+  SGP(9),
+  SDP4(10),
+  SGP8(11),
+  SDP8(12);
+
+  final int value;
+  const propagatorFamily(this.value);
+
+  factory propagatorFamily.fromValue(int value) {
+    switch (value) {
+      case 0: return propagatorFamily.NONE;
+      case 1: return propagatorFamily.SEMI_ANALYTICAL;
+      case 2: return propagatorFamily.VINTI;
+      case 3: return propagatorFamily.SGP4;
+      case 4: return propagatorFamily.COWELL;
+      case 5: return propagatorFamily.RK4;
+      case 6: return propagatorFamily.NYX;
+      case 7: return propagatorFamily.GMAT;
+      case 8: return propagatorFamily.SPICE;
+      case 9: return propagatorFamily.SGP;
+      case 10: return propagatorFamily.SDP4;
+      case 11: return propagatorFamily.SGP8;
+      case 12: return propagatorFamily.SDP8;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static propagatorFamily? _createOrNull(int? value) =>
+      value == null ? null : propagatorFamily.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 12;
+  static const fb.Reader<propagatorFamily> reader = _propagatorFamilyReader();
+}
+
+class _propagatorFamilyReader extends fb.Reader<propagatorFamily> {
+  const _propagatorFamilyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  propagatorFamily read(fb.BufferContext bc, int offset) =>
+      propagatorFamily.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Propagator configuration structure to describe propagation settings
+class propagatorConfig {
+  propagatorConfig._(this._bc, this._bcOffset);
+  factory propagatorConfig(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<MET> reader = _METReader();
+  static const fb.Reader<propagatorConfig> reader = _propagatorConfigReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  meanElementSource get meanElementTheory => MEAN_ELEMENT_THEORY;
+  String? get PROPAGATOR_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get propagatorName => PROPAGATOR_NAME;
+  propagatorFamily get PROPAGATOR_TYPE => propagatorFamily.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  propagatorFamily get propagatorType => PROPAGATOR_TYPE;
+  List<String>? get FORCE_MODELS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<String>? get forceModels => FORCE_MODELS;
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  double get TIME_STEP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get timeStep => TIME_STEP;
+  List<zonalHarmonic>? get ZONAL_HARMONIC_TERMS => const fb.ListReader<zonalHarmonic>(zonalHarmonic.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<zonalHarmonic>? get zonalHarmonicTerms => ZONAL_HARMONIC_TERMS;
 
   @override
   String toString() {
-    return 'MET{meanElementTheory: ${meanElementTheory}}';
+    return 'propagatorConfig{propagatorName: ${propagatorName}, propagatorType: ${propagatorType}, forceModels: ${forceModels}, EPOCH: ${EPOCH}, timeStep: ${timeStep}, zonalHarmonicTerms: ${zonalHarmonicTerms}}';
   }
 }
 
-class _METReader extends fb.TableReader<MET> {
-  const _METReader();
+class _propagatorConfigReader extends fb.TableReader<propagatorConfig> {
+  const _propagatorConfigReader();
 
   @override
-  MET createObject(fb.BufferContext bc, int offset) =>
-    MET._(bc, offset);
+  propagatorConfig createObject(fb.BufferContext bc, int offset) =>
+    propagatorConfig._(bc, offset);
 }
 
-class METBuilder {
-  METBuilder(this.fbBuilder);
+class propagatorConfigBuilder {
+  propagatorConfigBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(6);
   }
 
-  int addMeanElementTheory(meanElementSource? MEAN_ELEMENT_THEORY) {
-    fbBuilder.addInt8(0, MEAN_ELEMENT_THEORY?.value);
+  int addPropagatorNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorType(propagatorFamily? PROPAGATOR_TYPE) {
+    fbBuilder.addInt8(1, PROPAGATOR_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addForceModelsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeStep(double? TIME_STEP) {
+    fbBuilder.addFloat64(4, TIME_STEP);
+    return fbBuilder.offset;
+  }
+  int addZonalHarmonicTermsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
 
@@ -93,20 +542,1200 @@ class METBuilder {
   }
 }
 
-class METObjectBuilder extends fb.ObjectBuilder {
-  final meanElementSource? _MEAN_ELEMENT_THEORY;
+class propagatorConfigObjectBuilder extends fb.ObjectBuilder {
+  final String? _PROPAGATOR_NAME;
+  final propagatorFamily? _PROPAGATOR_TYPE;
+  final List<String>? _FORCE_MODELS;
+  final String? _EPOCH;
+  final double? _TIME_STEP;
+  final List<zonalHarmonic>? _ZONAL_HARMONIC_TERMS;
 
-  METObjectBuilder({
-    meanElementSource? MEAN_ELEMENT_THEORY,
-    meanElementSource? meanElementTheory,
+  propagatorConfigObjectBuilder({
+    String? PROPAGATOR_NAME,
+    String? propagatorName,
+    propagatorFamily? PROPAGATOR_TYPE,
+    propagatorFamily? propagatorType,
+    List<String>? FORCE_MODELS,
+    List<String>? forceModels,
+    String? EPOCH,
+    double? TIME_STEP,
+    double? timeStep,
+    List<zonalHarmonic>? ZONAL_HARMONIC_TERMS,
+    List<zonalHarmonic>? zonalHarmonicTerms,
   })
-      : _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY;
+      : _PROPAGATOR_NAME = propagatorName ?? PROPAGATOR_NAME,
+        _PROPAGATOR_TYPE = propagatorType ?? PROPAGATOR_TYPE,
+        _FORCE_MODELS = forceModels ?? FORCE_MODELS,
+        _EPOCH = EPOCH,
+        _TIME_STEP = timeStep ?? TIME_STEP,
+        _ZONAL_HARMONIC_TERMS = zonalHarmonicTerms ?? ZONAL_HARMONIC_TERMS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _MEAN_ELEMENT_THEORY?.value);
+    final int? PROPAGATOR_NAMEOffset = _PROPAGATOR_NAME == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_NAME!);
+    final int? FORCE_MODELSOffset = _FORCE_MODELS == null ? null
+        : fbBuilder.writeList(_FORCE_MODELS!.map(fbBuilder.writeString).toList());
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? ZONAL_HARMONIC_TERMSOffset = _ZONAL_HARMONIC_TERMS == null ? null
+        : fbBuilder.writeListInt8(_ZONAL_HARMONIC_TERMS!.map((f) => f.value).toList());
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, PROPAGATOR_NAMEOffset);
+    fbBuilder.addInt8(1, _PROPAGATOR_TYPE?.value);
+    fbBuilder.addOffset(2, FORCE_MODELSOffset);
+    fbBuilder.addOffset(3, EPOCHOffset);
+    fbBuilder.addFloat64(4, _TIME_STEP);
+    fbBuilder.addOffset(5, ZONAL_HARMONIC_TERMSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  VCM State Vector (position and velocity)
+class VCMStateVector {
+  VCMStateVector._(this._bc, this._bcOffset);
+  factory VCMStateVector(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VCMStateVector> reader = _VCMStateVectorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get xDot => X_DOT;
+  double get Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get yDot => Y_DOT;
+  double get Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get zDot => Z_DOT;
+
+  @override
+  String toString() {
+    return 'VCMStateVector{EPOCH: ${EPOCH}, X: ${X}, Y: ${Y}, Z: ${Z}, xDot: ${xDot}, yDot: ${yDot}, zDot: ${zDot}}';
+  }
+}
+
+class _VCMStateVectorReader extends fb.TableReader<VCMStateVector> {
+  const _VCMStateVectorReader();
+
+  @override
+  VCMStateVector createObject(fb.BufferContext bc, int offset) =>
+    VCMStateVector._(bc, offset);
+}
+
+class VCMStateVectorBuilder {
+  VCMStateVectorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addX(double? X) {
+    fbBuilder.addFloat64(1, X);
+    return fbBuilder.offset;
+  }
+  int addY(double? Y) {
+    fbBuilder.addFloat64(2, Y);
+    return fbBuilder.offset;
+  }
+  int addZ(double? Z) {
+    fbBuilder.addFloat64(3, Z);
+    return fbBuilder.offset;
+  }
+  int addXDot(double? X_DOT) {
+    fbBuilder.addFloat64(4, X_DOT);
+    return fbBuilder.offset;
+  }
+  int addYDot(double? Y_DOT) {
+    fbBuilder.addFloat64(5, Y_DOT);
+    return fbBuilder.offset;
+  }
+  int addZDot(double? Z_DOT) {
+    fbBuilder.addFloat64(6, Z_DOT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VCMStateVectorObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final double? _X;
+  final double? _Y;
+  final double? _Z;
+  final double? _X_DOT;
+  final double? _Y_DOT;
+  final double? _Z_DOT;
+
+  VCMStateVectorObjectBuilder({
+    String? EPOCH,
+    double? X,
+    double? Y,
+    double? Z,
+    double? X_DOT,
+    double? xDot,
+    double? Y_DOT,
+    double? yDot,
+    double? Z_DOT,
+    double? zDot,
+  })
+      : _EPOCH = EPOCH,
+        _X = X,
+        _Y = Y,
+        _Z = Z,
+        _X_DOT = xDot ?? X_DOT,
+        _Y_DOT = yDot ?? Y_DOT,
+        _Z_DOT = zDot ?? Z_DOT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _X);
+    fbBuilder.addFloat64(2, _Y);
+    fbBuilder.addFloat64(3, _Z);
+    fbBuilder.addFloat64(4, _X_DOT);
+    fbBuilder.addFloat64(5, _Y_DOT);
+    fbBuilder.addFloat64(6, _Z_DOT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Keplerian Elements
+class keplerianElements {
+  keplerianElements._(this._bc, this._bcOffset);
+  factory keplerianElements(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<keplerianElements> reader = _keplerianElementsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get semiMajorAxis => SEMI_MAJOR_AXIS;
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get raOfAscNode => RA_OF_ASC_NODE;
+  double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get argOfPericenter => ARG_OF_PERICENTER;
+  anomalyConvention get ANOMALY_TYPE => anomalyConvention.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  anomalyConvention get anomalyType => ANOMALY_TYPE;
+  double get ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get PERIAPSIS_RADIUS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get periapsisRadius => PERIAPSIS_RADIUS;
+
+  @override
+  String toString() {
+    return 'keplerianElements{semiMajorAxis: ${semiMajorAxis}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, anomalyType: ${anomalyType}, ANOMALY: ${ANOMALY}, periapsisRadius: ${periapsisRadius}}';
+  }
+}
+
+class _keplerianElementsReader extends fb.TableReader<keplerianElements> {
+  const _keplerianElementsReader();
+
+  @override
+  keplerianElements createObject(fb.BufferContext bc, int offset) =>
+    keplerianElements._(bc, offset);
+}
+
+class keplerianElementsBuilder {
+  keplerianElementsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addSemiMajorAxis(double? SEMI_MAJOR_AXIS) {
+    fbBuilder.addFloat64(0, SEMI_MAJOR_AXIS);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(1, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(2, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addRaOfAscNode(double? RA_OF_ASC_NODE) {
+    fbBuilder.addFloat64(3, RA_OF_ASC_NODE);
+    return fbBuilder.offset;
+  }
+  int addArgOfPericenter(double? ARG_OF_PERICENTER) {
+    fbBuilder.addFloat64(4, ARG_OF_PERICENTER);
+    return fbBuilder.offset;
+  }
+  int addAnomalyType(anomalyConvention? ANOMALY_TYPE) {
+    fbBuilder.addInt8(5, ANOMALY_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addAnomaly(double? ANOMALY) {
+    fbBuilder.addFloat64(6, ANOMALY);
+    return fbBuilder.offset;
+  }
+  int addPeriapsisRadius(double? PERIAPSIS_RADIUS) {
+    fbBuilder.addFloat64(7, PERIAPSIS_RADIUS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class keplerianElementsObjectBuilder extends fb.ObjectBuilder {
+  final double? _SEMI_MAJOR_AXIS;
+  final double? _ECCENTRICITY;
+  final double? _INCLINATION;
+  final double? _RA_OF_ASC_NODE;
+  final double? _ARG_OF_PERICENTER;
+  final anomalyConvention? _ANOMALY_TYPE;
+  final double? _ANOMALY;
+  final double? _PERIAPSIS_RADIUS;
+
+  keplerianElementsObjectBuilder({
+    double? SEMI_MAJOR_AXIS,
+    double? semiMajorAxis,
+    double? ECCENTRICITY,
+    double? INCLINATION,
+    double? RA_OF_ASC_NODE,
+    double? raOfAscNode,
+    double? ARG_OF_PERICENTER,
+    double? argOfPericenter,
+    anomalyConvention? ANOMALY_TYPE,
+    anomalyConvention? anomalyType,
+    double? ANOMALY,
+    double? PERIAPSIS_RADIUS,
+    double? periapsisRadius,
+  })
+      : _SEMI_MAJOR_AXIS = semiMajorAxis ?? SEMI_MAJOR_AXIS,
+        _ECCENTRICITY = ECCENTRICITY,
+        _INCLINATION = INCLINATION,
+        _RA_OF_ASC_NODE = raOfAscNode ?? RA_OF_ASC_NODE,
+        _ARG_OF_PERICENTER = argOfPericenter ?? ARG_OF_PERICENTER,
+        _ANOMALY_TYPE = anomalyType ?? ANOMALY_TYPE,
+        _ANOMALY = ANOMALY,
+        _PERIAPSIS_RADIUS = periapsisRadius ?? PERIAPSIS_RADIUS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(8);
+    fbBuilder.addFloat64(0, _SEMI_MAJOR_AXIS);
+    fbBuilder.addFloat64(1, _ECCENTRICITY);
+    fbBuilder.addFloat64(2, _INCLINATION);
+    fbBuilder.addFloat64(3, _RA_OF_ASC_NODE);
+    fbBuilder.addFloat64(4, _ARG_OF_PERICENTER);
+    fbBuilder.addInt8(5, _ANOMALY_TYPE?.value);
+    fbBuilder.addFloat64(6, _ANOMALY);
+    fbBuilder.addFloat64(7, _PERIAPSIS_RADIUS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Equinoctial Elements
+class equinoctialElements {
+  equinoctialElements._(this._bc, this._bcOffset);
+  factory equinoctialElements(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<equinoctialElements> reader = _equinoctialElementsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get AF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get AG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get L => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get CHI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get PSI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+
+  @override
+  String toString() {
+    return 'equinoctialElements{AF: ${AF}, AG: ${AG}, L: ${L}, N: ${N}, CHI: ${CHI}, PSI: ${PSI}}';
+  }
+}
+
+class _equinoctialElementsReader extends fb.TableReader<equinoctialElements> {
+  const _equinoctialElementsReader();
+
+  @override
+  equinoctialElements createObject(fb.BufferContext bc, int offset) =>
+    equinoctialElements._(bc, offset);
+}
+
+class equinoctialElementsBuilder {
+  equinoctialElementsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addAf(double? AF) {
+    fbBuilder.addFloat64(0, AF);
+    return fbBuilder.offset;
+  }
+  int addAg(double? AG) {
+    fbBuilder.addFloat64(1, AG);
+    return fbBuilder.offset;
+  }
+  int addL(double? L) {
+    fbBuilder.addFloat64(2, L);
+    return fbBuilder.offset;
+  }
+  int addN(double? N) {
+    fbBuilder.addFloat64(3, N);
+    return fbBuilder.offset;
+  }
+  int addChi(double? CHI) {
+    fbBuilder.addFloat64(4, CHI);
+    return fbBuilder.offset;
+  }
+  int addPsi(double? PSI) {
+    fbBuilder.addFloat64(5, PSI);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class equinoctialElementsObjectBuilder extends fb.ObjectBuilder {
+  final double? _AF;
+  final double? _AG;
+  final double? _L;
+  final double? _N;
+  final double? _CHI;
+  final double? _PSI;
+
+  equinoctialElementsObjectBuilder({
+    double? AF,
+    double? AG,
+    double? L,
+    double? N,
+    double? CHI,
+    double? PSI,
+  })
+      : _AF = AF,
+        _AG = AG,
+        _L = L,
+        _N = N,
+        _CHI = CHI,
+        _PSI = PSI;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(6);
+    fbBuilder.addFloat64(0, _AF);
+    fbBuilder.addFloat64(1, _AG);
+    fbBuilder.addFloat64(2, _L);
+    fbBuilder.addFloat64(3, _N);
+    fbBuilder.addFloat64(4, _CHI);
+    fbBuilder.addFloat64(5, _PSI);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  UVW Sigmas (Covariance matrix in UVW frame)
+class uvwSigmas {
+  uvwSigmas._(this._bc, this._bcOffset);
+  factory uvwSigmas(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<uvwSigmas> reader = _uvwSigmasReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get U_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get uSigma => U_SIGMA;
+  double get V_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get vSigma => V_SIGMA;
+  double get W_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get wSigma => W_SIGMA;
+  double get UD_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get udSigma => UD_SIGMA;
+  double get VD_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get vdSigma => VD_SIGMA;
+  double get WD_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get wdSigma => WD_SIGMA;
+
+  @override
+  String toString() {
+    return 'uvwSigmas{uSigma: ${uSigma}, vSigma: ${vSigma}, wSigma: ${wSigma}, udSigma: ${udSigma}, vdSigma: ${vdSigma}, wdSigma: ${wdSigma}}';
+  }
+}
+
+class _uvwSigmasReader extends fb.TableReader<uvwSigmas> {
+  const _uvwSigmasReader();
+
+  @override
+  uvwSigmas createObject(fb.BufferContext bc, int offset) =>
+    uvwSigmas._(bc, offset);
+}
+
+class uvwSigmasBuilder {
+  uvwSigmasBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addUSigma(double? U_SIGMA) {
+    fbBuilder.addFloat64(0, U_SIGMA);
+    return fbBuilder.offset;
+  }
+  int addVSigma(double? V_SIGMA) {
+    fbBuilder.addFloat64(1, V_SIGMA);
+    return fbBuilder.offset;
+  }
+  int addWSigma(double? W_SIGMA) {
+    fbBuilder.addFloat64(2, W_SIGMA);
+    return fbBuilder.offset;
+  }
+  int addUdSigma(double? UD_SIGMA) {
+    fbBuilder.addFloat64(3, UD_SIGMA);
+    return fbBuilder.offset;
+  }
+  int addVdSigma(double? VD_SIGMA) {
+    fbBuilder.addFloat64(4, VD_SIGMA);
+    return fbBuilder.offset;
+  }
+  int addWdSigma(double? WD_SIGMA) {
+    fbBuilder.addFloat64(5, WD_SIGMA);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class uvwSigmasObjectBuilder extends fb.ObjectBuilder {
+  final double? _U_SIGMA;
+  final double? _V_SIGMA;
+  final double? _W_SIGMA;
+  final double? _UD_SIGMA;
+  final double? _VD_SIGMA;
+  final double? _WD_SIGMA;
+
+  uvwSigmasObjectBuilder({
+    double? U_SIGMA,
+    double? uSigma,
+    double? V_SIGMA,
+    double? vSigma,
+    double? W_SIGMA,
+    double? wSigma,
+    double? UD_SIGMA,
+    double? udSigma,
+    double? VD_SIGMA,
+    double? vdSigma,
+    double? WD_SIGMA,
+    double? wdSigma,
+  })
+      : _U_SIGMA = uSigma ?? U_SIGMA,
+        _V_SIGMA = vSigma ?? V_SIGMA,
+        _W_SIGMA = wSigma ?? W_SIGMA,
+        _UD_SIGMA = udSigma ?? UD_SIGMA,
+        _VD_SIGMA = vdSigma ?? VD_SIGMA,
+        _WD_SIGMA = wdSigma ?? WD_SIGMA;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(6);
+    fbBuilder.addFloat64(0, _U_SIGMA);
+    fbBuilder.addFloat64(1, _V_SIGMA);
+    fbBuilder.addFloat64(2, _W_SIGMA);
+    fbBuilder.addFloat64(3, _UD_SIGMA);
+    fbBuilder.addFloat64(4, _VD_SIGMA);
+    fbBuilder.addFloat64(5, _WD_SIGMA);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  VCM Atmospheric and Perturbation Model Data
+class VCMAtmosphericModelData {
+  VCMAtmosphericModelData._(this._bc, this._bcOffset);
+  factory VCMAtmosphericModelData(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VCMAtmosphericModelData> reader = _VCMAtmosphericModelDataReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  atmosphericSource get ATMOSPHERIC_MODEL => atmosphericSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  atmosphericSource get atmosphericModel => ATMOSPHERIC_MODEL;
+  geopotentialSource get GEOPOTENTIAL_MODEL => geopotentialSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  geopotentialSource get geopotentialModel => GEOPOTENTIAL_MODEL;
+  perturbationStatus get LUNAR_SOLAR_PERTURBATION => perturbationStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  perturbationStatus get lunarSolarPerturbation => LUNAR_SOLAR_PERTURBATION;
+  lunarPerturbationSource get LUNAR_PERTURBATION_MODEL => lunarPerturbationSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  lunarPerturbationSource get lunarPerturbationModel => LUNAR_PERTURBATION_MODEL;
+  solarPerturbationSource get SOLAR_PERTURBATION_MODEL => solarPerturbationSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  solarPerturbationSource get solarPerturbationModel => SOLAR_PERTURBATION_MODEL;
+  perturbationStatus get SOLAR_RADIATION_PRESSURE => perturbationStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  perturbationStatus get solarRadiationPressure => SOLAR_RADIATION_PRESSURE;
+  solarRadiationPressureModel get SRP_MODEL => solarRadiationPressureModel.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  solarRadiationPressureModel get srpModel => SRP_MODEL;
+  resonanceSource get RESONANCE_MODEL => resonanceSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  resonanceSource get resonanceModel => RESONANCE_MODEL;
+
+  @override
+  String toString() {
+    return 'VCMAtmosphericModelData{atmosphericModel: ${atmosphericModel}, geopotentialModel: ${geopotentialModel}, lunarSolarPerturbation: ${lunarSolarPerturbation}, lunarPerturbationModel: ${lunarPerturbationModel}, solarPerturbationModel: ${solarPerturbationModel}, solarRadiationPressure: ${solarRadiationPressure}, srpModel: ${srpModel}, resonanceModel: ${resonanceModel}}';
+  }
+}
+
+class _VCMAtmosphericModelDataReader extends fb.TableReader<VCMAtmosphericModelData> {
+  const _VCMAtmosphericModelDataReader();
+
+  @override
+  VCMAtmosphericModelData createObject(fb.BufferContext bc, int offset) =>
+    VCMAtmosphericModelData._(bc, offset);
+}
+
+class VCMAtmosphericModelDataBuilder {
+  VCMAtmosphericModelDataBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addAtmosphericModel(atmosphericSource? ATMOSPHERIC_MODEL) {
+    fbBuilder.addInt8(0, ATMOSPHERIC_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addGeopotentialModel(geopotentialSource? GEOPOTENTIAL_MODEL) {
+    fbBuilder.addInt8(1, GEOPOTENTIAL_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addLunarSolarPerturbation(perturbationStatus? LUNAR_SOLAR_PERTURBATION) {
+    fbBuilder.addInt8(2, LUNAR_SOLAR_PERTURBATION?.value);
+    return fbBuilder.offset;
+  }
+  int addLunarPerturbationModel(lunarPerturbationSource? LUNAR_PERTURBATION_MODEL) {
+    fbBuilder.addInt8(3, LUNAR_PERTURBATION_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addSolarPerturbationModel(solarPerturbationSource? SOLAR_PERTURBATION_MODEL) {
+    fbBuilder.addInt8(4, SOLAR_PERTURBATION_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addSolarRadiationPressure(perturbationStatus? SOLAR_RADIATION_PRESSURE) {
+    fbBuilder.addInt8(5, SOLAR_RADIATION_PRESSURE?.value);
+    return fbBuilder.offset;
+  }
+  int addSrpModel(solarRadiationPressureModel? SRP_MODEL) {
+    fbBuilder.addInt8(6, SRP_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addResonanceModel(resonanceSource? RESONANCE_MODEL) {
+    fbBuilder.addInt8(7, RESONANCE_MODEL?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VCMAtmosphericModelDataObjectBuilder extends fb.ObjectBuilder {
+  final atmosphericSource? _ATMOSPHERIC_MODEL;
+  final geopotentialSource? _GEOPOTENTIAL_MODEL;
+  final perturbationStatus? _LUNAR_SOLAR_PERTURBATION;
+  final lunarPerturbationSource? _LUNAR_PERTURBATION_MODEL;
+  final solarPerturbationSource? _SOLAR_PERTURBATION_MODEL;
+  final perturbationStatus? _SOLAR_RADIATION_PRESSURE;
+  final solarRadiationPressureModel? _SRP_MODEL;
+  final resonanceSource? _RESONANCE_MODEL;
+
+  VCMAtmosphericModelDataObjectBuilder({
+    atmosphericSource? ATMOSPHERIC_MODEL,
+    atmosphericSource? atmosphericModel,
+    geopotentialSource? GEOPOTENTIAL_MODEL,
+    geopotentialSource? geopotentialModel,
+    perturbationStatus? LUNAR_SOLAR_PERTURBATION,
+    perturbationStatus? lunarSolarPerturbation,
+    lunarPerturbationSource? LUNAR_PERTURBATION_MODEL,
+    lunarPerturbationSource? lunarPerturbationModel,
+    solarPerturbationSource? SOLAR_PERTURBATION_MODEL,
+    solarPerturbationSource? solarPerturbationModel,
+    perturbationStatus? SOLAR_RADIATION_PRESSURE,
+    perturbationStatus? solarRadiationPressure,
+    solarRadiationPressureModel? SRP_MODEL,
+    solarRadiationPressureModel? srpModel,
+    resonanceSource? RESONANCE_MODEL,
+    resonanceSource? resonanceModel,
+  })
+      : _ATMOSPHERIC_MODEL = atmosphericModel ?? ATMOSPHERIC_MODEL,
+        _GEOPOTENTIAL_MODEL = geopotentialModel ?? GEOPOTENTIAL_MODEL,
+        _LUNAR_SOLAR_PERTURBATION = lunarSolarPerturbation ?? LUNAR_SOLAR_PERTURBATION,
+        _LUNAR_PERTURBATION_MODEL = lunarPerturbationModel ?? LUNAR_PERTURBATION_MODEL,
+        _SOLAR_PERTURBATION_MODEL = solarPerturbationModel ?? SOLAR_PERTURBATION_MODEL,
+        _SOLAR_RADIATION_PRESSURE = solarRadiationPressure ?? SOLAR_RADIATION_PRESSURE,
+        _SRP_MODEL = srpModel ?? SRP_MODEL,
+        _RESONANCE_MODEL = resonanceModel ?? RESONANCE_MODEL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(8);
+    fbBuilder.addInt8(0, _ATMOSPHERIC_MODEL?.value);
+    fbBuilder.addInt8(1, _GEOPOTENTIAL_MODEL?.value);
+    fbBuilder.addInt8(2, _LUNAR_SOLAR_PERTURBATION?.value);
+    fbBuilder.addInt8(3, _LUNAR_PERTURBATION_MODEL?.value);
+    fbBuilder.addInt8(4, _SOLAR_PERTURBATION_MODEL?.value);
+    fbBuilder.addInt8(5, _SOLAR_RADIATION_PRESSURE?.value);
+    fbBuilder.addInt8(6, _SRP_MODEL?.value);
+    fbBuilder.addInt8(7, _RESONANCE_MODEL?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
+class VCM {
+  VCM._(this._bc, this._bcOffset);
+  factory VCM(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VCM> reader = _VCMReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get CCSDS_OMM_VERS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get ccsdsOmmVers => CCSDS_OMM_VERS;
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get creationDate => CREATION_DATE;
+  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get objectName => OBJECT_NAME;
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get objectId => OBJECT_ID;
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get centerName => CENTER_NAME;
+  String? get REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get refFrame => REF_FRAME;
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get timeSystem => TIME_SYSTEM;
+  VCMStateVector? get STATE_VECTOR => VCMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  VCMStateVector? get stateVector => STATE_VECTOR;
+  keplerianElements? get KEPLERIAN_ELEMENTS => keplerianElements.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  keplerianElements? get keplerianElements => KEPLERIAN_ELEMENTS;
+  equinoctialElements? get EQUINOCTIAL_ELEMENTS => equinoctialElements.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  equinoctialElements? get equinoctialElements => EQUINOCTIAL_ELEMENTS;
+  double get GM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  VCMAtmosphericModelData? get ATMOSPHERIC_MODEL_DATA => VCMAtmosphericModelData.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  VCMAtmosphericModelData? get atmosphericModelData => ATMOSPHERIC_MODEL_DATA;
+  propagatorConfig? get PROPAGATOR_SETTINGS => propagatorConfig.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  propagatorConfig? get propagatorSettings => PROPAGATOR_SETTINGS;
+  uvwSigmas? get UVW_SIGMAS => uvwSigmas.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  uvwSigmas? get uvwSigmas => UVW_SIGMAS;
+  double get MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get SOLAR_RAD_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get solarRadArea => SOLAR_RAD_AREA;
+  double get SOLAR_RAD_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get solarRadCoeff => SOLAR_RAD_COEFF;
+  double get DRAG_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get dragArea => DRAG_AREA;
+  double get DRAG_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get dragCoeff => DRAG_COEFF;
+  perturbationStatus get SRP => perturbationStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 44, 0));
+  String? get CLASSIFICATION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get classificationType => CLASSIFICATION_TYPE;
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 48, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  int get ELEMENT_SET_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get elementSetNo => ELEMENT_SET_NO;
+  double get REV_AT_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get revAtEpoch => REV_AT_EPOCH;
+  double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  double get meanMotionDot => MEAN_MOTION_DOT;
+  double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  double get meanMotionDdot => MEAN_MOTION_DDOT;
+  String? get COV_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get covReferenceFrame => COV_REFERENCE_FRAME;
+  ///  Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  ///  Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///          CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///          CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///          CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  ///  Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  List<double>? get COVARIANCE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 62);
+  int get USER_DEFINED_BIP_0044_TYPE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 64, 0);
+  int get userDefinedBip0044Type => USER_DEFINED_BIP_0044_TYPE;
+  String? get USER_DEFINED_OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  String? get userDefinedObjectDesignator => USER_DEFINED_OBJECT_DESIGNATOR;
+  String? get USER_DEFINED_EARTH_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  String? get userDefinedEarthModel => USER_DEFINED_EARTH_MODEL;
+  double get USER_DEFINED_EPOCH_TIMESTAMP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  double get userDefinedEpochTimestamp => USER_DEFINED_EPOCH_TIMESTAMP;
+  double get USER_DEFINED_MICROSECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
+  double get userDefinedMicroseconds => USER_DEFINED_MICROSECONDS;
+
+  @override
+  String toString() {
+    return 'VCM{ccsdsOmmVers: ${ccsdsOmmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, centerName: ${centerName}, refFrame: ${refFrame}, timeSystem: ${timeSystem}, stateVector: ${stateVector}, keplerianElements: ${keplerianElements}, equinoctialElements: ${equinoctialElements}, GM: ${GM}, atmosphericModelData: ${atmosphericModelData}, propagatorSettings: ${propagatorSettings}, uvwSigmas: ${uvwSigmas}, MASS: ${MASS}, solarRadArea: ${solarRadArea}, solarRadCoeff: ${solarRadCoeff}, dragArea: ${dragArea}, dragCoeff: ${dragCoeff}, SRP: ${SRP}, classificationType: ${classificationType}, noradCatId: ${noradCatId}, elementSetNo: ${elementSetNo}, revAtEpoch: ${revAtEpoch}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, covReferenceFrame: ${covReferenceFrame}, COVARIANCE: ${COVARIANCE}, userDefinedBip0044Type: ${userDefinedBip0044Type}, userDefinedObjectDesignator: ${userDefinedObjectDesignator}, userDefinedEarthModel: ${userDefinedEarthModel}, userDefinedEpochTimestamp: ${userDefinedEpochTimestamp}, userDefinedMicroseconds: ${userDefinedMicroseconds}}';
+  }
+}
+
+class _VCMReader extends fb.TableReader<VCM> {
+  const _VCMReader();
+
+  @override
+  VCM createObject(fb.BufferContext bc, int offset) =>
+    VCM._(bc, offset);
+}
+
+class VCMBuilder {
+  VCMBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(35);
+  }
+
+  int addCcsdsOmmVers(double? CCSDS_OMM_VERS) {
+    fbBuilder.addFloat64(0, CCSDS_OMM_VERS);
+    return fbBuilder.offset;
+  }
+  int addCreationDateOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addStateVectorOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addKeplerianElementsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addEquinoctialElementsOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addGm(double? GM) {
+    fbBuilder.addFloat64(11, GM);
+    return fbBuilder.offset;
+  }
+  int addAtmosphericModelDataOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorSettingsOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addUvwSigmasOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addMass(double? MASS) {
+    fbBuilder.addFloat64(15, MASS);
+    return fbBuilder.offset;
+  }
+  int addSolarRadArea(double? SOLAR_RAD_AREA) {
+    fbBuilder.addFloat64(16, SOLAR_RAD_AREA);
+    return fbBuilder.offset;
+  }
+  int addSolarRadCoeff(double? SOLAR_RAD_COEFF) {
+    fbBuilder.addFloat64(17, SOLAR_RAD_COEFF);
+    return fbBuilder.offset;
+  }
+  int addDragArea(double? DRAG_AREA) {
+    fbBuilder.addFloat64(18, DRAG_AREA);
+    return fbBuilder.offset;
+  }
+  int addDragCoeff(double? DRAG_COEFF) {
+    fbBuilder.addFloat64(19, DRAG_COEFF);
+    return fbBuilder.offset;
+  }
+  int addSrp(perturbationStatus? SRP) {
+    fbBuilder.addInt8(20, SRP?.value);
+    return fbBuilder.offset;
+  }
+  int addClassificationTypeOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(22, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addElementSetNo(int? ELEMENT_SET_NO) {
+    fbBuilder.addUint32(23, ELEMENT_SET_NO);
+    return fbBuilder.offset;
+  }
+  int addRevAtEpoch(double? REV_AT_EPOCH) {
+    fbBuilder.addFloat64(24, REV_AT_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addBstar(double? BSTAR) {
+    fbBuilder.addFloat64(25, BSTAR);
+    return fbBuilder.offset;
+  }
+  int addMeanMotionDot(double? MEAN_MOTION_DOT) {
+    fbBuilder.addFloat64(26, MEAN_MOTION_DOT);
+    return fbBuilder.offset;
+  }
+  int addMeanMotionDdot(double? MEAN_MOTION_DDOT) {
+    fbBuilder.addFloat64(27, MEAN_MOTION_DDOT);
+    return fbBuilder.offset;
+  }
+  int addCovReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedBip0044Type(int? USER_DEFINED_BIP_0044_TYPE) {
+    fbBuilder.addUint32(30, USER_DEFINED_BIP_0044_TYPE);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedObjectDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedEarthModelOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedEpochTimestamp(double? USER_DEFINED_EPOCH_TIMESTAMP) {
+    fbBuilder.addFloat64(33, USER_DEFINED_EPOCH_TIMESTAMP);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedMicroseconds(double? USER_DEFINED_MICROSECONDS) {
+    fbBuilder.addFloat64(34, USER_DEFINED_MICROSECONDS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VCMObjectBuilder extends fb.ObjectBuilder {
+  final double? _CCSDS_OMM_VERS;
+  final String? _CREATION_DATE;
+  final String? _ORIGINATOR;
+  final String? _OBJECT_NAME;
+  final String? _OBJECT_ID;
+  final String? _CENTER_NAME;
+  final String? _REF_FRAME;
+  final String? _TIME_SYSTEM;
+  final VCMStateVectorObjectBuilder? _STATE_VECTOR;
+  final keplerianElementsObjectBuilder? _KEPLERIAN_ELEMENTS;
+  final equinoctialElementsObjectBuilder? _EQUINOCTIAL_ELEMENTS;
+  final double? _GM;
+  final VCMAtmosphericModelDataObjectBuilder? _ATMOSPHERIC_MODEL_DATA;
+  final propagatorConfigObjectBuilder? _PROPAGATOR_SETTINGS;
+  final uvwSigmasObjectBuilder? _UVW_SIGMAS;
+  final double? _MASS;
+  final double? _SOLAR_RAD_AREA;
+  final double? _SOLAR_RAD_COEFF;
+  final double? _DRAG_AREA;
+  final double? _DRAG_COEFF;
+  final perturbationStatus? _SRP;
+  final String? _CLASSIFICATION_TYPE;
+  final int? _NORAD_CAT_ID;
+  final int? _ELEMENT_SET_NO;
+  final double? _REV_AT_EPOCH;
+  final double? _BSTAR;
+  final double? _MEAN_MOTION_DOT;
+  final double? _MEAN_MOTION_DDOT;
+  final String? _COV_REFERENCE_FRAME;
+  final List<double>? _COVARIANCE;
+  final int? _USER_DEFINED_BIP_0044_TYPE;
+  final String? _USER_DEFINED_OBJECT_DESIGNATOR;
+  final String? _USER_DEFINED_EARTH_MODEL;
+  final double? _USER_DEFINED_EPOCH_TIMESTAMP;
+  final double? _USER_DEFINED_MICROSECONDS;
+
+  VCMObjectBuilder({
+    double? CCSDS_OMM_VERS,
+    double? ccsdsOmmVers,
+    String? CREATION_DATE,
+    String? creationDate,
+    String? ORIGINATOR,
+    String? OBJECT_NAME,
+    String? objectName,
+    String? OBJECT_ID,
+    String? objectId,
+    String? CENTER_NAME,
+    String? centerName,
+    String? REF_FRAME,
+    String? refFrame,
+    String? TIME_SYSTEM,
+    String? timeSystem,
+    VCMStateVectorObjectBuilder? STATE_VECTOR,
+    VCMStateVectorObjectBuilder? stateVector,
+    keplerianElementsObjectBuilder? KEPLERIAN_ELEMENTS,
+    keplerianElementsObjectBuilder? keplerianElements,
+    equinoctialElementsObjectBuilder? EQUINOCTIAL_ELEMENTS,
+    equinoctialElementsObjectBuilder? equinoctialElements,
+    double? GM,
+    VCMAtmosphericModelDataObjectBuilder? ATMOSPHERIC_MODEL_DATA,
+    VCMAtmosphericModelDataObjectBuilder? atmosphericModelData,
+    propagatorConfigObjectBuilder? PROPAGATOR_SETTINGS,
+    propagatorConfigObjectBuilder? propagatorSettings,
+    uvwSigmasObjectBuilder? UVW_SIGMAS,
+    uvwSigmasObjectBuilder? uvwSigmas,
+    double? MASS,
+    double? SOLAR_RAD_AREA,
+    double? solarRadArea,
+    double? SOLAR_RAD_COEFF,
+    double? solarRadCoeff,
+    double? DRAG_AREA,
+    double? dragArea,
+    double? DRAG_COEFF,
+    double? dragCoeff,
+    perturbationStatus? SRP,
+    String? CLASSIFICATION_TYPE,
+    String? classificationType,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    int? ELEMENT_SET_NO,
+    int? elementSetNo,
+    double? REV_AT_EPOCH,
+    double? revAtEpoch,
+    double? BSTAR,
+    double? MEAN_MOTION_DOT,
+    double? meanMotionDot,
+    double? MEAN_MOTION_DDOT,
+    double? meanMotionDdot,
+    String? COV_REFERENCE_FRAME,
+    String? covReferenceFrame,
+    List<double>? COVARIANCE,
+    int? USER_DEFINED_BIP_0044_TYPE,
+    int? userDefinedBip0044Type,
+    String? USER_DEFINED_OBJECT_DESIGNATOR,
+    String? userDefinedObjectDesignator,
+    String? USER_DEFINED_EARTH_MODEL,
+    String? userDefinedEarthModel,
+    double? USER_DEFINED_EPOCH_TIMESTAMP,
+    double? userDefinedEpochTimestamp,
+    double? USER_DEFINED_MICROSECONDS,
+    double? userDefinedMicroseconds,
+  })
+      : _CCSDS_OMM_VERS = ccsdsOmmVers ?? CCSDS_OMM_VERS,
+        _CREATION_DATE = creationDate ?? CREATION_DATE,
+        _ORIGINATOR = ORIGINATOR,
+        _OBJECT_NAME = objectName ?? OBJECT_NAME,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _REF_FRAME = refFrame ?? REF_FRAME,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _STATE_VECTOR = stateVector ?? STATE_VECTOR,
+        _KEPLERIAN_ELEMENTS = keplerianElements ?? KEPLERIAN_ELEMENTS,
+        _EQUINOCTIAL_ELEMENTS = equinoctialElements ?? EQUINOCTIAL_ELEMENTS,
+        _GM = GM,
+        _ATMOSPHERIC_MODEL_DATA = atmosphericModelData ?? ATMOSPHERIC_MODEL_DATA,
+        _PROPAGATOR_SETTINGS = propagatorSettings ?? PROPAGATOR_SETTINGS,
+        _UVW_SIGMAS = uvwSigmas ?? UVW_SIGMAS,
+        _MASS = MASS,
+        _SOLAR_RAD_AREA = solarRadArea ?? SOLAR_RAD_AREA,
+        _SOLAR_RAD_COEFF = solarRadCoeff ?? SOLAR_RAD_COEFF,
+        _DRAG_AREA = dragArea ?? DRAG_AREA,
+        _DRAG_COEFF = dragCoeff ?? DRAG_COEFF,
+        _SRP = SRP,
+        _CLASSIFICATION_TYPE = classificationType ?? CLASSIFICATION_TYPE,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _ELEMENT_SET_NO = elementSetNo ?? ELEMENT_SET_NO,
+        _REV_AT_EPOCH = revAtEpoch ?? REV_AT_EPOCH,
+        _BSTAR = BSTAR,
+        _MEAN_MOTION_DOT = meanMotionDot ?? MEAN_MOTION_DOT,
+        _MEAN_MOTION_DDOT = meanMotionDdot ?? MEAN_MOTION_DDOT,
+        _COV_REFERENCE_FRAME = covReferenceFrame ?? COV_REFERENCE_FRAME,
+        _COVARIANCE = COVARIANCE,
+        _USER_DEFINED_BIP_0044_TYPE = userDefinedBip0044Type ?? USER_DEFINED_BIP_0044_TYPE,
+        _USER_DEFINED_OBJECT_DESIGNATOR = userDefinedObjectDesignator ?? USER_DEFINED_OBJECT_DESIGNATOR,
+        _USER_DEFINED_EARTH_MODEL = userDefinedEarthModel ?? USER_DEFINED_EARTH_MODEL,
+        _USER_DEFINED_EPOCH_TIMESTAMP = userDefinedEpochTimestamp ?? USER_DEFINED_EPOCH_TIMESTAMP,
+        _USER_DEFINED_MICROSECONDS = userDefinedMicroseconds ?? USER_DEFINED_MICROSECONDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
+        : fbBuilder.writeString(_CREATION_DATE!);
+    final int? ORIGINATOROffset = _ORIGINATOR == null ? null
+        : fbBuilder.writeString(_ORIGINATOR!);
+    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
+        : fbBuilder.writeString(_OBJECT_NAME!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? REF_FRAMEOffset = _REF_FRAME == null ? null
+        : fbBuilder.writeString(_REF_FRAME!);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? STATE_VECTOROffset = _STATE_VECTOR?.getOrCreateOffset(fbBuilder);
+    final int? KEPLERIAN_ELEMENTSOffset = _KEPLERIAN_ELEMENTS?.getOrCreateOffset(fbBuilder);
+    final int? EQUINOCTIAL_ELEMENTSOffset = _EQUINOCTIAL_ELEMENTS?.getOrCreateOffset(fbBuilder);
+    final int? ATMOSPHERIC_MODEL_DATAOffset = _ATMOSPHERIC_MODEL_DATA?.getOrCreateOffset(fbBuilder);
+    final int? PROPAGATOR_SETTINGSOffset = _PROPAGATOR_SETTINGS?.getOrCreateOffset(fbBuilder);
+    final int? UVW_SIGMASOffset = _UVW_SIGMAS?.getOrCreateOffset(fbBuilder);
+    final int? CLASSIFICATION_TYPEOffset = _CLASSIFICATION_TYPE == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION_TYPE!);
+    final int? COV_REFERENCE_FRAMEOffset = _COV_REFERENCE_FRAME == null ? null
+        : fbBuilder.writeString(_COV_REFERENCE_FRAME!);
+    final int? COVARIANCEOffset = _COVARIANCE == null ? null
+        : fbBuilder.writeListFloat64(_COVARIANCE!);
+    final int? USER_DEFINED_OBJECT_DESIGNATOROffset = _USER_DEFINED_OBJECT_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_USER_DEFINED_OBJECT_DESIGNATOR!);
+    final int? USER_DEFINED_EARTH_MODELOffset = _USER_DEFINED_EARTH_MODEL == null ? null
+        : fbBuilder.writeString(_USER_DEFINED_EARTH_MODEL!);
+    fbBuilder.startTable(35);
+    fbBuilder.addFloat64(0, _CCSDS_OMM_VERS);
+    fbBuilder.addOffset(1, CREATION_DATEOffset);
+    fbBuilder.addOffset(2, ORIGINATOROffset);
+    fbBuilder.addOffset(3, OBJECT_NAMEOffset);
+    fbBuilder.addOffset(4, OBJECT_IDOffset);
+    fbBuilder.addOffset(5, CENTER_NAMEOffset);
+    fbBuilder.addOffset(6, REF_FRAMEOffset);
+    fbBuilder.addOffset(7, TIME_SYSTEMOffset);
+    fbBuilder.addOffset(8, STATE_VECTOROffset);
+    fbBuilder.addOffset(9, KEPLERIAN_ELEMENTSOffset);
+    fbBuilder.addOffset(10, EQUINOCTIAL_ELEMENTSOffset);
+    fbBuilder.addFloat64(11, _GM);
+    fbBuilder.addOffset(12, ATMOSPHERIC_MODEL_DATAOffset);
+    fbBuilder.addOffset(13, PROPAGATOR_SETTINGSOffset);
+    fbBuilder.addOffset(14, UVW_SIGMASOffset);
+    fbBuilder.addFloat64(15, _MASS);
+    fbBuilder.addFloat64(16, _SOLAR_RAD_AREA);
+    fbBuilder.addFloat64(17, _SOLAR_RAD_COEFF);
+    fbBuilder.addFloat64(18, _DRAG_AREA);
+    fbBuilder.addFloat64(19, _DRAG_COEFF);
+    fbBuilder.addInt8(20, _SRP?.value);
+    fbBuilder.addOffset(21, CLASSIFICATION_TYPEOffset);
+    fbBuilder.addUint32(22, _NORAD_CAT_ID);
+    fbBuilder.addUint32(23, _ELEMENT_SET_NO);
+    fbBuilder.addFloat64(24, _REV_AT_EPOCH);
+    fbBuilder.addFloat64(25, _BSTAR);
+    fbBuilder.addFloat64(26, _MEAN_MOTION_DOT);
+    fbBuilder.addFloat64(27, _MEAN_MOTION_DDOT);
+    fbBuilder.addOffset(28, COV_REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(29, COVARIANCEOffset);
+    fbBuilder.addUint32(30, _USER_DEFINED_BIP_0044_TYPE);
+    fbBuilder.addOffset(31, USER_DEFINED_OBJECT_DESIGNATOROffset);
+    fbBuilder.addOffset(32, USER_DEFINED_EARTH_MODELOffset);
+    fbBuilder.addFloat64(33, _USER_DEFINED_EPOCH_TIMESTAMP);
+    fbBuilder.addFloat64(34, _USER_DEFINED_MICROSECONDS);
     return fbBuilder.endTable();
   }
 

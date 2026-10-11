@@ -165,8 +165,35 @@ class OCMCovarianceBlock(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
+    # Realism of the block's covariance: one entry per line of LINES, in order,
+    # or one entry for every line.
+    # OCMCovarianceBlock
+    def COV_REALISM(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CVR import CVR
+            obj = CVR()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCMCovarianceBlock
+    def COV_REALISMLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCMCovarianceBlock
+    def COV_REALISMIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        return o == 0
+
 def OCMCovarianceBlockStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(16)
 
 def Start(builder):
     OCMCovarianceBlockStart(builder)
@@ -273,12 +300,31 @@ def OCMCovarianceBlockCreateLINESVector(builder, data):
 def CreateLINESVector(builder, data):
     return OCMCovarianceBlockCreateLINESVector(builder, data)
 
+def OCMCovarianceBlockAddCOV_REALISM(builder, COV_REALISM):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REALISM), 0)
+
+def AddCOV_REALISM(builder, COV_REALISM):
+    OCMCovarianceBlockAddCOV_REALISM(builder, COV_REALISM)
+
+def OCMCovarianceBlockStartCOV_REALISMVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOV_REALISMVector(builder, numElems):
+    return OCMCovarianceBlockStartCOV_REALISMVector(builder, numElems)
+
+def OCMCovarianceBlockCreateCOV_REALISMVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOV_REALISMVector(builder, data):
+    return OCMCovarianceBlockCreateCOV_REALISMVector(builder, data)
+
 def OCMCovarianceBlockEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return OCMCovarianceBlockEnd(builder)
 
+import CVR
 try:
     from typing import List
 except:
@@ -304,6 +350,7 @@ class OCMCovarianceBlockT(object):
         COV_ORDERING = 0,
         COV_UNITS = None,
         LINES = None,
+        COV_REALISM = None,
     ):
         self.COMMENT = COMMENT  # type: Optional[str]
         self.COV_ID = COV_ID  # type: Optional[str]
@@ -320,6 +367,7 @@ class OCMCovarianceBlockT(object):
         self.COV_ORDERING = COV_ORDERING  # type: int
         self.COV_UNITS = COV_UNITS  # type: Optional[str]
         self.LINES = LINES  # type: Optional[List[Optional[str]]]
+        self.COV_REALISM = COV_REALISM  # type: Optional[List[CVR.CVRT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -360,6 +408,14 @@ class OCMCovarianceBlockT(object):
             self.LINES = []
             for i in range(OCMCovarianceBlock.LINESLength()):
                 self.LINES.append(OCMCovarianceBlock.LINES(i))
+        if not OCMCovarianceBlock.COV_REALISMIsNone():
+            self.COV_REALISM = []
+            for i in range(OCMCovarianceBlock.COV_REALISMLength()):
+                if OCMCovarianceBlock.COV_REALISM(i) is None:
+                    self.COV_REALISM.append(None)
+                else:
+                    cVR_ = CVR.CVRT.InitFromObj(OCMCovarianceBlock.COV_REALISM(i))
+                    self.COV_REALISM.append(cVR_)
 
     # OCMCovarianceBlockT
     def Pack(self, builder):
@@ -391,6 +447,14 @@ class OCMCovarianceBlockT(object):
             for i in reversed(range(len(self.LINES))):
                 builder.PrependUOffsetTRelative(LINESlist[i])
             LINES = builder.EndVector()
+        if self.COV_REALISM is not None:
+            COV_REALISMlist = []
+            for i in range(len(self.COV_REALISM)):
+                COV_REALISMlist.append(self.COV_REALISM[i].Pack(builder))
+            OCMCovarianceBlockStartCOV_REALISMVector(builder, len(self.COV_REALISM))
+            for i in reversed(range(len(self.COV_REALISM))):
+                builder.PrependUOffsetTRelative(COV_REALISMlist[i])
+            COV_REALISM = builder.EndVector()
         OCMCovarianceBlockStart(builder)
         if self.COMMENT is not None:
             OCMCovarianceBlockAddCOMMENT(builder, COMMENT)
@@ -418,5 +482,7 @@ class OCMCovarianceBlockT(object):
             OCMCovarianceBlockAddCOV_UNITS(builder, COV_UNITS)
         if self.LINES is not None:
             OCMCovarianceBlockAddLINES(builder, LINES)
+        if self.COV_REALISM is not None:
+            OCMCovarianceBlockAddCOV_REALISM(builder, COV_REALISM)
         OCMCovarianceBlock = OCMCovarianceBlockEnd(builder)
         return OCMCovarianceBlock

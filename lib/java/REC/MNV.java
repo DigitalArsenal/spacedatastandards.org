@@ -18,6 +18,12 @@ import java.nio.ByteOrder;
 
 /**
  * Spacecraft Maneuver
+ *
+ * U, V and W are the UVW axes of an orbit state: U radial, along the position
+ * vector away from the central body; W cross-track, along the orbit normal
+ * (the direction of r x v); V in-track, W x U, completing the right-handed
+ * frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+ * pre-maneuver state at EVENT_START_TIME.
  */
 @SuppressWarnings("unused")
 public final class MNV extends com.google.flatbuffers.Table {
@@ -103,7 +109,8 @@ public final class MNV extends com.google.flatbuffers.Table {
   public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
   public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
   /**
-   * Maneuver event identifier
+   * Maneuver event identifier. Records of one event share it: a merged event
+   * and the source records it combines.
    */
   public String EVENT_ID() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EVENT_IDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
@@ -121,15 +128,15 @@ public final class MNV extends com.google.flatbuffers.Table {
    */
   public double DELTA_VEL() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Delta-V along-track/U component (km/s)
+   * Delta-V along U, radial (km/s)
    */
   public double DELTA_VEL_U() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Delta-V cross-track/V component (km/s)
+   * Delta-V along V, in-track (km/s)
    */
   public double DELTA_VEL_V() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Delta-V radial/W component (km/s)
+   * Delta-V along W, cross-track (km/s)
    */
   public double DELTA_VEL_W() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -137,15 +144,15 @@ public final class MNV extends com.google.flatbuffers.Table {
    */
   public double DELTA_POS() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Delta position U component (km)
+   * Delta position along U, radial (km)
    */
   public double DELTA_POS_U() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Delta position V component (km)
+   * Delta position along V, in-track (km)
    */
   public double DELTA_POS_V() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Delta position W component (km)
+   * Delta position along W, cross-track (km)
    */
   public double DELTA_POS_W() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -205,7 +212,8 @@ public final class MNV extends com.google.flatbuffers.Table {
   public StringVector mnvrAccelTimesVector() { return mnvrAccelTimesVector(new StringVector()); }
   public StringVector mnvrAccelTimesVector(StringVector obj) { int o = __offset(74); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * Acceleration values (km/s^2, 3 components per point)
+   * Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+   * the state at that point's MNVR_ACCEL_TIMES entry
    */
   public double MNVR_ACCELS(int j) { int o = __offset(76); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int MNVR_ACCELSLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
@@ -248,7 +256,9 @@ public final class MNV extends com.google.flatbuffers.Table {
   public StringVector tagsVector() { return tagsVector(new StringVector()); }
   public StringVector tagsVector(StringVector obj) { int o = __offset(86); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * Sourced data references
+   * Sourced data references: identifiers of the records this one was
+   * determined from (CIDv1 for records of this network), such as the source
+   * records a merged event combines
    */
   public String SOURCED_DATA(int j) { int o = __offset(88); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int SOURCED_DATALength() { int o = __offset(88); return o != 0 ? __vector_len(o) : 0; }
@@ -266,6 +276,11 @@ public final class MNV extends com.google.flatbuffers.Table {
   public String TRANSACTION_ID() { int o = __offset(92); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
   public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
+  /**
+   * Where the maneuver's data comes from and the terms it travels under.
+   */
+  public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
+  public PVN PROVENANCE(PVN obj) { int o = __offset(94); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createMNV(FlatBufferBuilder builder,
       int IDOffset,
@@ -312,8 +327,9 @@ public final class MNV extends com.google.flatbuffers.Table {
       int TAGSOffset,
       int SOURCED_DATAOffset,
       int SOURCED_DATA_TYPESOffset,
-      int TRANSACTION_IDOffset) {
-    builder.startTable(45);
+      int TRANSACTION_IDOffset,
+      int PROVENANCEOffset) {
+    builder.startTable(46);
     MNV.addStateModelVersion(builder, STATE_MODEL_VERSION);
     MNV.addPostArea(builder, POST_AREA);
     MNV.addPostMass(builder, POST_MASS);
@@ -329,6 +345,7 @@ public final class MNV extends com.google.flatbuffers.Table {
     MNV.addManeuverUnc(builder, MANEUVER_UNC);
     MNV.addTotalBurnTime(builder, TOTAL_BURN_TIME);
     MNV.addCharacterizationUnc(builder, CHARACTERIZATION_UNC);
+    MNV.addProvenance(builder, PROVENANCEOffset);
     MNV.addTransactionId(builder, TRANSACTION_IDOffset);
     MNV.addSourcedDataTypes(builder, SOURCED_DATA_TYPESOffset);
     MNV.addSourcedData(builder, SOURCED_DATAOffset);
@@ -362,7 +379,7 @@ public final class MNV extends com.google.flatbuffers.Table {
     return MNV.endMNV(builder);
   }
 
-  public static void startMNV(FlatBufferBuilder builder) { builder.startTable(45); }
+  public static void startMNV(FlatBufferBuilder builder) { builder.startTable(46); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(1, (int) SAT_NO, (int) 0L); }
   public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(2, ORIG_OBJECT_IDOffset, 0); }
@@ -420,6 +437,7 @@ public final class MNV extends com.google.flatbuffers.Table {
   public static void startSourcedDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addSourcedDataTypes(FlatBufferBuilder builder, int SOURCED_DATA_TYPESOffset) { builder.addOffset(43, SOURCED_DATA_TYPESOffset, 0); }
   public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(44, TRANSACTION_IDOffset, 0); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(45, PROVENANCEOffset, 0); }
   public static int endMNV(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

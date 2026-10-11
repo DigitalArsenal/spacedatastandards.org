@@ -42,12 +42,12 @@ class LCC extends Table
     }
 
     /**
-     * @return sbyte
+     * @return byte
      */
     public function getOWNER()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \legacyCountryCode::AB;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \legacyCountryCode::AB;
     }
 
     /// Display name of the owner or source the code stands for.
@@ -116,12 +116,12 @@ class LCC extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param byte
      * @return void
      */
     public static function addOWNER(FlatBufferBuilder $builder, $OWNER)
     {
-        $builder->addSbyteX(0, $OWNER, 0);
+        $builder->addByteX(0, $OWNER, 0);
     }
 
     /**

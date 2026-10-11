@@ -8,95 +8,2664 @@ import Common
 
 import FlatBuffers
 
-///  Conjunction Summary Message
-public struct CSM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Conjunction request/result semantics (normative): use exactly one payload
+///  arm consistent with PIV.METHOD_ID. Errors belong in PIV status/error fields;
+///  an empty scientific result is not a successful response. UNSPECIFIED choices
+///  that affect evaluation and unsupported controls fail explicitly.
+///
+///  Inputs resolve to a common explicit RFM frame/origin and TIM time scale.
+///  Unknown ECI/ECEF realizations are errors, never aliases inferred by a guest.
+///  The host selects the propagator for mean elements; propagated OEM/PPE tracks
+///  accept any compatible provider. Source queries are provenance, not commands.
+///
+///  These tables define canonical FlatBuffers. Port manifests retain both
+///  FLATBUFFER and ALIGNED_BINARY with identical logical schema identity; an
+///  aligned peer needs a declared portable layout and codec, not merely an
+///  aligned pointer to these bytes. See TAB/PLG and GCT's section-layout precedent.
+///
+///  Append-only; no claim that every provider implements every choice.
+public enum cqrProbabilityAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case foster = 1
+  case patera = 2
+  case alfanoMaximum = 3
+  case chan = 4
+  case alfriend1999 = 5
+  case alfriend1999Maximum = 6
+  case alfano2005 = 7
+  case laas2015 = 8
+  case alfriend2d = 9
+
+  public static var max: cqrProbabilityAlgorithm { return .alfriend2d }
+  public static var min: cqrProbabilityAlgorithm { return .unspecified }
+}
+
+
+public enum cqrUncertaintyOrigin: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case suppliedCovariance = 1
+  case synthesizedCovariance = 2
+  case maximumProbabilityOnly = 3
+
+  public static var max: cqrUncertaintyOrigin { return .maximumProbabilityOnly }
+  public static var min: cqrUncertaintyOrigin { return .unspecified }
+}
+
+
+///  Where an object's hard-body radius came from.
+public enum cqrHardBodyRadiusBasis: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  Given with the source, by an operator or the requester.
+  case supplied = 1
+  ///  Half the catalog entry's characteristic size (CAT SIZE).
+  case catalogSize = 2
+  ///  Radius of a sphere of the catalog entry's radar cross section,
+  ///  sqrt(RCS / pi): a radar measure, not a physical size.
+  case radarCrossSection = 3
+  ///  Half the request's COMBINED_RADIUS_M: no object-specific value.
+  case requestDefault = 4
+
+  public static var max: cqrHardBodyRadiusBasis { return .requestDefault }
+  public static var min: cqrHardBodyRadiusBasis { return .unspecified }
+}
+
+
+///  Where an object's position covariance at TCA came from.
+public enum cqrCovarianceBasis: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  None: the source supplied no covariance (an element set carries none).
+  case none_ = 1
+  ///  The source's ephemeris or orbit message (OEM or OCM covariance).
+  case sourceEphemeris = 2
+  ///  A conjunction data message.
+  case conjunctionMessage = 3
+  ///  The formal covariance of an orbit-determination fit.
+  case orbitDetermination = 4
+  ///  An empirical prediction-error model for the source's element sets.
+  case empiricalModel = 5
+
+  public static var max: cqrCovarianceBasis { return .empiricalModel }
+  public static var min: cqrCovarianceBasis { return .unspecified }
+}
+
+
+///  The assumed correlation between the two objects' position errors.
+public enum cqrCovarianceCorrelation: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  Independent errors: the combined covariance is the sum of the two.
+  case independent = 1
+  ///  A cross covariance was supplied and used.
+  case suppliedCrossCovariance = 2
+
+  public static var max: cqrCovarianceCorrelation { return .suppliedCrossCovariance }
+  public static var min: cqrCovarianceCorrelation { return .unspecified }
+}
+
+
+public enum cqrDocumentSyntax: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case ccsdsCdmKvn = 1
+  case ccsdsCdmXml = 2
+
+  public static var max: cqrDocumentSyntax { return .ccsdsCdmXml }
+  public static var min: cqrDocumentSyntax { return .unspecified }
+}
+
+
+public enum cqrIndexRepresentation: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case sourceDescriptions = 1
+  case polynomialSegments = 2
+  case sampledStates = 3
+
+  public static var max: cqrIndexRepresentation { return .sampledStates }
+  public static var min: cqrIndexRepresentation { return .unspecified }
+}
+
+
+public enum cqrRefinementStrategy: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case exactOnly = 1
+  case polynomialOnly = 2
+  case polynomialWithExactPolish = 3
+
+  public static var max: cqrRefinementStrategy { return .polynomialWithExactPolish }
+  public static var min: cqrRefinementStrategy { return .unspecified }
+}
+
+
+public enum cqrDataOrigin: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case ommRecord = 1
+  case ocmRecord = 2
+  case oemRecord = 3
+  case cdmRecord = 4
+  case querySelection = 5
+  case publication = 6
+  case pubsubTopic = 7
+
+  public static var max: cqrDataOrigin { return .pubsubTopic }
+  public static var min: cqrDataOrigin { return .unspecified }
+}
+
+
+///  On-orbit screening geometry; dimensions are metres.
+public enum cqrVolumeGeometry: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case spherical = 0
+  case ellipsoidal = 1
+  case box = 2
+
+  public static var max: cqrVolumeGeometry { return .box }
+  public static var min: cqrVolumeGeometry { return .spherical }
+}
+
+
+///  Object defining the centre and instantaneous RTN axes of a volume.
+public enum cqrVolumeAnchor: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case primary = 1
+  case secondary = 2
+  case both = 3
+
+  public static var max: cqrVolumeAnchor { return .both }
+  public static var min: cqrVolumeAnchor { return .unspecified }
+}
+
+
+///  Launch and reentry screening (normative). A launch window is screened by
+///  sweeping liftoff times; each launched object (stage, payload or jettisoned
+///  component) is one segment whose trajectory is fixed relative to liftoff.
+///
+///  Every segment trajectory and every orbiting-object ephemeris is expressed
+///  in EVALUATION_FRAME, which must be Earth-fixed: a fixed-azimuth ascent has
+///  the same Earth-fixed state at liftoff + τ for every liftoff time. Segment
+///  epochs are absolute times for a liftoff at NOMINAL_LIFTOFF; a provider
+///  evaluates another liftoff time by shifting them. Orbiting objects are
+///  screened at absolute times. A provider never selects a propagator: mean
+///  elements reach it only as ephemerides produced by a host-selected
+///  propagator.
+///
+///  Distances are SI metres, times TIMInstant, probabilities unitless.
+///  Unsupported screening kinds fail explicitly; they are never approximated.
+///  Orbiting-object class used to choose a screening criterion.
+public enum cqrLaunchObjectClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  Crewed or crew-capable object.
+  case inhabitable = 1
+  ///  Any object that is neither inhabitable nor orbital debris.
+  case nonDebris = 2
+  ///  Catalogued orbital debris.
+  case debris = 3
+
+  public static var max: cqrLaunchObjectClass { return .debris }
+  public static var min: cqrLaunchObjectClass { return .unspecified }
+}
+
+
+///  How one criterion decides a violation.
+public enum cqrLaunchScreening: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  Separation below RADIUS_M.
+  case spherical = 1
+  ///  Separation inside the RADIAL_M / IN_TRACK_M / CROSS_TRACK_M ellipsoid,
+  ///  centred on the orbiting object in its radial/in-track/cross-track frame.
+  case ellipsoidal = 2
+  ///  Probability of collision above MAX_PROBABILITY.
+  case probability = 3
+
+  public static var max: cqrLaunchScreening { return .probability }
+  public static var min: cqrLaunchScreening { return .unspecified }
+}
+
+
+///  Host-resolved provenance. Strings are evidence, not commands to execute.
+public struct CQRSourceProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CSM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CSM.id, addPrefix: prefix) }
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRSourceProvenance.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let OBJECT_1: VOffset = 4
-    static let DSE_1: VOffset = 6
-    static let OBJECT_2: VOffset = 8
-    static let DSE_2: VOffset = 10
-    static let TCA: VOffset = 12
-    static let TCA_RANGE: VOffset = 14
-    static let TCA_RELATIVE_SPEED: VOffset = 16
-    static let MAX_PROB: VOffset = 18
-    static let DILUTION: VOffset = 20
+    static let ORIGIN_CLASS: VOffset = 4
+    static let SOURCE_ID: VOffset = 6
+    static let PROVIDER_ID: VOffset = 8
+    static let SCHEMA_NAME: VOffset = 10
+    static let FILE_IDENTIFIER: VOffset = 12
+    static let QUERY: VOffset = 14
+    static let QUERY_HASH: VOffset = 16
+    static let PNM_CID: VOffset = 18
+    static let MANIFEST_CID: VOffset = 20
+    static let TOPIC: VOffset = 22
   }
 
-  ///  Satellite name for the first object
-  public var OBJECT_1: CAT? { let o = _accessor.offset(VT.OBJECT_1); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Days since epoch for the first object
-  public var DSE_1: Double { let o = _accessor.offset(VT.DSE_1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Satellite name for the second object
-  public var OBJECT_2: CAT? { let o = _accessor.offset(VT.OBJECT_2); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Days since epoch for the second object
-  public var DSE_2: Double { let o = _accessor.offset(VT.DSE_2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Time of closest approach as a Unix timestamp
-  public var TCA: Double { let o = _accessor.offset(VT.TCA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The distance or range between the two objects at TCA
-  public var TCA_RANGE: Double { let o = _accessor.offset(VT.TCA_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The magnitude of the relative velocity at TCA
-  public var TCA_RELATIVE_SPEED: Double { let o = _accessor.offset(VT.TCA_RELATIVE_SPEED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Maximum probability
-  public var MAX_PROB: Double { let o = _accessor.offset(VT.MAX_PROB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Standard deviation that produces the maximum probability
-  public var DILUTION: Double { let o = _accessor.offset(VT.DILUTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startCSM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(OBJECT_1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_1, at: VT.OBJECT_1) }
-  public static func add(DSE_1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DSE_1, def: 0.0, at: VT.DSE_1) }
-  public static func add(OBJECT_2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_2, at: VT.OBJECT_2) }
-  public static func add(DSE_2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DSE_2, def: 0.0, at: VT.DSE_2) }
-  public static func add(TCA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA, def: 0.0, at: VT.TCA) }
-  public static func add(TCA_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA_RANGE, def: 0.0, at: VT.TCA_RANGE) }
-  public static func add(TCA_RELATIVE_SPEED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA_RELATIVE_SPEED, def: 0.0, at: VT.TCA_RELATIVE_SPEED) }
-  public static func add(MAX_PROB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_PROB, def: 0.0, at: VT.MAX_PROB) }
-  public static func add(DILUTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DILUTION, def: 0.0, at: VT.DILUTION) }
-  public static func endCSM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createCSM(
+  public var ORIGIN_CLASS: cqrDataOrigin { let o = _accessor.offset(VT.ORIGIN_CLASS); return o == 0 ? .unspecified : cqrDataOrigin(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var SOURCE_ID: String? { let o = _accessor.offset(VT.SOURCE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_ID) }
+  public var PROVIDER_ID: String? { let o = _accessor.offset(VT.PROVIDER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_ID) }
+  public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
+  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VT.FILE_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_IDENTIFIER) }
+  public var QUERY: String? { let o = _accessor.offset(VT.QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.QUERY) }
+  public var QUERY_HASH: String? { let o = _accessor.offset(VT.QUERY_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var QUERY_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.QUERY_HASH) }
+  public var PNM_CID: String? { let o = _accessor.offset(VT.PNM_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PNM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PNM_CID) }
+  public var MANIFEST_CID: String? { let o = _accessor.offset(VT.MANIFEST_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MANIFEST_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MANIFEST_CID) }
+  public var TOPIC: String? { let o = _accessor.offset(VT.TOPIC); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TOPICSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TOPIC) }
+  public static func startCQRSourceProvenance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(ORIGIN_CLASS: cqrDataOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIGIN_CLASS.rawValue, def: 0, at: VT.ORIGIN_CLASS) }
+  public static func add(SOURCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ID, at: VT.SOURCE_ID) }
+  public static func add(PROVIDER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_ID, at: VT.PROVIDER_ID) }
+  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
+  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
+  public static func add(QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY, at: VT.QUERY) }
+  public static func add(QUERY_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY_HASH, at: VT.QUERY_HASH) }
+  public static func add(PNM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PNM_CID, at: VT.PNM_CID) }
+  public static func add(MANIFEST_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANIFEST_CID, at: VT.MANIFEST_CID) }
+  public static func add(TOPIC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOPIC, at: VT.TOPIC) }
+  public static func endCQRSourceProvenance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRSourceProvenance(
     _ fbb: inout FlatBufferBuilder,
-    OBJECT_1Offset OBJECT_1: Offset = Offset(),
-    DSE_1: Double = 0.0,
-    OBJECT_2Offset OBJECT_2: Offset = Offset(),
-    DSE_2: Double = 0.0,
-    TCA: Double = 0.0,
-    TCA_RANGE: Double = 0.0,
-    TCA_RELATIVE_SPEED: Double = 0.0,
-    MAX_PROB: Double = 0.0,
-    DILUTION: Double = 0.0
+    ORIGIN_CLASS: cqrDataOrigin = .unspecified,
+    SOURCE_IDOffset SOURCE_ID: Offset = Offset(),
+    PROVIDER_IDOffset PROVIDER_ID: Offset = Offset(),
+    SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
+    FILE_IDENTIFIEROffset FILE_IDENTIFIER: Offset = Offset(),
+    QUERYOffset QUERY: Offset = Offset(),
+    QUERY_HASHOffset QUERY_HASH: Offset = Offset(),
+    PNM_CIDOffset PNM_CID: Offset = Offset(),
+    MANIFEST_CIDOffset MANIFEST_CID: Offset = Offset(),
+    TOPICOffset TOPIC: Offset = Offset()
   ) -> Offset {
-    let __start = CSM.startCSM(&fbb)
-    CSM.add(OBJECT_1: OBJECT_1, &fbb)
-    CSM.add(DSE_1: DSE_1, &fbb)
-    CSM.add(OBJECT_2: OBJECT_2, &fbb)
-    CSM.add(DSE_2: DSE_2, &fbb)
-    CSM.add(TCA: TCA, &fbb)
-    CSM.add(TCA_RANGE: TCA_RANGE, &fbb)
-    CSM.add(TCA_RELATIVE_SPEED: TCA_RELATIVE_SPEED, &fbb)
-    CSM.add(MAX_PROB: MAX_PROB, &fbb)
-    CSM.add(DILUTION: DILUTION, &fbb)
-    return CSM.endCSM(&fbb, start: __start)
+    let __start = CQRSourceProvenance.startCQRSourceProvenance(&fbb)
+    CQRSourceProvenance.add(ORIGIN_CLASS: ORIGIN_CLASS, &fbb)
+    CQRSourceProvenance.add(SOURCE_ID: SOURCE_ID, &fbb)
+    CQRSourceProvenance.add(PROVIDER_ID: PROVIDER_ID, &fbb)
+    CQRSourceProvenance.add(SCHEMA_NAME: SCHEMA_NAME, &fbb)
+    CQRSourceProvenance.add(FILE_IDENTIFIER: FILE_IDENTIFIER, &fbb)
+    CQRSourceProvenance.add(QUERY: QUERY, &fbb)
+    CQRSourceProvenance.add(QUERY_HASH: QUERY_HASH, &fbb)
+    CQRSourceProvenance.add(PNM_CID: PNM_CID, &fbb)
+    CQRSourceProvenance.add(MANIFEST_CID: MANIFEST_CID, &fbb)
+    CQRSourceProvenance.add(TOPIC: TOPIC, &fbb)
+    return CQRSourceProvenance.endCQRSourceProvenance(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.OBJECT_1, fieldName: "OBJECT_1", required: false, type: ForwardOffset<CAT>.self)
-    try _v.visit(field: VT.DSE_1, fieldName: "DSE_1", required: false, type: Double.self)
-    try _v.visit(field: VT.OBJECT_2, fieldName: "OBJECT_2", required: false, type: ForwardOffset<CAT>.self)
-    try _v.visit(field: VT.DSE_2, fieldName: "DSE_2", required: false, type: Double.self)
-    try _v.visit(field: VT.TCA, fieldName: "TCA", required: false, type: Double.self)
-    try _v.visit(field: VT.TCA_RANGE, fieldName: "TCA_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VT.TCA_RELATIVE_SPEED, fieldName: "TCA_RELATIVE_SPEED", required: false, type: Double.self)
-    try _v.visit(field: VT.MAX_PROB, fieldName: "MAX_PROB", required: false, type: Double.self)
-    try _v.visit(field: VT.DILUTION, fieldName: "DILUTION", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIGIN_CLASS, fieldName: "ORIGIN_CLASS", required: false, type: cqrDataOrigin.self)
+    try _v.visit(field: VT.SOURCE_ID, fieldName: "SOURCE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_ID, fieldName: "PROVIDER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QUERY, fieldName: "QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QUERY_HASH, fieldName: "QUERY_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PNM_CID, fieldName: "PNM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MANIFEST_CID, fieldName: "MANIFEST_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TOPIC, fieldName: "TOPIC", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Exactly one scientific source arm, or a validated instance/source handle.
+///  OMM/TLE use their native mean-element units; OEM/PPE km and km/s; OCM its
+///  declared units. No implicit conversion of TEME, ECEF or ICRF-labelled data.
+public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRObjectSource.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OBJECT_ID: VOffset = 4
+    static let OBJECT_NAME: VOffset = 6
+    static let NORAD_CATALOG_ID: VOffset = 8
+    static let INSTANCE: VOffset = 10
+    static let SOURCE_HANDLE: VOffset = 12
+    static let PROPAGATOR_PORT_ID: VOffset = 14
+    static let MEAN_ELEMENTS: VOffset = 16
+    static let EPHEMERIS: VOffset = 18
+    static let COMPREHENSIVE_ORBIT: VOffset = 20
+    static let POLYNOMIAL_EPHEMERIS: VOffset = 22
+    static let TLE_LINES: VOffset = 24
+    static let PROVENANCE: VOffset = 26
+    static let SOURCE_EPOCH: VOffset = 28
+    static let PERIGEE_ALTITUDE_M: VOffset = 30
+    static let HAS_PERIGEE_ALTITUDE_M: VOffset = 32
+    static let APOGEE_ALTITUDE_M: VOffset = 34
+    static let HAS_APOGEE_ALTITUDE_M: VOffset = 36
+    static let HARD_BODY_RADIUS_M: VOffset = 38
+    static let HAS_HARD_BODY_RADIUS_M: VOffset = 40
+    static let CATALOG_ENTRY: VOffset = 42
+  }
+
+  public var OBJECT_ID: String! { let o = _accessor.offset(VT.OBJECT_ID); return _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.OBJECT_ID) }
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  public var NORAD_CATALOG_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CATALOG_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INSTANCE: PRWInstance? { let o = _accessor.offset(VT.INSTANCE); return o == 0 ? nil : PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SOURCE_HANDLE: UInt32 { let o = _accessor.offset(VT.SOURCE_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Host-connected provider for mean elements; no embedded fixed SGP4 choice.
+  public var PROPAGATOR_PORT_ID: String? { let o = _accessor.offset(VT.PROPAGATOR_PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_PORT_ID) }
+  public var MEAN_ELEMENTS: OMM? { let o = _accessor.offset(VT.MEAN_ELEMENTS); return o == 0 ? nil : OMM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EPHEMERIS: OEM? { let o = _accessor.offset(VT.EPHEMERIS); return o == 0 ? nil : OEM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMPREHENSIVE_ORBIT: OCM? { let o = _accessor.offset(VT.COMPREHENSIVE_ORBIT); return o == 0 ? nil : OCM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYNOMIAL_EPHEMERIS: PPE? { let o = _accessor.offset(VT.POLYNOMIAL_EPHEMERIS); return o == 0 ? nil : PPE(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TLE_LINES: PRWTleLines? { let o = _accessor.offset(VT.TLE_LINES); return o == 0 ? nil : PRWTleLines(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PROVENANCE: CQRSourceProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : CQRSourceProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Optional source epoch and perigee/apogee altitude above the reference
+  ///  Earth radius used by the source model, in SI metres (not geocentric radii).
+  public var SOURCE_EPOCH: TIMInstant? { let o = _accessor.offset(VT.SOURCE_EPOCH); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PERIGEE_ALTITUDE_M: Double { let o = _accessor.offset(VT.PERIGEE_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when PERIGEE_ALTITUDE_M carries a value; false means absent.
+  public var HAS_PERIGEE_ALTITUDE_M: Bool { let o = _accessor.offset(VT.HAS_PERIGEE_ALTITUDE_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var APOGEE_ALTITUDE_M: Double { let o = _accessor.offset(VT.APOGEE_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when APOGEE_ALTITUDE_M carries a value; false means absent.
+  public var HAS_APOGEE_ALTITUDE_M: Bool { let o = _accessor.offset(VT.HAS_APOGEE_ALTITUDE_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Hard-body radius in metres given with the source.
+  public var HARD_BODY_RADIUS_M: Double { let o = _accessor.offset(VT.HARD_BODY_RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when HARD_BODY_RADIUS_M carries a value; false means absent.
+  public var HAS_HARD_BODY_RADIUS_M: Bool { let o = _accessor.offset(VT.HAS_HARD_BODY_RADIUS_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  The object's catalog entry. Without a supplied radius, its SIZE, else
+  ///  its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+  public var CATALOG_ENTRY: CAT? { let o = _accessor.offset(VT.CATALOG_ENTRY); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQRObjectSource(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(NORAD_CATALOG_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CATALOG_ID, def: 0, at: VT.NORAD_CATALOG_ID) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(SOURCE_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_HANDLE, def: 0, at: VT.SOURCE_HANDLE) }
+  public static func add(PROPAGATOR_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_PORT_ID, at: VT.PROPAGATOR_PORT_ID) }
+  public static func add(MEAN_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEAN_ELEMENTS, at: VT.MEAN_ELEMENTS) }
+  public static func add(EPHEMERIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS, at: VT.EPHEMERIS) }
+  public static func add(COMPREHENSIVE_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPREHENSIVE_ORBIT, at: VT.COMPREHENSIVE_ORBIT) }
+  public static func add(POLYNOMIAL_EPHEMERIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYNOMIAL_EPHEMERIS, at: VT.POLYNOMIAL_EPHEMERIS) }
+  public static func add(TLE_LINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TLE_LINES, at: VT.TLE_LINES) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(SOURCE_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_EPOCH, at: VT.SOURCE_EPOCH) }
+  public static func add(PERIGEE_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE_ALTITUDE_M, def: 0.0, at: VT.PERIGEE_ALTITUDE_M) }
+  public static func add(HAS_PERIGEE_ALTITUDE_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_PERIGEE_ALTITUDE_M, def: false,
+   at: VT.HAS_PERIGEE_ALTITUDE_M) }
+  public static func add(APOGEE_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE_ALTITUDE_M, def: 0.0, at: VT.APOGEE_ALTITUDE_M) }
+  public static func add(HAS_APOGEE_ALTITUDE_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_APOGEE_ALTITUDE_M, def: false,
+   at: VT.HAS_APOGEE_ALTITUDE_M) }
+  public static func add(HARD_BODY_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HARD_BODY_RADIUS_M, def: 0.0, at: VT.HARD_BODY_RADIUS_M) }
+  public static func add(HAS_HARD_BODY_RADIUS_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_HARD_BODY_RADIUS_M, def: false,
+   at: VT.HAS_HARD_BODY_RADIUS_M) }
+  public static func add(CATALOG_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_ENTRY, at: VT.CATALOG_ENTRY) }
+  public static func endCQRObjectSource(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCQRObjectSource(
+    _ fbb: inout FlatBufferBuilder,
+    OBJECT_IDOffset OBJECT_ID: Offset,
+    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
+    NORAD_CATALOG_ID: UInt32 = 0,
+    INSTANCEOffset INSTANCE: Offset = Offset(),
+    SOURCE_HANDLE: UInt32 = 0,
+    PROPAGATOR_PORT_IDOffset PROPAGATOR_PORT_ID: Offset = Offset(),
+    MEAN_ELEMENTSOffset MEAN_ELEMENTS: Offset = Offset(),
+    EPHEMERISOffset EPHEMERIS: Offset = Offset(),
+    COMPREHENSIVE_ORBITOffset COMPREHENSIVE_ORBIT: Offset = Offset(),
+    POLYNOMIAL_EPHEMERISOffset POLYNOMIAL_EPHEMERIS: Offset = Offset(),
+    TLE_LINESOffset TLE_LINES: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    SOURCE_EPOCHOffset SOURCE_EPOCH: Offset = Offset(),
+    PERIGEE_ALTITUDE_M: Double = 0.0,
+    HAS_PERIGEE_ALTITUDE_M: Bool = false,
+    APOGEE_ALTITUDE_M: Double = 0.0,
+    HAS_APOGEE_ALTITUDE_M: Bool = false,
+    HARD_BODY_RADIUS_M: Double = 0.0,
+    HAS_HARD_BODY_RADIUS_M: Bool = false,
+    CATALOG_ENTRYOffset CATALOG_ENTRY: Offset = Offset()
+  ) -> Offset {
+    let __start = CQRObjectSource.startCQRObjectSource(&fbb)
+    CQRObjectSource.add(OBJECT_ID: OBJECT_ID, &fbb)
+    CQRObjectSource.add(OBJECT_NAME: OBJECT_NAME, &fbb)
+    CQRObjectSource.add(NORAD_CATALOG_ID: NORAD_CATALOG_ID, &fbb)
+    CQRObjectSource.add(INSTANCE: INSTANCE, &fbb)
+    CQRObjectSource.add(SOURCE_HANDLE: SOURCE_HANDLE, &fbb)
+    CQRObjectSource.add(PROPAGATOR_PORT_ID: PROPAGATOR_PORT_ID, &fbb)
+    CQRObjectSource.add(MEAN_ELEMENTS: MEAN_ELEMENTS, &fbb)
+    CQRObjectSource.add(EPHEMERIS: EPHEMERIS, &fbb)
+    CQRObjectSource.add(COMPREHENSIVE_ORBIT: COMPREHENSIVE_ORBIT, &fbb)
+    CQRObjectSource.add(POLYNOMIAL_EPHEMERIS: POLYNOMIAL_EPHEMERIS, &fbb)
+    CQRObjectSource.add(TLE_LINES: TLE_LINES, &fbb)
+    CQRObjectSource.add(PROVENANCE: PROVENANCE, &fbb)
+    CQRObjectSource.add(SOURCE_EPOCH: SOURCE_EPOCH, &fbb)
+    CQRObjectSource.add(PERIGEE_ALTITUDE_M: PERIGEE_ALTITUDE_M, &fbb)
+    CQRObjectSource.add(HAS_PERIGEE_ALTITUDE_M: HAS_PERIGEE_ALTITUDE_M, &fbb)
+    CQRObjectSource.add(APOGEE_ALTITUDE_M: APOGEE_ALTITUDE_M, &fbb)
+    CQRObjectSource.add(HAS_APOGEE_ALTITUDE_M: HAS_APOGEE_ALTITUDE_M, &fbb)
+    CQRObjectSource.add(HARD_BODY_RADIUS_M: HARD_BODY_RADIUS_M, &fbb)
+    CQRObjectSource.add(HAS_HARD_BODY_RADIUS_M: HAS_HARD_BODY_RADIUS_M, &fbb)
+    CQRObjectSource.add(CATALOG_ENTRY: CATALOG_ENTRY, &fbb)
+    return CQRObjectSource.endCQRObjectSource(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CATALOG_ID, fieldName: "NORAD_CATALOG_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: false, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.SOURCE_HANDLE, fieldName: "SOURCE_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PROPAGATOR_PORT_ID, fieldName: "PROPAGATOR_PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEAN_ELEMENTS, fieldName: "MEAN_ELEMENTS", required: false, type: ForwardOffset<OMM>.self)
+    try _v.visit(field: VT.EPHEMERIS, fieldName: "EPHEMERIS", required: false, type: ForwardOffset<OEM>.self)
+    try _v.visit(field: VT.COMPREHENSIVE_ORBIT, fieldName: "COMPREHENSIVE_ORBIT", required: false, type: ForwardOffset<OCM>.self)
+    try _v.visit(field: VT.POLYNOMIAL_EPHEMERIS, fieldName: "POLYNOMIAL_EPHEMERIS", required: false, type: ForwardOffset<PPE>.self)
+    try _v.visit(field: VT.TLE_LINES, fieldName: "TLE_LINES", required: false, type: ForwardOffset<PRWTleLines>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<CQRSourceProvenance>.self)
+    try _v.visit(field: VT.SOURCE_EPOCH, fieldName: "SOURCE_EPOCH", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.PERIGEE_ALTITUDE_M, fieldName: "PERIGEE_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_PERIGEE_ALTITUDE_M, fieldName: "HAS_PERIGEE_ALTITUDE_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.APOGEE_ALTITUDE_M, fieldName: "APOGEE_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_APOGEE_ALTITUDE_M, fieldName: "HAS_APOGEE_ALTITUDE_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HARD_BODY_RADIUS_M, fieldName: "HARD_BODY_RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_HARD_BODY_RADIUS_M, fieldName: "HAS_HARD_BODY_RADIUS_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.CATALOG_ENTRY, fieldName: "CATALOG_ENTRY", required: false, type: ForwardOffset<CAT>.self)
+    _v.finish()
+  }
+}
+
+///  Explicit UTC search window and positive resolution, SI seconds/metres.
+public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRScreeningControls.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let START_EPOCH: VOffset = 4
+    static let DURATION_SECONDS: VOffset = 6
+    static let THRESHOLD_M: VOffset = 8
+    static let REQUESTED_WORKERS: VOffset = 10
+    static let COARSE_STEP_SECONDS: VOffset = 12
+    static let REFINEMENT_TOLERANCE_SECONDS: VOffset = 14
+    static let COMBINED_RADIUS_M: VOffset = 16
+    static let USE_KD_TREE: VOffset = 18
+    static let USE_DYNAMIC_WINDOW: VOffset = 20
+    static let USE_PERIGEE_FILTER: VOffset = 22
+    static let PROGRESS_INTERVAL_SECONDS: VOffset = 24
+    static let HAS_PROGRESS_INTERVAL_SECONDS: VOffset = 26
+    static let ALGORITHM: VOffset = 28
+    static let SCREENING: VOffset = 30
+    static let RADIAL_M: VOffset = 32
+    static let IN_TRACK_M: VOffset = 34
+    static let CROSS_TRACK_M: VOffset = 36
+    static let VOLUME_CENTER: VOffset = 38
+  }
+
+  public var START_EPOCH: TIMInstant! { let o = _accessor.offset(VT.START_EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DURATION_SECONDS: Double { let o = _accessor.offset(VT.DURATION_SECONDS); return o == 0 ? 604800.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var THRESHOLD_M: Double { let o = _accessor.offset(VT.THRESHOLD_M); return o == 0 ? 5000.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REQUESTED_WORKERS: UInt32 { let o = _accessor.offset(VT.REQUESTED_WORKERS); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var COARSE_STEP_SECONDS: Double { let o = _accessor.offset(VT.COARSE_STEP_SECONDS); return o == 0 ? 60.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REFINEMENT_TOLERANCE_SECONDS: Double { let o = _accessor.offset(VT.REFINEMENT_TOLERANCE_SECONDS); return o == 0 ? 0.001 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COMBINED_RADIUS_M: Double { let o = _accessor.offset(VT.COMBINED_RADIUS_M); return o == 0 ? 10.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var USE_KD_TREE: Bool { let o = _accessor.offset(VT.USE_KD_TREE); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var USE_DYNAMIC_WINDOW: Bool { let o = _accessor.offset(VT.USE_DYNAMIC_WINDOW); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var USE_PERIGEE_FILTER: Bool { let o = _accessor.offset(VT.USE_PERIGEE_FILTER); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Optional progress cadence; PIV carries backpressure, not scientific data.
+  public var PROGRESS_INTERVAL_SECONDS: Double { let o = _accessor.offset(VT.PROGRESS_INTERVAL_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when PROGRESS_INTERVAL_SECONDS carries a value; false means absent.
+  public var HAS_PROGRESS_INTERVAL_SECONDS: Bool { let o = _accessor.offset(VT.HAS_PROGRESS_INTERVAL_SECONDS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ALGORITHM: cqrProbabilityAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .alfanoMaximum : cqrProbabilityAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .alfanoMaximum }
+  ///  SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+  ///  Admit local minima of relative distance inside or on the selected volume.
+  public var SCREENING: cqrVolumeGeometry { let o = _accessor.offset(VT.SCREENING); return o == 0 ? .spherical : cqrVolumeGeometry(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .spherical }
+  ///  RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+  public var RADIAL_M: Double { let o = _accessor.offset(VT.RADIAL_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var IN_TRACK_M: Double { let o = _accessor.offset(VT.IN_TRACK_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CROSS_TRACK_M: Double { let o = _accessor.offset(VT.CROSS_TRACK_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+  ///  R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+  ///  BOTH tests each object's volume independently and admits their union.
+  ///  UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+  public var VOLUME_CENTER: cqrVolumeAnchor { let o = _accessor.offset(VT.VOLUME_CENTER); return o == 0 ? .primary : cqrVolumeAnchor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .primary }
+  public static func startCQRScreeningControls(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
+  public static func add(DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_SECONDS, def: 604800.0, at: VT.DURATION_SECONDS) }
+  public static func add(THRESHOLD_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_M, def: 5000.0, at: VT.THRESHOLD_M) }
+  public static func add(REQUESTED_WORKERS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUESTED_WORKERS, def: 1, at: VT.REQUESTED_WORKERS) }
+  public static func add(COARSE_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COARSE_STEP_SECONDS, def: 60.0, at: VT.COARSE_STEP_SECONDS) }
+  public static func add(REFINEMENT_TOLERANCE_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFINEMENT_TOLERANCE_SECONDS, def: 0.001, at: VT.REFINEMENT_TOLERANCE_SECONDS) }
+  public static func add(COMBINED_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMBINED_RADIUS_M, def: 10.0, at: VT.COMBINED_RADIUS_M) }
+  public static func add(USE_KD_TREE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USE_KD_TREE, def: true,
+   at: VT.USE_KD_TREE) }
+  public static func add(USE_DYNAMIC_WINDOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USE_DYNAMIC_WINDOW, def: true,
+   at: VT.USE_DYNAMIC_WINDOW) }
+  public static func add(USE_PERIGEE_FILTER: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USE_PERIGEE_FILTER, def: true,
+   at: VT.USE_PERIGEE_FILTER) }
+  public static func add(PROGRESS_INTERVAL_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROGRESS_INTERVAL_SECONDS, def: 0.0, at: VT.PROGRESS_INTERVAL_SECONDS) }
+  public static func add(HAS_PROGRESS_INTERVAL_SECONDS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_PROGRESS_INTERVAL_SECONDS, def: false,
+   at: VT.HAS_PROGRESS_INTERVAL_SECONDS) }
+  public static func add(ALGORITHM: cqrProbabilityAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 3, at: VT.ALGORITHM) }
+  public static func add(SCREENING: cqrVolumeGeometry, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREENING.rawValue, def: 0, at: VT.SCREENING) }
+  public static func add(RADIAL_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIAL_M, def: 0.0, at: VT.RADIAL_M) }
+  public static func add(IN_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IN_TRACK_M, def: 0.0, at: VT.IN_TRACK_M) }
+  public static func add(CROSS_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CROSS_TRACK_M, def: 0.0, at: VT.CROSS_TRACK_M) }
+  public static func add(VOLUME_CENTER: cqrVolumeAnchor, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VOLUME_CENTER.rawValue, def: 1, at: VT.VOLUME_CENTER) }
+  public static func endCQRScreeningControls(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCQRScreeningControls(
+    _ fbb: inout FlatBufferBuilder,
+    START_EPOCHOffset START_EPOCH: Offset,
+    DURATION_SECONDS: Double = 604800.0,
+    THRESHOLD_M: Double = 5000.0,
+    REQUESTED_WORKERS: UInt32 = 1,
+    COARSE_STEP_SECONDS: Double = 60.0,
+    REFINEMENT_TOLERANCE_SECONDS: Double = 0.001,
+    COMBINED_RADIUS_M: Double = 10.0,
+    USE_KD_TREE: Bool = true,
+    USE_DYNAMIC_WINDOW: Bool = true,
+    USE_PERIGEE_FILTER: Bool = true,
+    PROGRESS_INTERVAL_SECONDS: Double = 0.0,
+    HAS_PROGRESS_INTERVAL_SECONDS: Bool = false,
+    ALGORITHM: cqrProbabilityAlgorithm = .alfanoMaximum,
+    SCREENING: cqrVolumeGeometry = .spherical,
+    RADIAL_M: Double = 0.0,
+    IN_TRACK_M: Double = 0.0,
+    CROSS_TRACK_M: Double = 0.0,
+    VOLUME_CENTER: cqrVolumeAnchor = .primary
+  ) -> Offset {
+    let __start = CQRScreeningControls.startCQRScreeningControls(&fbb)
+    CQRScreeningControls.add(START_EPOCH: START_EPOCH, &fbb)
+    CQRScreeningControls.add(DURATION_SECONDS: DURATION_SECONDS, &fbb)
+    CQRScreeningControls.add(THRESHOLD_M: THRESHOLD_M, &fbb)
+    CQRScreeningControls.add(REQUESTED_WORKERS: REQUESTED_WORKERS, &fbb)
+    CQRScreeningControls.add(COARSE_STEP_SECONDS: COARSE_STEP_SECONDS, &fbb)
+    CQRScreeningControls.add(REFINEMENT_TOLERANCE_SECONDS: REFINEMENT_TOLERANCE_SECONDS, &fbb)
+    CQRScreeningControls.add(COMBINED_RADIUS_M: COMBINED_RADIUS_M, &fbb)
+    CQRScreeningControls.add(USE_KD_TREE: USE_KD_TREE, &fbb)
+    CQRScreeningControls.add(USE_DYNAMIC_WINDOW: USE_DYNAMIC_WINDOW, &fbb)
+    CQRScreeningControls.add(USE_PERIGEE_FILTER: USE_PERIGEE_FILTER, &fbb)
+    CQRScreeningControls.add(PROGRESS_INTERVAL_SECONDS: PROGRESS_INTERVAL_SECONDS, &fbb)
+    CQRScreeningControls.add(HAS_PROGRESS_INTERVAL_SECONDS: HAS_PROGRESS_INTERVAL_SECONDS, &fbb)
+    CQRScreeningControls.add(ALGORITHM: ALGORITHM, &fbb)
+    CQRScreeningControls.add(SCREENING: SCREENING, &fbb)
+    CQRScreeningControls.add(RADIAL_M: RADIAL_M, &fbb)
+    CQRScreeningControls.add(IN_TRACK_M: IN_TRACK_M, &fbb)
+    CQRScreeningControls.add(CROSS_TRACK_M: CROSS_TRACK_M, &fbb)
+    CQRScreeningControls.add(VOLUME_CENTER: VOLUME_CENTER, &fbb)
+    return CQRScreeningControls.endCQRScreeningControls(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.START_EPOCH, fieldName: "START_EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.DURATION_SECONDS, fieldName: "DURATION_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.THRESHOLD_M, fieldName: "THRESHOLD_M", required: false, type: Double.self)
+    try _v.visit(field: VT.REQUESTED_WORKERS, fieldName: "REQUESTED_WORKERS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.COARSE_STEP_SECONDS, fieldName: "COARSE_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.REFINEMENT_TOLERANCE_SECONDS, fieldName: "REFINEMENT_TOLERANCE_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.COMBINED_RADIUS_M, fieldName: "COMBINED_RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.USE_KD_TREE, fieldName: "USE_KD_TREE", required: false, type: Bool.self)
+    try _v.visit(field: VT.USE_DYNAMIC_WINDOW, fieldName: "USE_DYNAMIC_WINDOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.USE_PERIGEE_FILTER, fieldName: "USE_PERIGEE_FILTER", required: false, type: Bool.self)
+    try _v.visit(field: VT.PROGRESS_INTERVAL_SECONDS, fieldName: "PROGRESS_INTERVAL_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_PROGRESS_INTERVAL_SECONDS, fieldName: "HAS_PROGRESS_INTERVAL_SECONDS", required: false, type: Bool.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: cqrProbabilityAlgorithm.self)
+    try _v.visit(field: VT.SCREENING, fieldName: "SCREENING", required: false, type: cqrVolumeGeometry.self)
+    try _v.visit(field: VT.RADIAL_M, fieldName: "RADIAL_M", required: false, type: Double.self)
+    try _v.visit(field: VT.IN_TRACK_M, fieldName: "IN_TRACK_M", required: false, type: Double.self)
+    try _v.visit(field: VT.CROSS_TRACK_M, fieldName: "CROSS_TRACK_M", required: false, type: Double.self)
+    try _v.visit(field: VT.VOLUME_CENTER, fieldName: "VOLUME_CENTER", required: false, type: cqrVolumeAnchor.self)
+    _v.finish()
+  }
+}
+
+///  CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
+///  Reject inconsistent radii instead of silently choosing one source.
+public struct CQRPairRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRPairRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PRIMARY: VOffset = 4
+    static let SECONDARY: VOffset = 6
+    static let CONTROLS: VOffset = 8
+    static let PRIMARY_RADIUS_M: VOffset = 10
+    static let SECONDARY_RADIUS_M: VOffset = 12
+    static let EVALUATION_FRAME: VOffset = 14
+  }
+
+  public var PRIMARY: CQRObjectSource! { let o = _accessor.offset(VT.PRIMARY); return CQRObjectSource(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SECONDARY: CQRObjectSource! { let o = _accessor.offset(VT.SECONDARY); return CQRObjectSource(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CONTROLS: CQRScreeningControls! { let o = _accessor.offset(VT.CONTROLS); return CQRScreeningControls(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PRIMARY_RADIUS_M: Double { let o = _accessor.offset(VT.PRIMARY_RADIUS_M); return o == 0 ? 5.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SECONDARY_RADIUS_M: Double { let o = _accessor.offset(VT.SECONDARY_RADIUS_M); return o == 0 ? 5.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Common inertial frame used for relative state and encounter-plane geometry.
+  public var EVALUATION_FRAME: RFMCoordinateSystem! { let o = _accessor.offset(VT.EVALUATION_FRAME); return RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQRPairRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(PRIMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY, at: VT.PRIMARY) }
+  public static func add(SECONDARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECONDARY, at: VT.SECONDARY) }
+  public static func add(CONTROLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTROLS, at: VT.CONTROLS) }
+  public static func add(PRIMARY_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_RADIUS_M, def: 5.0, at: VT.PRIMARY_RADIUS_M) }
+  public static func add(SECONDARY_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_RADIUS_M, def: 5.0, at: VT.SECONDARY_RADIUS_M) }
+  public static func add(EVALUATION_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVALUATION_FRAME, at: VT.EVALUATION_FRAME) }
+  public static func endCQRPairRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8, 14]); return end }
+  public static func createCQRPairRequest(
+    _ fbb: inout FlatBufferBuilder,
+    PRIMARYOffset PRIMARY: Offset,
+    SECONDARYOffset SECONDARY: Offset,
+    CONTROLSOffset CONTROLS: Offset,
+    PRIMARY_RADIUS_M: Double = 5.0,
+    SECONDARY_RADIUS_M: Double = 5.0,
+    EVALUATION_FRAMEOffset EVALUATION_FRAME: Offset
+  ) -> Offset {
+    let __start = CQRPairRequest.startCQRPairRequest(&fbb)
+    CQRPairRequest.add(PRIMARY: PRIMARY, &fbb)
+    CQRPairRequest.add(SECONDARY: SECONDARY, &fbb)
+    CQRPairRequest.add(CONTROLS: CONTROLS, &fbb)
+    CQRPairRequest.add(PRIMARY_RADIUS_M: PRIMARY_RADIUS_M, &fbb)
+    CQRPairRequest.add(SECONDARY_RADIUS_M: SECONDARY_RADIUS_M, &fbb)
+    CQRPairRequest.add(EVALUATION_FRAME: EVALUATION_FRAME, &fbb)
+    return CQRPairRequest.endCQRPairRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PRIMARY, fieldName: "PRIMARY", required: true, type: ForwardOffset<CQRObjectSource>.self)
+    try _v.visit(field: VT.SECONDARY, fieldName: "SECONDARY", required: true, type: ForwardOffset<CQRObjectSource>.self)
+    try _v.visit(field: VT.CONTROLS, fieldName: "CONTROLS", required: true, type: ForwardOffset<CQRScreeningControls>.self)
+    try _v.visit(field: VT.PRIMARY_RADIUS_M, fieldName: "PRIMARY_RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SECONDARY_RADIUS_M, fieldName: "SECONDARY_RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.EVALUATION_FRAME, fieldName: "EVALUATION_FRAME", required: true, type: ForwardOffset<RFMCoordinateSystem>.self)
+    _v.finish()
+  }
+}
+
+///  All numerical fields in metres or square metres in one orthonormal plane.
+///  Xi/zeta axes are normal to relative velocity. Rotate displacement and
+///  covariance together when changing basis; covariance is finite symmetric
+///  positive semidefinite. Probability algorithms requiring an inverse reject
+///  singular covariance unless their documented method supports it.
+public struct CQRPlaneGeometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRPlaneGeometry.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let XI_M: VOffset = 4
+    static let ZETA_M: VOffset = 6
+    static let VARIANCE_XI_M2: VOffset = 8
+    static let COVARIANCE_XI_ZETA_M2: VOffset = 10
+    static let VARIANCE_ZETA_M2: VOffset = 12
+    static let COMBINED_RADIUS_M: VOffset = 14
+  }
+
+  public var XI_M: Double { let o = _accessor.offset(VT.XI_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ZETA_M: Double { let o = _accessor.offset(VT.ZETA_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VARIANCE_XI_M2: Double { let o = _accessor.offset(VT.VARIANCE_XI_M2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COVARIANCE_XI_ZETA_M2: Double { let o = _accessor.offset(VT.COVARIANCE_XI_ZETA_M2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VARIANCE_ZETA_M2: Double { let o = _accessor.offset(VT.VARIANCE_ZETA_M2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COMBINED_RADIUS_M: Double { let o = _accessor.offset(VT.COMBINED_RADIUS_M); return o == 0 ? 10.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCQRPlaneGeometry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(XI_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: XI_M, def: 0.0, at: VT.XI_M) }
+  public static func add(ZETA_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ZETA_M, def: 0.0, at: VT.ZETA_M) }
+  public static func add(VARIANCE_XI_M2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIANCE_XI_M2, def: 0.0, at: VT.VARIANCE_XI_M2) }
+  public static func add(COVARIANCE_XI_ZETA_M2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVARIANCE_XI_ZETA_M2, def: 0.0, at: VT.COVARIANCE_XI_ZETA_M2) }
+  public static func add(VARIANCE_ZETA_M2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIANCE_ZETA_M2, def: 0.0, at: VT.VARIANCE_ZETA_M2) }
+  public static func add(COMBINED_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMBINED_RADIUS_M, def: 10.0, at: VT.COMBINED_RADIUS_M) }
+  public static func endCQRPlaneGeometry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRPlaneGeometry(
+    _ fbb: inout FlatBufferBuilder,
+    XI_M: Double = 0.0,
+    ZETA_M: Double = 0.0,
+    VARIANCE_XI_M2: Double = 0.0,
+    COVARIANCE_XI_ZETA_M2: Double = 0.0,
+    VARIANCE_ZETA_M2: Double = 0.0,
+    COMBINED_RADIUS_M: Double = 10.0
+  ) -> Offset {
+    let __start = CQRPlaneGeometry.startCQRPlaneGeometry(&fbb)
+    CQRPlaneGeometry.add(XI_M: XI_M, &fbb)
+    CQRPlaneGeometry.add(ZETA_M: ZETA_M, &fbb)
+    CQRPlaneGeometry.add(VARIANCE_XI_M2: VARIANCE_XI_M2, &fbb)
+    CQRPlaneGeometry.add(COVARIANCE_XI_ZETA_M2: COVARIANCE_XI_ZETA_M2, &fbb)
+    CQRPlaneGeometry.add(VARIANCE_ZETA_M2: VARIANCE_ZETA_M2, &fbb)
+    CQRPlaneGeometry.add(COMBINED_RADIUS_M: COMBINED_RADIUS_M, &fbb)
+    return CQRPlaneGeometry.endCQRPlaneGeometry(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.XI_M, fieldName: "XI_M", required: false, type: Double.self)
+    try _v.visit(field: VT.ZETA_M, fieldName: "ZETA_M", required: false, type: Double.self)
+    try _v.visit(field: VT.VARIANCE_XI_M2, fieldName: "VARIANCE_XI_M2", required: false, type: Double.self)
+    try _v.visit(field: VT.COVARIANCE_XI_ZETA_M2, fieldName: "COVARIANCE_XI_ZETA_M2", required: false, type: Double.self)
+    try _v.visit(field: VT.VARIANCE_ZETA_M2, fieldName: "VARIANCE_ZETA_M2", required: false, type: Double.self)
+    try _v.visit(field: VT.COMBINED_RADIUS_M, fieldName: "COMBINED_RADIUS_M", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct CQRProbabilityRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRProbabilityRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let GEOMETRY: VOffset = 4
+    static let ALGORITHM: VOffset = 6
+  }
+
+  public var GEOMETRY: CQRPlaneGeometry! { let o = _accessor.offset(VT.GEOMETRY); return CQRPlaneGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ALGORITHM: cqrProbabilityAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .foster : cqrProbabilityAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .foster }
+  public static func startCQRProbabilityRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VT.GEOMETRY) }
+  public static func add(ALGORITHM: cqrProbabilityAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 1, at: VT.ALGORITHM) }
+  public static func endCQRProbabilityRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCQRProbabilityRequest(
+    _ fbb: inout FlatBufferBuilder,
+    GEOMETRYOffset GEOMETRY: Offset,
+    ALGORITHM: cqrProbabilityAlgorithm = .foster
+  ) -> Offset {
+    let __start = CQRProbabilityRequest.startCQRProbabilityRequest(&fbb)
+    CQRProbabilityRequest.add(GEOMETRY: GEOMETRY, &fbb)
+    CQRProbabilityRequest.add(ALGORITHM: ALGORITHM, &fbb)
+    return CQRProbabilityRequest.endCQRProbabilityRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.GEOMETRY, fieldName: "GEOMETRY", required: true, type: ForwardOffset<CQRPlaneGeometry>.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: cqrProbabilityAlgorithm.self)
+    _v.finish()
+  }
+}
+
+///  Report the actual algorithm and uncertainty origin. With
+///  MAXIMUM_PROBABILITY_ONLY, MAXIMUM_PROBABILITY is present and PROBABILITY is
+///  inapplicable: consumers must ignore its default zero. Never report a heuristic
+///  maximum as probability computed from supplied covariance. Otherwise
+///  PROBABILITY is unitless in [0,1]; supplied/synthesized covariance is explicit.
+public struct CQRProbabilityResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRProbabilityResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PROBABILITY: VOffset = 4
+    static let ALGORITHM: VOffset = 6
+    static let CONVERGED: VOffset = 8
+    static let ITERATIONS: VOffset = 10
+    static let MAXIMUM_PROBABILITY: VOffset = 12
+    static let HAS_MAXIMUM_PROBABILITY: VOffset = 14
+    static let MAHALANOBIS_SQUARED: VOffset = 16
+    static let HAS_MAHALANOBIS_SQUARED: VOffset = 18
+    static let UNCERTAINTY_SOURCE: VOffset = 20
+    static let CALIBRATION: VOffset = 22
+    static let CALIBRATION_REFERENCE: VOffset = 24
+    static let CROSS_CORRELATION: VOffset = 26
+  }
+
+  public var PROBABILITY: Double { let o = _accessor.offset(VT.PROBABILITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALGORITHM: cqrProbabilityAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .unspecified : cqrProbabilityAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var CONVERGED: Bool { let o = _accessor.offset(VT.CONVERGED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ITERATIONS: UInt64 { let o = _accessor.offset(VT.ITERATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var MAXIMUM_PROBABILITY: Double { let o = _accessor.offset(VT.MAXIMUM_PROBABILITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when MAXIMUM_PROBABILITY carries a value; false means absent.
+  public var HAS_MAXIMUM_PROBABILITY: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_PROBABILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Explicitly squared distance d^T C^-1 d, dimensionless.
+  public var MAHALANOBIS_SQUARED: Double { let o = _accessor.offset(VT.MAHALANOBIS_SQUARED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when MAHALANOBIS_SQUARED carries a value; false means absent.
+  public var HAS_MAHALANOBIS_SQUARED: Bool { let o = _accessor.offset(VT.HAS_MAHALANOBIS_SQUARED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var UNCERTAINTY_SOURCE: cqrUncertaintyOrigin { let o = _accessor.offset(VT.UNCERTAINTY_SOURCE); return o == 0 ? .unspecified : cqrUncertaintyOrigin(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  For a covariance-based probability: whether the covariance's coverage was
+  ///  measured against independent reference states. Only CALIBRATED
+  ///  covariance supports a probability beyond "conditional on the stated
+  ///  assumptions".
+  public var CALIBRATION: covarianceCalibration { let o = _accessor.offset(VT.CALIBRATION); return o == 0 ? .unspecified : covarianceCalibration(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Identifier of the calibration evidence (a report or record).
+  public var CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CALIBRATION_REFERENCE) }
+  ///  The correlation assumed between the two objects' errors.
+  public var CROSS_CORRELATION: cqrCovarianceCorrelation { let o = _accessor.offset(VT.CROSS_CORRELATION); return o == 0 ? .unspecified : cqrCovarianceCorrelation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public static func startCQRProbabilityResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(PROBABILITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROBABILITY, def: 0.0, at: VT.PROBABILITY) }
+  public static func add(ALGORITHM: cqrProbabilityAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
+  public static func add(CONVERGED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONVERGED, def: false,
+   at: VT.CONVERGED) }
+  public static func add(ITERATIONS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITERATIONS, def: 0, at: VT.ITERATIONS) }
+  public static func add(MAXIMUM_PROBABILITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_PROBABILITY, def: 0.0, at: VT.MAXIMUM_PROBABILITY) }
+  public static func add(HAS_MAXIMUM_PROBABILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_PROBABILITY, def: false,
+   at: VT.HAS_MAXIMUM_PROBABILITY) }
+  public static func add(MAHALANOBIS_SQUARED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAHALANOBIS_SQUARED, def: 0.0, at: VT.MAHALANOBIS_SQUARED) }
+  public static func add(HAS_MAHALANOBIS_SQUARED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAHALANOBIS_SQUARED, def: false,
+   at: VT.HAS_MAHALANOBIS_SQUARED) }
+  public static func add(UNCERTAINTY_SOURCE: cqrUncertaintyOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNCERTAINTY_SOURCE.rawValue, def: 0, at: VT.UNCERTAINTY_SOURCE) }
+  public static func add(CALIBRATION: covarianceCalibration, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CALIBRATION.rawValue, def: 0, at: VT.CALIBRATION) }
+  public static func add(CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALIBRATION_REFERENCE, at: VT.CALIBRATION_REFERENCE) }
+  public static func add(CROSS_CORRELATION: cqrCovarianceCorrelation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CROSS_CORRELATION.rawValue, def: 0, at: VT.CROSS_CORRELATION) }
+  public static func endCQRProbabilityResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRProbabilityResult(
+    _ fbb: inout FlatBufferBuilder,
+    PROBABILITY: Double = 0.0,
+    ALGORITHM: cqrProbabilityAlgorithm = .unspecified,
+    CONVERGED: Bool = false,
+    ITERATIONS: UInt64 = 0,
+    MAXIMUM_PROBABILITY: Double = 0.0,
+    HAS_MAXIMUM_PROBABILITY: Bool = false,
+    MAHALANOBIS_SQUARED: Double = 0.0,
+    HAS_MAHALANOBIS_SQUARED: Bool = false,
+    UNCERTAINTY_SOURCE: cqrUncertaintyOrigin = .unspecified,
+    CALIBRATION: covarianceCalibration = .unspecified,
+    CALIBRATION_REFERENCEOffset CALIBRATION_REFERENCE: Offset = Offset(),
+    CROSS_CORRELATION: cqrCovarianceCorrelation = .unspecified
+  ) -> Offset {
+    let __start = CQRProbabilityResult.startCQRProbabilityResult(&fbb)
+    CQRProbabilityResult.add(PROBABILITY: PROBABILITY, &fbb)
+    CQRProbabilityResult.add(ALGORITHM: ALGORITHM, &fbb)
+    CQRProbabilityResult.add(CONVERGED: CONVERGED, &fbb)
+    CQRProbabilityResult.add(ITERATIONS: ITERATIONS, &fbb)
+    CQRProbabilityResult.add(MAXIMUM_PROBABILITY: MAXIMUM_PROBABILITY, &fbb)
+    CQRProbabilityResult.add(HAS_MAXIMUM_PROBABILITY: HAS_MAXIMUM_PROBABILITY, &fbb)
+    CQRProbabilityResult.add(MAHALANOBIS_SQUARED: MAHALANOBIS_SQUARED, &fbb)
+    CQRProbabilityResult.add(HAS_MAHALANOBIS_SQUARED: HAS_MAHALANOBIS_SQUARED, &fbb)
+    CQRProbabilityResult.add(UNCERTAINTY_SOURCE: UNCERTAINTY_SOURCE, &fbb)
+    CQRProbabilityResult.add(CALIBRATION: CALIBRATION, &fbb)
+    CQRProbabilityResult.add(CALIBRATION_REFERENCE: CALIBRATION_REFERENCE, &fbb)
+    CQRProbabilityResult.add(CROSS_CORRELATION: CROSS_CORRELATION, &fbb)
+    return CQRProbabilityResult.endCQRProbabilityResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PROBABILITY, fieldName: "PROBABILITY", required: false, type: Double.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: cqrProbabilityAlgorithm.self)
+    try _v.visit(field: VT.CONVERGED, fieldName: "CONVERGED", required: false, type: Bool.self)
+    try _v.visit(field: VT.ITERATIONS, fieldName: "ITERATIONS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.MAXIMUM_PROBABILITY, fieldName: "MAXIMUM_PROBABILITY", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_PROBABILITY, fieldName: "HAS_MAXIMUM_PROBABILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAHALANOBIS_SQUARED, fieldName: "MAHALANOBIS_SQUARED", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_MAHALANOBIS_SQUARED, fieldName: "HAS_MAHALANOBIS_SQUARED", required: false, type: Bool.self)
+    try _v.visit(field: VT.UNCERTAINTY_SOURCE, fieldName: "UNCERTAINTY_SOURCE", required: false, type: cqrUncertaintyOrigin.self)
+    try _v.visit(field: VT.CALIBRATION, fieldName: "CALIBRATION", required: false, type: covarianceCalibration.self)
+    try _v.visit(field: VT.CALIBRATION_REFERENCE, fieldName: "CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CROSS_CORRELATION, fieldName: "CROSS_CORRELATION", required: false, type: cqrCovarianceCorrelation.self)
+    _v.finish()
+  }
+}
+
+public struct CQRAlfanoRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRAlfanoRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MISS_DISTANCE_M: VOffset = 4
+    static let COMBINED_RADIUS_M: VOffset = 6
+  }
+
+  public var MISS_DISTANCE_M: Double { let o = _accessor.offset(VT.MISS_DISTANCE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COMBINED_RADIUS_M: Double { let o = _accessor.offset(VT.COMBINED_RADIUS_M); return o == 0 ? 10.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCQRAlfanoRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(MISS_DISTANCE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISS_DISTANCE_M, def: 0.0, at: VT.MISS_DISTANCE_M) }
+  public static func add(COMBINED_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMBINED_RADIUS_M, def: 10.0, at: VT.COMBINED_RADIUS_M) }
+  public static func endCQRAlfanoRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRAlfanoRequest(
+    _ fbb: inout FlatBufferBuilder,
+    MISS_DISTANCE_M: Double = 0.0,
+    COMBINED_RADIUS_M: Double = 10.0
+  ) -> Offset {
+    let __start = CQRAlfanoRequest.startCQRAlfanoRequest(&fbb)
+    CQRAlfanoRequest.add(MISS_DISTANCE_M: MISS_DISTANCE_M, &fbb)
+    CQRAlfanoRequest.add(COMBINED_RADIUS_M: COMBINED_RADIUS_M, &fbb)
+    return CQRAlfanoRequest.endCQRAlfanoRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MISS_DISTANCE_M, fieldName: "MISS_DISTANCE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.COMBINED_RADIUS_M, fieldName: "COMBINED_RADIUS_M", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct CQRAlfanoResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRAlfanoResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MAXIMUM_PROBABILITY: VOffset = 4
+    static let DILUTION_THRESHOLD_M: VOffset = 6
+    static let SIGMA_STAR_M: VOffset = 8
+  }
+
+  public var MAXIMUM_PROBABILITY: Double { let o = _accessor.offset(VT.MAXIMUM_PROBABILITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DILUTION_THRESHOLD_M: Double { let o = _accessor.offset(VT.DILUTION_THRESHOLD_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SIGMA_STAR_M: Double { let o = _accessor.offset(VT.SIGMA_STAR_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCQRAlfanoResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(MAXIMUM_PROBABILITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_PROBABILITY, def: 0.0, at: VT.MAXIMUM_PROBABILITY) }
+  public static func add(DILUTION_THRESHOLD_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DILUTION_THRESHOLD_M, def: 0.0, at: VT.DILUTION_THRESHOLD_M) }
+  public static func add(SIGMA_STAR_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGMA_STAR_M, def: 0.0, at: VT.SIGMA_STAR_M) }
+  public static func endCQRAlfanoResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRAlfanoResult(
+    _ fbb: inout FlatBufferBuilder,
+    MAXIMUM_PROBABILITY: Double = 0.0,
+    DILUTION_THRESHOLD_M: Double = 0.0,
+    SIGMA_STAR_M: Double = 0.0
+  ) -> Offset {
+    let __start = CQRAlfanoResult.startCQRAlfanoResult(&fbb)
+    CQRAlfanoResult.add(MAXIMUM_PROBABILITY: MAXIMUM_PROBABILITY, &fbb)
+    CQRAlfanoResult.add(DILUTION_THRESHOLD_M: DILUTION_THRESHOLD_M, &fbb)
+    CQRAlfanoResult.add(SIGMA_STAR_M: SIGMA_STAR_M, &fbb)
+    return CQRAlfanoResult.endCQRAlfanoResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MAXIMUM_PROBABILITY, fieldName: "MAXIMUM_PROBABILITY", required: false, type: Double.self)
+    try _v.visit(field: VT.DILUTION_THRESHOLD_M, fieldName: "DILUTION_THRESHOLD_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SIGMA_STAR_M, fieldName: "SIGMA_STAR_M", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Typed replacement of a bare raw-text port. Content is UTF-8 with no BOM;
+///  XML declaration, if present, must agree. Content must be nonempty CDM KVN
+///  or CDM XML matching SERIALIZATION; reject UNSPECIFIED and other documents.
+///  Not an arbitrary JSON container.
+public struct CQRNativeDocument: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRNativeDocument.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SERIALIZATION: VOffset = 4
+    static let CONTENT: VOffset = 6
+  }
+
+  public var SERIALIZATION: cqrDocumentSyntax { let o = _accessor.offset(VT.SERIALIZATION); return o == 0 ? .unspecified : cqrDocumentSyntax(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var CONTENT: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CONTENT, byteSize: 1) }
+  public func withUnsafePointerToContent<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CONTENT, body: body) }
+  public static func startCQRNativeDocument(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(SERIALIZATION: cqrDocumentSyntax, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SERIALIZATION.rawValue, def: 0, at: VT.SERIALIZATION) }
+  public static func addVectorOf(CONTENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT, at: VT.CONTENT) }
+  public static func endCQRNativeDocument(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
+  public static func createCQRNativeDocument(
+    _ fbb: inout FlatBufferBuilder,
+    SERIALIZATION: cqrDocumentSyntax = .unspecified,
+    CONTENTVectorOffset CONTENT: Offset
+  ) -> Offset {
+    let __start = CQRNativeDocument.startCQRNativeDocument(&fbb)
+    CQRNativeDocument.add(SERIALIZATION: SERIALIZATION, &fbb)
+    CQRNativeDocument.addVectorOf(CONTENT: CONTENT, &fbb)
+    return CQRNativeDocument.endCQRNativeDocument(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SERIALIZATION, fieldName: "SERIALIZATION", required: false, type: cqrDocumentSyntax.self)
+    try _v.visit(field: VT.CONTENT, fieldName: "CONTENT", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    _v.finish()
+  }
+}
+
+///  Order arrays index the supplied catalog stream in exact reception order.
+///  Ranges are half-open; absent endpoints select the full respective range.
+public struct CQRCatalogRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRCatalogRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PRIMARIES: VOffset = 4
+    static let SECONDARIES: VOffset = 6
+    static let CONTROLS: VOffset = 8
+    static let EVALUATION_FRAME: VOffset = 10
+    static let ORDERED_CATALOG_INDICES: VOffset = 12
+    static let START_ORDER_INDEX: VOffset = 14
+    static let HAS_START_ORDER_INDEX: VOffset = 16
+    static let END_ORDER_INDEX: VOffset = 18
+    static let HAS_END_ORDER_INDEX: VOffset = 20
+    static let SECONDARY_START_ORDER_INDEX: VOffset = 22
+    static let HAS_SECONDARY_START_ORDER_INDEX: VOffset = 24
+    static let SECONDARY_END_ORDER_INDEX: VOffset = 26
+    static let HAS_SECONDARY_END_ORDER_INDEX: VOffset = 28
+    static let SELECTED_SOURCES: VOffset = 30
+  }
+
+  public var PRIMARIES: FlatbufferVector<CQRObjectSource> { return _accessor.vector(at: VT.PRIMARIES, byteSize: 4) }
+  public var SECONDARIES: FlatbufferVector<CQRObjectSource> { return _accessor.vector(at: VT.SECONDARIES, byteSize: 4) }
+  public var CONTROLS: CQRScreeningControls! { let o = _accessor.offset(VT.CONTROLS); return CQRScreeningControls(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EVALUATION_FRAME: RFMCoordinateSystem! { let o = _accessor.offset(VT.EVALUATION_FRAME); return RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ORDERED_CATALOG_INDICES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.ORDERED_CATALOG_INDICES, byteSize: 4) }
+  public func withUnsafePointerToOrderedCatalogIndices<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ORDERED_CATALOG_INDICES, body: body) }
+  public var START_ORDER_INDEX: UInt32 { let o = _accessor.offset(VT.START_ORDER_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  True when START_ORDER_INDEX carries a value; false means absent.
+  public var HAS_START_ORDER_INDEX: Bool { let o = _accessor.offset(VT.HAS_START_ORDER_INDEX); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var END_ORDER_INDEX: UInt32 { let o = _accessor.offset(VT.END_ORDER_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  True when END_ORDER_INDEX carries a value; false means absent.
+  public var HAS_END_ORDER_INDEX: Bool { let o = _accessor.offset(VT.HAS_END_ORDER_INDEX); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SECONDARY_START_ORDER_INDEX: UInt32 { let o = _accessor.offset(VT.SECONDARY_START_ORDER_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  True when SECONDARY_START_ORDER_INDEX carries a value; false means absent.
+  public var HAS_SECONDARY_START_ORDER_INDEX: Bool { let o = _accessor.offset(VT.HAS_SECONDARY_START_ORDER_INDEX); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SECONDARY_END_ORDER_INDEX: UInt32 { let o = _accessor.offset(VT.SECONDARY_END_ORDER_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  True when SECONDARY_END_ORDER_INDEX carries a value; false means absent.
+  public var HAS_SECONDARY_END_ORDER_INDEX: Bool { let o = _accessor.offset(VT.HAS_SECONDARY_END_ORDER_INDEX); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SELECTED_SOURCES: FlatbufferVector<CQRSourceProvenance> { return _accessor.vector(at: VT.SELECTED_SOURCES, byteSize: 4) }
+  public static func startCQRCatalogRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func addVectorOf(PRIMARIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARIES, at: VT.PRIMARIES) }
+  public static func addVectorOf(SECONDARIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECONDARIES, at: VT.SECONDARIES) }
+  public static func add(CONTROLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTROLS, at: VT.CONTROLS) }
+  public static func add(EVALUATION_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVALUATION_FRAME, at: VT.EVALUATION_FRAME) }
+  public static func addVectorOf(ORDERED_CATALOG_INDICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORDERED_CATALOG_INDICES, at: VT.ORDERED_CATALOG_INDICES) }
+  public static func add(START_ORDER_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_ORDER_INDEX, def: 0, at: VT.START_ORDER_INDEX) }
+  public static func add(HAS_START_ORDER_INDEX: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_START_ORDER_INDEX, def: false,
+   at: VT.HAS_START_ORDER_INDEX) }
+  public static func add(END_ORDER_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_ORDER_INDEX, def: 0, at: VT.END_ORDER_INDEX) }
+  public static func add(HAS_END_ORDER_INDEX: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_END_ORDER_INDEX, def: false,
+   at: VT.HAS_END_ORDER_INDEX) }
+  public static func add(SECONDARY_START_ORDER_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_START_ORDER_INDEX, def: 0, at: VT.SECONDARY_START_ORDER_INDEX) }
+  public static func add(HAS_SECONDARY_START_ORDER_INDEX: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SECONDARY_START_ORDER_INDEX, def: false,
+   at: VT.HAS_SECONDARY_START_ORDER_INDEX) }
+  public static func add(SECONDARY_END_ORDER_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_END_ORDER_INDEX, def: 0, at: VT.SECONDARY_END_ORDER_INDEX) }
+  public static func add(HAS_SECONDARY_END_ORDER_INDEX: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SECONDARY_END_ORDER_INDEX, def: false,
+   at: VT.HAS_SECONDARY_END_ORDER_INDEX) }
+  public static func addVectorOf(SELECTED_SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECTED_SOURCES, at: VT.SELECTED_SOURCES) }
+  public static func endCQRCatalogRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8, 10]); return end }
+  public static func createCQRCatalogRequest(
+    _ fbb: inout FlatBufferBuilder,
+    PRIMARIESVectorOffset PRIMARIES: Offset = Offset(),
+    SECONDARIESVectorOffset SECONDARIES: Offset = Offset(),
+    CONTROLSOffset CONTROLS: Offset,
+    EVALUATION_FRAMEOffset EVALUATION_FRAME: Offset,
+    ORDERED_CATALOG_INDICESVectorOffset ORDERED_CATALOG_INDICES: Offset = Offset(),
+    START_ORDER_INDEX: UInt32 = 0,
+    HAS_START_ORDER_INDEX: Bool = false,
+    END_ORDER_INDEX: UInt32 = 0,
+    HAS_END_ORDER_INDEX: Bool = false,
+    SECONDARY_START_ORDER_INDEX: UInt32 = 0,
+    HAS_SECONDARY_START_ORDER_INDEX: Bool = false,
+    SECONDARY_END_ORDER_INDEX: UInt32 = 0,
+    HAS_SECONDARY_END_ORDER_INDEX: Bool = false,
+    SELECTED_SOURCESVectorOffset SELECTED_SOURCES: Offset = Offset()
+  ) -> Offset {
+    let __start = CQRCatalogRequest.startCQRCatalogRequest(&fbb)
+    CQRCatalogRequest.addVectorOf(PRIMARIES: PRIMARIES, &fbb)
+    CQRCatalogRequest.addVectorOf(SECONDARIES: SECONDARIES, &fbb)
+    CQRCatalogRequest.add(CONTROLS: CONTROLS, &fbb)
+    CQRCatalogRequest.add(EVALUATION_FRAME: EVALUATION_FRAME, &fbb)
+    CQRCatalogRequest.addVectorOf(ORDERED_CATALOG_INDICES: ORDERED_CATALOG_INDICES, &fbb)
+    CQRCatalogRequest.add(START_ORDER_INDEX: START_ORDER_INDEX, &fbb)
+    CQRCatalogRequest.add(HAS_START_ORDER_INDEX: HAS_START_ORDER_INDEX, &fbb)
+    CQRCatalogRequest.add(END_ORDER_INDEX: END_ORDER_INDEX, &fbb)
+    CQRCatalogRequest.add(HAS_END_ORDER_INDEX: HAS_END_ORDER_INDEX, &fbb)
+    CQRCatalogRequest.add(SECONDARY_START_ORDER_INDEX: SECONDARY_START_ORDER_INDEX, &fbb)
+    CQRCatalogRequest.add(HAS_SECONDARY_START_ORDER_INDEX: HAS_SECONDARY_START_ORDER_INDEX, &fbb)
+    CQRCatalogRequest.add(SECONDARY_END_ORDER_INDEX: SECONDARY_END_ORDER_INDEX, &fbb)
+    CQRCatalogRequest.add(HAS_SECONDARY_END_ORDER_INDEX: HAS_SECONDARY_END_ORDER_INDEX, &fbb)
+    CQRCatalogRequest.addVectorOf(SELECTED_SOURCES: SELECTED_SOURCES, &fbb)
+    return CQRCatalogRequest.endCQRCatalogRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PRIMARIES, fieldName: "PRIMARIES", required: false, type: ForwardOffset<Vector<ForwardOffset<CQRObjectSource>, CQRObjectSource>>.self)
+    try _v.visit(field: VT.SECONDARIES, fieldName: "SECONDARIES", required: false, type: ForwardOffset<Vector<ForwardOffset<CQRObjectSource>, CQRObjectSource>>.self)
+    try _v.visit(field: VT.CONTROLS, fieldName: "CONTROLS", required: true, type: ForwardOffset<CQRScreeningControls>.self)
+    try _v.visit(field: VT.EVALUATION_FRAME, fieldName: "EVALUATION_FRAME", required: true, type: ForwardOffset<RFMCoordinateSystem>.self)
+    try _v.visit(field: VT.ORDERED_CATALOG_INDICES, fieldName: "ORDERED_CATALOG_INDICES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.START_ORDER_INDEX, fieldName: "START_ORDER_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HAS_START_ORDER_INDEX, fieldName: "HAS_START_ORDER_INDEX", required: false, type: Bool.self)
+    try _v.visit(field: VT.END_ORDER_INDEX, fieldName: "END_ORDER_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HAS_END_ORDER_INDEX, fieldName: "HAS_END_ORDER_INDEX", required: false, type: Bool.self)
+    try _v.visit(field: VT.SECONDARY_START_ORDER_INDEX, fieldName: "SECONDARY_START_ORDER_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HAS_SECONDARY_START_ORDER_INDEX, fieldName: "HAS_SECONDARY_START_ORDER_INDEX", required: false, type: Bool.self)
+    try _v.visit(field: VT.SECONDARY_END_ORDER_INDEX, fieldName: "SECONDARY_END_ORDER_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HAS_SECONDARY_END_ORDER_INDEX, fieldName: "HAS_SECONDARY_END_ORDER_INDEX", required: false, type: Bool.self)
+    try _v.visit(field: VT.SELECTED_SOURCES, fieldName: "SELECTED_SOURCES", required: false, type: ForwardOffset<Vector<ForwardOffset<CQRSourceProvenance>, CQRSourceProvenance>>.self)
+    _v.finish()
+  }
+}
+
+///  Explicit summary when legacy source lacks sufficient data for a full CDM.
+public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQREvent.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PRIMARY_ID: VOffset = 4
+    static let SECONDARY_ID: VOffset = 6
+    static let PRIMARY_NAME: VOffset = 8
+    static let SECONDARY_NAME: VOffset = 10
+    static let PRIMARY_NORAD_ID: VOffset = 12
+    static let SECONDARY_NORAD_ID: VOffset = 14
+    static let TCA: VOffset = 16
+    static let MISS_DISTANCE_M: VOffset = 18
+    static let RELATIVE_SPEED_M_S: VOffset = 20
+    static let PROBABILITY: VOffset = 22
+    static let DILUTION_THRESHOLD_M: VOffset = 24
+    static let HAS_DILUTION_THRESHOLD_M: VOffset = 26
+    static let RELATIVE_POSITION_RTN: VOffset = 28
+    static let RELATIVE_VELOCITY_RTN: VOffset = 30
+    static let PRIMARY_SIGMA_RTN_M: VOffset = 32
+    static let SECONDARY_SIGMA_RTN_M: VOffset = 34
+    static let PRIMARY_DAYS_SINCE_EPOCH: VOffset = 36
+    static let HAS_PRIMARY_DAYS_SINCE_EPOCH: VOffset = 38
+    static let SECONDARY_DAYS_SINCE_EPOCH: VOffset = 40
+    static let HAS_SECONDARY_DAYS_SINCE_EPOCH: VOffset = 42
+    static let CONJUNCTION_MESSAGE: VOffset = 44
+    static let PRIMARY_STATE: VOffset = 46
+    static let SECONDARY_STATE: VOffset = 48
+    static let MAHALANOBIS_3D_SQUARED: VOffset = 50
+    static let HAS_MAHALANOBIS_3D_SQUARED: VOffset = 52
+    static let COMBINED_RADIUS_M: VOffset = 54
+    static let HAS_COMBINED_RADIUS_M: VOffset = 56
+    static let PRIMARY_HARD_BODY_RADIUS_M: VOffset = 58
+    static let HAS_PRIMARY_HARD_BODY_RADIUS_M: VOffset = 60
+    static let SECONDARY_HARD_BODY_RADIUS_M: VOffset = 62
+    static let HAS_SECONDARY_HARD_BODY_RADIUS_M: VOffset = 64
+    static let PRIMARY_RADIUS_BASIS: VOffset = 66
+    static let SECONDARY_RADIUS_BASIS: VOffset = 68
+    static let PRIMARY_COVARIANCE_BASIS: VOffset = 70
+    static let SECONDARY_COVARIANCE_BASIS: VOffset = 72
+    static let SCREENING: VOffset = 74
+    static let ADMITTED_BY: VOffset = 76
+  }
+
+  public var PRIMARY_ID: String! { let o = _accessor.offset(VT.PRIMARY_ID); return _accessor.string(at: o) }
+  public var PRIMARY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PRIMARY_ID) }
+  public var SECONDARY_ID: String! { let o = _accessor.offset(VT.SECONDARY_ID); return _accessor.string(at: o) }
+  public var SECONDARY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SECONDARY_ID) }
+  public var PRIMARY_NAME: String? { let o = _accessor.offset(VT.PRIMARY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRIMARY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRIMARY_NAME) }
+  public var SECONDARY_NAME: String? { let o = _accessor.offset(VT.SECONDARY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SECONDARY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SECONDARY_NAME) }
+  public var PRIMARY_NORAD_ID: UInt32 { let o = _accessor.offset(VT.PRIMARY_NORAD_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SECONDARY_NORAD_ID: UInt32 { let o = _accessor.offset(VT.SECONDARY_NORAD_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TCA: TIMInstant! { let o = _accessor.offset(VT.TCA); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MISS_DISTANCE_M: Double { let o = _accessor.offset(VT.MISS_DISTANCE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RELATIVE_SPEED_M_S: Double { let o = _accessor.offset(VT.RELATIVE_SPEED_M_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PROBABILITY: CQRProbabilityResult? { let o = _accessor.offset(VT.PROBABILITY); return o == 0 ? nil : CQRProbabilityResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DILUTION_THRESHOLD_M: Double { let o = _accessor.offset(VT.DILUTION_THRESHOLD_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when DILUTION_THRESHOLD_M carries a value; false means absent.
+  public var HAS_DILUTION_THRESHOLD_M: Bool { let o = _accessor.offset(VT.HAS_DILUTION_THRESHOLD_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Primary-object RTN components in m and m/s; omitted when unavailable.
+  public var RELATIVE_POSITION_RTN: FRMVector3? { let o = _accessor.offset(VT.RELATIVE_POSITION_RTN); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RELATIVE_VELOCITY_RTN: FRMVector3? { let o = _accessor.offset(VT.RELATIVE_VELOCITY_RTN); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  One-sigma RTN values in metres, not covariance matrices.
+  public var PRIMARY_SIGMA_RTN_M: FRMVector3? { let o = _accessor.offset(VT.PRIMARY_SIGMA_RTN_M); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SECONDARY_SIGMA_RTN_M: FRMVector3? { let o = _accessor.offset(VT.SECONDARY_SIGMA_RTN_M); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PRIMARY_DAYS_SINCE_EPOCH: Double { let o = _accessor.offset(VT.PRIMARY_DAYS_SINCE_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when PRIMARY_DAYS_SINCE_EPOCH carries a value; false means absent.
+  public var HAS_PRIMARY_DAYS_SINCE_EPOCH: Bool { let o = _accessor.offset(VT.HAS_PRIMARY_DAYS_SINCE_EPOCH); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SECONDARY_DAYS_SINCE_EPOCH: Double { let o = _accessor.offset(VT.SECONDARY_DAYS_SINCE_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when SECONDARY_DAYS_SINCE_EPOCH carries a value; false means absent.
+  public var HAS_SECONDARY_DAYS_SINCE_EPOCH: Bool { let o = _accessor.offset(VT.HAS_SECONDARY_DAYS_SINCE_EPOCH); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Full standards-backed result when physically available.
+  public var CONJUNCTION_MESSAGE: CDM? { let o = _accessor.offset(VT.CONJUNCTION_MESSAGE); return o == 0 ? nil : CDM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PRIMARY_STATE: PRWResidentState? { let o = _accessor.offset(VT.PRIMARY_STATE); return o == 0 ? nil : PRWResidentState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SECONDARY_STATE: PRWResidentState? { let o = _accessor.offset(VT.SECONDARY_STATE); return o == 0 ? nil : PRWResidentState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MAHALANOBIS_3D_SQUARED: Double { let o = _accessor.offset(VT.MAHALANOBIS_3D_SQUARED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when MAHALANOBIS_3D_SQUARED carries a value; false means absent.
+  public var HAS_MAHALANOBIS_3D_SQUARED: Bool { let o = _accessor.offset(VT.HAS_MAHALANOBIS_3D_SQUARED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var COMBINED_RADIUS_M: Double { let o = _accessor.offset(VT.COMBINED_RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when COMBINED_RADIUS_M carries a value; false means absent.
+  public var HAS_COMBINED_RADIUS_M: Bool { let o = _accessor.offset(VT.HAS_COMBINED_RADIUS_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Each object's hard-body radius in metres and where it came from;
+  ///  COMBINED_RADIUS_M is their sum.
+  public var PRIMARY_HARD_BODY_RADIUS_M: Double { let o = _accessor.offset(VT.PRIMARY_HARD_BODY_RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  public var HAS_PRIMARY_HARD_BODY_RADIUS_M: Bool { let o = _accessor.offset(VT.HAS_PRIMARY_HARD_BODY_RADIUS_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SECONDARY_HARD_BODY_RADIUS_M: Double { let o = _accessor.offset(VT.SECONDARY_HARD_BODY_RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  public var HAS_SECONDARY_HARD_BODY_RADIUS_M: Bool { let o = _accessor.offset(VT.HAS_SECONDARY_HARD_BODY_RADIUS_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis { let o = _accessor.offset(VT.PRIMARY_RADIUS_BASIS); return o == 0 ? .unspecified : cqrHardBodyRadiusBasis(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis { let o = _accessor.offset(VT.SECONDARY_RADIUS_BASIS); return o == 0 ? .unspecified : cqrHardBodyRadiusBasis(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Where each object's position covariance came from; NONE means the event
+  ///  carries no covariance-based quantity for it.
+  public var PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis { let o = _accessor.offset(VT.PRIMARY_COVARIANCE_BASIS); return o == 0 ? .unspecified : cqrCovarianceBasis(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis { let o = _accessor.offset(VT.SECONDARY_COVARIANCE_BASIS); return o == 0 ? .unspecified : cqrCovarianceBasis(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Geometry used by the screening request that admitted this event.
+  public var SCREENING: cqrVolumeGeometry { let o = _accessor.offset(VT.SCREENING); return o == 0 ? .spherical : cqrVolumeGeometry(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .spherical }
+  ///  Volume(s) containing the other object at TCA; BOTH means both tests passed.
+  ///  UNSPECIFIED means admission provenance was not reported.
+  public var ADMITTED_BY: cqrVolumeAnchor { let o = _accessor.offset(VT.ADMITTED_BY); return o == 0 ? .unspecified : cqrVolumeAnchor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public static func startCQREvent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 37) }
+  public static func add(PRIMARY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY_ID, at: VT.PRIMARY_ID) }
+  public static func add(SECONDARY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECONDARY_ID, at: VT.SECONDARY_ID) }
+  public static func add(PRIMARY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY_NAME, at: VT.PRIMARY_NAME) }
+  public static func add(SECONDARY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECONDARY_NAME, at: VT.SECONDARY_NAME) }
+  public static func add(PRIMARY_NORAD_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_NORAD_ID, def: 0, at: VT.PRIMARY_NORAD_ID) }
+  public static func add(SECONDARY_NORAD_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_NORAD_ID, def: 0, at: VT.SECONDARY_NORAD_ID) }
+  public static func add(TCA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TCA, at: VT.TCA) }
+  public static func add(MISS_DISTANCE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISS_DISTANCE_M, def: 0.0, at: VT.MISS_DISTANCE_M) }
+  public static func add(RELATIVE_SPEED_M_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_SPEED_M_S, def: 0.0, at: VT.RELATIVE_SPEED_M_S) }
+  public static func add(PROBABILITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROBABILITY, at: VT.PROBABILITY) }
+  public static func add(DILUTION_THRESHOLD_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DILUTION_THRESHOLD_M, def: 0.0, at: VT.DILUTION_THRESHOLD_M) }
+  public static func add(HAS_DILUTION_THRESHOLD_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DILUTION_THRESHOLD_M, def: false,
+   at: VT.HAS_DILUTION_THRESHOLD_M) }
+  public static func add(RELATIVE_POSITION_RTN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RELATIVE_POSITION_RTN, at: VT.RELATIVE_POSITION_RTN) }
+  public static func add(RELATIVE_VELOCITY_RTN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RELATIVE_VELOCITY_RTN, at: VT.RELATIVE_VELOCITY_RTN) }
+  public static func add(PRIMARY_SIGMA_RTN_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY_SIGMA_RTN_M, at: VT.PRIMARY_SIGMA_RTN_M) }
+  public static func add(SECONDARY_SIGMA_RTN_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECONDARY_SIGMA_RTN_M, at: VT.SECONDARY_SIGMA_RTN_M) }
+  public static func add(PRIMARY_DAYS_SINCE_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_DAYS_SINCE_EPOCH, def: 0.0, at: VT.PRIMARY_DAYS_SINCE_EPOCH) }
+  public static func add(HAS_PRIMARY_DAYS_SINCE_EPOCH: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_PRIMARY_DAYS_SINCE_EPOCH, def: false,
+   at: VT.HAS_PRIMARY_DAYS_SINCE_EPOCH) }
+  public static func add(SECONDARY_DAYS_SINCE_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_DAYS_SINCE_EPOCH, def: 0.0, at: VT.SECONDARY_DAYS_SINCE_EPOCH) }
+  public static func add(HAS_SECONDARY_DAYS_SINCE_EPOCH: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SECONDARY_DAYS_SINCE_EPOCH, def: false,
+   at: VT.HAS_SECONDARY_DAYS_SINCE_EPOCH) }
+  public static func add(CONJUNCTION_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONJUNCTION_MESSAGE, at: VT.CONJUNCTION_MESSAGE) }
+  public static func add(PRIMARY_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY_STATE, at: VT.PRIMARY_STATE) }
+  public static func add(SECONDARY_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECONDARY_STATE, at: VT.SECONDARY_STATE) }
+  public static func add(MAHALANOBIS_3D_SQUARED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAHALANOBIS_3D_SQUARED, def: 0.0, at: VT.MAHALANOBIS_3D_SQUARED) }
+  public static func add(HAS_MAHALANOBIS_3D_SQUARED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAHALANOBIS_3D_SQUARED, def: false,
+   at: VT.HAS_MAHALANOBIS_3D_SQUARED) }
+  public static func add(COMBINED_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMBINED_RADIUS_M, def: 0.0, at: VT.COMBINED_RADIUS_M) }
+  public static func add(HAS_COMBINED_RADIUS_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_COMBINED_RADIUS_M, def: false,
+   at: VT.HAS_COMBINED_RADIUS_M) }
+  public static func add(PRIMARY_HARD_BODY_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_HARD_BODY_RADIUS_M, def: 0.0, at: VT.PRIMARY_HARD_BODY_RADIUS_M) }
+  public static func add(HAS_PRIMARY_HARD_BODY_RADIUS_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_PRIMARY_HARD_BODY_RADIUS_M, def: false,
+   at: VT.HAS_PRIMARY_HARD_BODY_RADIUS_M) }
+  public static func add(SECONDARY_HARD_BODY_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_HARD_BODY_RADIUS_M, def: 0.0, at: VT.SECONDARY_HARD_BODY_RADIUS_M) }
+  public static func add(HAS_SECONDARY_HARD_BODY_RADIUS_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SECONDARY_HARD_BODY_RADIUS_M, def: false,
+   at: VT.HAS_SECONDARY_HARD_BODY_RADIUS_M) }
+  public static func add(PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_RADIUS_BASIS.rawValue, def: 0, at: VT.PRIMARY_RADIUS_BASIS) }
+  public static func add(SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_RADIUS_BASIS.rawValue, def: 0, at: VT.SECONDARY_RADIUS_BASIS) }
+  public static func add(PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_COVARIANCE_BASIS.rawValue, def: 0, at: VT.PRIMARY_COVARIANCE_BASIS) }
+  public static func add(SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_COVARIANCE_BASIS.rawValue, def: 0, at: VT.SECONDARY_COVARIANCE_BASIS) }
+  public static func add(SCREENING: cqrVolumeGeometry, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREENING.rawValue, def: 0, at: VT.SCREENING) }
+  public static func add(ADMITTED_BY: cqrVolumeAnchor, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADMITTED_BY.rawValue, def: 0, at: VT.ADMITTED_BY) }
+  public static func endCQREvent(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 16]); return end }
+  public static func createCQREvent(
+    _ fbb: inout FlatBufferBuilder,
+    PRIMARY_IDOffset PRIMARY_ID: Offset,
+    SECONDARY_IDOffset SECONDARY_ID: Offset,
+    PRIMARY_NAMEOffset PRIMARY_NAME: Offset = Offset(),
+    SECONDARY_NAMEOffset SECONDARY_NAME: Offset = Offset(),
+    PRIMARY_NORAD_ID: UInt32 = 0,
+    SECONDARY_NORAD_ID: UInt32 = 0,
+    TCAOffset TCA: Offset,
+    MISS_DISTANCE_M: Double = 0.0,
+    RELATIVE_SPEED_M_S: Double = 0.0,
+    PROBABILITYOffset PROBABILITY: Offset = Offset(),
+    DILUTION_THRESHOLD_M: Double = 0.0,
+    HAS_DILUTION_THRESHOLD_M: Bool = false,
+    RELATIVE_POSITION_RTNOffset RELATIVE_POSITION_RTN: Offset = Offset(),
+    RELATIVE_VELOCITY_RTNOffset RELATIVE_VELOCITY_RTN: Offset = Offset(),
+    PRIMARY_SIGMA_RTN_MOffset PRIMARY_SIGMA_RTN_M: Offset = Offset(),
+    SECONDARY_SIGMA_RTN_MOffset SECONDARY_SIGMA_RTN_M: Offset = Offset(),
+    PRIMARY_DAYS_SINCE_EPOCH: Double = 0.0,
+    HAS_PRIMARY_DAYS_SINCE_EPOCH: Bool = false,
+    SECONDARY_DAYS_SINCE_EPOCH: Double = 0.0,
+    HAS_SECONDARY_DAYS_SINCE_EPOCH: Bool = false,
+    CONJUNCTION_MESSAGEOffset CONJUNCTION_MESSAGE: Offset = Offset(),
+    PRIMARY_STATEOffset PRIMARY_STATE: Offset = Offset(),
+    SECONDARY_STATEOffset SECONDARY_STATE: Offset = Offset(),
+    MAHALANOBIS_3D_SQUARED: Double = 0.0,
+    HAS_MAHALANOBIS_3D_SQUARED: Bool = false,
+    COMBINED_RADIUS_M: Double = 0.0,
+    HAS_COMBINED_RADIUS_M: Bool = false,
+    PRIMARY_HARD_BODY_RADIUS_M: Double = 0.0,
+    HAS_PRIMARY_HARD_BODY_RADIUS_M: Bool = false,
+    SECONDARY_HARD_BODY_RADIUS_M: Double = 0.0,
+    HAS_SECONDARY_HARD_BODY_RADIUS_M: Bool = false,
+    PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis = .unspecified,
+    SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis = .unspecified,
+    PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis = .unspecified,
+    SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis = .unspecified,
+    SCREENING: cqrVolumeGeometry = .spherical,
+    ADMITTED_BY: cqrVolumeAnchor = .unspecified
+  ) -> Offset {
+    let __start = CQREvent.startCQREvent(&fbb)
+    CQREvent.add(PRIMARY_ID: PRIMARY_ID, &fbb)
+    CQREvent.add(SECONDARY_ID: SECONDARY_ID, &fbb)
+    CQREvent.add(PRIMARY_NAME: PRIMARY_NAME, &fbb)
+    CQREvent.add(SECONDARY_NAME: SECONDARY_NAME, &fbb)
+    CQREvent.add(PRIMARY_NORAD_ID: PRIMARY_NORAD_ID, &fbb)
+    CQREvent.add(SECONDARY_NORAD_ID: SECONDARY_NORAD_ID, &fbb)
+    CQREvent.add(TCA: TCA, &fbb)
+    CQREvent.add(MISS_DISTANCE_M: MISS_DISTANCE_M, &fbb)
+    CQREvent.add(RELATIVE_SPEED_M_S: RELATIVE_SPEED_M_S, &fbb)
+    CQREvent.add(PROBABILITY: PROBABILITY, &fbb)
+    CQREvent.add(DILUTION_THRESHOLD_M: DILUTION_THRESHOLD_M, &fbb)
+    CQREvent.add(HAS_DILUTION_THRESHOLD_M: HAS_DILUTION_THRESHOLD_M, &fbb)
+    CQREvent.add(RELATIVE_POSITION_RTN: RELATIVE_POSITION_RTN, &fbb)
+    CQREvent.add(RELATIVE_VELOCITY_RTN: RELATIVE_VELOCITY_RTN, &fbb)
+    CQREvent.add(PRIMARY_SIGMA_RTN_M: PRIMARY_SIGMA_RTN_M, &fbb)
+    CQREvent.add(SECONDARY_SIGMA_RTN_M: SECONDARY_SIGMA_RTN_M, &fbb)
+    CQREvent.add(PRIMARY_DAYS_SINCE_EPOCH: PRIMARY_DAYS_SINCE_EPOCH, &fbb)
+    CQREvent.add(HAS_PRIMARY_DAYS_SINCE_EPOCH: HAS_PRIMARY_DAYS_SINCE_EPOCH, &fbb)
+    CQREvent.add(SECONDARY_DAYS_SINCE_EPOCH: SECONDARY_DAYS_SINCE_EPOCH, &fbb)
+    CQREvent.add(HAS_SECONDARY_DAYS_SINCE_EPOCH: HAS_SECONDARY_DAYS_SINCE_EPOCH, &fbb)
+    CQREvent.add(CONJUNCTION_MESSAGE: CONJUNCTION_MESSAGE, &fbb)
+    CQREvent.add(PRIMARY_STATE: PRIMARY_STATE, &fbb)
+    CQREvent.add(SECONDARY_STATE: SECONDARY_STATE, &fbb)
+    CQREvent.add(MAHALANOBIS_3D_SQUARED: MAHALANOBIS_3D_SQUARED, &fbb)
+    CQREvent.add(HAS_MAHALANOBIS_3D_SQUARED: HAS_MAHALANOBIS_3D_SQUARED, &fbb)
+    CQREvent.add(COMBINED_RADIUS_M: COMBINED_RADIUS_M, &fbb)
+    CQREvent.add(HAS_COMBINED_RADIUS_M: HAS_COMBINED_RADIUS_M, &fbb)
+    CQREvent.add(PRIMARY_HARD_BODY_RADIUS_M: PRIMARY_HARD_BODY_RADIUS_M, &fbb)
+    CQREvent.add(HAS_PRIMARY_HARD_BODY_RADIUS_M: HAS_PRIMARY_HARD_BODY_RADIUS_M, &fbb)
+    CQREvent.add(SECONDARY_HARD_BODY_RADIUS_M: SECONDARY_HARD_BODY_RADIUS_M, &fbb)
+    CQREvent.add(HAS_SECONDARY_HARD_BODY_RADIUS_M: HAS_SECONDARY_HARD_BODY_RADIUS_M, &fbb)
+    CQREvent.add(PRIMARY_RADIUS_BASIS: PRIMARY_RADIUS_BASIS, &fbb)
+    CQREvent.add(SECONDARY_RADIUS_BASIS: SECONDARY_RADIUS_BASIS, &fbb)
+    CQREvent.add(PRIMARY_COVARIANCE_BASIS: PRIMARY_COVARIANCE_BASIS, &fbb)
+    CQREvent.add(SECONDARY_COVARIANCE_BASIS: SECONDARY_COVARIANCE_BASIS, &fbb)
+    CQREvent.add(SCREENING: SCREENING, &fbb)
+    CQREvent.add(ADMITTED_BY: ADMITTED_BY, &fbb)
+    return CQREvent.endCQREvent(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PRIMARY_ID, fieldName: "PRIMARY_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SECONDARY_ID, fieldName: "SECONDARY_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRIMARY_NAME, fieldName: "PRIMARY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SECONDARY_NAME, fieldName: "SECONDARY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRIMARY_NORAD_ID, fieldName: "PRIMARY_NORAD_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SECONDARY_NORAD_ID, fieldName: "SECONDARY_NORAD_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TCA, fieldName: "TCA", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.MISS_DISTANCE_M, fieldName: "MISS_DISTANCE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_SPEED_M_S, fieldName: "RELATIVE_SPEED_M_S", required: false, type: Double.self)
+    try _v.visit(field: VT.PROBABILITY, fieldName: "PROBABILITY", required: false, type: ForwardOffset<CQRProbabilityResult>.self)
+    try _v.visit(field: VT.DILUTION_THRESHOLD_M, fieldName: "DILUTION_THRESHOLD_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_DILUTION_THRESHOLD_M, fieldName: "HAS_DILUTION_THRESHOLD_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.RELATIVE_POSITION_RTN, fieldName: "RELATIVE_POSITION_RTN", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.RELATIVE_VELOCITY_RTN, fieldName: "RELATIVE_VELOCITY_RTN", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.PRIMARY_SIGMA_RTN_M, fieldName: "PRIMARY_SIGMA_RTN_M", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.SECONDARY_SIGMA_RTN_M, fieldName: "SECONDARY_SIGMA_RTN_M", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.PRIMARY_DAYS_SINCE_EPOCH, fieldName: "PRIMARY_DAYS_SINCE_EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_PRIMARY_DAYS_SINCE_EPOCH, fieldName: "HAS_PRIMARY_DAYS_SINCE_EPOCH", required: false, type: Bool.self)
+    try _v.visit(field: VT.SECONDARY_DAYS_SINCE_EPOCH, fieldName: "SECONDARY_DAYS_SINCE_EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_SECONDARY_DAYS_SINCE_EPOCH, fieldName: "HAS_SECONDARY_DAYS_SINCE_EPOCH", required: false, type: Bool.self)
+    try _v.visit(field: VT.CONJUNCTION_MESSAGE, fieldName: "CONJUNCTION_MESSAGE", required: false, type: ForwardOffset<CDM>.self)
+    try _v.visit(field: VT.PRIMARY_STATE, fieldName: "PRIMARY_STATE", required: false, type: ForwardOffset<PRWResidentState>.self)
+    try _v.visit(field: VT.SECONDARY_STATE, fieldName: "SECONDARY_STATE", required: false, type: ForwardOffset<PRWResidentState>.self)
+    try _v.visit(field: VT.MAHALANOBIS_3D_SQUARED, fieldName: "MAHALANOBIS_3D_SQUARED", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_MAHALANOBIS_3D_SQUARED, fieldName: "HAS_MAHALANOBIS_3D_SQUARED", required: false, type: Bool.self)
+    try _v.visit(field: VT.COMBINED_RADIUS_M, fieldName: "COMBINED_RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_COMBINED_RADIUS_M, fieldName: "HAS_COMBINED_RADIUS_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.PRIMARY_HARD_BODY_RADIUS_M, fieldName: "PRIMARY_HARD_BODY_RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_PRIMARY_HARD_BODY_RADIUS_M, fieldName: "HAS_PRIMARY_HARD_BODY_RADIUS_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.SECONDARY_HARD_BODY_RADIUS_M, fieldName: "SECONDARY_HARD_BODY_RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_SECONDARY_HARD_BODY_RADIUS_M, fieldName: "HAS_SECONDARY_HARD_BODY_RADIUS_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.PRIMARY_RADIUS_BASIS, fieldName: "PRIMARY_RADIUS_BASIS", required: false, type: cqrHardBodyRadiusBasis.self)
+    try _v.visit(field: VT.SECONDARY_RADIUS_BASIS, fieldName: "SECONDARY_RADIUS_BASIS", required: false, type: cqrHardBodyRadiusBasis.self)
+    try _v.visit(field: VT.PRIMARY_COVARIANCE_BASIS, fieldName: "PRIMARY_COVARIANCE_BASIS", required: false, type: cqrCovarianceBasis.self)
+    try _v.visit(field: VT.SECONDARY_COVARIANCE_BASIS, fieldName: "SECONDARY_COVARIANCE_BASIS", required: false, type: cqrCovarianceBasis.self)
+    try _v.visit(field: VT.SCREENING, fieldName: "SCREENING", required: false, type: cqrVolumeGeometry.self)
+    try _v.visit(field: VT.ADMITTED_BY, fieldName: "ADMITTED_BY", required: false, type: cqrVolumeAnchor.self)
+    _v.finish()
+  }
+}
+
+public struct CQRScreeningStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRScreeningStatistics.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TOTAL_OBJECTS: VOffset = 4
+    static let PAIRS_SCREENED: VOffset = 6
+    static let PAIRS_PREFILTERED: VOffset = 8
+    static let KD_TREE_CANDIDATES: VOffset = 10
+    static let TCA_REFINED: VOffset = 12
+    static let CONJUNCTIONS_FOUND: VOffset = 14
+    static let PROPAGATIONS: VOffset = 16
+    static let FAILED_PAIRS: VOffset = 18
+  }
+
+  public var TOTAL_OBJECTS: UInt64 { let o = _accessor.offset(VT.TOTAL_OBJECTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var PAIRS_SCREENED: UInt64 { let o = _accessor.offset(VT.PAIRS_SCREENED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var PAIRS_PREFILTERED: UInt64 { let o = _accessor.offset(VT.PAIRS_PREFILTERED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var KD_TREE_CANDIDATES: UInt64 { let o = _accessor.offset(VT.KD_TREE_CANDIDATES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var TCA_REFINED: UInt64 { let o = _accessor.offset(VT.TCA_REFINED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var CONJUNCTIONS_FOUND: UInt64 { let o = _accessor.offset(VT.CONJUNCTIONS_FOUND); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var PROPAGATIONS: UInt64 { let o = _accessor.offset(VT.PROPAGATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var FAILED_PAIRS: UInt64 { let o = _accessor.offset(VT.FAILED_PAIRS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startCQRScreeningStatistics(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(TOTAL_OBJECTS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_OBJECTS, def: 0, at: VT.TOTAL_OBJECTS) }
+  public static func add(PAIRS_SCREENED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAIRS_SCREENED, def: 0, at: VT.PAIRS_SCREENED) }
+  public static func add(PAIRS_PREFILTERED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAIRS_PREFILTERED, def: 0, at: VT.PAIRS_PREFILTERED) }
+  public static func add(KD_TREE_CANDIDATES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KD_TREE_CANDIDATES, def: 0, at: VT.KD_TREE_CANDIDATES) }
+  public static func add(TCA_REFINED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA_REFINED, def: 0, at: VT.TCA_REFINED) }
+  public static func add(CONJUNCTIONS_FOUND: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONJUNCTIONS_FOUND, def: 0, at: VT.CONJUNCTIONS_FOUND) }
+  public static func add(PROPAGATIONS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPAGATIONS, def: 0, at: VT.PROPAGATIONS) }
+  public static func add(FAILED_PAIRS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAILED_PAIRS, def: 0, at: VT.FAILED_PAIRS) }
+  public static func endCQRScreeningStatistics(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRScreeningStatistics(
+    _ fbb: inout FlatBufferBuilder,
+    TOTAL_OBJECTS: UInt64 = 0,
+    PAIRS_SCREENED: UInt64 = 0,
+    PAIRS_PREFILTERED: UInt64 = 0,
+    KD_TREE_CANDIDATES: UInt64 = 0,
+    TCA_REFINED: UInt64 = 0,
+    CONJUNCTIONS_FOUND: UInt64 = 0,
+    PROPAGATIONS: UInt64 = 0,
+    FAILED_PAIRS: UInt64 = 0
+  ) -> Offset {
+    let __start = CQRScreeningStatistics.startCQRScreeningStatistics(&fbb)
+    CQRScreeningStatistics.add(TOTAL_OBJECTS: TOTAL_OBJECTS, &fbb)
+    CQRScreeningStatistics.add(PAIRS_SCREENED: PAIRS_SCREENED, &fbb)
+    CQRScreeningStatistics.add(PAIRS_PREFILTERED: PAIRS_PREFILTERED, &fbb)
+    CQRScreeningStatistics.add(KD_TREE_CANDIDATES: KD_TREE_CANDIDATES, &fbb)
+    CQRScreeningStatistics.add(TCA_REFINED: TCA_REFINED, &fbb)
+    CQRScreeningStatistics.add(CONJUNCTIONS_FOUND: CONJUNCTIONS_FOUND, &fbb)
+    CQRScreeningStatistics.add(PROPAGATIONS: PROPAGATIONS, &fbb)
+    CQRScreeningStatistics.add(FAILED_PAIRS: FAILED_PAIRS, &fbb)
+    return CQRScreeningStatistics.endCQRScreeningStatistics(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TOTAL_OBJECTS, fieldName: "TOTAL_OBJECTS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PAIRS_SCREENED, fieldName: "PAIRS_SCREENED", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PAIRS_PREFILTERED, fieldName: "PAIRS_PREFILTERED", required: false, type: UInt64.self)
+    try _v.visit(field: VT.KD_TREE_CANDIDATES, fieldName: "KD_TREE_CANDIDATES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TCA_REFINED, fieldName: "TCA_REFINED", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CONJUNCTIONS_FOUND, fieldName: "CONJUNCTIONS_FOUND", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PROPAGATIONS, fieldName: "PROPAGATIONS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.FAILED_PAIRS, fieldName: "FAILED_PAIRS", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+///  Stable order by TCA then primary/secondary identity; ties retain original
+///  input-pair order. EVENT_OFFSET indexes this order across bounded chunks.
+///  PIV output cap, YIELDED and BACKLOG_REMAINING carry stream backpressure.
+public struct CQRCatalogResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRCatalogResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OBJECTS_PARSED: VOffset = 4
+    static let CONJUNCTIONS_FOUND: VOffset = 6
+    static let EVENTS: VOffset = 8
+    static let STATISTICS: VOffset = 10
+    static let EVENT_OFFSET: VOffset = 12
+    static let FINAL_CHUNK: VOffset = 14
+  }
+
+  public var OBJECTS_PARSED: UInt64 { let o = _accessor.offset(VT.OBJECTS_PARSED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var CONJUNCTIONS_FOUND: UInt64 { let o = _accessor.offset(VT.CONJUNCTIONS_FOUND); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var EVENTS: FlatbufferVector<CQREvent> { return _accessor.vector(at: VT.EVENTS, byteSize: 4) }
+  public var STATISTICS: CQRScreeningStatistics? { let o = _accessor.offset(VT.STATISTICS); return o == 0 ? nil : CQRScreeningStatistics(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EVENT_OFFSET: UInt64 { let o = _accessor.offset(VT.EVENT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var FINAL_CHUNK: Bool { let o = _accessor.offset(VT.FINAL_CHUNK); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startCQRCatalogResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(OBJECTS_PARSED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECTS_PARSED, def: 0, at: VT.OBJECTS_PARSED) }
+  public static func add(CONJUNCTIONS_FOUND: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONJUNCTIONS_FOUND, def: 0, at: VT.CONJUNCTIONS_FOUND) }
+  public static func addVectorOf(EVENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENTS, at: VT.EVENTS) }
+  public static func add(STATISTICS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATISTICS, at: VT.STATISTICS) }
+  public static func add(EVENT_OFFSET: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVENT_OFFSET, def: 0, at: VT.EVENT_OFFSET) }
+  public static func add(FINAL_CHUNK: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FINAL_CHUNK, def: true,
+   at: VT.FINAL_CHUNK) }
+  public static func endCQRCatalogResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRCatalogResult(
+    _ fbb: inout FlatBufferBuilder,
+    OBJECTS_PARSED: UInt64 = 0,
+    CONJUNCTIONS_FOUND: UInt64 = 0,
+    EVENTSVectorOffset EVENTS: Offset = Offset(),
+    STATISTICSOffset STATISTICS: Offset = Offset(),
+    EVENT_OFFSET: UInt64 = 0,
+    FINAL_CHUNK: Bool = true
+  ) -> Offset {
+    let __start = CQRCatalogResult.startCQRCatalogResult(&fbb)
+    CQRCatalogResult.add(OBJECTS_PARSED: OBJECTS_PARSED, &fbb)
+    CQRCatalogResult.add(CONJUNCTIONS_FOUND: CONJUNCTIONS_FOUND, &fbb)
+    CQRCatalogResult.addVectorOf(EVENTS: EVENTS, &fbb)
+    CQRCatalogResult.add(STATISTICS: STATISTICS, &fbb)
+    CQRCatalogResult.add(EVENT_OFFSET: EVENT_OFFSET, &fbb)
+    CQRCatalogResult.add(FINAL_CHUNK: FINAL_CHUNK, &fbb)
+    return CQRCatalogResult.endCQRCatalogResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OBJECTS_PARSED, fieldName: "OBJECTS_PARSED", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CONJUNCTIONS_FOUND, fieldName: "CONJUNCTIONS_FOUND", required: false, type: UInt64.self)
+    try _v.visit(field: VT.EVENTS, fieldName: "EVENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<CQREvent>, CQREvent>>.self)
+    try _v.visit(field: VT.STATISTICS, fieldName: "STATISTICS", required: false, type: ForwardOffset<CQRScreeningStatistics>.self)
+    try _v.visit(field: VT.EVENT_OFFSET, fieldName: "EVENT_OFFSET", required: false, type: UInt64.self)
+    try _v.visit(field: VT.FINAL_CHUNK, fieldName: "FINAL_CHUNK", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Resident index construction reuses canonical sources, samples and PPE.
+///  SAMPLED_STATES consumes sampled OEM records in SOURCES[].EPHEMERIS;
+///  POLYNOMIAL_SEGMENTS consumes SEGMENTS/PPE. Handles are validated against
+///  INSTANCE identity/generation; they are never persisted process addresses.
+public struct CQRIndexRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRIndexRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let CATALOG_HANDLE: VOffset = 6
+    static let SOURCE_HANDLES: VOffset = 8
+    static let SEGMENT_SET_HANDLE: VOffset = 10
+    static let PRIMARY_SOURCE_HANDLES: VOffset = 12
+    static let INDEX_CONTENT: VOffset = 14
+    static let REFINEMENT_MODE: VOffset = 16
+    static let SOURCES: VOffset = 18
+    static let SEGMENTS: VOffset = 20
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CATALOG_HANDLE: UInt32 { let o = _accessor.offset(VT.CATALOG_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCE_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.SOURCE_HANDLES, byteSize: 4) }
+  public func withUnsafePointerToSourceHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SOURCE_HANDLES, body: body) }
+  public var SEGMENT_SET_HANDLE: UInt32 { let o = _accessor.offset(VT.SEGMENT_SET_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var PRIMARY_SOURCE_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.PRIMARY_SOURCE_HANDLES, byteSize: 4) }
+  public func withUnsafePointerToPrimarySourceHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PRIMARY_SOURCE_HANDLES, body: body) }
+  public var INDEX_CONTENT: cqrIndexRepresentation { let o = _accessor.offset(VT.INDEX_CONTENT); return o == 0 ? .unspecified : cqrIndexRepresentation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var REFINEMENT_MODE: cqrRefinementStrategy { let o = _accessor.offset(VT.REFINEMENT_MODE); return o == 0 ? .unspecified : cqrRefinementStrategy(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var SOURCES: FlatbufferVector<CQRObjectSource> { return _accessor.vector(at: VT.SOURCES, byteSize: 4) }
+  public var SEGMENTS: PRWDescribeResult? { let o = _accessor.offset(VT.SEGMENTS); return o == 0 ? nil : PRWDescribeResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQRIndexRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(CATALOG_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CATALOG_HANDLE, def: 0, at: VT.CATALOG_HANDLE) }
+  public static func addVectorOf(SOURCE_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_HANDLES, at: VT.SOURCE_HANDLES) }
+  public static func add(SEGMENT_SET_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEGMENT_SET_HANDLE, def: 0, at: VT.SEGMENT_SET_HANDLE) }
+  public static func addVectorOf(PRIMARY_SOURCE_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY_SOURCE_HANDLES, at: VT.PRIMARY_SOURCE_HANDLES) }
+  public static func add(INDEX_CONTENT: cqrIndexRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INDEX_CONTENT.rawValue, def: 0, at: VT.INDEX_CONTENT) }
+  public static func add(REFINEMENT_MODE: cqrRefinementStrategy, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFINEMENT_MODE.rawValue, def: 0, at: VT.REFINEMENT_MODE) }
+  public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VT.SOURCES) }
+  public static func add(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
+  public static func endCQRIndexRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCQRIndexRequest(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    CATALOG_HANDLE: UInt32 = 0,
+    SOURCE_HANDLESVectorOffset SOURCE_HANDLES: Offset = Offset(),
+    SEGMENT_SET_HANDLE: UInt32 = 0,
+    PRIMARY_SOURCE_HANDLESVectorOffset PRIMARY_SOURCE_HANDLES: Offset = Offset(),
+    INDEX_CONTENT: cqrIndexRepresentation = .unspecified,
+    REFINEMENT_MODE: cqrRefinementStrategy = .unspecified,
+    SOURCESVectorOffset SOURCES: Offset = Offset(),
+    SEGMENTSOffset SEGMENTS: Offset = Offset()
+  ) -> Offset {
+    let __start = CQRIndexRequest.startCQRIndexRequest(&fbb)
+    CQRIndexRequest.add(INSTANCE: INSTANCE, &fbb)
+    CQRIndexRequest.add(CATALOG_HANDLE: CATALOG_HANDLE, &fbb)
+    CQRIndexRequest.addVectorOf(SOURCE_HANDLES: SOURCE_HANDLES, &fbb)
+    CQRIndexRequest.add(SEGMENT_SET_HANDLE: SEGMENT_SET_HANDLE, &fbb)
+    CQRIndexRequest.addVectorOf(PRIMARY_SOURCE_HANDLES: PRIMARY_SOURCE_HANDLES, &fbb)
+    CQRIndexRequest.add(INDEX_CONTENT: INDEX_CONTENT, &fbb)
+    CQRIndexRequest.add(REFINEMENT_MODE: REFINEMENT_MODE, &fbb)
+    CQRIndexRequest.addVectorOf(SOURCES: SOURCES, &fbb)
+    CQRIndexRequest.add(SEGMENTS: SEGMENTS, &fbb)
+    return CQRIndexRequest.endCQRIndexRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.CATALOG_HANDLE, fieldName: "CATALOG_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_HANDLES, fieldName: "SOURCE_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.SEGMENT_SET_HANDLE, fieldName: "SEGMENT_SET_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PRIMARY_SOURCE_HANDLES, fieldName: "PRIMARY_SOURCE_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.INDEX_CONTENT, fieldName: "INDEX_CONTENT", required: false, type: cqrIndexRepresentation.self)
+    try _v.visit(field: VT.REFINEMENT_MODE, fieldName: "REFINEMENT_MODE", required: false, type: cqrRefinementStrategy.self)
+    try _v.visit(field: VT.SOURCES, fieldName: "SOURCES", required: false, type: ForwardOffset<Vector<ForwardOffset<CQRObjectSource>, CQRObjectSource>>.self)
+    try _v.visit(field: VT.SEGMENTS, fieldName: "SEGMENTS", required: false, type: ForwardOffset<PRWDescribeResult>.self)
+    _v.finish()
+  }
+}
+
+public struct CQRIndexResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRIndexResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let SCREENING_INDEX_HANDLE: VOffset = 6
+    static let SOURCE_COUNT: VOffset = 8
+    static let CANDIDATE_PAIR_COUNT: VOffset = 10
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SCREENING_INDEX_HANDLE: UInt32 { let o = _accessor.offset(VT.SCREENING_INDEX_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCE_COUNT: UInt64 { let o = _accessor.offset(VT.SOURCE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var CANDIDATE_PAIR_COUNT: UInt64 { let o = _accessor.offset(VT.CANDIDATE_PAIR_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startCQRIndexResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(SCREENING_INDEX_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREENING_INDEX_HANDLE, def: 0, at: VT.SCREENING_INDEX_HANDLE) }
+  public static func add(SOURCE_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_COUNT, def: 0, at: VT.SOURCE_COUNT) }
+  public static func add(CANDIDATE_PAIR_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CANDIDATE_PAIR_COUNT, def: 0, at: VT.CANDIDATE_PAIR_COUNT) }
+  public static func endCQRIndexResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCQRIndexResult(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    SCREENING_INDEX_HANDLE: UInt32 = 0,
+    SOURCE_COUNT: UInt64 = 0,
+    CANDIDATE_PAIR_COUNT: UInt64 = 0
+  ) -> Offset {
+    let __start = CQRIndexResult.startCQRIndexResult(&fbb)
+    CQRIndexResult.add(INSTANCE: INSTANCE, &fbb)
+    CQRIndexResult.add(SCREENING_INDEX_HANDLE: SCREENING_INDEX_HANDLE, &fbb)
+    CQRIndexResult.add(SOURCE_COUNT: SOURCE_COUNT, &fbb)
+    CQRIndexResult.add(CANDIDATE_PAIR_COUNT: CANDIDATE_PAIR_COUNT, &fbb)
+    return CQRIndexResult.endCQRIndexResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.SCREENING_INDEX_HANDLE, fieldName: "SCREENING_INDEX_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_COUNT, fieldName: "SOURCE_COUNT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CANDIDATE_PAIR_COUNT, fieldName: "CANDIDATE_PAIR_COUNT", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+public struct CQRWindowRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRWindowRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let SCREENING_INDEX_HANDLE: VOffset = 6
+    static let CONTROLS: VOffset = 8
+    static let EVALUATION_FRAME: VOffset = 10
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SCREENING_INDEX_HANDLE: UInt32 { let o = _accessor.offset(VT.SCREENING_INDEX_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var CONTROLS: CQRScreeningControls! { let o = _accessor.offset(VT.CONTROLS); return CQRScreeningControls(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EVALUATION_FRAME: RFMCoordinateSystem! { let o = _accessor.offset(VT.EVALUATION_FRAME); return RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQRWindowRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(SCREENING_INDEX_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREENING_INDEX_HANDLE, def: 0, at: VT.SCREENING_INDEX_HANDLE) }
+  public static func add(CONTROLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTROLS, at: VT.CONTROLS) }
+  public static func add(EVALUATION_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVALUATION_FRAME, at: VT.EVALUATION_FRAME) }
+  public static func endCQRWindowRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8, 10]); return end }
+  public static func createCQRWindowRequest(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    SCREENING_INDEX_HANDLE: UInt32 = 0,
+    CONTROLSOffset CONTROLS: Offset,
+    EVALUATION_FRAMEOffset EVALUATION_FRAME: Offset
+  ) -> Offset {
+    let __start = CQRWindowRequest.startCQRWindowRequest(&fbb)
+    CQRWindowRequest.add(INSTANCE: INSTANCE, &fbb)
+    CQRWindowRequest.add(SCREENING_INDEX_HANDLE: SCREENING_INDEX_HANDLE, &fbb)
+    CQRWindowRequest.add(CONTROLS: CONTROLS, &fbb)
+    CQRWindowRequest.add(EVALUATION_FRAME: EVALUATION_FRAME, &fbb)
+    return CQRWindowRequest.endCQRWindowRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.SCREENING_INDEX_HANDLE, fieldName: "SCREENING_INDEX_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CONTROLS, fieldName: "CONTROLS", required: true, type: ForwardOffset<CQRScreeningControls>.self)
+    try _v.visit(field: VT.EVALUATION_FRAME, fieldName: "EVALUATION_FRAME", required: true, type: ForwardOffset<RFMCoordinateSystem>.self)
+    _v.finish()
+  }
+}
+
+public struct CQRDestroyRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRDestroyRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let SCREENING_INDEX_HANDLE: VOffset = 6
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SCREENING_INDEX_HANDLE: UInt32 { let o = _accessor.offset(VT.SCREENING_INDEX_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startCQRDestroyRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(SCREENING_INDEX_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREENING_INDEX_HANDLE, def: 0, at: VT.SCREENING_INDEX_HANDLE) }
+  public static func endCQRDestroyRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCQRDestroyRequest(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    SCREENING_INDEX_HANDLE: UInt32 = 0
+  ) -> Offset {
+    let __start = CQRDestroyRequest.startCQRDestroyRequest(&fbb)
+    CQRDestroyRequest.add(INSTANCE: INSTANCE, &fbb)
+    CQRDestroyRequest.add(SCREENING_INDEX_HANDLE: SCREENING_INDEX_HANDLE, &fbb)
+    return CQRDestroyRequest.endCQRDestroyRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.SCREENING_INDEX_HANDLE, fieldName: "SCREENING_INDEX_HANDLE", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+public struct CQRVersionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRVersionResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let VERSION: VOffset = 4
+  }
+
+  public var VERSION: String! { let o = _accessor.offset(VT.VERSION); return _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERSION) }
+  public static func startCQRVersionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func endCQRVersionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCQRVersionResult(
+    _ fbb: inout FlatBufferBuilder,
+    VERSIONOffset VERSION: Offset
+  ) -> Offset {
+    let __start = CQRVersionResult.startCQRVersionResult(&fbb)
+    CQRVersionResult.add(VERSION: VERSION, &fbb)
+    return CQRVersionResult.endCQRVersionResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Screening criterion for one object class. Exactly one kind per entry;
+///  SCREENING selects which fields apply.
+public struct CQRLaunchCriterion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRLaunchCriterion.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OBJECT_CLASS: VOffset = 4
+    static let SCREENING: VOffset = 6
+    static let RADIUS_M: VOffset = 8
+    static let RADIAL_M: VOffset = 10
+    static let IN_TRACK_M: VOffset = 12
+    static let CROSS_TRACK_M: VOffset = 14
+    static let MAX_PROBABILITY: VOffset = 16
+    static let ALGORITHM: VOffset = 18
+  }
+
+  public var OBJECT_CLASS: cqrLaunchObjectClass { let o = _accessor.offset(VT.OBJECT_CLASS); return o == 0 ? .unspecified : cqrLaunchObjectClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var SCREENING: cqrLaunchScreening { let o = _accessor.offset(VT.SCREENING); return o == 0 ? .unspecified : cqrLaunchScreening(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Sphere radius, metres (SPHERICAL).
+  public var RADIUS_M: Double { let o = _accessor.offset(VT.RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Ellipsoid semi-axes, metres (ELLIPSOIDAL).
+  public var RADIAL_M: Double { let o = _accessor.offset(VT.RADIAL_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var IN_TRACK_M: Double { let o = _accessor.offset(VT.IN_TRACK_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CROSS_TRACK_M: Double { let o = _accessor.offset(VT.CROSS_TRACK_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Largest acceptable probability of collision (PROBABILITY).
+  public var MAX_PROBABILITY: Double { let o = _accessor.offset(VT.MAX_PROBABILITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALGORITHM: cqrProbabilityAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .unspecified : cqrProbabilityAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public static func startCQRLaunchCriterion(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(OBJECT_CLASS: cqrLaunchObjectClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT_CLASS.rawValue, def: 0, at: VT.OBJECT_CLASS) }
+  public static func add(SCREENING: cqrLaunchScreening, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREENING.rawValue, def: 0, at: VT.SCREENING) }
+  public static func add(RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIUS_M, def: 0.0, at: VT.RADIUS_M) }
+  public static func add(RADIAL_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIAL_M, def: 0.0, at: VT.RADIAL_M) }
+  public static func add(IN_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IN_TRACK_M, def: 0.0, at: VT.IN_TRACK_M) }
+  public static func add(CROSS_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CROSS_TRACK_M, def: 0.0, at: VT.CROSS_TRACK_M) }
+  public static func add(MAX_PROBABILITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_PROBABILITY, def: 0.0, at: VT.MAX_PROBABILITY) }
+  public static func add(ALGORITHM: cqrProbabilityAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
+  public static func endCQRLaunchCriterion(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRLaunchCriterion(
+    _ fbb: inout FlatBufferBuilder,
+    OBJECT_CLASS: cqrLaunchObjectClass = .unspecified,
+    SCREENING: cqrLaunchScreening = .unspecified,
+    RADIUS_M: Double = 0.0,
+    RADIAL_M: Double = 0.0,
+    IN_TRACK_M: Double = 0.0,
+    CROSS_TRACK_M: Double = 0.0,
+    MAX_PROBABILITY: Double = 0.0,
+    ALGORITHM: cqrProbabilityAlgorithm = .unspecified
+  ) -> Offset {
+    let __start = CQRLaunchCriterion.startCQRLaunchCriterion(&fbb)
+    CQRLaunchCriterion.add(OBJECT_CLASS: OBJECT_CLASS, &fbb)
+    CQRLaunchCriterion.add(SCREENING: SCREENING, &fbb)
+    CQRLaunchCriterion.add(RADIUS_M: RADIUS_M, &fbb)
+    CQRLaunchCriterion.add(RADIAL_M: RADIAL_M, &fbb)
+    CQRLaunchCriterion.add(IN_TRACK_M: IN_TRACK_M, &fbb)
+    CQRLaunchCriterion.add(CROSS_TRACK_M: CROSS_TRACK_M, &fbb)
+    CQRLaunchCriterion.add(MAX_PROBABILITY: MAX_PROBABILITY, &fbb)
+    CQRLaunchCriterion.add(ALGORITHM: ALGORITHM, &fbb)
+    return CQRLaunchCriterion.endCQRLaunchCriterion(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OBJECT_CLASS, fieldName: "OBJECT_CLASS", required: false, type: cqrLaunchObjectClass.self)
+    try _v.visit(field: VT.SCREENING, fieldName: "SCREENING", required: false, type: cqrLaunchScreening.self)
+    try _v.visit(field: VT.RADIUS_M, fieldName: "RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.RADIAL_M, fieldName: "RADIAL_M", required: false, type: Double.self)
+    try _v.visit(field: VT.IN_TRACK_M, fieldName: "IN_TRACK_M", required: false, type: Double.self)
+    try _v.visit(field: VT.CROSS_TRACK_M, fieldName: "CROSS_TRACK_M", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_PROBABILITY, fieldName: "MAX_PROBABILITY", required: false, type: Double.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: cqrProbabilityAlgorithm.self)
+    _v.finish()
+  }
+}
+
+///  One launched object: its trajectory for a liftoff at NOMINAL_LIFTOFF.
+public struct CQRLaunchSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRLaunchSegment.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SEGMENT_ID: VOffset = 4
+    static let SEGMENT_NAME: VOffset = 6
+    static let TRAJECTORY: VOffset = 8
+    static let RADIUS_M: VOffset = 10
+    static let RADAR_CROSS_SECTION_M2: VOffset = 12
+    static let HAS_RADAR_CROSS_SECTION_M2: VOffset = 14
+    static let VALID_FROM: VOffset = 16
+    static let VALID_UNTIL: VOffset = 18
+  }
+
+  public var SEGMENT_ID: String! { let o = _accessor.offset(VT.SEGMENT_ID); return _accessor.string(at: o) }
+  public var SEGMENT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SEGMENT_ID) }
+  public var SEGMENT_NAME: String? { let o = _accessor.offset(VT.SEGMENT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SEGMENT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SEGMENT_NAME) }
+  ///  Sampled states in EVALUATION_FRAME, km and km/s as the OEM defines.
+  public var TRAJECTORY: OEM! { let o = _accessor.offset(VT.TRAJECTORY); return OEM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Hard-body radius, metres.
+  public var RADIUS_M: Double { let o = _accessor.offset(VT.RADIUS_M); return o == 0 ? 5.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Radar cross section, square metres.
+  public var RADAR_CROSS_SECTION_M2: Double { let o = _accessor.offset(VT.RADAR_CROSS_SECTION_M2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when RADAR_CROSS_SECTION_M2 carries a value; false means absent.
+  public var HAS_RADAR_CROSS_SECTION_M2: Bool { let o = _accessor.offset(VT.HAS_RADAR_CROSS_SECTION_M2); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Liftoff times this trajectory applies to, half-open [VALID_FROM,
+  ///  VALID_UNTIL). Absent bounds select the whole window. Windows whose
+  ///  trajectory changes (for example a varying azimuth) supply one segment
+  ///  per span.
+  public var VALID_FROM: TIMInstant? { let o = _accessor.offset(VT.VALID_FROM); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var VALID_UNTIL: TIMInstant? { let o = _accessor.offset(VT.VALID_UNTIL); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQRLaunchSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(SEGMENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENT_ID, at: VT.SEGMENT_ID) }
+  public static func add(SEGMENT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENT_NAME, at: VT.SEGMENT_NAME) }
+  public static func add(TRAJECTORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY, at: VT.TRAJECTORY) }
+  public static func add(RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIUS_M, def: 5.0, at: VT.RADIUS_M) }
+  public static func add(RADAR_CROSS_SECTION_M2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADAR_CROSS_SECTION_M2, def: 0.0, at: VT.RADAR_CROSS_SECTION_M2) }
+  public static func add(HAS_RADAR_CROSS_SECTION_M2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_RADAR_CROSS_SECTION_M2, def: false,
+   at: VT.HAS_RADAR_CROSS_SECTION_M2) }
+  public static func add(VALID_FROM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALID_FROM, at: VT.VALID_FROM) }
+  public static func add(VALID_UNTIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALID_UNTIL, at: VT.VALID_UNTIL) }
+  public static func endCQRLaunchSegment(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8]); return end }
+  public static func createCQRLaunchSegment(
+    _ fbb: inout FlatBufferBuilder,
+    SEGMENT_IDOffset SEGMENT_ID: Offset,
+    SEGMENT_NAMEOffset SEGMENT_NAME: Offset = Offset(),
+    TRAJECTORYOffset TRAJECTORY: Offset,
+    RADIUS_M: Double = 5.0,
+    RADAR_CROSS_SECTION_M2: Double = 0.0,
+    HAS_RADAR_CROSS_SECTION_M2: Bool = false,
+    VALID_FROMOffset VALID_FROM: Offset = Offset(),
+    VALID_UNTILOffset VALID_UNTIL: Offset = Offset()
+  ) -> Offset {
+    let __start = CQRLaunchSegment.startCQRLaunchSegment(&fbb)
+    CQRLaunchSegment.add(SEGMENT_ID: SEGMENT_ID, &fbb)
+    CQRLaunchSegment.add(SEGMENT_NAME: SEGMENT_NAME, &fbb)
+    CQRLaunchSegment.add(TRAJECTORY: TRAJECTORY, &fbb)
+    CQRLaunchSegment.add(RADIUS_M: RADIUS_M, &fbb)
+    CQRLaunchSegment.add(RADAR_CROSS_SECTION_M2: RADAR_CROSS_SECTION_M2, &fbb)
+    CQRLaunchSegment.add(HAS_RADAR_CROSS_SECTION_M2: HAS_RADAR_CROSS_SECTION_M2, &fbb)
+    CQRLaunchSegment.add(VALID_FROM: VALID_FROM, &fbb)
+    CQRLaunchSegment.add(VALID_UNTIL: VALID_UNTIL, &fbb)
+    return CQRLaunchSegment.endCQRLaunchSegment(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SEGMENT_ID, fieldName: "SEGMENT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEGMENT_NAME, fieldName: "SEGMENT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJECTORY, fieldName: "TRAJECTORY", required: true, type: ForwardOffset<OEM>.self)
+    try _v.visit(field: VT.RADIUS_M, fieldName: "RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.RADAR_CROSS_SECTION_M2, fieldName: "RADAR_CROSS_SECTION_M2", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_RADAR_CROSS_SECTION_M2, fieldName: "HAS_RADAR_CROSS_SECTION_M2", required: false, type: Bool.self)
+    try _v.visit(field: VT.VALID_FROM, fieldName: "VALID_FROM", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.VALID_UNTIL, fieldName: "VALID_UNTIL", required: false, type: ForwardOffset<TIMInstant>.self)
+    _v.finish()
+  }
+}
+
+///  One orbiting object to screen against.
+public struct CQRLaunchObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRLaunchObject.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SOURCE: VOffset = 4
+    static let OBJECT_CLASS: VOffset = 6
+    static let RENDEZVOUS_COORDINATED: VOffset = 8
+  }
+
+  ///  Ephemeris in EVALUATION_FRAME covering the screened absolute times.
+  public var SOURCE: CQRObjectSource! { let o = _accessor.offset(VT.SOURCE); return CQRObjectSource(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OBJECT_CLASS: cqrLaunchObjectClass { let o = _accessor.offset(VT.OBJECT_CLASS); return o == 0 ? .unspecified : cqrLaunchObjectClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  A pre-coordinated rendezvous or close approach: reported, never a
+  ///  window closure.
+  public var RENDEZVOUS_COORDINATED: Bool { let o = _accessor.offset(VT.RENDEZVOUS_COORDINATED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startCQRLaunchObject(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func add(OBJECT_CLASS: cqrLaunchObjectClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT_CLASS.rawValue, def: 0, at: VT.OBJECT_CLASS) }
+  public static func add(RENDEZVOUS_COORDINATED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RENDEZVOUS_COORDINATED, def: false,
+   at: VT.RENDEZVOUS_COORDINATED) }
+  public static func endCQRLaunchObject(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createCQRLaunchObject(
+    _ fbb: inout FlatBufferBuilder,
+    SOURCEOffset SOURCE: Offset,
+    OBJECT_CLASS: cqrLaunchObjectClass = .unspecified,
+    RENDEZVOUS_COORDINATED: Bool = false
+  ) -> Offset {
+    let __start = CQRLaunchObject.startCQRLaunchObject(&fbb)
+    CQRLaunchObject.add(SOURCE: SOURCE, &fbb)
+    CQRLaunchObject.add(OBJECT_CLASS: OBJECT_CLASS, &fbb)
+    CQRLaunchObject.add(RENDEZVOUS_COORDINATED: RENDEZVOUS_COORDINATED, &fbb)
+    return CQRLaunchObject.endCQRLaunchObject(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: true, type: ForwardOffset<CQRObjectSource>.self)
+    try _v.visit(field: VT.OBJECT_CLASS, fieldName: "OBJECT_CLASS", required: false, type: cqrLaunchObjectClass.self)
+    try _v.visit(field: VT.RENDEZVOUS_COORDINATED, fieldName: "RENDEZVOUS_COORDINATED", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+public struct CQRLaunchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRLaunchRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MISSION_NAME: VOffset = 4
+    static let NOMINAL_LIFTOFF: VOffset = 6
+    static let WINDOW_OPEN: VOffset = 8
+    static let WINDOW_CLOSE: VOffset = 10
+    static let LIFTOFF_STEP_SECONDS: VOffset = 12
+    static let SEGMENTS: VOffset = 14
+    static let OBJECTS: VOffset = 16
+    static let CRITERIA: VOffset = 18
+    static let MINIMUM_ALTITUDE_M: VOffset = 20
+    static let SCREEN_SECONDS_AFTER_LIFTOFF: VOffset = 22
+    static let CLOSURE_PAD_SECONDS: VOffset = 24
+    static let REPORT_RATIO: VOffset = 26
+    static let EVALUATION_FRAME: VOffset = 28
+  }
+
+  public var MISSION_NAME: String? { let o = _accessor.offset(VT.MISSION_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION_NAME) }
+  ///  Liftoff time the segment trajectories were produced for.
+  public var NOMINAL_LIFTOFF: TIMInstant! { let o = _accessor.offset(VT.NOMINAL_LIFTOFF); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Liftoff window, inclusive of both ends.
+  public var WINDOW_OPEN: TIMInstant! { let o = _accessor.offset(VT.WINDOW_OPEN); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var WINDOW_CLOSE: TIMInstant! { let o = _accessor.offset(VT.WINDOW_CLOSE); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Spacing of evaluated liftoff times, seconds.
+  public var LIFTOFF_STEP_SECONDS: Double { let o = _accessor.offset(VT.LIFTOFF_STEP_SECONDS); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEGMENTS: FlatbufferVector<CQRLaunchSegment> { return _accessor.vector(at: VT.SEGMENTS, byteSize: 4) }
+  public var OBJECTS: FlatbufferVector<CQRLaunchObject> { return _accessor.vector(at: VT.OBJECTS, byteSize: 4) }
+  ///  One criterion per object class present in OBJECTS.
+  public var CRITERIA: FlatbufferVector<CQRLaunchCriterion> { return _accessor.vector(at: VT.CRITERIA, byteSize: 4) }
+  ///  Segment states below this height above the reference ellipsoid are not
+  ///  screened, metres.
+  public var MINIMUM_ALTITUDE_M: Double { let o = _accessor.offset(VT.MINIMUM_ALTITUDE_M); return o == 0 ? 150000.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Screening ends this long after liftoff, seconds, or earlier where a
+  ///  trajectory ends.
+  public var SCREEN_SECONDS_AFTER_LIFTOFF: Double { let o = _accessor.offset(VT.SCREEN_SECONDS_AFTER_LIFTOFF); return o == 0 ? 10800.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time added before and after every closure for vehicle performance and
+  ///  timing uncertainty, seconds.
+  public var CLOSURE_PAD_SECONDS: Double { let o = _accessor.offset(VT.CLOSURE_PAD_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Report approaches whose criterion ratio is below this value; 1 reports
+  ///  violations only.
+  public var REPORT_RATIO: Double { let o = _accessor.offset(VT.REPORT_RATIO); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Earth-fixed frame shared by every trajectory and ephemeris.
+  public var EVALUATION_FRAME: RFMCoordinateSystem! { let o = _accessor.offset(VT.EVALUATION_FRAME); return RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQRLaunchRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(MISSION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_NAME, at: VT.MISSION_NAME) }
+  public static func add(NOMINAL_LIFTOFF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOMINAL_LIFTOFF, at: VT.NOMINAL_LIFTOFF) }
+  public static func add(WINDOW_OPEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_OPEN, at: VT.WINDOW_OPEN) }
+  public static func add(WINDOW_CLOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_CLOSE, at: VT.WINDOW_CLOSE) }
+  public static func add(LIFTOFF_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIFTOFF_STEP_SECONDS, def: 1.0, at: VT.LIFTOFF_STEP_SECONDS) }
+  public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
+  public static func addVectorOf(OBJECTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECTS, at: VT.OBJECTS) }
+  public static func addVectorOf(CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRITERIA, at: VT.CRITERIA) }
+  public static func add(MINIMUM_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_ALTITUDE_M, def: 150000.0, at: VT.MINIMUM_ALTITUDE_M) }
+  public static func add(SCREEN_SECONDS_AFTER_LIFTOFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_SECONDS_AFTER_LIFTOFF, def: 10800.0, at: VT.SCREEN_SECONDS_AFTER_LIFTOFF) }
+  public static func add(CLOSURE_PAD_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOSURE_PAD_SECONDS, def: 0.0, at: VT.CLOSURE_PAD_SECONDS) }
+  public static func add(REPORT_RATIO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_RATIO, def: 1.0, at: VT.REPORT_RATIO) }
+  public static func add(EVALUATION_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVALUATION_FRAME, at: VT.EVALUATION_FRAME) }
+  public static func endCQRLaunchRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10, 14, 16, 18, 28]); return end }
+  public static func createCQRLaunchRequest(
+    _ fbb: inout FlatBufferBuilder,
+    MISSION_NAMEOffset MISSION_NAME: Offset = Offset(),
+    NOMINAL_LIFTOFFOffset NOMINAL_LIFTOFF: Offset,
+    WINDOW_OPENOffset WINDOW_OPEN: Offset,
+    WINDOW_CLOSEOffset WINDOW_CLOSE: Offset,
+    LIFTOFF_STEP_SECONDS: Double = 1.0,
+    SEGMENTSVectorOffset SEGMENTS: Offset,
+    OBJECTSVectorOffset OBJECTS: Offset,
+    CRITERIAVectorOffset CRITERIA: Offset,
+    MINIMUM_ALTITUDE_M: Double = 150000.0,
+    SCREEN_SECONDS_AFTER_LIFTOFF: Double = 10800.0,
+    CLOSURE_PAD_SECONDS: Double = 0.0,
+    REPORT_RATIO: Double = 1.0,
+    EVALUATION_FRAMEOffset EVALUATION_FRAME: Offset
+  ) -> Offset {
+    let __start = CQRLaunchRequest.startCQRLaunchRequest(&fbb)
+    CQRLaunchRequest.add(MISSION_NAME: MISSION_NAME, &fbb)
+    CQRLaunchRequest.add(NOMINAL_LIFTOFF: NOMINAL_LIFTOFF, &fbb)
+    CQRLaunchRequest.add(WINDOW_OPEN: WINDOW_OPEN, &fbb)
+    CQRLaunchRequest.add(WINDOW_CLOSE: WINDOW_CLOSE, &fbb)
+    CQRLaunchRequest.add(LIFTOFF_STEP_SECONDS: LIFTOFF_STEP_SECONDS, &fbb)
+    CQRLaunchRequest.addVectorOf(SEGMENTS: SEGMENTS, &fbb)
+    CQRLaunchRequest.addVectorOf(OBJECTS: OBJECTS, &fbb)
+    CQRLaunchRequest.addVectorOf(CRITERIA: CRITERIA, &fbb)
+    CQRLaunchRequest.add(MINIMUM_ALTITUDE_M: MINIMUM_ALTITUDE_M, &fbb)
+    CQRLaunchRequest.add(SCREEN_SECONDS_AFTER_LIFTOFF: SCREEN_SECONDS_AFTER_LIFTOFF, &fbb)
+    CQRLaunchRequest.add(CLOSURE_PAD_SECONDS: CLOSURE_PAD_SECONDS, &fbb)
+    CQRLaunchRequest.add(REPORT_RATIO: REPORT_RATIO, &fbb)
+    CQRLaunchRequest.add(EVALUATION_FRAME: EVALUATION_FRAME, &fbb)
+    return CQRLaunchRequest.endCQRLaunchRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MISSION_NAME, fieldName: "MISSION_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NOMINAL_LIFTOFF, fieldName: "NOMINAL_LIFTOFF", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.WINDOW_OPEN, fieldName: "WINDOW_OPEN", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.WINDOW_CLOSE, fieldName: "WINDOW_CLOSE", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.LIFTOFF_STEP_SECONDS, fieldName: "LIFTOFF_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.SEGMENTS, fieldName: "SEGMENTS", required: true, type: ForwardOffset<Vector<ForwardOffset<CQRLaunchSegment>, CQRLaunchSegment>>.self)
+    try _v.visit(field: VT.OBJECTS, fieldName: "OBJECTS", required: true, type: ForwardOffset<Vector<ForwardOffset<CQRLaunchObject>, CQRLaunchObject>>.self)
+    try _v.visit(field: VT.CRITERIA, fieldName: "CRITERIA", required: true, type: ForwardOffset<Vector<ForwardOffset<CQRLaunchCriterion>, CQRLaunchCriterion>>.self)
+    try _v.visit(field: VT.MINIMUM_ALTITUDE_M, fieldName: "MINIMUM_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SCREEN_SECONDS_AFTER_LIFTOFF, fieldName: "SCREEN_SECONDS_AFTER_LIFTOFF", required: false, type: Double.self)
+    try _v.visit(field: VT.CLOSURE_PAD_SECONDS, fieldName: "CLOSURE_PAD_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.REPORT_RATIO, fieldName: "REPORT_RATIO", required: false, type: Double.self)
+    try _v.visit(field: VT.EVALUATION_FRAME, fieldName: "EVALUATION_FRAME", required: true, type: ForwardOffset<RFMCoordinateSystem>.self)
+    _v.finish()
+  }
+}
+
+///  Liftoff times that violate at least one criterion, half-open [START, END),
+///  widened by the liftoff step and CLOSURE_PAD_SECONDS and merged.
+public struct CQRLaunchClosure: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRLaunchClosure.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let START: VOffset = 4
+    static let END: VOffset = 6
+    static let OBJECT_IDS: VOffset = 8
+    static let SEGMENT_IDS: VOffset = 10
+  }
+
+  public var START: TIMInstant! { let o = _accessor.offset(VT.START); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var END: TIMInstant! { let o = _accessor.offset(VT.END); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Orbiting objects that cause this closure.
+  public var OBJECT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.OBJECT_IDS, byteSize: 4) }
+  ///  Segments involved.
+  public var SEGMENT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SEGMENT_IDS, byteSize: 4) }
+  public static func startCQRLaunchClosure(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START, at: VT.START) }
+  public static func add(END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END, at: VT.END) }
+  public static func addVectorOf(OBJECT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_IDS, at: VT.OBJECT_IDS) }
+  public static func addVectorOf(SEGMENT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENT_IDS, at: VT.SEGMENT_IDS) }
+  public static func endCQRLaunchClosure(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createCQRLaunchClosure(
+    _ fbb: inout FlatBufferBuilder,
+    STARTOffset START: Offset,
+    ENDOffset END: Offset,
+    OBJECT_IDSVectorOffset OBJECT_IDS: Offset = Offset(),
+    SEGMENT_IDSVectorOffset SEGMENT_IDS: Offset = Offset()
+  ) -> Offset {
+    let __start = CQRLaunchClosure.startCQRLaunchClosure(&fbb)
+    CQRLaunchClosure.add(START: START, &fbb)
+    CQRLaunchClosure.add(END: END, &fbb)
+    CQRLaunchClosure.addVectorOf(OBJECT_IDS: OBJECT_IDS, &fbb)
+    CQRLaunchClosure.addVectorOf(SEGMENT_IDS: SEGMENT_IDS, &fbb)
+    return CQRLaunchClosure.endCQRLaunchClosure(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.START, fieldName: "START", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.END, fieldName: "END", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.OBJECT_IDS, fieldName: "OBJECT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SEGMENT_IDS, fieldName: "SEGMENT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    _v.finish()
+  }
+}
+
+///  Closest approach of one segment to one orbiting object for one liftoff
+///  time: the worst liftoff time of each contiguous run below REPORT_RATIO.
+public struct CQRLaunchApproach: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRLaunchApproach.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SEGMENT_ID: VOffset = 4
+    static let OBJECT_ID: VOffset = 6
+    static let OBJECT_CLASS: VOffset = 8
+    static let LIFTOFF: VOffset = 10
+    static let TCA: VOffset = 12
+    static let MISS_DISTANCE_M: VOffset = 14
+    static let RELATIVE_SPEED_M_S: VOffset = 16
+    static let RELATIVE_POSITION_RTN: VOffset = 18
+    static let CRITERION_RATIO: VOffset = 20
+    static let VIOLATES: VOffset = 22
+    static let RENDEZVOUS_COORDINATED: VOffset = 24
+    static let RUN_START: VOffset = 26
+    static let RUN_END: VOffset = 28
+  }
+
+  public var SEGMENT_ID: String! { let o = _accessor.offset(VT.SEGMENT_ID); return _accessor.string(at: o) }
+  public var SEGMENT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SEGMENT_ID) }
+  public var OBJECT_ID: String! { let o = _accessor.offset(VT.OBJECT_ID); return _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.OBJECT_ID) }
+  public var OBJECT_CLASS: cqrLaunchObjectClass { let o = _accessor.offset(VT.OBJECT_CLASS); return o == 0 ? .unspecified : cqrLaunchObjectClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var LIFTOFF: TIMInstant! { let o = _accessor.offset(VT.LIFTOFF); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TCA: TIMInstant! { let o = _accessor.offset(VT.TCA); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MISS_DISTANCE_M: Double { let o = _accessor.offset(VT.MISS_DISTANCE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RELATIVE_SPEED_M_S: Double { let o = _accessor.offset(VT.RELATIVE_SPEED_M_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Segment position relative to the orbiting object in the object's
+  ///  radial/in-track/cross-track frame, metres.
+  public var RELATIVE_POSITION_RTN: FRMVector3? { let o = _accessor.offset(VT.RELATIVE_POSITION_RTN); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Normalised separation: distance over radius (SPHERICAL) or ellipsoid
+  ///  radius (ELLIPSOIDAL). Below 1 violates.
+  public var CRITERION_RATIO: Double { let o = _accessor.offset(VT.CRITERION_RATIO); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VIOLATES: Bool { let o = _accessor.offset(VT.VIOLATES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var RENDEZVOUS_COORDINATED: Bool { let o = _accessor.offset(VT.RENDEZVOUS_COORDINATED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  First and last liftoff times of the run this approach represents.
+  public var RUN_START: TIMInstant? { let o = _accessor.offset(VT.RUN_START); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RUN_END: TIMInstant? { let o = _accessor.offset(VT.RUN_END); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQRLaunchApproach(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(SEGMENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENT_ID, at: VT.SEGMENT_ID) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(OBJECT_CLASS: cqrLaunchObjectClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT_CLASS.rawValue, def: 0, at: VT.OBJECT_CLASS) }
+  public static func add(LIFTOFF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIFTOFF, at: VT.LIFTOFF) }
+  public static func add(TCA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TCA, at: VT.TCA) }
+  public static func add(MISS_DISTANCE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISS_DISTANCE_M, def: 0.0, at: VT.MISS_DISTANCE_M) }
+  public static func add(RELATIVE_SPEED_M_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_SPEED_M_S, def: 0.0, at: VT.RELATIVE_SPEED_M_S) }
+  public static func add(RELATIVE_POSITION_RTN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RELATIVE_POSITION_RTN, at: VT.RELATIVE_POSITION_RTN) }
+  public static func add(CRITERION_RATIO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRITERION_RATIO, def: 0.0, at: VT.CRITERION_RATIO) }
+  public static func add(VIOLATES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIOLATES, def: false,
+   at: VT.VIOLATES) }
+  public static func add(RENDEZVOUS_COORDINATED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RENDEZVOUS_COORDINATED, def: false,
+   at: VT.RENDEZVOUS_COORDINATED) }
+  public static func add(RUN_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RUN_START, at: VT.RUN_START) }
+  public static func add(RUN_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RUN_END, at: VT.RUN_END) }
+  public static func endCQRLaunchApproach(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 10, 12]); return end }
+  public static func createCQRLaunchApproach(
+    _ fbb: inout FlatBufferBuilder,
+    SEGMENT_IDOffset SEGMENT_ID: Offset,
+    OBJECT_IDOffset OBJECT_ID: Offset,
+    OBJECT_CLASS: cqrLaunchObjectClass = .unspecified,
+    LIFTOFFOffset LIFTOFF: Offset,
+    TCAOffset TCA: Offset,
+    MISS_DISTANCE_M: Double = 0.0,
+    RELATIVE_SPEED_M_S: Double = 0.0,
+    RELATIVE_POSITION_RTNOffset RELATIVE_POSITION_RTN: Offset = Offset(),
+    CRITERION_RATIO: Double = 0.0,
+    VIOLATES: Bool = false,
+    RENDEZVOUS_COORDINATED: Bool = false,
+    RUN_STARTOffset RUN_START: Offset = Offset(),
+    RUN_ENDOffset RUN_END: Offset = Offset()
+  ) -> Offset {
+    let __start = CQRLaunchApproach.startCQRLaunchApproach(&fbb)
+    CQRLaunchApproach.add(SEGMENT_ID: SEGMENT_ID, &fbb)
+    CQRLaunchApproach.add(OBJECT_ID: OBJECT_ID, &fbb)
+    CQRLaunchApproach.add(OBJECT_CLASS: OBJECT_CLASS, &fbb)
+    CQRLaunchApproach.add(LIFTOFF: LIFTOFF, &fbb)
+    CQRLaunchApproach.add(TCA: TCA, &fbb)
+    CQRLaunchApproach.add(MISS_DISTANCE_M: MISS_DISTANCE_M, &fbb)
+    CQRLaunchApproach.add(RELATIVE_SPEED_M_S: RELATIVE_SPEED_M_S, &fbb)
+    CQRLaunchApproach.add(RELATIVE_POSITION_RTN: RELATIVE_POSITION_RTN, &fbb)
+    CQRLaunchApproach.add(CRITERION_RATIO: CRITERION_RATIO, &fbb)
+    CQRLaunchApproach.add(VIOLATES: VIOLATES, &fbb)
+    CQRLaunchApproach.add(RENDEZVOUS_COORDINATED: RENDEZVOUS_COORDINATED, &fbb)
+    CQRLaunchApproach.add(RUN_START: RUN_START, &fbb)
+    CQRLaunchApproach.add(RUN_END: RUN_END, &fbb)
+    return CQRLaunchApproach.endCQRLaunchApproach(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SEGMENT_ID, fieldName: "SEGMENT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_CLASS, fieldName: "OBJECT_CLASS", required: false, type: cqrLaunchObjectClass.self)
+    try _v.visit(field: VT.LIFTOFF, fieldName: "LIFTOFF", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.TCA, fieldName: "TCA", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.MISS_DISTANCE_M, fieldName: "MISS_DISTANCE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_SPEED_M_S, fieldName: "RELATIVE_SPEED_M_S", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_POSITION_RTN, fieldName: "RELATIVE_POSITION_RTN", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.CRITERION_RATIO, fieldName: "CRITERION_RATIO", required: false, type: Double.self)
+    try _v.visit(field: VT.VIOLATES, fieldName: "VIOLATES", required: false, type: Bool.self)
+    try _v.visit(field: VT.RENDEZVOUS_COORDINATED, fieldName: "RENDEZVOUS_COORDINATED", required: false, type: Bool.self)
+    try _v.visit(field: VT.RUN_START, fieldName: "RUN_START", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.RUN_END, fieldName: "RUN_END", required: false, type: ForwardOffset<TIMInstant>.self)
+    _v.finish()
+  }
+}
+
+public struct CQRLaunchResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRLaunchResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MISSION_NAME: VOffset = 4
+    static let WINDOW_OPEN: VOffset = 6
+    static let WINDOW_CLOSE: VOffset = 8
+    static let LIFTOFF_STEP_SECONDS: VOffset = 10
+    static let LIFTOFF_TIMES_EVALUATED: VOffset = 12
+    static let CLOSURES: VOffset = 14
+    static let APPROACHES: VOffset = 16
+    static let STATISTICS: VOffset = 18
+  }
+
+  public var MISSION_NAME: String? { let o = _accessor.offset(VT.MISSION_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION_NAME) }
+  public var WINDOW_OPEN: TIMInstant? { let o = _accessor.offset(VT.WINDOW_OPEN); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var WINDOW_CLOSE: TIMInstant? { let o = _accessor.offset(VT.WINDOW_CLOSE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LIFTOFF_STEP_SECONDS: Double { let o = _accessor.offset(VT.LIFTOFF_STEP_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LIFTOFF_TIMES_EVALUATED: UInt64 { let o = _accessor.offset(VT.LIFTOFF_TIMES_EVALUATED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Ordered by START.
+  public var CLOSURES: FlatbufferVector<CQRLaunchClosure> { return _accessor.vector(at: VT.CLOSURES, byteSize: 4) }
+  ///  Ordered by LIFTOFF, then segment and object identity.
+  public var APPROACHES: FlatbufferVector<CQRLaunchApproach> { return _accessor.vector(at: VT.APPROACHES, byteSize: 4) }
+  public var STATISTICS: CQRScreeningStatistics? { let o = _accessor.offset(VT.STATISTICS); return o == 0 ? nil : CQRScreeningStatistics(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQRLaunchResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(MISSION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_NAME, at: VT.MISSION_NAME) }
+  public static func add(WINDOW_OPEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_OPEN, at: VT.WINDOW_OPEN) }
+  public static func add(WINDOW_CLOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_CLOSE, at: VT.WINDOW_CLOSE) }
+  public static func add(LIFTOFF_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIFTOFF_STEP_SECONDS, def: 0.0, at: VT.LIFTOFF_STEP_SECONDS) }
+  public static func add(LIFTOFF_TIMES_EVALUATED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIFTOFF_TIMES_EVALUATED, def: 0, at: VT.LIFTOFF_TIMES_EVALUATED) }
+  public static func addVectorOf(CLOSURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOSURES, at: VT.CLOSURES) }
+  public static func addVectorOf(APPROACHES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APPROACHES, at: VT.APPROACHES) }
+  public static func add(STATISTICS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATISTICS, at: VT.STATISTICS) }
+  public static func endCQRLaunchResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQRLaunchResult(
+    _ fbb: inout FlatBufferBuilder,
+    MISSION_NAMEOffset MISSION_NAME: Offset = Offset(),
+    WINDOW_OPENOffset WINDOW_OPEN: Offset = Offset(),
+    WINDOW_CLOSEOffset WINDOW_CLOSE: Offset = Offset(),
+    LIFTOFF_STEP_SECONDS: Double = 0.0,
+    LIFTOFF_TIMES_EVALUATED: UInt64 = 0,
+    CLOSURESVectorOffset CLOSURES: Offset = Offset(),
+    APPROACHESVectorOffset APPROACHES: Offset = Offset(),
+    STATISTICSOffset STATISTICS: Offset = Offset()
+  ) -> Offset {
+    let __start = CQRLaunchResult.startCQRLaunchResult(&fbb)
+    CQRLaunchResult.add(MISSION_NAME: MISSION_NAME, &fbb)
+    CQRLaunchResult.add(WINDOW_OPEN: WINDOW_OPEN, &fbb)
+    CQRLaunchResult.add(WINDOW_CLOSE: WINDOW_CLOSE, &fbb)
+    CQRLaunchResult.add(LIFTOFF_STEP_SECONDS: LIFTOFF_STEP_SECONDS, &fbb)
+    CQRLaunchResult.add(LIFTOFF_TIMES_EVALUATED: LIFTOFF_TIMES_EVALUATED, &fbb)
+    CQRLaunchResult.addVectorOf(CLOSURES: CLOSURES, &fbb)
+    CQRLaunchResult.addVectorOf(APPROACHES: APPROACHES, &fbb)
+    CQRLaunchResult.add(STATISTICS: STATISTICS, &fbb)
+    return CQRLaunchResult.endCQRLaunchResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MISSION_NAME, fieldName: "MISSION_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WINDOW_OPEN, fieldName: "WINDOW_OPEN", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.WINDOW_CLOSE, fieldName: "WINDOW_CLOSE", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.LIFTOFF_STEP_SECONDS, fieldName: "LIFTOFF_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.LIFTOFF_TIMES_EVALUATED, fieldName: "LIFTOFF_TIMES_EVALUATED", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CLOSURES, fieldName: "CLOSURES", required: false, type: ForwardOffset<Vector<ForwardOffset<CQRLaunchClosure>, CQRLaunchClosure>>.self)
+    try _v.visit(field: VT.APPROACHES, fieldName: "APPROACHES", required: false, type: ForwardOffset<Vector<ForwardOffset<CQRLaunchApproach>, CQRLaunchApproach>>.self)
+    try _v.visit(field: VT.STATISTICS, fieldName: "STATISTICS", required: false, type: ForwardOffset<CQRScreeningStatistics>.self)
+    _v.finish()
+  }
+}
+
+///  Conjunction Query and Result — pair/catalog screening, encounter-plane
+///  probability, typed native documents, resident screening-index control and
+///  launch-window screening.
+///  Exactly one arm per PIV payload, selected by the declared METHOD_ID.
+public struct CQR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQR.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PAIR_REQUEST: VOffset = 4
+    static let CATALOG_REQUEST: VOffset = 6
+    static let PROBABILITY_REQUEST: VOffset = 8
+    static let PROBABILITY_RESULT: VOffset = 10
+    static let ALFANO_REQUEST: VOffset = 12
+    static let ALFANO_RESULT: VOffset = 14
+    static let EVENT_RESULT: VOffset = 16
+    static let TCA_RESULT: VOffset = 18
+    static let CATALOG_RESULT: VOffset = 20
+    static let NATIVE_DOCUMENT: VOffset = 22
+    static let INDEX_REQUEST: VOffset = 24
+    static let INDEX_RESULT: VOffset = 26
+    static let WINDOW_REQUEST: VOffset = 28
+    static let DESTROY_REQUEST: VOffset = 30
+    static let VERSION_QUERY: VOffset = 32
+    static let VERSION_RESULT: VOffset = 34
+    static let LAUNCH_REQUEST: VOffset = 36
+    static let LAUNCH_RESULT: VOffset = 38
+  }
+
+  public var PAIR_REQUEST: CQRPairRequest? { let o = _accessor.offset(VT.PAIR_REQUEST); return o == 0 ? nil : CQRPairRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CATALOG_REQUEST: CQRCatalogRequest? { let o = _accessor.offset(VT.CATALOG_REQUEST); return o == 0 ? nil : CQRCatalogRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PROBABILITY_REQUEST: CQRProbabilityRequest? { let o = _accessor.offset(VT.PROBABILITY_REQUEST); return o == 0 ? nil : CQRProbabilityRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PROBABILITY_RESULT: CQRProbabilityResult? { let o = _accessor.offset(VT.PROBABILITY_RESULT); return o == 0 ? nil : CQRProbabilityResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ALFANO_REQUEST: CQRAlfanoRequest? { let o = _accessor.offset(VT.ALFANO_REQUEST); return o == 0 ? nil : CQRAlfanoRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ALFANO_RESULT: CQRAlfanoResult? { let o = _accessor.offset(VT.ALFANO_RESULT); return o == 0 ? nil : CQRAlfanoResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EVENT_RESULT: CQREvent? { let o = _accessor.offset(VT.EVENT_RESULT); return o == 0 ? nil : CQREvent(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TCA_RESULT: TIMInstant? { let o = _accessor.offset(VT.TCA_RESULT); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CATALOG_RESULT: CQRCatalogResult? { let o = _accessor.offset(VT.CATALOG_RESULT); return o == 0 ? nil : CQRCatalogResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var NATIVE_DOCUMENT: CQRNativeDocument? { let o = _accessor.offset(VT.NATIVE_DOCUMENT); return o == 0 ? nil : CQRNativeDocument(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INDEX_REQUEST: CQRIndexRequest? { let o = _accessor.offset(VT.INDEX_REQUEST); return o == 0 ? nil : CQRIndexRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INDEX_RESULT: CQRIndexResult? { let o = _accessor.offset(VT.INDEX_RESULT); return o == 0 ? nil : CQRIndexResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var WINDOW_REQUEST: CQRWindowRequest? { let o = _accessor.offset(VT.WINDOW_REQUEST); return o == 0 ? nil : CQRWindowRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DESTROY_REQUEST: CQRDestroyRequest? { let o = _accessor.offset(VT.DESTROY_REQUEST); return o == 0 ? nil : CQRDestroyRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var VERSION_QUERY: Bool { let o = _accessor.offset(VT.VERSION_QUERY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VERSION_RESULT: CQRVersionResult? { let o = _accessor.offset(VT.VERSION_RESULT); return o == 0 ? nil : CQRVersionResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  APPENDED. Launch-window screening request and result.
+  public var LAUNCH_REQUEST: CQRLaunchRequest? { let o = _accessor.offset(VT.LAUNCH_REQUEST); return o == 0 ? nil : CQRLaunchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LAUNCH_RESULT: CQRLaunchResult? { let o = _accessor.offset(VT.LAUNCH_RESULT); return o == 0 ? nil : CQRLaunchResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCQR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  public static func add(PAIR_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAIR_REQUEST, at: VT.PAIR_REQUEST) }
+  public static func add(CATALOG_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_REQUEST, at: VT.CATALOG_REQUEST) }
+  public static func add(PROBABILITY_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROBABILITY_REQUEST, at: VT.PROBABILITY_REQUEST) }
+  public static func add(PROBABILITY_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROBABILITY_RESULT, at: VT.PROBABILITY_RESULT) }
+  public static func add(ALFANO_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALFANO_REQUEST, at: VT.ALFANO_REQUEST) }
+  public static func add(ALFANO_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALFANO_RESULT, at: VT.ALFANO_RESULT) }
+  public static func add(EVENT_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_RESULT, at: VT.EVENT_RESULT) }
+  public static func add(TCA_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TCA_RESULT, at: VT.TCA_RESULT) }
+  public static func add(CATALOG_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_RESULT, at: VT.CATALOG_RESULT) }
+  public static func add(NATIVE_DOCUMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NATIVE_DOCUMENT, at: VT.NATIVE_DOCUMENT) }
+  public static func add(INDEX_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INDEX_REQUEST, at: VT.INDEX_REQUEST) }
+  public static func add(INDEX_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INDEX_RESULT, at: VT.INDEX_RESULT) }
+  public static func add(WINDOW_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_REQUEST, at: VT.WINDOW_REQUEST) }
+  public static func add(DESTROY_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESTROY_REQUEST, at: VT.DESTROY_REQUEST) }
+  public static func add(VERSION_QUERY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION_QUERY, def: false,
+   at: VT.VERSION_QUERY) }
+  public static func add(VERSION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION_RESULT, at: VT.VERSION_RESULT) }
+  public static func add(LAUNCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_REQUEST, at: VT.LAUNCH_REQUEST) }
+  public static func add(LAUNCH_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_RESULT, at: VT.LAUNCH_RESULT) }
+  public static func endCQR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCQR(
+    _ fbb: inout FlatBufferBuilder,
+    PAIR_REQUESTOffset PAIR_REQUEST: Offset = Offset(),
+    CATALOG_REQUESTOffset CATALOG_REQUEST: Offset = Offset(),
+    PROBABILITY_REQUESTOffset PROBABILITY_REQUEST: Offset = Offset(),
+    PROBABILITY_RESULTOffset PROBABILITY_RESULT: Offset = Offset(),
+    ALFANO_REQUESTOffset ALFANO_REQUEST: Offset = Offset(),
+    ALFANO_RESULTOffset ALFANO_RESULT: Offset = Offset(),
+    EVENT_RESULTOffset EVENT_RESULT: Offset = Offset(),
+    TCA_RESULTOffset TCA_RESULT: Offset = Offset(),
+    CATALOG_RESULTOffset CATALOG_RESULT: Offset = Offset(),
+    NATIVE_DOCUMENTOffset NATIVE_DOCUMENT: Offset = Offset(),
+    INDEX_REQUESTOffset INDEX_REQUEST: Offset = Offset(),
+    INDEX_RESULTOffset INDEX_RESULT: Offset = Offset(),
+    WINDOW_REQUESTOffset WINDOW_REQUEST: Offset = Offset(),
+    DESTROY_REQUESTOffset DESTROY_REQUEST: Offset = Offset(),
+    VERSION_QUERY: Bool = false,
+    VERSION_RESULTOffset VERSION_RESULT: Offset = Offset(),
+    LAUNCH_REQUESTOffset LAUNCH_REQUEST: Offset = Offset(),
+    LAUNCH_RESULTOffset LAUNCH_RESULT: Offset = Offset()
+  ) -> Offset {
+    let __start = CQR.startCQR(&fbb)
+    CQR.add(PAIR_REQUEST: PAIR_REQUEST, &fbb)
+    CQR.add(CATALOG_REQUEST: CATALOG_REQUEST, &fbb)
+    CQR.add(PROBABILITY_REQUEST: PROBABILITY_REQUEST, &fbb)
+    CQR.add(PROBABILITY_RESULT: PROBABILITY_RESULT, &fbb)
+    CQR.add(ALFANO_REQUEST: ALFANO_REQUEST, &fbb)
+    CQR.add(ALFANO_RESULT: ALFANO_RESULT, &fbb)
+    CQR.add(EVENT_RESULT: EVENT_RESULT, &fbb)
+    CQR.add(TCA_RESULT: TCA_RESULT, &fbb)
+    CQR.add(CATALOG_RESULT: CATALOG_RESULT, &fbb)
+    CQR.add(NATIVE_DOCUMENT: NATIVE_DOCUMENT, &fbb)
+    CQR.add(INDEX_REQUEST: INDEX_REQUEST, &fbb)
+    CQR.add(INDEX_RESULT: INDEX_RESULT, &fbb)
+    CQR.add(WINDOW_REQUEST: WINDOW_REQUEST, &fbb)
+    CQR.add(DESTROY_REQUEST: DESTROY_REQUEST, &fbb)
+    CQR.add(VERSION_QUERY: VERSION_QUERY, &fbb)
+    CQR.add(VERSION_RESULT: VERSION_RESULT, &fbb)
+    CQR.add(LAUNCH_REQUEST: LAUNCH_REQUEST, &fbb)
+    CQR.add(LAUNCH_RESULT: LAUNCH_RESULT, &fbb)
+    return CQR.endCQR(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PAIR_REQUEST, fieldName: "PAIR_REQUEST", required: false, type: ForwardOffset<CQRPairRequest>.self)
+    try _v.visit(field: VT.CATALOG_REQUEST, fieldName: "CATALOG_REQUEST", required: false, type: ForwardOffset<CQRCatalogRequest>.self)
+    try _v.visit(field: VT.PROBABILITY_REQUEST, fieldName: "PROBABILITY_REQUEST", required: false, type: ForwardOffset<CQRProbabilityRequest>.self)
+    try _v.visit(field: VT.PROBABILITY_RESULT, fieldName: "PROBABILITY_RESULT", required: false, type: ForwardOffset<CQRProbabilityResult>.self)
+    try _v.visit(field: VT.ALFANO_REQUEST, fieldName: "ALFANO_REQUEST", required: false, type: ForwardOffset<CQRAlfanoRequest>.self)
+    try _v.visit(field: VT.ALFANO_RESULT, fieldName: "ALFANO_RESULT", required: false, type: ForwardOffset<CQRAlfanoResult>.self)
+    try _v.visit(field: VT.EVENT_RESULT, fieldName: "EVENT_RESULT", required: false, type: ForwardOffset<CQREvent>.self)
+    try _v.visit(field: VT.TCA_RESULT, fieldName: "TCA_RESULT", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.CATALOG_RESULT, fieldName: "CATALOG_RESULT", required: false, type: ForwardOffset<CQRCatalogResult>.self)
+    try _v.visit(field: VT.NATIVE_DOCUMENT, fieldName: "NATIVE_DOCUMENT", required: false, type: ForwardOffset<CQRNativeDocument>.self)
+    try _v.visit(field: VT.INDEX_REQUEST, fieldName: "INDEX_REQUEST", required: false, type: ForwardOffset<CQRIndexRequest>.self)
+    try _v.visit(field: VT.INDEX_RESULT, fieldName: "INDEX_RESULT", required: false, type: ForwardOffset<CQRIndexResult>.self)
+    try _v.visit(field: VT.WINDOW_REQUEST, fieldName: "WINDOW_REQUEST", required: false, type: ForwardOffset<CQRWindowRequest>.self)
+    try _v.visit(field: VT.DESTROY_REQUEST, fieldName: "DESTROY_REQUEST", required: false, type: ForwardOffset<CQRDestroyRequest>.self)
+    try _v.visit(field: VT.VERSION_QUERY, fieldName: "VERSION_QUERY", required: false, type: Bool.self)
+    try _v.visit(field: VT.VERSION_RESULT, fieldName: "VERSION_RESULT", required: false, type: ForwardOffset<CQRVersionResult>.self)
+    try _v.visit(field: VT.LAUNCH_REQUEST, fieldName: "LAUNCH_REQUEST", required: false, type: ForwardOffset<CQRLaunchRequest>.self)
+    try _v.visit(field: VT.LAUNCH_RESULT, fieldName: "LAUNCH_RESULT", required: false, type: ForwardOffset<CQRLaunchResult>.self)
     _v.finish()
   }
 }

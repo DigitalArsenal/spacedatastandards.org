@@ -3,6 +3,8 @@
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -178,6 +180,8 @@ impl<'a> OMM<'a> {
     pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 84;
     pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 86;
     pub const VT_USER_DEFINED_PARAMETERS: ::flatbuffers::VOffsetT = 88;
+    pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 90;
+    pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 92;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -210,6 +214,8 @@ impl<'a> OMM<'a> {
         builder.add_MEAN_MOTION(args.MEAN_MOTION);
         builder.add_SEMI_MAJOR_AXIS(args.SEMI_MAJOR_AXIS);
         builder.add_CCSDS_OMM_VERS(args.CCSDS_OMM_VERS);
+        if let Some(x) = args.COV_REALISM { builder.add_COV_REALISM(x); }
+        if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.USER_DEFINED_PARAMETERS { builder.add_USER_DEFINED_PARAMETERS(x); }
         if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
         if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
@@ -314,6 +320,12 @@ impl<'a> OMM<'a> {
         let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let PROVENANCE = self.PROVENANCE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let COV_REALISM = self.COV_REALISM().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         OMMT {
             CCSDS_OMM_VERS,
             CREATION_DATE,
@@ -358,6 +370,8 @@ impl<'a> OMM<'a> {
             CLASSIFICATION,
             MESSAGE_ID,
             USER_DEFINED_PARAMETERS,
+            PROVENANCE,
+            COV_REALISM,
         }
     }
 
@@ -763,6 +777,24 @@ impl<'a> OMM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter>>>>(OMM::VT_USER_DEFINED_PARAMETERS, None)}
     }
+
+    /// Where the element set comes from and the terms it travels under.
+    #[inline]
+    pub fn PROVENANCE(&self) -> Option<PVN<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PVN>>(OMM::VT_PROVENANCE, None)}
+    }
+
+    /// Realism of COVARIANCE.
+    #[inline]
+    pub fn COV_REALISM(&self) -> Option<CVR<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CVR>>(OMM::VT_COV_REALISM, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OMM<'_> {
@@ -814,6 +846,8 @@ impl ::flatbuffers::Verifiable for OMM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter>>>>("USER_DEFINED_PARAMETERS", Self::VT_USER_DEFINED_PARAMETERS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PVN>>("PROVENANCE", Self::VT_PROVENANCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<CVR>>("COV_REALISM", Self::VT_COV_REALISM, false)?
             .finish();
         Ok(())
     }
@@ -863,6 +897,8 @@ pub struct OMMArgs<'a> {
     pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub USER_DEFINED_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter<'a>>>>>,
+    pub PROVENANCE: Option<::flatbuffers::WIPOffset<PVN<'a>>>,
+    pub COV_REALISM: Option<::flatbuffers::WIPOffset<CVR<'a>>>,
 }
 
 impl<'a> Default for OMMArgs<'a> {
@@ -912,6 +948,8 @@ impl<'a> Default for OMMArgs<'a> {
             CLASSIFICATION: None,
             MESSAGE_ID: None,
             USER_DEFINED_PARAMETERS: None,
+            PROVENANCE: None,
+            COV_REALISM: None,
         }
     }
 }
@@ -1138,6 +1176,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OMMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PROVENANCE(&mut self, PROVENANCE: ::flatbuffers::WIPOffset<PVN<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PVN>>(OMM::VT_PROVENANCE, PROVENANCE);
+    }
+
+    #[inline]
+    pub fn add_COV_REALISM(&mut self, COV_REALISM: ::flatbuffers::WIPOffset<CVR<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CVR>>(OMM::VT_COV_REALISM, COV_REALISM);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OMMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OMMBuilder {
@@ -1199,6 +1247,8 @@ impl ::core::fmt::Debug for OMM<'_> {
         ds.field("CLASSIFICATION", &self.CLASSIFICATION());
         ds.field("MESSAGE_ID", &self.MESSAGE_ID());
         ds.field("USER_DEFINED_PARAMETERS", &self.USER_DEFINED_PARAMETERS());
+        ds.field("PROVENANCE", &self.PROVENANCE());
+        ds.field("COV_REALISM", &self.COV_REALISM());
         ds.finish()
     }
 }
@@ -1249,6 +1299,8 @@ pub struct OMMT {
     pub CLASSIFICATION: Option<alloc::string::String>,
     pub MESSAGE_ID: Option<alloc::string::String>,
     pub USER_DEFINED_PARAMETERS: Option<alloc::vec::Vec<OMMUserDefinedParameterT>>,
+    pub PROVENANCE: Option<alloc::boxed::Box<PVNT>>,
+    pub COV_REALISM: Option<alloc::boxed::Box<CVRT>>,
 }
 
 impl Default for OMMT {
@@ -1297,6 +1349,8 @@ impl Default for OMMT {
             CLASSIFICATION: None,
             MESSAGE_ID: None,
             USER_DEFINED_PARAMETERS: None,
+            PROVENANCE: None,
+            COV_REALISM: None,
         }
     }
 }
@@ -1383,6 +1437,12 @@ impl OMMT {
         let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let PROVENANCE = self.PROVENANCE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         OMM::create(_fbb, &OMMArgs{
             CCSDS_OMM_VERS,
             CREATION_DATE,
@@ -1427,6 +1487,8 @@ impl OMMT {
             CLASSIFICATION,
             MESSAGE_ID,
             USER_DEFINED_PARAMETERS,
+            PROVENANCE,
+            COV_REALISM,
         })
     }
 }

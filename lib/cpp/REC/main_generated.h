@@ -269,6 +269,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -2121,14 +2123,18 @@ bool VerifyRecordTypeVector(::flatbuffers::VerifierTemplate<B> &verifier, const 
 enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_NONE = 0,
   RecordTypeExtended_ABA = 256,
+  RecordTypeExtended_CVR = 257,
+  RecordTypeExtended_PVN = 258,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_ABA
+  RecordTypeExtended_MAX = RecordTypeExtended_PVN
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[2] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[4] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
-    RecordTypeExtended_ABA
+    RecordTypeExtended_ABA,
+    RecordTypeExtended_CVR,
+    RecordTypeExtended_PVN
   };
   return values;
 }
@@ -2137,6 +2143,8 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
   switch (e) {
     case RecordTypeExtended_NONE: return "NONE";
     case RecordTypeExtended_ABA: return "ABA";
+    case RecordTypeExtended_CVR: return "CVR";
+    case RecordTypeExtended_PVN: return "PVN";
     default: return "";
   }
 }

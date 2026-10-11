@@ -19,7 +19,7 @@ public struct LCC : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public LCC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public legacyCountryCode OWNER { get { int o = __p.__offset(4); return o != 0 ? (legacyCountryCode)__p.bb.GetSbyte(o + __p.bb_pos) : legacyCountryCode.AB; } }
+  public legacyCountryCode OWNER { get { int o = __p.__offset(4); return o != 0 ? (legacyCountryCode)__p.bb.Get(o + __p.bb_pos) : legacyCountryCode.AB; } }
   /// Display name of the owner or source the code stands for.
   public string NAME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -73,7 +73,7 @@ public struct LCC : IFlatbufferObject
   }
 
   public static void StartLCC(FlatBufferBuilder builder) { builder.StartTable(6); }
-  public static void AddOWNER(FlatBufferBuilder builder, legacyCountryCode OWNER) { builder.AddSbyte(0, (sbyte)OWNER, 0); }
+  public static void AddOWNER(FlatBufferBuilder builder, legacyCountryCode OWNER) { builder.AddByte(0, (byte)OWNER, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(2, DESCRIPTIONOffset.Value, 0); }
   public static void AddACTIVE(FlatBufferBuilder builder, bool ACTIVE) { builder.AddBool(3, ACTIVE, false); }

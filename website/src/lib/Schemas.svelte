@@ -62,6 +62,8 @@
     "OCM": ["orbit", "comprehensive", "trajectory", "covariance", "maneuver", "perturbation", "CCSDS"],
     "BOV": ["burn out", "vector", "launch", "trajectory", "EFG", "velocity", "epoch"],
     "MNV": ["maneuver", "orbit change", "delta-v", "station-keeping", "thrust", "burn"],
+    "CVR": ["covariance", "realism", "calibration", "uncertainty", "Mahalanobis", "coverage", "error model"],
+    "PVN": ["provenance", "attribution", "source", "originator", "provider", "license", "licence", "lineage"],
     "MFE": ["manifold", "element set", "temporary", "satellite number", "TLE"],
     "MNF": ["manifold", "propagation", "delta-v", "probability", "candidate"],
     "MPE": ["minimum", "propagatable", "compact", "mean motion", "BSTAR", "TLE subset"],

@@ -8,340 +8,2858 @@ import Common
 
 import FlatBuffers
 
-public enum legacyCountryCode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Trajectory state representation type.
+///  Defines how trajectory data is parameterized in this OCM.
+///  CCSDS 502.0-B-3 Section 7 specifies multiple trajectory state types.
+public enum trajectoryType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Arab Satellite Communications Organization
-  case ab = 0
-  ///  Asia Broadcast Satellite
-  case abs = 1
-  ///  Asia Satellite Telecommunications Company (ASIASAT)
-  case ac = 2
-  ///  Algeria
-  case alg = 3
-  ///  Angola
-  case ang = 4
-  ///  Argentina
-  case argn = 5
-  ///  Republic of Armenia
-  case arm = 6
-  ///  Austria
-  case asra = 7
-  ///  Australia
-  case aus = 8
-  ///  Azerbaijan
-  case azer = 9
-  ///  Belgium
-  case bel = 10
-  ///  Belarus
-  case bela = 11
-  ///  Bermuda
-  case berm = 12
-  ///  People's Republic of Bangladesh
-  case bgd = 13
-  ///  Kingdom of Bhutan
-  case bhut = 14
-  ///  Bolivia
-  case bol = 15
-  ///  Brazil
-  case braz = 16
-  ///  Bulgaria
-  case bul = 17
-  ///  Canada
-  case ca = 18
-  ///  China/Brazil
-  case chbz = 19
-  ///  China/Turkey
-  case chtu = 20
-  ///  Chile
-  case chle = 21
-  ///  Commonwealth of Independent States (former USSR)
-  case cis = 22
-  ///  Colombia
-  case col = 23
-  ///  Republic of Costa Rica
-  case cri = 24
-  ///  Czech Republic (former Czechoslovakia)
-  case czch = 25
-  ///  Denmark
-  case den = 26
-  ///  Republic of Djibouti
-  case dji = 27
-  ///  Ecuador
-  case ecu = 28
-  ///  Egypt
-  case egyp = 29
-  ///  European Space Agency
-  case esa = 30
-  ///  European Space Research Organization
-  case esro = 31
-  ///  Estonia
-  case est = 32
-  ///  Ethiopia
-  case eth = 33
-  ///  European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-  case eume = 34
-  ///  European Telecommunications Satellite Organization (EUTELSAT)
-  case eute = 35
-  ///  France/Germany
-  case fger = 36
-  ///  Finland
-  case fin = 37
-  ///  France
-  case fr = 38
-  ///  France/Italy
-  case frit = 39
-  ///  Germany
-  case ger = 40
-  ///  Republic of Ghana
-  case gha = 41
-  ///  Globalstar
-  case glob = 42
-  ///  Greece
-  case grec = 43
-  ///  Greece/Saudi Arabia
-  case grsa = 44
-  ///  Guatemala
-  case guat = 45
-  ///  Hungary
-  case hun = 46
-  ///  International Mobile Satellite Organization (INMARSAT)
-  case im = 47
-  ///  India
-  case ind = 48
-  ///  Indonesia
-  case indo = 49
-  ///  Iran
-  case iran = 50
-  ///  Iraq
-  case iraq = 51
-  ///  Iridium
-  case irid = 52
-  ///  Ireland
-  case irl = 53
-  ///  Israel
-  case isra = 54
-  ///  Indian Space Research Organisation
-  case isro = 55
-  ///  International Space Station
-  case iss = 56
-  ///  Italy
-  case it = 57
-  ///  International Telecommunications Satellite Organization (INTELSAT)
-  case itso = 58
-  ///  Japan
-  case jpn = 59
-  ///  Kazakhstan
-  case kaz = 60
-  ///  Republic of Kenya
-  case ken = 61
-  ///  Laos
-  case laos = 62
-  ///  Democratic Socialist Republic of Sri Lanka
-  case lka = 63
-  ///  Lithuania
-  case ltu = 64
-  ///  Luxembourg
-  case luxe = 65
-  ///  Morocco
-  case ma = 66
-  ///  Malaysia
-  case mala = 67
-  ///  Principality of Monaco
-  case mco = 68
-  ///  Republic of Moldova
-  case mda = 69
-  ///  Mexico
-  case mex = 70
-  ///  Republic of the Union of Myanmar
-  case mmr = 71
-  ///  Mongolia
-  case mng = 72
-  ///  Mauritius
-  case mus = 73
-  ///  North Atlantic Treaty Organization
-  case nato = 74
-  ///  Netherlands
-  case neth = 75
-  ///  New ICO
-  case nico = 76
-  ///  Nigeria
-  case nig = 77
-  ///  Democratic People's Republic of Korea
-  case nkor = 78
-  ///  Norway
-  case nor = 79
-  ///  Federal Democratic Republic of Nepal
-  case npl = 80
-  ///  New Zealand
-  case nz = 81
-  ///  O3b Networks
-  case o3b = 82
-  ///  ORBCOMM
-  case orb = 83
-  ///  Pakistan
-  case paki = 84
-  ///  Peru
-  case peru = 85
-  ///  Poland
-  case pol = 86
-  ///  Portugal
-  case por = 87
-  ///  People's Republic of China
-  case prc = 88
-  ///  Republic of Paraguay
-  case pry = 89
-  ///  People's Republic of China/European Space Agency
-  case pres = 90
-  ///  State of Qatar
-  case qat = 91
-  ///  RascomStar-QAF
-  case rasc = 92
-  ///  Taiwan (Republic of China)
-  case roc = 93
-  ///  Romania
-  case rom = 94
-  ///  Philippines (Republic of the Philippines)
-  case rp = 95
-  ///  Republic of Rwanda
-  case rwa = 96
-  ///  South Africa
-  case safr = 97
-  ///  Saudi Arabia
-  case saud = 98
-  ///  Republic of Sudan
-  case sdn = 99
-  ///  Sea Launch
-  case seal = 100
-  ///  SES
-  case ses = 101
-  ///  Singapore/Japan
-  case sgjp = 102
-  ///  Singapore
-  case sing = 103
-  ///  Republic of Korea
-  case skor = 104
-  ///  Spain
-  case spn = 105
-  ///  Singapore/Taiwan
-  case stct = 106
-  ///  Slovenia
-  case svn = 107
-  ///  Sweden
-  case swed = 108
-  ///  Switzerland
-  case swtz = 109
-  ///  To Be Determined
-  case tbd = 110
-  ///  Thailand
-  case thai = 111
-  ///  Turkmenistan/Monaco
-  case tmmc = 112
-  ///  Republic of Tunisia
-  case tun = 113
-  ///  Turkey
-  case turk = 114
-  ///  United Arab Emirates
-  case uae = 115
-  ///  United Kingdom
-  case uk = 116
-  ///  Ukraine
-  case ukr = 117
-  ///  Unknown
-  case unk = 118
-  ///  Uruguay
-  case ury = 119
-  ///  United States
-  case us = 120
-  ///  United States/Brazil
-  case usbz = 121
-  ///  Vatican City State
-  case vat = 122
-  ///  Venezuela
-  case venz = 123
-  ///  Vietnam
-  case vtnm = 124
-  ///  Republic of Zimbabwe
-  case zwe = 125
+  ///  Cartesian position and velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT).
+  case cartesianPv = 0
+  ///  Cartesian position, velocity, and acceleration (9 components).
+  case cartesianPva = 1
+  ///  Polynomial coefficients for Cartesian position (and optionally velocity).
+  ///  Associated data in POLYNOMIAL_POSITION_RECORDS.
+  case polynomialPos = 2
+  ///  Polynomial coefficients for classical orbital elements.
+  ///  Associated data in POLYNOMIAL_OE_RECORDS.
+  case polynomialOe = 3
+  ///  Hermite interpolating polynomial representation.
+  case hermite = 4
+  ///  Lagrange interpolating polynomial representation.
+  case lagrange = 5
+  ///  Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+  ///  [km], eccentricity, inclination, right ascension of the ascending node,
+  ///  argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+  ///  KEPLERIAN (OID 1.3.112.4.57.5.11).
+  case keplerian = 6
+  ///  As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+  ///  Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+  case keplerianMean = 7
+  ///  Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+  ///  af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+  ///  L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+  ///  psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+  ///  SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+  case equinoctial = 8
+  ///  Modified equinoctial set, 7 values per row: semi-latus rectum
+  ///  p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+  ///  [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+  ///  (OID 1.3.112.4.57.5.9).
+  case equinoctialMod = 9
 
-  public static var max: legacyCountryCode { return .zwe }
-  public static var min: legacyCountryCode { return .ab }
+  public static var max: trajectoryType { return .equinoctialMod }
+  public static var min: trajectoryType { return .cartesianPv }
 }
 
 
-///  Legacy Country Code
-public struct LCC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Estimator class that produced an orbit-determination solution
+///  (batch-vs-filter provenance).
+public enum estimatorCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Estimator class not specified
+  case unknown = 0
+  ///  Batch least-squares fit
+  case batchleastsquares = 1
+  ///  Extended Kalman filter
+  case extendedkalman = 2
+  ///  Unscented Kalman filter
+  case unscentedkalman = 3
+  ///  Smoothed sequential solution
+  case smoother = 4
+
+  public static var max: estimatorCategory { return .smoother }
+  public static var min: estimatorCategory { return .unknown }
+}
+
+
+///  Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+public enum covarianceOrdering: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
+  case ltm = 0
+  ///  Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values.
+  case utm = 1
+  ///  The whole matrix row by row: N*N values.
+  case full = 2
+  ///  The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places
+  ///  above the diagonal hold the correlation coefficients (covariance over the product of standard deviations).
+  case ltmwcc = 3
+  ///  The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places
+  ///  below the diagonal hold the correlation coefficients.
+  case utmwcc = 4
+
+  public static var max: covarianceOrdering { return .utmwcc }
+  public static var min: covarianceOrdering { return .ltm }
+}
+
+
+public struct Header: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$LCC" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LCC.id, addPrefix: prefix) }
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Header.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let OWNER: VOffset = 4
-    static let NAME: VOffset = 6
-    static let DESCRIPTION: VOffset = 8
-    static let ACTIVE: VOffset = 10
-    static let SOURCE_URL: VOffset = 12
-    static let RETRIEVED_AT: VOffset = 14
+    static let CCSDS_OCM_VERS: VOffset = 4
+    static let COMMENT: VOffset = 6
+    static let CLASSIFICATION: VOffset = 8
+    static let CREATION_DATE: VOffset = 10
+    static let ORIGINATOR: VOffset = 12
+    static let MESSAGE_ID: VOffset = 14
   }
 
-  public var OWNER: legacyCountryCode { let o = _accessor.offset(VT.OWNER); return o == 0 ? .ab : legacyCountryCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ab }
-  ///  Display name of the owner or source the code stands for.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Longer description of the owner or source.
-  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  True while the code is in current use by the publishing catalogue.
-  public var ACTIVE: Bool { let o = _accessor.offset(VT.ACTIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  URL of the reference table the row was retrieved from.
-  public var SOURCE_URL: String? { let o = _accessor.offset(VT.SOURCE_URL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_URL) }
-  ///  ISO 8601 UTC time the reference table was retrieved.
-  public var RETRIEVED_AT: String? { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RETRIEVED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RETRIEVED_AT) }
-  public static func startLCC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(OWNER: legacyCountryCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNER.rawValue, def: 0, at: VT.OWNER) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(ACTIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTIVE, def: false,
-   at: VT.ACTIVE) }
-  public static func add(SOURCE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_URL, at: VT.SOURCE_URL) }
-  public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
-  public static func endLCC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createLCC(
+  ///  Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.
+  public var CCSDS_OCM_VERS: String? { let o = _accessor.offset(VT.CCSDS_OCM_VERS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CCSDS_OCM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_OCM_VERS) }
+  ///  Comments (a contiguous set of one or more comment lines may be provided immediately after the version number).
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT, byteSize: 4) }
+  ///  User-defined free-text message classification/caveats of this OCM.
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
+  ///  File creation date/time in UTC.
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  ///  Creating agency or operator.
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  ///  Free-text field containing an ID that uniquely identifies a message from this originator.
+  public var MESSAGE_ID: String? { let o = _accessor.offset(VT.MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_ID) }
+  public static func startHeader(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(CCSDS_OCM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_OCM_VERS, at: VT.CCSDS_OCM_VERS) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func add(MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_ID, at: VT.MESSAGE_ID) }
+  public static func endHeader(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createHeader(
     _ fbb: inout FlatBufferBuilder,
-    OWNER: legacyCountryCode = .ab,
-    NAMEOffset NAME: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    ACTIVE: Bool = false,
-    SOURCE_URLOffset SOURCE_URL: Offset = Offset(),
-    RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset()
+    CCSDS_OCM_VERSOffset CCSDS_OCM_VERS: Offset = Offset(),
+    COMMENTVectorOffset COMMENT: Offset = Offset(),
+    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
+    CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
+    ORIGINATOROffset ORIGINATOR: Offset = Offset(),
+    MESSAGE_IDOffset MESSAGE_ID: Offset = Offset()
   ) -> Offset {
-    let __start = LCC.startLCC(&fbb)
-    LCC.add(OWNER: OWNER, &fbb)
-    LCC.add(NAME: NAME, &fbb)
-    LCC.add(DESCRIPTION: DESCRIPTION, &fbb)
-    LCC.add(ACTIVE: ACTIVE, &fbb)
-    LCC.add(SOURCE_URL: SOURCE_URL, &fbb)
-    LCC.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
-    return LCC.endLCC(&fbb, start: __start)
+    let __start = Header.startHeader(&fbb)
+    Header.add(CCSDS_OCM_VERS: CCSDS_OCM_VERS, &fbb)
+    Header.addVectorOf(COMMENT: COMMENT, &fbb)
+    Header.add(CLASSIFICATION: CLASSIFICATION, &fbb)
+    Header.add(CREATION_DATE: CREATION_DATE, &fbb)
+    Header.add(ORIGINATOR: ORIGINATOR, &fbb)
+    Header.add(MESSAGE_ID: MESSAGE_ID, &fbb)
+    return Header.endHeader(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.OWNER, fieldName: "OWNER", required: false, type: legacyCountryCode.self)
+    try _v.visit(field: VT.CCSDS_OCM_VERS, fieldName: "CCSDS_OCM_VERS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_ID, fieldName: "MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+public struct Metadata: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Metadata.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let OBJECT_NAME: VOffset = 6
+    static let INTERNATIONAL_DESIGNATOR: VOffset = 8
+    static let CATALOG_NAME: VOffset = 10
+    static let OBJECT_DESIGNATOR: VOffset = 12
+    static let ALTERNATE_NAMES: VOffset = 14
+    static let ORIGINATOR_POC: VOffset = 16
+    static let ORIGINATOR_POSITION: VOffset = 18
+    static let ORIGINATOR_PHONE: VOffset = 20
+    static let ORIGINATOR_EMAIL: VOffset = 22
+    static let ORIGINATOR_ADDRESS: VOffset = 24
+    static let TECH_ORG: VOffset = 26
+    static let TECH_POC: VOffset = 28
+    static let TECH_POSITION: VOffset = 30
+    static let TECH_PHONE: VOffset = 32
+    static let TECH_EMAIL: VOffset = 34
+    static let TECH_ADDRESS: VOffset = 36
+    static let PREVIOUS_MESSAGE_ID: VOffset = 38
+    static let NEXT_MESSAGE_ID: VOffset = 40
+    static let ADM_MSG_LINK: VOffset = 42
+    static let CDM_MSG_LINK: VOffset = 44
+    static let PRM_MSG_LINK: VOffset = 46
+    static let RDM_MSG_LINK: VOffset = 48
+    static let TDM_MSG_LINK: VOffset = 50
+    static let OPERATOR: VOffset = 52
+    static let OWNER: VOffset = 54
+    static let COUNTRY: VOffset = 56
+    static let CONSTELLATION: VOffset = 58
+    static let OBJECT_TYPE: VOffset = 60
+    static let TIME_SYSTEM: VOffset = 62
+    static let EPOCH_TZERO: VOffset = 64
+    static let OPS_STATUS: VOffset = 66
+    static let ORBIT_CATEGORY: VOffset = 68
+    static let OCM_DATA_ELEMENTS: VOffset = 70
+    static let SCLK_OFFSET_AT_EPOCH: VOffset = 72
+    static let SCLK_SEC_PER_SI_SEC: VOffset = 74
+    static let PREVIOUS_MESSAGE_EPOCH: VOffset = 76
+    static let NEXT_MESSAGE_EPOCH: VOffset = 78
+    static let START_TIME: VOffset = 80
+    static let STOP_TIME: VOffset = 82
+    static let TIME_SPAN: VOffset = 84
+    static let TAIMUTC_AT_TZERO: VOffset = 86
+    static let NEXT_LEAP_EPOCH: VOffset = 88
+    static let NEXT_LEAP_TAIMUTC: VOffset = 90
+    static let UT1MUTC_AT_TZERO: VOffset = 92
+    static let EOP_SOURCE: VOffset = 94
+    static let INTERP_METHOD_EOP: VOffset = 96
+    static let CELESTIAL_SOURCE: VOffset = 98
+  }
+
+  ///  Comments in the Metadata section.
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT, byteSize: 4) }
+  ///  Free-text field containing the name of the object.
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  ///  International designator for the object as assigned by COSPAR.
+  public var INTERNATIONAL_DESIGNATOR: String? { let o = _accessor.offset(VT.INTERNATIONAL_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERNATIONAL_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERNATIONAL_DESIGNATOR) }
+  ///  Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained.
+  public var CATALOG_NAME: String? { let o = _accessor.offset(VT.CATALOG_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CATALOG_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CATALOG_NAME) }
+  ///  Unique satellite identification designator from the catalog.
+  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VT.OBJECT_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_DESIGNATOR) }
+  ///  Alternate names of this space object.
+  public var ALTERNATE_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALTERNATE_NAMES, byteSize: 4) }
+  ///  Originator or programmatic Point-of-Contact (PoC) for OCM.
+  public var ORIGINATOR_POC: String? { let o = _accessor.offset(VT.ORIGINATOR_POC); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATOR_POCSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR_POC) }
+  ///  Contact position of the originator PoC.
+  public var ORIGINATOR_POSITION: String? { let o = _accessor.offset(VT.ORIGINATOR_POSITION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATOR_POSITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR_POSITION) }
+  ///  Originator PoC phone number.
+  public var ORIGINATOR_PHONE: String? { let o = _accessor.offset(VT.ORIGINATOR_PHONE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATOR_PHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR_PHONE) }
+  ///  Originator PoC email address.
+  public var ORIGINATOR_EMAIL: String? { let o = _accessor.offset(VT.ORIGINATOR_EMAIL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATOR_EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR_EMAIL) }
+  ///  Originator's physical address information.
+  public var ORIGINATOR_ADDRESS: String? { let o = _accessor.offset(VT.ORIGINATOR_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATOR_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR_ADDRESS) }
+  ///  Creating agency or operator for technical contact.
+  public var TECH_ORG: String? { let o = _accessor.offset(VT.TECH_ORG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TECH_ORGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TECH_ORG) }
+  ///  Technical Point-of-Contact (PoC) for OCM.
+  public var TECH_POC: String? { let o = _accessor.offset(VT.TECH_POC); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TECH_POCSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TECH_POC) }
+  ///  Contact position of the technical PoC.
+  public var TECH_POSITION: String? { let o = _accessor.offset(VT.TECH_POSITION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TECH_POSITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TECH_POSITION) }
+  ///  Technical PoC phone number.
+  public var TECH_PHONE: String? { let o = _accessor.offset(VT.TECH_PHONE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TECH_PHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TECH_PHONE) }
+  ///  Technical PoC email address.
+  public var TECH_EMAIL: String? { let o = _accessor.offset(VT.TECH_EMAIL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TECH_EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TECH_EMAIL) }
+  ///  Technical PoC physical address information.
+  public var TECH_ADDRESS: String? { let o = _accessor.offset(VT.TECH_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TECH_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TECH_ADDRESS) }
+  ///  ID that uniquely identifies the previous message from this originator.
+  public var PREVIOUS_MESSAGE_ID: String? { let o = _accessor.offset(VT.PREVIOUS_MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PREVIOUS_MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREVIOUS_MESSAGE_ID) }
+  ///  ID that uniquely identifies the next message from this originator.
+  public var NEXT_MESSAGE_ID: String? { let o = _accessor.offset(VT.NEXT_MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NEXT_MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NEXT_MESSAGE_ID) }
+  ///  Unique identifier of Attitude Data Messages linked to this OCM.
+  public var ADM_MSG_LINK: String? { let o = _accessor.offset(VT.ADM_MSG_LINK); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ADM_MSG_LINKSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ADM_MSG_LINK) }
+  ///  Unique identifier of Conjunction Data Messages linked to this OCM.
+  public var CDM_MSG_LINK: String? { let o = _accessor.offset(VT.CDM_MSG_LINK); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CDM_MSG_LINKSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CDM_MSG_LINK) }
+  ///  Unique identifier of Pointing Request Messages linked to this OCM.
+  public var PRM_MSG_LINK: String? { let o = _accessor.offset(VT.PRM_MSG_LINK); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRM_MSG_LINKSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRM_MSG_LINK) }
+  ///  Unique identifier of Reentry Data Messages linked to this OCM.
+  public var RDM_MSG_LINK: String? { let o = _accessor.offset(VT.RDM_MSG_LINK); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RDM_MSG_LINKSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RDM_MSG_LINK) }
+  ///  List of Tracking Data Messages upon which this orbit determination is based.
+  public var TDM_MSG_LINK: FlatbufferVector<String?> { return _accessor.vector(at: VT.TDM_MSG_LINK, byteSize: 4) }
+  ///  Operator of the space object.
+  public var OPERATOR: String? { let o = _accessor.offset(VT.OPERATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPERATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPERATOR) }
+  ///  Owner of the space object.
+  public var OWNER: String? { let o = _accessor.offset(VT.OWNER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OWNERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OWNER) }
+  ///  Country where the space object owner is based.
+  public var COUNTRY: String? { let o = _accessor.offset(VT.COUNTRY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COUNTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COUNTRY) }
+  ///  Name of the constellation to which this space object belongs.
+  public var CONSTELLATION: String? { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTELLATION) }
+  ///  Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS).
+  public var OBJECT_TYPE: String? { let o = _accessor.offset(VT.OBJECT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_TYPE) }
+  ///  Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  ///  Default epoch to which all relative times are referenced in data blocks.
+  public var EPOCH_TZERO: String? { let o = _accessor.offset(VT.EPOCH_TZERO); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCH_TZEROSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TZERO) }
+  ///  Specification of the operational status of the space object.
+  public var OPS_STATUS: String? { let o = _accessor.offset(VT.OPS_STATUS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPS_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPS_STATUS) }
+  ///  Specification of the type of orbit (e.g., GEO, LEO).
+  public var ORBIT_CATEGORY: String? { let o = _accessor.offset(VT.ORBIT_CATEGORY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORBIT_CATEGORYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORBIT_CATEGORY) }
+  ///  List of elements of information data blocks included in this message.
+  public var OCM_DATA_ELEMENTS: FlatbufferVector<String?> { return _accessor.vector(at: VT.OCM_DATA_ELEMENTS, byteSize: 4) }
+  ///  Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK).
+  public var SCLK_OFFSET_AT_EPOCH: Double { let o = _accessor.offset(VT.SCLK_OFFSET_AT_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).
+  public var SCLK_SEC_PER_SI_SEC: Double { let o = _accessor.offset(VT.SCLK_SEC_PER_SI_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Creation epoch of the previous message from this originator.
+  public var PREVIOUS_MESSAGE_EPOCH: String? { let o = _accessor.offset(VT.PREVIOUS_MESSAGE_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PREVIOUS_MESSAGE_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREVIOUS_MESSAGE_EPOCH) }
+  ///  Anticipated (or actual) epoch of the next message from this originator.
+  public var NEXT_MESSAGE_EPOCH: String? { let o = _accessor.offset(VT.NEXT_MESSAGE_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NEXT_MESSAGE_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NEXT_MESSAGE_EPOCH) }
+  ///  Time of the earliest data contained in the OCM.
+  public var START_TIME: String? { let o = _accessor.offset(VT.START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_TIME) }
+  ///  Time of the latest data contained in the OCM.
+  public var STOP_TIME: String? { let o = _accessor.offset(VT.STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_TIME) }
+  ///  Span of time that the OCM covers, measured in days.
+  public var TIME_SPAN: Double { let o = _accessor.offset(VT.TIME_SPAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Difference (TAI - UTC) in seconds at EPOCH_TZERO.
+  public var TAIMUTC_AT_TZERO: Double { let o = _accessor.offset(VT.TAIMUTC_AT_TZERO); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch of next leap second.
+  public var NEXT_LEAP_EPOCH: String? { let o = _accessor.offset(VT.NEXT_LEAP_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NEXT_LEAP_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NEXT_LEAP_EPOCH) }
+  ///  Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH.
+  public var NEXT_LEAP_TAIMUTC: Double { let o = _accessor.offset(VT.NEXT_LEAP_TAIMUTC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Difference (UT1 - UTC) in seconds at EPOCH_TZERO.
+  public var UT1MUTC_AT_TZERO: Double { let o = _accessor.offset(VT.UT1MUTC_AT_TZERO); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Source and version of Earth Orientation Parameters used.
+  public var EOP_SOURCE: String? { let o = _accessor.offset(VT.EOP_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EOP_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_SOURCE) }
+  ///  Method used to select or interpolate sequential EOP data.
+  public var INTERP_METHOD_EOP: String? { let o = _accessor.offset(VT.INTERP_METHOD_EOP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERP_METHOD_EOPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERP_METHOD_EOP) }
+  ///  Source and version of celestial body ephemeris data used.
+  public var CELESTIAL_SOURCE: String? { let o = _accessor.offset(VT.CELESTIAL_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CELESTIAL_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CELESTIAL_SOURCE) }
+  public static func startMetadata(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 48) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(INTERNATIONAL_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNATIONAL_DESIGNATOR, at: VT.INTERNATIONAL_DESIGNATOR) }
+  public static func add(CATALOG_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_NAME, at: VT.CATALOG_NAME) }
+  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VT.OBJECT_DESIGNATOR) }
+  public static func addVectorOf(ALTERNATE_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_NAMES, at: VT.ALTERNATE_NAMES) }
+  public static func add(ORIGINATOR_POC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR_POC, at: VT.ORIGINATOR_POC) }
+  public static func add(ORIGINATOR_POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR_POSITION, at: VT.ORIGINATOR_POSITION) }
+  public static func add(ORIGINATOR_PHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR_PHONE, at: VT.ORIGINATOR_PHONE) }
+  public static func add(ORIGINATOR_EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR_EMAIL, at: VT.ORIGINATOR_EMAIL) }
+  public static func add(ORIGINATOR_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR_ADDRESS, at: VT.ORIGINATOR_ADDRESS) }
+  public static func add(TECH_ORG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TECH_ORG, at: VT.TECH_ORG) }
+  public static func add(TECH_POC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TECH_POC, at: VT.TECH_POC) }
+  public static func add(TECH_POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TECH_POSITION, at: VT.TECH_POSITION) }
+  public static func add(TECH_PHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TECH_PHONE, at: VT.TECH_PHONE) }
+  public static func add(TECH_EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TECH_EMAIL, at: VT.TECH_EMAIL) }
+  public static func add(TECH_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TECH_ADDRESS, at: VT.TECH_ADDRESS) }
+  public static func add(PREVIOUS_MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREVIOUS_MESSAGE_ID, at: VT.PREVIOUS_MESSAGE_ID) }
+  public static func add(NEXT_MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NEXT_MESSAGE_ID, at: VT.NEXT_MESSAGE_ID) }
+  public static func add(ADM_MSG_LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADM_MSG_LINK, at: VT.ADM_MSG_LINK) }
+  public static func add(CDM_MSG_LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CDM_MSG_LINK, at: VT.CDM_MSG_LINK) }
+  public static func add(PRM_MSG_LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRM_MSG_LINK, at: VT.PRM_MSG_LINK) }
+  public static func add(RDM_MSG_LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RDM_MSG_LINK, at: VT.RDM_MSG_LINK) }
+  public static func addVectorOf(TDM_MSG_LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TDM_MSG_LINK, at: VT.TDM_MSG_LINK) }
+  public static func add(OPERATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATOR, at: VT.OPERATOR) }
+  public static func add(OWNER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OWNER, at: VT.OWNER) }
+  public static func add(COUNTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNTRY, at: VT.COUNTRY) }
+  public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VT.CONSTELLATION) }
+  public static func add(OBJECT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_TYPE, at: VT.OBJECT_TYPE) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func add(EPOCH_TZERO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TZERO, at: VT.EPOCH_TZERO) }
+  public static func add(OPS_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPS_STATUS, at: VT.OPS_STATUS) }
+  public static func add(ORBIT_CATEGORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_CATEGORY, at: VT.ORBIT_CATEGORY) }
+  public static func addVectorOf(OCM_DATA_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCM_DATA_ELEMENTS, at: VT.OCM_DATA_ELEMENTS) }
+  public static func add(SCLK_OFFSET_AT_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCLK_OFFSET_AT_EPOCH, def: 0.0, at: VT.SCLK_OFFSET_AT_EPOCH) }
+  public static func add(SCLK_SEC_PER_SI_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCLK_SEC_PER_SI_SEC, def: 0.0, at: VT.SCLK_SEC_PER_SI_SEC) }
+  public static func add(PREVIOUS_MESSAGE_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREVIOUS_MESSAGE_EPOCH, at: VT.PREVIOUS_MESSAGE_EPOCH) }
+  public static func add(NEXT_MESSAGE_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NEXT_MESSAGE_EPOCH, at: VT.NEXT_MESSAGE_EPOCH) }
+  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VT.START_TIME) }
+  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VT.STOP_TIME) }
+  public static func add(TIME_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SPAN, def: 0.0, at: VT.TIME_SPAN) }
+  public static func add(TAIMUTC_AT_TZERO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAIMUTC_AT_TZERO, def: 0.0, at: VT.TAIMUTC_AT_TZERO) }
+  public static func add(NEXT_LEAP_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NEXT_LEAP_EPOCH, at: VT.NEXT_LEAP_EPOCH) }
+  public static func add(NEXT_LEAP_TAIMUTC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEXT_LEAP_TAIMUTC, def: 0.0, at: VT.NEXT_LEAP_TAIMUTC) }
+  public static func add(UT1MUTC_AT_TZERO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UT1MUTC_AT_TZERO, def: 0.0, at: VT.UT1MUTC_AT_TZERO) }
+  public static func add(EOP_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_SOURCE, at: VT.EOP_SOURCE) }
+  public static func add(INTERP_METHOD_EOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERP_METHOD_EOP, at: VT.INTERP_METHOD_EOP) }
+  public static func add(CELESTIAL_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CELESTIAL_SOURCE, at: VT.CELESTIAL_SOURCE) }
+  public static func endMetadata(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createMetadata(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTVectorOffset COMMENT: Offset = Offset(),
+    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
+    INTERNATIONAL_DESIGNATOROffset INTERNATIONAL_DESIGNATOR: Offset = Offset(),
+    CATALOG_NAMEOffset CATALOG_NAME: Offset = Offset(),
+    OBJECT_DESIGNATOROffset OBJECT_DESIGNATOR: Offset = Offset(),
+    ALTERNATE_NAMESVectorOffset ALTERNATE_NAMES: Offset = Offset(),
+    ORIGINATOR_POCOffset ORIGINATOR_POC: Offset = Offset(),
+    ORIGINATOR_POSITIONOffset ORIGINATOR_POSITION: Offset = Offset(),
+    ORIGINATOR_PHONEOffset ORIGINATOR_PHONE: Offset = Offset(),
+    ORIGINATOR_EMAILOffset ORIGINATOR_EMAIL: Offset = Offset(),
+    ORIGINATOR_ADDRESSOffset ORIGINATOR_ADDRESS: Offset = Offset(),
+    TECH_ORGOffset TECH_ORG: Offset = Offset(),
+    TECH_POCOffset TECH_POC: Offset = Offset(),
+    TECH_POSITIONOffset TECH_POSITION: Offset = Offset(),
+    TECH_PHONEOffset TECH_PHONE: Offset = Offset(),
+    TECH_EMAILOffset TECH_EMAIL: Offset = Offset(),
+    TECH_ADDRESSOffset TECH_ADDRESS: Offset = Offset(),
+    PREVIOUS_MESSAGE_IDOffset PREVIOUS_MESSAGE_ID: Offset = Offset(),
+    NEXT_MESSAGE_IDOffset NEXT_MESSAGE_ID: Offset = Offset(),
+    ADM_MSG_LINKOffset ADM_MSG_LINK: Offset = Offset(),
+    CDM_MSG_LINKOffset CDM_MSG_LINK: Offset = Offset(),
+    PRM_MSG_LINKOffset PRM_MSG_LINK: Offset = Offset(),
+    RDM_MSG_LINKOffset RDM_MSG_LINK: Offset = Offset(),
+    TDM_MSG_LINKVectorOffset TDM_MSG_LINK: Offset = Offset(),
+    OPERATOROffset OPERATOR: Offset = Offset(),
+    OWNEROffset OWNER: Offset = Offset(),
+    COUNTRYOffset COUNTRY: Offset = Offset(),
+    CONSTELLATIONOffset CONSTELLATION: Offset = Offset(),
+    OBJECT_TYPEOffset OBJECT_TYPE: Offset = Offset(),
+    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset(),
+    EPOCH_TZEROOffset EPOCH_TZERO: Offset = Offset(),
+    OPS_STATUSOffset OPS_STATUS: Offset = Offset(),
+    ORBIT_CATEGORYOffset ORBIT_CATEGORY: Offset = Offset(),
+    OCM_DATA_ELEMENTSVectorOffset OCM_DATA_ELEMENTS: Offset = Offset(),
+    SCLK_OFFSET_AT_EPOCH: Double = 0.0,
+    SCLK_SEC_PER_SI_SEC: Double = 0.0,
+    PREVIOUS_MESSAGE_EPOCHOffset PREVIOUS_MESSAGE_EPOCH: Offset = Offset(),
+    NEXT_MESSAGE_EPOCHOffset NEXT_MESSAGE_EPOCH: Offset = Offset(),
+    START_TIMEOffset START_TIME: Offset = Offset(),
+    STOP_TIMEOffset STOP_TIME: Offset = Offset(),
+    TIME_SPAN: Double = 0.0,
+    TAIMUTC_AT_TZERO: Double = 0.0,
+    NEXT_LEAP_EPOCHOffset NEXT_LEAP_EPOCH: Offset = Offset(),
+    NEXT_LEAP_TAIMUTC: Double = 0.0,
+    UT1MUTC_AT_TZERO: Double = 0.0,
+    EOP_SOURCEOffset EOP_SOURCE: Offset = Offset(),
+    INTERP_METHOD_EOPOffset INTERP_METHOD_EOP: Offset = Offset(),
+    CELESTIAL_SOURCEOffset CELESTIAL_SOURCE: Offset = Offset()
+  ) -> Offset {
+    let __start = Metadata.startMetadata(&fbb)
+    Metadata.addVectorOf(COMMENT: COMMENT, &fbb)
+    Metadata.add(OBJECT_NAME: OBJECT_NAME, &fbb)
+    Metadata.add(INTERNATIONAL_DESIGNATOR: INTERNATIONAL_DESIGNATOR, &fbb)
+    Metadata.add(CATALOG_NAME: CATALOG_NAME, &fbb)
+    Metadata.add(OBJECT_DESIGNATOR: OBJECT_DESIGNATOR, &fbb)
+    Metadata.addVectorOf(ALTERNATE_NAMES: ALTERNATE_NAMES, &fbb)
+    Metadata.add(ORIGINATOR_POC: ORIGINATOR_POC, &fbb)
+    Metadata.add(ORIGINATOR_POSITION: ORIGINATOR_POSITION, &fbb)
+    Metadata.add(ORIGINATOR_PHONE: ORIGINATOR_PHONE, &fbb)
+    Metadata.add(ORIGINATOR_EMAIL: ORIGINATOR_EMAIL, &fbb)
+    Metadata.add(ORIGINATOR_ADDRESS: ORIGINATOR_ADDRESS, &fbb)
+    Metadata.add(TECH_ORG: TECH_ORG, &fbb)
+    Metadata.add(TECH_POC: TECH_POC, &fbb)
+    Metadata.add(TECH_POSITION: TECH_POSITION, &fbb)
+    Metadata.add(TECH_PHONE: TECH_PHONE, &fbb)
+    Metadata.add(TECH_EMAIL: TECH_EMAIL, &fbb)
+    Metadata.add(TECH_ADDRESS: TECH_ADDRESS, &fbb)
+    Metadata.add(PREVIOUS_MESSAGE_ID: PREVIOUS_MESSAGE_ID, &fbb)
+    Metadata.add(NEXT_MESSAGE_ID: NEXT_MESSAGE_ID, &fbb)
+    Metadata.add(ADM_MSG_LINK: ADM_MSG_LINK, &fbb)
+    Metadata.add(CDM_MSG_LINK: CDM_MSG_LINK, &fbb)
+    Metadata.add(PRM_MSG_LINK: PRM_MSG_LINK, &fbb)
+    Metadata.add(RDM_MSG_LINK: RDM_MSG_LINK, &fbb)
+    Metadata.addVectorOf(TDM_MSG_LINK: TDM_MSG_LINK, &fbb)
+    Metadata.add(OPERATOR: OPERATOR, &fbb)
+    Metadata.add(OWNER: OWNER, &fbb)
+    Metadata.add(COUNTRY: COUNTRY, &fbb)
+    Metadata.add(CONSTELLATION: CONSTELLATION, &fbb)
+    Metadata.add(OBJECT_TYPE: OBJECT_TYPE, &fbb)
+    Metadata.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    Metadata.add(EPOCH_TZERO: EPOCH_TZERO, &fbb)
+    Metadata.add(OPS_STATUS: OPS_STATUS, &fbb)
+    Metadata.add(ORBIT_CATEGORY: ORBIT_CATEGORY, &fbb)
+    Metadata.addVectorOf(OCM_DATA_ELEMENTS: OCM_DATA_ELEMENTS, &fbb)
+    Metadata.add(SCLK_OFFSET_AT_EPOCH: SCLK_OFFSET_AT_EPOCH, &fbb)
+    Metadata.add(SCLK_SEC_PER_SI_SEC: SCLK_SEC_PER_SI_SEC, &fbb)
+    Metadata.add(PREVIOUS_MESSAGE_EPOCH: PREVIOUS_MESSAGE_EPOCH, &fbb)
+    Metadata.add(NEXT_MESSAGE_EPOCH: NEXT_MESSAGE_EPOCH, &fbb)
+    Metadata.add(START_TIME: START_TIME, &fbb)
+    Metadata.add(STOP_TIME: STOP_TIME, &fbb)
+    Metadata.add(TIME_SPAN: TIME_SPAN, &fbb)
+    Metadata.add(TAIMUTC_AT_TZERO: TAIMUTC_AT_TZERO, &fbb)
+    Metadata.add(NEXT_LEAP_EPOCH: NEXT_LEAP_EPOCH, &fbb)
+    Metadata.add(NEXT_LEAP_TAIMUTC: NEXT_LEAP_TAIMUTC, &fbb)
+    Metadata.add(UT1MUTC_AT_TZERO: UT1MUTC_AT_TZERO, &fbb)
+    Metadata.add(EOP_SOURCE: EOP_SOURCE, &fbb)
+    Metadata.add(INTERP_METHOD_EOP: INTERP_METHOD_EOP, &fbb)
+    Metadata.add(CELESTIAL_SOURCE: CELESTIAL_SOURCE, &fbb)
+    return Metadata.endMetadata(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERNATIONAL_DESIGNATOR, fieldName: "INTERNATIONAL_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATALOG_NAME, fieldName: "CATALOG_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_DESIGNATOR, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALTERNATE_NAMES, fieldName: "ALTERNATE_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ORIGINATOR_POC, fieldName: "ORIGINATOR_POC", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR_POSITION, fieldName: "ORIGINATOR_POSITION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR_PHONE, fieldName: "ORIGINATOR_PHONE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR_EMAIL, fieldName: "ORIGINATOR_EMAIL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR_ADDRESS, fieldName: "ORIGINATOR_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TECH_ORG, fieldName: "TECH_ORG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TECH_POC, fieldName: "TECH_POC", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TECH_POSITION, fieldName: "TECH_POSITION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TECH_PHONE, fieldName: "TECH_PHONE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TECH_EMAIL, fieldName: "TECH_EMAIL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TECH_ADDRESS, fieldName: "TECH_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PREVIOUS_MESSAGE_ID, fieldName: "PREVIOUS_MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NEXT_MESSAGE_ID, fieldName: "NEXT_MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ADM_MSG_LINK, fieldName: "ADM_MSG_LINK", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CDM_MSG_LINK, fieldName: "CDM_MSG_LINK", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRM_MSG_LINK, fieldName: "PRM_MSG_LINK", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RDM_MSG_LINK, fieldName: "RDM_MSG_LINK", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TDM_MSG_LINK, fieldName: "TDM_MSG_LINK", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OPERATOR, fieldName: "OPERATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OWNER, fieldName: "OWNER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COUNTRY, fieldName: "COUNTRY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSTELLATION, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_TYPE, fieldName: "OBJECT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH_TZERO, fieldName: "EPOCH_TZERO", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPS_STATUS, fieldName: "OPS_STATUS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORBIT_CATEGORY, fieldName: "ORBIT_CATEGORY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OCM_DATA_ELEMENTS, fieldName: "OCM_DATA_ELEMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SCLK_OFFSET_AT_EPOCH, fieldName: "SCLK_OFFSET_AT_EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.SCLK_SEC_PER_SI_SEC, fieldName: "SCLK_SEC_PER_SI_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.PREVIOUS_MESSAGE_EPOCH, fieldName: "PREVIOUS_MESSAGE_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NEXT_MESSAGE_EPOCH, fieldName: "NEXT_MESSAGE_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.START_TIME, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_TIME, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SPAN, fieldName: "TIME_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VT.TAIMUTC_AT_TZERO, fieldName: "TAIMUTC_AT_TZERO", required: false, type: Double.self)
+    try _v.visit(field: VT.NEXT_LEAP_EPOCH, fieldName: "NEXT_LEAP_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NEXT_LEAP_TAIMUTC, fieldName: "NEXT_LEAP_TAIMUTC", required: false, type: Double.self)
+    try _v.visit(field: VT.UT1MUTC_AT_TZERO, fieldName: "UT1MUTC_AT_TZERO", required: false, type: Double.self)
+    try _v.visit(field: VT.EOP_SOURCE, fieldName: "EOP_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERP_METHOD_EOP, fieldName: "INTERP_METHOD_EOP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CELESTIAL_SOURCE, fieldName: "CELESTIAL_SOURCE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+public struct StateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: StateVector.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let X: VOffset = 6
+    static let Y: VOffset = 8
+    static let Z: VOffset = 10
+    static let X_DOT: VOffset = 12
+    static let Y_DOT: VOffset = 14
+    static let Z_DOT: VOffset = 16
+    static let X_DDOT: VOffset = 18
+    static let Y_DDOT: VOffset = 20
+    static let Z_DDOT: VOffset = 22
+  }
+
+  ///  Epoch of the state vector.
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  X component of position in the specified reference frame.
+  public var X: Double { let o = _accessor.offset(VT.X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Y component of position.
+  public var Y: Double { let o = _accessor.offset(VT.Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Z component of position.
+  public var Z: Double { let o = _accessor.offset(VT.Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  X component of velocity.
+  public var X_DOT: Double { let o = _accessor.offset(VT.X_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Y component of velocity.
+  public var Y_DOT: Double { let o = _accessor.offset(VT.Y_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Z component of velocity.
+  public var Z_DOT: Double { let o = _accessor.offset(VT.Z_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  X component of acceleration.
+  public var X_DDOT: Double { let o = _accessor.offset(VT.X_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Y component of acceleration.
+  public var Y_DDOT: Double { let o = _accessor.offset(VT.Y_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Z component of acceleration.
+  public var Z_DDOT: Double { let o = _accessor.offset(VT.Z_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startStateVector(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VT.X) }
+  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VT.Y) }
+  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VT.Z) }
+  public static func add(X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DOT, def: 0.0, at: VT.X_DOT) }
+  public static func add(Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DOT, def: 0.0, at: VT.Y_DOT) }
+  public static func add(Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DOT, def: 0.0, at: VT.Z_DOT) }
+  public static func add(X_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DDOT, def: 0.0, at: VT.X_DDOT) }
+  public static func add(Y_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DDOT, def: 0.0, at: VT.Y_DDOT) }
+  public static func add(Z_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DDOT, def: 0.0, at: VT.Z_DDOT) }
+  public static func endStateVector(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createStateVector(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset = Offset(),
+    X: Double = 0.0,
+    Y: Double = 0.0,
+    Z: Double = 0.0,
+    X_DOT: Double = 0.0,
+    Y_DOT: Double = 0.0,
+    Z_DOT: Double = 0.0,
+    X_DDOT: Double = 0.0,
+    Y_DDOT: Double = 0.0,
+    Z_DDOT: Double = 0.0
+  ) -> Offset {
+    let __start = StateVector.startStateVector(&fbb)
+    StateVector.add(EPOCH: EPOCH, &fbb)
+    StateVector.add(X: X, &fbb)
+    StateVector.add(Y: Y, &fbb)
+    StateVector.add(Z: Z, &fbb)
+    StateVector.add(X_DOT: X_DOT, &fbb)
+    StateVector.add(Y_DOT: Y_DOT, &fbb)
+    StateVector.add(Z_DOT: Z_DOT, &fbb)
+    StateVector.add(X_DDOT: X_DDOT, &fbb)
+    StateVector.add(Y_DDOT: Y_DDOT, &fbb)
+    StateVector.add(Z_DDOT: Z_DDOT, &fbb)
+    return StateVector.endStateVector(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.X, fieldName: "X", required: false, type: Double.self)
+    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: Double.self)
+    try _v.visit(field: VT.Z, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VT.X_DOT, fieldName: "X_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_DOT, fieldName: "Y_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Z_DOT, fieldName: "Z_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.X_DDOT, fieldName: "X_DDOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_DDOT, fieldName: "Y_DDOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Z_DDOT, fieldName: "Z_DDOT", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct PhysicalProperties: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PhysicalProperties.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let WET_MASS: VOffset = 6
+    static let DRY_MASS: VOffset = 8
+    static let MASS_UNITS: VOffset = 10
+    static let OEB_Q1: VOffset = 12
+    static let OEB_Q2: VOffset = 14
+    static let OEB_Q3: VOffset = 16
+    static let OEB_QC: VOffset = 18
+    static let OEB_MAX: VOffset = 20
+    static let OEB_INT: VOffset = 22
+    static let OEB_MIN: VOffset = 24
+    static let AREA_ALONG_OEB_MAX: VOffset = 26
+    static let AREA_ALONG_OEB_INT: VOffset = 28
+    static let AREA_ALONG_OEB_MIN: VOffset = 30
+    static let AREA_UNITS: VOffset = 32
+    static let DRAG_CONST_AREA: VOffset = 34
+    static let DRAG_COEFF_NOM: VOffset = 36
+    static let DRAG_UNCERTAINTY: VOffset = 38
+    static let SRP_CONST_AREA: VOffset = 40
+    static let SOLAR_RAD_COEFF: VOffset = 42
+    static let SRP_UNCERTAINTY: VOffset = 44
+    static let MANUFACTURER: VOffset = 46
+    static let BUS_MODEL: VOffset = 48
+    static let DOCKED_WITH: VOffset = 50
+    static let INITIAL_WET_MASS: VOffset = 52
+    static let OEB_PARENT_FRAME: VOffset = 54
+    static let OEB_PARENT_FRAME_EPOCH: VOffset = 56
+    static let AREA_MIN_FOR_PC: VOffset = 58
+    static let AREA_MAX_FOR_PC: VOffset = 60
+    static let AREA_TYP_FOR_PC: VOffset = 62
+    static let RCS: VOffset = 64
+    static let RCS_MIN: VOffset = 66
+    static let RCS_MAX: VOffset = 68
+    static let VM_ABSOLUTE: VOffset = 70
+    static let VM_APPARENT_MIN: VOffset = 72
+    static let VM_APPARENT: VOffset = 74
+    static let VM_APPARENT_MAX: VOffset = 76
+    static let REFLECTANCE: VOffset = 78
+    static let ATT_CONTROL_MODE: VOffset = 80
+    static let ATT_ACTUATOR_TYPE: VOffset = 82
+    static let ATT_KNOWLEDGE: VOffset = 84
+    static let ATT_CONTROL: VOffset = 86
+    static let ATT_POINTING: VOffset = 88
+    static let AVG_MANEUVER_FREQ: VOffset = 90
+    static let MAX_THRUST: VOffset = 92
+    static let DV_BOL: VOffset = 94
+    static let DV_REMAINING: VOffset = 96
+    static let IXX: VOffset = 98
+    static let IYY: VOffset = 100
+    static let IZZ: VOffset = 102
+    static let IXY: VOffset = 104
+    static let IXZ: VOffset = 106
+    static let IYZ: VOffset = 108
+  }
+
+  ///  Comments in the Physical Properties section.
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT, byteSize: 4) }
+  ///  Wet mass of the space object.
+  public var WET_MASS: Double { let o = _accessor.offset(VT.WET_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Dry mass of the space object.
+  public var DRY_MASS: Double { let o = _accessor.offset(VT.DRY_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units for mass values.
+  public var MASS_UNITS: String? { let o = _accessor.offset(VT.MASS_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MASS_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MASS_UNITS) }
+  ///  Quaternion component q1 of orientation from OEB to EME2000.
+  public var OEB_Q1: Double { let o = _accessor.offset(VT.OEB_Q1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion component q2.
+  public var OEB_Q2: Double { let o = _accessor.offset(VT.OEB_Q2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion component q3.
+  public var OEB_Q3: Double { let o = _accessor.offset(VT.OEB_Q3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion scalar component qc.
+  public var OEB_QC: Double { let o = _accessor.offset(VT.OEB_QC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Maximum dimension of the object along OEB frame axes.
+  public var OEB_MAX: Double { let o = _accessor.offset(VT.OEB_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Intermediate dimension along OEB frame axes.
+  public var OEB_INT: Double { let o = _accessor.offset(VT.OEB_INT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum dimension of the object along OEB frame axes.
+  public var OEB_MIN: Double { let o = _accessor.offset(VT.OEB_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Area along OEB_MAX axis.
+  public var AREA_ALONG_OEB_MAX: Double { let o = _accessor.offset(VT.AREA_ALONG_OEB_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Area along OEB_INT axis.
+  public var AREA_ALONG_OEB_INT: Double { let o = _accessor.offset(VT.AREA_ALONG_OEB_INT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Area along OEB_MIN axis.
+  public var AREA_ALONG_OEB_MIN: Double { let o = _accessor.offset(VT.AREA_ALONG_OEB_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units for area values.
+  public var AREA_UNITS: String? { let o = _accessor.offset(VT.AREA_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AREA_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AREA_UNITS) }
+  ///  Constant area for drag computations.
+  public var DRAG_CONST_AREA: Double { let o = _accessor.offset(VT.DRAG_CONST_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Nominal drag coefficient.
+  public var DRAG_COEFF_NOM: Double { let o = _accessor.offset(VT.DRAG_COEFF_NOM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Uncertainty in the drag coefficient.
+  public var DRAG_UNCERTAINTY: Double { let o = _accessor.offset(VT.DRAG_UNCERTAINTY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Constant area for solar radiation pressure computations.
+  public var SRP_CONST_AREA: Double { let o = _accessor.offset(VT.SRP_CONST_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Nominal solar radiation pressure coefficient.
+  public var SOLAR_RAD_COEFF: Double { let o = _accessor.offset(VT.SOLAR_RAD_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Uncertainty in the solar radiation pressure coefficient.
+  public var SRP_UNCERTAINTY: Double { let o = _accessor.offset(VT.SRP_UNCERTAINTY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+  public var MANUFACTURER: String? { let o = _accessor.offset(VT.MANUFACTURER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MANUFACTURERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MANUFACTURER) }
+  ///  BUS_MODEL: the object's bus model.
+  public var BUS_MODEL: String? { let o = _accessor.offset(VT.BUS_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BUS_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUS_MODEL) }
+  ///  DOCKED_WITH: comma-separated names of the objects it is docked with.
+  public var DOCKED_WITH: String? { let o = _accessor.offset(VT.DOCKED_WITH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DOCKED_WITHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DOCKED_WITH) }
+  ///  INITIAL_WET_MASS in kg, NaN when not stated.
+  public var INITIAL_WET_MASS: Double { let o = _accessor.offset(VT.INITIAL_WET_MASS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+  public var OEB_PARENT_FRAME: String? { let o = _accessor.offset(VT.OEB_PARENT_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OEB_PARENT_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OEB_PARENT_FRAME) }
+  ///  OEB_PARENT_FRAME_EPOCH.
+  public var OEB_PARENT_FRAME_EPOCH: String? { let o = _accessor.offset(VT.OEB_PARENT_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OEB_PARENT_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OEB_PARENT_FRAME_EPOCH) }
+  ///  AREA_MIN_FOR_PC in m**2, NaN when not stated.
+  public var AREA_MIN_FOR_PC: Double { let o = _accessor.offset(VT.AREA_MIN_FOR_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  AREA_MAX_FOR_PC in m**2, NaN when not stated.
+  public var AREA_MAX_FOR_PC: Double { let o = _accessor.offset(VT.AREA_MAX_FOR_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  AREA_TYP_FOR_PC in m**2, NaN when not stated.
+  public var AREA_TYP_FOR_PC: Double { let o = _accessor.offset(VT.AREA_TYP_FOR_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RCS in m**2, NaN when not stated.
+  public var RCS: Double { let o = _accessor.offset(VT.RCS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RCS_MIN in m**2, NaN when not stated.
+  public var RCS_MIN: Double { let o = _accessor.offset(VT.RCS_MIN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RCS_MAX in m**2, NaN when not stated.
+  public var RCS_MAX: Double { let o = _accessor.offset(VT.RCS_MAX); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+  public var VM_ABSOLUTE: Double { let o = _accessor.offset(VT.VM_ABSOLUTE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+  public var VM_APPARENT_MIN: Double { let o = _accessor.offset(VT.VM_APPARENT_MIN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  VM_APPARENT: apparent visual magnitude, NaN when not stated.
+  public var VM_APPARENT: Double { let o = _accessor.offset(VT.VM_APPARENT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+  public var VM_APPARENT_MAX: Double { let o = _accessor.offset(VT.VM_APPARENT_MAX); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  REFLECTANCE: typical reflectivity, NaN when not stated.
+  public var REFLECTANCE: Double { let o = _accessor.offset(VT.REFLECTANCE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ATT_CONTROL_MODE.
+  public var ATT_CONTROL_MODE: String? { let o = _accessor.offset(VT.ATT_CONTROL_MODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATT_CONTROL_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATT_CONTROL_MODE) }
+  ///  ATT_ACTUATOR_TYPE.
+  public var ATT_ACTUATOR_TYPE: String? { let o = _accessor.offset(VT.ATT_ACTUATOR_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATT_ACTUATOR_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATT_ACTUATOR_TYPE) }
+  ///  ATT_KNOWLEDGE in degrees, NaN when not stated.
+  public var ATT_KNOWLEDGE: Double { let o = _accessor.offset(VT.ATT_KNOWLEDGE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ATT_CONTROL in degrees, NaN when not stated.
+  public var ATT_CONTROL: Double { let o = _accessor.offset(VT.ATT_CONTROL); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ATT_POINTING in degrees, NaN when not stated.
+  public var ATT_POINTING: Double { let o = _accessor.offset(VT.ATT_POINTING); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+  public var AVG_MANEUVER_FREQ: Double { let o = _accessor.offset(VT.AVG_MANEUVER_FREQ); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAX_THRUST in N, NaN when not stated.
+  public var MAX_THRUST: Double { let o = _accessor.offset(VT.MAX_THRUST); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+  public var DV_BOL: Double { let o = _accessor.offset(VT.DV_BOL); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  DV_REMAINING in km/s, NaN when not stated.
+  public var DV_REMAINING: Double { let o = _accessor.offset(VT.DV_REMAINING); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IXX in kg*m**2, NaN when not stated.
+  public var IXX: Double { let o = _accessor.offset(VT.IXX); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IYY in kg*m**2, NaN when not stated.
+  public var IYY: Double { let o = _accessor.offset(VT.IYY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IZZ in kg*m**2, NaN when not stated.
+  public var IZZ: Double { let o = _accessor.offset(VT.IZZ); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IXY in kg*m**2, NaN when not stated.
+  public var IXY: Double { let o = _accessor.offset(VT.IXY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IXZ in kg*m**2, NaN when not stated.
+  public var IXZ: Double { let o = _accessor.offset(VT.IXZ); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IYZ in kg*m**2, NaN when not stated.
+  public var IYZ: Double { let o = _accessor.offset(VT.IYZ); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPhysicalProperties(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 53) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(WET_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WET_MASS, def: 0.0, at: VT.WET_MASS) }
+  public static func add(DRY_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRY_MASS, def: 0.0, at: VT.DRY_MASS) }
+  public static func add(MASS_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MASS_UNITS, at: VT.MASS_UNITS) }
+  public static func add(OEB_Q1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OEB_Q1, def: 0.0, at: VT.OEB_Q1) }
+  public static func add(OEB_Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OEB_Q2, def: 0.0, at: VT.OEB_Q2) }
+  public static func add(OEB_Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OEB_Q3, def: 0.0, at: VT.OEB_Q3) }
+  public static func add(OEB_QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OEB_QC, def: 0.0, at: VT.OEB_QC) }
+  public static func add(OEB_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OEB_MAX, def: 0.0, at: VT.OEB_MAX) }
+  public static func add(OEB_INT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OEB_INT, def: 0.0, at: VT.OEB_INT) }
+  public static func add(OEB_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OEB_MIN, def: 0.0, at: VT.OEB_MIN) }
+  public static func add(AREA_ALONG_OEB_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_ALONG_OEB_MAX, def: 0.0, at: VT.AREA_ALONG_OEB_MAX) }
+  public static func add(AREA_ALONG_OEB_INT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_ALONG_OEB_INT, def: 0.0, at: VT.AREA_ALONG_OEB_INT) }
+  public static func add(AREA_ALONG_OEB_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_ALONG_OEB_MIN, def: 0.0, at: VT.AREA_ALONG_OEB_MIN) }
+  public static func add(AREA_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AREA_UNITS, at: VT.AREA_UNITS) }
+  public static func add(DRAG_CONST_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_CONST_AREA, def: 0.0, at: VT.DRAG_CONST_AREA) }
+  public static func add(DRAG_COEFF_NOM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFF_NOM, def: 0.0, at: VT.DRAG_COEFF_NOM) }
+  public static func add(DRAG_UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_UNCERTAINTY, def: 0.0, at: VT.DRAG_UNCERTAINTY) }
+  public static func add(SRP_CONST_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_CONST_AREA, def: 0.0, at: VT.SRP_CONST_AREA) }
+  public static func add(SOLAR_RAD_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_COEFF, def: 0.0, at: VT.SOLAR_RAD_COEFF) }
+  public static func add(SRP_UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_UNCERTAINTY, def: 0.0, at: VT.SRP_UNCERTAINTY) }
+  public static func add(MANUFACTURER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANUFACTURER, at: VT.MANUFACTURER) }
+  public static func add(BUS_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUS_MODEL, at: VT.BUS_MODEL) }
+  public static func add(DOCKED_WITH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOCKED_WITH, at: VT.DOCKED_WITH) }
+  public static func add(INITIAL_WET_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_WET_MASS, def: .nan, at: VT.INITIAL_WET_MASS) }
+  public static func add(OEB_PARENT_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OEB_PARENT_FRAME, at: VT.OEB_PARENT_FRAME) }
+  public static func add(OEB_PARENT_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OEB_PARENT_FRAME_EPOCH, at: VT.OEB_PARENT_FRAME_EPOCH) }
+  public static func add(AREA_MIN_FOR_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_MIN_FOR_PC, def: .nan, at: VT.AREA_MIN_FOR_PC) }
+  public static func add(AREA_MAX_FOR_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_MAX_FOR_PC, def: .nan, at: VT.AREA_MAX_FOR_PC) }
+  public static func add(AREA_TYP_FOR_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_TYP_FOR_PC, def: .nan, at: VT.AREA_TYP_FOR_PC) }
+  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: .nan, at: VT.RCS) }
+  public static func add(RCS_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MIN, def: .nan, at: VT.RCS_MIN) }
+  public static func add(RCS_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MAX, def: .nan, at: VT.RCS_MAX) }
+  public static func add(VM_ABSOLUTE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VM_ABSOLUTE, def: .nan, at: VT.VM_ABSOLUTE) }
+  public static func add(VM_APPARENT_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VM_APPARENT_MIN, def: .nan, at: VT.VM_APPARENT_MIN) }
+  public static func add(VM_APPARENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VM_APPARENT, def: .nan, at: VT.VM_APPARENT) }
+  public static func add(VM_APPARENT_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VM_APPARENT_MAX, def: .nan, at: VT.VM_APPARENT_MAX) }
+  public static func add(REFLECTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTANCE, def: .nan, at: VT.REFLECTANCE) }
+  public static func add(ATT_CONTROL_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATT_CONTROL_MODE, at: VT.ATT_CONTROL_MODE) }
+  public static func add(ATT_ACTUATOR_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATT_ACTUATOR_TYPE, at: VT.ATT_ACTUATOR_TYPE) }
+  public static func add(ATT_KNOWLEDGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATT_KNOWLEDGE, def: .nan, at: VT.ATT_KNOWLEDGE) }
+  public static func add(ATT_CONTROL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATT_CONTROL, def: .nan, at: VT.ATT_CONTROL) }
+  public static func add(ATT_POINTING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATT_POINTING, def: .nan, at: VT.ATT_POINTING) }
+  public static func add(AVG_MANEUVER_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AVG_MANEUVER_FREQ, def: .nan, at: VT.AVG_MANEUVER_FREQ) }
+  public static func add(MAX_THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_THRUST, def: .nan, at: VT.MAX_THRUST) }
+  public static func add(DV_BOL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DV_BOL, def: .nan, at: VT.DV_BOL) }
+  public static func add(DV_REMAINING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DV_REMAINING, def: .nan, at: VT.DV_REMAINING) }
+  public static func add(IXX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IXX, def: .nan, at: VT.IXX) }
+  public static func add(IYY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IYY, def: .nan, at: VT.IYY) }
+  public static func add(IZZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IZZ, def: .nan, at: VT.IZZ) }
+  public static func add(IXY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IXY, def: .nan, at: VT.IXY) }
+  public static func add(IXZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IXZ, def: .nan, at: VT.IXZ) }
+  public static func add(IYZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IYZ, def: .nan, at: VT.IYZ) }
+  public static func endPhysicalProperties(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPhysicalProperties(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTVectorOffset COMMENT: Offset = Offset(),
+    WET_MASS: Double = 0.0,
+    DRY_MASS: Double = 0.0,
+    MASS_UNITSOffset MASS_UNITS: Offset = Offset(),
+    OEB_Q1: Double = 0.0,
+    OEB_Q2: Double = 0.0,
+    OEB_Q3: Double = 0.0,
+    OEB_QC: Double = 0.0,
+    OEB_MAX: Double = 0.0,
+    OEB_INT: Double = 0.0,
+    OEB_MIN: Double = 0.0,
+    AREA_ALONG_OEB_MAX: Double = 0.0,
+    AREA_ALONG_OEB_INT: Double = 0.0,
+    AREA_ALONG_OEB_MIN: Double = 0.0,
+    AREA_UNITSOffset AREA_UNITS: Offset = Offset(),
+    DRAG_CONST_AREA: Double = 0.0,
+    DRAG_COEFF_NOM: Double = 0.0,
+    DRAG_UNCERTAINTY: Double = 0.0,
+    SRP_CONST_AREA: Double = 0.0,
+    SOLAR_RAD_COEFF: Double = 0.0,
+    SRP_UNCERTAINTY: Double = 0.0,
+    MANUFACTUREROffset MANUFACTURER: Offset = Offset(),
+    BUS_MODELOffset BUS_MODEL: Offset = Offset(),
+    DOCKED_WITHOffset DOCKED_WITH: Offset = Offset(),
+    INITIAL_WET_MASS: Double = .nan,
+    OEB_PARENT_FRAMEOffset OEB_PARENT_FRAME: Offset = Offset(),
+    OEB_PARENT_FRAME_EPOCHOffset OEB_PARENT_FRAME_EPOCH: Offset = Offset(),
+    AREA_MIN_FOR_PC: Double = .nan,
+    AREA_MAX_FOR_PC: Double = .nan,
+    AREA_TYP_FOR_PC: Double = .nan,
+    RCS: Double = .nan,
+    RCS_MIN: Double = .nan,
+    RCS_MAX: Double = .nan,
+    VM_ABSOLUTE: Double = .nan,
+    VM_APPARENT_MIN: Double = .nan,
+    VM_APPARENT: Double = .nan,
+    VM_APPARENT_MAX: Double = .nan,
+    REFLECTANCE: Double = .nan,
+    ATT_CONTROL_MODEOffset ATT_CONTROL_MODE: Offset = Offset(),
+    ATT_ACTUATOR_TYPEOffset ATT_ACTUATOR_TYPE: Offset = Offset(),
+    ATT_KNOWLEDGE: Double = .nan,
+    ATT_CONTROL: Double = .nan,
+    ATT_POINTING: Double = .nan,
+    AVG_MANEUVER_FREQ: Double = .nan,
+    MAX_THRUST: Double = .nan,
+    DV_BOL: Double = .nan,
+    DV_REMAINING: Double = .nan,
+    IXX: Double = .nan,
+    IYY: Double = .nan,
+    IZZ: Double = .nan,
+    IXY: Double = .nan,
+    IXZ: Double = .nan,
+    IYZ: Double = .nan
+  ) -> Offset {
+    let __start = PhysicalProperties.startPhysicalProperties(&fbb)
+    PhysicalProperties.addVectorOf(COMMENT: COMMENT, &fbb)
+    PhysicalProperties.add(WET_MASS: WET_MASS, &fbb)
+    PhysicalProperties.add(DRY_MASS: DRY_MASS, &fbb)
+    PhysicalProperties.add(MASS_UNITS: MASS_UNITS, &fbb)
+    PhysicalProperties.add(OEB_Q1: OEB_Q1, &fbb)
+    PhysicalProperties.add(OEB_Q2: OEB_Q2, &fbb)
+    PhysicalProperties.add(OEB_Q3: OEB_Q3, &fbb)
+    PhysicalProperties.add(OEB_QC: OEB_QC, &fbb)
+    PhysicalProperties.add(OEB_MAX: OEB_MAX, &fbb)
+    PhysicalProperties.add(OEB_INT: OEB_INT, &fbb)
+    PhysicalProperties.add(OEB_MIN: OEB_MIN, &fbb)
+    PhysicalProperties.add(AREA_ALONG_OEB_MAX: AREA_ALONG_OEB_MAX, &fbb)
+    PhysicalProperties.add(AREA_ALONG_OEB_INT: AREA_ALONG_OEB_INT, &fbb)
+    PhysicalProperties.add(AREA_ALONG_OEB_MIN: AREA_ALONG_OEB_MIN, &fbb)
+    PhysicalProperties.add(AREA_UNITS: AREA_UNITS, &fbb)
+    PhysicalProperties.add(DRAG_CONST_AREA: DRAG_CONST_AREA, &fbb)
+    PhysicalProperties.add(DRAG_COEFF_NOM: DRAG_COEFF_NOM, &fbb)
+    PhysicalProperties.add(DRAG_UNCERTAINTY: DRAG_UNCERTAINTY, &fbb)
+    PhysicalProperties.add(SRP_CONST_AREA: SRP_CONST_AREA, &fbb)
+    PhysicalProperties.add(SOLAR_RAD_COEFF: SOLAR_RAD_COEFF, &fbb)
+    PhysicalProperties.add(SRP_UNCERTAINTY: SRP_UNCERTAINTY, &fbb)
+    PhysicalProperties.add(MANUFACTURER: MANUFACTURER, &fbb)
+    PhysicalProperties.add(BUS_MODEL: BUS_MODEL, &fbb)
+    PhysicalProperties.add(DOCKED_WITH: DOCKED_WITH, &fbb)
+    PhysicalProperties.add(INITIAL_WET_MASS: INITIAL_WET_MASS, &fbb)
+    PhysicalProperties.add(OEB_PARENT_FRAME: OEB_PARENT_FRAME, &fbb)
+    PhysicalProperties.add(OEB_PARENT_FRAME_EPOCH: OEB_PARENT_FRAME_EPOCH, &fbb)
+    PhysicalProperties.add(AREA_MIN_FOR_PC: AREA_MIN_FOR_PC, &fbb)
+    PhysicalProperties.add(AREA_MAX_FOR_PC: AREA_MAX_FOR_PC, &fbb)
+    PhysicalProperties.add(AREA_TYP_FOR_PC: AREA_TYP_FOR_PC, &fbb)
+    PhysicalProperties.add(RCS: RCS, &fbb)
+    PhysicalProperties.add(RCS_MIN: RCS_MIN, &fbb)
+    PhysicalProperties.add(RCS_MAX: RCS_MAX, &fbb)
+    PhysicalProperties.add(VM_ABSOLUTE: VM_ABSOLUTE, &fbb)
+    PhysicalProperties.add(VM_APPARENT_MIN: VM_APPARENT_MIN, &fbb)
+    PhysicalProperties.add(VM_APPARENT: VM_APPARENT, &fbb)
+    PhysicalProperties.add(VM_APPARENT_MAX: VM_APPARENT_MAX, &fbb)
+    PhysicalProperties.add(REFLECTANCE: REFLECTANCE, &fbb)
+    PhysicalProperties.add(ATT_CONTROL_MODE: ATT_CONTROL_MODE, &fbb)
+    PhysicalProperties.add(ATT_ACTUATOR_TYPE: ATT_ACTUATOR_TYPE, &fbb)
+    PhysicalProperties.add(ATT_KNOWLEDGE: ATT_KNOWLEDGE, &fbb)
+    PhysicalProperties.add(ATT_CONTROL: ATT_CONTROL, &fbb)
+    PhysicalProperties.add(ATT_POINTING: ATT_POINTING, &fbb)
+    PhysicalProperties.add(AVG_MANEUVER_FREQ: AVG_MANEUVER_FREQ, &fbb)
+    PhysicalProperties.add(MAX_THRUST: MAX_THRUST, &fbb)
+    PhysicalProperties.add(DV_BOL: DV_BOL, &fbb)
+    PhysicalProperties.add(DV_REMAINING: DV_REMAINING, &fbb)
+    PhysicalProperties.add(IXX: IXX, &fbb)
+    PhysicalProperties.add(IYY: IYY, &fbb)
+    PhysicalProperties.add(IZZ: IZZ, &fbb)
+    PhysicalProperties.add(IXY: IXY, &fbb)
+    PhysicalProperties.add(IXZ: IXZ, &fbb)
+    PhysicalProperties.add(IYZ: IYZ, &fbb)
+    return PhysicalProperties.endPhysicalProperties(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.WET_MASS, fieldName: "WET_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.DRY_MASS, fieldName: "DRY_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS_UNITS, fieldName: "MASS_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OEB_Q1, fieldName: "OEB_Q1", required: false, type: Double.self)
+    try _v.visit(field: VT.OEB_Q2, fieldName: "OEB_Q2", required: false, type: Double.self)
+    try _v.visit(field: VT.OEB_Q3, fieldName: "OEB_Q3", required: false, type: Double.self)
+    try _v.visit(field: VT.OEB_QC, fieldName: "OEB_QC", required: false, type: Double.self)
+    try _v.visit(field: VT.OEB_MAX, fieldName: "OEB_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.OEB_INT, fieldName: "OEB_INT", required: false, type: Double.self)
+    try _v.visit(field: VT.OEB_MIN, fieldName: "OEB_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_ALONG_OEB_MAX, fieldName: "AREA_ALONG_OEB_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_ALONG_OEB_INT, fieldName: "AREA_ALONG_OEB_INT", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_ALONG_OEB_MIN, fieldName: "AREA_ALONG_OEB_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_UNITS, fieldName: "AREA_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DRAG_CONST_AREA, fieldName: "DRAG_CONST_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_COEFF_NOM, fieldName: "DRAG_COEFF_NOM", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_UNCERTAINTY, fieldName: "DRAG_UNCERTAINTY", required: false, type: Double.self)
+    try _v.visit(field: VT.SRP_CONST_AREA, fieldName: "SRP_CONST_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLAR_RAD_COEFF, fieldName: "SOLAR_RAD_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.SRP_UNCERTAINTY, fieldName: "SRP_UNCERTAINTY", required: false, type: Double.self)
+    try _v.visit(field: VT.MANUFACTURER, fieldName: "MANUFACTURER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUS_MODEL, fieldName: "BUS_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DOCKED_WITH, fieldName: "DOCKED_WITH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_WET_MASS, fieldName: "INITIAL_WET_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.OEB_PARENT_FRAME, fieldName: "OEB_PARENT_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OEB_PARENT_FRAME_EPOCH, fieldName: "OEB_PARENT_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AREA_MIN_FOR_PC, fieldName: "AREA_MIN_FOR_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_MAX_FOR_PC, fieldName: "AREA_MAX_FOR_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_TYP_FOR_PC, fieldName: "AREA_TYP_FOR_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS, fieldName: "RCS", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS_MIN, fieldName: "RCS_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS_MAX, fieldName: "RCS_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.VM_ABSOLUTE, fieldName: "VM_ABSOLUTE", required: false, type: Double.self)
+    try _v.visit(field: VT.VM_APPARENT_MIN, fieldName: "VM_APPARENT_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.VM_APPARENT, fieldName: "VM_APPARENT", required: false, type: Double.self)
+    try _v.visit(field: VT.VM_APPARENT_MAX, fieldName: "VM_APPARENT_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.REFLECTANCE, fieldName: "REFLECTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.ATT_CONTROL_MODE, fieldName: "ATT_CONTROL_MODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATT_ACTUATOR_TYPE, fieldName: "ATT_ACTUATOR_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATT_KNOWLEDGE, fieldName: "ATT_KNOWLEDGE", required: false, type: Double.self)
+    try _v.visit(field: VT.ATT_CONTROL, fieldName: "ATT_CONTROL", required: false, type: Double.self)
+    try _v.visit(field: VT.ATT_POINTING, fieldName: "ATT_POINTING", required: false, type: Double.self)
+    try _v.visit(field: VT.AVG_MANEUVER_FREQ, fieldName: "AVG_MANEUVER_FREQ", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_THRUST, fieldName: "MAX_THRUST", required: false, type: Double.self)
+    try _v.visit(field: VT.DV_BOL, fieldName: "DV_BOL", required: false, type: Double.self)
+    try _v.visit(field: VT.DV_REMAINING, fieldName: "DV_REMAINING", required: false, type: Double.self)
+    try _v.visit(field: VT.IXX, fieldName: "IXX", required: false, type: Double.self)
+    try _v.visit(field: VT.IYY, fieldName: "IYY", required: false, type: Double.self)
+    try _v.visit(field: VT.IZZ, fieldName: "IZZ", required: false, type: Double.self)
+    try _v.visit(field: VT.IXY, fieldName: "IXY", required: false, type: Double.self)
+    try _v.visit(field: VT.IXZ, fieldName: "IXZ", required: false, type: Double.self)
+    try _v.visit(field: VT.IYZ, fieldName: "IYZ", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct Perturbations: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Perturbations.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let ATMOSPHERIC_MODEL: VOffset = 6
+    static let GRAVITY_MODEL: VOffset = 8
+    static let GRAVITY_DEGREE: VOffset = 10
+    static let GRAVITY_ORDER: VOffset = 12
+    static let GM: VOffset = 14
+    static let N_BODY_PERTURBATIONS: VOffset = 16
+    static let OCEAN_TIDES_MODEL: VOffset = 18
+    static let SOLID_TIDES_MODEL: VOffset = 20
+    static let ATMOSPHERIC_TIDES_MODEL: VOffset = 22
+    static let GEOPOTENTIAL_MODEL: VOffset = 24
+    static let SOLAR_RAD_PRESSURE: VOffset = 26
+    static let ALBEDO: VOffset = 28
+    static let THERMAL: VOffset = 30
+    static let RELATIVITY: VOffset = 32
+    static let ATMOSPHERIC_DRAG: VOffset = 34
+    static let FIXED_GEOMAG_KP: VOffset = 36
+    static let FIXED_F10P7: VOffset = 38
+    static let FIXED_F10P7_MEAN: VOffset = 40
+    static let FIXED_GEOMAG_AP: VOffset = 42
+    static let ATMOSPHERIC_MODEL_NAME: VOffset = 44
+    static let EQUATORIAL_RADIUS: VOffset = 46
+    static let CENTRAL_BODY_ROTATION: VOffset = 48
+    static let OBLATE_FLATTENING: VOffset = 50
+    static let REDUCTION_THEORY: VOffset = 52
+    static let ALBEDO_GRID_SIZE: VOffset = 54
+    static let SHADOW_MODEL: VOffset = 56
+    static let SHADOW_BODIES: VOffset = 58
+    static let SW_DATA_SOURCE: VOffset = 60
+    static let SW_DATA_EPOCH: VOffset = 62
+    static let SW_INTERP_METHOD: VOffset = 64
+    static let FIXED_GEOMAG_DST: VOffset = 66
+    static let FIXED_M10P7: VOffset = 68
+    static let FIXED_M10P7_MEAN: VOffset = 70
+    static let FIXED_S10P7: VOffset = 72
+    static let FIXED_S10P7_MEAN: VOffset = 74
+    static let FIXED_Y10P7: VOffset = 76
+    static let FIXED_Y10P7_MEAN: VOffset = 78
+  }
+
+  ///  Comments in the Perturbations section.
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT, byteSize: 4) }
+  ///  Atmospheric model used.
+  public var ATMOSPHERIC_MODEL: ATM? { let o = _accessor.offset(VT.ATMOSPHERIC_MODEL); return o == 0 ? nil : ATM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Gravity model used.
+  public var GRAVITY_MODEL: String? { let o = _accessor.offset(VT.GRAVITY_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRAVITY_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRAVITY_MODEL) }
+  ///  Degree of the gravity model.
+  public var GRAVITY_DEGREE: Int32 { let o = _accessor.offset(VT.GRAVITY_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Order of the gravity model.
+  public var GRAVITY_ORDER: Int32 { let o = _accessor.offset(VT.GRAVITY_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Gravitational constant times the mass of the central body.
+  public var GM: Double { let o = _accessor.offset(VT.GM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  List of celestial bodies included in n-body perturbations.
+  public var N_BODY_PERTURBATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.N_BODY_PERTURBATIONS, byteSize: 4) }
+  ///  Ocean tides model used.
+  public var OCEAN_TIDES_MODEL: String? { let o = _accessor.offset(VT.OCEAN_TIDES_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OCEAN_TIDES_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OCEAN_TIDES_MODEL) }
+  ///  Solid tides model used.
+  public var SOLID_TIDES_MODEL: String? { let o = _accessor.offset(VT.SOLID_TIDES_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOLID_TIDES_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLID_TIDES_MODEL) }
+  ///  Atmospheric tides model used.
+  public var ATMOSPHERIC_TIDES_MODEL: String? { let o = _accessor.offset(VT.ATMOSPHERIC_TIDES_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATMOSPHERIC_TIDES_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATMOSPHERIC_TIDES_MODEL) }
+  ///  Geopotential model used.
+  public var GEOPOTENTIAL_MODEL: String? { let o = _accessor.offset(VT.GEOPOTENTIAL_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GEOPOTENTIAL_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GEOPOTENTIAL_MODEL) }
+  ///  Solar radiation pressure model used.
+  public var SOLAR_RAD_PRESSURE: String? { let o = _accessor.offset(VT.SOLAR_RAD_PRESSURE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOLAR_RAD_PRESSURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLAR_RAD_PRESSURE) }
+  ///  Albedo model used.
+  public var ALBEDO: String? { let o = _accessor.offset(VT.ALBEDO); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALBEDOSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALBEDO) }
+  ///  Thermal model used.
+  public var THERMAL: String? { let o = _accessor.offset(VT.THERMAL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var THERMALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.THERMAL) }
+  ///  Relativity model used.
+  public var RELATIVITY: String? { let o = _accessor.offset(VT.RELATIVITY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RELATIVITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RELATIVITY) }
+  ///  Atmospheric drag model used.
+  public var ATMOSPHERIC_DRAG: String? { let o = _accessor.offset(VT.ATMOSPHERIC_DRAG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATMOSPHERIC_DRAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATMOSPHERIC_DRAG) }
+  ///  Fixed geomagnetic Kp index used.
+  public var FIXED_GEOMAG_KP: Double { let o = _accessor.offset(VT.FIXED_GEOMAG_KP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fixed F10.7 solar flux value used.
+  public var FIXED_F10P7: Double { let o = _accessor.offset(VT.FIXED_F10P7); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fixed mean F10.7 solar flux value used.
+  public var FIXED_F10P7_MEAN: Double { let o = _accessor.offset(VT.FIXED_F10P7_MEAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fixed (time-invariant) geomagnetic index ap used in place of the normal
+  ///  time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+  public var FIXED_GEOMAG_AP: Double { let o = _accessor.offset(VT.FIXED_GEOMAG_AP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+  ///  above is the model family when the text names one.
+  public var ATMOSPHERIC_MODEL_NAME: String? { let o = _accessor.offset(VT.ATMOSPHERIC_MODEL_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATMOSPHERIC_MODEL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATMOSPHERIC_MODEL_NAME) }
+  ///  EQUATORIAL_RADIUS in km, NaN when not stated.
+  public var EQUATORIAL_RADIUS: Double { let o = _accessor.offset(VT.EQUATORIAL_RADIUS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+  public var CENTRAL_BODY_ROTATION: Double { let o = _accessor.offset(VT.CENTRAL_BODY_ROTATION); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OBLATE_FLATTENING, NaN when not stated.
+  public var OBLATE_FLATTENING: Double { let o = _accessor.offset(VT.OBLATE_FLATTENING); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  REDUCTION_THEORY.
+  public var REDUCTION_THEORY: String? { let o = _accessor.offset(VT.REDUCTION_THEORY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REDUCTION_THEORYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REDUCTION_THEORY) }
+  ///  ALBEDO_GRID_SIZE.
+  public var ALBEDO_GRID_SIZE: UInt32 { let o = _accessor.offset(VT.ALBEDO_GRID_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  SHADOW_MODEL.
+  public var SHADOW_MODEL: String? { let o = _accessor.offset(VT.SHADOW_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOW_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOW_MODEL) }
+  ///  SHADOW_BODIES.
+  public var SHADOW_BODIES: String? { let o = _accessor.offset(VT.SHADOW_BODIES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOW_BODIESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOW_BODIES) }
+  ///  SW_DATA_SOURCE: the space weather data source.
+  public var SW_DATA_SOURCE: String? { let o = _accessor.offset(VT.SW_DATA_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SW_DATA_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SW_DATA_SOURCE) }
+  ///  SW_DATA_EPOCH.
+  public var SW_DATA_EPOCH: String? { let o = _accessor.offset(VT.SW_DATA_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SW_DATA_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SW_DATA_EPOCH) }
+  ///  SW_INTERP_METHOD.
+  public var SW_INTERP_METHOD: String? { let o = _accessor.offset(VT.SW_INTERP_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SW_INTERP_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SW_INTERP_METHOD) }
+  ///  FIXED_GEOMAG_DST in nT, NaN when not stated.
+  public var FIXED_GEOMAG_DST: Double { let o = _accessor.offset(VT.FIXED_GEOMAG_DST); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIXED_M10P7, NaN when not stated.
+  public var FIXED_M10P7: Double { let o = _accessor.offset(VT.FIXED_M10P7); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIXED_M10P7_MEAN, NaN when not stated.
+  public var FIXED_M10P7_MEAN: Double { let o = _accessor.offset(VT.FIXED_M10P7_MEAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIXED_S10P7, NaN when not stated.
+  public var FIXED_S10P7: Double { let o = _accessor.offset(VT.FIXED_S10P7); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIXED_S10P7_MEAN, NaN when not stated.
+  public var FIXED_S10P7_MEAN: Double { let o = _accessor.offset(VT.FIXED_S10P7_MEAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIXED_Y10P7, NaN when not stated.
+  public var FIXED_Y10P7: Double { let o = _accessor.offset(VT.FIXED_Y10P7); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  FIXED_Y10P7_MEAN, NaN when not stated.
+  public var FIXED_Y10P7_MEAN: Double { let o = _accessor.offset(VT.FIXED_Y10P7_MEAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPerturbations(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 38) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(ATMOSPHERIC_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL, at: VT.ATMOSPHERIC_MODEL) }
+  public static func add(GRAVITY_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAVITY_MODEL, at: VT.GRAVITY_MODEL) }
+  public static func add(GRAVITY_DEGREE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_DEGREE, def: 0, at: VT.GRAVITY_DEGREE) }
+  public static func add(GRAVITY_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_ORDER, def: 0, at: VT.GRAVITY_ORDER) }
+  public static func add(GM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GM, def: 0.0, at: VT.GM) }
+  public static func addVectorOf(N_BODY_PERTURBATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: N_BODY_PERTURBATIONS, at: VT.N_BODY_PERTURBATIONS) }
+  public static func add(OCEAN_TIDES_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCEAN_TIDES_MODEL, at: VT.OCEAN_TIDES_MODEL) }
+  public static func add(SOLID_TIDES_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLID_TIDES_MODEL, at: VT.SOLID_TIDES_MODEL) }
+  public static func add(ATMOSPHERIC_TIDES_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_TIDES_MODEL, at: VT.ATMOSPHERIC_TIDES_MODEL) }
+  public static func add(GEOPOTENTIAL_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOPOTENTIAL_MODEL, at: VT.GEOPOTENTIAL_MODEL) }
+  public static func add(SOLAR_RAD_PRESSURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLAR_RAD_PRESSURE, at: VT.SOLAR_RAD_PRESSURE) }
+  public static func add(ALBEDO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALBEDO, at: VT.ALBEDO) }
+  public static func add(THERMAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THERMAL, at: VT.THERMAL) }
+  public static func add(RELATIVITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RELATIVITY, at: VT.RELATIVITY) }
+  public static func add(ATMOSPHERIC_DRAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_DRAG, at: VT.ATMOSPHERIC_DRAG) }
+  public static func add(FIXED_GEOMAG_KP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_GEOMAG_KP, def: 0.0, at: VT.FIXED_GEOMAG_KP) }
+  public static func add(FIXED_F10P7: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_F10P7, def: 0.0, at: VT.FIXED_F10P7) }
+  public static func add(FIXED_F10P7_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_F10P7_MEAN, def: 0.0, at: VT.FIXED_F10P7_MEAN) }
+  public static func add(FIXED_GEOMAG_AP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_GEOMAG_AP, def: 0.0, at: VT.FIXED_GEOMAG_AP) }
+  public static func add(ATMOSPHERIC_MODEL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL_NAME, at: VT.ATMOSPHERIC_MODEL_NAME) }
+  public static func add(EQUATORIAL_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EQUATORIAL_RADIUS, def: .nan, at: VT.EQUATORIAL_RADIUS) }
+  public static func add(CENTRAL_BODY_ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY_ROTATION, def: .nan, at: VT.CENTRAL_BODY_ROTATION) }
+  public static func add(OBLATE_FLATTENING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBLATE_FLATTENING, def: .nan, at: VT.OBLATE_FLATTENING) }
+  public static func add(REDUCTION_THEORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REDUCTION_THEORY, at: VT.REDUCTION_THEORY) }
+  public static func add(ALBEDO_GRID_SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALBEDO_GRID_SIZE, def: 0, at: VT.ALBEDO_GRID_SIZE) }
+  public static func add(SHADOW_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOW_MODEL, at: VT.SHADOW_MODEL) }
+  public static func add(SHADOW_BODIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOW_BODIES, at: VT.SHADOW_BODIES) }
+  public static func add(SW_DATA_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SW_DATA_SOURCE, at: VT.SW_DATA_SOURCE) }
+  public static func add(SW_DATA_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SW_DATA_EPOCH, at: VT.SW_DATA_EPOCH) }
+  public static func add(SW_INTERP_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SW_INTERP_METHOD, at: VT.SW_INTERP_METHOD) }
+  public static func add(FIXED_GEOMAG_DST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_GEOMAG_DST, def: .nan, at: VT.FIXED_GEOMAG_DST) }
+  public static func add(FIXED_M10P7: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_M10P7, def: .nan, at: VT.FIXED_M10P7) }
+  public static func add(FIXED_M10P7_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_M10P7_MEAN, def: .nan, at: VT.FIXED_M10P7_MEAN) }
+  public static func add(FIXED_S10P7: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_S10P7, def: .nan, at: VT.FIXED_S10P7) }
+  public static func add(FIXED_S10P7_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_S10P7_MEAN, def: .nan, at: VT.FIXED_S10P7_MEAN) }
+  public static func add(FIXED_Y10P7: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_Y10P7, def: .nan, at: VT.FIXED_Y10P7) }
+  public static func add(FIXED_Y10P7_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_Y10P7_MEAN, def: .nan, at: VT.FIXED_Y10P7_MEAN) }
+  public static func endPerturbations(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPerturbations(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTVectorOffset COMMENT: Offset = Offset(),
+    ATMOSPHERIC_MODELOffset ATMOSPHERIC_MODEL: Offset = Offset(),
+    GRAVITY_MODELOffset GRAVITY_MODEL: Offset = Offset(),
+    GRAVITY_DEGREE: Int32 = 0,
+    GRAVITY_ORDER: Int32 = 0,
+    GM: Double = 0.0,
+    N_BODY_PERTURBATIONSVectorOffset N_BODY_PERTURBATIONS: Offset = Offset(),
+    OCEAN_TIDES_MODELOffset OCEAN_TIDES_MODEL: Offset = Offset(),
+    SOLID_TIDES_MODELOffset SOLID_TIDES_MODEL: Offset = Offset(),
+    ATMOSPHERIC_TIDES_MODELOffset ATMOSPHERIC_TIDES_MODEL: Offset = Offset(),
+    GEOPOTENTIAL_MODELOffset GEOPOTENTIAL_MODEL: Offset = Offset(),
+    SOLAR_RAD_PRESSUREOffset SOLAR_RAD_PRESSURE: Offset = Offset(),
+    ALBEDOOffset ALBEDO: Offset = Offset(),
+    THERMALOffset THERMAL: Offset = Offset(),
+    RELATIVITYOffset RELATIVITY: Offset = Offset(),
+    ATMOSPHERIC_DRAGOffset ATMOSPHERIC_DRAG: Offset = Offset(),
+    FIXED_GEOMAG_KP: Double = 0.0,
+    FIXED_F10P7: Double = 0.0,
+    FIXED_F10P7_MEAN: Double = 0.0,
+    FIXED_GEOMAG_AP: Double = 0.0,
+    ATMOSPHERIC_MODEL_NAMEOffset ATMOSPHERIC_MODEL_NAME: Offset = Offset(),
+    EQUATORIAL_RADIUS: Double = .nan,
+    CENTRAL_BODY_ROTATION: Double = .nan,
+    OBLATE_FLATTENING: Double = .nan,
+    REDUCTION_THEORYOffset REDUCTION_THEORY: Offset = Offset(),
+    ALBEDO_GRID_SIZE: UInt32 = 0,
+    SHADOW_MODELOffset SHADOW_MODEL: Offset = Offset(),
+    SHADOW_BODIESOffset SHADOW_BODIES: Offset = Offset(),
+    SW_DATA_SOURCEOffset SW_DATA_SOURCE: Offset = Offset(),
+    SW_DATA_EPOCHOffset SW_DATA_EPOCH: Offset = Offset(),
+    SW_INTERP_METHODOffset SW_INTERP_METHOD: Offset = Offset(),
+    FIXED_GEOMAG_DST: Double = .nan,
+    FIXED_M10P7: Double = .nan,
+    FIXED_M10P7_MEAN: Double = .nan,
+    FIXED_S10P7: Double = .nan,
+    FIXED_S10P7_MEAN: Double = .nan,
+    FIXED_Y10P7: Double = .nan,
+    FIXED_Y10P7_MEAN: Double = .nan
+  ) -> Offset {
+    let __start = Perturbations.startPerturbations(&fbb)
+    Perturbations.addVectorOf(COMMENT: COMMENT, &fbb)
+    Perturbations.add(ATMOSPHERIC_MODEL: ATMOSPHERIC_MODEL, &fbb)
+    Perturbations.add(GRAVITY_MODEL: GRAVITY_MODEL, &fbb)
+    Perturbations.add(GRAVITY_DEGREE: GRAVITY_DEGREE, &fbb)
+    Perturbations.add(GRAVITY_ORDER: GRAVITY_ORDER, &fbb)
+    Perturbations.add(GM: GM, &fbb)
+    Perturbations.addVectorOf(N_BODY_PERTURBATIONS: N_BODY_PERTURBATIONS, &fbb)
+    Perturbations.add(OCEAN_TIDES_MODEL: OCEAN_TIDES_MODEL, &fbb)
+    Perturbations.add(SOLID_TIDES_MODEL: SOLID_TIDES_MODEL, &fbb)
+    Perturbations.add(ATMOSPHERIC_TIDES_MODEL: ATMOSPHERIC_TIDES_MODEL, &fbb)
+    Perturbations.add(GEOPOTENTIAL_MODEL: GEOPOTENTIAL_MODEL, &fbb)
+    Perturbations.add(SOLAR_RAD_PRESSURE: SOLAR_RAD_PRESSURE, &fbb)
+    Perturbations.add(ALBEDO: ALBEDO, &fbb)
+    Perturbations.add(THERMAL: THERMAL, &fbb)
+    Perturbations.add(RELATIVITY: RELATIVITY, &fbb)
+    Perturbations.add(ATMOSPHERIC_DRAG: ATMOSPHERIC_DRAG, &fbb)
+    Perturbations.add(FIXED_GEOMAG_KP: FIXED_GEOMAG_KP, &fbb)
+    Perturbations.add(FIXED_F10P7: FIXED_F10P7, &fbb)
+    Perturbations.add(FIXED_F10P7_MEAN: FIXED_F10P7_MEAN, &fbb)
+    Perturbations.add(FIXED_GEOMAG_AP: FIXED_GEOMAG_AP, &fbb)
+    Perturbations.add(ATMOSPHERIC_MODEL_NAME: ATMOSPHERIC_MODEL_NAME, &fbb)
+    Perturbations.add(EQUATORIAL_RADIUS: EQUATORIAL_RADIUS, &fbb)
+    Perturbations.add(CENTRAL_BODY_ROTATION: CENTRAL_BODY_ROTATION, &fbb)
+    Perturbations.add(OBLATE_FLATTENING: OBLATE_FLATTENING, &fbb)
+    Perturbations.add(REDUCTION_THEORY: REDUCTION_THEORY, &fbb)
+    Perturbations.add(ALBEDO_GRID_SIZE: ALBEDO_GRID_SIZE, &fbb)
+    Perturbations.add(SHADOW_MODEL: SHADOW_MODEL, &fbb)
+    Perturbations.add(SHADOW_BODIES: SHADOW_BODIES, &fbb)
+    Perturbations.add(SW_DATA_SOURCE: SW_DATA_SOURCE, &fbb)
+    Perturbations.add(SW_DATA_EPOCH: SW_DATA_EPOCH, &fbb)
+    Perturbations.add(SW_INTERP_METHOD: SW_INTERP_METHOD, &fbb)
+    Perturbations.add(FIXED_GEOMAG_DST: FIXED_GEOMAG_DST, &fbb)
+    Perturbations.add(FIXED_M10P7: FIXED_M10P7, &fbb)
+    Perturbations.add(FIXED_M10P7_MEAN: FIXED_M10P7_MEAN, &fbb)
+    Perturbations.add(FIXED_S10P7: FIXED_S10P7, &fbb)
+    Perturbations.add(FIXED_S10P7_MEAN: FIXED_S10P7_MEAN, &fbb)
+    Perturbations.add(FIXED_Y10P7: FIXED_Y10P7, &fbb)
+    Perturbations.add(FIXED_Y10P7_MEAN: FIXED_Y10P7_MEAN, &fbb)
+    return Perturbations.endPerturbations(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ATMOSPHERIC_MODEL, fieldName: "ATMOSPHERIC_MODEL", required: false, type: ForwardOffset<ATM>.self)
+    try _v.visit(field: VT.GRAVITY_MODEL, fieldName: "GRAVITY_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRAVITY_DEGREE, fieldName: "GRAVITY_DEGREE", required: false, type: Int32.self)
+    try _v.visit(field: VT.GRAVITY_ORDER, fieldName: "GRAVITY_ORDER", required: false, type: Int32.self)
+    try _v.visit(field: VT.GM, fieldName: "GM", required: false, type: Double.self)
+    try _v.visit(field: VT.N_BODY_PERTURBATIONS, fieldName: "N_BODY_PERTURBATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OCEAN_TIDES_MODEL, fieldName: "OCEAN_TIDES_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLID_TIDES_MODEL, fieldName: "SOLID_TIDES_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATMOSPHERIC_TIDES_MODEL, fieldName: "ATMOSPHERIC_TIDES_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOPOTENTIAL_MODEL, fieldName: "GEOPOTENTIAL_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLAR_RAD_PRESSURE, fieldName: "SOLAR_RAD_PRESSURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALBEDO, fieldName: "ALBEDO", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THERMAL, fieldName: "THERMAL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RELATIVITY, fieldName: "RELATIVITY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATMOSPHERIC_DRAG, fieldName: "ATMOSPHERIC_DRAG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIXED_GEOMAG_KP, fieldName: "FIXED_GEOMAG_KP", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_F10P7, fieldName: "FIXED_F10P7", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_F10P7_MEAN, fieldName: "FIXED_F10P7_MEAN", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_GEOMAG_AP, fieldName: "FIXED_GEOMAG_AP", required: false, type: Double.self)
+    try _v.visit(field: VT.ATMOSPHERIC_MODEL_NAME, fieldName: "ATMOSPHERIC_MODEL_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EQUATORIAL_RADIUS, fieldName: "EQUATORIAL_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.CENTRAL_BODY_ROTATION, fieldName: "CENTRAL_BODY_ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.OBLATE_FLATTENING, fieldName: "OBLATE_FLATTENING", required: false, type: Double.self)
+    try _v.visit(field: VT.REDUCTION_THEORY, fieldName: "REDUCTION_THEORY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALBEDO_GRID_SIZE, fieldName: "ALBEDO_GRID_SIZE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SHADOW_MODEL, fieldName: "SHADOW_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHADOW_BODIES, fieldName: "SHADOW_BODIES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SW_DATA_SOURCE, fieldName: "SW_DATA_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SW_DATA_EPOCH, fieldName: "SW_DATA_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SW_INTERP_METHOD, fieldName: "SW_INTERP_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIXED_GEOMAG_DST, fieldName: "FIXED_GEOMAG_DST", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_M10P7, fieldName: "FIXED_M10P7", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_M10P7_MEAN, fieldName: "FIXED_M10P7_MEAN", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_S10P7, fieldName: "FIXED_S10P7", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_S10P7_MEAN, fieldName: "FIXED_S10P7_MEAN", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_Y10P7, fieldName: "FIXED_Y10P7", required: false, type: Double.self)
+    try _v.visit(field: VT.FIXED_Y10P7_MEAN, fieldName: "FIXED_Y10P7_MEAN", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Maneuver.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MAN_ID: VOffset = 4
+    static let MAN_BASIS: VOffset = 6
+    static let MAN_DEVICE_ID: VOffset = 8
+    static let MAN_PREV_ID: VOffset = 10
+    static let MAN_PURPOSE: VOffset = 12
+    static let MAN_REF_FRAME: VOffset = 14
+    static let MAN_FRAME_EPOCH: VOffset = 16
+    static let MAN_TYPE: VOffset = 18
+    static let MAN_EPOCH_START: VOffset = 20
+    static let MAN_DURATION: VOffset = 22
+    static let MAN_UNITS: VOffset = 24
+    static let DATA: VOffset = 26
+    static let MAN_COMMENT: VOffset = 28
+    static let MAN_COMPOSITION: VOffset = 30
+    static let MAN_NEXT_ID: VOffset = 32
+    static let MAN_BASIS_ID: VOffset = 34
+    static let MAN_PREV_EPOCH: VOffset = 36
+    static let MAN_NEXT_EPOCH: VOffset = 38
+    static let MAN_PRED_SOURCE: VOffset = 40
+    static let GRAV_ASSIST_NAME: VOffset = 42
+    static let DC_TYPE: VOffset = 44
+    static let DC_WIN_OPEN: VOffset = 46
+    static let DC_WIN_CLOSE: VOffset = 48
+    static let DC_MIN_CYCLES: VOffset = 50
+    static let DC_MAX_CYCLES: VOffset = 52
+    static let HAS_DC_MIN_CYCLES: VOffset = 54
+    static let HAS_DC_MAX_CYCLES: VOffset = 56
+    static let DC_EXEC_START: VOffset = 58
+    static let DC_EXEC_STOP: VOffset = 60
+    static let DC_REF_TIME: VOffset = 62
+    static let DC_TIME_PULSE_DURATION: VOffset = 64
+    static let DC_TIME_PULSE_PERIOD: VOffset = 66
+    static let DC_REF_DIR: VOffset = 68
+    static let DC_BODY_FRAME: VOffset = 70
+    static let DC_BODY_TRIGGER: VOffset = 72
+    static let DC_PA_START_ANGLE: VOffset = 74
+    static let DC_PA_STOP_ANGLE: VOffset = 76
+  }
+
+  ///  Unique identifier for the maneuver.
+  public var MAN_ID: String? { let o = _accessor.offset(VT.MAN_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_ID) }
+  ///  Basis of the maneuver plan (e.g., planned, predicted, estimated).
+  public var MAN_BASIS: String? { let o = _accessor.offset(VT.MAN_BASIS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_BASISSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_BASIS) }
+  ///  Identifier of the maneuver device.
+  public var MAN_DEVICE_ID: String? { let o = _accessor.offset(VT.MAN_DEVICE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_DEVICE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_DEVICE_ID) }
+  ///  Identifier of the previous maneuver.
+  public var MAN_PREV_ID: String? { let o = _accessor.offset(VT.MAN_PREV_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_PREV_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_PREV_ID) }
+  ///  Purpose of the maneuver.
+  public var MAN_PURPOSE: String? { let o = _accessor.offset(VT.MAN_PURPOSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_PURPOSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_PURPOSE) }
+  ///  Reference frame for the maneuver data.
+  public var MAN_REF_FRAME: String? { let o = _accessor.offset(VT.MAN_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_REF_FRAME) }
+  ///  Epoch of the maneuver reference frame.
+  public var MAN_FRAME_EPOCH: String? { let o = _accessor.offset(VT.MAN_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_FRAME_EPOCH) }
+  ///  Type of maneuver (e.g., IMPULSIVE, FINITE).
+  public var MAN_TYPE: String? { let o = _accessor.offset(VT.MAN_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_TYPE) }
+  ///  Start epoch of the maneuver.
+  public var MAN_EPOCH_START: String? { let o = _accessor.offset(VT.MAN_EPOCH_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_EPOCH_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_EPOCH_START) }
+  ///  Duration of the maneuver.
+  public var MAN_DURATION: Double { let o = _accessor.offset(VT.MAN_DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units for the maneuver data values.
+  public var MAN_UNITS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MAN_UNITS, byteSize: 4) }
+  ///  Data associated with the maneuver.
+  public var DATA: FlatbufferVector<String?> { return _accessor.vector(at: VT.DATA, byteSize: 4) }
+  ///  Comments related to the maneuver.
+  public var MAN_COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.MAN_COMMENT, byteSize: 4) }
+  ///  Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+  ///  CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+  ///  DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+  ///  Relative time tags are seconds from METADATA.EPOCH_TZERO.
+  public var MAN_COMPOSITION: FlatbufferVector<String?> { return _accessor.vector(at: VT.MAN_COMPOSITION, byteSize: 4) }
+  ///  Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+  public var MAN_NEXT_ID: String? { let o = _accessor.offset(VT.MAN_NEXT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_NEXT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_NEXT_ID) }
+  ///  OD, navigation solution or simulation identifier (Table 6-7).
+  public var MAN_BASIS_ID: String? { let o = _accessor.offset(VT.MAN_BASIS_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_BASIS_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_BASIS_ID) }
+  ///  Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+  ///  CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+  public var MAN_PREV_EPOCH: String? { let o = _accessor.offset(VT.MAN_PREV_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_PREV_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_PREV_EPOCH) }
+  ///  Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+  public var MAN_NEXT_EPOCH: String? { let o = _accessor.offset(VT.MAN_NEXT_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_NEXT_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_NEXT_EPOCH) }
+  ///  Source of predicted orbit or attitude states (Table 6-7).
+  public var MAN_PRED_SOURCE: String? { let o = _accessor.offset(VT.MAN_PRED_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_PRED_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_PRED_SOURCE) }
+  ///  Gravitational assist body name (Table 6-7).
+  public var GRAV_ASSIST_NAME: String? { let o = _accessor.offset(VT.GRAV_ASSIST_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRAV_ASSIST_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRAV_ASSIST_NAME) }
+  ///  CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+  public var DC_TYPE: String? { let o = _accessor.offset(VT.DC_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_TYPE) }
+  ///  Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+  public var DC_WIN_OPEN: String? { let o = _accessor.offset(VT.DC_WIN_OPEN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_WIN_OPENSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_WIN_OPEN) }
+  ///  Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+  public var DC_WIN_CLOSE: String? { let o = _accessor.offset(VT.DC_WIN_CLOSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_WIN_CLOSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_WIN_CLOSE) }
+  ///  Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+  public var DC_MIN_CYCLES: UInt32 { let o = _accessor.offset(VT.DC_MIN_CYCLES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var DC_MAX_CYCLES: UInt32 { let o = _accessor.offset(VT.DC_MAX_CYCLES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Presence of the corresponding cycle bound; zero remains representable.
+  public var HAS_DC_MIN_CYCLES: Bool { let o = _accessor.offset(VT.HAS_DC_MIN_CYCLES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_DC_MAX_CYCLES: Bool { let o = _accessor.offset(VT.HAS_DC_MAX_CYCLES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+  ///  Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+  public var DC_EXEC_START: String? { let o = _accessor.offset(VT.DC_EXEC_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_EXEC_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_EXEC_START) }
+  public var DC_EXEC_STOP: String? { let o = _accessor.offset(VT.DC_EXEC_STOP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_EXEC_STOPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_EXEC_STOP) }
+  ///  Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+  public var DC_REF_TIME: String? { let o = _accessor.offset(VT.DC_REF_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_REF_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_REF_TIME) }
+  ///  Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+  ///  Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+  public var DC_TIME_PULSE_DURATION: Double { let o = _accessor.offset(VT.DC_TIME_PULSE_DURATION); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DC_TIME_PULSE_PERIOD: Double { let o = _accessor.offset(VT.DC_TIME_PULSE_PERIOD); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+  ///  Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+  public var DC_REF_DIR: FlatbufferVector<Double> { return _accessor.vector(at: VT.DC_REF_DIR, byteSize: 8) }
+  public func withUnsafePointerToDcRefDir<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DC_REF_DIR, body: body) }
+  ///  Body frame of DC_BODY_TRIGGER (Table 6-7).
+  public var DC_BODY_FRAME: String? { let o = _accessor.offset(VT.DC_BODY_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_BODY_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_BODY_FRAME) }
+  ///  Three-component body-frame trigger unit direction (Table 6-7).
+  public var DC_BODY_TRIGGER: FlatbufferVector<Double> { return _accessor.vector(at: VT.DC_BODY_TRIGGER, byteSize: 8) }
+  public func withUnsafePointerToDcBodyTrigger<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DC_BODY_TRIGGER, body: body) }
+  ///  Pulse start and stop phase angles, degrees; NaN means unspecified.
+  ///  CCSDS 502.0-B-3 Table 6-7.
+  public var DC_PA_START_ANGLE: Double { let o = _accessor.offset(VT.DC_PA_START_ANGLE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DC_PA_STOP_ANGLE: Double { let o = _accessor.offset(VT.DC_PA_STOP_ANGLE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startManeuver(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 37) }
+  public static func add(MAN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_ID, at: VT.MAN_ID) }
+  public static func add(MAN_BASIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_BASIS, at: VT.MAN_BASIS) }
+  public static func add(MAN_DEVICE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_DEVICE_ID, at: VT.MAN_DEVICE_ID) }
+  public static func add(MAN_PREV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_PREV_ID, at: VT.MAN_PREV_ID) }
+  public static func add(MAN_PURPOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_PURPOSE, at: VT.MAN_PURPOSE) }
+  public static func add(MAN_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_REF_FRAME, at: VT.MAN_REF_FRAME) }
+  public static func add(MAN_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_FRAME_EPOCH, at: VT.MAN_FRAME_EPOCH) }
+  public static func add(MAN_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_TYPE, at: VT.MAN_TYPE) }
+  public static func add(MAN_EPOCH_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_EPOCH_START, at: VT.MAN_EPOCH_START) }
+  public static func add(MAN_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_DURATION, def: 0.0, at: VT.MAN_DURATION) }
+  public static func addVectorOf(MAN_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_UNITS, at: VT.MAN_UNITS) }
+  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
+  public static func addVectorOf(MAN_COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_COMMENT, at: VT.MAN_COMMENT) }
+  public static func addVectorOf(MAN_COMPOSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_COMPOSITION, at: VT.MAN_COMPOSITION) }
+  public static func add(MAN_NEXT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_NEXT_ID, at: VT.MAN_NEXT_ID) }
+  public static func add(MAN_BASIS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_BASIS_ID, at: VT.MAN_BASIS_ID) }
+  public static func add(MAN_PREV_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_PREV_EPOCH, at: VT.MAN_PREV_EPOCH) }
+  public static func add(MAN_NEXT_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_NEXT_EPOCH, at: VT.MAN_NEXT_EPOCH) }
+  public static func add(MAN_PRED_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_PRED_SOURCE, at: VT.MAN_PRED_SOURCE) }
+  public static func add(GRAV_ASSIST_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAV_ASSIST_NAME, at: VT.GRAV_ASSIST_NAME) }
+  public static func add(DC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_TYPE, at: VT.DC_TYPE) }
+  public static func add(DC_WIN_OPEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_WIN_OPEN, at: VT.DC_WIN_OPEN) }
+  public static func add(DC_WIN_CLOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_WIN_CLOSE, at: VT.DC_WIN_CLOSE) }
+  public static func add(DC_MIN_CYCLES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_MIN_CYCLES, def: 0, at: VT.DC_MIN_CYCLES) }
+  public static func add(DC_MAX_CYCLES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_MAX_CYCLES, def: 0, at: VT.DC_MAX_CYCLES) }
+  public static func add(HAS_DC_MIN_CYCLES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DC_MIN_CYCLES, def: false,
+   at: VT.HAS_DC_MIN_CYCLES) }
+  public static func add(HAS_DC_MAX_CYCLES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DC_MAX_CYCLES, def: false,
+   at: VT.HAS_DC_MAX_CYCLES) }
+  public static func add(DC_EXEC_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_EXEC_START, at: VT.DC_EXEC_START) }
+  public static func add(DC_EXEC_STOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_EXEC_STOP, at: VT.DC_EXEC_STOP) }
+  public static func add(DC_REF_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_REF_TIME, at: VT.DC_REF_TIME) }
+  public static func add(DC_TIME_PULSE_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_TIME_PULSE_DURATION, def: .nan, at: VT.DC_TIME_PULSE_DURATION) }
+  public static func add(DC_TIME_PULSE_PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_TIME_PULSE_PERIOD, def: .nan, at: VT.DC_TIME_PULSE_PERIOD) }
+  public static func addVectorOf(DC_REF_DIR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_REF_DIR, at: VT.DC_REF_DIR) }
+  public static func add(DC_BODY_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_BODY_FRAME, at: VT.DC_BODY_FRAME) }
+  public static func addVectorOf(DC_BODY_TRIGGER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_BODY_TRIGGER, at: VT.DC_BODY_TRIGGER) }
+  public static func add(DC_PA_START_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_PA_START_ANGLE, def: .nan, at: VT.DC_PA_START_ANGLE) }
+  public static func add(DC_PA_STOP_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_PA_STOP_ANGLE, def: .nan, at: VT.DC_PA_STOP_ANGLE) }
+  public static func endManeuver(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createManeuver(
+    _ fbb: inout FlatBufferBuilder,
+    MAN_IDOffset MAN_ID: Offset = Offset(),
+    MAN_BASISOffset MAN_BASIS: Offset = Offset(),
+    MAN_DEVICE_IDOffset MAN_DEVICE_ID: Offset = Offset(),
+    MAN_PREV_IDOffset MAN_PREV_ID: Offset = Offset(),
+    MAN_PURPOSEOffset MAN_PURPOSE: Offset = Offset(),
+    MAN_REF_FRAMEOffset MAN_REF_FRAME: Offset = Offset(),
+    MAN_FRAME_EPOCHOffset MAN_FRAME_EPOCH: Offset = Offset(),
+    MAN_TYPEOffset MAN_TYPE: Offset = Offset(),
+    MAN_EPOCH_STARTOffset MAN_EPOCH_START: Offset = Offset(),
+    MAN_DURATION: Double = 0.0,
+    MAN_UNITSVectorOffset MAN_UNITS: Offset = Offset(),
+    DATAVectorOffset DATA: Offset = Offset(),
+    MAN_COMMENTVectorOffset MAN_COMMENT: Offset = Offset(),
+    MAN_COMPOSITIONVectorOffset MAN_COMPOSITION: Offset = Offset(),
+    MAN_NEXT_IDOffset MAN_NEXT_ID: Offset = Offset(),
+    MAN_BASIS_IDOffset MAN_BASIS_ID: Offset = Offset(),
+    MAN_PREV_EPOCHOffset MAN_PREV_EPOCH: Offset = Offset(),
+    MAN_NEXT_EPOCHOffset MAN_NEXT_EPOCH: Offset = Offset(),
+    MAN_PRED_SOURCEOffset MAN_PRED_SOURCE: Offset = Offset(),
+    GRAV_ASSIST_NAMEOffset GRAV_ASSIST_NAME: Offset = Offset(),
+    DC_TYPEOffset DC_TYPE: Offset = Offset(),
+    DC_WIN_OPENOffset DC_WIN_OPEN: Offset = Offset(),
+    DC_WIN_CLOSEOffset DC_WIN_CLOSE: Offset = Offset(),
+    DC_MIN_CYCLES: UInt32 = 0,
+    DC_MAX_CYCLES: UInt32 = 0,
+    HAS_DC_MIN_CYCLES: Bool = false,
+    HAS_DC_MAX_CYCLES: Bool = false,
+    DC_EXEC_STARTOffset DC_EXEC_START: Offset = Offset(),
+    DC_EXEC_STOPOffset DC_EXEC_STOP: Offset = Offset(),
+    DC_REF_TIMEOffset DC_REF_TIME: Offset = Offset(),
+    DC_TIME_PULSE_DURATION: Double = .nan,
+    DC_TIME_PULSE_PERIOD: Double = .nan,
+    DC_REF_DIRVectorOffset DC_REF_DIR: Offset = Offset(),
+    DC_BODY_FRAMEOffset DC_BODY_FRAME: Offset = Offset(),
+    DC_BODY_TRIGGERVectorOffset DC_BODY_TRIGGER: Offset = Offset(),
+    DC_PA_START_ANGLE: Double = .nan,
+    DC_PA_STOP_ANGLE: Double = .nan
+  ) -> Offset {
+    let __start = Maneuver.startManeuver(&fbb)
+    Maneuver.add(MAN_ID: MAN_ID, &fbb)
+    Maneuver.add(MAN_BASIS: MAN_BASIS, &fbb)
+    Maneuver.add(MAN_DEVICE_ID: MAN_DEVICE_ID, &fbb)
+    Maneuver.add(MAN_PREV_ID: MAN_PREV_ID, &fbb)
+    Maneuver.add(MAN_PURPOSE: MAN_PURPOSE, &fbb)
+    Maneuver.add(MAN_REF_FRAME: MAN_REF_FRAME, &fbb)
+    Maneuver.add(MAN_FRAME_EPOCH: MAN_FRAME_EPOCH, &fbb)
+    Maneuver.add(MAN_TYPE: MAN_TYPE, &fbb)
+    Maneuver.add(MAN_EPOCH_START: MAN_EPOCH_START, &fbb)
+    Maneuver.add(MAN_DURATION: MAN_DURATION, &fbb)
+    Maneuver.addVectorOf(MAN_UNITS: MAN_UNITS, &fbb)
+    Maneuver.addVectorOf(DATA: DATA, &fbb)
+    Maneuver.addVectorOf(MAN_COMMENT: MAN_COMMENT, &fbb)
+    Maneuver.addVectorOf(MAN_COMPOSITION: MAN_COMPOSITION, &fbb)
+    Maneuver.add(MAN_NEXT_ID: MAN_NEXT_ID, &fbb)
+    Maneuver.add(MAN_BASIS_ID: MAN_BASIS_ID, &fbb)
+    Maneuver.add(MAN_PREV_EPOCH: MAN_PREV_EPOCH, &fbb)
+    Maneuver.add(MAN_NEXT_EPOCH: MAN_NEXT_EPOCH, &fbb)
+    Maneuver.add(MAN_PRED_SOURCE: MAN_PRED_SOURCE, &fbb)
+    Maneuver.add(GRAV_ASSIST_NAME: GRAV_ASSIST_NAME, &fbb)
+    Maneuver.add(DC_TYPE: DC_TYPE, &fbb)
+    Maneuver.add(DC_WIN_OPEN: DC_WIN_OPEN, &fbb)
+    Maneuver.add(DC_WIN_CLOSE: DC_WIN_CLOSE, &fbb)
+    Maneuver.add(DC_MIN_CYCLES: DC_MIN_CYCLES, &fbb)
+    Maneuver.add(DC_MAX_CYCLES: DC_MAX_CYCLES, &fbb)
+    Maneuver.add(HAS_DC_MIN_CYCLES: HAS_DC_MIN_CYCLES, &fbb)
+    Maneuver.add(HAS_DC_MAX_CYCLES: HAS_DC_MAX_CYCLES, &fbb)
+    Maneuver.add(DC_EXEC_START: DC_EXEC_START, &fbb)
+    Maneuver.add(DC_EXEC_STOP: DC_EXEC_STOP, &fbb)
+    Maneuver.add(DC_REF_TIME: DC_REF_TIME, &fbb)
+    Maneuver.add(DC_TIME_PULSE_DURATION: DC_TIME_PULSE_DURATION, &fbb)
+    Maneuver.add(DC_TIME_PULSE_PERIOD: DC_TIME_PULSE_PERIOD, &fbb)
+    Maneuver.addVectorOf(DC_REF_DIR: DC_REF_DIR, &fbb)
+    Maneuver.add(DC_BODY_FRAME: DC_BODY_FRAME, &fbb)
+    Maneuver.addVectorOf(DC_BODY_TRIGGER: DC_BODY_TRIGGER, &fbb)
+    Maneuver.add(DC_PA_START_ANGLE: DC_PA_START_ANGLE, &fbb)
+    Maneuver.add(DC_PA_STOP_ANGLE: DC_PA_STOP_ANGLE, &fbb)
+    return Maneuver.endManeuver(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MAN_ID, fieldName: "MAN_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_BASIS, fieldName: "MAN_BASIS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_DEVICE_ID, fieldName: "MAN_DEVICE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_PREV_ID, fieldName: "MAN_PREV_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_PURPOSE, fieldName: "MAN_PURPOSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_REF_FRAME, fieldName: "MAN_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_FRAME_EPOCH, fieldName: "MAN_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_TYPE, fieldName: "MAN_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_EPOCH_START, fieldName: "MAN_EPOCH_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_DURATION, fieldName: "MAN_DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_UNITS, fieldName: "MAN_UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MAN_COMMENT, fieldName: "MAN_COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MAN_COMPOSITION, fieldName: "MAN_COMPOSITION", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MAN_NEXT_ID, fieldName: "MAN_NEXT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_BASIS_ID, fieldName: "MAN_BASIS_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_PREV_EPOCH, fieldName: "MAN_PREV_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_NEXT_EPOCH, fieldName: "MAN_NEXT_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_PRED_SOURCE, fieldName: "MAN_PRED_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRAV_ASSIST_NAME, fieldName: "GRAV_ASSIST_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_TYPE, fieldName: "DC_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_WIN_OPEN, fieldName: "DC_WIN_OPEN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_WIN_CLOSE, fieldName: "DC_WIN_CLOSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_MIN_CYCLES, fieldName: "DC_MIN_CYCLES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DC_MAX_CYCLES, fieldName: "DC_MAX_CYCLES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HAS_DC_MIN_CYCLES, fieldName: "HAS_DC_MIN_CYCLES", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_DC_MAX_CYCLES, fieldName: "HAS_DC_MAX_CYCLES", required: false, type: Bool.self)
+    try _v.visit(field: VT.DC_EXEC_START, fieldName: "DC_EXEC_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_EXEC_STOP, fieldName: "DC_EXEC_STOP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_REF_TIME, fieldName: "DC_REF_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_TIME_PULSE_DURATION, fieldName: "DC_TIME_PULSE_DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.DC_TIME_PULSE_PERIOD, fieldName: "DC_TIME_PULSE_PERIOD", required: false, type: Double.self)
+    try _v.visit(field: VT.DC_REF_DIR, fieldName: "DC_REF_DIR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DC_BODY_FRAME, fieldName: "DC_BODY_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_BODY_TRIGGER, fieldName: "DC_BODY_TRIGGER", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DC_PA_START_ANGLE, fieldName: "DC_PA_START_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.DC_PA_STOP_ANGLE, fieldName: "DC_PA_STOP_ANGLE", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+///  epoch and whether the orbit determination solved for it (a held value is a catalog value).
+public struct OCMDynamicParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OCMDynamicParameter.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let VALUE: VOffset = 6
+    static let UNITS: VOffset = 8
+    static let SOLVED_FOR: VOffset = 10
+  }
+
+  ///  Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+  ///  SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
+  ///  are the producer's, as in USER_DEFINED_PARAMETERS.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Value at the solution epoch, in UNITS.
+  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+  ///  m/s**2 for IN_TRACK_ACCELERATION.
+  public var UNITS: String? { let o = _accessor.offset(VT.UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNITS) }
+  ///  True when the orbit determination solved for the parameter, false when VALUE was held.
+  public var SOLVED_FOR: Bool { let o = _accessor.offset(VT.SOLVED_FOR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startOCMDynamicParameter(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
+  public static func add(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(SOLVED_FOR: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLVED_FOR, def: false,
+   at: VT.SOLVED_FOR) }
+  public static func endOCMDynamicParameter(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOCMDynamicParameter(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    VALUE: Double = 0.0,
+    UNITSOffset UNITS: Offset = Offset(),
+    SOLVED_FOR: Bool = false
+  ) -> Offset {
+    let __start = OCMDynamicParameter.startOCMDynamicParameter(&fbb)
+    OCMDynamicParameter.add(NAME: NAME, &fbb)
+    OCMDynamicParameter.add(VALUE: VALUE, &fbb)
+    OCMDynamicParameter.add(UNITS: UNITS, &fbb)
+    OCMDynamicParameter.add(SOLVED_FOR: SOLVED_FOR, &fbb)
+    return OCMDynamicParameter.endOCMDynamicParameter(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ACTIVE, fieldName: "ACTIVE", required: false, type: Bool.self)
-    try _v.visit(field: VT.SOURCE_URL, fieldName: "SOURCE_URL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLVED_FOR, fieldName: "SOLVED_FOR", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OrbitDetermination.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OD_ID: VOffset = 4
+    static let OD_PREV_ID: VOffset = 6
+    static let OD_ALGORITHM: VOffset = 8
+    static let OD_METHOD: VOffset = 10
+    static let OD_EPOCH: VOffset = 12
+    static let OD_TIME_TAG: VOffset = 14
+    static let OD_PROCESS_NOISE: VOffset = 16
+    static let OD_COV_REDUCTION: VOffset = 18
+    static let OD_NOISE_MODELS: VOffset = 20
+    static let OD_OBSERVATIONS_TYPE: VOffset = 22
+    static let OD_OBSERVATIONS_USED: VOffset = 24
+    static let OD_TRACKS_USED: VOffset = 26
+    static let OD_DATA_WEIGHTING: VOffset = 28
+    static let OD_CONVERGENCE_CRITERIA: VOffset = 30
+    static let OD_EST_PARAMETERS: VOffset = 32
+    static let OD_APRIORI_DATA: VOffset = 34
+    static let OD_RESIDUALS: VOffset = 36
+    static let OD_ESTIMATOR: VOffset = 38
+    static let OD_RESIDUAL_RMS: VOffset = 40
+    static let OD_RESIDUALS_SERIES: VOffset = 42
+    static let OD_RESIDUAL_EPOCHS: VOffset = 44
+    static let OD_BATCH_BASELINE_ID: VOffset = 46
+    static let OD_BATCH_BASELINE_RMS: VOffset = 48
+    static let SEDR: VOffset = 50
+    static let WEIGHTED_RMS: VOffset = 52
+    static let OD_DYNAMIC_PARAMETERS: VOffset = 54
+    static let DAYS_SINCE_FIRST_OBS: VOffset = 56
+    static let DAYS_SINCE_LAST_OBS: VOffset = 58
+    static let RECOMMENDED_OD_SPAN: VOffset = 60
+    static let ACTUAL_OD_SPAN: VOffset = 62
+    static let OBS_AVAILABLE: VOffset = 64
+    static let TRACKS_AVAILABLE: VOffset = 66
+    static let MAXIMUM_OBS_GAP: VOffset = 68
+    static let OD_EPOCH_EIGMAJ: VOffset = 70
+    static let OD_EPOCH_EIGINT: VOffset = 72
+    static let OD_EPOCH_EIGMIN: VOffset = 74
+    static let OD_MAX_PRED_EIGMAJ: VOffset = 76
+    static let OD_MIN_PRED_EIGMIN: VOffset = 78
+    static let OD_CONFIDENCE: VOffset = 80
+    static let GDOP: VOffset = 82
+    static let SOLVE_N: VOffset = 84
+    static let SOLVE_STATES: VOffset = 86
+    static let CONSIDER_N: VOffset = 88
+    static let CONSIDER_PARAMS: VOffset = 90
+    static let SENSORS_N: VOffset = 92
+    static let SENSORS: VOffset = 94
+    static let COMMENT: VOffset = 96
+  }
+
+  ///  Unique identifier for the orbit determination.
+  public var OD_ID: String? { let o = _accessor.offset(VT.OD_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_ID) }
+  ///  Identifier of the previous orbit determination.
+  public var OD_PREV_ID: String? { let o = _accessor.offset(VT.OD_PREV_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_PREV_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_PREV_ID) }
+  ///  Algorithm used for orbit determination.
+  public var OD_ALGORITHM: String? { let o = _accessor.offset(VT.OD_ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_ALGORITHM) }
+  ///  Method used for orbit determination.
+  public var OD_METHOD: String? { let o = _accessor.offset(VT.OD_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_METHOD) }
+  ///  Epoch of the orbit determination.
+  public var OD_EPOCH: String? { let o = _accessor.offset(VT.OD_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_EPOCH) }
+  ///  Time tag of the orbit determination.
+  public var OD_TIME_TAG: String? { let o = _accessor.offset(VT.OD_TIME_TAG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_TIME_TAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_TIME_TAG) }
+  ///  Process noise model used.
+  public var OD_PROCESS_NOISE: String? { let o = _accessor.offset(VT.OD_PROCESS_NOISE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_PROCESS_NOISESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_PROCESS_NOISE) }
+  ///  Covariance reduction techniques used.
+  public var OD_COV_REDUCTION: String? { let o = _accessor.offset(VT.OD_COV_REDUCTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_COV_REDUCTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_COV_REDUCTION) }
+  ///  Noise models used.
+  public var OD_NOISE_MODELS: String? { let o = _accessor.offset(VT.OD_NOISE_MODELS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_NOISE_MODELSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_NOISE_MODELS) }
+  ///  Types of observations used (e.g., RANGE, DOPPLER).
+  public var OD_OBSERVATIONS_TYPE: FlatbufferVector<String?> { return _accessor.vector(at: VT.OD_OBSERVATIONS_TYPE, byteSize: 4) }
+  ///  Number of observations used.
+  public var OD_OBSERVATIONS_USED: Int32 { let o = _accessor.offset(VT.OD_OBSERVATIONS_USED); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Number of tracks used.
+  public var OD_TRACKS_USED: Int32 { let o = _accessor.offset(VT.OD_TRACKS_USED); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Data weighting scheme used.
+  public var OD_DATA_WEIGHTING: String? { let o = _accessor.offset(VT.OD_DATA_WEIGHTING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_DATA_WEIGHTINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_DATA_WEIGHTING) }
+  ///  Convergence criteria used.
+  public var OD_CONVERGENCE_CRITERIA: String? { let o = _accessor.offset(VT.OD_CONVERGENCE_CRITERIA); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_CONVERGENCE_CRITERIASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_CONVERGENCE_CRITERIA) }
+  ///  Parameters estimated during orbit determination.
+  public var OD_EST_PARAMETERS: FlatbufferVector<String?> { return _accessor.vector(at: VT.OD_EST_PARAMETERS, byteSize: 4) }
+  ///  A priori data used for orbit determination.
+  public var OD_APRIORI_DATA: String? { let o = _accessor.offset(VT.OD_APRIORI_DATA); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_APRIORI_DATASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_APRIORI_DATA) }
+  ///  Residuals from the orbit determination.
+  public var OD_RESIDUALS: String? { let o = _accessor.offset(VT.OD_RESIDUALS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_RESIDUALSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_RESIDUALS) }
+  ///  Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  public var OD_ESTIMATOR: estimatorCategory { let o = _accessor.offset(VT.OD_ESTIMATOR); return o == 0 ? .unknown : estimatorCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  RMS of post-fit residuals for this solution.
+  public var OD_RESIDUAL_RMS: Double { let o = _accessor.offset(VT.OD_RESIDUAL_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Post-fit residual series, one entry per accepted observation.
+  public var OD_RESIDUALS_SERIES: FlatbufferVector<Double> { return _accessor.vector(at: VT.OD_RESIDUALS_SERIES, byteSize: 8) }
+  public func withUnsafePointerToOdResidualsSeries<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OD_RESIDUALS_SERIES, body: body) }
+  ///  Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  ///  since 1970-01-01T00:00:00 UTC].
+  public var OD_RESIDUAL_EPOCHS: FlatbufferVector<Double> { return _accessor.vector(at: VT.OD_RESIDUAL_EPOCHS, byteSize: 8) }
+  public func withUnsafePointerToOdResidualEpochs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OD_RESIDUAL_EPOCHS, body: body) }
+  ///  OD_ID of the batch baseline solution a filtered solution derives from and
+  ///  is compared against (empty for batch solutions).
+  public var OD_BATCH_BASELINE_ID: String? { let o = _accessor.offset(VT.OD_BATCH_BASELINE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_BATCH_BASELINE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_BATCH_BASELINE_ID) }
+  ///  Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  ///  comparison.
+  public var OD_BATCH_BASELINE_RMS: Double { let o = _accessor.offset(VT.OD_BATCH_BASELINE_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Specific energy dissipation rate in W/kg: energy removed from the orbit
+  ///  by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+  public var SEDR: Double { let o = _accessor.offset(VT.SEDR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+  public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Dynamical-model parameters of the solution with their values, solved for or held. An
+  ///  IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+  ///  COV_PARAMETERS names in the covariance are entries of this list.
+  public var OD_DYNAMIC_PARAMETERS: FlatbufferVector<OCMDynamicParameter> { return _accessor.vector(at: VT.OD_DYNAMIC_PARAMETERS, byteSize: 4) }
+  ///  DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+  public var DAYS_SINCE_FIRST_OBS: Double { let o = _accessor.offset(VT.DAYS_SINCE_FIRST_OBS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  DAYS_SINCE_LAST_OBS, NaN when not stated.
+  public var DAYS_SINCE_LAST_OBS: Double { let o = _accessor.offset(VT.DAYS_SINCE_LAST_OBS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  public var RECOMMENDED_OD_SPAN: Double { let o = _accessor.offset(VT.RECOMMENDED_OD_SPAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ACTUAL_OD_SPAN in days, NaN when not stated.
+  public var ACTUAL_OD_SPAN: Double { let o = _accessor.offset(VT.ACTUAL_OD_SPAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+  public var OBS_AVAILABLE: UInt32 { let o = _accessor.offset(VT.OBS_AVAILABLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+  public var TRACKS_AVAILABLE: UInt32 { let o = _accessor.offset(VT.TRACKS_AVAILABLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  MAXIMUM_OBS_GAP in days, NaN when not stated.
+  public var MAXIMUM_OBS_GAP: Double { let o = _accessor.offset(VT.MAXIMUM_OBS_GAP); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OD_EPOCH_EIGMAJ in m, NaN when not stated.
+  public var OD_EPOCH_EIGMAJ: Double { let o = _accessor.offset(VT.OD_EPOCH_EIGMAJ); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OD_EPOCH_EIGINT in m, NaN when not stated.
+  public var OD_EPOCH_EIGINT: Double { let o = _accessor.offset(VT.OD_EPOCH_EIGINT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OD_EPOCH_EIGMIN in m, NaN when not stated.
+  public var OD_EPOCH_EIGMIN: Double { let o = _accessor.offset(VT.OD_EPOCH_EIGMIN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+  public var OD_MAX_PRED_EIGMAJ: Double { let o = _accessor.offset(VT.OD_MAX_PRED_EIGMAJ); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+  public var OD_MIN_PRED_EIGMIN: Double { let o = _accessor.offset(VT.OD_MIN_PRED_EIGMIN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OD_CONFIDENCE in percent, NaN when not stated.
+  public var OD_CONFIDENCE: Double { let o = _accessor.offset(VT.OD_CONFIDENCE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  GDOP, NaN when not stated.
+  public var GDOP: Double { let o = _accessor.offset(VT.GDOP); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SOLVE_N: the number of solved-for states.
+  public var SOLVE_N: UInt32 { let o = _accessor.offset(VT.SOLVE_N); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  SOLVE_STATES: the solved-for states, as written.
+  public var SOLVE_STATES: String? { let o = _accessor.offset(VT.SOLVE_STATES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOLVE_STATESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLVE_STATES) }
+  ///  CONSIDER_N: the number of consider parameters.
+  public var CONSIDER_N: UInt32 { let o = _accessor.offset(VT.CONSIDER_N); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  CONSIDER_PARAMS: the consider parameters, as written.
+  public var CONSIDER_PARAMS: String? { let o = _accessor.offset(VT.CONSIDER_PARAMS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSIDER_PARAMSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSIDER_PARAMS) }
+  ///  SENSORS_N: the number of sensors.
+  public var SENSORS_N: UInt32 { let o = _accessor.offset(VT.SENSORS_N); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  SENSORS: the sensors, as written.
+  public var SENSORS: String? { let o = _accessor.offset(VT.SENSORS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSORSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SENSORS) }
+  ///  COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMENT, byteSize: 4) }
+  public static func startOrbitDetermination(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 47) }
+  public static func add(OD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ID, at: VT.OD_ID) }
+  public static func add(OD_PREV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_PREV_ID, at: VT.OD_PREV_ID) }
+  public static func add(OD_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ALGORITHM, at: VT.OD_ALGORITHM) }
+  public static func add(OD_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_METHOD, at: VT.OD_METHOD) }
+  public static func add(OD_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_EPOCH, at: VT.OD_EPOCH) }
+  public static func add(OD_TIME_TAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_TIME_TAG, at: VT.OD_TIME_TAG) }
+  public static func add(OD_PROCESS_NOISE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_PROCESS_NOISE, at: VT.OD_PROCESS_NOISE) }
+  public static func add(OD_COV_REDUCTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_COV_REDUCTION, at: VT.OD_COV_REDUCTION) }
+  public static func add(OD_NOISE_MODELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_NOISE_MODELS, at: VT.OD_NOISE_MODELS) }
+  public static func addVectorOf(OD_OBSERVATIONS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_OBSERVATIONS_TYPE, at: VT.OD_OBSERVATIONS_TYPE) }
+  public static func add(OD_OBSERVATIONS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_OBSERVATIONS_USED, def: 0, at: VT.OD_OBSERVATIONS_USED) }
+  public static func add(OD_TRACKS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_TRACKS_USED, def: 0, at: VT.OD_TRACKS_USED) }
+  public static func add(OD_DATA_WEIGHTING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_DATA_WEIGHTING, at: VT.OD_DATA_WEIGHTING) }
+  public static func add(OD_CONVERGENCE_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_CONVERGENCE_CRITERIA, at: VT.OD_CONVERGENCE_CRITERIA) }
+  public static func addVectorOf(OD_EST_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_EST_PARAMETERS, at: VT.OD_EST_PARAMETERS) }
+  public static func add(OD_APRIORI_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_APRIORI_DATA, at: VT.OD_APRIORI_DATA) }
+  public static func add(OD_RESIDUALS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_RESIDUALS, at: VT.OD_RESIDUALS) }
+  public static func add(OD_ESTIMATOR: estimatorCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_ESTIMATOR.rawValue, def: 0, at: VT.OD_ESTIMATOR) }
+  public static func add(OD_RESIDUAL_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_RESIDUAL_RMS, def: 0.0, at: VT.OD_RESIDUAL_RMS) }
+  public static func addVectorOf(OD_RESIDUALS_SERIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_RESIDUALS_SERIES, at: VT.OD_RESIDUALS_SERIES) }
+  public static func addVectorOf(OD_RESIDUAL_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_RESIDUAL_EPOCHS, at: VT.OD_RESIDUAL_EPOCHS) }
+  public static func add(OD_BATCH_BASELINE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_BATCH_BASELINE_ID, at: VT.OD_BATCH_BASELINE_ID) }
+  public static func add(OD_BATCH_BASELINE_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_BATCH_BASELINE_RMS, def: 0.0, at: VT.OD_BATCH_BASELINE_RMS) }
+  public static func add(SEDR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEDR, def: 0.0, at: VT.SEDR) }
+  public static func add(WEIGHTED_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHTED_RMS, def: 0.0, at: VT.WEIGHTED_RMS) }
+  public static func addVectorOf(OD_DYNAMIC_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_DYNAMIC_PARAMETERS, at: VT.OD_DYNAMIC_PARAMETERS) }
+  public static func add(DAYS_SINCE_FIRST_OBS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DAYS_SINCE_FIRST_OBS, def: .nan, at: VT.DAYS_SINCE_FIRST_OBS) }
+  public static func add(DAYS_SINCE_LAST_OBS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DAYS_SINCE_LAST_OBS, def: .nan, at: VT.DAYS_SINCE_LAST_OBS) }
+  public static func add(RECOMMENDED_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECOMMENDED_OD_SPAN, def: .nan, at: VT.RECOMMENDED_OD_SPAN) }
+  public static func add(ACTUAL_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTUAL_OD_SPAN, def: .nan, at: VT.ACTUAL_OD_SPAN) }
+  public static func add(OBS_AVAILABLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_AVAILABLE, def: 0, at: VT.OBS_AVAILABLE) }
+  public static func add(TRACKS_AVAILABLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKS_AVAILABLE, def: 0, at: VT.TRACKS_AVAILABLE) }
+  public static func add(MAXIMUM_OBS_GAP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_OBS_GAP, def: .nan, at: VT.MAXIMUM_OBS_GAP) }
+  public static func add(OD_EPOCH_EIGMAJ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_EPOCH_EIGMAJ, def: .nan, at: VT.OD_EPOCH_EIGMAJ) }
+  public static func add(OD_EPOCH_EIGINT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_EPOCH_EIGINT, def: .nan, at: VT.OD_EPOCH_EIGINT) }
+  public static func add(OD_EPOCH_EIGMIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_EPOCH_EIGMIN, def: .nan, at: VT.OD_EPOCH_EIGMIN) }
+  public static func add(OD_MAX_PRED_EIGMAJ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_MAX_PRED_EIGMAJ, def: .nan, at: VT.OD_MAX_PRED_EIGMAJ) }
+  public static func add(OD_MIN_PRED_EIGMIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_MIN_PRED_EIGMIN, def: .nan, at: VT.OD_MIN_PRED_EIGMIN) }
+  public static func add(OD_CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_CONFIDENCE, def: .nan, at: VT.OD_CONFIDENCE) }
+  public static func add(GDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GDOP, def: .nan, at: VT.GDOP) }
+  public static func add(SOLVE_N: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLVE_N, def: 0, at: VT.SOLVE_N) }
+  public static func add(SOLVE_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLVE_STATES, at: VT.SOLVE_STATES) }
+  public static func add(CONSIDER_N: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSIDER_N, def: 0, at: VT.CONSIDER_N) }
+  public static func add(CONSIDER_PARAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSIDER_PARAMS, at: VT.CONSIDER_PARAMS) }
+  public static func add(SENSORS_N: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSORS_N, def: 0, at: VT.SENSORS_N) }
+  public static func add(SENSORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSORS, at: VT.SENSORS) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func endOrbitDetermination(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOrbitDetermination(
+    _ fbb: inout FlatBufferBuilder,
+    OD_IDOffset OD_ID: Offset = Offset(),
+    OD_PREV_IDOffset OD_PREV_ID: Offset = Offset(),
+    OD_ALGORITHMOffset OD_ALGORITHM: Offset = Offset(),
+    OD_METHODOffset OD_METHOD: Offset = Offset(),
+    OD_EPOCHOffset OD_EPOCH: Offset = Offset(),
+    OD_TIME_TAGOffset OD_TIME_TAG: Offset = Offset(),
+    OD_PROCESS_NOISEOffset OD_PROCESS_NOISE: Offset = Offset(),
+    OD_COV_REDUCTIONOffset OD_COV_REDUCTION: Offset = Offset(),
+    OD_NOISE_MODELSOffset OD_NOISE_MODELS: Offset = Offset(),
+    OD_OBSERVATIONS_TYPEVectorOffset OD_OBSERVATIONS_TYPE: Offset = Offset(),
+    OD_OBSERVATIONS_USED: Int32 = 0,
+    OD_TRACKS_USED: Int32 = 0,
+    OD_DATA_WEIGHTINGOffset OD_DATA_WEIGHTING: Offset = Offset(),
+    OD_CONVERGENCE_CRITERIAOffset OD_CONVERGENCE_CRITERIA: Offset = Offset(),
+    OD_EST_PARAMETERSVectorOffset OD_EST_PARAMETERS: Offset = Offset(),
+    OD_APRIORI_DATAOffset OD_APRIORI_DATA: Offset = Offset(),
+    OD_RESIDUALSOffset OD_RESIDUALS: Offset = Offset(),
+    OD_ESTIMATOR: estimatorCategory = .unknown,
+    OD_RESIDUAL_RMS: Double = 0.0,
+    OD_RESIDUALS_SERIESVectorOffset OD_RESIDUALS_SERIES: Offset = Offset(),
+    OD_RESIDUAL_EPOCHSVectorOffset OD_RESIDUAL_EPOCHS: Offset = Offset(),
+    OD_BATCH_BASELINE_IDOffset OD_BATCH_BASELINE_ID: Offset = Offset(),
+    OD_BATCH_BASELINE_RMS: Double = 0.0,
+    SEDR: Double = 0.0,
+    WEIGHTED_RMS: Double = 0.0,
+    OD_DYNAMIC_PARAMETERSVectorOffset OD_DYNAMIC_PARAMETERS: Offset = Offset(),
+    DAYS_SINCE_FIRST_OBS: Double = .nan,
+    DAYS_SINCE_LAST_OBS: Double = .nan,
+    RECOMMENDED_OD_SPAN: Double = .nan,
+    ACTUAL_OD_SPAN: Double = .nan,
+    OBS_AVAILABLE: UInt32 = 0,
+    TRACKS_AVAILABLE: UInt32 = 0,
+    MAXIMUM_OBS_GAP: Double = .nan,
+    OD_EPOCH_EIGMAJ: Double = .nan,
+    OD_EPOCH_EIGINT: Double = .nan,
+    OD_EPOCH_EIGMIN: Double = .nan,
+    OD_MAX_PRED_EIGMAJ: Double = .nan,
+    OD_MIN_PRED_EIGMIN: Double = .nan,
+    OD_CONFIDENCE: Double = .nan,
+    GDOP: Double = .nan,
+    SOLVE_N: UInt32 = 0,
+    SOLVE_STATESOffset SOLVE_STATES: Offset = Offset(),
+    CONSIDER_N: UInt32 = 0,
+    CONSIDER_PARAMSOffset CONSIDER_PARAMS: Offset = Offset(),
+    SENSORS_N: UInt32 = 0,
+    SENSORSOffset SENSORS: Offset = Offset(),
+    COMMENTVectorOffset COMMENT: Offset = Offset()
+  ) -> Offset {
+    let __start = OrbitDetermination.startOrbitDetermination(&fbb)
+    OrbitDetermination.add(OD_ID: OD_ID, &fbb)
+    OrbitDetermination.add(OD_PREV_ID: OD_PREV_ID, &fbb)
+    OrbitDetermination.add(OD_ALGORITHM: OD_ALGORITHM, &fbb)
+    OrbitDetermination.add(OD_METHOD: OD_METHOD, &fbb)
+    OrbitDetermination.add(OD_EPOCH: OD_EPOCH, &fbb)
+    OrbitDetermination.add(OD_TIME_TAG: OD_TIME_TAG, &fbb)
+    OrbitDetermination.add(OD_PROCESS_NOISE: OD_PROCESS_NOISE, &fbb)
+    OrbitDetermination.add(OD_COV_REDUCTION: OD_COV_REDUCTION, &fbb)
+    OrbitDetermination.add(OD_NOISE_MODELS: OD_NOISE_MODELS, &fbb)
+    OrbitDetermination.addVectorOf(OD_OBSERVATIONS_TYPE: OD_OBSERVATIONS_TYPE, &fbb)
+    OrbitDetermination.add(OD_OBSERVATIONS_USED: OD_OBSERVATIONS_USED, &fbb)
+    OrbitDetermination.add(OD_TRACKS_USED: OD_TRACKS_USED, &fbb)
+    OrbitDetermination.add(OD_DATA_WEIGHTING: OD_DATA_WEIGHTING, &fbb)
+    OrbitDetermination.add(OD_CONVERGENCE_CRITERIA: OD_CONVERGENCE_CRITERIA, &fbb)
+    OrbitDetermination.addVectorOf(OD_EST_PARAMETERS: OD_EST_PARAMETERS, &fbb)
+    OrbitDetermination.add(OD_APRIORI_DATA: OD_APRIORI_DATA, &fbb)
+    OrbitDetermination.add(OD_RESIDUALS: OD_RESIDUALS, &fbb)
+    OrbitDetermination.add(OD_ESTIMATOR: OD_ESTIMATOR, &fbb)
+    OrbitDetermination.add(OD_RESIDUAL_RMS: OD_RESIDUAL_RMS, &fbb)
+    OrbitDetermination.addVectorOf(OD_RESIDUALS_SERIES: OD_RESIDUALS_SERIES, &fbb)
+    OrbitDetermination.addVectorOf(OD_RESIDUAL_EPOCHS: OD_RESIDUAL_EPOCHS, &fbb)
+    OrbitDetermination.add(OD_BATCH_BASELINE_ID: OD_BATCH_BASELINE_ID, &fbb)
+    OrbitDetermination.add(OD_BATCH_BASELINE_RMS: OD_BATCH_BASELINE_RMS, &fbb)
+    OrbitDetermination.add(SEDR: SEDR, &fbb)
+    OrbitDetermination.add(WEIGHTED_RMS: WEIGHTED_RMS, &fbb)
+    OrbitDetermination.addVectorOf(OD_DYNAMIC_PARAMETERS: OD_DYNAMIC_PARAMETERS, &fbb)
+    OrbitDetermination.add(DAYS_SINCE_FIRST_OBS: DAYS_SINCE_FIRST_OBS, &fbb)
+    OrbitDetermination.add(DAYS_SINCE_LAST_OBS: DAYS_SINCE_LAST_OBS, &fbb)
+    OrbitDetermination.add(RECOMMENDED_OD_SPAN: RECOMMENDED_OD_SPAN, &fbb)
+    OrbitDetermination.add(ACTUAL_OD_SPAN: ACTUAL_OD_SPAN, &fbb)
+    OrbitDetermination.add(OBS_AVAILABLE: OBS_AVAILABLE, &fbb)
+    OrbitDetermination.add(TRACKS_AVAILABLE: TRACKS_AVAILABLE, &fbb)
+    OrbitDetermination.add(MAXIMUM_OBS_GAP: MAXIMUM_OBS_GAP, &fbb)
+    OrbitDetermination.add(OD_EPOCH_EIGMAJ: OD_EPOCH_EIGMAJ, &fbb)
+    OrbitDetermination.add(OD_EPOCH_EIGINT: OD_EPOCH_EIGINT, &fbb)
+    OrbitDetermination.add(OD_EPOCH_EIGMIN: OD_EPOCH_EIGMIN, &fbb)
+    OrbitDetermination.add(OD_MAX_PRED_EIGMAJ: OD_MAX_PRED_EIGMAJ, &fbb)
+    OrbitDetermination.add(OD_MIN_PRED_EIGMIN: OD_MIN_PRED_EIGMIN, &fbb)
+    OrbitDetermination.add(OD_CONFIDENCE: OD_CONFIDENCE, &fbb)
+    OrbitDetermination.add(GDOP: GDOP, &fbb)
+    OrbitDetermination.add(SOLVE_N: SOLVE_N, &fbb)
+    OrbitDetermination.add(SOLVE_STATES: SOLVE_STATES, &fbb)
+    OrbitDetermination.add(CONSIDER_N: CONSIDER_N, &fbb)
+    OrbitDetermination.add(CONSIDER_PARAMS: CONSIDER_PARAMS, &fbb)
+    OrbitDetermination.add(SENSORS_N: SENSORS_N, &fbb)
+    OrbitDetermination.add(SENSORS: SENSORS, &fbb)
+    OrbitDetermination.addVectorOf(COMMENT: COMMENT, &fbb)
+    return OrbitDetermination.endOrbitDetermination(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OD_ID, fieldName: "OD_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_PREV_ID, fieldName: "OD_PREV_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_ALGORITHM, fieldName: "OD_ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_METHOD, fieldName: "OD_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_EPOCH, fieldName: "OD_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_TIME_TAG, fieldName: "OD_TIME_TAG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_PROCESS_NOISE, fieldName: "OD_PROCESS_NOISE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_COV_REDUCTION, fieldName: "OD_COV_REDUCTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_NOISE_MODELS, fieldName: "OD_NOISE_MODELS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_OBSERVATIONS_TYPE, fieldName: "OD_OBSERVATIONS_TYPE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OD_OBSERVATIONS_USED, fieldName: "OD_OBSERVATIONS_USED", required: false, type: Int32.self)
+    try _v.visit(field: VT.OD_TRACKS_USED, fieldName: "OD_TRACKS_USED", required: false, type: Int32.self)
+    try _v.visit(field: VT.OD_DATA_WEIGHTING, fieldName: "OD_DATA_WEIGHTING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_CONVERGENCE_CRITERIA, fieldName: "OD_CONVERGENCE_CRITERIA", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_EST_PARAMETERS, fieldName: "OD_EST_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OD_APRIORI_DATA, fieldName: "OD_APRIORI_DATA", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_RESIDUALS, fieldName: "OD_RESIDUALS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_ESTIMATOR, fieldName: "OD_ESTIMATOR", required: false, type: estimatorCategory.self)
+    try _v.visit(field: VT.OD_RESIDUAL_RMS, fieldName: "OD_RESIDUAL_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_RESIDUALS_SERIES, fieldName: "OD_RESIDUALS_SERIES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OD_RESIDUAL_EPOCHS, fieldName: "OD_RESIDUAL_EPOCHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OD_BATCH_BASELINE_ID, fieldName: "OD_BATCH_BASELINE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_BATCH_BASELINE_RMS, fieldName: "OD_BATCH_BASELINE_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.SEDR, fieldName: "SEDR", required: false, type: Double.self)
+    try _v.visit(field: VT.WEIGHTED_RMS, fieldName: "WEIGHTED_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_DYNAMIC_PARAMETERS, fieldName: "OD_DYNAMIC_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<OCMDynamicParameter>, OCMDynamicParameter>>.self)
+    try _v.visit(field: VT.DAYS_SINCE_FIRST_OBS, fieldName: "DAYS_SINCE_FIRST_OBS", required: false, type: Double.self)
+    try _v.visit(field: VT.DAYS_SINCE_LAST_OBS, fieldName: "DAYS_SINCE_LAST_OBS", required: false, type: Double.self)
+    try _v.visit(field: VT.RECOMMENDED_OD_SPAN, fieldName: "RECOMMENDED_OD_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VT.ACTUAL_OD_SPAN, fieldName: "ACTUAL_OD_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VT.OBS_AVAILABLE, fieldName: "OBS_AVAILABLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TRACKS_AVAILABLE, fieldName: "TRACKS_AVAILABLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MAXIMUM_OBS_GAP, fieldName: "MAXIMUM_OBS_GAP", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_EPOCH_EIGMAJ, fieldName: "OD_EPOCH_EIGMAJ", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_EPOCH_EIGINT, fieldName: "OD_EPOCH_EIGINT", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_EPOCH_EIGMIN, fieldName: "OD_EPOCH_EIGMIN", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_MAX_PRED_EIGMAJ, fieldName: "OD_MAX_PRED_EIGMAJ", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_MIN_PRED_EIGMIN, fieldName: "OD_MIN_PRED_EIGMIN", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_CONFIDENCE, fieldName: "OD_CONFIDENCE", required: false, type: Double.self)
+    try _v.visit(field: VT.GDOP, fieldName: "GDOP", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLVE_N, fieldName: "SOLVE_N", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOLVE_STATES, fieldName: "SOLVE_STATES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSIDER_N, fieldName: "CONSIDER_N", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CONSIDER_PARAMS, fieldName: "CONSIDER_PARAMS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SENSORS_N, fieldName: "SENSORS_N", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SENSORS, fieldName: "SENSORS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    _v.finish()
+  }
+}
+
+///  One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):
+///  the block's keywords, and its data lines as written (a time tag, then the
+///  numbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state
+///  the first block's CARTPV or CARTPVA states for the modules that read those.
+public struct OCMTrajectoryBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OCMTrajectoryBlock.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let TRAJ_ID: VOffset = 6
+    static let TRAJ_PREV_ID: VOffset = 8
+    static let TRAJ_NEXT_ID: VOffset = 10
+    static let TRAJ_BASIS: VOffset = 12
+    static let TRAJ_BASIS_ID: VOffset = 14
+    static let INTERPOLATION: VOffset = 16
+    static let INTERPOLATION_DEGREE: VOffset = 18
+    static let PROPAGATOR: VOffset = 20
+    static let CENTER_NAME: VOffset = 22
+    static let TRAJ_REF_FRAME: VOffset = 24
+    static let TRAJ_FRAME_EPOCH: VOffset = 26
+    static let USEABLE_START_TIME: VOffset = 28
+    static let USEABLE_STOP_TIME: VOffset = 30
+    static let ORB_REVNUM: VOffset = 32
+    static let ORB_REVNUM_BASIS: VOffset = 34
+    static let TRAJ_TYPE: VOffset = 36
+    static let ORB_AVERAGING: VOffset = 38
+    static let TRAJ_UNITS: VOffset = 40
+    static let LINES: VOffset = 42
+  }
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  TRAJ_ID.
+  public var TRAJ_ID: String? { let o = _accessor.offset(VT.TRAJ_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_ID) }
+  ///  TRAJ_PREV_ID.
+  public var TRAJ_PREV_ID: String? { let o = _accessor.offset(VT.TRAJ_PREV_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_PREV_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_PREV_ID) }
+  ///  TRAJ_NEXT_ID.
+  public var TRAJ_NEXT_ID: String? { let o = _accessor.offset(VT.TRAJ_NEXT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_NEXT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_NEXT_ID) }
+  ///  TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.
+  public var TRAJ_BASIS: String? { let o = _accessor.offset(VT.TRAJ_BASIS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_BASISSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_BASIS) }
+  ///  TRAJ_BASIS_ID.
+  public var TRAJ_BASIS_ID: String? { let o = _accessor.offset(VT.TRAJ_BASIS_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_BASIS_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_BASIS_ID) }
+  ///  INTERPOLATION: the recommended interpolation method.
+  public var INTERPOLATION: String? { let o = _accessor.offset(VT.INTERPOLATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERPOLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERPOLATION) }
+  ///  INTERPOLATION_DEGREE.
+  public var INTERPOLATION_DEGREE: UInt32 { let o = _accessor.offset(VT.INTERPOLATION_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  PROPAGATOR.
+  public var PROPAGATOR: String? { let o = _accessor.offset(VT.PROPAGATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR) }
+  ///  CENTER_NAME.
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  TRAJ_REF_FRAME.
+  public var TRAJ_REF_FRAME: String? { let o = _accessor.offset(VT.TRAJ_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_REF_FRAME) }
+  ///  TRAJ_FRAME_EPOCH.
+  public var TRAJ_FRAME_EPOCH: String? { let o = _accessor.offset(VT.TRAJ_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_FRAME_EPOCH) }
+  ///  USEABLE_START_TIME.
+  public var USEABLE_START_TIME: String? { let o = _accessor.offset(VT.USEABLE_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var USEABLE_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.USEABLE_START_TIME) }
+  ///  USEABLE_STOP_TIME.
+  public var USEABLE_STOP_TIME: String? { let o = _accessor.offset(VT.USEABLE_STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var USEABLE_STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.USEABLE_STOP_TIME) }
+  ///  ORB_REVNUM, NaN when not stated.
+  public var ORB_REVNUM: Double { let o = _accessor.offset(VT.ORB_REVNUM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.
+  public var ORB_REVNUM_BASIS: Int32 { let o = _accessor.offset(VT.ORB_REVNUM_BASIS); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  TRAJ_TYPE as written, for example CARTPV.
+  public var TRAJ_TYPE: String? { let o = _accessor.offset(VT.TRAJ_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_TYPE) }
+  ///  ORB_AVERAGING.
+  public var ORB_AVERAGING: String? { let o = _accessor.offset(VT.ORB_AVERAGING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORB_AVERAGINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORB_AVERAGING) }
+  ///  TRAJ_UNITS.
+  public var TRAJ_UNITS: String? { let o = _accessor.offset(VT.TRAJ_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_UNITS) }
+  ///  The data lines, as written.
+  public var LINES: FlatbufferVector<String?> { return _accessor.vector(at: VT.LINES, byteSize: 4) }
+  public static func startOCMTrajectoryBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(TRAJ_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_ID, at: VT.TRAJ_ID) }
+  public static func add(TRAJ_PREV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_PREV_ID, at: VT.TRAJ_PREV_ID) }
+  public static func add(TRAJ_NEXT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_NEXT_ID, at: VT.TRAJ_NEXT_ID) }
+  public static func add(TRAJ_BASIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_BASIS, at: VT.TRAJ_BASIS) }
+  public static func add(TRAJ_BASIS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_BASIS_ID, at: VT.TRAJ_BASIS_ID) }
+  public static func add(INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPOLATION, at: VT.INTERPOLATION) }
+  public static func add(INTERPOLATION_DEGREE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATION_DEGREE, def: 0, at: VT.INTERPOLATION_DEGREE) }
+  public static func add(PROPAGATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR, at: VT.PROPAGATOR) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(TRAJ_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_REF_FRAME, at: VT.TRAJ_REF_FRAME) }
+  public static func add(TRAJ_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_FRAME_EPOCH, at: VT.TRAJ_FRAME_EPOCH) }
+  public static func add(USEABLE_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_START_TIME, at: VT.USEABLE_START_TIME) }
+  public static func add(USEABLE_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_STOP_TIME, at: VT.USEABLE_STOP_TIME) }
+  public static func add(ORB_REVNUM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORB_REVNUM, def: .nan, at: VT.ORB_REVNUM) }
+  public static func add(ORB_REVNUM_BASIS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORB_REVNUM_BASIS, def: -1, at: VT.ORB_REVNUM_BASIS) }
+  public static func add(TRAJ_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_TYPE, at: VT.TRAJ_TYPE) }
+  public static func add(ORB_AVERAGING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORB_AVERAGING, at: VT.ORB_AVERAGING) }
+  public static func add(TRAJ_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_UNITS, at: VT.TRAJ_UNITS) }
+  public static func addVectorOf(LINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINES, at: VT.LINES) }
+  public static func endOCMTrajectoryBlock(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOCMTrajectoryBlock(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    TRAJ_IDOffset TRAJ_ID: Offset = Offset(),
+    TRAJ_PREV_IDOffset TRAJ_PREV_ID: Offset = Offset(),
+    TRAJ_NEXT_IDOffset TRAJ_NEXT_ID: Offset = Offset(),
+    TRAJ_BASISOffset TRAJ_BASIS: Offset = Offset(),
+    TRAJ_BASIS_IDOffset TRAJ_BASIS_ID: Offset = Offset(),
+    INTERPOLATIONOffset INTERPOLATION: Offset = Offset(),
+    INTERPOLATION_DEGREE: UInt32 = 0,
+    PROPAGATOROffset PROPAGATOR: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    TRAJ_REF_FRAMEOffset TRAJ_REF_FRAME: Offset = Offset(),
+    TRAJ_FRAME_EPOCHOffset TRAJ_FRAME_EPOCH: Offset = Offset(),
+    USEABLE_START_TIMEOffset USEABLE_START_TIME: Offset = Offset(),
+    USEABLE_STOP_TIMEOffset USEABLE_STOP_TIME: Offset = Offset(),
+    ORB_REVNUM: Double = .nan,
+    ORB_REVNUM_BASIS: Int32 = -1,
+    TRAJ_TYPEOffset TRAJ_TYPE: Offset = Offset(),
+    ORB_AVERAGINGOffset ORB_AVERAGING: Offset = Offset(),
+    TRAJ_UNITSOffset TRAJ_UNITS: Offset = Offset(),
+    LINESVectorOffset LINES: Offset = Offset()
+  ) -> Offset {
+    let __start = OCMTrajectoryBlock.startOCMTrajectoryBlock(&fbb)
+    OCMTrajectoryBlock.add(COMMENT: COMMENT, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_ID: TRAJ_ID, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_PREV_ID: TRAJ_PREV_ID, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_NEXT_ID: TRAJ_NEXT_ID, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_BASIS: TRAJ_BASIS, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_BASIS_ID: TRAJ_BASIS_ID, &fbb)
+    OCMTrajectoryBlock.add(INTERPOLATION: INTERPOLATION, &fbb)
+    OCMTrajectoryBlock.add(INTERPOLATION_DEGREE: INTERPOLATION_DEGREE, &fbb)
+    OCMTrajectoryBlock.add(PROPAGATOR: PROPAGATOR, &fbb)
+    OCMTrajectoryBlock.add(CENTER_NAME: CENTER_NAME, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_REF_FRAME: TRAJ_REF_FRAME, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_FRAME_EPOCH: TRAJ_FRAME_EPOCH, &fbb)
+    OCMTrajectoryBlock.add(USEABLE_START_TIME: USEABLE_START_TIME, &fbb)
+    OCMTrajectoryBlock.add(USEABLE_STOP_TIME: USEABLE_STOP_TIME, &fbb)
+    OCMTrajectoryBlock.add(ORB_REVNUM: ORB_REVNUM, &fbb)
+    OCMTrajectoryBlock.add(ORB_REVNUM_BASIS: ORB_REVNUM_BASIS, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_TYPE: TRAJ_TYPE, &fbb)
+    OCMTrajectoryBlock.add(ORB_AVERAGING: ORB_AVERAGING, &fbb)
+    OCMTrajectoryBlock.add(TRAJ_UNITS: TRAJ_UNITS, &fbb)
+    OCMTrajectoryBlock.addVectorOf(LINES: LINES, &fbb)
+    return OCMTrajectoryBlock.endOCMTrajectoryBlock(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_ID, fieldName: "TRAJ_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_PREV_ID, fieldName: "TRAJ_PREV_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_NEXT_ID, fieldName: "TRAJ_NEXT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_BASIS, fieldName: "TRAJ_BASIS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_BASIS_ID, fieldName: "TRAJ_BASIS_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERPOLATION, fieldName: "INTERPOLATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERPOLATION_DEGREE, fieldName: "INTERPOLATION_DEGREE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PROPAGATOR, fieldName: "PROPAGATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_REF_FRAME, fieldName: "TRAJ_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_FRAME_EPOCH, fieldName: "TRAJ_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USEABLE_START_TIME, fieldName: "USEABLE_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USEABLE_STOP_TIME, fieldName: "USEABLE_STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORB_REVNUM, fieldName: "ORB_REVNUM", required: false, type: Double.self)
+    try _v.visit(field: VT.ORB_REVNUM_BASIS, fieldName: "ORB_REVNUM_BASIS", required: false, type: Int32.self)
+    try _v.visit(field: VT.TRAJ_TYPE, fieldName: "TRAJ_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORB_AVERAGING, fieldName: "ORB_AVERAGING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_UNITS, fieldName: "TRAJ_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINES, fieldName: "LINES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    _v.finish()
+  }
+}
+
+///  One covariance time history of an OCM (Table 6-6): the block's keywords and its
+///  data lines as written (a time tag, then the covariance in COV_ORDERING). The
+///  single-covariance fields of the OCM above state the first block when it is one
+///  line.
+public struct OCMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OCMCovarianceBlock.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let COV_ID: VOffset = 6
+    static let COV_PREV_ID: VOffset = 8
+    static let COV_NEXT_ID: VOffset = 10
+    static let COV_BASIS: VOffset = 12
+    static let COV_BASIS_ID: VOffset = 14
+    static let COV_REF_FRAME: VOffset = 16
+    static let COV_FRAME_EPOCH: VOffset = 18
+    static let COV_SCALE_MIN: VOffset = 20
+    static let COV_SCALE_MAX: VOffset = 22
+    static let COV_CONFIDENCE: VOffset = 24
+    static let COV_TYPE: VOffset = 26
+    static let COV_ORDERING: VOffset = 28
+    static let COV_UNITS: VOffset = 30
+    static let LINES: VOffset = 32
+    static let COV_REALISM: VOffset = 34
+  }
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  COV_ID.
+  public var COV_ID: String? { let o = _accessor.offset(VT.COV_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_ID) }
+  ///  COV_PREV_ID.
+  public var COV_PREV_ID: String? { let o = _accessor.offset(VT.COV_PREV_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_PREV_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_PREV_ID) }
+  ///  COV_NEXT_ID.
+  public var COV_NEXT_ID: String? { let o = _accessor.offset(VT.COV_NEXT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_NEXT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_NEXT_ID) }
+  ///  COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.
+  public var COV_BASIS: String? { let o = _accessor.offset(VT.COV_BASIS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_BASISSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_BASIS) }
+  ///  COV_BASIS_ID.
+  public var COV_BASIS_ID: String? { let o = _accessor.offset(VT.COV_BASIS_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_BASIS_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_BASIS_ID) }
+  ///  COV_REF_FRAME.
+  public var COV_REF_FRAME: String? { let o = _accessor.offset(VT.COV_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_REF_FRAME) }
+  ///  COV_FRAME_EPOCH.
+  public var COV_FRAME_EPOCH: String? { let o = _accessor.offset(VT.COV_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_FRAME_EPOCH) }
+  ///  COV_SCALE_MIN, NaN when not stated.
+  public var COV_SCALE_MIN: Double { let o = _accessor.offset(VT.COV_SCALE_MIN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  COV_SCALE_MAX, NaN when not stated.
+  public var COV_SCALE_MAX: Double { let o = _accessor.offset(VT.COV_SCALE_MAX); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  COV_CONFIDENCE in percent, NaN when not stated.
+  public var COV_CONFIDENCE: Double { let o = _accessor.offset(VT.COV_CONFIDENCE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  COV_TYPE as written, for example CARTPV.
+  public var COV_TYPE: String? { let o = _accessor.offset(VT.COV_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_TYPE) }
+  ///  COV_ORDERING.
+  public var COV_ORDERING: covarianceOrdering { let o = _accessor.offset(VT.COV_ORDERING); return o == 0 ? .ltm : covarianceOrdering(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ltm }
+  ///  COV_UNITS.
+  public var COV_UNITS: String? { let o = _accessor.offset(VT.COV_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_UNITS) }
+  ///  The data lines, as written.
+  public var LINES: FlatbufferVector<String?> { return _accessor.vector(at: VT.LINES, byteSize: 4) }
+  ///  Realism of the block's covariance: one entry per line of LINES, in order,
+  ///  or one entry for every line.
+  public var COV_REALISM: FlatbufferVector<CVR> { return _accessor.vector(at: VT.COV_REALISM, byteSize: 4) }
+  public static func startOCMCovarianceBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(COV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_ID, at: VT.COV_ID) }
+  public static func add(COV_PREV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_PREV_ID, at: VT.COV_PREV_ID) }
+  public static func add(COV_NEXT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_NEXT_ID, at: VT.COV_NEXT_ID) }
+  public static func add(COV_BASIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_BASIS, at: VT.COV_BASIS) }
+  public static func add(COV_BASIS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_BASIS_ID, at: VT.COV_BASIS_ID) }
+  public static func add(COV_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REF_FRAME, at: VT.COV_REF_FRAME) }
+  public static func add(COV_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_FRAME_EPOCH, at: VT.COV_FRAME_EPOCH) }
+  public static func add(COV_SCALE_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_SCALE_MIN, def: .nan, at: VT.COV_SCALE_MIN) }
+  public static func add(COV_SCALE_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_SCALE_MAX, def: .nan, at: VT.COV_SCALE_MAX) }
+  public static func add(COV_CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_CONFIDENCE, def: .nan, at: VT.COV_CONFIDENCE) }
+  public static func add(COV_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_TYPE, at: VT.COV_TYPE) }
+  public static func add(COV_ORDERING: covarianceOrdering, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_ORDERING.rawValue, def: 0, at: VT.COV_ORDERING) }
+  public static func add(COV_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_UNITS, at: VT.COV_UNITS) }
+  public static func addVectorOf(LINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINES, at: VT.LINES) }
+  public static func addVectorOf(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
+  public static func endOCMCovarianceBlock(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOCMCovarianceBlock(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    COV_IDOffset COV_ID: Offset = Offset(),
+    COV_PREV_IDOffset COV_PREV_ID: Offset = Offset(),
+    COV_NEXT_IDOffset COV_NEXT_ID: Offset = Offset(),
+    COV_BASISOffset COV_BASIS: Offset = Offset(),
+    COV_BASIS_IDOffset COV_BASIS_ID: Offset = Offset(),
+    COV_REF_FRAMEOffset COV_REF_FRAME: Offset = Offset(),
+    COV_FRAME_EPOCHOffset COV_FRAME_EPOCH: Offset = Offset(),
+    COV_SCALE_MIN: Double = .nan,
+    COV_SCALE_MAX: Double = .nan,
+    COV_CONFIDENCE: Double = .nan,
+    COV_TYPEOffset COV_TYPE: Offset = Offset(),
+    COV_ORDERING: covarianceOrdering = .ltm,
+    COV_UNITSOffset COV_UNITS: Offset = Offset(),
+    LINESVectorOffset LINES: Offset = Offset(),
+    COV_REALISMVectorOffset COV_REALISM: Offset = Offset()
+  ) -> Offset {
+    let __start = OCMCovarianceBlock.startOCMCovarianceBlock(&fbb)
+    OCMCovarianceBlock.add(COMMENT: COMMENT, &fbb)
+    OCMCovarianceBlock.add(COV_ID: COV_ID, &fbb)
+    OCMCovarianceBlock.add(COV_PREV_ID: COV_PREV_ID, &fbb)
+    OCMCovarianceBlock.add(COV_NEXT_ID: COV_NEXT_ID, &fbb)
+    OCMCovarianceBlock.add(COV_BASIS: COV_BASIS, &fbb)
+    OCMCovarianceBlock.add(COV_BASIS_ID: COV_BASIS_ID, &fbb)
+    OCMCovarianceBlock.add(COV_REF_FRAME: COV_REF_FRAME, &fbb)
+    OCMCovarianceBlock.add(COV_FRAME_EPOCH: COV_FRAME_EPOCH, &fbb)
+    OCMCovarianceBlock.add(COV_SCALE_MIN: COV_SCALE_MIN, &fbb)
+    OCMCovarianceBlock.add(COV_SCALE_MAX: COV_SCALE_MAX, &fbb)
+    OCMCovarianceBlock.add(COV_CONFIDENCE: COV_CONFIDENCE, &fbb)
+    OCMCovarianceBlock.add(COV_TYPE: COV_TYPE, &fbb)
+    OCMCovarianceBlock.add(COV_ORDERING: COV_ORDERING, &fbb)
+    OCMCovarianceBlock.add(COV_UNITS: COV_UNITS, &fbb)
+    OCMCovarianceBlock.addVectorOf(LINES: LINES, &fbb)
+    OCMCovarianceBlock.addVectorOf(COV_REALISM: COV_REALISM, &fbb)
+    return OCMCovarianceBlock.endOCMCovarianceBlock(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_ID, fieldName: "COV_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_PREV_ID, fieldName: "COV_PREV_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_NEXT_ID, fieldName: "COV_NEXT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_BASIS, fieldName: "COV_BASIS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_BASIS_ID, fieldName: "COV_BASIS_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_REF_FRAME, fieldName: "COV_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_FRAME_EPOCH, fieldName: "COV_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_SCALE_MIN, fieldName: "COV_SCALE_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.COV_SCALE_MAX, fieldName: "COV_SCALE_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.COV_CONFIDENCE, fieldName: "COV_CONFIDENCE", required: false, type: Double.self)
+    try _v.visit(field: VT.COV_TYPE, fieldName: "COV_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_ORDERING, fieldName: "COV_ORDERING", required: false, type: covarianceOrdering.self)
+    try _v.visit(field: VT.COV_UNITS, fieldName: "COV_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINES, fieldName: "LINES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<Vector<ForwardOffset<CVR>, CVR>>.self)
+    _v.finish()
+  }
+}
+
+public struct UserDefinedParameters: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: UserDefinedParameters.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PARAM_NAME: VOffset = 4
+    static let PARAM_VALUE: VOffset = 6
+  }
+
+  ///  Name of the user-defined parameter.
+  public var PARAM_NAME: String? { let o = _accessor.offset(VT.PARAM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAM_NAME) }
+  ///  Value of the user-defined parameter.
+  public var PARAM_VALUE: String? { let o = _accessor.offset(VT.PARAM_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAM_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAM_VALUE) }
+  public static func startUserDefinedParameters(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(PARAM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAM_NAME, at: VT.PARAM_NAME) }
+  public static func add(PARAM_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAM_VALUE, at: VT.PARAM_VALUE) }
+  public static func endUserDefinedParameters(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createUserDefinedParameters(
+    _ fbb: inout FlatBufferBuilder,
+    PARAM_NAMEOffset PARAM_NAME: Offset = Offset(),
+    PARAM_VALUEOffset PARAM_VALUE: Offset = Offset()
+  ) -> Offset {
+    let __start = UserDefinedParameters.startUserDefinedParameters(&fbb)
+    UserDefinedParameters.add(PARAM_NAME: PARAM_NAME, &fbb)
+    UserDefinedParameters.add(PARAM_VALUE: PARAM_VALUE, &fbb)
+    return UserDefinedParameters.endUserDefinedParameters(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PARAM_NAME, fieldName: "PARAM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAM_VALUE, fieldName: "PARAM_VALUE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Orbit Comprehensive Message
+public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OCM.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let HEADER: VOffset = 4
+    static let METADATA: VOffset = 6
+    static let TRAJ_TYPE: VOffset = 8
+    static let TRAJ_TYPE_DESCRIPTION: VOffset = 10
+    static let STATE_STEP_SIZE: VOffset = 12
+    static let STATE_VECTOR_SIZE: VOffset = 14
+    static let STATE_DATA: VOffset = 16
+    static let COVARIANCE_DATA: VOffset = 18
+    static let POLYNOMIAL_POSITION_RECORDS: VOffset = 20
+    static let POLYNOMIAL_OE_RECORDS: VOffset = 22
+    static let PHYSICAL_PROPERTIES: VOffset = 24
+    static let MANEUVER_DATA: VOffset = 26
+    static let PERTURBATIONS: VOffset = 28
+    static let ORBIT_DETERMINATION: VOffset = 30
+    static let USER_DEFINED_PARAMETERS: VOffset = 32
+    static let CENTER_NAME: VOffset = 34
+    static let TRAJ_REF_FRAME: VOffset = 36
+    static let TRAJ_FRAME_EPOCH: VOffset = 38
+    static let COV_REF_FRAME: VOffset = 40
+    static let ORB_REVNUM: VOffset = 42
+    static let ORB_AVERAGING: VOffset = 44
+    static let COV_CALIBRATION: VOffset = 46
+    static let COV_CALIBRATION_REFERENCE: VOffset = 48
+    static let STATE_EPOCHS: VOffset = 50
+    static let COV_TYPE: VOffset = 52
+    static let COV_ORDERING: VOffset = 54
+    static let COV_SIZE: VOffset = 56
+    static let COV_PARAMETERS: VOffset = 58
+    static let COV_UNITS: VOffset = 60
+    static let TRAJECTORY_BLOCKS: VOffset = 62
+    static let COVARIANCE_BLOCKS: VOffset = 64
+    static let PROVENANCE: VOffset = 66
+    static let COV_REALISM: VOffset = 68
+  }
+
+  ///  Header section of the OCM.
+  public var HEADER: Header? { let o = _accessor.offset(VT.HEADER); return o == 0 ? nil : Header(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Metadata section of the OCM.
+  public var METADATA: Metadata? { let o = _accessor.offset(VT.METADATA); return o == 0 ? nil : Metadata(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Trajectory state representation type.
+  ///  Determines how orbit state data is parameterized in this message.
+  ///  For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+  ///  For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
+  public var TRAJ_TYPE: trajectoryType { let o = _accessor.offset(VT.TRAJ_TYPE); return o == 0 ? .cartesianPv : trajectoryType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .cartesianPv }
+  ///  Legacy trajectory type string for backward compatibility and extended types
+  ///  (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+  public var TRAJ_TYPE_DESCRIPTION: String? { let o = _accessor.offset(VT.TRAJ_TYPE_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_TYPE_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_TYPE_DESCRIPTION) }
+  ///  Time interval between state vectors in seconds; required without STATE_EPOCHS.
+  public var STATE_STEP_SIZE: Double { let o = _accessor.offset(VT.STATE_STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of components per state vector.
+  ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  ///  6 or 7 for the element sets named by TRAJ_TYPE.
+  public var STATE_VECTOR_SIZE: UInt8 { let o = _accessor.offset(VT.STATE_VECTOR_SIZE); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  State data as row-major array of doubles.
+  ///  Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  ///  Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
+  ///  Length must be divisible by STATE_VECTOR_SIZE.
+  ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+  public var STATE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.STATE_DATA, byteSize: 8) }
+  public func withUnsafePointerToStateData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.STATE_DATA, body: body) }
+  ///  Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+  ///  COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+  ///  has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+  ///  state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+  ///  epoch, the lower triangle of the 6x6 position and velocity covariance.
+  public var COVARIANCE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE_DATA, byteSize: 8) }
+  public func withUnsafePointerToCovarianceData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE_DATA, body: body) }
+  ///  Polynomial position records.
+  ///  Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+  ///  with polynomial coefficients for X, Y, Z position (and optionally velocity).
+  ///  See PPE schema for record structure and evaluation procedure.
+  public var POLYNOMIAL_POSITION_RECORDS: FlatbufferVector<PPEPositionRecord> { return _accessor.vector(at: VT.POLYNOMIAL_POSITION_RECORDS, byteSize: 4) }
+  ///  Polynomial orbital element records.
+  ///  Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+  ///  with polynomial coefficients for classical orbital elements.
+  ///  See PPE schema for record structure and evaluation procedure.
+  public var POLYNOMIAL_OE_RECORDS: FlatbufferVector<PPEOrbitalElementRecord> { return _accessor.vector(at: VT.POLYNOMIAL_OE_RECORDS, byteSize: 4) }
+  ///  Physical properties of the space object.
+  public var PHYSICAL_PROPERTIES: PhysicalProperties? { let o = _accessor.offset(VT.PHYSICAL_PROPERTIES); return o == 0 ? nil : PhysicalProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Maneuver data.
+  public var MANEUVER_DATA: FlatbufferVector<Maneuver> { return _accessor.vector(at: VT.MANEUVER_DATA, byteSize: 4) }
+  ///  Perturbations parameters used.
+  public var PERTURBATIONS: Perturbations? { let o = _accessor.offset(VT.PERTURBATIONS); return o == 0 ? nil : Perturbations(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Orbit determination data.
+  public var ORBIT_DETERMINATION: OrbitDetermination? { let o = _accessor.offset(VT.ORBIT_DETERMINATION); return o == 0 ? nil : OrbitDetermination(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  User-defined parameters and supplemental comments.
+  public var USER_DEFINED_PARAMETERS: FlatbufferVector<UserDefinedParameters> { return _accessor.vector(at: VT.USER_DEFINED_PARAMETERS, byteSize: 4) }
+  ///  Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  Reference frame of STATE_DATA and the polynomial records
+  ///  (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  public var TRAJ_REF_FRAME: RFM? { let o = _accessor.offset(VT.TRAJ_REF_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+  ///  (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+  public var TRAJ_FRAME_EPOCH: String? { let o = _accessor.offset(VT.TRAJ_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJ_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_FRAME_EPOCH) }
+  ///  Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  public var COV_REF_FRAME: RFM? { let o = _accessor.offset(VT.COV_REF_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+  public var ORB_REVNUM: UInt32 { let o = _accessor.offset(VT.ORB_REVNUM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+  ///  KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+  public var ORB_AVERAGING: String? { let o = _accessor.offset(VT.ORB_AVERAGING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORB_AVERAGINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORB_AVERAGING) }
+  ///  Whether COVARIANCE_DATA's coverage was measured against independent
+  ///  reference states: Calibrated only when every COV_REALISM entry is.
+  public var COV_CALIBRATION: covarianceCalibration { let o = _accessor.offset(VT.COV_CALIBRATION); return o == 0 ? .unspecified : covarianceCalibration(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Identifier of that calibration evidence (a report or record).
+  public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
+  ///  Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+  ///  section 6.2.4). When nonempty, length equals STATE_DATA.length /
+  ///  STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+  ///  Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+  public var STATE_EPOCHS: FlatbufferVector<String?> { return _accessor.vector(at: VT.STATE_EPOCHS, byteSize: 4) }
+  ///  Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+  ///  (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+  ///  TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+  public var COV_TYPE: String? { let o = _accessor.offset(VT.COV_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_TYPE) }
+  ///  Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  public var COV_ORDERING: covarianceOrdering { let o = _accessor.offset(VT.COV_ORDERING); return o == 0 ? .ltm : covarianceOrdering(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ltm }
+  ///  Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+  ///  COV_PARAMETERS names.
+  public var COV_SIZE: UInt8 { let o = _accessor.offset(VT.COV_SIZE); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+  ///  by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+  ///  matrix reaches). A row the orbit determination did not solve for is zero.
+  public var COV_PARAMETERS: FlatbufferVector<String?> { return _accessor.vector(at: VT.COV_PARAMETERS, byteSize: 4) }
+  ///  Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+  ///  dimensionless one.
+  public var COV_UNITS: FlatbufferVector<String?> { return _accessor.vector(at: VT.COV_UNITS, byteSize: 4) }
+  ///  Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+  ///  blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+  ///  them above state the first block's CARTPV or CARTPVA states.
+  public var TRAJECTORY_BLOCKS: FlatbufferVector<OCMTrajectoryBlock> { return _accessor.vector(at: VT.TRAJECTORY_BLOCKS, byteSize: 4) }
+  ///  Every covariance time history of the message (COV_START blocks), in message
+  ///  order. COVARIANCE_DATA and the fields that go with it above state the first
+  ///  block when it is one line.
+  public var COVARIANCE_BLOCKS: FlatbufferVector<OCMCovarianceBlock> { return _accessor.vector(at: VT.COVARIANCE_BLOCKS, byteSize: 4) }
+  ///  Where the message's data comes from and the terms it travels under.
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+  ///  STATE_DATA epochs, or one entry for every epoch.
+  public var COV_REALISM: FlatbufferVector<CVR> { return _accessor.vector(at: VT.COV_REALISM, byteSize: 4) }
+  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 33) }
+  public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VT.HEADER) }
+  public static func add(METADATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA, at: VT.METADATA) }
+  public static func add(TRAJ_TYPE: trajectoryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAJ_TYPE.rawValue, def: 0, at: VT.TRAJ_TYPE) }
+  public static func add(TRAJ_TYPE_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_TYPE_DESCRIPTION, at: VT.TRAJ_TYPE_DESCRIPTION) }
+  public static func add(STATE_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_STEP_SIZE, def: 0.0, at: VT.STATE_STEP_SIZE) }
+  public static func add(STATE_VECTOR_SIZE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_VECTOR_SIZE, def: 6, at: VT.STATE_VECTOR_SIZE) }
+  public static func addVectorOf(STATE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_DATA, at: VT.STATE_DATA) }
+  public static func addVectorOf(COVARIANCE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE_DATA, at: VT.COVARIANCE_DATA) }
+  public static func addVectorOf(POLYNOMIAL_POSITION_RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYNOMIAL_POSITION_RECORDS, at: VT.POLYNOMIAL_POSITION_RECORDS) }
+  public static func addVectorOf(POLYNOMIAL_OE_RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYNOMIAL_OE_RECORDS, at: VT.POLYNOMIAL_OE_RECORDS) }
+  public static func add(PHYSICAL_PROPERTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHYSICAL_PROPERTIES, at: VT.PHYSICAL_PROPERTIES) }
+  public static func addVectorOf(MANEUVER_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANEUVER_DATA, at: VT.MANEUVER_DATA) }
+  public static func add(PERTURBATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PERTURBATIONS, at: VT.PERTURBATIONS) }
+  public static func add(ORBIT_DETERMINATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_DETERMINATION, at: VT.ORBIT_DETERMINATION) }
+  public static func addVectorOf(USER_DEFINED_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_PARAMETERS, at: VT.USER_DEFINED_PARAMETERS) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(TRAJ_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_REF_FRAME, at: VT.TRAJ_REF_FRAME) }
+  public static func add(TRAJ_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_FRAME_EPOCH, at: VT.TRAJ_FRAME_EPOCH) }
+  public static func add(COV_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REF_FRAME, at: VT.COV_REF_FRAME) }
+  public static func add(ORB_REVNUM: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORB_REVNUM, def: 0, at: VT.ORB_REVNUM) }
+  public static func add(ORB_AVERAGING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORB_AVERAGING, at: VT.ORB_AVERAGING) }
+  public static func add(COV_CALIBRATION: covarianceCalibration, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_CALIBRATION.rawValue, def: 0, at: VT.COV_CALIBRATION) }
+  public static func add(COV_CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_CALIBRATION_REFERENCE, at: VT.COV_CALIBRATION_REFERENCE) }
+  public static func addVectorOf(STATE_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_EPOCHS, at: VT.STATE_EPOCHS) }
+  public static func add(COV_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_TYPE, at: VT.COV_TYPE) }
+  public static func add(COV_ORDERING: covarianceOrdering, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_ORDERING.rawValue, def: 0, at: VT.COV_ORDERING) }
+  public static func add(COV_SIZE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_SIZE, def: 6, at: VT.COV_SIZE) }
+  public static func addVectorOf(COV_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_PARAMETERS, at: VT.COV_PARAMETERS) }
+  public static func addVectorOf(COV_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_UNITS, at: VT.COV_UNITS) }
+  public static func addVectorOf(TRAJECTORY_BLOCKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY_BLOCKS, at: VT.TRAJECTORY_BLOCKS) }
+  public static func addVectorOf(COVARIANCE_BLOCKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE_BLOCKS, at: VT.COVARIANCE_BLOCKS) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func addVectorOf(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
+  public static func endOCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOCM(
+    _ fbb: inout FlatBufferBuilder,
+    HEADEROffset HEADER: Offset = Offset(),
+    METADATAOffset METADATA: Offset = Offset(),
+    TRAJ_TYPE: trajectoryType = .cartesianPv,
+    TRAJ_TYPE_DESCRIPTIONOffset TRAJ_TYPE_DESCRIPTION: Offset = Offset(),
+    STATE_STEP_SIZE: Double = 0.0,
+    STATE_VECTOR_SIZE: UInt8 = 6,
+    STATE_DATAVectorOffset STATE_DATA: Offset = Offset(),
+    COVARIANCE_DATAVectorOffset COVARIANCE_DATA: Offset = Offset(),
+    POLYNOMIAL_POSITION_RECORDSVectorOffset POLYNOMIAL_POSITION_RECORDS: Offset = Offset(),
+    POLYNOMIAL_OE_RECORDSVectorOffset POLYNOMIAL_OE_RECORDS: Offset = Offset(),
+    PHYSICAL_PROPERTIESOffset PHYSICAL_PROPERTIES: Offset = Offset(),
+    MANEUVER_DATAVectorOffset MANEUVER_DATA: Offset = Offset(),
+    PERTURBATIONSOffset PERTURBATIONS: Offset = Offset(),
+    ORBIT_DETERMINATIONOffset ORBIT_DETERMINATION: Offset = Offset(),
+    USER_DEFINED_PARAMETERSVectorOffset USER_DEFINED_PARAMETERS: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    TRAJ_REF_FRAMEOffset TRAJ_REF_FRAME: Offset = Offset(),
+    TRAJ_FRAME_EPOCHOffset TRAJ_FRAME_EPOCH: Offset = Offset(),
+    COV_REF_FRAMEOffset COV_REF_FRAME: Offset = Offset(),
+    ORB_REVNUM: UInt32 = 0,
+    ORB_AVERAGINGOffset ORB_AVERAGING: Offset = Offset(),
+    COV_CALIBRATION: covarianceCalibration = .unspecified,
+    COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset(),
+    STATE_EPOCHSVectorOffset STATE_EPOCHS: Offset = Offset(),
+    COV_TYPEOffset COV_TYPE: Offset = Offset(),
+    COV_ORDERING: covarianceOrdering = .ltm,
+    COV_SIZE: UInt8 = 6,
+    COV_PARAMETERSVectorOffset COV_PARAMETERS: Offset = Offset(),
+    COV_UNITSVectorOffset COV_UNITS: Offset = Offset(),
+    TRAJECTORY_BLOCKSVectorOffset TRAJECTORY_BLOCKS: Offset = Offset(),
+    COVARIANCE_BLOCKSVectorOffset COVARIANCE_BLOCKS: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    COV_REALISMVectorOffset COV_REALISM: Offset = Offset()
+  ) -> Offset {
+    let __start = OCM.startOCM(&fbb)
+    OCM.add(HEADER: HEADER, &fbb)
+    OCM.add(METADATA: METADATA, &fbb)
+    OCM.add(TRAJ_TYPE: TRAJ_TYPE, &fbb)
+    OCM.add(TRAJ_TYPE_DESCRIPTION: TRAJ_TYPE_DESCRIPTION, &fbb)
+    OCM.add(STATE_STEP_SIZE: STATE_STEP_SIZE, &fbb)
+    OCM.add(STATE_VECTOR_SIZE: STATE_VECTOR_SIZE, &fbb)
+    OCM.addVectorOf(STATE_DATA: STATE_DATA, &fbb)
+    OCM.addVectorOf(COVARIANCE_DATA: COVARIANCE_DATA, &fbb)
+    OCM.addVectorOf(POLYNOMIAL_POSITION_RECORDS: POLYNOMIAL_POSITION_RECORDS, &fbb)
+    OCM.addVectorOf(POLYNOMIAL_OE_RECORDS: POLYNOMIAL_OE_RECORDS, &fbb)
+    OCM.add(PHYSICAL_PROPERTIES: PHYSICAL_PROPERTIES, &fbb)
+    OCM.addVectorOf(MANEUVER_DATA: MANEUVER_DATA, &fbb)
+    OCM.add(PERTURBATIONS: PERTURBATIONS, &fbb)
+    OCM.add(ORBIT_DETERMINATION: ORBIT_DETERMINATION, &fbb)
+    OCM.addVectorOf(USER_DEFINED_PARAMETERS: USER_DEFINED_PARAMETERS, &fbb)
+    OCM.add(CENTER_NAME: CENTER_NAME, &fbb)
+    OCM.add(TRAJ_REF_FRAME: TRAJ_REF_FRAME, &fbb)
+    OCM.add(TRAJ_FRAME_EPOCH: TRAJ_FRAME_EPOCH, &fbb)
+    OCM.add(COV_REF_FRAME: COV_REF_FRAME, &fbb)
+    OCM.add(ORB_REVNUM: ORB_REVNUM, &fbb)
+    OCM.add(ORB_AVERAGING: ORB_AVERAGING, &fbb)
+    OCM.add(COV_CALIBRATION: COV_CALIBRATION, &fbb)
+    OCM.add(COV_CALIBRATION_REFERENCE: COV_CALIBRATION_REFERENCE, &fbb)
+    OCM.addVectorOf(STATE_EPOCHS: STATE_EPOCHS, &fbb)
+    OCM.add(COV_TYPE: COV_TYPE, &fbb)
+    OCM.add(COV_ORDERING: COV_ORDERING, &fbb)
+    OCM.add(COV_SIZE: COV_SIZE, &fbb)
+    OCM.addVectorOf(COV_PARAMETERS: COV_PARAMETERS, &fbb)
+    OCM.addVectorOf(COV_UNITS: COV_UNITS, &fbb)
+    OCM.addVectorOf(TRAJECTORY_BLOCKS: TRAJECTORY_BLOCKS, &fbb)
+    OCM.addVectorOf(COVARIANCE_BLOCKS: COVARIANCE_BLOCKS, &fbb)
+    OCM.add(PROVENANCE: PROVENANCE, &fbb)
+    OCM.addVectorOf(COV_REALISM: COV_REALISM, &fbb)
+    return OCM.endOCM(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.HEADER, fieldName: "HEADER", required: false, type: ForwardOffset<Header>.self)
+    try _v.visit(field: VT.METADATA, fieldName: "METADATA", required: false, type: ForwardOffset<Metadata>.self)
+    try _v.visit(field: VT.TRAJ_TYPE, fieldName: "TRAJ_TYPE", required: false, type: trajectoryType.self)
+    try _v.visit(field: VT.TRAJ_TYPE_DESCRIPTION, fieldName: "TRAJ_TYPE_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE_STEP_SIZE, fieldName: "STATE_STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.STATE_VECTOR_SIZE, fieldName: "STATE_VECTOR_SIZE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.STATE_DATA, fieldName: "STATE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.COVARIANCE_DATA, fieldName: "COVARIANCE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POLYNOMIAL_POSITION_RECORDS, fieldName: "POLYNOMIAL_POSITION_RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<PPEPositionRecord>, PPEPositionRecord>>.self)
+    try _v.visit(field: VT.POLYNOMIAL_OE_RECORDS, fieldName: "POLYNOMIAL_OE_RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<PPEOrbitalElementRecord>, PPEOrbitalElementRecord>>.self)
+    try _v.visit(field: VT.PHYSICAL_PROPERTIES, fieldName: "PHYSICAL_PROPERTIES", required: false, type: ForwardOffset<PhysicalProperties>.self)
+    try _v.visit(field: VT.MANEUVER_DATA, fieldName: "MANEUVER_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<Maneuver>, Maneuver>>.self)
+    try _v.visit(field: VT.PERTURBATIONS, fieldName: "PERTURBATIONS", required: false, type: ForwardOffset<Perturbations>.self)
+    try _v.visit(field: VT.ORBIT_DETERMINATION, fieldName: "ORBIT_DETERMINATION", required: false, type: ForwardOffset<OrbitDetermination>.self)
+    try _v.visit(field: VT.USER_DEFINED_PARAMETERS, fieldName: "USER_DEFINED_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<UserDefinedParameters>, UserDefinedParameters>>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJ_REF_FRAME, fieldName: "TRAJ_REF_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.TRAJ_FRAME_EPOCH, fieldName: "TRAJ_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_REF_FRAME, fieldName: "COV_REF_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.ORB_REVNUM, fieldName: "ORB_REVNUM", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ORB_AVERAGING, fieldName: "ORB_AVERAGING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_CALIBRATION, fieldName: "COV_CALIBRATION", required: false, type: covarianceCalibration.self)
+    try _v.visit(field: VT.COV_CALIBRATION_REFERENCE, fieldName: "COV_CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE_EPOCHS, fieldName: "STATE_EPOCHS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COV_TYPE, fieldName: "COV_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_ORDERING, fieldName: "COV_ORDERING", required: false, type: covarianceOrdering.self)
+    try _v.visit(field: VT.COV_SIZE, fieldName: "COV_SIZE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.COV_PARAMETERS, fieldName: "COV_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COV_UNITS, fieldName: "COV_UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.TRAJECTORY_BLOCKS, fieldName: "TRAJECTORY_BLOCKS", required: false, type: ForwardOffset<Vector<ForwardOffset<OCMTrajectoryBlock>, OCMTrajectoryBlock>>.self)
+    try _v.visit(field: VT.COVARIANCE_BLOCKS, fieldName: "COVARIANCE_BLOCKS", required: false, type: ForwardOffset<Vector<ForwardOffset<OCMCovarianceBlock>, OCMCovarianceBlock>>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
+    try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<Vector<ForwardOffset<CVR>, CVR>>.self)
     _v.finish()
   }
 }

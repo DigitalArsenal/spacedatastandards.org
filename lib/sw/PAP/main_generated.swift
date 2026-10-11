@@ -8,525 +8,519 @@ import Common
 
 import FlatBuffers
 
-public enum timingStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Physical arrangement of array elements.
+public enum papArrayGeometry: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Greenwich Mean Sidereal Time
-  case gmst = 0
-  ///  Global Positioning System
-  case gps = 1
-  ///  Mission Elapsed Time
-  case met = 2
-  ///  Mission Relative Time
-  case mrt = 3
-  ///  Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  case sclk = 4
-  ///  International Atomic Time
-  case tai = 5
-  ///  Barycentric Coordinate Time
-  case tcb = 6
-  ///  Barycentric Dynamical Time
-  case tdb = 7
-  ///  Geocentric Coordinate Time
-  case tcg = 8
-  ///  Terrestrial Time
-  case tt = 9
-  ///  Universal Time
-  case ut1 = 10
-  ///  Coordinated Universal Time
-  case utc = 11
-  ///  GLONASS Time
-  case glonass = 12
-  ///  Galileo System Time
-  case gst = 13
-  ///  Quasi-Zenith Satellite System Time
-  case qzss = 14
-  ///  BeiDou Time
-  case bdt = 15
-  ///  Navigation with Indian Constellation Time
-  case navic = 16
-  ///  Satellite-Based Augmentation System Time
-  case sbas = 17
-  ///  Atomic time scale of the reference atomic-time network, offset from
-  ///  International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
-  ///  exactly. Appended last; never reorder or reuse existing values.
-  case a1 = 18
+  case unspecified = 0
+  case linear = 1
+  case rectangular = 2
+  case triangular = 3
+  case circular = 4
+  case conformal = 5
+  case arbitrary = 6
 
-  public static var max: timingStandard { return .a1 }
-  public static var min: timingStandard { return .gmst }
+  public static var max: papArrayGeometry { return .arbitrary }
+  public static var min: papArrayGeometry { return .unspecified }
 }
 
 
-public enum timEpochRepresentation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Amplitude taper capability class.
+public enum papTaperFamily: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Julian Date day count.
-  case julianDate = 0
-  ///  Modified Julian Date day count (JD - 2400000.5).
-  case modifiedJulianDate = 1
-  ///  Seconds since 1970-01-01T00:00:00 UTC.
-  case unixSeconds = 2
-  ///  ISO 8601 timestamp text.
-  case iso8601 = 3
-  ///  Seconds since 1980-01-06T00:00:00 GPS.
-  case gpsSeconds = 4
-  ///  GNSS week number plus seconds within the week.
-  case gnssWeekSeconds = 5
-  ///  CCSDS binary time-code field with preamble metadata.
-  case ccsdsTimeCode = 6
-  ///  Seconds from an application-defined mission epoch.
-  case missionElapsedSeconds = 7
+  case unspecified = 0
+  case uniform = 1
+  case cosine = 2
+  case raisedCosine = 3
+  case equalSidelobe = 4
+  case controlledSidelobe = 5
+  case custom = 6
 
-  public static var max: timEpochRepresentation { return .missionElapsedSeconds }
-  public static var min: timEpochRepresentation { return .julianDate }
+  public static var max: papTaperFamily { return .custom }
+  public static var min: papTaperFamily { return .unspecified }
 }
 
 
-public enum timCcsdsTimeCodeKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Angular coordinate held fixed by a gain cut.
+public enum papGainCutAxis: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  No CCSDS time code selected.
-  case none_ = 0
-  ///  CCSDS Unsegmented Time Code (CUC).
-  case unsegmented = 1
-  ///  CCSDS Day Segmented Time Code (CDS).
-  case daySegmented = 2
-  ///  CCSDS Calendar Segmented Time Code (CCS).
-  case calendarSegmented = 3
+  case unspecified = 0
+  case azimuth = 1
+  case elevation = 2
+  case cone = 3
+  case clock = 4
 
-  public static var max: timCcsdsTimeCodeKind { return .calendarSegmented }
-  public static var min: timCcsdsTimeCodeKind { return .none_ }
+  public static var max: papGainCutAxis { return .clock }
+  public static var min: papGainCutAxis { return .unspecified }
 }
 
 
-public enum timConversionStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Conversion completed.
-  case ok = 0
-  ///  Input epoch or requested representation is invalid.
-  case invalidInput = 1
-  ///  Requested source or target time system is not supported.
-  case unsupportedTimeSystem = 2
-  ///  Conversion requires leap-second data that was not available.
-  case leapSecondDataRequired = 3
-  ///  Conversion requires Earth-orientation data that was not available.
-  case eopDataRequired = 4
-  ///  Requested instant is outside the supported conversion range.
-  case outOfRange = 5
-
-  public static var max: timConversionStatus { return .outOfRange }
-  public static var min: timConversionStatus { return .ok }
-}
-
-
-///  CCSDS time-code payload and preamble metadata.
-public struct TIMCcsdsTimeCode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One array element and its applied complex weight.
+public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMCcsdsTimeCode.id, addPrefix: prefix) }
+  public static var id: String { "$PAP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PAPElement.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE_KIND: VOffset = 4
-    static let PREAMBLE_FIELD1: VOffset = 6
-    static let PREAMBLE_FIELD2: VOffset = 8
-    static let TIME_FIELD: VOffset = 10
-    static let AGENCY_DEFINED_EPOCH_ISO8601: VOffset = 12
-    static let CCSDS_EPOCH_ISO8601: VOffset = 14
+    static let ELEMENT_ID: VOffset = 4
+    static let POSITION_X_M: VOffset = 6
+    static let POSITION_Y_M: VOffset = 8
+    static let POSITION_Z_M: VOffset = 10
+    static let WEIGHT_REAL: VOffset = 12
+    static let WEIGHT_IMAGINARY: VOffset = 14
+    static let AMPLITUDE: VOffset = 16
+    static let PHASE_DEG: VOffset = 18
+    static let ELEMENT_PATTERN_ID: VOffset = 20
+    static let FAILURE_FLAGS: VOffset = 22
+    static let FAILED: VOffset = 24
   }
 
-  ///  CCSDS time-code family.
-  public var CODE_KIND: timCcsdsTimeCodeKind { let o = _accessor.offset(VT.CODE_KIND); return o == 0 ? .none_ : timCcsdsTimeCodeKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
-  ///  First CCSDS preamble field octet.
-  public var PREAMBLE_FIELD1: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
-  public var PREAMBLE_FIELD2: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD2); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Raw CCSDS time field octets.
-  public var TIME_FIELD: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.TIME_FIELD, byteSize: 1) }
-  public func withUnsafePointerToTimeField<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TIME_FIELD, body: body) }
-  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
-  public var AGENCY_DEFINED_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.AGENCY_DEFINED_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AGENCY_DEFINED_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
-  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
-  public var CCSDS_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.CCSDS_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CCSDS_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_EPOCH_ISO8601) }
-  public static func startTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(CODE_KIND: timCcsdsTimeCodeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE_KIND.rawValue, def: 0, at: VT.CODE_KIND) }
-  public static func add(PREAMBLE_FIELD1: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD1, def: 0, at: VT.PREAMBLE_FIELD1) }
-  public static func add(PREAMBLE_FIELD2: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD2, def: 0, at: VT.PREAMBLE_FIELD2) }
-  public static func addVectorOf(TIME_FIELD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_FIELD, at: VT.TIME_FIELD) }
-  public static func add(AGENCY_DEFINED_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGENCY_DEFINED_EPOCH_ISO8601, at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
-  public static func add(CCSDS_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_EPOCH_ISO8601, at: VT.CCSDS_EPOCH_ISO8601) }
-  public static func endTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMCcsdsTimeCode(
+  public var ELEMENT_ID: String! { let o = _accessor.offset(VT.ELEMENT_ID); return _accessor.string(at: o) }
+  public var ELEMENT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ELEMENT_ID) }
+  public var POSITION_X_M: Double { let o = _accessor.offset(VT.POSITION_X_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POSITION_Y_M: Double { let o = _accessor.offset(VT.POSITION_Y_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POSITION_Z_M: Double { let o = _accessor.offset(VT.POSITION_Z_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WEIGHT_REAL: Double { let o = _accessor.offset(VT.WEIGHT_REAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WEIGHT_IMAGINARY: Double { let o = _accessor.offset(VT.WEIGHT_IMAGINARY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AMPLITUDE: Double { let o = _accessor.offset(VT.AMPLITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PHASE_DEG: Double { let o = _accessor.offset(VT.PHASE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ELEMENT_PATTERN_ID: String? { let o = _accessor.offset(VT.ELEMENT_PATTERN_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ELEMENT_PATTERN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ELEMENT_PATTERN_ID) }
+  public var FAILURE_FLAGS: UInt32 { let o = _accessor.offset(VT.FAILURE_FLAGS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var FAILED: Bool { let o = _accessor.offset(VT.FAILED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPAPElement(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(ELEMENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEMENT_ID, at: VT.ELEMENT_ID) }
+  public static func add(POSITION_X_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X_M, def: 0.0, at: VT.POSITION_X_M) }
+  public static func add(POSITION_Y_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y_M, def: 0.0, at: VT.POSITION_Y_M) }
+  public static func add(POSITION_Z_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Z_M, def: 0.0, at: VT.POSITION_Z_M) }
+  public static func add(WEIGHT_REAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHT_REAL, def: 0.0, at: VT.WEIGHT_REAL) }
+  public static func add(WEIGHT_IMAGINARY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHT_IMAGINARY, def: 0.0, at: VT.WEIGHT_IMAGINARY) }
+  public static func add(AMPLITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AMPLITUDE, def: 0.0, at: VT.AMPLITUDE) }
+  public static func add(PHASE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PHASE_DEG, def: 0.0, at: VT.PHASE_DEG) }
+  public static func add(ELEMENT_PATTERN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEMENT_PATTERN_ID, at: VT.ELEMENT_PATTERN_ID) }
+  public static func add(FAILURE_FLAGS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAILURE_FLAGS, def: 0, at: VT.FAILURE_FLAGS) }
+  public static func add(FAILED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAILED, def: false,
+   at: VT.FAILED) }
+  public static func endPAPElement(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPAPElement(
     _ fbb: inout FlatBufferBuilder,
-    CODE_KIND: timCcsdsTimeCodeKind = .none_,
-    PREAMBLE_FIELD1: UInt8 = 0,
-    PREAMBLE_FIELD2: UInt8 = 0,
-    TIME_FIELDVectorOffset TIME_FIELD: Offset = Offset(),
-    AGENCY_DEFINED_EPOCH_ISO8601Offset AGENCY_DEFINED_EPOCH_ISO8601: Offset = Offset(),
-    CCSDS_EPOCH_ISO8601Offset CCSDS_EPOCH_ISO8601: Offset = Offset()
+    ELEMENT_IDOffset ELEMENT_ID: Offset,
+    POSITION_X_M: Double = 0.0,
+    POSITION_Y_M: Double = 0.0,
+    POSITION_Z_M: Double = 0.0,
+    WEIGHT_REAL: Double = 0.0,
+    WEIGHT_IMAGINARY: Double = 0.0,
+    AMPLITUDE: Double = 0.0,
+    PHASE_DEG: Double = 0.0,
+    ELEMENT_PATTERN_IDOffset ELEMENT_PATTERN_ID: Offset = Offset(),
+    FAILURE_FLAGS: UInt32 = 0,
+    FAILED: Bool = false
   ) -> Offset {
-    let __start = TIMCcsdsTimeCode.startTIMCcsdsTimeCode(&fbb)
-    TIMCcsdsTimeCode.add(CODE_KIND: CODE_KIND, &fbb)
-    TIMCcsdsTimeCode.add(PREAMBLE_FIELD1: PREAMBLE_FIELD1, &fbb)
-    TIMCcsdsTimeCode.add(PREAMBLE_FIELD2: PREAMBLE_FIELD2, &fbb)
-    TIMCcsdsTimeCode.addVectorOf(TIME_FIELD: TIME_FIELD, &fbb)
-    TIMCcsdsTimeCode.add(AGENCY_DEFINED_EPOCH_ISO8601: AGENCY_DEFINED_EPOCH_ISO8601, &fbb)
-    TIMCcsdsTimeCode.add(CCSDS_EPOCH_ISO8601: CCSDS_EPOCH_ISO8601, &fbb)
-    return TIMCcsdsTimeCode.endTIMCcsdsTimeCode(&fbb, start: __start)
+    let __start = PAPElement.startPAPElement(&fbb)
+    PAPElement.add(ELEMENT_ID: ELEMENT_ID, &fbb)
+    PAPElement.add(POSITION_X_M: POSITION_X_M, &fbb)
+    PAPElement.add(POSITION_Y_M: POSITION_Y_M, &fbb)
+    PAPElement.add(POSITION_Z_M: POSITION_Z_M, &fbb)
+    PAPElement.add(WEIGHT_REAL: WEIGHT_REAL, &fbb)
+    PAPElement.add(WEIGHT_IMAGINARY: WEIGHT_IMAGINARY, &fbb)
+    PAPElement.add(AMPLITUDE: AMPLITUDE, &fbb)
+    PAPElement.add(PHASE_DEG: PHASE_DEG, &fbb)
+    PAPElement.add(ELEMENT_PATTERN_ID: ELEMENT_PATTERN_ID, &fbb)
+    PAPElement.add(FAILURE_FLAGS: FAILURE_FLAGS, &fbb)
+    PAPElement.add(FAILED: FAILED, &fbb)
+    return PAPElement.endPAPElement(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE_KIND, fieldName: "CODE_KIND", required: false, type: timCcsdsTimeCodeKind.self)
-    try _v.visit(field: VT.PREAMBLE_FIELD1, fieldName: "PREAMBLE_FIELD1", required: false, type: UInt8.self)
-    try _v.visit(field: VT.PREAMBLE_FIELD2, fieldName: "PREAMBLE_FIELD2", required: false, type: UInt8.self)
-    try _v.visit(field: VT.TIME_FIELD, fieldName: "TIME_FIELD", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.AGENCY_DEFINED_EPOCH_ISO8601, fieldName: "AGENCY_DEFINED_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CCSDS_EPOCH_ISO8601, fieldName: "CCSDS_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ELEMENT_ID, fieldName: "ELEMENT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POSITION_X_M, fieldName: "POSITION_X_M", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_Y_M, fieldName: "POSITION_Y_M", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_Z_M, fieldName: "POSITION_Z_M", required: false, type: Double.self)
+    try _v.visit(field: VT.WEIGHT_REAL, fieldName: "WEIGHT_REAL", required: false, type: Double.self)
+    try _v.visit(field: VT.WEIGHT_IMAGINARY, fieldName: "WEIGHT_IMAGINARY", required: false, type: Double.self)
+    try _v.visit(field: VT.AMPLITUDE, fieldName: "AMPLITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.PHASE_DEG, fieldName: "PHASE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ELEMENT_PATTERN_ID, fieldName: "ELEMENT_PATTERN_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FAILURE_FLAGS, fieldName: "FAILURE_FLAGS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.FAILED, fieldName: "FAILED", required: false, type: Bool.self)
     _v.finish()
   }
 }
 
-///  Numeric or textual instant tagged with its time system and representation.
-public struct TIMInstant: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One one-dimensional gain cut through the synthesized pattern.
+public struct PAPGainCut: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMInstant.id, addPrefix: prefix) }
+  public static var id: String { "$PAP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PAPGainCut.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let TIME_SYSTEM: VOffset = 4
-    static let EPOCH_FORMAT: VOffset = 6
-    static let JULIAN_DATE: VOffset = 8
-    static let SECONDS: VOffset = 10
-    static let ISO8601: VOffset = 12
-    static let SUBSECOND_NANOS: VOffset = 14
-    static let EPOCH_LABEL: VOffset = 16
-    static let GNSS_WEEK: VOffset = 18
-    static let HAS_GNSS_ROLLOVER_REFERENCE: VOffset = 20
-    static let GNSS_ROLLOVER_REFERENCE_ISO8601: VOffset = 22
-    static let CCSDS_TIME_CODE: VOffset = 24
+    static let CUT_ID: VOffset = 4
+    static let AXIS: VOffset = 6
+    static let FIXED_ANGLE_DEG: VOffset = 8
+    static let ANGLES_DEG: VOffset = 10
+    static let GAIN_DBI: VOffset = 12
   }
 
-  ///  Time system for this instant.
-  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
-  public var EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
-  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
-  public var JULIAN_DATE: Double { let o = _accessor.offset(VT.JULIAN_DATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
-  public var SECONDS: Double { let o = _accessor.offset(VT.SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
-  public var ISO8601: String? { let o = _accessor.offset(VT.ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ISO8601) }
-  ///  Additional nanoseconds beyond the fractional scalar/text value.
-  public var SUBSECOND_NANOS: Int32 { let o = _accessor.offset(VT.SUBSECOND_NANOS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
-  public var EPOCH_LABEL: String? { let o = _accessor.offset(VT.EPOCH_LABEL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_LABEL) }
-  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
-  public var GNSS_WEEK: Int32 { let o = _accessor.offset(VT.GNSS_WEEK); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
-  public var HAS_GNSS_ROLLOVER_REFERENCE: Bool { let o = _accessor.offset(VT.HAS_GNSS_ROLLOVER_REFERENCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional Orekit-style GNSS week rollover reference timestamp.
-  public var GNSS_ROLLOVER_REFERENCE_ISO8601: String? { let o = _accessor.offset(VT.GNSS_ROLLOVER_REFERENCE_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GNSS_ROLLOVER_REFERENCE_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
-  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
-  public var CCSDS_TIME_CODE: TIMCcsdsTimeCode? { let o = _accessor.offset(VT.CCSDS_TIME_CODE); return o == 0 ? nil : TIMCcsdsTimeCode(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTIMInstant(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
-  public static func add(EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_FORMAT.rawValue, def: 0, at: VT.EPOCH_FORMAT) }
-  public static func add(JULIAN_DATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JULIAN_DATE, def: 0.0, at: VT.JULIAN_DATE) }
-  public static func add(SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDS, def: 0.0, at: VT.SECONDS) }
-  public static func add(ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISO8601, at: VT.ISO8601) }
-  public static func add(SUBSECOND_NANOS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSECOND_NANOS, def: 0, at: VT.SUBSECOND_NANOS) }
-  public static func add(EPOCH_LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_LABEL, at: VT.EPOCH_LABEL) }
-  public static func add(GNSS_WEEK: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNSS_WEEK, def: 0, at: VT.GNSS_WEEK) }
-  public static func add(HAS_GNSS_ROLLOVER_REFERENCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GNSS_ROLLOVER_REFERENCE, def: false,
-   at: VT.HAS_GNSS_ROLLOVER_REFERENCE) }
-  public static func add(GNSS_ROLLOVER_REFERENCE_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_ROLLOVER_REFERENCE_ISO8601, at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
-  public static func add(CCSDS_TIME_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_TIME_CODE, at: VT.CCSDS_TIME_CODE) }
-  public static func endTIMInstant(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMInstant(
+  public var CUT_ID: String! { let o = _accessor.offset(VT.CUT_ID); return _accessor.string(at: o) }
+  public var CUT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CUT_ID) }
+  public var AXIS: papGainCutAxis { let o = _accessor.offset(VT.AXIS); return o == 0 ? .unspecified : papGainCutAxis(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var FIXED_ANGLE_DEG: Double { let o = _accessor.offset(VT.FIXED_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ANGLES_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.ANGLES_DEG, byteSize: 8) }
+  public func withUnsafePointerToAnglesDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ANGLES_DEG, body: body) }
+  public var GAIN_DBI: FlatbufferVector<Double> { return _accessor.vector(at: VT.GAIN_DBI, byteSize: 8) }
+  public func withUnsafePointerToGainDbi<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.GAIN_DBI, body: body) }
+  public static func startPAPGainCut(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(CUT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUT_ID, at: VT.CUT_ID) }
+  public static func add(AXIS: papGainCutAxis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXIS.rawValue, def: 0, at: VT.AXIS) }
+  public static func add(FIXED_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_ANGLE_DEG, def: 0.0, at: VT.FIXED_ANGLE_DEG) }
+  public static func addVectorOf(ANGLES_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANGLES_DEG, at: VT.ANGLES_DEG) }
+  public static func addVectorOf(GAIN_DBI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GAIN_DBI, at: VT.GAIN_DBI) }
+  public static func endPAPGainCut(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10, 12]); return end }
+  public static func createPAPGainCut(
     _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst,
-    EPOCH_FORMAT: timEpochRepresentation = .julianDate,
-    JULIAN_DATE: Double = 0.0,
-    SECONDS: Double = 0.0,
-    ISO8601Offset ISO8601: Offset = Offset(),
-    SUBSECOND_NANOS: Int32 = 0,
-    EPOCH_LABELOffset EPOCH_LABEL: Offset = Offset(),
-    GNSS_WEEK: Int32 = 0,
-    HAS_GNSS_ROLLOVER_REFERENCE: Bool = false,
-    GNSS_ROLLOVER_REFERENCE_ISO8601Offset GNSS_ROLLOVER_REFERENCE_ISO8601: Offset = Offset(),
-    CCSDS_TIME_CODEOffset CCSDS_TIME_CODE: Offset = Offset()
+    CUT_IDOffset CUT_ID: Offset,
+    AXIS: papGainCutAxis = .unspecified,
+    FIXED_ANGLE_DEG: Double = 0.0,
+    ANGLES_DEGVectorOffset ANGLES_DEG: Offset,
+    GAIN_DBIVectorOffset GAIN_DBI: Offset
   ) -> Offset {
-    let __start = TIMInstant.startTIMInstant(&fbb)
-    TIMInstant.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    TIMInstant.add(EPOCH_FORMAT: EPOCH_FORMAT, &fbb)
-    TIMInstant.add(JULIAN_DATE: JULIAN_DATE, &fbb)
-    TIMInstant.add(SECONDS: SECONDS, &fbb)
-    TIMInstant.add(ISO8601: ISO8601, &fbb)
-    TIMInstant.add(SUBSECOND_NANOS: SUBSECOND_NANOS, &fbb)
-    TIMInstant.add(EPOCH_LABEL: EPOCH_LABEL, &fbb)
-    TIMInstant.add(GNSS_WEEK: GNSS_WEEK, &fbb)
-    TIMInstant.add(HAS_GNSS_ROLLOVER_REFERENCE: HAS_GNSS_ROLLOVER_REFERENCE, &fbb)
-    TIMInstant.add(GNSS_ROLLOVER_REFERENCE_ISO8601: GNSS_ROLLOVER_REFERENCE_ISO8601, &fbb)
-    TIMInstant.add(CCSDS_TIME_CODE: CCSDS_TIME_CODE, &fbb)
-    return TIMInstant.endTIMInstant(&fbb, start: __start)
+    let __start = PAPGainCut.startPAPGainCut(&fbb)
+    PAPGainCut.add(CUT_ID: CUT_ID, &fbb)
+    PAPGainCut.add(AXIS: AXIS, &fbb)
+    PAPGainCut.add(FIXED_ANGLE_DEG: FIXED_ANGLE_DEG, &fbb)
+    PAPGainCut.addVectorOf(ANGLES_DEG: ANGLES_DEG, &fbb)
+    PAPGainCut.addVectorOf(GAIN_DBI: GAIN_DBI, &fbb)
+    return PAPGainCut.endPAPGainCut(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.EPOCH_FORMAT, fieldName: "EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
-    try _v.visit(field: VT.JULIAN_DATE, fieldName: "JULIAN_DATE", required: false, type: Double.self)
-    try _v.visit(field: VT.SECONDS, fieldName: "SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.ISO8601, fieldName: "ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUBSECOND_NANOS, fieldName: "SUBSECOND_NANOS", required: false, type: Int32.self)
-    try _v.visit(field: VT.EPOCH_LABEL, fieldName: "EPOCH_LABEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GNSS_WEEK, fieldName: "GNSS_WEEK", required: false, type: Int32.self)
-    try _v.visit(field: VT.HAS_GNSS_ROLLOVER_REFERENCE, fieldName: "HAS_GNSS_ROLLOVER_REFERENCE", required: false, type: Bool.self)
-    try _v.visit(field: VT.GNSS_ROLLOVER_REFERENCE_ISO8601, fieldName: "GNSS_ROLLOVER_REFERENCE_ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CCSDS_TIME_CODE, fieldName: "CCSDS_TIME_CODE", required: false, type: ForwardOffset<TIMCcsdsTimeCode>.self)
+    try _v.visit(field: VT.CUT_ID, fieldName: "CUT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AXIS, fieldName: "AXIS", required: false, type: papGainCutAxis.self)
+    try _v.visit(field: VT.FIXED_ANGLE_DEG, fieldName: "FIXED_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLES_DEG, fieldName: "ANGLES_DEG", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.GAIN_DBI, fieldName: "GAIN_DBI", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
 
-///  Request to convert one instant into another time system/representation.
-public struct TIMConversionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One requested adaptive null and its achieved result.
+public struct PAPNull: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionRequest.id, addPrefix: prefix) }
+  public static var id: String { "$PAP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PAPNull.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SOURCE: VOffset = 4
-    static let TARGET_TIME_SYSTEM: VOffset = 6
-    static let TARGET_EPOCH_FORMAT: VOffset = 8
-    static let TAI_MINUS_UTC_SECONDS: VOffset = 10
-    static let HAS_TAI_MINUS_UTC: VOffset = 12
-    static let DUT1_SECONDS: VOffset = 14
-    static let HAS_DUT1: VOffset = 16
-    static let TRACE_ID: VOffset = 18
+    static let NULL_ID: VOffset = 4
+    static let SOURCE_ID: VOffset = 6
+    static let AZIMUTH_DEG: VOffset = 8
+    static let ELEVATION_DEG: VOffset = 10
+    static let REQUESTED_DEPTH_DB: VOffset = 12
+    static let ACHIEVED_DEPTH_DB: VOffset = 14
+    static let ANGULAR_ERROR_DEG: VOffset = 16
   }
 
-  ///  Source instant to convert.
-  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Target time system.
-  public var TARGET_TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TARGET_TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Preferred target representation.
-  public var TARGET_EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.TARGET_EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
-  ///  Optional TAI-UTC override in seconds for the source instant.
-  public var TAI_MINUS_UTC_SECONDS: Double { let o = _accessor.offset(VT.TAI_MINUS_UTC_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
-  public var HAS_TAI_MINUS_UTC: Bool { let o = _accessor.offset(VT.HAS_TAI_MINUS_UTC); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional UT1-UTC override in seconds for UT1 conversions.
-  public var DUT1_SECONDS: Double { let o = _accessor.offset(VT.DUT1_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
-  public var HAS_DUT1: Bool { let o = _accessor.offset(VT.HAS_DUT1); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional caller trace/correlation identifier.
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startTIMConversionRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(TARGET_TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_TIME_SYSTEM.rawValue, def: 0, at: VT.TARGET_TIME_SYSTEM) }
-  public static func add(TARGET_EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_EPOCH_FORMAT.rawValue, def: 0, at: VT.TARGET_EPOCH_FORMAT) }
-  public static func add(TAI_MINUS_UTC_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAI_MINUS_UTC_SECONDS, def: 0.0, at: VT.TAI_MINUS_UTC_SECONDS) }
-  public static func add(HAS_TAI_MINUS_UTC: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TAI_MINUS_UTC, def: false,
-   at: VT.HAS_TAI_MINUS_UTC) }
-  public static func add(DUT1_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DUT1_SECONDS, def: 0.0, at: VT.DUT1_SECONDS) }
-  public static func add(HAS_DUT1: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DUT1, def: false,
-   at: VT.HAS_DUT1) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endTIMConversionRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMConversionRequest(
+  public var NULL_ID: String! { let o = _accessor.offset(VT.NULL_ID); return _accessor.string(at: o) }
+  public var NULL_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NULL_ID) }
+  public var SOURCE_ID: String? { let o = _accessor.offset(VT.SOURCE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_ID) }
+  public var AZIMUTH_DEG: Double { let o = _accessor.offset(VT.AZIMUTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ELEVATION_DEG: Double { let o = _accessor.offset(VT.ELEVATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REQUESTED_DEPTH_DB: Double { let o = _accessor.offset(VT.REQUESTED_DEPTH_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ACHIEVED_DEPTH_DB: Double { let o = _accessor.offset(VT.ACHIEVED_DEPTH_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ANGULAR_ERROR_DEG: Double { let o = _accessor.offset(VT.ANGULAR_ERROR_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPAPNull(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(NULL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NULL_ID, at: VT.NULL_ID) }
+  public static func add(SOURCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ID, at: VT.SOURCE_ID) }
+  public static func add(AZIMUTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_DEG, def: 0.0, at: VT.AZIMUTH_DEG) }
+  public static func add(ELEVATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_DEG, def: 0.0, at: VT.ELEVATION_DEG) }
+  public static func add(REQUESTED_DEPTH_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUESTED_DEPTH_DB, def: 0.0, at: VT.REQUESTED_DEPTH_DB) }
+  public static func add(ACHIEVED_DEPTH_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACHIEVED_DEPTH_DB, def: 0.0, at: VT.ACHIEVED_DEPTH_DB) }
+  public static func add(ANGULAR_ERROR_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGULAR_ERROR_DEG, def: 0.0, at: VT.ANGULAR_ERROR_DEG) }
+  public static func endPAPNull(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPAPNull(
     _ fbb: inout FlatBufferBuilder,
-    SOURCEOffset SOURCE: Offset = Offset(),
-    TARGET_TIME_SYSTEM: timingStandard = .gmst,
-    TARGET_EPOCH_FORMAT: timEpochRepresentation = .julianDate,
-    TAI_MINUS_UTC_SECONDS: Double = 0.0,
-    HAS_TAI_MINUS_UTC: Bool = false,
-    DUT1_SECONDS: Double = 0.0,
-    HAS_DUT1: Bool = false,
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    NULL_IDOffset NULL_ID: Offset,
+    SOURCE_IDOffset SOURCE_ID: Offset = Offset(),
+    AZIMUTH_DEG: Double = 0.0,
+    ELEVATION_DEG: Double = 0.0,
+    REQUESTED_DEPTH_DB: Double = 0.0,
+    ACHIEVED_DEPTH_DB: Double = 0.0,
+    ANGULAR_ERROR_DEG: Double = 0.0
   ) -> Offset {
-    let __start = TIMConversionRequest.startTIMConversionRequest(&fbb)
-    TIMConversionRequest.add(SOURCE: SOURCE, &fbb)
-    TIMConversionRequest.add(TARGET_TIME_SYSTEM: TARGET_TIME_SYSTEM, &fbb)
-    TIMConversionRequest.add(TARGET_EPOCH_FORMAT: TARGET_EPOCH_FORMAT, &fbb)
-    TIMConversionRequest.add(TAI_MINUS_UTC_SECONDS: TAI_MINUS_UTC_SECONDS, &fbb)
-    TIMConversionRequest.add(HAS_TAI_MINUS_UTC: HAS_TAI_MINUS_UTC, &fbb)
-    TIMConversionRequest.add(DUT1_SECONDS: DUT1_SECONDS, &fbb)
-    TIMConversionRequest.add(HAS_DUT1: HAS_DUT1, &fbb)
-    TIMConversionRequest.add(TRACE_ID: TRACE_ID, &fbb)
-    return TIMConversionRequest.endTIMConversionRequest(&fbb, start: __start)
+    let __start = PAPNull.startPAPNull(&fbb)
+    PAPNull.add(NULL_ID: NULL_ID, &fbb)
+    PAPNull.add(SOURCE_ID: SOURCE_ID, &fbb)
+    PAPNull.add(AZIMUTH_DEG: AZIMUTH_DEG, &fbb)
+    PAPNull.add(ELEVATION_DEG: ELEVATION_DEG, &fbb)
+    PAPNull.add(REQUESTED_DEPTH_DB: REQUESTED_DEPTH_DB, &fbb)
+    PAPNull.add(ACHIEVED_DEPTH_DB: ACHIEVED_DEPTH_DB, &fbb)
+    PAPNull.add(ANGULAR_ERROR_DEG: ANGULAR_ERROR_DEG, &fbb)
+    return PAPNull.endPAPNull(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.TARGET_TIME_SYSTEM, fieldName: "TARGET_TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.TARGET_EPOCH_FORMAT, fieldName: "TARGET_EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
-    try _v.visit(field: VT.TAI_MINUS_UTC_SECONDS, fieldName: "TAI_MINUS_UTC_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_TAI_MINUS_UTC, fieldName: "HAS_TAI_MINUS_UTC", required: false, type: Bool.self)
-    try _v.visit(field: VT.DUT1_SECONDS, fieldName: "DUT1_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_DUT1, fieldName: "HAS_DUT1", required: false, type: Bool.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NULL_ID, fieldName: "NULL_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_ID, fieldName: "SOURCE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AZIMUTH_DEG, fieldName: "AZIMUTH_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ELEVATION_DEG, fieldName: "ELEVATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.REQUESTED_DEPTH_DB, fieldName: "REQUESTED_DEPTH_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.ACHIEVED_DEPTH_DB, fieldName: "ACHIEVED_DEPTH_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGULAR_ERROR_DEG, fieldName: "ANGULAR_ERROR_DEG", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-///  Result of a time conversion request.
-public struct TIMConversionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Phased Array Pattern Synthesis
+public struct PAP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionResult.id, addPrefix: prefix) }
+  public static var id: String { "$PAP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PAP.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SOURCE: VOffset = 4
-    static let TARGET: VOffset = 6
-    static let DELTA_SECONDS: VOffset = 8
-    static let STATUS: VOffset = 10
-    static let ERROR_MESSAGE: VOffset = 12
-    static let TRACE_ID: VOffset = 14
+    static let PAP_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let SCENARIO_ID: VOffset = 8
+    static let RFE_ID: VOffset = 10
+    static let BEM_ID: VOffset = 12
+    static let HOP_SCHEDULE_ID: VOffset = 14
+    static let GEOMETRY: VOffset = 16
+    static let ELEMENTS: VOffset = 18
+    static let TAPER: VOffset = 20
+    static let TAPER_PARAMETERS: VOffset = 22
+    static let STEERING_AZIMUTH_DEG: VOffset = 24
+    static let STEERING_ELEVATION_DEG: VOffset = 26
+    static let STEERING_CONE_DEG: VOffset = 28
+    static let STEERING_CLOCK_DEG: VOffset = 30
+    static let SCAN_LOSS_DB: VOffset = 32
+    static let PEAK_GAIN_DBI: VOffset = 34
+    static let GAIN_CUTS: VOffset = 36
+    static let AZIMUTH_3DB_BEAMWIDTH_DEG: VOffset = 38
+    static let ELEVATION_3DB_BEAMWIDTH_DEG: VOffset = 40
+    static let FIRST_SIDELOBE_LEVEL_DB: VOffset = 42
+    static let PEAK_SIDELOBE_LEVEL_DB: VOffset = 44
+    static let GRATING_LOBE_PRESENT: VOffset = 46
+    static let GRATING_LOBE_AZIMUTH_DEG: VOffset = 48
+    static let GRATING_LOBE_ELEVATION_DEG: VOffset = 50
+    static let NULLS: VOffset = 52
+    static let PROVENANCE: VOffset = 54
+    static let COMPUTED_AT: VOffset = 56
+    static let PRODUCER_ID: VOffset = 58
+    static let SIGNATURE: VOffset = 60
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 62
   }
 
-  ///  Original source instant.
-  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Converted target instant.
-  public var TARGET: TIMInstant? { let o = _accessor.offset(VT.TARGET); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Target minus source offset in SI seconds for the requested conversion.
-  public var DELTA_SECONDS: Double { let o = _accessor.offset(VT.DELTA_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Conversion status.
-  public var STATUS: timConversionStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : timConversionStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ok }
-  ///  Optional error detail when STATUS is not OK.
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  ///  Caller trace/correlation identifier copied from the request when present.
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startTIMConversionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(TARGET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET, at: VT.TARGET) }
-  public static func add(DELTA_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_SECONDS, def: 0.0, at: VT.DELTA_SECONDS) }
-  public static func add(STATUS: timConversionStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endTIMConversionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMConversionResult(
+  public var PAP_ID: String! { let o = _accessor.offset(VT.PAP_ID); return _accessor.string(at: o) }
+  public var PAP_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PAP_ID) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var SCENARIO_ID: String? { let o = _accessor.offset(VT.SCENARIO_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCENARIO_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCENARIO_ID) }
+  public var RFE_ID: String? { let o = _accessor.offset(VT.RFE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFE_ID) }
+  public var BEM_ID: String? { let o = _accessor.offset(VT.BEM_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BEM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BEM_ID) }
+  ///  BEMHopSchedule.SCHEDULE_ID evaluated by this synthesis, when applicable.
+  public var HOP_SCHEDULE_ID: String? { let o = _accessor.offset(VT.HOP_SCHEDULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HOP_SCHEDULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HOP_SCHEDULE_ID) }
+  public var GEOMETRY: papArrayGeometry { let o = _accessor.offset(VT.GEOMETRY); return o == 0 ? .unspecified : papArrayGeometry(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var ELEMENTS: FlatbufferVector<PAPElement> { return _accessor.vector(at: VT.ELEMENTS, byteSize: 4) }
+  public var TAPER: papTaperFamily { let o = _accessor.offset(VT.TAPER); return o == 0 ? .unspecified : papTaperFamily(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var TAPER_PARAMETERS: FlatbufferVector<Double> { return _accessor.vector(at: VT.TAPER_PARAMETERS, byteSize: 8) }
+  public func withUnsafePointerToTaperParameters<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TAPER_PARAMETERS, body: body) }
+  public var STEERING_AZIMUTH_DEG: Double { let o = _accessor.offset(VT.STEERING_AZIMUTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STEERING_ELEVATION_DEG: Double { let o = _accessor.offset(VT.STEERING_ELEVATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STEERING_CONE_DEG: Double { let o = _accessor.offset(VT.STEERING_CONE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STEERING_CLOCK_DEG: Double { let o = _accessor.offset(VT.STEERING_CLOCK_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCAN_LOSS_DB: Double { let o = _accessor.offset(VT.SCAN_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PEAK_GAIN_DBI: Double { let o = _accessor.offset(VT.PEAK_GAIN_DBI); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GAIN_CUTS: FlatbufferVector<PAPGainCut> { return _accessor.vector(at: VT.GAIN_CUTS, byteSize: 4) }
+  public var AZIMUTH_3DB_BEAMWIDTH_DEG: Double { let o = _accessor.offset(VT.AZIMUTH_3DB_BEAMWIDTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ELEVATION_3DB_BEAMWIDTH_DEG: Double { let o = _accessor.offset(VT.ELEVATION_3DB_BEAMWIDTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FIRST_SIDELOBE_LEVEL_DB: Double { let o = _accessor.offset(VT.FIRST_SIDELOBE_LEVEL_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PEAK_SIDELOBE_LEVEL_DB: Double { let o = _accessor.offset(VT.PEAK_SIDELOBE_LEVEL_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRATING_LOBE_PRESENT: Bool { let o = _accessor.offset(VT.GRATING_LOBE_PRESENT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var GRATING_LOBE_AZIMUTH_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.GRATING_LOBE_AZIMUTH_DEG, byteSize: 8) }
+  public func withUnsafePointerToGratingLobeAzimuthDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.GRATING_LOBE_AZIMUTH_DEG, body: body) }
+  public var GRATING_LOBE_ELEVATION_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.GRATING_LOBE_ELEVATION_DEG, byteSize: 8) }
+  public func withUnsafePointerToGratingLobeElevationDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.GRATING_LOBE_ELEVATION_DEG, body: body) }
+  public var NULLS: FlatbufferVector<PAPNull> { return _accessor.vector(at: VT.NULLS, byteSize: 4) }
+  public var PROVENANCE: RFLProvenance! { let o = _accessor.offset(VT.PROVENANCE); return RFLProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var PRODUCER_ID: String! { let o = _accessor.offset(VT.PRODUCER_ID); return _accessor.string(at: o) }
+  public var PRODUCER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PRODUCER_ID) }
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  public static func startPAP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 30) }
+  public static func add(PAP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAP_ID, at: VT.PAP_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
+  public static func add(RFE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFE_ID, at: VT.RFE_ID) }
+  public static func add(BEM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEM_ID, at: VT.BEM_ID) }
+  public static func add(HOP_SCHEDULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HOP_SCHEDULE_ID, at: VT.HOP_SCHEDULE_ID) }
+  public static func add(GEOMETRY: papArrayGeometry, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOMETRY.rawValue, def: 0, at: VT.GEOMETRY) }
+  public static func addVectorOf(ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEMENTS, at: VT.ELEMENTS) }
+  public static func add(TAPER: papTaperFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAPER.rawValue, def: 0, at: VT.TAPER) }
+  public static func addVectorOf(TAPER_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAPER_PARAMETERS, at: VT.TAPER_PARAMETERS) }
+  public static func add(STEERING_AZIMUTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEERING_AZIMUTH_DEG, def: 0.0, at: VT.STEERING_AZIMUTH_DEG) }
+  public static func add(STEERING_ELEVATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEERING_ELEVATION_DEG, def: 0.0, at: VT.STEERING_ELEVATION_DEG) }
+  public static func add(STEERING_CONE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEERING_CONE_DEG, def: 0.0, at: VT.STEERING_CONE_DEG) }
+  public static func add(STEERING_CLOCK_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEERING_CLOCK_DEG, def: 0.0, at: VT.STEERING_CLOCK_DEG) }
+  public static func add(SCAN_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCAN_LOSS_DB, def: 0.0, at: VT.SCAN_LOSS_DB) }
+  public static func add(PEAK_GAIN_DBI: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_GAIN_DBI, def: 0.0, at: VT.PEAK_GAIN_DBI) }
+  public static func addVectorOf(GAIN_CUTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GAIN_CUTS, at: VT.GAIN_CUTS) }
+  public static func add(AZIMUTH_3DB_BEAMWIDTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_3DB_BEAMWIDTH_DEG, def: 0.0, at: VT.AZIMUTH_3DB_BEAMWIDTH_DEG) }
+  public static func add(ELEVATION_3DB_BEAMWIDTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_3DB_BEAMWIDTH_DEG, def: 0.0, at: VT.ELEVATION_3DB_BEAMWIDTH_DEG) }
+  public static func add(FIRST_SIDELOBE_LEVEL_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRST_SIDELOBE_LEVEL_DB, def: 0.0, at: VT.FIRST_SIDELOBE_LEVEL_DB) }
+  public static func add(PEAK_SIDELOBE_LEVEL_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_SIDELOBE_LEVEL_DB, def: 0.0, at: VT.PEAK_SIDELOBE_LEVEL_DB) }
+  public static func add(GRATING_LOBE_PRESENT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRATING_LOBE_PRESENT, def: false,
+   at: VT.GRATING_LOBE_PRESENT) }
+  public static func addVectorOf(GRATING_LOBE_AZIMUTH_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRATING_LOBE_AZIMUTH_DEG, at: VT.GRATING_LOBE_AZIMUTH_DEG) }
+  public static func addVectorOf(GRATING_LOBE_ELEVATION_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRATING_LOBE_ELEVATION_DEG, at: VT.GRATING_LOBE_ELEVATION_DEG) }
+  public static func addVectorOf(NULLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NULLS, at: VT.NULLS) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func add(PRODUCER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_ID, at: VT.PRODUCER_ID) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
+  public static func endPAP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 18, 36, 54, 58, 60, 62]); return end }
+  public static func createPAP(
     _ fbb: inout FlatBufferBuilder,
-    SOURCEOffset SOURCE: Offset = Offset(),
-    TARGETOffset TARGET: Offset = Offset(),
-    DELTA_SECONDS: Double = 0.0,
-    STATUS: timConversionStatus = .ok,
-    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    PAP_IDOffset PAP_ID: Offset,
+    NAMEOffset NAME: Offset = Offset(),
+    SCENARIO_IDOffset SCENARIO_ID: Offset = Offset(),
+    RFE_IDOffset RFE_ID: Offset = Offset(),
+    BEM_IDOffset BEM_ID: Offset = Offset(),
+    HOP_SCHEDULE_IDOffset HOP_SCHEDULE_ID: Offset = Offset(),
+    GEOMETRY: papArrayGeometry = .unspecified,
+    ELEMENTSVectorOffset ELEMENTS: Offset,
+    TAPER: papTaperFamily = .unspecified,
+    TAPER_PARAMETERSVectorOffset TAPER_PARAMETERS: Offset = Offset(),
+    STEERING_AZIMUTH_DEG: Double = 0.0,
+    STEERING_ELEVATION_DEG: Double = 0.0,
+    STEERING_CONE_DEG: Double = 0.0,
+    STEERING_CLOCK_DEG: Double = 0.0,
+    SCAN_LOSS_DB: Double = 0.0,
+    PEAK_GAIN_DBI: Double = 0.0,
+    GAIN_CUTSVectorOffset GAIN_CUTS: Offset,
+    AZIMUTH_3DB_BEAMWIDTH_DEG: Double = 0.0,
+    ELEVATION_3DB_BEAMWIDTH_DEG: Double = 0.0,
+    FIRST_SIDELOBE_LEVEL_DB: Double = 0.0,
+    PEAK_SIDELOBE_LEVEL_DB: Double = 0.0,
+    GRATING_LOBE_PRESENT: Bool = false,
+    GRATING_LOBE_AZIMUTH_DEGVectorOffset GRATING_LOBE_AZIMUTH_DEG: Offset = Offset(),
+    GRATING_LOBE_ELEVATION_DEGVectorOffset GRATING_LOBE_ELEVATION_DEG: Offset = Offset(),
+    NULLSVectorOffset NULLS: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset,
+    COMPUTED_AT: UInt64 = 0,
+    PRODUCER_IDOffset PRODUCER_ID: Offset,
+    SIGNATUREVectorOffset SIGNATURE: Offset,
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset
   ) -> Offset {
-    let __start = TIMConversionResult.startTIMConversionResult(&fbb)
-    TIMConversionResult.add(SOURCE: SOURCE, &fbb)
-    TIMConversionResult.add(TARGET: TARGET, &fbb)
-    TIMConversionResult.add(DELTA_SECONDS: DELTA_SECONDS, &fbb)
-    TIMConversionResult.add(STATUS: STATUS, &fbb)
-    TIMConversionResult.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
-    TIMConversionResult.add(TRACE_ID: TRACE_ID, &fbb)
-    return TIMConversionResult.endTIMConversionResult(&fbb, start: __start)
+    let __start = PAP.startPAP(&fbb)
+    PAP.add(PAP_ID: PAP_ID, &fbb)
+    PAP.add(NAME: NAME, &fbb)
+    PAP.add(SCENARIO_ID: SCENARIO_ID, &fbb)
+    PAP.add(RFE_ID: RFE_ID, &fbb)
+    PAP.add(BEM_ID: BEM_ID, &fbb)
+    PAP.add(HOP_SCHEDULE_ID: HOP_SCHEDULE_ID, &fbb)
+    PAP.add(GEOMETRY: GEOMETRY, &fbb)
+    PAP.addVectorOf(ELEMENTS: ELEMENTS, &fbb)
+    PAP.add(TAPER: TAPER, &fbb)
+    PAP.addVectorOf(TAPER_PARAMETERS: TAPER_PARAMETERS, &fbb)
+    PAP.add(STEERING_AZIMUTH_DEG: STEERING_AZIMUTH_DEG, &fbb)
+    PAP.add(STEERING_ELEVATION_DEG: STEERING_ELEVATION_DEG, &fbb)
+    PAP.add(STEERING_CONE_DEG: STEERING_CONE_DEG, &fbb)
+    PAP.add(STEERING_CLOCK_DEG: STEERING_CLOCK_DEG, &fbb)
+    PAP.add(SCAN_LOSS_DB: SCAN_LOSS_DB, &fbb)
+    PAP.add(PEAK_GAIN_DBI: PEAK_GAIN_DBI, &fbb)
+    PAP.addVectorOf(GAIN_CUTS: GAIN_CUTS, &fbb)
+    PAP.add(AZIMUTH_3DB_BEAMWIDTH_DEG: AZIMUTH_3DB_BEAMWIDTH_DEG, &fbb)
+    PAP.add(ELEVATION_3DB_BEAMWIDTH_DEG: ELEVATION_3DB_BEAMWIDTH_DEG, &fbb)
+    PAP.add(FIRST_SIDELOBE_LEVEL_DB: FIRST_SIDELOBE_LEVEL_DB, &fbb)
+    PAP.add(PEAK_SIDELOBE_LEVEL_DB: PEAK_SIDELOBE_LEVEL_DB, &fbb)
+    PAP.add(GRATING_LOBE_PRESENT: GRATING_LOBE_PRESENT, &fbb)
+    PAP.addVectorOf(GRATING_LOBE_AZIMUTH_DEG: GRATING_LOBE_AZIMUTH_DEG, &fbb)
+    PAP.addVectorOf(GRATING_LOBE_ELEVATION_DEG: GRATING_LOBE_ELEVATION_DEG, &fbb)
+    PAP.addVectorOf(NULLS: NULLS, &fbb)
+    PAP.add(PROVENANCE: PROVENANCE, &fbb)
+    PAP.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    PAP.add(PRODUCER_ID: PRODUCER_ID, &fbb)
+    PAP.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    PAP.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
+    return PAP.endPAP(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.DELTA_SECONDS, fieldName: "DELTA_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: timConversionStatus.self)
-    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Time System and time-conversion envelope.
-public struct TIM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let TIME_SYSTEM: VOffset = 4
-    static let INSTANT: VOffset = 6
-    static let CONVERSION_REQUEST: VOffset = 8
-    static let CONVERSION_RESULT: VOffset = 10
-  }
-
-  ///  Legacy time-system selector retained for existing TIM consumers.
-  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  A single tagged instant.
-  public var INSTANT: TIMInstant? { let o = _accessor.offset(VT.INSTANT); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time conversion request.
-  public var CONVERSION_REQUEST: TIMConversionRequest? { let o = _accessor.offset(VT.CONVERSION_REQUEST); return o == 0 ? nil : TIMConversionRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time conversion result.
-  public var CONVERSION_RESULT: TIMConversionResult? { let o = _accessor.offset(VT.CONVERSION_RESULT); return o == 0 ? nil : TIMConversionResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTIM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
-  public static func add(INSTANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANT, at: VT.INSTANT) }
-  public static func add(CONVERSION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_REQUEST, at: VT.CONVERSION_REQUEST) }
-  public static func add(CONVERSION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_RESULT, at: VT.CONVERSION_RESULT) }
-  public static func endTIM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIM(
-    _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst,
-    INSTANTOffset INSTANT: Offset = Offset(),
-    CONVERSION_REQUESTOffset CONVERSION_REQUEST: Offset = Offset(),
-    CONVERSION_RESULTOffset CONVERSION_RESULT: Offset = Offset()
-  ) -> Offset {
-    let __start = TIM.startTIM(&fbb)
-    TIM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    TIM.add(INSTANT: INSTANT, &fbb)
-    TIM.add(CONVERSION_REQUEST: CONVERSION_REQUEST, &fbb)
-    TIM.add(CONVERSION_RESULT: CONVERSION_RESULT, &fbb)
-    return TIM.endTIM(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.INSTANT, fieldName: "INSTANT", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.CONVERSION_REQUEST, fieldName: "CONVERSION_REQUEST", required: false, type: ForwardOffset<TIMConversionRequest>.self)
-    try _v.visit(field: VT.CONVERSION_RESULT, fieldName: "CONVERSION_RESULT", required: false, type: ForwardOffset<TIMConversionResult>.self)
+    try _v.visit(field: VT.PAP_ID, fieldName: "PAP_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCENARIO_ID, fieldName: "SCENARIO_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFE_ID, fieldName: "RFE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BEM_ID, fieldName: "BEM_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HOP_SCHEDULE_ID, fieldName: "HOP_SCHEDULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOMETRY, fieldName: "GEOMETRY", required: false, type: papArrayGeometry.self)
+    try _v.visit(field: VT.ELEMENTS, fieldName: "ELEMENTS", required: true, type: ForwardOffset<Vector<ForwardOffset<PAPElement>, PAPElement>>.self)
+    try _v.visit(field: VT.TAPER, fieldName: "TAPER", required: false, type: papTaperFamily.self)
+    try _v.visit(field: VT.TAPER_PARAMETERS, fieldName: "TAPER_PARAMETERS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.STEERING_AZIMUTH_DEG, fieldName: "STEERING_AZIMUTH_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.STEERING_ELEVATION_DEG, fieldName: "STEERING_ELEVATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.STEERING_CONE_DEG, fieldName: "STEERING_CONE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.STEERING_CLOCK_DEG, fieldName: "STEERING_CLOCK_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.SCAN_LOSS_DB, fieldName: "SCAN_LOSS_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.PEAK_GAIN_DBI, fieldName: "PEAK_GAIN_DBI", required: false, type: Double.self)
+    try _v.visit(field: VT.GAIN_CUTS, fieldName: "GAIN_CUTS", required: true, type: ForwardOffset<Vector<ForwardOffset<PAPGainCut>, PAPGainCut>>.self)
+    try _v.visit(field: VT.AZIMUTH_3DB_BEAMWIDTH_DEG, fieldName: "AZIMUTH_3DB_BEAMWIDTH_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ELEVATION_3DB_BEAMWIDTH_DEG, fieldName: "ELEVATION_3DB_BEAMWIDTH_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.FIRST_SIDELOBE_LEVEL_DB, fieldName: "FIRST_SIDELOBE_LEVEL_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.PEAK_SIDELOBE_LEVEL_DB, fieldName: "PEAK_SIDELOBE_LEVEL_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.GRATING_LOBE_PRESENT, fieldName: "GRATING_LOBE_PRESENT", required: false, type: Bool.self)
+    try _v.visit(field: VT.GRATING_LOBE_AZIMUTH_DEG, fieldName: "GRATING_LOBE_AZIMUTH_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.GRATING_LOBE_ELEVATION_DEG, fieldName: "GRATING_LOBE_ELEVATION_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.NULLS, fieldName: "NULLS", required: false, type: ForwardOffset<Vector<ForwardOffset<PAPNull>, PAPNull>>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<RFLProvenance>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CVR, CVRT } from './CVR.js';
 import { Header, HeaderT } from './Header.js';
 import { Maneuver, ManeuverT } from './Maneuver.js';
 import { Metadata, MetadataT } from './Metadata.js';
@@ -12,6 +13,7 @@ import { OCMTrajectoryBlock, OCMTrajectoryBlockT } from './OCMTrajectoryBlock.js
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
+import { PVN, PVNT } from './PVN.js';
 import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
 import { RFM, RFMT } from './RFM.js';
@@ -288,7 +290,7 @@ ORB_AVERAGING(optionalEncoding?:any):string|Uint8Array|null {
 
 /**
  * Whether COVARIANCE_DATA's coverage was measured against independent
- * reference states.
+ * reference states: Calibrated only when every COV_REALISM entry is.
  */
 COV_CALIBRATION():covarianceCalibration {
   const offset = this.bb!.__offset(this.bb_pos, 46);
@@ -415,8 +417,30 @@ covarianceBlocksLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Where the message's data comes from and the terms it travels under.
+ */
+PROVENANCE(obj?:PVN):PVN|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+ * STATE_DATA epochs, or one entry for every epoch.
+ */
+COV_REALISM(index: number, obj?:CVR):CVR|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? (obj || new CVR()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+covRealismLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(31);
+  builder.startObject(33);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -685,6 +709,26 @@ static startCovarianceBlocksVector(builder:flatbuffers.Builder, numElems:number)
   builder.startVector(4, numElems, 4);
 }
 
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, PROVENANCEOffset, 0);
+}
+
+static addCovRealism(builder:flatbuffers.Builder, COV_REALISMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, COV_REALISMOffset, 0);
+}
+
+static createCovRealismVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovRealismVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -731,7 +775,9 @@ unpack(): OCMT {
     this.bb!.createScalarList<string>(this.COV_PARAMETERS.bind(this), this.covParametersLength()),
     this.bb!.createScalarList<string>(this.COV_UNITS.bind(this), this.covUnitsLength()),
     this.bb!.createObjList<OCMTrajectoryBlock, OCMTrajectoryBlockT>(this.TRAJECTORY_BLOCKS.bind(this), this.trajectoryBlocksLength()),
-    this.bb!.createObjList<OCMCovarianceBlock, OCMCovarianceBlockT>(this.COVARIANCE_BLOCKS.bind(this), this.covarianceBlocksLength())
+    this.bb!.createObjList<OCMCovarianceBlock, OCMCovarianceBlockT>(this.COVARIANCE_BLOCKS.bind(this), this.covarianceBlocksLength()),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
+    this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength())
   );
 }
 
@@ -768,6 +814,8 @@ unpackTo(_o: OCMT): void {
   _o.COV_UNITS = this.bb!.createScalarList<string>(this.COV_UNITS.bind(this), this.covUnitsLength());
   _o.TRAJECTORY_BLOCKS = this.bb!.createObjList<OCMTrajectoryBlock, OCMTrajectoryBlockT>(this.TRAJECTORY_BLOCKS.bind(this), this.trajectoryBlocksLength());
   _o.COVARIANCE_BLOCKS = this.bb!.createObjList<OCMCovarianceBlock, OCMCovarianceBlockT>(this.COVARIANCE_BLOCKS.bind(this), this.covarianceBlocksLength());
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
+  _o.COV_REALISM = this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength());
 }
 }
 
@@ -803,7 +851,9 @@ constructor(
   public COV_PARAMETERS: (string)[] = [],
   public COV_UNITS: (string)[] = [],
   public TRAJECTORY_BLOCKS: (OCMTrajectoryBlockT)[] = [],
-  public COVARIANCE_BLOCKS: (OCMCovarianceBlockT)[] = []
+  public COVARIANCE_BLOCKS: (OCMCovarianceBlockT)[] = [],
+  public PROVENANCE: PVNT|null = null,
+  public COV_REALISM: (CVRT)[] = []
 ){}
 
 
@@ -832,6 +882,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COV_UNITS = OCM.createCovUnitsVector(builder, builder.createObjectOffsetList(this.COV_UNITS));
   const TRAJECTORY_BLOCKS = OCM.createTrajectoryBlocksVector(builder, builder.createObjectOffsetList(this.TRAJECTORY_BLOCKS));
   const COVARIANCE_BLOCKS = OCM.createCovarianceBlocksVector(builder, builder.createObjectOffsetList(this.COVARIANCE_BLOCKS));
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
+  const COV_REALISM = OCM.createCovRealismVector(builder, builder.createObjectOffsetList(this.COV_REALISM));
 
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
@@ -865,6 +917,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addCovUnits(builder, COV_UNITS);
   OCM.addTrajectoryBlocks(builder, TRAJECTORY_BLOCKS);
   OCM.addCovarianceBlocks(builder, COVARIANCE_BLOCKS);
+  OCM.addProvenance(builder, PROVENANCE);
+  OCM.addCovRealism(builder, COV_REALISM);
 
   return OCM.endOCM(builder);
 }

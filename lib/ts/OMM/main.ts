@@ -4,8 +4,11 @@
 
 export * from './CelestialFrame.js';
 export * from './CelestialFrameWrapper.js';
+export * from './covarianceCalibration.js';
+export * from './covarianceRule.js';
 export * from './CustomFrame.js';
 export * from './CustomFrameWrapper.js';
+export * from './CVR.js';
 export * from './ephemerisFormat.js';
 export * from './meanElementSource.js';
 export * from './MET.js';
@@ -13,6 +16,9 @@ export * from './OMM.js';
 export * from './OMMUserDefinedParameter.js';
 export * from './OrbitFrame.js';
 export * from './OrbitFrameWrapper.js';
+export * from './PVN.js';
+export * from './pvnLicenseClass.js';
+export * from './pvnSourceKind.js';
 export * from './RFM.js';
 export * from './rfmAxisType.js';
 export * from './RFMCoordinateSystem.js';

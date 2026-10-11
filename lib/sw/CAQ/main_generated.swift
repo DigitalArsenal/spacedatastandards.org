@@ -8,260 +8,211 @@ import Common
 
 import FlatBuffers
 
-///  Entity category for shared entity metadata index rows.
-public enum entityKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case entity = 0
-  case space = 1
-  case ground = 2
-  case aircraft = 3
-  case missile = 4
-  case ship = 5
-  case vehicle = 6
-  case sensor = 7
-  case other = 127
+///  Catalog query discriminator. Callers and host plugins use this enum to
+///  select a query shape for in-memory catalog queries answered by a host
+///  runtime (for example the shared FlatSQL entity collection).
+public enum catalogQueryKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Return matched entity metadata rows.
+  case rows = 0
+  ///  Return only the matched entity indices.
+  case entityIndices = 1
+  ///  Return a packed visibility mask (one byte per entity).
+  case visibilityMask = 2
+  ///  Return a single catalog row by entity index.
+  case catalogRow = 3
 
-  public static var max: entityKind { return .other }
-  public static var min: entityKind { return .entity }
+  public static var max: catalogQueryKind { return .catalogRow }
+  public static var min: catalogQueryKind { return .rows }
 }
 
 
-///  Entity Metadata — generic queryable metadata for a host-local entity.
-///  Participates in shared FlatSQL/WASM runtimes where multiple plugins
-///  cross-query the same entity collection.
-public struct ETM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Catalog query request payload.
+public struct CAQRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$ETM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ETM.id, addPrefix: prefix) }
+  public static var id: String { "$CAQ" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CAQRequest.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let ENTITY_ID: VOffset = 4
-    static let NAME: VOffset = 6
-    static let KIND: VOffset = 8
-    static let SUBTYPE: VOffset = 10
-    static let PARENT_ENTITY_ID: VOffset = 12
-    static let WASM_HANDLE: VOffset = 14
-    static let NORAD_CAT_ID: VOffset = 16
-    static let OBJECT_NAME: VOffset = 18
-    static let OBJECT_ID: VOffset = 20
-    static let CAT_OBJECT_NAME: VOffset = 22
-    static let CAT_OBJECT_ID: VOffset = 24
-    static let FACILITY_TYPE: VOffset = 26
-    static let SEARCH_TEXT: VOffset = 28
-    static let OWNER: VOffset = 30
-    static let STATUS_CODE: VOffset = 32
-    static let LAUNCH_DATE: VOffset = 34
-    static let LAUNCH_YEAR: VOffset = 36
-    static let ORBIT_REGIME: VOffset = 38
-    static let PERIOD: VOffset = 40
-    static let INCLINATION: VOffset = 42
-    static let APOGEE: VOffset = 44
-    static let PERIGEE: VOffset = 46
-    static let MEAN_MOTION: VOffset = 48
-    static let ECCENTRICITY: VOffset = 50
-    static let BSTAR: VOffset = 52
-    static let HAS_GP: VOffset = 54
-    static let RESERVED: VOffset = 56
+    static let KIND: VOffset = 4
+    static let QUERY: VOffset = 6
+    static let ENTITY_INDEX: VOffset = 8
+    static let MAX_COUNT: VOffset = 10
+    static let ENTITY_COUNT: VOffset = 12
   }
 
-  ///  Stable host-local entity identifier.
-  public var ENTITY_ID: String? { let o = _accessor.offset(VT.ENTITY_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENTITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTITY_ID) }
-  ///  Human-readable entity name used for shared query/search surfaces.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Broad entity category.
-  public var KIND: entityKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .entity : entityKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .entity }
-  ///  More specific runtime subtype or class name.
-  public var SUBTYPE: String? { let o = _accessor.offset(VT.SUBTYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SUBTYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SUBTYPE) }
-  ///  Optional parent entity id for hierarchy / linkage queries.
-  public var PARENT_ENTITY_ID: String? { let o = _accessor.offset(VT.PARENT_ENTITY_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARENT_ENTITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARENT_ENTITY_ID) }
-  ///  Collection-scoped WASM handle used for batch visibility application.
-  public var WASM_HANDLE: UInt32 { let o = _accessor.offset(VT.WASM_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Optional NORAD catalog id for standards-backed entities.
-  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Primary object name surfaced by attached standards metadata.
-  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
-  ///  Primary international / object designator surfaced by attached standards metadata.
-  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
-  ///  Secondary CAT object name when different from the primary object name.
-  public var CAT_OBJECT_NAME: String? { let o = _accessor.offset(VT.CAT_OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CAT_OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CAT_OBJECT_NAME) }
-  ///  Secondary CAT object id when different from the primary object id.
-  public var CAT_OBJECT_ID: String? { let o = _accessor.offset(VT.CAT_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CAT_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CAT_OBJECT_ID) }
-  ///  Ground / facility subtype metadata for non-space entity search.
-  public var FACILITY_TYPE: String? { let o = _accessor.offset(VT.FACILITY_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FACILITY_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FACILITY_TYPE) }
-  ///  Pre-normalized phrase-search text for collection-wide shared queries.
-  public var SEARCH_TEXT: String? { let o = _accessor.offset(VT.SEARCH_TEXT); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SEARCH_TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SEARCH_TEXT) }
-  ///  CAT owner country code.
-  public var OWNER: String? { let o = _accessor.offset(VT.OWNER); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OWNERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OWNER) }
-  ///  CAT operational status code.
-  public var STATUS_CODE: String? { let o = _accessor.offset(VT.STATUS_CODE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STATUS_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATUS_CODE) }
-  ///  CAT launch date.
-  public var LAUNCH_DATE: String? { let o = _accessor.offset(VT.LAUNCH_DATE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_DATE) }
-  ///  Launch year derived from launch date.
-  public var LAUNCH_YEAR: String? { let o = _accessor.offset(VT.LAUNCH_YEAR); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_YEARSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_YEAR) }
-  ///  Derived orbit regime classification.
-  public var ORBIT_REGIME: String? { let o = _accessor.offset(VT.ORBIT_REGIME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORBIT_REGIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORBIT_REGIME) }
-  ///  Orbital period in minutes.
-  public var PERIOD: Double { let o = _accessor.offset(VT.PERIOD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Inclination in degrees.
-  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Apogee altitude in kilometers.
-  public var APOGEE: Double { let o = _accessor.offset(VT.APOGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Perigee altitude in kilometers.
-  public var PERIGEE: Double { let o = _accessor.offset(VT.PERIGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Mean motion in revolutions per day.
-  public var MEAN_MOTION: Double { let o = _accessor.offset(VT.MEAN_MOTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Orbital eccentricity.
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  B* drag term from OMM.
-  public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether GP / OMM state is present for the entity.
-  public var HAS_GP: Bool { let o = _accessor.offset(VT.HAS_GP); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Reserved for forward-compatible growth.
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
-  public static func startETM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
-  public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(KIND: entityKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
-  public static func add(SUBTYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUBTYPE, at: VT.SUBTYPE) }
-  public static func add(PARENT_ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARENT_ENTITY_ID, at: VT.PARENT_ENTITY_ID) }
-  public static func add(WASM_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WASM_HANDLE, def: 0, at: VT.WASM_HANDLE) }
-  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
-  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
-  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
-  public static func add(CAT_OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAT_OBJECT_NAME, at: VT.CAT_OBJECT_NAME) }
-  public static func add(CAT_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAT_OBJECT_ID, at: VT.CAT_OBJECT_ID) }
-  public static func add(FACILITY_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FACILITY_TYPE, at: VT.FACILITY_TYPE) }
-  public static func add(SEARCH_TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEARCH_TEXT, at: VT.SEARCH_TEXT) }
-  public static func add(OWNER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OWNER, at: VT.OWNER) }
-  public static func add(STATUS_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS_CODE, at: VT.STATUS_CODE) }
-  public static func add(LAUNCH_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_DATE, at: VT.LAUNCH_DATE) }
-  public static func add(LAUNCH_YEAR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_YEAR, at: VT.LAUNCH_YEAR) }
-  public static func add(ORBIT_REGIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_REGIME, at: VT.ORBIT_REGIME) }
-  public static func add(PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIOD, def: 0.0, at: VT.PERIOD) }
-  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
-  public static func add(APOGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE, def: 0.0, at: VT.APOGEE) }
-  public static func add(PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE, def: 0.0, at: VT.PERIGEE) }
-  public static func add(MEAN_MOTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION, def: 0.0, at: VT.MEAN_MOTION) }
-  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
-  public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VT.BSTAR) }
-  public static func add(HAS_GP: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GP, def: false,
-   at: VT.HAS_GP) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
-  public static func endETM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createETM(
+  public var KIND: catalogQueryKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .rows : catalogQueryKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .rows }
+  ///  Host-specific query string (for example a FlatSQL or DSL expression).
+  public var QUERY: String? { let o = _accessor.offset(VT.QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.QUERY) }
+  ///  Entity index for single-row queries.
+  public var ENTITY_INDEX: UInt32 { let o = _accessor.offset(VT.ENTITY_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Upper bound on the number of rows / indices to return (0 = unbounded).
+  public var MAX_COUNT: UInt32 { let o = _accessor.offset(VT.MAX_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Expected number of entities in the catalog at the time the request was
+  ///  issued, used to size visibility masks.
+  public var ENTITY_COUNT: UInt32 { let o = _accessor.offset(VT.ENTITY_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startCAQRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(KIND: catalogQueryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY, at: VT.QUERY) }
+  public static func add(ENTITY_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_INDEX, def: 0, at: VT.ENTITY_INDEX) }
+  public static func add(MAX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_COUNT, def: 0, at: VT.MAX_COUNT) }
+  public static func add(ENTITY_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_COUNT, def: 0, at: VT.ENTITY_COUNT) }
+  public static func endCAQRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCAQRequest(
     _ fbb: inout FlatBufferBuilder,
-    ENTITY_IDOffset ENTITY_ID: Offset = Offset(),
-    NAMEOffset NAME: Offset = Offset(),
-    KIND: entityKind = .entity,
-    SUBTYPEOffset SUBTYPE: Offset = Offset(),
-    PARENT_ENTITY_IDOffset PARENT_ENTITY_ID: Offset = Offset(),
-    WASM_HANDLE: UInt32 = 0,
-    NORAD_CAT_ID: UInt32 = 0,
-    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
-    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
-    CAT_OBJECT_NAMEOffset CAT_OBJECT_NAME: Offset = Offset(),
-    CAT_OBJECT_IDOffset CAT_OBJECT_ID: Offset = Offset(),
-    FACILITY_TYPEOffset FACILITY_TYPE: Offset = Offset(),
-    SEARCH_TEXTOffset SEARCH_TEXT: Offset = Offset(),
-    OWNEROffset OWNER: Offset = Offset(),
-    STATUS_CODEOffset STATUS_CODE: Offset = Offset(),
-    LAUNCH_DATEOffset LAUNCH_DATE: Offset = Offset(),
-    LAUNCH_YEAROffset LAUNCH_YEAR: Offset = Offset(),
-    ORBIT_REGIMEOffset ORBIT_REGIME: Offset = Offset(),
-    PERIOD: Double = 0.0,
-    INCLINATION: Double = 0.0,
-    APOGEE: Double = 0.0,
-    PERIGEE: Double = 0.0,
-    MEAN_MOTION: Double = 0.0,
-    ECCENTRICITY: Double = 0.0,
-    BSTAR: Double = 0.0,
-    HAS_GP: Bool = false,
-    RESERVEDVectorOffset RESERVED: Offset = Offset()
+    KIND: catalogQueryKind = .rows,
+    QUERYOffset QUERY: Offset = Offset(),
+    ENTITY_INDEX: UInt32 = 0,
+    MAX_COUNT: UInt32 = 0,
+    ENTITY_COUNT: UInt32 = 0
   ) -> Offset {
-    let __start = ETM.startETM(&fbb)
-    ETM.add(ENTITY_ID: ENTITY_ID, &fbb)
-    ETM.add(NAME: NAME, &fbb)
-    ETM.add(KIND: KIND, &fbb)
-    ETM.add(SUBTYPE: SUBTYPE, &fbb)
-    ETM.add(PARENT_ENTITY_ID: PARENT_ENTITY_ID, &fbb)
-    ETM.add(WASM_HANDLE: WASM_HANDLE, &fbb)
-    ETM.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
-    ETM.add(OBJECT_NAME: OBJECT_NAME, &fbb)
-    ETM.add(OBJECT_ID: OBJECT_ID, &fbb)
-    ETM.add(CAT_OBJECT_NAME: CAT_OBJECT_NAME, &fbb)
-    ETM.add(CAT_OBJECT_ID: CAT_OBJECT_ID, &fbb)
-    ETM.add(FACILITY_TYPE: FACILITY_TYPE, &fbb)
-    ETM.add(SEARCH_TEXT: SEARCH_TEXT, &fbb)
-    ETM.add(OWNER: OWNER, &fbb)
-    ETM.add(STATUS_CODE: STATUS_CODE, &fbb)
-    ETM.add(LAUNCH_DATE: LAUNCH_DATE, &fbb)
-    ETM.add(LAUNCH_YEAR: LAUNCH_YEAR, &fbb)
-    ETM.add(ORBIT_REGIME: ORBIT_REGIME, &fbb)
-    ETM.add(PERIOD: PERIOD, &fbb)
-    ETM.add(INCLINATION: INCLINATION, &fbb)
-    ETM.add(APOGEE: APOGEE, &fbb)
-    ETM.add(PERIGEE: PERIGEE, &fbb)
-    ETM.add(MEAN_MOTION: MEAN_MOTION, &fbb)
-    ETM.add(ECCENTRICITY: ECCENTRICITY, &fbb)
-    ETM.add(BSTAR: BSTAR, &fbb)
-    ETM.add(HAS_GP: HAS_GP, &fbb)
-    ETM.addVectorOf(RESERVED: RESERVED, &fbb)
-    return ETM.endETM(&fbb, start: __start)
+    let __start = CAQRequest.startCAQRequest(&fbb)
+    CAQRequest.add(KIND: KIND, &fbb)
+    CAQRequest.add(QUERY: QUERY, &fbb)
+    CAQRequest.add(ENTITY_INDEX: ENTITY_INDEX, &fbb)
+    CAQRequest.add(MAX_COUNT: MAX_COUNT, &fbb)
+    CAQRequest.add(ENTITY_COUNT: ENTITY_COUNT, &fbb)
+    return CAQRequest.endCAQRequest(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.ENTITY_ID, fieldName: "ENTITY_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: entityKind.self)
-    try _v.visit(field: VT.SUBTYPE, fieldName: "SUBTYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PARENT_ENTITY_ID, fieldName: "PARENT_ENTITY_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.WASM_HANDLE, fieldName: "WASM_HANDLE", required: false, type: UInt32.self)
-    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CAT_OBJECT_NAME, fieldName: "CAT_OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CAT_OBJECT_ID, fieldName: "CAT_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FACILITY_TYPE, fieldName: "FACILITY_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SEARCH_TEXT, fieldName: "SEARCH_TEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OWNER, fieldName: "OWNER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.STATUS_CODE, fieldName: "STATUS_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LAUNCH_DATE, fieldName: "LAUNCH_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LAUNCH_YEAR, fieldName: "LAUNCH_YEAR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ORBIT_REGIME, fieldName: "ORBIT_REGIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PERIOD, fieldName: "PERIOD", required: false, type: Double.self)
-    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
-    try _v.visit(field: VT.APOGEE, fieldName: "APOGEE", required: false, type: Double.self)
-    try _v.visit(field: VT.PERIGEE, fieldName: "PERIGEE", required: false, type: Double.self)
-    try _v.visit(field: VT.MEAN_MOTION, fieldName: "MEAN_MOTION", required: false, type: Double.self)
-    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
-    try _v.visit(field: VT.BSTAR, fieldName: "BSTAR", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_GP, fieldName: "HAS_GP", required: false, type: Bool.self)
-    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: catalogQueryKind.self)
+    try _v.visit(field: VT.QUERY, fieldName: "QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTITY_INDEX, fieldName: "ENTITY_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MAX_COUNT, fieldName: "MAX_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ENTITY_COUNT, fieldName: "ENTITY_COUNT", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  Catalog query result payload.
+public struct CAQResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CAQ" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CAQResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let KIND: VOffset = 4
+    static let ROWS: VOffset = 6
+    static let ENTITY_INDICES: VOffset = 8
+    static let MASK: VOffset = 10
+    static let VISIBLE_COUNT: VOffset = 12
+    static let ENTITY_INDEX: VOffset = 14
+    static let ROW: VOffset = 16
+  }
+
+  public var KIND: catalogQueryKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .rows : catalogQueryKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .rows }
+  ///  Populated when KIND == ROWS.
+  public var ROWS: FlatbufferVector<ETM> { return _accessor.vector(at: VT.ROWS, byteSize: 4) }
+  ///  Populated when KIND == ENTITY_INDICES.
+  public var ENTITY_INDICES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.ENTITY_INDICES, byteSize: 4) }
+  public func withUnsafePointerToEntityIndices<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENTITY_INDICES, body: body) }
+  ///  Populated when KIND == VISIBILITY_MASK (one byte per entity).
+  public var MASK: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.MASK, byteSize: 1) }
+  public func withUnsafePointerToMask<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MASK, body: body) }
+  ///  Number of visible (masked-in) entities in MASK.
+  public var VISIBLE_COUNT: UInt32 { let o = _accessor.offset(VT.VISIBLE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Populated when KIND == CATALOG_ROW.
+  public var ENTITY_INDEX: UInt32 { let o = _accessor.offset(VT.ENTITY_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Single matched row when KIND == CATALOG_ROW.
+  public var ROW: ETM? { let o = _accessor.offset(VT.ROW); return o == 0 ? nil : ETM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCAQResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(KIND: catalogQueryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func addVectorOf(ROWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROWS, at: VT.ROWS) }
+  public static func addVectorOf(ENTITY_INDICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_INDICES, at: VT.ENTITY_INDICES) }
+  public static func addVectorOf(MASK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MASK, at: VT.MASK) }
+  public static func add(VISIBLE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBLE_COUNT, def: 0, at: VT.VISIBLE_COUNT) }
+  public static func add(ENTITY_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_INDEX, def: 0, at: VT.ENTITY_INDEX) }
+  public static func add(ROW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROW, at: VT.ROW) }
+  public static func endCAQResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCAQResult(
+    _ fbb: inout FlatBufferBuilder,
+    KIND: catalogQueryKind = .rows,
+    ROWSVectorOffset ROWS: Offset = Offset(),
+    ENTITY_INDICESVectorOffset ENTITY_INDICES: Offset = Offset(),
+    MASKVectorOffset MASK: Offset = Offset(),
+    VISIBLE_COUNT: UInt32 = 0,
+    ENTITY_INDEX: UInt32 = 0,
+    ROWOffset ROW: Offset = Offset()
+  ) -> Offset {
+    let __start = CAQResult.startCAQResult(&fbb)
+    CAQResult.add(KIND: KIND, &fbb)
+    CAQResult.addVectorOf(ROWS: ROWS, &fbb)
+    CAQResult.addVectorOf(ENTITY_INDICES: ENTITY_INDICES, &fbb)
+    CAQResult.addVectorOf(MASK: MASK, &fbb)
+    CAQResult.add(VISIBLE_COUNT: VISIBLE_COUNT, &fbb)
+    CAQResult.add(ENTITY_INDEX: ENTITY_INDEX, &fbb)
+    CAQResult.add(ROW: ROW, &fbb)
+    return CAQResult.endCAQResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: catalogQueryKind.self)
+    try _v.visit(field: VT.ROWS, fieldName: "ROWS", required: false, type: ForwardOffset<Vector<ForwardOffset<ETM>, ETM>>.self)
+    try _v.visit(field: VT.ENTITY_INDICES, fieldName: "ENTITY_INDICES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.MASK, fieldName: "MASK", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.VISIBLE_COUNT, fieldName: "VISIBLE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ENTITY_INDEX, fieldName: "ENTITY_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ROW, fieldName: "ROW", required: false, type: ForwardOffset<ETM>.self)
+    _v.finish()
+  }
+}
+
+///  Catalog query envelope — carries either a request or a result payload.
+public struct CAQ: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CAQ" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CAQ.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let REQUEST: VOffset = 4
+    static let RESULT: VOffset = 6
+  }
+
+  public var REQUEST: CAQRequest? { let o = _accessor.offset(VT.REQUEST); return o == 0 ? nil : CAQRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RESULT: CAQResult? { let o = _accessor.offset(VT.RESULT); return o == 0 ? nil : CAQResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startCAQ(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST, at: VT.REQUEST) }
+  public static func add(RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESULT, at: VT.RESULT) }
+  public static func endCAQ(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCAQ(
+    _ fbb: inout FlatBufferBuilder,
+    REQUESTOffset REQUEST: Offset = Offset(),
+    RESULTOffset RESULT: Offset = Offset()
+  ) -> Offset {
+    let __start = CAQ.startCAQ(&fbb)
+    CAQ.add(REQUEST: REQUEST, &fbb)
+    CAQ.add(RESULT: RESULT, &fbb)
+    return CAQ.endCAQ(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.REQUEST, fieldName: "REQUEST", required: false, type: ForwardOffset<CAQRequest>.self)
+    try _v.visit(field: VT.RESULT, fieldName: "RESULT", required: false, type: ForwardOffset<CAQResult>.self)
     _v.finish()
   }
 }

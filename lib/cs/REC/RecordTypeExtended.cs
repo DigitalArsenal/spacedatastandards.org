@@ -13,4 +13,6 @@ public enum RecordTypeExtended : ushort
 {
   NONE = 0,
   ABA = 256,
+  CVR = 257,
+  PVN = 258,
 };

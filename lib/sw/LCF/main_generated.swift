@@ -8,126 +8,167 @@ import Common
 
 import FlatBuffers
 
-public enum keyReferenceRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum licensingConfigMessageType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case unknown = 0
-  case providersigning = 1
-  case providerwrapping = 2
-  case requestersigning = 3
-  case publicationcontent = 4
-  case verificationkey = 5
-  case decryptkey = 6
+  case configure = 0
+  case status = 1
 
-  public static var max: keyReferenceRole { return .decryptkey }
-  public static var min: keyReferenceRole { return .unknown }
+  public static var max: licensingConfigMessageType { return .status }
+  public static var min: licensingConfigMessageType { return .configure }
 }
 
 
-public enum keyReferenceAlgorithm: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum licensingConfigRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case unknown = 0
-  case ed25519seed = 1
-  case ed25519public = 2
-  case x25519private = 3
-  case x25519public = 4
-  case aes256gcm = 5
-  case opaque = 6
+  case provider = 0
+  case requester = 1
 
-  public static var max: keyReferenceAlgorithm { return .opaque }
-  public static var min: keyReferenceAlgorithm { return .unknown }
+  public static var max: licensingConfigRole { return .requester }
+  public static var min: licensingConfigRole { return .provider }
 }
 
 
-///  Key Reference Frame
-public struct KRF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  Licensing Configuration Frame
+public struct LCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$KRF" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: KRF.id, addPrefix: prefix) }
+  public static var id: String { "$LCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LCF.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let KEY_ID: VOffset = 4
-    static let SLOT_ID: VOffset = 6
-    static let ROLE: VOffset = 8
-    static let ALGORITHM: VOffset = 10
-    static let PUBLIC_KEY: VOffset = 12
-    static let VERSION: VOffset = 14
-    static let EXPIRES_AT: VOffset = 16
-    static let HOST_MANAGED: VOffset = 18
+    static let MESSAGE_TYPE: VOffset = 4
+    static let ROLE: VOffset = 6
+    static let PROVIDER_PEER_ID: VOffset = 8
+    static let PROVIDER_SIGNING_KEY: VOffset = 10
+    static let PROVIDER_WRAPPING_KEY: VOffset = 12
+    static let REQUESTER_SIGNING_KEY: VOffset = 14
+    static let ACTIVE_KEY_VERSION: VOffset = 16
+    static let EXPIRES_AT: VOffset = 18
+    static let MAX_CLOCK_SKEW_MS: VOffset = 20
+    static let CHALLENGE_TTL_MS: VOffset = 22
+    static let CAPABILITY_TOKEN: VOffset = 24
+    static let INITIALIZED: VOffset = 26
+    static let NEEDS_ROTATION: VOffset = 28
+    static let STATUS_CODE: VOffset = 30
+    static let STATUS_MESSAGE: VOffset = 32
   }
 
-  ///  Logical key identifier used across publication and grant records.
-  public var KEY_ID: String? { let o = _accessor.offset(VT.KEY_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_ID) }
-  ///  Host-managed key slot or key handle identifier.
-  public var SLOT_ID: String? { let o = _accessor.offset(VT.SLOT_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SLOT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SLOT_ID) }
-  ///  Role the referenced key fulfills for the module flow.
-  public var ROLE: keyReferenceRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .unknown : keyReferenceRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
-  ///  Algorithm or key family for the referenced key.
-  public var ALGORITHM: keyReferenceAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .unknown : keyReferenceAlgorithm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
-  ///  Optional public bytes for verification or peer identity binding.
-  public var PUBLIC_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PUBLIC_KEY, byteSize: 1) }
-  public func withUnsafePointerToPublicKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PUBLIC_KEY, body: body) }
-  ///  Logical version of the referenced key.
-  public var VERSION: UInt32 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Expiration time in unix milliseconds, or 0 if unbounded.
+  ///  Distinguishes configuration inputs from runtime status outputs.
+  public var MESSAGE_TYPE: licensingConfigMessageType { let o = _accessor.offset(VT.MESSAGE_TYPE); return o == 0 ? .configure : licensingConfigMessageType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .configure }
+  ///  Indicates whether the configuration/status applies to server/provider or requester/client behavior.
+  public var ROLE: licensingConfigRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .provider : licensingConfigRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .provider }
+  ///  Peer ID advertised by the licensing provider.
+  public var PROVIDER_PEER_ID: String? { let o = _accessor.offset(VT.PROVIDER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_PEER_ID) }
+  ///  Host-managed long-lived signing key used for grant signatures.
+  public var PROVIDER_SIGNING_KEY: KRF? { let o = _accessor.offset(VT.PROVIDER_SIGNING_KEY); return o == 0 ? nil : KRF(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Host-managed wrapping key used to protect per-publication content keys for requesters.
+  public var PROVIDER_WRAPPING_KEY: KRF? { let o = _accessor.offset(VT.PROVIDER_WRAPPING_KEY); return o == 0 ? nil : KRF(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Optional requester signing key reference for requester-hosted flows.
+  public var REQUESTER_SIGNING_KEY: KRF? { let o = _accessor.offset(VT.REQUESTER_SIGNING_KEY); return o == 0 ? nil : KRF(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Logical active publication/grant key version.
+  public var ACTIVE_KEY_VERSION: UInt32 { let o = _accessor.offset(VT.ACTIVE_KEY_VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Runtime expiry in unix milliseconds, or 0 if unbounded.
   public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  True when the secret material remains in the host key slot.
-  public var HOST_MANAGED: Bool { let o = _accessor.offset(VT.HOST_MANAGED); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startKRF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ID, at: VT.KEY_ID) }
-  public static func add(SLOT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLOT_ID, at: VT.SLOT_ID) }
-  public static func add(ROLE: keyReferenceRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VT.ROLE) }
-  public static func add(ALGORITHM: keyReferenceAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
-  public static func addVectorOf(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VT.PUBLIC_KEY) }
-  public static func add(VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VT.VERSION) }
+  ///  Maximum accepted requester/provider clock skew in milliseconds.
+  public var MAX_CLOCK_SKEW_MS: UInt64 { let o = _accessor.offset(VT.MAX_CLOCK_SKEW_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Challenge time-to-live in milliseconds.
+  public var CHALLENGE_TTL_MS: UInt64 { let o = _accessor.offset(VT.CHALLENGE_TTL_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Optional capability token bytes returned with successful grants.
+  public var CAPABILITY_TOKEN: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CAPABILITY_TOKEN, byteSize: 1) }
+  public func withUnsafePointerToCapabilityToken<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CAPABILITY_TOKEN, body: body) }
+  ///  Whether the runtime has been initialized successfully.
+  public var INITIALIZED: Bool { let o = _accessor.offset(VT.INITIALIZED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Whether the runtime needs issuer key rotation or refreshed configuration.
+  public var NEEDS_ROTATION: Bool { let o = _accessor.offset(VT.NEEDS_ROTATION); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Optional machine-readable status code for status/error responses.
+  public var STATUS_CODE: String? { let o = _accessor.offset(VT.STATUS_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATUS_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATUS_CODE) }
+  ///  Optional human-readable status or error message.
+  public var STATUS_MESSAGE: String? { let o = _accessor.offset(VT.STATUS_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATUS_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATUS_MESSAGE) }
+  public static func startLCF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  public static func add(MESSAGE_TYPE: licensingConfigMessageType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGE_TYPE.rawValue, def: 0, at: VT.MESSAGE_TYPE) }
+  public static func add(ROLE: licensingConfigRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VT.ROLE) }
+  public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
+  public static func add(PROVIDER_SIGNING_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_SIGNING_KEY, at: VT.PROVIDER_SIGNING_KEY) }
+  public static func add(PROVIDER_WRAPPING_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_WRAPPING_KEY, at: VT.PROVIDER_WRAPPING_KEY) }
+  public static func add(REQUESTER_SIGNING_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_SIGNING_KEY, at: VT.REQUESTER_SIGNING_KEY) }
+  public static func add(ACTIVE_KEY_VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTIVE_KEY_VERSION, def: 0, at: VT.ACTIVE_KEY_VERSION) }
   public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VT.EXPIRES_AT) }
-  public static func add(HOST_MANAGED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOST_MANAGED, def: true,
-   at: VT.HOST_MANAGED) }
-  public static func endKRF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createKRF(
+  public static func add(MAX_CLOCK_SKEW_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_CLOCK_SKEW_MS, def: 0, at: VT.MAX_CLOCK_SKEW_MS) }
+  public static func add(CHALLENGE_TTL_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHALLENGE_TTL_MS, def: 0, at: VT.CHALLENGE_TTL_MS) }
+  public static func addVectorOf(CAPABILITY_TOKEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPABILITY_TOKEN, at: VT.CAPABILITY_TOKEN) }
+  public static func add(INITIALIZED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIALIZED, def: false,
+   at: VT.INITIALIZED) }
+  public static func add(NEEDS_ROTATION: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEEDS_ROTATION, def: false,
+   at: VT.NEEDS_ROTATION) }
+  public static func add(STATUS_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS_CODE, at: VT.STATUS_CODE) }
+  public static func add(STATUS_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS_MESSAGE, at: VT.STATUS_MESSAGE) }
+  public static func endLCF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createLCF(
     _ fbb: inout FlatBufferBuilder,
-    KEY_IDOffset KEY_ID: Offset = Offset(),
-    SLOT_IDOffset SLOT_ID: Offset = Offset(),
-    ROLE: keyReferenceRole = .unknown,
-    ALGORITHM: keyReferenceAlgorithm = .unknown,
-    PUBLIC_KEYVectorOffset PUBLIC_KEY: Offset = Offset(),
-    VERSION: UInt32 = 0,
+    MESSAGE_TYPE: licensingConfigMessageType = .configure,
+    ROLE: licensingConfigRole = .provider,
+    PROVIDER_PEER_IDOffset PROVIDER_PEER_ID: Offset = Offset(),
+    PROVIDER_SIGNING_KEYOffset PROVIDER_SIGNING_KEY: Offset = Offset(),
+    PROVIDER_WRAPPING_KEYOffset PROVIDER_WRAPPING_KEY: Offset = Offset(),
+    REQUESTER_SIGNING_KEYOffset REQUESTER_SIGNING_KEY: Offset = Offset(),
+    ACTIVE_KEY_VERSION: UInt32 = 0,
     EXPIRES_AT: UInt64 = 0,
-    HOST_MANAGED: Bool = true
+    MAX_CLOCK_SKEW_MS: UInt64 = 0,
+    CHALLENGE_TTL_MS: UInt64 = 0,
+    CAPABILITY_TOKENVectorOffset CAPABILITY_TOKEN: Offset = Offset(),
+    INITIALIZED: Bool = false,
+    NEEDS_ROTATION: Bool = false,
+    STATUS_CODEOffset STATUS_CODE: Offset = Offset(),
+    STATUS_MESSAGEOffset STATUS_MESSAGE: Offset = Offset()
   ) -> Offset {
-    let __start = KRF.startKRF(&fbb)
-    KRF.add(KEY_ID: KEY_ID, &fbb)
-    KRF.add(SLOT_ID: SLOT_ID, &fbb)
-    KRF.add(ROLE: ROLE, &fbb)
-    KRF.add(ALGORITHM: ALGORITHM, &fbb)
-    KRF.addVectorOf(PUBLIC_KEY: PUBLIC_KEY, &fbb)
-    KRF.add(VERSION: VERSION, &fbb)
-    KRF.add(EXPIRES_AT: EXPIRES_AT, &fbb)
-    KRF.add(HOST_MANAGED: HOST_MANAGED, &fbb)
-    return KRF.endKRF(&fbb, start: __start)
+    let __start = LCF.startLCF(&fbb)
+    LCF.add(MESSAGE_TYPE: MESSAGE_TYPE, &fbb)
+    LCF.add(ROLE: ROLE, &fbb)
+    LCF.add(PROVIDER_PEER_ID: PROVIDER_PEER_ID, &fbb)
+    LCF.add(PROVIDER_SIGNING_KEY: PROVIDER_SIGNING_KEY, &fbb)
+    LCF.add(PROVIDER_WRAPPING_KEY: PROVIDER_WRAPPING_KEY, &fbb)
+    LCF.add(REQUESTER_SIGNING_KEY: REQUESTER_SIGNING_KEY, &fbb)
+    LCF.add(ACTIVE_KEY_VERSION: ACTIVE_KEY_VERSION, &fbb)
+    LCF.add(EXPIRES_AT: EXPIRES_AT, &fbb)
+    LCF.add(MAX_CLOCK_SKEW_MS: MAX_CLOCK_SKEW_MS, &fbb)
+    LCF.add(CHALLENGE_TTL_MS: CHALLENGE_TTL_MS, &fbb)
+    LCF.addVectorOf(CAPABILITY_TOKEN: CAPABILITY_TOKEN, &fbb)
+    LCF.add(INITIALIZED: INITIALIZED, &fbb)
+    LCF.add(NEEDS_ROTATION: NEEDS_ROTATION, &fbb)
+    LCF.add(STATUS_CODE: STATUS_CODE, &fbb)
+    LCF.add(STATUS_MESSAGE: STATUS_MESSAGE, &fbb)
+    return LCF.endLCF(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.KEY_ID, fieldName: "KEY_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SLOT_ID, fieldName: "SLOT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: keyReferenceRole.self)
-    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: keyReferenceAlgorithm.self)
-    try _v.visit(field: VT.PUBLIC_KEY, fieldName: "PUBLIC_KEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MESSAGE_TYPE, fieldName: "MESSAGE_TYPE", required: false, type: licensingConfigMessageType.self)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: licensingConfigRole.self)
+    try _v.visit(field: VT.PROVIDER_PEER_ID, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_SIGNING_KEY, fieldName: "PROVIDER_SIGNING_KEY", required: false, type: ForwardOffset<KRF>.self)
+    try _v.visit(field: VT.PROVIDER_WRAPPING_KEY, fieldName: "PROVIDER_WRAPPING_KEY", required: false, type: ForwardOffset<KRF>.self)
+    try _v.visit(field: VT.REQUESTER_SIGNING_KEY, fieldName: "REQUESTER_SIGNING_KEY", required: false, type: ForwardOffset<KRF>.self)
+    try _v.visit(field: VT.ACTIVE_KEY_VERSION, fieldName: "ACTIVE_KEY_VERSION", required: false, type: UInt32.self)
     try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.HOST_MANAGED, fieldName: "HOST_MANAGED", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAX_CLOCK_SKEW_MS, fieldName: "MAX_CLOCK_SKEW_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CHALLENGE_TTL_MS, fieldName: "CHALLENGE_TTL_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CAPABILITY_TOKEN, fieldName: "CAPABILITY_TOKEN", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.INITIALIZED, fieldName: "INITIALIZED", required: false, type: Bool.self)
+    try _v.visit(field: VT.NEEDS_ROTATION, fieldName: "NEEDS_ROTATION", required: false, type: Bool.self)
+    try _v.visit(field: VT.STATUS_CODE, fieldName: "STATUS_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS_MESSAGE, fieldName: "STATUS_MESSAGE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

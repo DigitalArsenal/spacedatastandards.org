@@ -5,219 +5,139 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Encryption Header for FlatBuffers field-level encryption
-///  Key exchange algorithm used to derive the shared secret
-enum KeyExchange {
-  X25519(0),
-  Secp256k1(1),
-  P256(2);
+///  Direction of an RPC envelope.
+enum rpcDirection {
+  Request(0),
+  Response(1);
 
   final int value;
-  const KeyExchange(this.value);
+  const rpcDirection(this.value);
 
-  factory KeyExchange.fromValue(int value) {
+  factory rpcDirection.fromValue(int value) {
     switch (value) {
-      case 0: return KeyExchange.X25519;
-      case 1: return KeyExchange.Secp256k1;
-      case 2: return KeyExchange.P256;
+      case 0: return rpcDirection.Request;
+      case 1: return rpcDirection.Response;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static KeyExchange? _createOrNull(int? value) =>
-      value == null ? null : KeyExchange.fromValue(value);
+  static rpcDirection? _createOrNull(int? value) =>
+      value == null ? null : rpcDirection.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
-  static const fb.Reader<KeyExchange> reader = _KeyExchangeReader();
+  static const int maxValue = 1;
+  static const fb.Reader<rpcDirection> reader = _rpcDirectionReader();
 }
 
-class _KeyExchangeReader extends fb.Reader<KeyExchange> {
-  const _KeyExchangeReader();
+class _rpcDirectionReader extends fb.Reader<rpcDirection> {
+  const _rpcDirectionReader();
 
   @override
   int get size => 1;
 
   @override
-  KeyExchange read(fb.BufferContext bc, int offset) =>
-      KeyExchange.fromValue(const fb.Int8Reader().read(bc, offset));
+  rpcDirection read(fb.BufferContext bc, int offset) =>
+      rpcDirection.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Symmetric encryption algorithm
-enum SymmetricAlgo {
-  AES_256_CTR(0);
-
-  final int value;
-  const SymmetricAlgo(this.value);
-
-  factory SymmetricAlgo.fromValue(int value) {
-    switch (value) {
-      case 0: return SymmetricAlgo.AES_256_CTR;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static SymmetricAlgo? _createOrNull(int? value) =>
-      value == null ? null : SymmetricAlgo.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 0;
-  static const fb.Reader<SymmetricAlgo> reader = _SymmetricAlgoReader();
-}
-
-class _SymmetricAlgoReader extends fb.Reader<SymmetricAlgo> {
-  const _SymmetricAlgoReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  SymmetricAlgo read(fb.BufferContext bc, int offset) =>
-      SymmetricAlgo.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Key derivation function
-enum KDF {
-  HKDF_SHA256(0);
-
-  final int value;
-  const KDF(this.value);
-
-  factory KDF.fromValue(int value) {
-    switch (value) {
-      case 0: return KDF.HKDF_SHA256;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static KDF? _createOrNull(int? value) =>
-      value == null ? null : KDF.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 0;
-  static const fb.Reader<KDF> reader = _KDFReader();
-}
-
-class _KDFReader extends fb.Reader<KDF> {
-  const _KDFReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  KDF read(fb.BufferContext bc, int offset) =>
-      KDF.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Encryption Header containing all parameters needed for decryption
-class ENC {
-  ENC._(this._bc, this._bcOffset);
-  factory ENC(List<int> bytes) {
+///  Plaintext carried, size-prefixed, inside RPC.CIPHERTEXT.
+class RPCBody {
+  RPCBody._(this._bc, this._bcOffset);
+  factory RPCBody(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<ENC> reader = _ENCReader();
+  static const fb.Reader<RPCBody> reader = _RPCBodyReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Schema version for forward compatibility
-  int get VERSION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 1);
-  ///  Key exchange algorithm used
-  KeyExchange get KEY_EXCHANGE => KeyExchange.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  KeyExchange get keyExchange => KEY_EXCHANGE;
-  ///  Symmetric encryption algorithm used
-  SymmetricAlgo get SYMMETRIC => SymmetricAlgo.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  Key derivation function used
-  KDF get KEY_DERIVATION => KDF.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  KDF get keyDerivation => KEY_DERIVATION;
-  ///  Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
-  List<int>? get EPHEMERAL_PUBLIC_KEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
-  List<int>? get ephemeralPublicKey => EPHEMERAL_PUBLIC_KEY;
-  ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
-  List<int>? get NONCE_START => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
-  List<int>? get nonceStart => NONCE_START;
-  ///  Optional identifier for the recipient's public key (up to 32 bytes)
-  List<int>? get RECIPIENT_KEY_ID => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
-  List<int>? get recipientKeyId => RECIPIENT_KEY_ID;
-  ///  Optional domain separation context string
-  String? get CONTEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
-  List<int>? get SCHEMA_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
-  List<int>? get schemaHash => SCHEMA_HASH;
-  ///  Optional root type name from the schema
-  String? get ROOT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get rootType => ROOT_TYPE;
-  ///  Optional Unix timestamp (milliseconds) when encryption was performed
-  int get TIMESTAMP => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  ///  Request method verb (for example GET, POST). Empty on a response.
+  String? get METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Request route, path plus optional query. Empty on a response.
+  String? get ROUTE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Request or response payload bytes.
+  List<int>? get BODY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Four-character file identifier of BODY when BODY is a FlatBuffer,
+  ///  `$` included (for example "$EPM"). Empty when BODY is not a FlatBuffer.
+  String? get BODY_FILE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get bodyFileId => BODY_FILE_ID;
+  ///  Response status code. Zero on a request.
+  int get STATUS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  ///  Identifier of the signer's key; MUST identify RPC.SIGNER_PUBLIC_KEY.
+  List<int>? get SIGNER_KEY_ID => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
+  List<int>? get signerKeyId => SIGNER_KEY_ID;
+  ///  Request only: public key the response is sealed to.
+  List<int>? get REPLY_KEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+  List<int>? get replyKey => REPLY_KEY;
+  ///  Response only: RPC.NONCE of the request being answered.
+  List<int>? get REQUEST_NONCE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 18);
+  List<int>? get requestNonce => REQUEST_NONCE;
+  ///  Response only: SHA-256 (32 bytes) of the complete size-prefixed request
+  ///  RPC FlatBuffer as received, signatures included.
+  List<int>? get REQUEST_DIGEST => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
+  List<int>? get requestDigest => REQUEST_DIGEST;
 
   @override
   String toString() {
-    return 'ENC{VERSION: ${VERSION}, keyExchange: ${keyExchange}, SYMMETRIC: ${SYMMETRIC}, keyDerivation: ${keyDerivation}, ephemeralPublicKey: ${ephemeralPublicKey}, nonceStart: ${nonceStart}, recipientKeyId: ${recipientKeyId}, CONTEXT: ${CONTEXT}, schemaHash: ${schemaHash}, rootType: ${rootType}, TIMESTAMP: ${TIMESTAMP}}';
+    return 'RPCBody{METHOD: ${METHOD}, ROUTE: ${ROUTE}, BODY: ${BODY}, bodyFileId: ${bodyFileId}, STATUS: ${STATUS}, signerKeyId: ${signerKeyId}, replyKey: ${replyKey}, requestNonce: ${requestNonce}, requestDigest: ${requestDigest}}';
   }
 }
 
-class _ENCReader extends fb.TableReader<ENC> {
-  const _ENCReader();
+class _RPCBodyReader extends fb.TableReader<RPCBody> {
+  const _RPCBodyReader();
 
   @override
-  ENC createObject(fb.BufferContext bc, int offset) =>
-    ENC._(bc, offset);
+  RPCBody createObject(fb.BufferContext bc, int offset) =>
+    RPCBody._(bc, offset);
 }
 
-class ENCBuilder {
-  ENCBuilder(this.fbBuilder);
+class RPCBodyBuilder {
+  RPCBodyBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(9);
   }
 
-  int addVersion(int? VERSION) {
-    fbBuilder.addUint8(0, VERSION);
+  int addMethodOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addKeyExchange(KeyExchange? KEY_EXCHANGE) {
-    fbBuilder.addInt8(1, KEY_EXCHANGE?.value);
+  int addRouteOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSymmetric(SymmetricAlgo? SYMMETRIC) {
-    fbBuilder.addInt8(2, SYMMETRIC?.value);
+  int addBodyOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addKeyDerivation(KDF? KEY_DERIVATION) {
-    fbBuilder.addInt8(3, KEY_DERIVATION?.value);
+  int addBodyFileIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addEphemeralPublicKeyOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addStatus(int? STATUS) {
+    fbBuilder.addUint16(4, STATUS);
     return fbBuilder.offset;
   }
-  int addNonceStartOffset(int? offset) {
+  int addSignerKeyIdOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addRecipientKeyIdOffset(int? offset) {
+  int addReplyKeyOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addContextOffset(int? offset) {
+  int addRequestNonceOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addSchemaHashOffset(int? offset) {
+  int addRequestDigestOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addRootTypeOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addTimestamp(int? TIMESTAMP) {
-    fbBuilder.addUint64(10, TIMESTAMP);
     return fbBuilder.offset;
   }
 
@@ -226,78 +146,287 @@ class ENCBuilder {
   }
 }
 
-class ENCObjectBuilder extends fb.ObjectBuilder {
-  final int? _VERSION;
-  final KeyExchange? _KEY_EXCHANGE;
-  final SymmetricAlgo? _SYMMETRIC;
-  final KDF? _KEY_DERIVATION;
-  final List<int>? _EPHEMERAL_PUBLIC_KEY;
-  final List<int>? _NONCE_START;
-  final List<int>? _RECIPIENT_KEY_ID;
-  final String? _CONTEXT;
-  final List<int>? _SCHEMA_HASH;
-  final String? _ROOT_TYPE;
-  final int? _TIMESTAMP;
+class RPCBodyObjectBuilder extends fb.ObjectBuilder {
+  final String? _METHOD;
+  final String? _ROUTE;
+  final List<int>? _BODY;
+  final String? _BODY_FILE_ID;
+  final int? _STATUS;
+  final List<int>? _SIGNER_KEY_ID;
+  final List<int>? _REPLY_KEY;
+  final List<int>? _REQUEST_NONCE;
+  final List<int>? _REQUEST_DIGEST;
 
-  ENCObjectBuilder({
-    int? VERSION,
-    KeyExchange? KEY_EXCHANGE,
-    KeyExchange? keyExchange,
-    SymmetricAlgo? SYMMETRIC,
-    KDF? KEY_DERIVATION,
-    KDF? keyDerivation,
-    List<int>? EPHEMERAL_PUBLIC_KEY,
-    List<int>? ephemeralPublicKey,
-    List<int>? NONCE_START,
-    List<int>? nonceStart,
-    List<int>? RECIPIENT_KEY_ID,
-    List<int>? recipientKeyId,
-    String? CONTEXT,
-    List<int>? SCHEMA_HASH,
-    List<int>? schemaHash,
-    String? ROOT_TYPE,
-    String? rootType,
-    int? TIMESTAMP,
+  RPCBodyObjectBuilder({
+    String? METHOD,
+    String? ROUTE,
+    List<int>? BODY,
+    String? BODY_FILE_ID,
+    String? bodyFileId,
+    int? STATUS,
+    List<int>? SIGNER_KEY_ID,
+    List<int>? signerKeyId,
+    List<int>? REPLY_KEY,
+    List<int>? replyKey,
+    List<int>? REQUEST_NONCE,
+    List<int>? requestNonce,
+    List<int>? REQUEST_DIGEST,
+    List<int>? requestDigest,
   })
-      : _VERSION = VERSION,
-        _KEY_EXCHANGE = keyExchange ?? KEY_EXCHANGE,
-        _SYMMETRIC = SYMMETRIC,
-        _KEY_DERIVATION = keyDerivation ?? KEY_DERIVATION,
-        _EPHEMERAL_PUBLIC_KEY = ephemeralPublicKey ?? EPHEMERAL_PUBLIC_KEY,
-        _NONCE_START = nonceStart ?? NONCE_START,
-        _RECIPIENT_KEY_ID = recipientKeyId ?? RECIPIENT_KEY_ID,
-        _CONTEXT = CONTEXT,
-        _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
-        _ROOT_TYPE = rootType ?? ROOT_TYPE,
-        _TIMESTAMP = TIMESTAMP;
+      : _METHOD = METHOD,
+        _ROUTE = ROUTE,
+        _BODY = BODY,
+        _BODY_FILE_ID = bodyFileId ?? BODY_FILE_ID,
+        _STATUS = STATUS,
+        _SIGNER_KEY_ID = signerKeyId ?? SIGNER_KEY_ID,
+        _REPLY_KEY = replyKey ?? REPLY_KEY,
+        _REQUEST_NONCE = requestNonce ?? REQUEST_NONCE,
+        _REQUEST_DIGEST = requestDigest ?? REQUEST_DIGEST;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? EPHEMERAL_PUBLIC_KEYOffset = _EPHEMERAL_PUBLIC_KEY == null ? null
-        : fbBuilder.writeListUint8(_EPHEMERAL_PUBLIC_KEY!);
-    final int? NONCE_STARTOffset = _NONCE_START == null ? null
-        : fbBuilder.writeListUint8(_NONCE_START!);
-    final int? RECIPIENT_KEY_IDOffset = _RECIPIENT_KEY_ID == null ? null
-        : fbBuilder.writeListUint8(_RECIPIENT_KEY_ID!);
-    final int? CONTEXTOffset = _CONTEXT == null ? null
-        : fbBuilder.writeString(_CONTEXT!);
-    final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
-        : fbBuilder.writeListUint8(_SCHEMA_HASH!);
-    final int? ROOT_TYPEOffset = _ROOT_TYPE == null ? null
-        : fbBuilder.writeString(_ROOT_TYPE!);
-    fbBuilder.startTable(11);
+    final int? METHODOffset = _METHOD == null ? null
+        : fbBuilder.writeString(_METHOD!);
+    final int? ROUTEOffset = _ROUTE == null ? null
+        : fbBuilder.writeString(_ROUTE!);
+    final int? BODYOffset = _BODY == null ? null
+        : fbBuilder.writeListUint8(_BODY!);
+    final int? BODY_FILE_IDOffset = _BODY_FILE_ID == null ? null
+        : fbBuilder.writeString(_BODY_FILE_ID!);
+    final int? SIGNER_KEY_IDOffset = _SIGNER_KEY_ID == null ? null
+        : fbBuilder.writeListUint8(_SIGNER_KEY_ID!);
+    final int? REPLY_KEYOffset = _REPLY_KEY == null ? null
+        : fbBuilder.writeListUint8(_REPLY_KEY!);
+    final int? REQUEST_NONCEOffset = _REQUEST_NONCE == null ? null
+        : fbBuilder.writeListUint8(_REQUEST_NONCE!);
+    final int? REQUEST_DIGESTOffset = _REQUEST_DIGEST == null ? null
+        : fbBuilder.writeListUint8(_REQUEST_DIGEST!);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, METHODOffset);
+    fbBuilder.addOffset(1, ROUTEOffset);
+    fbBuilder.addOffset(2, BODYOffset);
+    fbBuilder.addOffset(3, BODY_FILE_IDOffset);
+    fbBuilder.addUint16(4, _STATUS);
+    fbBuilder.addOffset(5, SIGNER_KEY_IDOffset);
+    fbBuilder.addOffset(6, REPLY_KEYOffset);
+    fbBuilder.addOffset(7, REQUEST_NONCEOffset);
+    fbBuilder.addOffset(8, REQUEST_DIGESTOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Sealed Remote Procedure Call envelope (outer, plaintext, signed).
+class RPC {
+  RPC._(this._bc, this._bcOffset);
+  factory RPC(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RPC> reader = _RPCReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Envelope version. This document defines version 1.
+  int get VERSION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 1);
+  ///  Request or response.
+  rpcDirection get DIRECTION => rpcDirection.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Encryption header for CIPHERTEXT. CONTEXT is "RPC/1|request" or
+  ///  "RPC/1|response" matching DIRECTION.
+  ENC? get ENCRYPTION => ENC.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Optional session identifier established by a prior sign-in.
+  String? get SESSION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get sessionId => SESSION_ID;
+  ///  Optional identifier of the sender's key (routing hint only; the binding
+  ///  identity is SIGNER_PUBLIC_KEY checked against RPCBody.SIGNER_KEY_ID).
+  List<int>? get SENDER_KEY_ID => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get senderKeyId => SENDER_KEY_ID;
+  ///  Sender clock at signing, milliseconds since the Unix epoch (UTC).
+  int get TIMESTAMP => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  Random 16-byte nonce, unique per envelope.
+  List<int>? get NONCE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Encrypted size-prefixed RPCBody.
+  List<int>? get CIPHERTEXT => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Ed25519 public key (32 bytes) that verifies both signatures.
+  List<int>? get SIGNER_PUBLIC_KEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
+  List<int>? get signerPublicKey => SIGNER_PUBLIC_KEY;
+  ///  Signature algorithm name. Version 1 defines "Ed25519".
+  String? get SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get signatureType => SIGNATURE_TYPE;
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 26);
+  List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
+
+  @override
+  String toString() {
+    return 'RPC{VERSION: ${VERSION}, DIRECTION: ${DIRECTION}, ENCRYPTION: ${ENCRYPTION}, sessionId: ${sessionId}, senderKeyId: ${senderKeyId}, TIMESTAMP: ${TIMESTAMP}, NONCE: ${NONCE}, CIPHERTEXT: ${CIPHERTEXT}, signerPublicKey: ${signerPublicKey}, signatureType: ${signatureType}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}}';
+  }
+}
+
+class _RPCReader extends fb.TableReader<RPC> {
+  const _RPCReader();
+
+  @override
+  RPC createObject(fb.BufferContext bc, int offset) =>
+    RPC._(bc, offset);
+}
+
+class RPCBuilder {
+  RPCBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addVersion(int? VERSION) {
+    fbBuilder.addUint8(0, VERSION);
+    return fbBuilder.offset;
+  }
+  int addDirection(rpcDirection? DIRECTION) {
+    fbBuilder.addInt8(1, DIRECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addEncryptionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSessionIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSenderKeyIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTimestamp(int? TIMESTAMP) {
+    fbBuilder.addUint64(5, TIMESTAMP);
+    return fbBuilder.offset;
+  }
+  int addNonceOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addCiphertextOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addSignerPublicKeyOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureTypeOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalJsonSignatureOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RPCObjectBuilder extends fb.ObjectBuilder {
+  final int? _VERSION;
+  final rpcDirection? _DIRECTION;
+  final ENCObjectBuilder? _ENCRYPTION;
+  final String? _SESSION_ID;
+  final List<int>? _SENDER_KEY_ID;
+  final int? _TIMESTAMP;
+  final List<int>? _NONCE;
+  final List<int>? _CIPHERTEXT;
+  final List<int>? _SIGNER_PUBLIC_KEY;
+  final String? _SIGNATURE_TYPE;
+  final List<int>? _SIGNATURE;
+  final List<int>? _CANONICAL_JSON_SIGNATURE;
+
+  RPCObjectBuilder({
+    int? VERSION,
+    rpcDirection? DIRECTION,
+    ENCObjectBuilder? ENCRYPTION,
+    String? SESSION_ID,
+    String? sessionId,
+    List<int>? SENDER_KEY_ID,
+    List<int>? senderKeyId,
+    int? TIMESTAMP,
+    List<int>? NONCE,
+    List<int>? CIPHERTEXT,
+    List<int>? SIGNER_PUBLIC_KEY,
+    List<int>? signerPublicKey,
+    String? SIGNATURE_TYPE,
+    String? signatureType,
+    List<int>? SIGNATURE,
+    List<int>? CANONICAL_JSON_SIGNATURE,
+    List<int>? canonicalJsonSignature,
+  })
+      : _VERSION = VERSION,
+        _DIRECTION = DIRECTION,
+        _ENCRYPTION = ENCRYPTION,
+        _SESSION_ID = sessionId ?? SESSION_ID,
+        _SENDER_KEY_ID = senderKeyId ?? SENDER_KEY_ID,
+        _TIMESTAMP = TIMESTAMP,
+        _NONCE = NONCE,
+        _CIPHERTEXT = CIPHERTEXT,
+        _SIGNER_PUBLIC_KEY = signerPublicKey ?? SIGNER_PUBLIC_KEY,
+        _SIGNATURE_TYPE = signatureType ?? SIGNATURE_TYPE,
+        _SIGNATURE = SIGNATURE,
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ENCRYPTIONOffset = _ENCRYPTION?.getOrCreateOffset(fbBuilder);
+    final int? SESSION_IDOffset = _SESSION_ID == null ? null
+        : fbBuilder.writeString(_SESSION_ID!);
+    final int? SENDER_KEY_IDOffset = _SENDER_KEY_ID == null ? null
+        : fbBuilder.writeListUint8(_SENDER_KEY_ID!);
+    final int? NONCEOffset = _NONCE == null ? null
+        : fbBuilder.writeListUint8(_NONCE!);
+    final int? CIPHERTEXTOffset = _CIPHERTEXT == null ? null
+        : fbBuilder.writeListUint8(_CIPHERTEXT!);
+    final int? SIGNER_PUBLIC_KEYOffset = _SIGNER_PUBLIC_KEY == null ? null
+        : fbBuilder.writeListUint8(_SIGNER_PUBLIC_KEY!);
+    final int? SIGNATURE_TYPEOffset = _SIGNATURE_TYPE == null ? null
+        : fbBuilder.writeString(_SIGNATURE_TYPE!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
+    fbBuilder.startTable(12);
     fbBuilder.addUint8(0, _VERSION);
-    fbBuilder.addInt8(1, _KEY_EXCHANGE?.value);
-    fbBuilder.addInt8(2, _SYMMETRIC?.value);
-    fbBuilder.addInt8(3, _KEY_DERIVATION?.value);
-    fbBuilder.addOffset(4, EPHEMERAL_PUBLIC_KEYOffset);
-    fbBuilder.addOffset(5, NONCE_STARTOffset);
-    fbBuilder.addOffset(6, RECIPIENT_KEY_IDOffset);
-    fbBuilder.addOffset(7, CONTEXTOffset);
-    fbBuilder.addOffset(8, SCHEMA_HASHOffset);
-    fbBuilder.addOffset(9, ROOT_TYPEOffset);
-    fbBuilder.addUint64(10, _TIMESTAMP);
+    fbBuilder.addInt8(1, _DIRECTION?.value);
+    fbBuilder.addOffset(2, ENCRYPTIONOffset);
+    fbBuilder.addOffset(3, SESSION_IDOffset);
+    fbBuilder.addOffset(4, SENDER_KEY_IDOffset);
+    fbBuilder.addUint64(5, _TIMESTAMP);
+    fbBuilder.addOffset(6, NONCEOffset);
+    fbBuilder.addOffset(7, CIPHERTEXTOffset);
+    fbBuilder.addOffset(8, SIGNER_PUBLIC_KEYOffset);
+    fbBuilder.addOffset(9, SIGNATURE_TYPEOffset);
+    fbBuilder.addOffset(10, SIGNATUREOffset);
+    fbBuilder.addOffset(11, CANONICAL_JSON_SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

@@ -5,361 +5,269 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum legacyCountryCode {
-  AB(0),
-  ABS(1),
-  AC(2),
-  ALG(3),
-  ANG(4),
-  ARGN(5),
-  ARM(6),
-  ASRA(7),
-  AUS(8),
-  AZER(9),
-  BEL(10),
-  BELA(11),
-  BERM(12),
-  BGD(13),
-  BHUT(14),
-  BOL(15),
-  BRAZ(16),
-  BUL(17),
-  CA(18),
-  CHBZ(19),
-  CHTU(20),
-  CHLE(21),
-  CIS(22),
-  COL(23),
-  CRI(24),
-  CZCH(25),
-  DEN(26),
-  DJI(27),
-  ECU(28),
-  EGYP(29),
-  ESA(30),
-  ESRO(31),
-  EST(32),
-  ETH(33),
-  EUME(34),
-  EUTE(35),
-  FGER(36),
-  FIN(37),
-  FR(38),
-  FRIT(39),
-  GER(40),
-  GHA(41),
-  GLOB(42),
-  GREC(43),
-  GRSA(44),
-  GUAT(45),
-  HUN(46),
-  IM(47),
-  IND(48),
-  INDO(49),
-  IRAN(50),
-  IRAQ(51),
-  IRID(52),
-  IRL(53),
-  ISRA(54),
-  ISRO(55),
-  ISS(56),
-  IT(57),
-  ITSO(58),
-  JPN(59),
-  KAZ(60),
-  KEN(61),
-  LAOS(62),
-  LKA(63),
-  LTU(64),
-  LUXE(65),
-  MA(66),
-  MALA(67),
-  MCO(68),
-  MDA(69),
-  MEX(70),
-  MMR(71),
-  MNG(72),
-  MUS(73),
-  NATO(74),
-  NETH(75),
-  NICO(76),
-  NIG(77),
-  NKOR(78),
-  NOR(79),
-  NPL(80),
-  NZ(81),
-  O3B(82),
-  ORB(83),
-  PAKI(84),
-  PERU(85),
-  POL(86),
-  POR(87),
-  PRC(88),
-  PRY(89),
-  PRES(90),
-  QAT(91),
-  RASC(92),
-  ROC(93),
-  ROM(94),
-  RP(95),
-  RWA(96),
-  SAFR(97),
-  SAUD(98),
-  SDN(99),
-  SEAL(100),
-  SES(101),
-  SGJP(102),
-  SING(103),
-  SKOR(104),
-  SPN(105),
-  STCT(106),
-  SVN(107),
-  SWED(108),
-  SWTZ(109),
-  TBD(110),
-  THAI(111),
-  TMMC(112),
-  TUN(113),
-  TURK(114),
-  UAE(115),
-  UK(116),
-  UKR(117),
-  UNK(118),
-  URY(119),
-  US(120),
-  USBZ(121),
-  VAT(122),
-  VENZ(123),
-  VTNM(124),
-  ZWE(125);
+///  Polynomial basis type for coefficient interpretation.
+///  Determines how the coefficient arrays are evaluated.
+enum polynomialBasisType {
+  CHEBYSHEV(0),
+  LEGENDRE(1),
+  HERMITE(2),
+  LAGRANGE(3),
+  POWER_SERIES(4);
 
   final int value;
-  const legacyCountryCode(this.value);
+  const polynomialBasisType(this.value);
 
-  factory legacyCountryCode.fromValue(int value) {
+  factory polynomialBasisType.fromValue(int value) {
     switch (value) {
-      case 0: return legacyCountryCode.AB;
-      case 1: return legacyCountryCode.ABS;
-      case 2: return legacyCountryCode.AC;
-      case 3: return legacyCountryCode.ALG;
-      case 4: return legacyCountryCode.ANG;
-      case 5: return legacyCountryCode.ARGN;
-      case 6: return legacyCountryCode.ARM;
-      case 7: return legacyCountryCode.ASRA;
-      case 8: return legacyCountryCode.AUS;
-      case 9: return legacyCountryCode.AZER;
-      case 10: return legacyCountryCode.BEL;
-      case 11: return legacyCountryCode.BELA;
-      case 12: return legacyCountryCode.BERM;
-      case 13: return legacyCountryCode.BGD;
-      case 14: return legacyCountryCode.BHUT;
-      case 15: return legacyCountryCode.BOL;
-      case 16: return legacyCountryCode.BRAZ;
-      case 17: return legacyCountryCode.BUL;
-      case 18: return legacyCountryCode.CA;
-      case 19: return legacyCountryCode.CHBZ;
-      case 20: return legacyCountryCode.CHTU;
-      case 21: return legacyCountryCode.CHLE;
-      case 22: return legacyCountryCode.CIS;
-      case 23: return legacyCountryCode.COL;
-      case 24: return legacyCountryCode.CRI;
-      case 25: return legacyCountryCode.CZCH;
-      case 26: return legacyCountryCode.DEN;
-      case 27: return legacyCountryCode.DJI;
-      case 28: return legacyCountryCode.ECU;
-      case 29: return legacyCountryCode.EGYP;
-      case 30: return legacyCountryCode.ESA;
-      case 31: return legacyCountryCode.ESRO;
-      case 32: return legacyCountryCode.EST;
-      case 33: return legacyCountryCode.ETH;
-      case 34: return legacyCountryCode.EUME;
-      case 35: return legacyCountryCode.EUTE;
-      case 36: return legacyCountryCode.FGER;
-      case 37: return legacyCountryCode.FIN;
-      case 38: return legacyCountryCode.FR;
-      case 39: return legacyCountryCode.FRIT;
-      case 40: return legacyCountryCode.GER;
-      case 41: return legacyCountryCode.GHA;
-      case 42: return legacyCountryCode.GLOB;
-      case 43: return legacyCountryCode.GREC;
-      case 44: return legacyCountryCode.GRSA;
-      case 45: return legacyCountryCode.GUAT;
-      case 46: return legacyCountryCode.HUN;
-      case 47: return legacyCountryCode.IM;
-      case 48: return legacyCountryCode.IND;
-      case 49: return legacyCountryCode.INDO;
-      case 50: return legacyCountryCode.IRAN;
-      case 51: return legacyCountryCode.IRAQ;
-      case 52: return legacyCountryCode.IRID;
-      case 53: return legacyCountryCode.IRL;
-      case 54: return legacyCountryCode.ISRA;
-      case 55: return legacyCountryCode.ISRO;
-      case 56: return legacyCountryCode.ISS;
-      case 57: return legacyCountryCode.IT;
-      case 58: return legacyCountryCode.ITSO;
-      case 59: return legacyCountryCode.JPN;
-      case 60: return legacyCountryCode.KAZ;
-      case 61: return legacyCountryCode.KEN;
-      case 62: return legacyCountryCode.LAOS;
-      case 63: return legacyCountryCode.LKA;
-      case 64: return legacyCountryCode.LTU;
-      case 65: return legacyCountryCode.LUXE;
-      case 66: return legacyCountryCode.MA;
-      case 67: return legacyCountryCode.MALA;
-      case 68: return legacyCountryCode.MCO;
-      case 69: return legacyCountryCode.MDA;
-      case 70: return legacyCountryCode.MEX;
-      case 71: return legacyCountryCode.MMR;
-      case 72: return legacyCountryCode.MNG;
-      case 73: return legacyCountryCode.MUS;
-      case 74: return legacyCountryCode.NATO;
-      case 75: return legacyCountryCode.NETH;
-      case 76: return legacyCountryCode.NICO;
-      case 77: return legacyCountryCode.NIG;
-      case 78: return legacyCountryCode.NKOR;
-      case 79: return legacyCountryCode.NOR;
-      case 80: return legacyCountryCode.NPL;
-      case 81: return legacyCountryCode.NZ;
-      case 82: return legacyCountryCode.O3B;
-      case 83: return legacyCountryCode.ORB;
-      case 84: return legacyCountryCode.PAKI;
-      case 85: return legacyCountryCode.PERU;
-      case 86: return legacyCountryCode.POL;
-      case 87: return legacyCountryCode.POR;
-      case 88: return legacyCountryCode.PRC;
-      case 89: return legacyCountryCode.PRY;
-      case 90: return legacyCountryCode.PRES;
-      case 91: return legacyCountryCode.QAT;
-      case 92: return legacyCountryCode.RASC;
-      case 93: return legacyCountryCode.ROC;
-      case 94: return legacyCountryCode.ROM;
-      case 95: return legacyCountryCode.RP;
-      case 96: return legacyCountryCode.RWA;
-      case 97: return legacyCountryCode.SAFR;
-      case 98: return legacyCountryCode.SAUD;
-      case 99: return legacyCountryCode.SDN;
-      case 100: return legacyCountryCode.SEAL;
-      case 101: return legacyCountryCode.SES;
-      case 102: return legacyCountryCode.SGJP;
-      case 103: return legacyCountryCode.SING;
-      case 104: return legacyCountryCode.SKOR;
-      case 105: return legacyCountryCode.SPN;
-      case 106: return legacyCountryCode.STCT;
-      case 107: return legacyCountryCode.SVN;
-      case 108: return legacyCountryCode.SWED;
-      case 109: return legacyCountryCode.SWTZ;
-      case 110: return legacyCountryCode.TBD;
-      case 111: return legacyCountryCode.THAI;
-      case 112: return legacyCountryCode.TMMC;
-      case 113: return legacyCountryCode.TUN;
-      case 114: return legacyCountryCode.TURK;
-      case 115: return legacyCountryCode.UAE;
-      case 116: return legacyCountryCode.UK;
-      case 117: return legacyCountryCode.UKR;
-      case 118: return legacyCountryCode.UNK;
-      case 119: return legacyCountryCode.URY;
-      case 120: return legacyCountryCode.US;
-      case 121: return legacyCountryCode.USBZ;
-      case 122: return legacyCountryCode.VAT;
-      case 123: return legacyCountryCode.VENZ;
-      case 124: return legacyCountryCode.VTNM;
-      case 125: return legacyCountryCode.ZWE;
+      case 0: return polynomialBasisType.CHEBYSHEV;
+      case 1: return polynomialBasisType.LEGENDRE;
+      case 2: return polynomialBasisType.HERMITE;
+      case 3: return polynomialBasisType.LAGRANGE;
+      case 4: return polynomialBasisType.POWER_SERIES;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static legacyCountryCode? _createOrNull(int? value) =>
-      value == null ? null : legacyCountryCode.fromValue(value);
+  static polynomialBasisType? _createOrNull(int? value) =>
+      value == null ? null : polynomialBasisType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 125;
-  static const fb.Reader<legacyCountryCode> reader = _legacyCountryCodeReader();
+  static const int maxValue = 4;
+  static const fb.Reader<polynomialBasisType> reader = _polynomialBasisTypeReader();
 }
 
-class _legacyCountryCodeReader extends fb.Reader<legacyCountryCode> {
-  const _legacyCountryCodeReader();
+class _polynomialBasisTypeReader extends fb.Reader<polynomialBasisType> {
+  const _polynomialBasisTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  legacyCountryCode read(fb.BufferContext bc, int offset) =>
-      legacyCountryCode.fromValue(const fb.Int8Reader().read(bc, offset));
+  polynomialBasisType read(fb.BufferContext bc, int offset) =>
+      polynomialBasisType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Legacy Country Code
-class LCC {
-  LCC._(this._bc, this._bcOffset);
-  factory LCC(List<int> bytes) {
+///  Anomaly type flag for orbital element records.
+enum ppeAnomalyType {
+  TRUE_ANOMALY(0),
+  MEAN_ANOMALY(1),
+  ECCENTRIC_ANOMALY(2);
+
+  final int value;
+  const ppeAnomalyType(this.value);
+
+  factory ppeAnomalyType.fromValue(int value) {
+    switch (value) {
+      case 0: return ppeAnomalyType.TRUE_ANOMALY;
+      case 1: return ppeAnomalyType.MEAN_ANOMALY;
+      case 2: return ppeAnomalyType.ECCENTRIC_ANOMALY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ppeAnomalyType? _createOrNull(int? value) =>
+      value == null ? null : ppeAnomalyType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<ppeAnomalyType> reader = _ppeAnomalyTypeReader();
+}
+
+class _ppeAnomalyTypeReader extends fb.Reader<ppeAnomalyType> {
+  const _ppeAnomalyTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ppeAnomalyType read(fb.BufferContext bc, int offset) =>
+      ppeAnomalyType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Orbital element parameterization for the first element (size/shape).
+enum sizeShapeProfile {
+  SMA(0),
+  R_PERIAPSIS(1);
+
+  final int value;
+  const sizeShapeProfile(this.value);
+
+  factory sizeShapeProfile.fromValue(int value) {
+    switch (value) {
+      case 0: return sizeShapeProfile.SMA;
+      case 1: return sizeShapeProfile.R_PERIAPSIS;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static sizeShapeProfile? _createOrNull(int? value) =>
+      value == null ? null : sizeShapeProfile.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<sizeShapeProfile> reader = _sizeShapeProfileReader();
+}
+
+class _sizeShapeProfileReader extends fb.Reader<sizeShapeProfile> {
+  const _sizeShapeProfileReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  sizeShapeProfile read(fb.BufferContext bc, int offset) =>
+      sizeShapeProfile.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  A single time-segment record of polynomial coefficients for Cartesian position
+///  (and optionally velocity). Coefficients are stored per axis.
+///
+///  To evaluate position at time t within this record's validity window:
+///    1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
+///       where tau is in [-1, +1].
+///    2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
+///       the coefficients for each axis.
+///
+///  Velocity coefficients, if present, follow the same evaluation procedure.
+///  If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
+///  analytically differentiating the position polynomial.
+class PPEPositionRecord {
+  PPEPositionRecord._(this._bc, this._bcOffset);
+  factory PPEPositionRecord(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<LCC> reader = _LCCReader();
+  static const fb.Reader<PPEPositionRecord> reader = _PPEPositionRecordReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  legacyCountryCode get OWNER => legacyCountryCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Display name of the owner or source the code stands for.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Longer description of the owner or source.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  True while the code is in current use by the publishing catalogue.
-  bool get ACTIVE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
-  ///  URL of the reference table the row was retrieved from.
-  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get sourceUrl => SOURCE_URL;
-  ///  ISO 8601 UTC time the reference table was retrieved.
-  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get retrievedAt => RETRIEVED_AT;
+  ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  ///  Together with EPOCH_HALF_SPAN, defines the time interval:
+  ///    [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
+  String? get EPOCH_MID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get epochMid => EPOCH_MID;
+  ///  Half-span of the validity window in seconds.
+  ///  The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
+  double get EPOCH_HALF_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get epochHalfSpan => EPOCH_HALF_SPAN;
+  ///  Number of polynomial coefficients per axis.
+  ///  The polynomial degree is (NUM_COEFFICIENTS - 1).
+  ///  Typical values: 8-32 for high-fidelity ephemeris fits.
+  int get NUM_COEFFICIENTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get numCoefficients => NUM_COEFFICIENTS;
+  ///  Polynomial basis type for interpreting the coefficient arrays.
+  polynomialBasisType get BASIS_TYPE => polynomialBasisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  polynomialBasisType get basisType => BASIS_TYPE;
+  ///  Position coefficients for X-axis (km).
+  ///  Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
+  List<double>? get POS_COEFF_X => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<double>? get posCoeffX => POS_COEFF_X;
+  ///  Position coefficients for Y-axis (km).
+  ///  Length must equal NUM_COEFFICIENTS.
+  List<double>? get POS_COEFF_Y => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<double>? get posCoeffY => POS_COEFF_Y;
+  ///  Position coefficients for Z-axis (km).
+  ///  Length must equal NUM_COEFFICIENTS.
+  List<double>? get POS_COEFF_Z => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<double>? get posCoeffZ => POS_COEFF_Z;
+  ///  Whether explicit velocity coefficients are provided.
+  ///  If false, velocity should be derived by differentiating the position polynomial.
+  bool get HAS_VELOCITY_COEFFICIENTS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get hasVelocityCoefficients => HAS_VELOCITY_COEFFICIENTS;
+  ///  Velocity coefficients for X-axis (km/s). Optional.
+  ///  Length must equal NUM_COEFFICIENTS if present.
+  List<double>? get VEL_COEFF_X => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<double>? get velCoeffX => VEL_COEFF_X;
+  ///  Velocity coefficients for Y-axis (km/s). Optional.
+  List<double>? get VEL_COEFF_Y => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<double>? get velCoeffY => VEL_COEFF_Y;
+  ///  Velocity coefficients for Z-axis (km/s). Optional.
+  List<double>? get VEL_COEFF_Z => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<double>? get velCoeffZ => VEL_COEFF_Z;
+  ///  Maximum position fit residual over this segment (km). Optional quality metric.
+  double get MAX_POSITION_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get maxPositionResidual => MAX_POSITION_RESIDUAL;
+  ///  RMS position fit residual over this segment (km). Optional quality metric.
+  double get RMS_POSITION_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get rmsPositionResidual => RMS_POSITION_RESIDUAL;
 
   @override
   String toString() {
-    return 'LCC{OWNER: ${OWNER}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ACTIVE: ${ACTIVE}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}}';
+    return 'PPEPositionRecord{epochMid: ${epochMid}, epochHalfSpan: ${epochHalfSpan}, numCoefficients: ${numCoefficients}, basisType: ${basisType}, posCoeffX: ${posCoeffX}, posCoeffY: ${posCoeffY}, posCoeffZ: ${posCoeffZ}, hasVelocityCoefficients: ${hasVelocityCoefficients}, velCoeffX: ${velCoeffX}, velCoeffY: ${velCoeffY}, velCoeffZ: ${velCoeffZ}, maxPositionResidual: ${maxPositionResidual}, rmsPositionResidual: ${rmsPositionResidual}}';
   }
 }
 
-class _LCCReader extends fb.TableReader<LCC> {
-  const _LCCReader();
+class _PPEPositionRecordReader extends fb.TableReader<PPEPositionRecord> {
+  const _PPEPositionRecordReader();
 
   @override
-  LCC createObject(fb.BufferContext bc, int offset) =>
-    LCC._(bc, offset);
+  PPEPositionRecord createObject(fb.BufferContext bc, int offset) =>
+    PPEPositionRecord._(bc, offset);
 }
 
-class LCCBuilder {
-  LCCBuilder(this.fbBuilder);
+class PPEPositionRecordBuilder {
+  PPEPositionRecordBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(13);
   }
 
-  int addOwner(legacyCountryCode? OWNER) {
-    fbBuilder.addInt8(0, OWNER?.value);
+  int addEpochMidOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addEpochHalfSpan(double? EPOCH_HALF_SPAN) {
+    fbBuilder.addFloat64(1, EPOCH_HALF_SPAN);
     return fbBuilder.offset;
   }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addNumCoefficients(int? NUM_COEFFICIENTS) {
+    fbBuilder.addUint16(2, NUM_COEFFICIENTS);
     return fbBuilder.offset;
   }
-  int addActive(bool? ACTIVE) {
-    fbBuilder.addBool(3, ACTIVE);
+  int addBasisType(polynomialBasisType? BASIS_TYPE) {
+    fbBuilder.addInt8(3, BASIS_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addSourceUrlOffset(int? offset) {
+  int addPosCoeffXOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addRetrievedAtOffset(int? offset) {
+  int addPosCoeffYOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addPosCoeffZOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addHasVelocityCoefficients(bool? HAS_VELOCITY_COEFFICIENTS) {
+    fbBuilder.addBool(7, HAS_VELOCITY_COEFFICIENTS);
+    return fbBuilder.offset;
+  }
+  int addVelCoeffXOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addVelCoeffYOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addVelCoeffZOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxPositionResidual(double? MAX_POSITION_RESIDUAL) {
+    fbBuilder.addFloat64(11, MAX_POSITION_RESIDUAL);
+    return fbBuilder.offset;
+  }
+  int addRmsPositionResidual(double? RMS_POSITION_RESIDUAL) {
+    fbBuilder.addFloat64(12, RMS_POSITION_RESIDUAL);
     return fbBuilder.offset;
   }
 
@@ -368,49 +276,599 @@ class LCCBuilder {
   }
 }
 
-class LCCObjectBuilder extends fb.ObjectBuilder {
-  final legacyCountryCode? _OWNER;
-  final String? _NAME;
-  final String? _DESCRIPTION;
-  final bool? _ACTIVE;
-  final String? _SOURCE_URL;
-  final String? _RETRIEVED_AT;
+class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH_MID;
+  final double? _EPOCH_HALF_SPAN;
+  final int? _NUM_COEFFICIENTS;
+  final polynomialBasisType? _BASIS_TYPE;
+  final List<double>? _POS_COEFF_X;
+  final List<double>? _POS_COEFF_Y;
+  final List<double>? _POS_COEFF_Z;
+  final bool? _HAS_VELOCITY_COEFFICIENTS;
+  final List<double>? _VEL_COEFF_X;
+  final List<double>? _VEL_COEFF_Y;
+  final List<double>? _VEL_COEFF_Z;
+  final double? _MAX_POSITION_RESIDUAL;
+  final double? _RMS_POSITION_RESIDUAL;
 
-  LCCObjectBuilder({
-    legacyCountryCode? OWNER,
-    String? NAME,
-    String? DESCRIPTION,
-    bool? ACTIVE,
-    String? SOURCE_URL,
-    String? sourceUrl,
-    String? RETRIEVED_AT,
-    String? retrievedAt,
+  PPEPositionRecordObjectBuilder({
+    String? EPOCH_MID,
+    String? epochMid,
+    double? EPOCH_HALF_SPAN,
+    double? epochHalfSpan,
+    int? NUM_COEFFICIENTS,
+    int? numCoefficients,
+    polynomialBasisType? BASIS_TYPE,
+    polynomialBasisType? basisType,
+    List<double>? POS_COEFF_X,
+    List<double>? posCoeffX,
+    List<double>? POS_COEFF_Y,
+    List<double>? posCoeffY,
+    List<double>? POS_COEFF_Z,
+    List<double>? posCoeffZ,
+    bool? HAS_VELOCITY_COEFFICIENTS,
+    bool? hasVelocityCoefficients,
+    List<double>? VEL_COEFF_X,
+    List<double>? velCoeffX,
+    List<double>? VEL_COEFF_Y,
+    List<double>? velCoeffY,
+    List<double>? VEL_COEFF_Z,
+    List<double>? velCoeffZ,
+    double? MAX_POSITION_RESIDUAL,
+    double? maxPositionResidual,
+    double? RMS_POSITION_RESIDUAL,
+    double? rmsPositionResidual,
   })
-      : _OWNER = OWNER,
-        _NAME = NAME,
-        _DESCRIPTION = DESCRIPTION,
-        _ACTIVE = ACTIVE,
-        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
-        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT;
+      : _EPOCH_MID = epochMid ?? EPOCH_MID,
+        _EPOCH_HALF_SPAN = epochHalfSpan ?? EPOCH_HALF_SPAN,
+        _NUM_COEFFICIENTS = numCoefficients ?? NUM_COEFFICIENTS,
+        _BASIS_TYPE = basisType ?? BASIS_TYPE,
+        _POS_COEFF_X = posCoeffX ?? POS_COEFF_X,
+        _POS_COEFF_Y = posCoeffY ?? POS_COEFF_Y,
+        _POS_COEFF_Z = posCoeffZ ?? POS_COEFF_Z,
+        _HAS_VELOCITY_COEFFICIENTS = hasVelocityCoefficients ?? HAS_VELOCITY_COEFFICIENTS,
+        _VEL_COEFF_X = velCoeffX ?? VEL_COEFF_X,
+        _VEL_COEFF_Y = velCoeffY ?? VEL_COEFF_Y,
+        _VEL_COEFF_Z = velCoeffZ ?? VEL_COEFF_Z,
+        _MAX_POSITION_RESIDUAL = maxPositionResidual ?? MAX_POSITION_RESIDUAL,
+        _RMS_POSITION_RESIDUAL = rmsPositionResidual ?? RMS_POSITION_RESIDUAL;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
-        : fbBuilder.writeString(_SOURCE_URL!);
-    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
-        : fbBuilder.writeString(_RETRIEVED_AT!);
-    fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _OWNER?.value);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, DESCRIPTIONOffset);
-    fbBuilder.addBool(3, _ACTIVE);
-    fbBuilder.addOffset(4, SOURCE_URLOffset);
-    fbBuilder.addOffset(5, RETRIEVED_ATOffset);
+    final int? EPOCH_MIDOffset = _EPOCH_MID == null ? null
+        : fbBuilder.writeString(_EPOCH_MID!);
+    final int? POS_COEFF_XOffset = _POS_COEFF_X == null ? null
+        : fbBuilder.writeListFloat64(_POS_COEFF_X!);
+    final int? POS_COEFF_YOffset = _POS_COEFF_Y == null ? null
+        : fbBuilder.writeListFloat64(_POS_COEFF_Y!);
+    final int? POS_COEFF_ZOffset = _POS_COEFF_Z == null ? null
+        : fbBuilder.writeListFloat64(_POS_COEFF_Z!);
+    final int? VEL_COEFF_XOffset = _VEL_COEFF_X == null ? null
+        : fbBuilder.writeListFloat64(_VEL_COEFF_X!);
+    final int? VEL_COEFF_YOffset = _VEL_COEFF_Y == null ? null
+        : fbBuilder.writeListFloat64(_VEL_COEFF_Y!);
+    final int? VEL_COEFF_ZOffset = _VEL_COEFF_Z == null ? null
+        : fbBuilder.writeListFloat64(_VEL_COEFF_Z!);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, EPOCH_MIDOffset);
+    fbBuilder.addFloat64(1, _EPOCH_HALF_SPAN);
+    fbBuilder.addUint16(2, _NUM_COEFFICIENTS);
+    fbBuilder.addInt8(3, _BASIS_TYPE?.value);
+    fbBuilder.addOffset(4, POS_COEFF_XOffset);
+    fbBuilder.addOffset(5, POS_COEFF_YOffset);
+    fbBuilder.addOffset(6, POS_COEFF_ZOffset);
+    fbBuilder.addBool(7, _HAS_VELOCITY_COEFFICIENTS);
+    fbBuilder.addOffset(8, VEL_COEFF_XOffset);
+    fbBuilder.addOffset(9, VEL_COEFF_YOffset);
+    fbBuilder.addOffset(10, VEL_COEFF_ZOffset);
+    fbBuilder.addFloat64(11, _MAX_POSITION_RESIDUAL);
+    fbBuilder.addFloat64(12, _RMS_POSITION_RESIDUAL);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A single time-segment record of polynomial coefficients for classical orbital elements.
+///
+///  The six classical elements are:
+///    1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
+///    2. Eccentricity (dimensionless)
+///    3. Inclination (degrees)
+///    4. Right Ascension of Ascending Node / RAAN (degrees)
+///    5. Argument of Periapsis (degrees)
+///    6. Anomaly (degrees) — see ANOMALY_TYPE
+///
+///  Evaluation follows the same normalized-time procedure as PPEPositionRecord.
+class PPEOrbitalElementRecord {
+  PPEOrbitalElementRecord._(this._bc, this._bcOffset);
+  factory PPEOrbitalElementRecord(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PPEOrbitalElementRecord> reader = _PPEOrbitalElementRecordReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  String? get EPOCH_MID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get epochMid => EPOCH_MID;
+  ///  Half-span of the validity window in seconds.
+  double get EPOCH_HALF_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get epochHalfSpan => EPOCH_HALF_SPAN;
+  ///  Number of polynomial coefficients per element.
+  int get NUM_COEFFICIENTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get numCoefficients => NUM_COEFFICIENTS;
+  ///  Polynomial basis type for interpreting the coefficient arrays.
+  polynomialBasisType get BASIS_TYPE => polynomialBasisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  polynomialBasisType get basisType => BASIS_TYPE;
+  ///  Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
+  sizeShapeProfile get SIZE_SHAPE_TYPE => sizeShapeProfile.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  sizeShapeProfile get sizeShapeType => SIZE_SHAPE_TYPE;
+  ///  Anomaly type for the sixth orbital element.
+  ppeAnomalyType get ANOMALY_TYPE => ppeAnomalyType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ppeAnomalyType get anomalyType => ANOMALY_TYPE;
+  ///  Coefficients for SMA or radius of periapsis (km).
+  ///  Length must equal NUM_COEFFICIENTS.
+  List<double>? get COEFF_SIZE_SHAPE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<double>? get coeffSizeShape => COEFF_SIZE_SHAPE;
+  ///  Coefficients for eccentricity (dimensionless).
+  ///  Length must equal NUM_COEFFICIENTS.
+  List<double>? get COEFF_ECCENTRICITY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get coeffEccentricity => COEFF_ECCENTRICITY;
+  ///  Coefficients for inclination (degrees).
+  ///  Length must equal NUM_COEFFICIENTS.
+  List<double>? get COEFF_INCLINATION => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<double>? get coeffInclination => COEFF_INCLINATION;
+  ///  Coefficients for RAAN (degrees).
+  ///  Length must equal NUM_COEFFICIENTS.
+  List<double>? get COEFF_RAAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<double>? get coeffRaan => COEFF_RAAN;
+  ///  Coefficients for argument of periapsis (degrees).
+  ///  Length must equal NUM_COEFFICIENTS.
+  List<double>? get COEFF_ARG_PERIAPSIS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<double>? get coeffArgPeriapsis => COEFF_ARG_PERIAPSIS;
+  ///  Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
+  ///  Length must equal NUM_COEFFICIENTS.
+  List<double>? get COEFF_ANOMALY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 26);
+  List<double>? get coeffAnomaly => COEFF_ANOMALY;
+  ///  Maximum element fit residual over this segment. Optional quality metric.
+  ///  Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
+  double get MAX_ELEMENT_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get maxElementResidual => MAX_ELEMENT_RESIDUAL;
+  ///  RMS element fit residual over this segment. Optional quality metric.
+  double get RMS_ELEMENT_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get rmsElementResidual => RMS_ELEMENT_RESIDUAL;
+
+  @override
+  String toString() {
+    return 'PPEOrbitalElementRecord{epochMid: ${epochMid}, epochHalfSpan: ${epochHalfSpan}, numCoefficients: ${numCoefficients}, basisType: ${basisType}, sizeShapeType: ${sizeShapeType}, anomalyType: ${anomalyType}, coeffSizeShape: ${coeffSizeShape}, coeffEccentricity: ${coeffEccentricity}, coeffInclination: ${coeffInclination}, coeffRaan: ${coeffRaan}, coeffArgPeriapsis: ${coeffArgPeriapsis}, coeffAnomaly: ${coeffAnomaly}, maxElementResidual: ${maxElementResidual}, rmsElementResidual: ${rmsElementResidual}}';
+  }
+}
+
+class _PPEOrbitalElementRecordReader extends fb.TableReader<PPEOrbitalElementRecord> {
+  const _PPEOrbitalElementRecordReader();
+
+  @override
+  PPEOrbitalElementRecord createObject(fb.BufferContext bc, int offset) =>
+    PPEOrbitalElementRecord._(bc, offset);
+}
+
+class PPEOrbitalElementRecordBuilder {
+  PPEOrbitalElementRecordBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(14);
+  }
+
+  int addEpochMidOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochHalfSpan(double? EPOCH_HALF_SPAN) {
+    fbBuilder.addFloat64(1, EPOCH_HALF_SPAN);
+    return fbBuilder.offset;
+  }
+  int addNumCoefficients(int? NUM_COEFFICIENTS) {
+    fbBuilder.addUint16(2, NUM_COEFFICIENTS);
+    return fbBuilder.offset;
+  }
+  int addBasisType(polynomialBasisType? BASIS_TYPE) {
+    fbBuilder.addInt8(3, BASIS_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addSizeShapeType(sizeShapeProfile? SIZE_SHAPE_TYPE) {
+    fbBuilder.addInt8(4, SIZE_SHAPE_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addAnomalyType(ppeAnomalyType? ANOMALY_TYPE) {
+    fbBuilder.addInt8(5, ANOMALY_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addCoeffSizeShapeOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addCoeffEccentricityOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCoeffInclinationOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addCoeffRaanOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addCoeffArgPeriapsisOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addCoeffAnomalyOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxElementResidual(double? MAX_ELEMENT_RESIDUAL) {
+    fbBuilder.addFloat64(12, MAX_ELEMENT_RESIDUAL);
+    return fbBuilder.offset;
+  }
+  int addRmsElementResidual(double? RMS_ELEMENT_RESIDUAL) {
+    fbBuilder.addFloat64(13, RMS_ELEMENT_RESIDUAL);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PPEOrbitalElementRecordObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH_MID;
+  final double? _EPOCH_HALF_SPAN;
+  final int? _NUM_COEFFICIENTS;
+  final polynomialBasisType? _BASIS_TYPE;
+  final sizeShapeProfile? _SIZE_SHAPE_TYPE;
+  final ppeAnomalyType? _ANOMALY_TYPE;
+  final List<double>? _COEFF_SIZE_SHAPE;
+  final List<double>? _COEFF_ECCENTRICITY;
+  final List<double>? _COEFF_INCLINATION;
+  final List<double>? _COEFF_RAAN;
+  final List<double>? _COEFF_ARG_PERIAPSIS;
+  final List<double>? _COEFF_ANOMALY;
+  final double? _MAX_ELEMENT_RESIDUAL;
+  final double? _RMS_ELEMENT_RESIDUAL;
+
+  PPEOrbitalElementRecordObjectBuilder({
+    String? EPOCH_MID,
+    String? epochMid,
+    double? EPOCH_HALF_SPAN,
+    double? epochHalfSpan,
+    int? NUM_COEFFICIENTS,
+    int? numCoefficients,
+    polynomialBasisType? BASIS_TYPE,
+    polynomialBasisType? basisType,
+    sizeShapeProfile? SIZE_SHAPE_TYPE,
+    sizeShapeProfile? sizeShapeType,
+    ppeAnomalyType? ANOMALY_TYPE,
+    ppeAnomalyType? anomalyType,
+    List<double>? COEFF_SIZE_SHAPE,
+    List<double>? coeffSizeShape,
+    List<double>? COEFF_ECCENTRICITY,
+    List<double>? coeffEccentricity,
+    List<double>? COEFF_INCLINATION,
+    List<double>? coeffInclination,
+    List<double>? COEFF_RAAN,
+    List<double>? coeffRaan,
+    List<double>? COEFF_ARG_PERIAPSIS,
+    List<double>? coeffArgPeriapsis,
+    List<double>? COEFF_ANOMALY,
+    List<double>? coeffAnomaly,
+    double? MAX_ELEMENT_RESIDUAL,
+    double? maxElementResidual,
+    double? RMS_ELEMENT_RESIDUAL,
+    double? rmsElementResidual,
+  })
+      : _EPOCH_MID = epochMid ?? EPOCH_MID,
+        _EPOCH_HALF_SPAN = epochHalfSpan ?? EPOCH_HALF_SPAN,
+        _NUM_COEFFICIENTS = numCoefficients ?? NUM_COEFFICIENTS,
+        _BASIS_TYPE = basisType ?? BASIS_TYPE,
+        _SIZE_SHAPE_TYPE = sizeShapeType ?? SIZE_SHAPE_TYPE,
+        _ANOMALY_TYPE = anomalyType ?? ANOMALY_TYPE,
+        _COEFF_SIZE_SHAPE = coeffSizeShape ?? COEFF_SIZE_SHAPE,
+        _COEFF_ECCENTRICITY = coeffEccentricity ?? COEFF_ECCENTRICITY,
+        _COEFF_INCLINATION = coeffInclination ?? COEFF_INCLINATION,
+        _COEFF_RAAN = coeffRaan ?? COEFF_RAAN,
+        _COEFF_ARG_PERIAPSIS = coeffArgPeriapsis ?? COEFF_ARG_PERIAPSIS,
+        _COEFF_ANOMALY = coeffAnomaly ?? COEFF_ANOMALY,
+        _MAX_ELEMENT_RESIDUAL = maxElementResidual ?? MAX_ELEMENT_RESIDUAL,
+        _RMS_ELEMENT_RESIDUAL = rmsElementResidual ?? RMS_ELEMENT_RESIDUAL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCH_MIDOffset = _EPOCH_MID == null ? null
+        : fbBuilder.writeString(_EPOCH_MID!);
+    final int? COEFF_SIZE_SHAPEOffset = _COEFF_SIZE_SHAPE == null ? null
+        : fbBuilder.writeListFloat64(_COEFF_SIZE_SHAPE!);
+    final int? COEFF_ECCENTRICITYOffset = _COEFF_ECCENTRICITY == null ? null
+        : fbBuilder.writeListFloat64(_COEFF_ECCENTRICITY!);
+    final int? COEFF_INCLINATIONOffset = _COEFF_INCLINATION == null ? null
+        : fbBuilder.writeListFloat64(_COEFF_INCLINATION!);
+    final int? COEFF_RAANOffset = _COEFF_RAAN == null ? null
+        : fbBuilder.writeListFloat64(_COEFF_RAAN!);
+    final int? COEFF_ARG_PERIAPSISOffset = _COEFF_ARG_PERIAPSIS == null ? null
+        : fbBuilder.writeListFloat64(_COEFF_ARG_PERIAPSIS!);
+    final int? COEFF_ANOMALYOffset = _COEFF_ANOMALY == null ? null
+        : fbBuilder.writeListFloat64(_COEFF_ANOMALY!);
+    fbBuilder.startTable(14);
+    fbBuilder.addOffset(0, EPOCH_MIDOffset);
+    fbBuilder.addFloat64(1, _EPOCH_HALF_SPAN);
+    fbBuilder.addUint16(2, _NUM_COEFFICIENTS);
+    fbBuilder.addInt8(3, _BASIS_TYPE?.value);
+    fbBuilder.addInt8(4, _SIZE_SHAPE_TYPE?.value);
+    fbBuilder.addInt8(5, _ANOMALY_TYPE?.value);
+    fbBuilder.addOffset(6, COEFF_SIZE_SHAPEOffset);
+    fbBuilder.addOffset(7, COEFF_ECCENTRICITYOffset);
+    fbBuilder.addOffset(8, COEFF_INCLINATIONOffset);
+    fbBuilder.addOffset(9, COEFF_RAANOffset);
+    fbBuilder.addOffset(10, COEFF_ARG_PERIAPSISOffset);
+    fbBuilder.addOffset(11, COEFF_ANOMALYOffset);
+    fbBuilder.addFloat64(12, _MAX_ELEMENT_RESIDUAL);
+    fbBuilder.addFloat64(13, _RMS_ELEMENT_RESIDUAL);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Polynomial Ephemeris — top-level message containing metadata and
+///  one or more polynomial coefficient records for a single space object.
+///
+///  A PPE message may contain position records, orbital element records, or both.
+///  Records should be ordered chronologically by EPOCH_MID and should collectively
+///  cover the time span [START_TIME, STOP_TIME] without gaps.
+class PPE {
+  PPE._(this._bc, this._bcOffset);
+  factory PPE(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PPE> reader = _PPEReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Plain-text comments.
+  List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Space object identification.
+  CAT? get OBJECT => CAT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Origin of the reference frame (e.g., EARTH, MOON, MARS).
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get centerName => CENTER_NAME;
+  ///  Reference frame for position/velocity coefficients.
+  RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  RFM? get referenceFrame => REFERENCE_FRAME;
+  ///  Time system used for all epochs in this message.
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  timingStandard get timeSystem => TIME_SYSTEM;
+  ///  Start of the total time span covered by this ephemeris (ISO 8601).
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get startTime => START_TIME;
+  ///  End of the total time span covered by this ephemeris (ISO 8601).
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get stopTime => STOP_TIME;
+  ///  Default polynomial basis type for all records in this message.
+  ///  Individual records may override this with their own BASIS_TYPE field.
+  polynomialBasisType get DEFAULT_BASIS_TYPE => polynomialBasisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  polynomialBasisType get defaultBasisType => DEFAULT_BASIS_TYPE;
+  ///  Array of position polynomial records.
+  ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  List<PPEPositionRecord>? get POSITION_RECORDS => const fb.ListReader<PPEPositionRecord>(PPEPositionRecord.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  List<PPEPositionRecord>? get positionRecords => POSITION_RECORDS;
+  ///  Array of orbital element polynomial records.
+  ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  List<PPEOrbitalElementRecord>? get ORBITAL_ELEMENT_RECORDS => const fb.ListReader<PPEOrbitalElementRecord>(PPEOrbitalElementRecord.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  List<PPEOrbitalElementRecord>? get orbitalElementRecords => ORBITAL_ELEMENT_RECORDS;
+  ///  Generating ephemeris source, verbatim as the generator names itself
+  ///  (e.g., a planetary ephemeris series designation, a numerical propagator
+  ///  name and version, or an in-house tool identifier).
+  String? get EPHEMERIS_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get ephemerisSource => EPHEMERIS_SOURCE;
+  ///  Fit span in seconds used to generate each polynomial segment.
+  ///  Informational; actual spans are in individual records.
+  double get NOMINAL_SEGMENT_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get nominalSegmentSpan => NOMINAL_SEGMENT_SPAN;
+  ///  Nominal number of coefficients per segment.
+  ///  Informational; actual counts are in individual records.
+  int get NOMINAL_NUM_COEFFICIENTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get nominalNumCoefficients => NOMINAL_NUM_COEFFICIENTS;
+
+  @override
+  String toString() {
+    return 'PPE{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, stopTime: ${stopTime}, defaultBasisType: ${defaultBasisType}, positionRecords: ${positionRecords}, orbitalElementRecords: ${orbitalElementRecords}, ephemerisSource: ${ephemerisSource}, nominalSegmentSpan: ${nominalSegmentSpan}, nominalNumCoefficients: ${nominalNumCoefficients}}';
+  }
+}
+
+class _PPEReader extends fb.TableReader<PPE> {
+  const _PPEReader();
+
+  @override
+  PPE createObject(fb.BufferContext bc, int offset) =>
+    PPE._(bc, offset);
+}
+
+class PPEBuilder {
+  PPEBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
+    fbBuilder.addInt8(4, TIME_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addDefaultBasisType(polynomialBasisType? DEFAULT_BASIS_TYPE) {
+    fbBuilder.addInt8(7, DEFAULT_BASIS_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addPositionRecordsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitalElementRecordsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisSourceOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addNominalSegmentSpan(double? NOMINAL_SEGMENT_SPAN) {
+    fbBuilder.addFloat64(11, NOMINAL_SEGMENT_SPAN);
+    return fbBuilder.offset;
+  }
+  int addNominalNumCoefficients(int? NOMINAL_NUM_COEFFICIENTS) {
+    fbBuilder.addUint16(12, NOMINAL_NUM_COEFFICIENTS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PPEObjectBuilder extends fb.ObjectBuilder {
+  final List<String>? _COMMENT;
+  final CATObjectBuilder? _OBJECT;
+  final String? _CENTER_NAME;
+  final RFMObjectBuilder? _REFERENCE_FRAME;
+  final timingStandard? _TIME_SYSTEM;
+  final String? _START_TIME;
+  final String? _STOP_TIME;
+  final polynomialBasisType? _DEFAULT_BASIS_TYPE;
+  final List<PPEPositionRecordObjectBuilder>? _POSITION_RECORDS;
+  final List<PPEOrbitalElementRecordObjectBuilder>? _ORBITAL_ELEMENT_RECORDS;
+  final String? _EPHEMERIS_SOURCE;
+  final double? _NOMINAL_SEGMENT_SPAN;
+  final int? _NOMINAL_NUM_COEFFICIENTS;
+
+  PPEObjectBuilder({
+    List<String>? COMMENT,
+    CATObjectBuilder? OBJECT,
+    String? CENTER_NAME,
+    String? centerName,
+    RFMObjectBuilder? REFERENCE_FRAME,
+    RFMObjectBuilder? referenceFrame,
+    timingStandard? TIME_SYSTEM,
+    timingStandard? timeSystem,
+    String? START_TIME,
+    String? startTime,
+    String? STOP_TIME,
+    String? stopTime,
+    polynomialBasisType? DEFAULT_BASIS_TYPE,
+    polynomialBasisType? defaultBasisType,
+    List<PPEPositionRecordObjectBuilder>? POSITION_RECORDS,
+    List<PPEPositionRecordObjectBuilder>? positionRecords,
+    List<PPEOrbitalElementRecordObjectBuilder>? ORBITAL_ELEMENT_RECORDS,
+    List<PPEOrbitalElementRecordObjectBuilder>? orbitalElementRecords,
+    String? EPHEMERIS_SOURCE,
+    String? ephemerisSource,
+    double? NOMINAL_SEGMENT_SPAN,
+    double? nominalSegmentSpan,
+    int? NOMINAL_NUM_COEFFICIENTS,
+    int? nominalNumCoefficients,
+  })
+      : _COMMENT = COMMENT,
+        _OBJECT = OBJECT,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _START_TIME = startTime ?? START_TIME,
+        _STOP_TIME = stopTime ?? STOP_TIME,
+        _DEFAULT_BASIS_TYPE = defaultBasisType ?? DEFAULT_BASIS_TYPE,
+        _POSITION_RECORDS = positionRecords ?? POSITION_RECORDS,
+        _ORBITAL_ELEMENT_RECORDS = orbitalElementRecords ?? ORBITAL_ELEMENT_RECORDS,
+        _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE,
+        _NOMINAL_SEGMENT_SPAN = nominalSegmentSpan ?? NOMINAL_SEGMENT_SPAN,
+        _NOMINAL_NUM_COEFFICIENTS = nominalNumCoefficients ?? NOMINAL_NUM_COEFFICIENTS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
+    final int? OBJECTOffset = _OBJECT?.getOrCreateOffset(fbBuilder);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? STOP_TIMEOffset = _STOP_TIME == null ? null
+        : fbBuilder.writeString(_STOP_TIME!);
+    final int? POSITION_RECORDSOffset = _POSITION_RECORDS == null ? null
+        : fbBuilder.writeList(_POSITION_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ORBITAL_ELEMENT_RECORDSOffset = _ORBITAL_ELEMENT_RECORDS == null ? null
+        : fbBuilder.writeList(_ORBITAL_ELEMENT_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? EPHEMERIS_SOURCEOffset = _EPHEMERIS_SOURCE == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, OBJECTOffset);
+    fbBuilder.addOffset(2, CENTER_NAMEOffset);
+    fbBuilder.addOffset(3, REFERENCE_FRAMEOffset);
+    fbBuilder.addInt8(4, _TIME_SYSTEM?.value);
+    fbBuilder.addOffset(5, START_TIMEOffset);
+    fbBuilder.addOffset(6, STOP_TIMEOffset);
+    fbBuilder.addInt8(7, _DEFAULT_BASIS_TYPE?.value);
+    fbBuilder.addOffset(8, POSITION_RECORDSOffset);
+    fbBuilder.addOffset(9, ORBITAL_ELEMENT_RECORDSOffset);
+    fbBuilder.addOffset(10, EPHEMERIS_SOURCEOffset);
+    fbBuilder.addFloat64(11, _NOMINAL_SEGMENT_SPAN);
+    fbBuilder.addUint16(12, _NOMINAL_NUM_COEFFICIENTS);
     return fbBuilder.endTable();
   }
 

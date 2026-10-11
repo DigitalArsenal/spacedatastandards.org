@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "covarianceCalibration": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Uncalibrated",
+        "Calibrated"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Calibration not stated"
+        },
+        "Uncalibrated": {
+          "value": 1,
+          "description": "Not measured against independent reference states, or measured and failed"
+        },
+        "Calibrated": {
+          "value": 2,
+          "description": "Measured against independent reference states and passed"
+        }
+      }
+    },
+    "covarianceRule": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Operator",
+        "ScaledFit",
+        "SourceModel",
+        "PooledModel"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "Operator": {
+          "value": 1,
+          "description": "The operator's covariance, as supplied"
+        },
+        "ScaledFit": {
+          "value": 2,
+          "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+        },
+        "SourceModel": {
+          "value": 3,
+          "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+        },
+        "PooledModel": {
+          "value": 4,
+          "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+        }
+      }
+    },
+    "CVR": {
+      "type": "object",
+      "description": "Covariance Realism",
+      "properties": {
+        "RULE": {
+          "$ref": "#/definitions/covarianceRule",
+          "description": "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "Operator": {
+              "value": 1,
+              "description": "The operator's covariance, as supplied"
+            },
+            "ScaledFit": {
+              "value": 2,
+              "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            "SourceModel": {
+              "value": 3,
+              "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            "PooledModel": {
+              "value": 4,
+              "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "MODEL_ID": {
+          "type": "string",
+          "description": "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME": {
+          "type": "string",
+          "description": "Orbit regime of the cell, as the model names it.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGE_DAYS": {
+          "type": "number",
+          "description": "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HORIZON_DAYS": {
+          "type": "number",
+          "description": "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MEASURED_LINEAGE": {
+          "type": "string",
+          "description": "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+          "x-flatbuffer-type": "string"
+        },
+        "TEST_WINDOW": {
+          "type": "string",
+          "description": "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+          "x-flatbuffer-type": "string"
+        },
+        "MEAN_D2_OVER_3": {
+          "type": "number",
+          "description": "Mean of d2/3 over the held-out samples. NaN when not measured.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "COVERAGE_95": {
+          "type": "number",
+          "description": "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of held-out samples the test used.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of distinct objects the samples came from.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SCALE_FACTOR": {
+          "type": "number",
+          "description": "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CALIBRATION": {
+          "$ref": "#/definitions/covarianceCalibration",
+          "description": "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Calibration not stated"
+            },
+            "Uncalibrated": {
+              "value": 1,
+              "description": "Not measured against independent reference states, or measured and failed"
+            },
+            "Calibrated": {
+              "value": 2,
+              "description": "Measured against independent reference states and passed"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "EVIDENCE": {
+          "type": "string",
+          "description": "Identifier of the report or record that holds the test.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CVR",
+  "x-flatbuffer-root-type": "CVR",
+  "x-flatbuffer-file-identifier": "$CVR"
+}

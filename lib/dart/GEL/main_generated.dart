@@ -5,403 +5,143 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum timingStandard {
-  GMST(0),
-  GPS(1),
-  MET(2),
-  MRT(3),
-  SCLK(4),
-  TAI(5),
-  TCB(6),
-  TDB(7),
-  TCG(8),
-  TT(9),
-  UT1(10),
-  UTC(11),
-  GLONASS(12),
-  GST(13),
-  QZSS(14),
-  BDT(15),
-  NAVIC(16),
-  SBAS(17),
-  A1(18);
+///  Measurement technique used by the solution.
+enum gelTechniqueClass {
+  UNSPECIFIED(0),
+  TDOA(1),
+  FDOA(2),
+  TDOA_FDOA(3),
+  ANGLE_OF_ARRIVAL(4),
+  HYBRID(5),
+  MULTI_EPOCH_FUSION(6);
 
   final int value;
-  const timingStandard(this.value);
+  const gelTechniqueClass(this.value);
 
-  factory timingStandard.fromValue(int value) {
+  factory gelTechniqueClass.fromValue(int value) {
     switch (value) {
-      case 0: return timingStandard.GMST;
-      case 1: return timingStandard.GPS;
-      case 2: return timingStandard.MET;
-      case 3: return timingStandard.MRT;
-      case 4: return timingStandard.SCLK;
-      case 5: return timingStandard.TAI;
-      case 6: return timingStandard.TCB;
-      case 7: return timingStandard.TDB;
-      case 8: return timingStandard.TCG;
-      case 9: return timingStandard.TT;
-      case 10: return timingStandard.UT1;
-      case 11: return timingStandard.UTC;
-      case 12: return timingStandard.GLONASS;
-      case 13: return timingStandard.GST;
-      case 14: return timingStandard.QZSS;
-      case 15: return timingStandard.BDT;
-      case 16: return timingStandard.NAVIC;
-      case 17: return timingStandard.SBAS;
-      case 18: return timingStandard.A1;
+      case 0: return gelTechniqueClass.UNSPECIFIED;
+      case 1: return gelTechniqueClass.TDOA;
+      case 2: return gelTechniqueClass.FDOA;
+      case 3: return gelTechniqueClass.TDOA_FDOA;
+      case 4: return gelTechniqueClass.ANGLE_OF_ARRIVAL;
+      case 5: return gelTechniqueClass.HYBRID;
+      case 6: return gelTechniqueClass.MULTI_EPOCH_FUSION;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timingStandard? _createOrNull(int? value) =>
-      value == null ? null : timingStandard.fromValue(value);
+  static gelTechniqueClass? _createOrNull(int? value) =>
+      value == null ? null : gelTechniqueClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 18;
-  static const fb.Reader<timingStandard> reader = _timingStandardReader();
+  static const int maxValue = 6;
+  static const fb.Reader<gelTechniqueClass> reader = _gelTechniqueClassReader();
 }
 
-class _timingStandardReader extends fb.Reader<timingStandard> {
-  const _timingStandardReader();
+class _gelTechniqueClassReader extends fb.Reader<gelTechniqueClass> {
+  const _gelTechniqueClassReader();
 
   @override
   int get size => 1;
 
   @override
-  timingStandard read(fb.BufferContext bc, int offset) =>
-      timingStandard.fromValue(const fb.Int8Reader().read(bc, offset));
+  gelTechniqueClass read(fb.BufferContext bc, int offset) =>
+      gelTechniqueClass.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timEpochRepresentation {
-  JULIAN_DATE(0),
-  MODIFIED_JULIAN_DATE(1),
-  UNIX_SECONDS(2),
-  ISO8601(3),
-  GPS_SECONDS(4),
-  GNSS_WEEK_SECONDS(5),
-  CCSDS_TIME_CODE(6),
-  MISSION_ELAPSED_SECONDS(7);
+///  How one observation participated in the final solution.
+enum gelObservationDisposition {
+  UNSPECIFIED(0),
+  ACCEPTED(1),
+  DOWNWEIGHTED(2),
+  REJECTED(3);
 
   final int value;
-  const timEpochRepresentation(this.value);
+  const gelObservationDisposition(this.value);
 
-  factory timEpochRepresentation.fromValue(int value) {
+  factory gelObservationDisposition.fromValue(int value) {
     switch (value) {
-      case 0: return timEpochRepresentation.JULIAN_DATE;
-      case 1: return timEpochRepresentation.MODIFIED_JULIAN_DATE;
-      case 2: return timEpochRepresentation.UNIX_SECONDS;
-      case 3: return timEpochRepresentation.ISO8601;
-      case 4: return timEpochRepresentation.GPS_SECONDS;
-      case 5: return timEpochRepresentation.GNSS_WEEK_SECONDS;
-      case 6: return timEpochRepresentation.CCSDS_TIME_CODE;
-      case 7: return timEpochRepresentation.MISSION_ELAPSED_SECONDS;
+      case 0: return gelObservationDisposition.UNSPECIFIED;
+      case 1: return gelObservationDisposition.ACCEPTED;
+      case 2: return gelObservationDisposition.DOWNWEIGHTED;
+      case 3: return gelObservationDisposition.REJECTED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timEpochRepresentation? _createOrNull(int? value) =>
-      value == null ? null : timEpochRepresentation.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 7;
-  static const fb.Reader<timEpochRepresentation> reader = _timEpochRepresentationReader();
-}
-
-class _timEpochRepresentationReader extends fb.Reader<timEpochRepresentation> {
-  const _timEpochRepresentationReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  timEpochRepresentation read(fb.BufferContext bc, int offset) =>
-      timEpochRepresentation.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-enum timCcsdsTimeCodeKind {
-  NONE(0),
-  UNSEGMENTED(1),
-  DAY_SEGMENTED(2),
-  CALENDAR_SEGMENTED(3);
-
-  final int value;
-  const timCcsdsTimeCodeKind(this.value);
-
-  factory timCcsdsTimeCodeKind.fromValue(int value) {
-    switch (value) {
-      case 0: return timCcsdsTimeCodeKind.NONE;
-      case 1: return timCcsdsTimeCodeKind.UNSEGMENTED;
-      case 2: return timCcsdsTimeCodeKind.DAY_SEGMENTED;
-      case 3: return timCcsdsTimeCodeKind.CALENDAR_SEGMENTED;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static timCcsdsTimeCodeKind? _createOrNull(int? value) =>
-      value == null ? null : timCcsdsTimeCodeKind.fromValue(value);
+  static gelObservationDisposition? _createOrNull(int? value) =>
+      value == null ? null : gelObservationDisposition.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<timCcsdsTimeCodeKind> reader = _timCcsdsTimeCodeKindReader();
+  static const fb.Reader<gelObservationDisposition> reader = _gelObservationDispositionReader();
 }
 
-class _timCcsdsTimeCodeKindReader extends fb.Reader<timCcsdsTimeCodeKind> {
-  const _timCcsdsTimeCodeKindReader();
+class _gelObservationDispositionReader extends fb.Reader<gelObservationDisposition> {
+  const _gelObservationDispositionReader();
 
   @override
   int get size => 1;
 
   @override
-  timCcsdsTimeCodeKind read(fb.BufferContext bc, int offset) =>
-      timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().read(bc, offset));
+  gelObservationDisposition read(fb.BufferContext bc, int offset) =>
+      gelObservationDisposition.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timConversionStatus {
-  OK(0),
-  INVALID_INPUT(1),
-  UNSUPPORTED_TIME_SYSTEM(2),
-  LEAP_SECOND_DATA_REQUIRED(3),
-  EOP_DATA_REQUIRED(4),
-  OUT_OF_RANGE(5);
-
-  final int value;
-  const timConversionStatus(this.value);
-
-  factory timConversionStatus.fromValue(int value) {
-    switch (value) {
-      case 0: return timConversionStatus.OK;
-      case 1: return timConversionStatus.INVALID_INPUT;
-      case 2: return timConversionStatus.UNSUPPORTED_TIME_SYSTEM;
-      case 3: return timConversionStatus.LEAP_SECOND_DATA_REQUIRED;
-      case 4: return timConversionStatus.EOP_DATA_REQUIRED;
-      case 5: return timConversionStatus.OUT_OF_RANGE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static timConversionStatus? _createOrNull(int? value) =>
-      value == null ? null : timConversionStatus.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<timConversionStatus> reader = _timConversionStatusReader();
-}
-
-class _timConversionStatusReader extends fb.Reader<timConversionStatus> {
-  const _timConversionStatusReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  timConversionStatus read(fb.BufferContext bc, int offset) =>
-      timConversionStatus.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  CCSDS time-code payload and preamble metadata.
-class TIMCcsdsTimeCode {
-  TIMCcsdsTimeCode._(this._bc, this._bcOffset);
-  factory TIMCcsdsTimeCode(List<int> bytes) {
+///  Trace from a solution row back to one `$DOA` observation or `$IQC` capture.
+class GELObservationRef {
+  GELObservationRef._(this._bc, this._bcOffset);
+  factory GELObservationRef(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMCcsdsTimeCode> reader = _TIMCcsdsTimeCodeReader();
+  static const fb.Reader<GELObservationRef> reader = _GELObservationRefReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  CCSDS time-code family.
-  timCcsdsTimeCodeKind get CODE_KIND => timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timCcsdsTimeCodeKind get codeKind => CODE_KIND;
-  ///  First CCSDS preamble field octet.
-  int get PREAMBLE_FIELD1 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get preambleField1 => PREAMBLE_FIELD1;
-  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
-  int get PREAMBLE_FIELD2 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get preambleField2 => PREAMBLE_FIELD2;
-  ///  Raw CCSDS time field octets.
-  List<int>? get TIME_FIELD => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
-  List<int>? get timeField => TIME_FIELD;
-  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
-  String? get AGENCY_DEFINED_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get agencyDefinedEpochIso8601 => AGENCY_DEFINED_EPOCH_ISO8601;
-  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
-  String? get CCSDS_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get ccsdsEpochIso8601 => CCSDS_EPOCH_ISO8601;
+  int get OBSERVATION_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get observationIndex => OBSERVATION_INDEX;
+  ///  At least one of DOA_ID or IQC_ID is required. When both are present, the
+  ///  `$DOA` observation must have been derived from the named `$IQC` capture.
+  String? get DOA_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get doaId => DOA_ID;
+  String? get IQC_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get iqcId => IQC_ID;
+  String? get COLLECTOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get collectorId => COLLECTOR_ID;
+  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get TIME_DIFFERENCE_RESIDUAL_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get timeDifferenceResidualS => TIME_DIFFERENCE_RESIDUAL_S;
+  double get FREQUENCY_DIFFERENCE_RESIDUAL_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get frequencyDifferenceResidualHz => FREQUENCY_DIFFERENCE_RESIDUAL_HZ;
+  double get ANGULAR_RESIDUAL_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get angularResidualDeg => ANGULAR_RESIDUAL_DEG;
+  double get WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  gelObservationDisposition get DISPOSITION => gelObservationDisposition.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  String? get REJECTION_REASON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get rejectionReason => REJECTION_REASON;
 
   @override
   String toString() {
-    return 'TIMCcsdsTimeCode{codeKind: ${codeKind}, preambleField1: ${preambleField1}, preambleField2: ${preambleField2}, timeField: ${timeField}, agencyDefinedEpochIso8601: ${agencyDefinedEpochIso8601}, ccsdsEpochIso8601: ${ccsdsEpochIso8601}}';
+    return 'GELObservationRef{observationIndex: ${observationIndex}, doaId: ${doaId}, iqcId: ${iqcId}, collectorId: ${collectorId}, EPOCH: ${EPOCH}, timeDifferenceResidualS: ${timeDifferenceResidualS}, frequencyDifferenceResidualHz: ${frequencyDifferenceResidualHz}, angularResidualDeg: ${angularResidualDeg}, WEIGHT: ${WEIGHT}, DISPOSITION: ${DISPOSITION}, rejectionReason: ${rejectionReason}}';
   }
 }
 
-class _TIMCcsdsTimeCodeReader extends fb.TableReader<TIMCcsdsTimeCode> {
-  const _TIMCcsdsTimeCodeReader();
+class _GELObservationRefReader extends fb.TableReader<GELObservationRef> {
+  const _GELObservationRefReader();
 
   @override
-  TIMCcsdsTimeCode createObject(fb.BufferContext bc, int offset) =>
-    TIMCcsdsTimeCode._(bc, offset);
+  GELObservationRef createObject(fb.BufferContext bc, int offset) =>
+    GELObservationRef._(bc, offset);
 }
 
-class TIMCcsdsTimeCodeBuilder {
-  TIMCcsdsTimeCodeBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addCodeKind(timCcsdsTimeCodeKind? CODE_KIND) {
-    fbBuilder.addInt8(0, CODE_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addPreambleField1(int? PREAMBLE_FIELD1) {
-    fbBuilder.addUint8(1, PREAMBLE_FIELD1);
-    return fbBuilder.offset;
-  }
-  int addPreambleField2(int? PREAMBLE_FIELD2) {
-    fbBuilder.addUint8(2, PREAMBLE_FIELD2);
-    return fbBuilder.offset;
-  }
-  int addTimeFieldOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addAgencyDefinedEpochIso8601Offset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addCcsdsEpochIso8601Offset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMCcsdsTimeCodeObjectBuilder extends fb.ObjectBuilder {
-  final timCcsdsTimeCodeKind? _CODE_KIND;
-  final int? _PREAMBLE_FIELD1;
-  final int? _PREAMBLE_FIELD2;
-  final List<int>? _TIME_FIELD;
-  final String? _AGENCY_DEFINED_EPOCH_ISO8601;
-  final String? _CCSDS_EPOCH_ISO8601;
-
-  TIMCcsdsTimeCodeObjectBuilder({
-    timCcsdsTimeCodeKind? CODE_KIND,
-    timCcsdsTimeCodeKind? codeKind,
-    int? PREAMBLE_FIELD1,
-    int? preambleField1,
-    int? PREAMBLE_FIELD2,
-    int? preambleField2,
-    List<int>? TIME_FIELD,
-    List<int>? timeField,
-    String? AGENCY_DEFINED_EPOCH_ISO8601,
-    String? agencyDefinedEpochIso8601,
-    String? CCSDS_EPOCH_ISO8601,
-    String? ccsdsEpochIso8601,
-  })
-      : _CODE_KIND = codeKind ?? CODE_KIND,
-        _PREAMBLE_FIELD1 = preambleField1 ?? PREAMBLE_FIELD1,
-        _PREAMBLE_FIELD2 = preambleField2 ?? PREAMBLE_FIELD2,
-        _TIME_FIELD = timeField ?? TIME_FIELD,
-        _AGENCY_DEFINED_EPOCH_ISO8601 = agencyDefinedEpochIso8601 ?? AGENCY_DEFINED_EPOCH_ISO8601,
-        _CCSDS_EPOCH_ISO8601 = ccsdsEpochIso8601 ?? CCSDS_EPOCH_ISO8601;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? TIME_FIELDOffset = _TIME_FIELD == null ? null
-        : fbBuilder.writeListUint8(_TIME_FIELD!);
-    final int? AGENCY_DEFINED_EPOCH_ISO8601Offset = _AGENCY_DEFINED_EPOCH_ISO8601 == null ? null
-        : fbBuilder.writeString(_AGENCY_DEFINED_EPOCH_ISO8601!);
-    final int? CCSDS_EPOCH_ISO8601Offset = _CCSDS_EPOCH_ISO8601 == null ? null
-        : fbBuilder.writeString(_CCSDS_EPOCH_ISO8601!);
-    fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _CODE_KIND?.value);
-    fbBuilder.addUint8(1, _PREAMBLE_FIELD1);
-    fbBuilder.addUint8(2, _PREAMBLE_FIELD2);
-    fbBuilder.addOffset(3, TIME_FIELDOffset);
-    fbBuilder.addOffset(4, AGENCY_DEFINED_EPOCH_ISO8601Offset);
-    fbBuilder.addOffset(5, CCSDS_EPOCH_ISO8601Offset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Numeric or textual instant tagged with its time system and representation.
-class TIMInstant {
-  TIMInstant._(this._bc, this._bcOffset);
-  factory TIMInstant(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIMInstant> reader = _TIMInstantReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Time system for this instant.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timingStandard get timeSystem => TIME_SYSTEM;
-  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
-  timEpochRepresentation get EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  timEpochRepresentation get epochFormat => EPOCH_FORMAT;
-  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
-  double get JULIAN_DATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get julianDate => JULIAN_DATE;
-  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
-  double get SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
-  String? get ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Additional nanoseconds beyond the fractional scalar/text value.
-  int get SUBSECOND_NANOS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get subsecondNanos => SUBSECOND_NANOS;
-  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
-  String? get EPOCH_LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get epochLabel => EPOCH_LABEL;
-  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
-  int get GNSS_WEEK => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get gnssWeek => GNSS_WEEK;
-  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
-  bool get HAS_GNSS_ROLLOVER_REFERENCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
-  bool get hasGnssRolloverReference => HAS_GNSS_ROLLOVER_REFERENCE;
-  ///  Optional Orekit-style GNSS week rollover reference timestamp.
-  String? get GNSS_ROLLOVER_REFERENCE_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get gnssRolloverReferenceIso8601 => GNSS_ROLLOVER_REFERENCE_ISO8601;
-  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
-  TIMCcsdsTimeCode? get CCSDS_TIME_CODE => TIMCcsdsTimeCode.reader.vTableGetNullable(_bc, _bcOffset, 24);
-  TIMCcsdsTimeCode? get ccsdsTimeCode => CCSDS_TIME_CODE;
-
-  @override
-  String toString() {
-    return 'TIMInstant{timeSystem: ${timeSystem}, epochFormat: ${epochFormat}, julianDate: ${julianDate}, SECONDS: ${SECONDS}, ISO8601: ${ISO8601}, subsecondNanos: ${subsecondNanos}, epochLabel: ${epochLabel}, gnssWeek: ${gnssWeek}, hasGnssRolloverReference: ${hasGnssRolloverReference}, gnssRolloverReferenceIso8601: ${gnssRolloverReferenceIso8601}, ccsdsTimeCode: ${ccsdsTimeCode}}';
-  }
-}
-
-class _TIMInstantReader extends fb.TableReader<TIMInstant> {
-  const _TIMInstantReader();
-
-  @override
-  TIMInstant createObject(fb.BufferContext bc, int offset) =>
-    TIMInstant._(bc, offset);
-}
-
-class TIMInstantBuilder {
-  TIMInstantBuilder(this.fbBuilder);
+class GELObservationRefBuilder {
+  GELObservationRefBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -409,47 +149,47 @@ class TIMInstantBuilder {
     fbBuilder.startTable(11);
   }
 
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
+  int addObservationIndex(int? OBSERVATION_INDEX) {
+    fbBuilder.addUint32(0, OBSERVATION_INDEX);
     return fbBuilder.offset;
   }
-  int addEpochFormat(timEpochRepresentation? EPOCH_FORMAT) {
-    fbBuilder.addInt8(1, EPOCH_FORMAT?.value);
+  int addDoaIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addJulianDate(double? JULIAN_DATE) {
-    fbBuilder.addFloat64(2, JULIAN_DATE);
+  int addIqcIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addSeconds(double? SECONDS) {
-    fbBuilder.addFloat64(3, SECONDS);
+  int addCollectorIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addIso8601Offset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addEpoch(double? EPOCH) {
+    fbBuilder.addFloat64(4, EPOCH);
     return fbBuilder.offset;
   }
-  int addSubsecondNanos(int? SUBSECOND_NANOS) {
-    fbBuilder.addInt32(5, SUBSECOND_NANOS);
+  int addTimeDifferenceResidualS(double? TIME_DIFFERENCE_RESIDUAL_S) {
+    fbBuilder.addFloat64(5, TIME_DIFFERENCE_RESIDUAL_S);
     return fbBuilder.offset;
   }
-  int addEpochLabelOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addFrequencyDifferenceResidualHz(double? FREQUENCY_DIFFERENCE_RESIDUAL_HZ) {
+    fbBuilder.addFloat64(6, FREQUENCY_DIFFERENCE_RESIDUAL_HZ);
     return fbBuilder.offset;
   }
-  int addGnssWeek(int? GNSS_WEEK) {
-    fbBuilder.addInt32(7, GNSS_WEEK);
+  int addAngularResidualDeg(double? ANGULAR_RESIDUAL_DEG) {
+    fbBuilder.addFloat64(7, ANGULAR_RESIDUAL_DEG);
     return fbBuilder.offset;
   }
-  int addHasGnssRolloverReference(bool? HAS_GNSS_ROLLOVER_REFERENCE) {
-    fbBuilder.addBool(8, HAS_GNSS_ROLLOVER_REFERENCE);
+  int addWeight(double? WEIGHT) {
+    fbBuilder.addFloat64(8, WEIGHT);
     return fbBuilder.offset;
   }
-  int addGnssRolloverReferenceIso8601Offset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addDisposition(gelObservationDisposition? DISPOSITION) {
+    fbBuilder.addInt8(9, DISPOSITION?.value);
     return fbBuilder.offset;
   }
-  int addCcsdsTimeCodeOffset(int? offset) {
+  int addRejectionReasonOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
@@ -459,75 +199,75 @@ class TIMInstantBuilder {
   }
 }
 
-class TIMInstantObjectBuilder extends fb.ObjectBuilder {
-  final timingStandard? _TIME_SYSTEM;
-  final timEpochRepresentation? _EPOCH_FORMAT;
-  final double? _JULIAN_DATE;
-  final double? _SECONDS;
-  final String? _ISO8601;
-  final int? _SUBSECOND_NANOS;
-  final String? _EPOCH_LABEL;
-  final int? _GNSS_WEEK;
-  final bool? _HAS_GNSS_ROLLOVER_REFERENCE;
-  final String? _GNSS_ROLLOVER_REFERENCE_ISO8601;
-  final TIMCcsdsTimeCodeObjectBuilder? _CCSDS_TIME_CODE;
+class GELObservationRefObjectBuilder extends fb.ObjectBuilder {
+  final int? _OBSERVATION_INDEX;
+  final String? _DOA_ID;
+  final String? _IQC_ID;
+  final String? _COLLECTOR_ID;
+  final double? _EPOCH;
+  final double? _TIME_DIFFERENCE_RESIDUAL_S;
+  final double? _FREQUENCY_DIFFERENCE_RESIDUAL_HZ;
+  final double? _ANGULAR_RESIDUAL_DEG;
+  final double? _WEIGHT;
+  final gelObservationDisposition? _DISPOSITION;
+  final String? _REJECTION_REASON;
 
-  TIMInstantObjectBuilder({
-    timingStandard? TIME_SYSTEM,
-    timingStandard? timeSystem,
-    timEpochRepresentation? EPOCH_FORMAT,
-    timEpochRepresentation? epochFormat,
-    double? JULIAN_DATE,
-    double? julianDate,
-    double? SECONDS,
-    String? ISO8601,
-    int? SUBSECOND_NANOS,
-    int? subsecondNanos,
-    String? EPOCH_LABEL,
-    String? epochLabel,
-    int? GNSS_WEEK,
-    int? gnssWeek,
-    bool? HAS_GNSS_ROLLOVER_REFERENCE,
-    bool? hasGnssRolloverReference,
-    String? GNSS_ROLLOVER_REFERENCE_ISO8601,
-    String? gnssRolloverReferenceIso8601,
-    TIMCcsdsTimeCodeObjectBuilder? CCSDS_TIME_CODE,
-    TIMCcsdsTimeCodeObjectBuilder? ccsdsTimeCode,
+  GELObservationRefObjectBuilder({
+    int? OBSERVATION_INDEX,
+    int? observationIndex,
+    String? DOA_ID,
+    String? doaId,
+    String? IQC_ID,
+    String? iqcId,
+    String? COLLECTOR_ID,
+    String? collectorId,
+    double? EPOCH,
+    double? TIME_DIFFERENCE_RESIDUAL_S,
+    double? timeDifferenceResidualS,
+    double? FREQUENCY_DIFFERENCE_RESIDUAL_HZ,
+    double? frequencyDifferenceResidualHz,
+    double? ANGULAR_RESIDUAL_DEG,
+    double? angularResidualDeg,
+    double? WEIGHT,
+    gelObservationDisposition? DISPOSITION,
+    String? REJECTION_REASON,
+    String? rejectionReason,
   })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
-        _EPOCH_FORMAT = epochFormat ?? EPOCH_FORMAT,
-        _JULIAN_DATE = julianDate ?? JULIAN_DATE,
-        _SECONDS = SECONDS,
-        _ISO8601 = ISO8601,
-        _SUBSECOND_NANOS = subsecondNanos ?? SUBSECOND_NANOS,
-        _EPOCH_LABEL = epochLabel ?? EPOCH_LABEL,
-        _GNSS_WEEK = gnssWeek ?? GNSS_WEEK,
-        _HAS_GNSS_ROLLOVER_REFERENCE = hasGnssRolloverReference ?? HAS_GNSS_ROLLOVER_REFERENCE,
-        _GNSS_ROLLOVER_REFERENCE_ISO8601 = gnssRolloverReferenceIso8601 ?? GNSS_ROLLOVER_REFERENCE_ISO8601,
-        _CCSDS_TIME_CODE = ccsdsTimeCode ?? CCSDS_TIME_CODE;
+      : _OBSERVATION_INDEX = observationIndex ?? OBSERVATION_INDEX,
+        _DOA_ID = doaId ?? DOA_ID,
+        _IQC_ID = iqcId ?? IQC_ID,
+        _COLLECTOR_ID = collectorId ?? COLLECTOR_ID,
+        _EPOCH = EPOCH,
+        _TIME_DIFFERENCE_RESIDUAL_S = timeDifferenceResidualS ?? TIME_DIFFERENCE_RESIDUAL_S,
+        _FREQUENCY_DIFFERENCE_RESIDUAL_HZ = frequencyDifferenceResidualHz ?? FREQUENCY_DIFFERENCE_RESIDUAL_HZ,
+        _ANGULAR_RESIDUAL_DEG = angularResidualDeg ?? ANGULAR_RESIDUAL_DEG,
+        _WEIGHT = WEIGHT,
+        _DISPOSITION = DISPOSITION,
+        _REJECTION_REASON = rejectionReason ?? REJECTION_REASON;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? ISO8601Offset = _ISO8601 == null ? null
-        : fbBuilder.writeString(_ISO8601!);
-    final int? EPOCH_LABELOffset = _EPOCH_LABEL == null ? null
-        : fbBuilder.writeString(_EPOCH_LABEL!);
-    final int? GNSS_ROLLOVER_REFERENCE_ISO8601Offset = _GNSS_ROLLOVER_REFERENCE_ISO8601 == null ? null
-        : fbBuilder.writeString(_GNSS_ROLLOVER_REFERENCE_ISO8601!);
-    final int? CCSDS_TIME_CODEOffset = _CCSDS_TIME_CODE?.getOrCreateOffset(fbBuilder);
+    final int? DOA_IDOffset = _DOA_ID == null ? null
+        : fbBuilder.writeString(_DOA_ID!);
+    final int? IQC_IDOffset = _IQC_ID == null ? null
+        : fbBuilder.writeString(_IQC_ID!);
+    final int? COLLECTOR_IDOffset = _COLLECTOR_ID == null ? null
+        : fbBuilder.writeString(_COLLECTOR_ID!);
+    final int? REJECTION_REASONOffset = _REJECTION_REASON == null ? null
+        : fbBuilder.writeString(_REJECTION_REASON!);
     fbBuilder.startTable(11);
-    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
-    fbBuilder.addInt8(1, _EPOCH_FORMAT?.value);
-    fbBuilder.addFloat64(2, _JULIAN_DATE);
-    fbBuilder.addFloat64(3, _SECONDS);
-    fbBuilder.addOffset(4, ISO8601Offset);
-    fbBuilder.addInt32(5, _SUBSECOND_NANOS);
-    fbBuilder.addOffset(6, EPOCH_LABELOffset);
-    fbBuilder.addInt32(7, _GNSS_WEEK);
-    fbBuilder.addBool(8, _HAS_GNSS_ROLLOVER_REFERENCE);
-    fbBuilder.addOffset(9, GNSS_ROLLOVER_REFERENCE_ISO8601Offset);
-    fbBuilder.addOffset(10, CCSDS_TIME_CODEOffset);
+    fbBuilder.addUint32(0, _OBSERVATION_INDEX);
+    fbBuilder.addOffset(1, DOA_IDOffset);
+    fbBuilder.addOffset(2, IQC_IDOffset);
+    fbBuilder.addOffset(3, COLLECTOR_IDOffset);
+    fbBuilder.addFloat64(4, _EPOCH);
+    fbBuilder.addFloat64(5, _TIME_DIFFERENCE_RESIDUAL_S);
+    fbBuilder.addFloat64(6, _FREQUENCY_DIFFERENCE_RESIDUAL_HZ);
+    fbBuilder.addFloat64(7, _ANGULAR_RESIDUAL_DEG);
+    fbBuilder.addFloat64(8, _WEIGHT);
+    fbBuilder.addInt8(9, _DISPOSITION?.value);
+    fbBuilder.addOffset(10, REJECTION_REASONOffset);
     return fbBuilder.endTable();
   }
 
@@ -539,96 +279,94 @@ class TIMInstantObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Request to convert one instant into another time system/representation.
-class TIMConversionRequest {
-  TIMConversionRequest._(this._bc, this._bcOffset);
-  factory TIMConversionRequest(List<int> bytes) {
+///  Numerical convergence diagnostics for the fused estimator.
+class GELConvergenceDiagnostics {
+  GELConvergenceDiagnostics._(this._bc, this._bcOffset);
+  factory GELConvergenceDiagnostics(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMConversionRequest> reader = _TIMConversionRequestReader();
+  static const fb.Reader<GELConvergenceDiagnostics> reader = _GELConvergenceDiagnosticsReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Source instant to convert.
-  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Target time system.
-  timingStandard get TARGET_TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  timingStandard get targetTimeSystem => TARGET_TIME_SYSTEM;
-  ///  Preferred target representation.
-  timEpochRepresentation get TARGET_EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  timEpochRepresentation get targetEpochFormat => TARGET_EPOCH_FORMAT;
-  ///  Optional TAI-UTC override in seconds for the source instant.
-  double get TAI_MINUS_UTC_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get taiMinusUtcSeconds => TAI_MINUS_UTC_SECONDS;
-  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
-  bool get HAS_TAI_MINUS_UTC => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
-  bool get hasTaiMinusUtc => HAS_TAI_MINUS_UTC;
-  ///  Optional UT1-UTC override in seconds for UT1 conversions.
-  double get DUT1_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get dut1Seconds => DUT1_SECONDS;
-  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
-  bool get HAS_DUT1 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  bool get hasDut1 => HAS_DUT1;
-  ///  Optional caller trace/correlation identifier.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get traceId => TRACE_ID;
+  bool get CONVERGED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  int get ITERATION_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get iterationCount => ITERATION_COUNT;
+  double get OBJECTIVE_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get objectiveValue => OBJECTIVE_VALUE;
+  double get OBJECTIVE_CHANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get objectiveChange => OBJECTIVE_CHANGE;
+  double get STEP_NORM_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get stepNormM => STEP_NORM_M;
+  double get GRADIENT_NORM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get gradientNorm => GRADIENT_NORM;
+  double get NORMAL_MATRIX_CONDITION_NUMBER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get normalMatrixConditionNumber => NORMAL_MATRIX_CONDITION_NUMBER;
+  int get DEGREES_OF_FREEDOM => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get degreesOfFreedom => DEGREES_OF_FREEDOM;
+  String? get TERMINATION_REASON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get terminationReason => TERMINATION_REASON;
 
   @override
   String toString() {
-    return 'TIMConversionRequest{SOURCE: ${SOURCE}, targetTimeSystem: ${targetTimeSystem}, targetEpochFormat: ${targetEpochFormat}, taiMinusUtcSeconds: ${taiMinusUtcSeconds}, hasTaiMinusUtc: ${hasTaiMinusUtc}, dut1Seconds: ${dut1Seconds}, hasDut1: ${hasDut1}, traceId: ${traceId}}';
+    return 'GELConvergenceDiagnostics{CONVERGED: ${CONVERGED}, iterationCount: ${iterationCount}, objectiveValue: ${objectiveValue}, objectiveChange: ${objectiveChange}, stepNormM: ${stepNormM}, gradientNorm: ${gradientNorm}, normalMatrixConditionNumber: ${normalMatrixConditionNumber}, degreesOfFreedom: ${degreesOfFreedom}, terminationReason: ${terminationReason}}';
   }
 }
 
-class _TIMConversionRequestReader extends fb.TableReader<TIMConversionRequest> {
-  const _TIMConversionRequestReader();
+class _GELConvergenceDiagnosticsReader extends fb.TableReader<GELConvergenceDiagnostics> {
+  const _GELConvergenceDiagnosticsReader();
 
   @override
-  TIMConversionRequest createObject(fb.BufferContext bc, int offset) =>
-    TIMConversionRequest._(bc, offset);
+  GELConvergenceDiagnostics createObject(fb.BufferContext bc, int offset) =>
+    GELConvergenceDiagnostics._(bc, offset);
 }
 
-class TIMConversionRequestBuilder {
-  TIMConversionRequestBuilder(this.fbBuilder);
+class GELConvergenceDiagnosticsBuilder {
+  GELConvergenceDiagnosticsBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(9);
   }
 
-  int addSourceOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addConverged(bool? CONVERGED) {
+    fbBuilder.addBool(0, CONVERGED);
     return fbBuilder.offset;
   }
-  int addTargetTimeSystem(timingStandard? TARGET_TIME_SYSTEM) {
-    fbBuilder.addInt8(1, TARGET_TIME_SYSTEM?.value);
+  int addIterationCount(int? ITERATION_COUNT) {
+    fbBuilder.addUint32(1, ITERATION_COUNT);
     return fbBuilder.offset;
   }
-  int addTargetEpochFormat(timEpochRepresentation? TARGET_EPOCH_FORMAT) {
-    fbBuilder.addInt8(2, TARGET_EPOCH_FORMAT?.value);
+  int addObjectiveValue(double? OBJECTIVE_VALUE) {
+    fbBuilder.addFloat64(2, OBJECTIVE_VALUE);
     return fbBuilder.offset;
   }
-  int addTaiMinusUtcSeconds(double? TAI_MINUS_UTC_SECONDS) {
-    fbBuilder.addFloat64(3, TAI_MINUS_UTC_SECONDS);
+  int addObjectiveChange(double? OBJECTIVE_CHANGE) {
+    fbBuilder.addFloat64(3, OBJECTIVE_CHANGE);
     return fbBuilder.offset;
   }
-  int addHasTaiMinusUtc(bool? HAS_TAI_MINUS_UTC) {
-    fbBuilder.addBool(4, HAS_TAI_MINUS_UTC);
+  int addStepNormM(double? STEP_NORM_M) {
+    fbBuilder.addFloat64(4, STEP_NORM_M);
     return fbBuilder.offset;
   }
-  int addDut1Seconds(double? DUT1_SECONDS) {
-    fbBuilder.addFloat64(5, DUT1_SECONDS);
+  int addGradientNorm(double? GRADIENT_NORM) {
+    fbBuilder.addFloat64(5, GRADIENT_NORM);
     return fbBuilder.offset;
   }
-  int addHasDut1(bool? HAS_DUT1) {
-    fbBuilder.addBool(6, HAS_DUT1);
+  int addNormalMatrixConditionNumber(double? NORMAL_MATRIX_CONDITION_NUMBER) {
+    fbBuilder.addFloat64(6, NORMAL_MATRIX_CONDITION_NUMBER);
     return fbBuilder.offset;
   }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addDegreesOfFreedom(int? DEGREES_OF_FREEDOM) {
+    fbBuilder.addUint32(7, DEGREES_OF_FREEDOM);
+    return fbBuilder.offset;
+  }
+  int addTerminationReasonOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
 
@@ -637,57 +375,61 @@ class TIMConversionRequestBuilder {
   }
 }
 
-class TIMConversionRequestObjectBuilder extends fb.ObjectBuilder {
-  final TIMInstantObjectBuilder? _SOURCE;
-  final timingStandard? _TARGET_TIME_SYSTEM;
-  final timEpochRepresentation? _TARGET_EPOCH_FORMAT;
-  final double? _TAI_MINUS_UTC_SECONDS;
-  final bool? _HAS_TAI_MINUS_UTC;
-  final double? _DUT1_SECONDS;
-  final bool? _HAS_DUT1;
-  final String? _TRACE_ID;
+class GELConvergenceDiagnosticsObjectBuilder extends fb.ObjectBuilder {
+  final bool? _CONVERGED;
+  final int? _ITERATION_COUNT;
+  final double? _OBJECTIVE_VALUE;
+  final double? _OBJECTIVE_CHANGE;
+  final double? _STEP_NORM_M;
+  final double? _GRADIENT_NORM;
+  final double? _NORMAL_MATRIX_CONDITION_NUMBER;
+  final int? _DEGREES_OF_FREEDOM;
+  final String? _TERMINATION_REASON;
 
-  TIMConversionRequestObjectBuilder({
-    TIMInstantObjectBuilder? SOURCE,
-    timingStandard? TARGET_TIME_SYSTEM,
-    timingStandard? targetTimeSystem,
-    timEpochRepresentation? TARGET_EPOCH_FORMAT,
-    timEpochRepresentation? targetEpochFormat,
-    double? TAI_MINUS_UTC_SECONDS,
-    double? taiMinusUtcSeconds,
-    bool? HAS_TAI_MINUS_UTC,
-    bool? hasTaiMinusUtc,
-    double? DUT1_SECONDS,
-    double? dut1Seconds,
-    bool? HAS_DUT1,
-    bool? hasDut1,
-    String? TRACE_ID,
-    String? traceId,
+  GELConvergenceDiagnosticsObjectBuilder({
+    bool? CONVERGED,
+    int? ITERATION_COUNT,
+    int? iterationCount,
+    double? OBJECTIVE_VALUE,
+    double? objectiveValue,
+    double? OBJECTIVE_CHANGE,
+    double? objectiveChange,
+    double? STEP_NORM_M,
+    double? stepNormM,
+    double? GRADIENT_NORM,
+    double? gradientNorm,
+    double? NORMAL_MATRIX_CONDITION_NUMBER,
+    double? normalMatrixConditionNumber,
+    int? DEGREES_OF_FREEDOM,
+    int? degreesOfFreedom,
+    String? TERMINATION_REASON,
+    String? terminationReason,
   })
-      : _SOURCE = SOURCE,
-        _TARGET_TIME_SYSTEM = targetTimeSystem ?? TARGET_TIME_SYSTEM,
-        _TARGET_EPOCH_FORMAT = targetEpochFormat ?? TARGET_EPOCH_FORMAT,
-        _TAI_MINUS_UTC_SECONDS = taiMinusUtcSeconds ?? TAI_MINUS_UTC_SECONDS,
-        _HAS_TAI_MINUS_UTC = hasTaiMinusUtc ?? HAS_TAI_MINUS_UTC,
-        _DUT1_SECONDS = dut1Seconds ?? DUT1_SECONDS,
-        _HAS_DUT1 = hasDut1 ?? HAS_DUT1,
-        _TRACE_ID = traceId ?? TRACE_ID;
+      : _CONVERGED = CONVERGED,
+        _ITERATION_COUNT = iterationCount ?? ITERATION_COUNT,
+        _OBJECTIVE_VALUE = objectiveValue ?? OBJECTIVE_VALUE,
+        _OBJECTIVE_CHANGE = objectiveChange ?? OBJECTIVE_CHANGE,
+        _STEP_NORM_M = stepNormM ?? STEP_NORM_M,
+        _GRADIENT_NORM = gradientNorm ?? GRADIENT_NORM,
+        _NORMAL_MATRIX_CONDITION_NUMBER = normalMatrixConditionNumber ?? NORMAL_MATRIX_CONDITION_NUMBER,
+        _DEGREES_OF_FREEDOM = degreesOfFreedom ?? DEGREES_OF_FREEDOM,
+        _TERMINATION_REASON = terminationReason ?? TERMINATION_REASON;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, SOURCEOffset);
-    fbBuilder.addInt8(1, _TARGET_TIME_SYSTEM?.value);
-    fbBuilder.addInt8(2, _TARGET_EPOCH_FORMAT?.value);
-    fbBuilder.addFloat64(3, _TAI_MINUS_UTC_SECONDS);
-    fbBuilder.addBool(4, _HAS_TAI_MINUS_UTC);
-    fbBuilder.addFloat64(5, _DUT1_SECONDS);
-    fbBuilder.addBool(6, _HAS_DUT1);
-    fbBuilder.addOffset(7, TRACE_IDOffset);
+    final int? TERMINATION_REASONOffset = _TERMINATION_REASON == null ? null
+        : fbBuilder.writeString(_TERMINATION_REASON!);
+    fbBuilder.startTable(9);
+    fbBuilder.addBool(0, _CONVERGED);
+    fbBuilder.addUint32(1, _ITERATION_COUNT);
+    fbBuilder.addFloat64(2, _OBJECTIVE_VALUE);
+    fbBuilder.addFloat64(3, _OBJECTIVE_CHANGE);
+    fbBuilder.addFloat64(4, _STEP_NORM_M);
+    fbBuilder.addFloat64(5, _GRADIENT_NORM);
+    fbBuilder.addFloat64(6, _NORMAL_MATRIX_CONDITION_NUMBER);
+    fbBuilder.addUint32(7, _DEGREES_OF_FREEDOM);
+    fbBuilder.addOffset(8, TERMINATION_REASONOffset);
     return fbBuilder.endTable();
   }
 
@@ -699,203 +441,204 @@ class TIMConversionRequestObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Result of a time conversion request.
-class TIMConversionResult {
-  TIMConversionResult._(this._bc, this._bcOffset);
-  factory TIMConversionResult(List<int> bytes) {
+///  Emitter Geolocation Solution
+class GEL {
+  GEL._(this._bc, this._bcOffset);
+  factory GEL(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMConversionResult> reader = _TIMConversionResultReader();
+  static const fb.Reader<GEL> reader = _GELReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Original source instant.
-  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Converted target instant.
-  TIMInstant? get TARGET => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Target minus source offset in SI seconds for the requested conversion.
-  double get DELTA_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get deltaSeconds => DELTA_SECONDS;
-  ///  Conversion status.
-  timConversionStatus get STATUS => timConversionStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  ///  Optional error detail when STATUS is not OK.
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get errorMessage => ERROR_MESSAGE;
-  ///  Caller trace/correlation identifier copied from the request when present.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get traceId => TRACE_ID;
+  String? get GEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get gelId => GEL_ID;
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get SCENARIO_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get scenarioId => SCENARIO_ID;
+  String? get EMITTER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get emitterId => EMITTER_ID;
+  gelTechniqueClass get TECHNIQUE => gelTechniqueClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  double get SOLUTION_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get solutionEpoch => SOLUTION_EPOCH;
+  double get LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get latitudeDeg => LATITUDE_DEG;
+  double get LONGITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get longitudeDeg => LONGITUDE_DEG;
+  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get altitudeM => ALTITUDE_M;
+  ///  3x3 east-north-up covariance, row-major, square metres.
+  List<double>? get ENU_COVARIANCE_M2 => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<double>? get enuCovarianceM2 => ENU_COVARIANCE_M2;
+  double get ERROR_ELLIPSE_SEMI_MAJOR_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get errorEllipseSemiMajorM => ERROR_ELLIPSE_SEMI_MAJOR_M;
+  double get ERROR_ELLIPSE_SEMI_MINOR_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get errorEllipseSemiMinorM => ERROR_ELLIPSE_SEMI_MINOR_M;
+  double get ERROR_ELLIPSE_ORIENTATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get errorEllipseOrientationDeg => ERROR_ELLIPSE_ORIENTATION_DEG;
+  double get CEP50_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get cep50M => CEP50_M;
+  double get CEP95_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get cep95M => CEP95_M;
+  double get GDOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get VELOCITY_EAST_M_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get velocityEastMS => VELOCITY_EAST_M_S;
+  double get VELOCITY_NORTH_M_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get velocityNorthMS => VELOCITY_NORTH_M_S;
+  double get VELOCITY_UP_M_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get velocityUpMS => VELOCITY_UP_M_S;
+  List<double>? get VELOCITY_COVARIANCE_M2_S2 => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 42);
+  List<double>? get velocityCovarianceM2S2 => VELOCITY_COVARIANCE_M2_S2;
+  List<GELObservationRef>? get OBSERVATION_REFS => const fb.ListReader<GELObservationRef>(GELObservationRef.reader).vTableGetNullable(_bc, _bcOffset, 44);
+  List<GELObservationRef>? get observationRefs => OBSERVATION_REFS;
+  GELConvergenceDiagnostics? get CONVERGENCE_DIAGNOSTICS => GELConvergenceDiagnostics.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  GELConvergenceDiagnostics? get convergenceDiagnostics => CONVERGENCE_DIAGNOSTICS;
+  RFLProvenance? get PROVENANCE => RFLProvenance.reader.vTableGetNullable(_bc, _bcOffset, 48);
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get computedAt => COMPUTED_AT;
+  String? get PRODUCER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get producerId => PRODUCER_ID;
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 54);
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 56);
+  List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
 
   @override
   String toString() {
-    return 'TIMConversionResult{SOURCE: ${SOURCE}, TARGET: ${TARGET}, deltaSeconds: ${deltaSeconds}, STATUS: ${STATUS}, errorMessage: ${errorMessage}, traceId: ${traceId}}';
+    return 'GEL{gelId: ${gelId}, NAME: ${NAME}, scenarioId: ${scenarioId}, emitterId: ${emitterId}, TECHNIQUE: ${TECHNIQUE}, solutionEpoch: ${solutionEpoch}, latitudeDeg: ${latitudeDeg}, longitudeDeg: ${longitudeDeg}, altitudeM: ${altitudeM}, enuCovarianceM2: ${enuCovarianceM2}, errorEllipseSemiMajorM: ${errorEllipseSemiMajorM}, errorEllipseSemiMinorM: ${errorEllipseSemiMinorM}, errorEllipseOrientationDeg: ${errorEllipseOrientationDeg}, cep50M: ${cep50M}, cep95M: ${cep95M}, GDOP: ${GDOP}, velocityEastMS: ${velocityEastMS}, velocityNorthMS: ${velocityNorthMS}, velocityUpMS: ${velocityUpMS}, velocityCovarianceM2S2: ${velocityCovarianceM2S2}, observationRefs: ${observationRefs}, convergenceDiagnostics: ${convergenceDiagnostics}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}}';
   }
 }
 
-class _TIMConversionResultReader extends fb.TableReader<TIMConversionResult> {
-  const _TIMConversionResultReader();
+class _GELReader extends fb.TableReader<GEL> {
+  const _GELReader();
 
   @override
-  TIMConversionResult createObject(fb.BufferContext bc, int offset) =>
-    TIMConversionResult._(bc, offset);
+  GEL createObject(fb.BufferContext bc, int offset) =>
+    GEL._(bc, offset);
 }
 
-class TIMConversionResultBuilder {
-  TIMConversionResultBuilder(this.fbBuilder);
+class GELBuilder {
+  GELBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(27);
   }
 
-  int addSourceOffset(int? offset) {
+  int addGelIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addTargetOffset(int? offset) {
+  int addNameOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDeltaSeconds(double? DELTA_SECONDS) {
-    fbBuilder.addFloat64(2, DELTA_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addStatus(timConversionStatus? STATUS) {
-    fbBuilder.addInt8(3, STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addErrorMessageOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMConversionResultObjectBuilder extends fb.ObjectBuilder {
-  final TIMInstantObjectBuilder? _SOURCE;
-  final TIMInstantObjectBuilder? _TARGET;
-  final double? _DELTA_SECONDS;
-  final timConversionStatus? _STATUS;
-  final String? _ERROR_MESSAGE;
-  final String? _TRACE_ID;
-
-  TIMConversionResultObjectBuilder({
-    TIMInstantObjectBuilder? SOURCE,
-    TIMInstantObjectBuilder? TARGET,
-    double? DELTA_SECONDS,
-    double? deltaSeconds,
-    timConversionStatus? STATUS,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
-    String? TRACE_ID,
-    String? traceId,
-  })
-      : _SOURCE = SOURCE,
-        _TARGET = TARGET,
-        _DELTA_SECONDS = deltaSeconds ?? DELTA_SECONDS,
-        _STATUS = STATUS,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
-        _TRACE_ID = traceId ?? TRACE_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
-    final int? TARGETOffset = _TARGET?.getOrCreateOffset(fbBuilder);
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, SOURCEOffset);
-    fbBuilder.addOffset(1, TARGETOffset);
-    fbBuilder.addFloat64(2, _DELTA_SECONDS);
-    fbBuilder.addInt8(3, _STATUS?.value);
-    fbBuilder.addOffset(4, ERROR_MESSAGEOffset);
-    fbBuilder.addOffset(5, TRACE_IDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Time System and time-conversion envelope.
-class TIM {
-  TIM._(this._bc, this._bcOffset);
-  factory TIM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIM> reader = _TIMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Legacy time-system selector retained for existing TIM consumers.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timingStandard get timeSystem => TIME_SYSTEM;
-  ///  A single tagged instant.
-  TIMInstant? get INSTANT => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Time conversion request.
-  TIMConversionRequest? get CONVERSION_REQUEST => TIMConversionRequest.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  TIMConversionRequest? get conversionRequest => CONVERSION_REQUEST;
-  ///  Time conversion result.
-  TIMConversionResult? get CONVERSION_RESULT => TIMConversionResult.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  TIMConversionResult? get conversionResult => CONVERSION_RESULT;
-
-  @override
-  String toString() {
-    return 'TIM{timeSystem: ${timeSystem}, INSTANT: ${INSTANT}, conversionRequest: ${conversionRequest}, conversionResult: ${conversionResult}}';
-  }
-}
-
-class _TIMReader extends fb.TableReader<TIM> {
-  const _TIMReader();
-
-  @override
-  TIM createObject(fb.BufferContext bc, int offset) =>
-    TIM._(bc, offset);
-}
-
-class TIMBuilder {
-  TIMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addInstantOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addConversionRequestOffset(int? offset) {
+  int addScenarioIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addConversionResultOffset(int? offset) {
+  int addEmitterIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTechnique(gelTechniqueClass? TECHNIQUE) {
+    fbBuilder.addInt8(4, TECHNIQUE?.value);
+    return fbBuilder.offset;
+  }
+  int addSolutionEpoch(double? SOLUTION_EPOCH) {
+    fbBuilder.addFloat64(5, SOLUTION_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addLatitudeDeg(double? LATITUDE_DEG) {
+    fbBuilder.addFloat64(6, LATITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addLongitudeDeg(double? LONGITUDE_DEG) {
+    fbBuilder.addFloat64(7, LONGITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addAltitudeM(double? ALTITUDE_M) {
+    fbBuilder.addFloat64(8, ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addEnuCovarianceM2Offset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addErrorEllipseSemiMajorM(double? ERROR_ELLIPSE_SEMI_MAJOR_M) {
+    fbBuilder.addFloat64(10, ERROR_ELLIPSE_SEMI_MAJOR_M);
+    return fbBuilder.offset;
+  }
+  int addErrorEllipseSemiMinorM(double? ERROR_ELLIPSE_SEMI_MINOR_M) {
+    fbBuilder.addFloat64(11, ERROR_ELLIPSE_SEMI_MINOR_M);
+    return fbBuilder.offset;
+  }
+  int addErrorEllipseOrientationDeg(double? ERROR_ELLIPSE_ORIENTATION_DEG) {
+    fbBuilder.addFloat64(12, ERROR_ELLIPSE_ORIENTATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addCep50M(double? CEP50_M) {
+    fbBuilder.addFloat64(13, CEP50_M);
+    return fbBuilder.offset;
+  }
+  int addCep95M(double? CEP95_M) {
+    fbBuilder.addFloat64(14, CEP95_M);
+    return fbBuilder.offset;
+  }
+  int addGdop(double? GDOP) {
+    fbBuilder.addFloat64(15, GDOP);
+    return fbBuilder.offset;
+  }
+  int addVelocityEastMS(double? VELOCITY_EAST_M_S) {
+    fbBuilder.addFloat64(16, VELOCITY_EAST_M_S);
+    return fbBuilder.offset;
+  }
+  int addVelocityNorthMS(double? VELOCITY_NORTH_M_S) {
+    fbBuilder.addFloat64(17, VELOCITY_NORTH_M_S);
+    return fbBuilder.offset;
+  }
+  int addVelocityUpMS(double? VELOCITY_UP_M_S) {
+    fbBuilder.addFloat64(18, VELOCITY_UP_M_S);
+    return fbBuilder.offset;
+  }
+  int addVelocityCovarianceM2S2Offset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addObservationRefsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addConvergenceDiagnosticsOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(23, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addProducerIdOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalJsonSignatureOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
     return fbBuilder.offset;
   }
 
@@ -904,37 +647,167 @@ class TIMBuilder {
   }
 }
 
-class TIMObjectBuilder extends fb.ObjectBuilder {
-  final timingStandard? _TIME_SYSTEM;
-  final TIMInstantObjectBuilder? _INSTANT;
-  final TIMConversionRequestObjectBuilder? _CONVERSION_REQUEST;
-  final TIMConversionResultObjectBuilder? _CONVERSION_RESULT;
+class GELObjectBuilder extends fb.ObjectBuilder {
+  final String? _GEL_ID;
+  final String? _NAME;
+  final String? _SCENARIO_ID;
+  final String? _EMITTER_ID;
+  final gelTechniqueClass? _TECHNIQUE;
+  final double? _SOLUTION_EPOCH;
+  final double? _LATITUDE_DEG;
+  final double? _LONGITUDE_DEG;
+  final double? _ALTITUDE_M;
+  final List<double>? _ENU_COVARIANCE_M2;
+  final double? _ERROR_ELLIPSE_SEMI_MAJOR_M;
+  final double? _ERROR_ELLIPSE_SEMI_MINOR_M;
+  final double? _ERROR_ELLIPSE_ORIENTATION_DEG;
+  final double? _CEP50_M;
+  final double? _CEP95_M;
+  final double? _GDOP;
+  final double? _VELOCITY_EAST_M_S;
+  final double? _VELOCITY_NORTH_M_S;
+  final double? _VELOCITY_UP_M_S;
+  final List<double>? _VELOCITY_COVARIANCE_M2_S2;
+  final List<GELObservationRefObjectBuilder>? _OBSERVATION_REFS;
+  final GELConvergenceDiagnosticsObjectBuilder? _CONVERGENCE_DIAGNOSTICS;
+  final RFLProvenanceObjectBuilder? _PROVENANCE;
+  final int? _COMPUTED_AT;
+  final String? _PRODUCER_ID;
+  final List<int>? _SIGNATURE;
+  final List<int>? _CANONICAL_JSON_SIGNATURE;
 
-  TIMObjectBuilder({
-    timingStandard? TIME_SYSTEM,
-    timingStandard? timeSystem,
-    TIMInstantObjectBuilder? INSTANT,
-    TIMConversionRequestObjectBuilder? CONVERSION_REQUEST,
-    TIMConversionRequestObjectBuilder? conversionRequest,
-    TIMConversionResultObjectBuilder? CONVERSION_RESULT,
-    TIMConversionResultObjectBuilder? conversionResult,
+  GELObjectBuilder({
+    String? GEL_ID,
+    String? gelId,
+    String? NAME,
+    String? SCENARIO_ID,
+    String? scenarioId,
+    String? EMITTER_ID,
+    String? emitterId,
+    gelTechniqueClass? TECHNIQUE,
+    double? SOLUTION_EPOCH,
+    double? solutionEpoch,
+    double? LATITUDE_DEG,
+    double? latitudeDeg,
+    double? LONGITUDE_DEG,
+    double? longitudeDeg,
+    double? ALTITUDE_M,
+    double? altitudeM,
+    List<double>? ENU_COVARIANCE_M2,
+    List<double>? enuCovarianceM2,
+    double? ERROR_ELLIPSE_SEMI_MAJOR_M,
+    double? errorEllipseSemiMajorM,
+    double? ERROR_ELLIPSE_SEMI_MINOR_M,
+    double? errorEllipseSemiMinorM,
+    double? ERROR_ELLIPSE_ORIENTATION_DEG,
+    double? errorEllipseOrientationDeg,
+    double? CEP50_M,
+    double? cep50M,
+    double? CEP95_M,
+    double? cep95M,
+    double? GDOP,
+    double? VELOCITY_EAST_M_S,
+    double? velocityEastMS,
+    double? VELOCITY_NORTH_M_S,
+    double? velocityNorthMS,
+    double? VELOCITY_UP_M_S,
+    double? velocityUpMS,
+    List<double>? VELOCITY_COVARIANCE_M2_S2,
+    List<double>? velocityCovarianceM2S2,
+    List<GELObservationRefObjectBuilder>? OBSERVATION_REFS,
+    List<GELObservationRefObjectBuilder>? observationRefs,
+    GELConvergenceDiagnosticsObjectBuilder? CONVERGENCE_DIAGNOSTICS,
+    GELConvergenceDiagnosticsObjectBuilder? convergenceDiagnostics,
+    RFLProvenanceObjectBuilder? PROVENANCE,
+    int? COMPUTED_AT,
+    int? computedAt,
+    String? PRODUCER_ID,
+    String? producerId,
+    List<int>? SIGNATURE,
+    List<int>? CANONICAL_JSON_SIGNATURE,
+    List<int>? canonicalJsonSignature,
   })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
-        _INSTANT = INSTANT,
-        _CONVERSION_REQUEST = conversionRequest ?? CONVERSION_REQUEST,
-        _CONVERSION_RESULT = conversionResult ?? CONVERSION_RESULT;
+      : _GEL_ID = gelId ?? GEL_ID,
+        _NAME = NAME,
+        _SCENARIO_ID = scenarioId ?? SCENARIO_ID,
+        _EMITTER_ID = emitterId ?? EMITTER_ID,
+        _TECHNIQUE = TECHNIQUE,
+        _SOLUTION_EPOCH = solutionEpoch ?? SOLUTION_EPOCH,
+        _LATITUDE_DEG = latitudeDeg ?? LATITUDE_DEG,
+        _LONGITUDE_DEG = longitudeDeg ?? LONGITUDE_DEG,
+        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _ENU_COVARIANCE_M2 = enuCovarianceM2 ?? ENU_COVARIANCE_M2,
+        _ERROR_ELLIPSE_SEMI_MAJOR_M = errorEllipseSemiMajorM ?? ERROR_ELLIPSE_SEMI_MAJOR_M,
+        _ERROR_ELLIPSE_SEMI_MINOR_M = errorEllipseSemiMinorM ?? ERROR_ELLIPSE_SEMI_MINOR_M,
+        _ERROR_ELLIPSE_ORIENTATION_DEG = errorEllipseOrientationDeg ?? ERROR_ELLIPSE_ORIENTATION_DEG,
+        _CEP50_M = cep50M ?? CEP50_M,
+        _CEP95_M = cep95M ?? CEP95_M,
+        _GDOP = GDOP,
+        _VELOCITY_EAST_M_S = velocityEastMS ?? VELOCITY_EAST_M_S,
+        _VELOCITY_NORTH_M_S = velocityNorthMS ?? VELOCITY_NORTH_M_S,
+        _VELOCITY_UP_M_S = velocityUpMS ?? VELOCITY_UP_M_S,
+        _VELOCITY_COVARIANCE_M2_S2 = velocityCovarianceM2S2 ?? VELOCITY_COVARIANCE_M2_S2,
+        _OBSERVATION_REFS = observationRefs ?? OBSERVATION_REFS,
+        _CONVERGENCE_DIAGNOSTICS = convergenceDiagnostics ?? CONVERGENCE_DIAGNOSTICS,
+        _PROVENANCE = PROVENANCE,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _PRODUCER_ID = producerId ?? PRODUCER_ID,
+        _SIGNATURE = SIGNATURE,
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? INSTANTOffset = _INSTANT?.getOrCreateOffset(fbBuilder);
-    final int? CONVERSION_REQUESTOffset = _CONVERSION_REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? CONVERSION_RESULTOffset = _CONVERSION_RESULT?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
-    fbBuilder.addOffset(1, INSTANTOffset);
-    fbBuilder.addOffset(2, CONVERSION_REQUESTOffset);
-    fbBuilder.addOffset(3, CONVERSION_RESULTOffset);
+    final int? GEL_IDOffset = _GEL_ID == null ? null
+        : fbBuilder.writeString(_GEL_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? SCENARIO_IDOffset = _SCENARIO_ID == null ? null
+        : fbBuilder.writeString(_SCENARIO_ID!);
+    final int? EMITTER_IDOffset = _EMITTER_ID == null ? null
+        : fbBuilder.writeString(_EMITTER_ID!);
+    final int? ENU_COVARIANCE_M2Offset = _ENU_COVARIANCE_M2 == null ? null
+        : fbBuilder.writeListFloat64(_ENU_COVARIANCE_M2!);
+    final int? VELOCITY_COVARIANCE_M2_S2Offset = _VELOCITY_COVARIANCE_M2_S2 == null ? null
+        : fbBuilder.writeListFloat64(_VELOCITY_COVARIANCE_M2_S2!);
+    final int? OBSERVATION_REFSOffset = _OBSERVATION_REFS == null ? null
+        : fbBuilder.writeList(_OBSERVATION_REFS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CONVERGENCE_DIAGNOSTICSOffset = _CONVERGENCE_DIAGNOSTICS?.getOrCreateOffset(fbBuilder);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? PRODUCER_IDOffset = _PRODUCER_ID == null ? null
+        : fbBuilder.writeString(_PRODUCER_ID!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
+    fbBuilder.startTable(27);
+    fbBuilder.addOffset(0, GEL_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, SCENARIO_IDOffset);
+    fbBuilder.addOffset(3, EMITTER_IDOffset);
+    fbBuilder.addInt8(4, _TECHNIQUE?.value);
+    fbBuilder.addFloat64(5, _SOLUTION_EPOCH);
+    fbBuilder.addFloat64(6, _LATITUDE_DEG);
+    fbBuilder.addFloat64(7, _LONGITUDE_DEG);
+    fbBuilder.addFloat64(8, _ALTITUDE_M);
+    fbBuilder.addOffset(9, ENU_COVARIANCE_M2Offset);
+    fbBuilder.addFloat64(10, _ERROR_ELLIPSE_SEMI_MAJOR_M);
+    fbBuilder.addFloat64(11, _ERROR_ELLIPSE_SEMI_MINOR_M);
+    fbBuilder.addFloat64(12, _ERROR_ELLIPSE_ORIENTATION_DEG);
+    fbBuilder.addFloat64(13, _CEP50_M);
+    fbBuilder.addFloat64(14, _CEP95_M);
+    fbBuilder.addFloat64(15, _GDOP);
+    fbBuilder.addFloat64(16, _VELOCITY_EAST_M_S);
+    fbBuilder.addFloat64(17, _VELOCITY_NORTH_M_S);
+    fbBuilder.addFloat64(18, _VELOCITY_UP_M_S);
+    fbBuilder.addOffset(19, VELOCITY_COVARIANCE_M2_S2Offset);
+    fbBuilder.addOffset(20, OBSERVATION_REFSOffset);
+    fbBuilder.addOffset(21, CONVERGENCE_DIAGNOSTICSOffset);
+    fbBuilder.addOffset(22, PROVENANCEOffset);
+    fbBuilder.addUint64(23, _COMPUTED_AT);
+    fbBuilder.addOffset(24, PRODUCER_IDOffset);
+    fbBuilder.addOffset(25, SIGNATUREOffset);
+    fbBuilder.addOffset(26, CANONICAL_JSON_SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

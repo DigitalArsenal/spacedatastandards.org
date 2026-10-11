@@ -5,291 +5,162 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum linkCategory {
-  UPLINK(0),
-  DOWNLINK(1),
-  CROSSLINK(2),
-  INTER_SATELLITE(3),
-  GROUND_TO_GROUND(4),
-  RELAY(5);
+///  Role a referenced payload plays for one capture.
+enum iqcPayloadRole {
+  DATA(0),
+  METADATA(1),
+  ARCHIVE(2),
+  PREVIEW(3),
+  OTHER(4);
 
   final int value;
-  const linkCategory(this.value);
+  const iqcPayloadRole(this.value);
 
-  factory linkCategory.fromValue(int value) {
+  factory iqcPayloadRole.fromValue(int value) {
     switch (value) {
-      case 0: return linkCategory.UPLINK;
-      case 1: return linkCategory.DOWNLINK;
-      case 2: return linkCategory.CROSSLINK;
-      case 3: return linkCategory.INTER_SATELLITE;
-      case 4: return linkCategory.GROUND_TO_GROUND;
-      case 5: return linkCategory.RELAY;
+      case 0: return iqcPayloadRole.DATA;
+      case 1: return iqcPayloadRole.METADATA;
+      case 2: return iqcPayloadRole.ARCHIVE;
+      case 3: return iqcPayloadRole.PREVIEW;
+      case 4: return iqcPayloadRole.OTHER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static linkCategory? _createOrNull(int? value) =>
-      value == null ? null : linkCategory.fromValue(value);
+  static iqcPayloadRole? _createOrNull(int? value) =>
+      value == null ? null : iqcPayloadRole.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<linkCategory> reader = _linkCategoryReader();
+  static const int maxValue = 4;
+  static const fb.Reader<iqcPayloadRole> reader = _iqcPayloadRoleReader();
 }
 
-class _linkCategoryReader extends fb.Reader<linkCategory> {
-  const _linkCategoryReader();
+class _iqcPayloadRoleReader extends fb.Reader<iqcPayloadRole> {
+  const _iqcPayloadRoleReader();
 
   @override
   int get size => 1;
 
   @override
-  linkCategory read(fb.BufferContext bc, int offset) =>
-      linkCategory.fromValue(const fb.Int8Reader().read(bc, offset));
+  iqcPayloadRole read(fb.BufferContext bc, int offset) =>
+      iqcPayloadRole.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum linkCondition {
-  ESTABLISHED(0),
-  DEGRADED(1),
-  INTERRUPTED(2),
-  PLANNED(3),
-  TERMINATED(4),
-  UNKNOWN(5);
+///  Where a capture's bytes physically live right now.
+enum iqcCustody {
+  UPSTREAM_ONLY(0),
+  PINNED(1),
+  UNPINNED(2);
 
   final int value;
-  const linkCondition(this.value);
+  const iqcCustody(this.value);
 
-  factory linkCondition.fromValue(int value) {
+  factory iqcCustody.fromValue(int value) {
     switch (value) {
-      case 0: return linkCondition.ESTABLISHED;
-      case 1: return linkCondition.DEGRADED;
-      case 2: return linkCondition.INTERRUPTED;
-      case 3: return linkCondition.PLANNED;
-      case 4: return linkCondition.TERMINATED;
-      case 5: return linkCondition.UNKNOWN;
+      case 0: return iqcCustody.UPSTREAM_ONLY;
+      case 1: return iqcCustody.PINNED;
+      case 2: return iqcCustody.UNPINNED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static linkCondition? _createOrNull(int? value) =>
-      value == null ? null : linkCondition.fromValue(value);
+  static iqcCustody? _createOrNull(int? value) =>
+      value == null ? null : iqcCustody.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<linkCondition> reader = _linkConditionReader();
+  static const int maxValue = 2;
+  static const fb.Reader<iqcCustody> reader = _iqcCustodyReader();
 }
 
-class _linkConditionReader extends fb.Reader<linkCondition> {
-  const _linkConditionReader();
+class _iqcCustodyReader extends fb.Reader<iqcCustody> {
+  const _iqcCustodyReader();
 
   @override
   int get size => 1;
 
   @override
-  linkCondition read(fb.BufferContext bc, int offset) =>
-      linkCondition.fromValue(const fb.Int8Reader().read(bc, offset));
+  iqcCustody read(fb.BufferContext bc, int offset) =>
+      iqcCustody.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Link Status
-class LKS {
-  LKS._(this._bc, this._bcOffset);
-  factory LKS(List<int> bytes) {
+///  Geodetic position of the receiver at capture time.
+///
+///  A separate table because latitude/longitude 0,0 is a VALID coordinate: an
+///  absent GEOLOCATION means "the source published no position", which a
+///  zero-defaulted scalar pair could never express.
+class IQCGeolocation {
+  IQCGeolocation._(this._bc, this._bcOffset);
+  factory IQCGeolocation(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<LKS> reader = _LKSReader();
+  static const fb.Reader<IQCGeolocation> reader = _IQCGeolocationReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Unique identifier
-  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  First endpoint on-orbit identifier
-  String? get ID_ON_ORBIT1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get idOnOrbit1 => ID_ON_ORBIT1;
-  ///  First endpoint satellite catalog number
-  int get SAT_NO1 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get satNo1 => SAT_NO1;
-  ///  Second endpoint on-orbit identifier
-  String? get ID_ON_ORBIT2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get idOnOrbit2 => ID_ON_ORBIT2;
-  ///  Second endpoint satellite catalog number
-  int get SAT_NO2 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get satNo2 => SAT_NO2;
-  ///  Constellation name
-  String? get CONSTELLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Link name or identifier
-  String? get LINK_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get linkName => LINK_NAME;
-  ///  Link type
-  linkCategory get LINK_TYPE => linkCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  linkCategory get linkType => LINK_TYPE;
-  ///  Link state
-  linkCondition get LINK_STATE => linkCondition.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  linkCondition get linkState => LINK_STATE;
-  ///  RF band
-  String? get BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  ///  Link start time (ISO 8601)
-  String? get LINK_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get linkStartTime => LINK_START_TIME;
-  ///  Link stop time (ISO 8601)
-  String? get LINK_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get linkStopTime => LINK_STOP_TIME;
-  ///  First endpoint beam identifier
-  String? get ID_BEAM1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get idBeam1 => ID_BEAM1;
-  ///  First endpoint name
-  String? get END_POINT1_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get endPoint1Name => END_POINT1_NAME;
-  ///  First endpoint latitude (degrees)
-  double get END_POINT1_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  double get endPoint1Lat => END_POINT1_LAT;
-  ///  First endpoint longitude (degrees)
-  double get END_POINT1_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  double get endPoint1Lon => END_POINT1_LON;
-  ///  Second endpoint beam identifier
-  String? get ID_BEAM2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  String? get idBeam2 => ID_BEAM2;
-  ///  Second endpoint name
-  String? get END_POINT2_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
-  String? get endPoint2Name => END_POINT2_NAME;
-  ///  Second endpoint latitude (degrees)
-  double get END_POINT2_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  double get endPoint2Lat => END_POINT2_LAT;
-  ///  Second endpoint longitude (degrees)
-  double get END_POINT2_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  double get endPoint2Lon => END_POINT2_LON;
-  ///  Data rate from endpoint 1 to 2 (Mbps)
-  double get DATA_RATE1_TO2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get dataRate1To2 => DATA_RATE1_TO2;
-  ///  Data rate from endpoint 2 to 1 (Mbps)
-  double get DATA_RATE2_TO1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get dataRate2To1 => DATA_RATE2_TO1;
-  ///  System capability status
-  String? get SYS_CAP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
-  String? get sysCap => SYS_CAP;
-  ///  Operational capability status
-  String? get OPS_CAP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
-  String? get opsCap => OPS_CAP;
+  ///  Geodetic latitude, degrees, WGS-84, positive north.
+  double get LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get latitudeDeg => LATITUDE_DEG;
+  ///  Geodetic longitude, degrees, WGS-84, positive east.
+  double get LONGITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get longitudeDeg => LONGITUDE_DEG;
+  ///  Height above the WGS-84 ellipsoid, metres. Absent in most SigMF
+  ///  recordings; SigMF `core:geolocation` is a GeoJSON Point whose third
+  ///  ordinate is optional.
+  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get altitudeM => ALTITUDE_M;
+  ///  Reported position uncertainty, metres, when the source states one.
+  double get UNCERTAINTY_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get uncertaintyM => UNCERTAINTY_M;
+  ///  How the position was obtained, verbatim from the source (e.g. "GPS",
+  ///  "station registry", "author-supplied"). Never inferred.
+  String? get METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
 
   @override
   String toString() {
-    return 'LKS{ID: ${ID}, idOnOrbit1: ${idOnOrbit1}, satNo1: ${satNo1}, idOnOrbit2: ${idOnOrbit2}, satNo2: ${satNo2}, CONSTELLATION: ${CONSTELLATION}, linkName: ${linkName}, linkType: ${linkType}, linkState: ${linkState}, BAND: ${BAND}, linkStartTime: ${linkStartTime}, linkStopTime: ${linkStopTime}, idBeam1: ${idBeam1}, endPoint1Name: ${endPoint1Name}, endPoint1Lat: ${endPoint1Lat}, endPoint1Lon: ${endPoint1Lon}, idBeam2: ${idBeam2}, endPoint2Name: ${endPoint2Name}, endPoint2Lat: ${endPoint2Lat}, endPoint2Lon: ${endPoint2Lon}, dataRate1To2: ${dataRate1To2}, dataRate2To1: ${dataRate2To1}, sysCap: ${sysCap}, opsCap: ${opsCap}}';
+    return 'IQCGeolocation{latitudeDeg: ${latitudeDeg}, longitudeDeg: ${longitudeDeg}, altitudeM: ${altitudeM}, uncertaintyM: ${uncertaintyM}, METHOD: ${METHOD}}';
   }
 }
 
-class _LKSReader extends fb.TableReader<LKS> {
-  const _LKSReader();
+class _IQCGeolocationReader extends fb.TableReader<IQCGeolocation> {
+  const _IQCGeolocationReader();
 
   @override
-  LKS createObject(fb.BufferContext bc, int offset) =>
-    LKS._(bc, offset);
+  IQCGeolocation createObject(fb.BufferContext bc, int offset) =>
+    IQCGeolocation._(bc, offset);
 }
 
-class LKSBuilder {
-  LKSBuilder(this.fbBuilder);
+class IQCGeolocationBuilder {
+  IQCGeolocationBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(24);
+    fbBuilder.startTable(5);
   }
 
-  int addIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addLatitudeDeg(double? LATITUDE_DEG) {
+    fbBuilder.addFloat64(0, LATITUDE_DEG);
     return fbBuilder.offset;
   }
-  int addIdOnOrbit1Offset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addLongitudeDeg(double? LONGITUDE_DEG) {
+    fbBuilder.addFloat64(1, LONGITUDE_DEG);
     return fbBuilder.offset;
   }
-  int addSatNo1(int? SAT_NO1) {
-    fbBuilder.addUint32(2, SAT_NO1);
+  int addAltitudeM(double? ALTITUDE_M) {
+    fbBuilder.addFloat64(2, ALTITUDE_M);
     return fbBuilder.offset;
   }
-  int addIdOnOrbit2Offset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addUncertaintyM(double? UNCERTAINTY_M) {
+    fbBuilder.addFloat64(3, UNCERTAINTY_M);
     return fbBuilder.offset;
   }
-  int addSatNo2(int? SAT_NO2) {
-    fbBuilder.addUint32(4, SAT_NO2);
-    return fbBuilder.offset;
-  }
-  int addConstellationOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addLinkNameOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addLinkType(linkCategory? LINK_TYPE) {
-    fbBuilder.addInt8(7, LINK_TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addLinkState(linkCondition? LINK_STATE) {
-    fbBuilder.addInt8(8, LINK_STATE?.value);
-    return fbBuilder.offset;
-  }
-  int addBandOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addLinkStartTimeOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addLinkStopTimeOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addIdBeam1Offset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addEndPoint1NameOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addEndPoint1Lat(double? END_POINT1_LAT) {
-    fbBuilder.addFloat64(14, END_POINT1_LAT);
-    return fbBuilder.offset;
-  }
-  int addEndPoint1Lon(double? END_POINT1_LON) {
-    fbBuilder.addFloat64(15, END_POINT1_LON);
-    return fbBuilder.offset;
-  }
-  int addIdBeam2Offset(int? offset) {
-    fbBuilder.addOffset(16, offset);
-    return fbBuilder.offset;
-  }
-  int addEndPoint2NameOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
-    return fbBuilder.offset;
-  }
-  int addEndPoint2Lat(double? END_POINT2_LAT) {
-    fbBuilder.addFloat64(18, END_POINT2_LAT);
-    return fbBuilder.offset;
-  }
-  int addEndPoint2Lon(double? END_POINT2_LON) {
-    fbBuilder.addFloat64(19, END_POINT2_LON);
-    return fbBuilder.offset;
-  }
-  int addDataRate1To2(double? DATA_RATE1_TO2) {
-    fbBuilder.addFloat64(20, DATA_RATE1_TO2);
-    return fbBuilder.offset;
-  }
-  int addDataRate2To1(double? DATA_RATE2_TO1) {
-    fbBuilder.addFloat64(21, DATA_RATE2_TO1);
-    return fbBuilder.offset;
-  }
-  int addSysCapOffset(int? offset) {
-    fbBuilder.addOffset(22, offset);
-    return fbBuilder.offset;
-  }
-  int addOpsCapOffset(int? offset) {
-    fbBuilder.addOffset(23, offset);
+  int addMethodOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
 
@@ -298,160 +169,1492 @@ class LKSBuilder {
   }
 }
 
-class LKSObjectBuilder extends fb.ObjectBuilder {
-  final String? _ID;
-  final String? _ID_ON_ORBIT1;
-  final int? _SAT_NO1;
-  final String? _ID_ON_ORBIT2;
-  final int? _SAT_NO2;
-  final String? _CONSTELLATION;
-  final String? _LINK_NAME;
-  final linkCategory? _LINK_TYPE;
-  final linkCondition? _LINK_STATE;
-  final String? _BAND;
-  final String? _LINK_START_TIME;
-  final String? _LINK_STOP_TIME;
-  final String? _ID_BEAM1;
-  final String? _END_POINT1_NAME;
-  final double? _END_POINT1_LAT;
-  final double? _END_POINT1_LON;
-  final String? _ID_BEAM2;
-  final String? _END_POINT2_NAME;
-  final double? _END_POINT2_LAT;
-  final double? _END_POINT2_LON;
-  final double? _DATA_RATE1_TO2;
-  final double? _DATA_RATE2_TO1;
-  final String? _SYS_CAP;
-  final String? _OPS_CAP;
+class IQCGeolocationObjectBuilder extends fb.ObjectBuilder {
+  final double? _LATITUDE_DEG;
+  final double? _LONGITUDE_DEG;
+  final double? _ALTITUDE_M;
+  final double? _UNCERTAINTY_M;
+  final String? _METHOD;
 
-  LKSObjectBuilder({
+  IQCGeolocationObjectBuilder({
+    double? LATITUDE_DEG,
+    double? latitudeDeg,
+    double? LONGITUDE_DEG,
+    double? longitudeDeg,
+    double? ALTITUDE_M,
+    double? altitudeM,
+    double? UNCERTAINTY_M,
+    double? uncertaintyM,
+    String? METHOD,
+  })
+      : _LATITUDE_DEG = latitudeDeg ?? LATITUDE_DEG,
+        _LONGITUDE_DEG = longitudeDeg ?? LONGITUDE_DEG,
+        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _UNCERTAINTY_M = uncertaintyM ?? UNCERTAINTY_M,
+        _METHOD = METHOD;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? METHODOffset = _METHOD == null ? null
+        : fbBuilder.writeString(_METHOD!);
+    fbBuilder.startTable(5);
+    fbBuilder.addFloat64(0, _LATITUDE_DEG);
+    fbBuilder.addFloat64(1, _LONGITUDE_DEG);
+    fbBuilder.addFloat64(2, _ALTITUDE_M);
+    fbBuilder.addFloat64(3, _UNCERTAINTY_M);
+    fbBuilder.addOffset(4, METHODOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Receive chain that produced the samples.
+///
+///  Every field is a verbatim string. SigMF `core:hw` is free text and the
+///  non-SigMF archives publish nothing more structured; splitting free text
+///  into a manufacturer and a model by guessing is a defect.
+class IQCHardware {
+  IQCHardware._(this._bc, this._bcOffset);
+  factory IQCHardware(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<IQCHardware> reader = _IQCHardwareReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  SigMF `core:hw` verbatim, or the source's equivalent free-text
+  ///  description of the receive chain.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Receiver manufacturer, only when the source names it as its own field.
+  String? get MANUFACTURER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Receiver model, only when the source names it as its own field.
+  String? get MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Antenna description, only when the source names it as its own field.
+  String? get ANTENNA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  SigMF `core:recorder` — the SOFTWARE that wrote the recording.
+  String? get RECORDER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'IQCHardware{DESCRIPTION: ${DESCRIPTION}, MANUFACTURER: ${MANUFACTURER}, MODEL: ${MODEL}, ANTENNA: ${ANTENNA}, RECORDER: ${RECORDER}}';
+  }
+}
+
+class _IQCHardwareReader extends fb.TableReader<IQCHardware> {
+  const _IQCHardwareReader();
+
+  @override
+  IQCHardware createObject(fb.BufferContext bc, int offset) =>
+    IQCHardware._(bc, offset);
+}
+
+class IQCHardwareBuilder {
+  IQCHardwareBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addManufacturerOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addModelOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addAntennaOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addRecorderOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class IQCHardwareObjectBuilder extends fb.ObjectBuilder {
+  final String? _DESCRIPTION;
+  final String? _MANUFACTURER;
+  final String? _MODEL;
+  final String? _ANTENNA;
+  final String? _RECORDER;
+
+  IQCHardwareObjectBuilder({
+    String? DESCRIPTION,
+    String? MANUFACTURER,
+    String? MODEL,
+    String? ANTENNA,
+    String? RECORDER,
+  })
+      : _DESCRIPTION = DESCRIPTION,
+        _MANUFACTURER = MANUFACTURER,
+        _MODEL = MODEL,
+        _ANTENNA = ANTENNA,
+        _RECORDER = RECORDER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? MANUFACTUREROffset = _MANUFACTURER == null ? null
+        : fbBuilder.writeString(_MANUFACTURER!);
+    final int? MODELOffset = _MODEL == null ? null
+        : fbBuilder.writeString(_MODEL!);
+    final int? ANTENNAOffset = _ANTENNA == null ? null
+        : fbBuilder.writeString(_ANTENNA!);
+    final int? RECORDEROffset = _RECORDER == null ? null
+        : fbBuilder.writeString(_RECORDER!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, DESCRIPTIONOffset);
+    fbBuilder.addOffset(1, MANUFACTUREROffset);
+    fbBuilder.addOffset(2, MODELOffset);
+    fbBuilder.addOffset(3, ANTENNAOffset);
+    fbBuilder.addOffset(4, RECORDEROffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One SigMF capture segment: the point in the sample stream at which the
+///  listed tuning took effect. A retuned or frequency-hopped recording has
+///  several; a single-tune recording has one.
+class IQCSegment {
+  IQCSegment._(this._bc, this._bcOffset);
+  factory IQCSegment(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<IQCSegment> reader = _IQCSegmentReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  SigMF `core:sample_start` — index of the first sample of this segment.
+  int get SAMPLE_START => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get sampleStart => SAMPLE_START;
+  ///  SigMF `core:global_index` — index of this sample in the receiver's
+  ///  free-running sample counter.
+  int get GLOBAL_INDEX => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get globalIndex => GLOBAL_INDEX;
+  ///  SigMF `core:header_bytes` — bytes preceding this segment in the data
+  ///  file.
+  int get HEADER_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get headerBytes => HEADER_BYTES;
+  ///  SigMF `core:frequency` — centre frequency of this segment, HERTZ.
+  double get CENTER_FREQ_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get centerFreqHz => CENTER_FREQ_HZ;
+  ///  SigMF `core:datetime` — ISO 8601 UTC timestamp of SAMPLE_START.
+  String? get DATETIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'IQCSegment{sampleStart: ${sampleStart}, globalIndex: ${globalIndex}, headerBytes: ${headerBytes}, centerFreqHz: ${centerFreqHz}, DATETIME: ${DATETIME}}';
+  }
+}
+
+class _IQCSegmentReader extends fb.TableReader<IQCSegment> {
+  const _IQCSegmentReader();
+
+  @override
+  IQCSegment createObject(fb.BufferContext bc, int offset) =>
+    IQCSegment._(bc, offset);
+}
+
+class IQCSegmentBuilder {
+  IQCSegmentBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addSampleStart(int? SAMPLE_START) {
+    fbBuilder.addUint64(0, SAMPLE_START);
+    return fbBuilder.offset;
+  }
+  int addGlobalIndex(int? GLOBAL_INDEX) {
+    fbBuilder.addUint64(1, GLOBAL_INDEX);
+    return fbBuilder.offset;
+  }
+  int addHeaderBytes(int? HEADER_BYTES) {
+    fbBuilder.addUint64(2, HEADER_BYTES);
+    return fbBuilder.offset;
+  }
+  int addCenterFreqHz(double? CENTER_FREQ_HZ) {
+    fbBuilder.addFloat64(3, CENTER_FREQ_HZ);
+    return fbBuilder.offset;
+  }
+  int addDatetimeOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class IQCSegmentObjectBuilder extends fb.ObjectBuilder {
+  final int? _SAMPLE_START;
+  final int? _GLOBAL_INDEX;
+  final int? _HEADER_BYTES;
+  final double? _CENTER_FREQ_HZ;
+  final String? _DATETIME;
+
+  IQCSegmentObjectBuilder({
+    int? SAMPLE_START,
+    int? sampleStart,
+    int? GLOBAL_INDEX,
+    int? globalIndex,
+    int? HEADER_BYTES,
+    int? headerBytes,
+    double? CENTER_FREQ_HZ,
+    double? centerFreqHz,
+    String? DATETIME,
+  })
+      : _SAMPLE_START = sampleStart ?? SAMPLE_START,
+        _GLOBAL_INDEX = globalIndex ?? GLOBAL_INDEX,
+        _HEADER_BYTES = headerBytes ?? HEADER_BYTES,
+        _CENTER_FREQ_HZ = centerFreqHz ?? CENTER_FREQ_HZ,
+        _DATETIME = DATETIME;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DATETIMEOffset = _DATETIME == null ? null
+        : fbBuilder.writeString(_DATETIME!);
+    fbBuilder.startTable(5);
+    fbBuilder.addUint64(0, _SAMPLE_START);
+    fbBuilder.addUint64(1, _GLOBAL_INDEX);
+    fbBuilder.addUint64(2, _HEADER_BYTES);
+    fbBuilder.addFloat64(3, _CENTER_FREQ_HZ);
+    fbBuilder.addOffset(4, DATETIMEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One labelled region of the capture in time and frequency.
+class IQCAnnotation {
+  IQCAnnotation._(this._bc, this._bcOffset);
+  factory IQCAnnotation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<IQCAnnotation> reader = _IQCAnnotationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  SigMF `core:sample_start` — first sample of the annotated region.
+  int get SAMPLE_START => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get sampleStart => SAMPLE_START;
+  ///  SigMF `core:sample_count` — length of the annotated region in samples.
+  int get SAMPLE_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get sampleCount => SAMPLE_COUNT;
+  ///  SigMF `core:freq_lower_edge` — lower edge of the annotated band, HERTZ.
+  double get FREQ_LOWER_EDGE_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get freqLowerEdgeHz => FREQ_LOWER_EDGE_HZ;
+  ///  SigMF `core:freq_upper_edge` — upper edge of the annotated band, HERTZ.
+  double get FREQ_UPPER_EDGE_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get freqUpperEdgeHz => FREQ_UPPER_EDGE_HZ;
+  ///  SigMF `core:label` — the short human label ("LoRa", "ADS-B", "AIS").
+  String? get LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  SigMF `core:comment` — free-text note.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  SigMF `core:generator` — the tool or person that produced the
+  ///  annotation. An annotation asserted by an automatic classifier and one
+  ///  asserted by a human are not interchangeable evidence; this field is how
+  ///  a consumer tells them apart.
+  String? get GENERATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  SigMF `core:uuid` — the annotation's own identifier, when present.
+  String? get UUID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+
+  @override
+  String toString() {
+    return 'IQCAnnotation{sampleStart: ${sampleStart}, sampleCount: ${sampleCount}, freqLowerEdgeHz: ${freqLowerEdgeHz}, freqUpperEdgeHz: ${freqUpperEdgeHz}, LABEL: ${LABEL}, COMMENT: ${COMMENT}, GENERATOR: ${GENERATOR}, UUID: ${UUID}}';
+  }
+}
+
+class _IQCAnnotationReader extends fb.TableReader<IQCAnnotation> {
+  const _IQCAnnotationReader();
+
+  @override
+  IQCAnnotation createObject(fb.BufferContext bc, int offset) =>
+    IQCAnnotation._(bc, offset);
+}
+
+class IQCAnnotationBuilder {
+  IQCAnnotationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addSampleStart(int? SAMPLE_START) {
+    fbBuilder.addUint64(0, SAMPLE_START);
+    return fbBuilder.offset;
+  }
+  int addSampleCount(int? SAMPLE_COUNT) {
+    fbBuilder.addUint64(1, SAMPLE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addFreqLowerEdgeHz(double? FREQ_LOWER_EDGE_HZ) {
+    fbBuilder.addFloat64(2, FREQ_LOWER_EDGE_HZ);
+    return fbBuilder.offset;
+  }
+  int addFreqUpperEdgeHz(double? FREQ_UPPER_EDGE_HZ) {
+    fbBuilder.addFloat64(3, FREQ_UPPER_EDGE_HZ);
+    return fbBuilder.offset;
+  }
+  int addLabelOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addGeneratorOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addUuidOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class IQCAnnotationObjectBuilder extends fb.ObjectBuilder {
+  final int? _SAMPLE_START;
+  final int? _SAMPLE_COUNT;
+  final double? _FREQ_LOWER_EDGE_HZ;
+  final double? _FREQ_UPPER_EDGE_HZ;
+  final String? _LABEL;
+  final String? _COMMENT;
+  final String? _GENERATOR;
+  final String? _UUID;
+
+  IQCAnnotationObjectBuilder({
+    int? SAMPLE_START,
+    int? sampleStart,
+    int? SAMPLE_COUNT,
+    int? sampleCount,
+    double? FREQ_LOWER_EDGE_HZ,
+    double? freqLowerEdgeHz,
+    double? FREQ_UPPER_EDGE_HZ,
+    double? freqUpperEdgeHz,
+    String? LABEL,
+    String? COMMENT,
+    String? GENERATOR,
+    String? UUID,
+  })
+      : _SAMPLE_START = sampleStart ?? SAMPLE_START,
+        _SAMPLE_COUNT = sampleCount ?? SAMPLE_COUNT,
+        _FREQ_LOWER_EDGE_HZ = freqLowerEdgeHz ?? FREQ_LOWER_EDGE_HZ,
+        _FREQ_UPPER_EDGE_HZ = freqUpperEdgeHz ?? FREQ_UPPER_EDGE_HZ,
+        _LABEL = LABEL,
+        _COMMENT = COMMENT,
+        _GENERATOR = GENERATOR,
+        _UUID = UUID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LABELOffset = _LABEL == null ? null
+        : fbBuilder.writeString(_LABEL!);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? GENERATOROffset = _GENERATOR == null ? null
+        : fbBuilder.writeString(_GENERATOR!);
+    final int? UUIDOffset = _UUID == null ? null
+        : fbBuilder.writeString(_UUID!);
+    fbBuilder.startTable(8);
+    fbBuilder.addUint64(0, _SAMPLE_START);
+    fbBuilder.addUint64(1, _SAMPLE_COUNT);
+    fbBuilder.addFloat64(2, _FREQ_LOWER_EDGE_HZ);
+    fbBuilder.addFloat64(3, _FREQ_UPPER_EDGE_HZ);
+    fbBuilder.addOffset(4, LABELOffset);
+    fbBuilder.addOffset(5, COMMENTOffset);
+    fbBuilder.addOffset(6, GENERATOROffset);
+    fbBuilder.addOffset(7, UUIDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A SigMF extension namespace the upstream metadata declares.
+class IQCExtension {
+  IQCExtension._(this._bc, this._bcOffset);
+  factory IQCExtension(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<IQCExtension> reader = _IQCExtensionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Extension namespace name.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Extension version.
+  String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  True when the extension is declared optional for interpretation.
+  bool get IS_OPTIONAL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get isOptional => IS_OPTIONAL;
+
+  @override
+  String toString() {
+    return 'IQCExtension{NAME: ${NAME}, VERSION: ${VERSION}, isOptional: ${isOptional}}';
+  }
+}
+
+class _IQCExtensionReader extends fb.TableReader<IQCExtension> {
+  const _IQCExtensionReader();
+
+  @override
+  IQCExtension createObject(fb.BufferContext bc, int offset) =>
+    IQCExtension._(bc, offset);
+}
+
+class IQCExtensionBuilder {
+  IQCExtensionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addVersionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIsOptional(bool? IS_OPTIONAL) {
+    fbBuilder.addBool(2, IS_OPTIONAL);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class IQCExtensionObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _VERSION;
+  final bool? _IS_OPTIONAL;
+
+  IQCExtensionObjectBuilder({
+    String? NAME,
+    String? VERSION,
+    bool? IS_OPTIONAL,
+    bool? isOptional,
+  })
+      : _NAME = NAME,
+        _VERSION = VERSION,
+        _IS_OPTIONAL = isOptional ?? IS_OPTIONAL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? VERSIONOffset = _VERSION == null ? null
+        : fbBuilder.writeString(_VERSION!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, VERSIONOffset);
+    fbBuilder.addBool(2, _IS_OPTIONAL);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A retrievable file belonging to this capture.
+///
+///  The record NEVER carries sample bytes. It carries where they are, how big
+///  they are, and what they hash to, so a consumer can decide for itself
+///  whether to fetch 400 kB or 127 GB.
+class IQCPayloadRef {
+  IQCPayloadRef._(this._bc, this._bcOffset);
+  factory IQCPayloadRef(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<IQCPayloadRef> reader = _IQCPayloadRefReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  What this file is.
+  iqcPayloadRole get ROLE => iqcPayloadRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 4));
+  ///  Upstream retrieval URL, verbatim.
+  String? get URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  File name as the source publishes it.
+  String? get FILE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get fileName => FILE_NAME;
+  ///  IANA media type when the source declares one.
+  String? get MEDIA_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get mediaType => MEDIA_TYPE;
+  ///  Byte length. 0 means the source did not publish a size — it never means
+  ///  an empty file.
+  int get BYTE_LENGTH => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get byteLength => BYTE_LENGTH;
+  ///  SHA-256 of the exact bytes, lowercase hex. Populated only when computed
+  ///  or published; never guessed.
+  String? get BYTE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get byteSha256 => BYTE_SHA256;
+  ///  SHA-512 of the exact bytes, lowercase hex. SigMF `core:sha512` is a
+  ///  SHA-512 over the dataset file, so it is carried in its own field rather
+  ///  than converted or discarded.
+  String? get BYTE_SHA512 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get byteSha512 => BYTE_SHA512;
+  ///  IPFS CIDv1 when, and only when, this SDN pinned the bytes.
+  String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Multiformat address, usually /ipfs/{CID}.
+  String? get MULTIFORMAT_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get multiformatAddress => MULTIFORMAT_ADDRESS;
+  ///  Custody of these bytes.
+  iqcCustody get CUSTODY => iqcCustody.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  ISO 8601 UTC time at which URL was last confirmed retrievable.
+  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get retrievedAt => RETRIEVED_AT;
+
+  @override
+  String toString() {
+    return 'IQCPayloadRef{ROLE: ${ROLE}, URL: ${URL}, fileName: ${fileName}, mediaType: ${mediaType}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, byteSha512: ${byteSha512}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, CUSTODY: ${CUSTODY}, retrievedAt: ${retrievedAt}}';
+  }
+}
+
+class _IQCPayloadRefReader extends fb.TableReader<IQCPayloadRef> {
+  const _IQCPayloadRefReader();
+
+  @override
+  IQCPayloadRef createObject(fb.BufferContext bc, int offset) =>
+    IQCPayloadRef._(bc, offset);
+}
+
+class IQCPayloadRefBuilder {
+  IQCPayloadRefBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addRole(iqcPayloadRole? ROLE) {
+    fbBuilder.addInt8(0, ROLE?.value);
+    return fbBuilder.offset;
+  }
+  int addUrlOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addFileNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMediaTypeOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addByteLength(int? BYTE_LENGTH) {
+    fbBuilder.addUint64(4, BYTE_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addByteSha256Offset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addByteSha512Offset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addCidOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addMultiformatAddressOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addCustody(iqcCustody? CUSTODY) {
+    fbBuilder.addInt8(9, CUSTODY?.value);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAtOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class IQCPayloadRefObjectBuilder extends fb.ObjectBuilder {
+  final iqcPayloadRole? _ROLE;
+  final String? _URL;
+  final String? _FILE_NAME;
+  final String? _MEDIA_TYPE;
+  final int? _BYTE_LENGTH;
+  final String? _BYTE_SHA256;
+  final String? _BYTE_SHA512;
+  final String? _CID;
+  final String? _MULTIFORMAT_ADDRESS;
+  final iqcCustody? _CUSTODY;
+  final String? _RETRIEVED_AT;
+
+  IQCPayloadRefObjectBuilder({
+    iqcPayloadRole? ROLE,
+    String? URL,
+    String? FILE_NAME,
+    String? fileName,
+    String? MEDIA_TYPE,
+    String? mediaType,
+    int? BYTE_LENGTH,
+    int? byteLength,
+    String? BYTE_SHA256,
+    String? byteSha256,
+    String? BYTE_SHA512,
+    String? byteSha512,
+    String? CID,
+    String? MULTIFORMAT_ADDRESS,
+    String? multiformatAddress,
+    iqcCustody? CUSTODY,
+    String? RETRIEVED_AT,
+    String? retrievedAt,
+  })
+      : _ROLE = ROLE,
+        _URL = URL,
+        _FILE_NAME = fileName ?? FILE_NAME,
+        _MEDIA_TYPE = mediaType ?? MEDIA_TYPE,
+        _BYTE_LENGTH = byteLength ?? BYTE_LENGTH,
+        _BYTE_SHA256 = byteSha256 ?? BYTE_SHA256,
+        _BYTE_SHA512 = byteSha512 ?? BYTE_SHA512,
+        _CID = CID,
+        _MULTIFORMAT_ADDRESS = multiformatAddress ?? MULTIFORMAT_ADDRESS,
+        _CUSTODY = CUSTODY,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? URLOffset = _URL == null ? null
+        : fbBuilder.writeString(_URL!);
+    final int? FILE_NAMEOffset = _FILE_NAME == null ? null
+        : fbBuilder.writeString(_FILE_NAME!);
+    final int? MEDIA_TYPEOffset = _MEDIA_TYPE == null ? null
+        : fbBuilder.writeString(_MEDIA_TYPE!);
+    final int? BYTE_SHA256Offset = _BYTE_SHA256 == null ? null
+        : fbBuilder.writeString(_BYTE_SHA256!);
+    final int? BYTE_SHA512Offset = _BYTE_SHA512 == null ? null
+        : fbBuilder.writeString(_BYTE_SHA512!);
+    final int? CIDOffset = _CID == null ? null
+        : fbBuilder.writeString(_CID!);
+    final int? MULTIFORMAT_ADDRESSOffset = _MULTIFORMAT_ADDRESS == null ? null
+        : fbBuilder.writeString(_MULTIFORMAT_ADDRESS!);
+    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
+        : fbBuilder.writeString(_RETRIEVED_AT!);
+    fbBuilder.startTable(11);
+    fbBuilder.addInt8(0, _ROLE?.value);
+    fbBuilder.addOffset(1, URLOffset);
+    fbBuilder.addOffset(2, FILE_NAMEOffset);
+    fbBuilder.addOffset(3, MEDIA_TYPEOffset);
+    fbBuilder.addUint64(4, _BYTE_LENGTH);
+    fbBuilder.addOffset(5, BYTE_SHA256Offset);
+    fbBuilder.addOffset(6, BYTE_SHA512Offset);
+    fbBuilder.addOffset(7, CIDOffset);
+    fbBuilder.addOffset(8, MULTIFORMAT_ADDRESSOffset);
+    fbBuilder.addInt8(9, _CUSTODY?.value);
+    fbBuilder.addOffset(10, RETRIEVED_ATOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  RF IQ Capture Metadata.
+///
+///  The description of ONE raw, un-demodulated complex-baseband recording held
+///  in a public archive — a hosted IQ-capture repository, a crowdsourced
+///  signal-identification catalog, an institutional dataset repository, an
+///  SDR project's capture database, a general-purpose research data archive —
+///  normalized onto the SigMF v1 core namespace, which is the only metadata
+///  vocabulary these archive classes share.
+///
+///  $IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable
+///  and verifiable without anyone mirroring its payload: the samples stay where
+///  their publisher put them and `PAYLOADS` says where that is, how large it
+///  is, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture
+///  decision for small high-value recordings, never a default.
+///
+///  UNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and
+///  sample rate in HERTZ, so every frequency and rate field here is `_HZ` and
+///  carries the Hz value unconverted. This standard deliberately does NOT
+///  follow $RFB's MHz convention — silently rescaling a SigMF value on ingest
+///  is the exact defect the suffix exists to prevent. A consumer joining $IQC
+///  to $RFB divides by 1e6 at the join, explicitly.
+///
+///  LICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.
+///  It does not mean public domain, it does not mean permissive, and it does
+///  not authorize redistribution. Crowdsourced catalogs and hosted repositories
+///  both carry third-party recordings, so licence is per RECORDING, never per
+///  archive.
+///
+///  Division of labour: $RFO = a sensor's astrometric/RF observation of a
+///  tracked object (azimuth, elevation, range); $RFE = the parametric emitter
+///  description; $RFB = the emitter's band specification in MHz; $IQC = the
+///  archived baseband recording itself. $DPM remains the manifest under which
+///  THIS network publishes a shard of $IQC records; it does not describe an
+///  upstream third party's capture.
+class IQC {
+  IQC._(this._bc, this._bcOffset);
+  factory IQC(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<IQC> reader = _IQCReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable identifier for this record.
+  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  The upstream archive's own identifier for this capture, verbatim.
+  String? get CAPTURE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get captureId => CAPTURE_ID;
+  ///  Name of the archive that publishes the capture, carried verbatim as that
+  ///  archive states it. A string rather than an enum so a new archive lane
+  ///  never requires a schema release.
+  String? get SOURCE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sourceName => SOURCE_NAME;
+  ///  Landing page for the capture at the source.
+  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get sourceUrl => SOURCE_URL;
+  ///  Identifier of the source record this was normalized from, when the
+  ///  source exposes one distinct from CAPTURE_ID.
+  String? get SOURCE_RECORD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get sourceRecordId => SOURCE_RECORD_ID;
+  ///  SHA-256 of the raw upstream metadata bytes that produced this record,
+  ///  lowercase hex. Makes the normalization auditable.
+  String? get SOURCE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get sourceSha256 => SOURCE_SHA256;
+  ///  ISO 8601 UTC time the source metadata was retrieved.
+  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get retrievedAt => RETRIEVED_AT;
+  ///  Human title of the capture.
+  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  SigMF `core:description`.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  SigMF `core:author`.
+  String? get AUTHOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  SigMF `core:version` — the SigMF specification version the upstream
+  ///  metadata declares. Empty for captures normalized from a non-SigMF
+  ///  source; that emptiness is itself informative.
+  String? get SIGMF_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get sigmfVersion => SIGMF_VERSION;
+  ///  SigMF `core:collection` — identifier of the collection this recording
+  ///  belongs to.
+  String? get COLLECTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  SigMF `core:extensions`.
+  List<IQCExtension>? get EXTENSIONS => const fb.ListReader<IQCExtension>(IQCExtension.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  SigMF `core:datatype` VERBATIM, e.g. "cf32_le", "ci16_le", "ru8". Never
+  ///  re-spelled, never normalized to another vocabulary. A consumer that
+  ///  cannot parse the token MUST refuse the samples rather than assume a
+  ///  layout.
+  String? get DATATYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  SigMF `core:sample_rate`, HERTZ (complex samples per second).
+  double get SAMPLE_RATE_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get sampleRateHz => SAMPLE_RATE_HZ;
+  ///  SigMF `core:num_channels`. 0 means unstated; 1 is the SigMF default and
+  ///  MUST be written explicitly when known.
+  int get NUM_CHANNELS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 34, 0);
+  int get numChannels => NUM_CHANNELS;
+  ///  Centre frequency of the FIRST capture segment, HERTZ, copied here for
+  ///  indexing. `SEGMENTS` is normative whenever it is present.
+  double get CENTER_FREQ_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get centerFreqHz => CENTER_FREQ_HZ;
+  ///  Lowest occupied frequency across the recording, HERTZ, when the source
+  ///  states it or its annotations bound it.
+  double get FREQ_LOWER_EDGE_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get freqLowerEdgeHz => FREQ_LOWER_EDGE_HZ;
+  ///  Highest occupied frequency across the recording, HERTZ.
+  double get FREQ_UPPER_EDGE_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get freqUpperEdgeHz => FREQ_UPPER_EDGE_HZ;
+  ///  Total complex samples in the recording. 0 means unstated — it is NOT to
+  ///  be back-computed from BYTE_LENGTH unless DATATYPE and any header bytes
+  ///  are both known.
+  int get SAMPLE_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 42, 0);
+  int get sampleCount => SAMPLE_COUNT;
+  ///  Recording length in seconds, when stated or exactly derivable from
+  ///  SAMPLE_COUNT and SAMPLE_RATE_HZ.
+  double get DURATION_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get durationSeconds => DURATION_SECONDS;
+  ///  SigMF `core:offset` — index of the first sample in the recording's own
+  ///  numbering.
+  int get SAMPLE_OFFSET => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 46, 0);
+  int get sampleOffset => SAMPLE_OFFSET;
+  ///  SigMF `core:metadata_only` — true when no dataset file accompanies the
+  ///  metadata.
+  bool get METADATA_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 48, false);
+  bool get metadataOnly => METADATA_ONLY;
+  ///  SigMF `core:trailing_bytes` — non-sample bytes at the end of the data
+  ///  file.
+  int get TRAILING_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get trailingBytes => TRAILING_BYTES;
+  ///  ISO 8601 UTC start of the recording (the first segment's
+  ///  `core:datetime`).
+  String? get CAPTURE_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get captureStart => CAPTURE_START;
+  ///  ISO 8601 UTC end of the recording, when stated or exactly derivable.
+  String? get CAPTURE_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get captureStop => CAPTURE_STOP;
+  ///  Per-segment tuning history.
+  List<IQCSegment>? get SEGMENTS => const fb.ListReader<IQCSegment>(IQCSegment.reader).vTableGetNullable(_bc, _bcOffset, 56);
+  ///  Labelled time/frequency regions.
+  List<IQCAnnotation>? get ANNOTATIONS => const fb.ListReader<IQCAnnotation>(IQCAnnotation.reader).vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Archive-level tags, categories or keywords, carried verbatim in whatever
+  ///  vocabulary the publishing archive uses.
+  List<String>? get LABELS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 60);
+  ///  Receiver position. Absent when the source published none.
+  IQCGeolocation? get GEOLOCATION => IQCGeolocation.reader.vTableGetNullable(_bc, _bcOffset, 62);
+  ///  Receive chain.
+  IQCHardware? get HARDWARE => IQCHardware.reader.vTableGetNullable(_bc, _bcOffset, 64);
+  ///  Signal designation the source states, verbatim ("LoRa", "DVB-S2",
+  ///  "ADS-B", "VOR"). Not an enum: these archives catalogue the whole radio
+  ///  world, and $RFE's `signalModulation` is a radar-emitter vocabulary that
+  ///  would force every civil waveform into UNKNOWN.
+  String? get SIGNAL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  String? get signalName => SIGNAL_NAME;
+  ///  Modulation the source states, verbatim. Never inferred from the samples.
+  String? get MODULATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Band designation the source states. Shares $RFB's `rfBandDesignation`, so
+  ///  an HF or VHF capture is designated identically on both records.
+  rfBandDesignation get BAND => rfBandDesignation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 12));
+  ///  NORAD catalogue number of the transmitting spacecraft when the capture
+  ///  is of a known space object. Joins to $CAT.NORAD_CAT_ID. 0 when unbound.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 72, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  International designator of the transmitting spacecraft, when known.
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  String? get objectId => OBJECT_ID;
+  ///  $RFE.ID of the emitter this capture is of, when identified.
+  String? get EMITTER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  String? get emitterId => EMITTER_ID;
+  ///  $RFB.ID of the band specification this capture exercises, when
+  ///  identified.
+  String? get RFB_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  String? get rfbId => RFB_ID;
+  ///  SPDX identifier when the source states one, otherwise the source's
+  ///  licence name verbatim. EMPTY MEANS UNKNOWN TERMS — never public domain.
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  ///  URL of the licence text the source points at.
+  String? get LICENSE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get licenseUrl => LICENSE_URL;
+  ///  Attribution/citation string the licence requires this record and any
+  ///  derived product to carry downstream.
+  String? get ATTRIBUTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  ///  SigMF `core:meta_doi` — DOI of the metadata.
+  String? get META_DOI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  String? get metaDoi => META_DOI;
+  ///  SigMF `core:data_doi` — DOI of the dataset.
+  String? get DATA_DOI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  String? get dataDoi => DATA_DOI;
+  ///  Retrievable files for this capture.
+  List<IQCPayloadRef>? get PAYLOADS => const fb.ListReader<IQCPayloadRef>(IQCPayloadRef.reader).vTableGetNullable(_bc, _bcOffset, 90);
+  ///  ISO 8601 UTC creation time of this record.
+  String? get CREATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
+  String? get createdAt => CREATED_AT;
+  ///  ISO 8601 UTC last-update time of this record.
+  String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  String? get updatedAt => UPDATED_AT;
+  ///  CID of the $IQC this record replaces, when the upstream capture's
+  ///  metadata changed.
+  String? get SUPERSEDES_IQC_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
+  String? get supersedesIqcCid => SUPERSEDES_IQC_CID;
+
+  @override
+  String toString() {
+    return 'IQC{ID: ${ID}, captureId: ${captureId}, sourceName: ${sourceName}, sourceUrl: ${sourceUrl}, sourceRecordId: ${sourceRecordId}, sourceSha256: ${sourceSha256}, retrievedAt: ${retrievedAt}, TITLE: ${TITLE}, DESCRIPTION: ${DESCRIPTION}, AUTHOR: ${AUTHOR}, sigmfVersion: ${sigmfVersion}, COLLECTION: ${COLLECTION}, EXTENSIONS: ${EXTENSIONS}, DATATYPE: ${DATATYPE}, sampleRateHz: ${sampleRateHz}, numChannels: ${numChannels}, centerFreqHz: ${centerFreqHz}, freqLowerEdgeHz: ${freqLowerEdgeHz}, freqUpperEdgeHz: ${freqUpperEdgeHz}, sampleCount: ${sampleCount}, durationSeconds: ${durationSeconds}, sampleOffset: ${sampleOffset}, metadataOnly: ${metadataOnly}, trailingBytes: ${trailingBytes}, captureStart: ${captureStart}, captureStop: ${captureStop}, SEGMENTS: ${SEGMENTS}, ANNOTATIONS: ${ANNOTATIONS}, LABELS: ${LABELS}, GEOLOCATION: ${GEOLOCATION}, HARDWARE: ${HARDWARE}, signalName: ${signalName}, MODULATION: ${MODULATION}, BAND: ${BAND}, noradCatId: ${noradCatId}, objectId: ${objectId}, emitterId: ${emitterId}, rfbId: ${rfbId}, LICENSE: ${LICENSE}, licenseUrl: ${licenseUrl}, ATTRIBUTION: ${ATTRIBUTION}, metaDoi: ${metaDoi}, dataDoi: ${dataDoi}, PAYLOADS: ${PAYLOADS}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, supersedesIqcCid: ${supersedesIqcCid}}';
+  }
+}
+
+class _IQCReader extends fb.TableReader<IQC> {
+  const _IQCReader();
+
+  @override
+  IQC createObject(fb.BufferContext bc, int offset) =>
+    IQC._(bc, offset);
+}
+
+class IQCBuilder {
+  IQCBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(47);
+  }
+
+  int addIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCaptureIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceUrlOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceRecordIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceSha256Offset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAtOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTitleOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addAuthorOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addSigmfVersionOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addCollectionOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addExtensionsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addDatatypeOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addSampleRateHz(double? SAMPLE_RATE_HZ) {
+    fbBuilder.addFloat64(14, SAMPLE_RATE_HZ);
+    return fbBuilder.offset;
+  }
+  int addNumChannels(int? NUM_CHANNELS) {
+    fbBuilder.addUint32(15, NUM_CHANNELS);
+    return fbBuilder.offset;
+  }
+  int addCenterFreqHz(double? CENTER_FREQ_HZ) {
+    fbBuilder.addFloat64(16, CENTER_FREQ_HZ);
+    return fbBuilder.offset;
+  }
+  int addFreqLowerEdgeHz(double? FREQ_LOWER_EDGE_HZ) {
+    fbBuilder.addFloat64(17, FREQ_LOWER_EDGE_HZ);
+    return fbBuilder.offset;
+  }
+  int addFreqUpperEdgeHz(double? FREQ_UPPER_EDGE_HZ) {
+    fbBuilder.addFloat64(18, FREQ_UPPER_EDGE_HZ);
+    return fbBuilder.offset;
+  }
+  int addSampleCount(int? SAMPLE_COUNT) {
+    fbBuilder.addUint64(19, SAMPLE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addDurationSeconds(double? DURATION_SECONDS) {
+    fbBuilder.addFloat64(20, DURATION_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addSampleOffset(int? SAMPLE_OFFSET) {
+    fbBuilder.addUint64(21, SAMPLE_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addMetadataOnly(bool? METADATA_ONLY) {
+    fbBuilder.addBool(22, METADATA_ONLY);
+    return fbBuilder.offset;
+  }
+  int addTrailingBytes(int? TRAILING_BYTES) {
+    fbBuilder.addUint64(23, TRAILING_BYTES);
+    return fbBuilder.offset;
+  }
+  int addCaptureStartOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addCaptureStopOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addSegmentsOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addAnnotationsOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addLabelsOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addGeolocationOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addHardwareOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addSignalNameOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addModulationOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addBand(rfBandDesignation? BAND) {
+    fbBuilder.addInt8(33, BAND?.value);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(34, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addEmitterIdOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addRfbIdOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseUrlOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addAttributionOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addMetaDoiOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addDataDoiOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addPayloadsOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addCreatedAtOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAtOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addSupersedesIqcCidOffset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class IQCObjectBuilder extends fb.ObjectBuilder {
+  final String? _ID;
+  final String? _CAPTURE_ID;
+  final String? _SOURCE_NAME;
+  final String? _SOURCE_URL;
+  final String? _SOURCE_RECORD_ID;
+  final String? _SOURCE_SHA256;
+  final String? _RETRIEVED_AT;
+  final String? _TITLE;
+  final String? _DESCRIPTION;
+  final String? _AUTHOR;
+  final String? _SIGMF_VERSION;
+  final String? _COLLECTION;
+  final List<IQCExtensionObjectBuilder>? _EXTENSIONS;
+  final String? _DATATYPE;
+  final double? _SAMPLE_RATE_HZ;
+  final int? _NUM_CHANNELS;
+  final double? _CENTER_FREQ_HZ;
+  final double? _FREQ_LOWER_EDGE_HZ;
+  final double? _FREQ_UPPER_EDGE_HZ;
+  final int? _SAMPLE_COUNT;
+  final double? _DURATION_SECONDS;
+  final int? _SAMPLE_OFFSET;
+  final bool? _METADATA_ONLY;
+  final int? _TRAILING_BYTES;
+  final String? _CAPTURE_START;
+  final String? _CAPTURE_STOP;
+  final List<IQCSegmentObjectBuilder>? _SEGMENTS;
+  final List<IQCAnnotationObjectBuilder>? _ANNOTATIONS;
+  final List<String>? _LABELS;
+  final IQCGeolocationObjectBuilder? _GEOLOCATION;
+  final IQCHardwareObjectBuilder? _HARDWARE;
+  final String? _SIGNAL_NAME;
+  final String? _MODULATION;
+  final rfBandDesignation? _BAND;
+  final int? _NORAD_CAT_ID;
+  final String? _OBJECT_ID;
+  final String? _EMITTER_ID;
+  final String? _RFB_ID;
+  final String? _LICENSE;
+  final String? _LICENSE_URL;
+  final String? _ATTRIBUTION;
+  final String? _META_DOI;
+  final String? _DATA_DOI;
+  final List<IQCPayloadRefObjectBuilder>? _PAYLOADS;
+  final String? _CREATED_AT;
+  final String? _UPDATED_AT;
+  final String? _SUPERSEDES_IQC_CID;
+
+  IQCObjectBuilder({
     String? ID,
-    String? ID_ON_ORBIT1,
-    String? idOnOrbit1,
-    int? SAT_NO1,
-    int? satNo1,
-    String? ID_ON_ORBIT2,
-    String? idOnOrbit2,
-    int? SAT_NO2,
-    int? satNo2,
-    String? CONSTELLATION,
-    String? LINK_NAME,
-    String? linkName,
-    linkCategory? LINK_TYPE,
-    linkCategory? linkType,
-    linkCondition? LINK_STATE,
-    linkCondition? linkState,
-    String? BAND,
-    String? LINK_START_TIME,
-    String? linkStartTime,
-    String? LINK_STOP_TIME,
-    String? linkStopTime,
-    String? ID_BEAM1,
-    String? idBeam1,
-    String? END_POINT1_NAME,
-    String? endPoint1Name,
-    double? END_POINT1_LAT,
-    double? endPoint1Lat,
-    double? END_POINT1_LON,
-    double? endPoint1Lon,
-    String? ID_BEAM2,
-    String? idBeam2,
-    String? END_POINT2_NAME,
-    String? endPoint2Name,
-    double? END_POINT2_LAT,
-    double? endPoint2Lat,
-    double? END_POINT2_LON,
-    double? endPoint2Lon,
-    double? DATA_RATE1_TO2,
-    double? dataRate1To2,
-    double? DATA_RATE2_TO1,
-    double? dataRate2To1,
-    String? SYS_CAP,
-    String? sysCap,
-    String? OPS_CAP,
-    String? opsCap,
+    String? CAPTURE_ID,
+    String? captureId,
+    String? SOURCE_NAME,
+    String? sourceName,
+    String? SOURCE_URL,
+    String? sourceUrl,
+    String? SOURCE_RECORD_ID,
+    String? sourceRecordId,
+    String? SOURCE_SHA256,
+    String? sourceSha256,
+    String? RETRIEVED_AT,
+    String? retrievedAt,
+    String? TITLE,
+    String? DESCRIPTION,
+    String? AUTHOR,
+    String? SIGMF_VERSION,
+    String? sigmfVersion,
+    String? COLLECTION,
+    List<IQCExtensionObjectBuilder>? EXTENSIONS,
+    String? DATATYPE,
+    double? SAMPLE_RATE_HZ,
+    double? sampleRateHz,
+    int? NUM_CHANNELS,
+    int? numChannels,
+    double? CENTER_FREQ_HZ,
+    double? centerFreqHz,
+    double? FREQ_LOWER_EDGE_HZ,
+    double? freqLowerEdgeHz,
+    double? FREQ_UPPER_EDGE_HZ,
+    double? freqUpperEdgeHz,
+    int? SAMPLE_COUNT,
+    int? sampleCount,
+    double? DURATION_SECONDS,
+    double? durationSeconds,
+    int? SAMPLE_OFFSET,
+    int? sampleOffset,
+    bool? METADATA_ONLY,
+    bool? metadataOnly,
+    int? TRAILING_BYTES,
+    int? trailingBytes,
+    String? CAPTURE_START,
+    String? captureStart,
+    String? CAPTURE_STOP,
+    String? captureStop,
+    List<IQCSegmentObjectBuilder>? SEGMENTS,
+    List<IQCAnnotationObjectBuilder>? ANNOTATIONS,
+    List<String>? LABELS,
+    IQCGeolocationObjectBuilder? GEOLOCATION,
+    IQCHardwareObjectBuilder? HARDWARE,
+    String? SIGNAL_NAME,
+    String? signalName,
+    String? MODULATION,
+    rfBandDesignation? BAND,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? OBJECT_ID,
+    String? objectId,
+    String? EMITTER_ID,
+    String? emitterId,
+    String? RFB_ID,
+    String? rfbId,
+    String? LICENSE,
+    String? LICENSE_URL,
+    String? licenseUrl,
+    String? ATTRIBUTION,
+    String? META_DOI,
+    String? metaDoi,
+    String? DATA_DOI,
+    String? dataDoi,
+    List<IQCPayloadRefObjectBuilder>? PAYLOADS,
+    String? CREATED_AT,
+    String? createdAt,
+    String? UPDATED_AT,
+    String? updatedAt,
+    String? SUPERSEDES_IQC_CID,
+    String? supersedesIqcCid,
   })
       : _ID = ID,
-        _ID_ON_ORBIT1 = idOnOrbit1 ?? ID_ON_ORBIT1,
-        _SAT_NO1 = satNo1 ?? SAT_NO1,
-        _ID_ON_ORBIT2 = idOnOrbit2 ?? ID_ON_ORBIT2,
-        _SAT_NO2 = satNo2 ?? SAT_NO2,
-        _CONSTELLATION = CONSTELLATION,
-        _LINK_NAME = linkName ?? LINK_NAME,
-        _LINK_TYPE = linkType ?? LINK_TYPE,
-        _LINK_STATE = linkState ?? LINK_STATE,
+        _CAPTURE_ID = captureId ?? CAPTURE_ID,
+        _SOURCE_NAME = sourceName ?? SOURCE_NAME,
+        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
+        _SOURCE_RECORD_ID = sourceRecordId ?? SOURCE_RECORD_ID,
+        _SOURCE_SHA256 = sourceSha256 ?? SOURCE_SHA256,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
+        _TITLE = TITLE,
+        _DESCRIPTION = DESCRIPTION,
+        _AUTHOR = AUTHOR,
+        _SIGMF_VERSION = sigmfVersion ?? SIGMF_VERSION,
+        _COLLECTION = COLLECTION,
+        _EXTENSIONS = EXTENSIONS,
+        _DATATYPE = DATATYPE,
+        _SAMPLE_RATE_HZ = sampleRateHz ?? SAMPLE_RATE_HZ,
+        _NUM_CHANNELS = numChannels ?? NUM_CHANNELS,
+        _CENTER_FREQ_HZ = centerFreqHz ?? CENTER_FREQ_HZ,
+        _FREQ_LOWER_EDGE_HZ = freqLowerEdgeHz ?? FREQ_LOWER_EDGE_HZ,
+        _FREQ_UPPER_EDGE_HZ = freqUpperEdgeHz ?? FREQ_UPPER_EDGE_HZ,
+        _SAMPLE_COUNT = sampleCount ?? SAMPLE_COUNT,
+        _DURATION_SECONDS = durationSeconds ?? DURATION_SECONDS,
+        _SAMPLE_OFFSET = sampleOffset ?? SAMPLE_OFFSET,
+        _METADATA_ONLY = metadataOnly ?? METADATA_ONLY,
+        _TRAILING_BYTES = trailingBytes ?? TRAILING_BYTES,
+        _CAPTURE_START = captureStart ?? CAPTURE_START,
+        _CAPTURE_STOP = captureStop ?? CAPTURE_STOP,
+        _SEGMENTS = SEGMENTS,
+        _ANNOTATIONS = ANNOTATIONS,
+        _LABELS = LABELS,
+        _GEOLOCATION = GEOLOCATION,
+        _HARDWARE = HARDWARE,
+        _SIGNAL_NAME = signalName ?? SIGNAL_NAME,
+        _MODULATION = MODULATION,
         _BAND = BAND,
-        _LINK_START_TIME = linkStartTime ?? LINK_START_TIME,
-        _LINK_STOP_TIME = linkStopTime ?? LINK_STOP_TIME,
-        _ID_BEAM1 = idBeam1 ?? ID_BEAM1,
-        _END_POINT1_NAME = endPoint1Name ?? END_POINT1_NAME,
-        _END_POINT1_LAT = endPoint1Lat ?? END_POINT1_LAT,
-        _END_POINT1_LON = endPoint1Lon ?? END_POINT1_LON,
-        _ID_BEAM2 = idBeam2 ?? ID_BEAM2,
-        _END_POINT2_NAME = endPoint2Name ?? END_POINT2_NAME,
-        _END_POINT2_LAT = endPoint2Lat ?? END_POINT2_LAT,
-        _END_POINT2_LON = endPoint2Lon ?? END_POINT2_LON,
-        _DATA_RATE1_TO2 = dataRate1To2 ?? DATA_RATE1_TO2,
-        _DATA_RATE2_TO1 = dataRate2To1 ?? DATA_RATE2_TO1,
-        _SYS_CAP = sysCap ?? SYS_CAP,
-        _OPS_CAP = opsCap ?? OPS_CAP;
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _EMITTER_ID = emitterId ?? EMITTER_ID,
+        _RFB_ID = rfbId ?? RFB_ID,
+        _LICENSE = LICENSE,
+        _LICENSE_URL = licenseUrl ?? LICENSE_URL,
+        _ATTRIBUTION = ATTRIBUTION,
+        _META_DOI = metaDoi ?? META_DOI,
+        _DATA_DOI = dataDoi ?? DATA_DOI,
+        _PAYLOADS = PAYLOADS,
+        _CREATED_AT = createdAt ?? CREATED_AT,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+        _SUPERSEDES_IQC_CID = supersedesIqcCid ?? SUPERSEDES_IQC_CID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
-    final int? ID_ON_ORBIT1Offset = _ID_ON_ORBIT1 == null ? null
-        : fbBuilder.writeString(_ID_ON_ORBIT1!);
-    final int? ID_ON_ORBIT2Offset = _ID_ON_ORBIT2 == null ? null
-        : fbBuilder.writeString(_ID_ON_ORBIT2!);
-    final int? CONSTELLATIONOffset = _CONSTELLATION == null ? null
-        : fbBuilder.writeString(_CONSTELLATION!);
-    final int? LINK_NAMEOffset = _LINK_NAME == null ? null
-        : fbBuilder.writeString(_LINK_NAME!);
-    final int? BANDOffset = _BAND == null ? null
-        : fbBuilder.writeString(_BAND!);
-    final int? LINK_START_TIMEOffset = _LINK_START_TIME == null ? null
-        : fbBuilder.writeString(_LINK_START_TIME!);
-    final int? LINK_STOP_TIMEOffset = _LINK_STOP_TIME == null ? null
-        : fbBuilder.writeString(_LINK_STOP_TIME!);
-    final int? ID_BEAM1Offset = _ID_BEAM1 == null ? null
-        : fbBuilder.writeString(_ID_BEAM1!);
-    final int? END_POINT1_NAMEOffset = _END_POINT1_NAME == null ? null
-        : fbBuilder.writeString(_END_POINT1_NAME!);
-    final int? ID_BEAM2Offset = _ID_BEAM2 == null ? null
-        : fbBuilder.writeString(_ID_BEAM2!);
-    final int? END_POINT2_NAMEOffset = _END_POINT2_NAME == null ? null
-        : fbBuilder.writeString(_END_POINT2_NAME!);
-    final int? SYS_CAPOffset = _SYS_CAP == null ? null
-        : fbBuilder.writeString(_SYS_CAP!);
-    final int? OPS_CAPOffset = _OPS_CAP == null ? null
-        : fbBuilder.writeString(_OPS_CAP!);
-    fbBuilder.startTable(24);
+    final int? CAPTURE_IDOffset = _CAPTURE_ID == null ? null
+        : fbBuilder.writeString(_CAPTURE_ID!);
+    final int? SOURCE_NAMEOffset = _SOURCE_NAME == null ? null
+        : fbBuilder.writeString(_SOURCE_NAME!);
+    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
+        : fbBuilder.writeString(_SOURCE_URL!);
+    final int? SOURCE_RECORD_IDOffset = _SOURCE_RECORD_ID == null ? null
+        : fbBuilder.writeString(_SOURCE_RECORD_ID!);
+    final int? SOURCE_SHA256Offset = _SOURCE_SHA256 == null ? null
+        : fbBuilder.writeString(_SOURCE_SHA256!);
+    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
+        : fbBuilder.writeString(_RETRIEVED_AT!);
+    final int? TITLEOffset = _TITLE == null ? null
+        : fbBuilder.writeString(_TITLE!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? AUTHOROffset = _AUTHOR == null ? null
+        : fbBuilder.writeString(_AUTHOR!);
+    final int? SIGMF_VERSIONOffset = _SIGMF_VERSION == null ? null
+        : fbBuilder.writeString(_SIGMF_VERSION!);
+    final int? COLLECTIONOffset = _COLLECTION == null ? null
+        : fbBuilder.writeString(_COLLECTION!);
+    final int? EXTENSIONSOffset = _EXTENSIONS == null ? null
+        : fbBuilder.writeList(_EXTENSIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? DATATYPEOffset = _DATATYPE == null ? null
+        : fbBuilder.writeString(_DATATYPE!);
+    final int? CAPTURE_STARTOffset = _CAPTURE_START == null ? null
+        : fbBuilder.writeString(_CAPTURE_START!);
+    final int? CAPTURE_STOPOffset = _CAPTURE_STOP == null ? null
+        : fbBuilder.writeString(_CAPTURE_STOP!);
+    final int? SEGMENTSOffset = _SEGMENTS == null ? null
+        : fbBuilder.writeList(_SEGMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ANNOTATIONSOffset = _ANNOTATIONS == null ? null
+        : fbBuilder.writeList(_ANNOTATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? LABELSOffset = _LABELS == null ? null
+        : fbBuilder.writeList(_LABELS!.map(fbBuilder.writeString).toList());
+    final int? GEOLOCATIONOffset = _GEOLOCATION?.getOrCreateOffset(fbBuilder);
+    final int? HARDWAREOffset = _HARDWARE?.getOrCreateOffset(fbBuilder);
+    final int? SIGNAL_NAMEOffset = _SIGNAL_NAME == null ? null
+        : fbBuilder.writeString(_SIGNAL_NAME!);
+    final int? MODULATIONOffset = _MODULATION == null ? null
+        : fbBuilder.writeString(_MODULATION!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? EMITTER_IDOffset = _EMITTER_ID == null ? null
+        : fbBuilder.writeString(_EMITTER_ID!);
+    final int? RFB_IDOffset = _RFB_ID == null ? null
+        : fbBuilder.writeString(_RFB_ID!);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? LICENSE_URLOffset = _LICENSE_URL == null ? null
+        : fbBuilder.writeString(_LICENSE_URL!);
+    final int? ATTRIBUTIONOffset = _ATTRIBUTION == null ? null
+        : fbBuilder.writeString(_ATTRIBUTION!);
+    final int? META_DOIOffset = _META_DOI == null ? null
+        : fbBuilder.writeString(_META_DOI!);
+    final int? DATA_DOIOffset = _DATA_DOI == null ? null
+        : fbBuilder.writeString(_DATA_DOI!);
+    final int? PAYLOADSOffset = _PAYLOADS == null ? null
+        : fbBuilder.writeList(_PAYLOADS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CREATED_ATOffset = _CREATED_AT == null ? null
+        : fbBuilder.writeString(_CREATED_AT!);
+    final int? UPDATED_ATOffset = _UPDATED_AT == null ? null
+        : fbBuilder.writeString(_UPDATED_AT!);
+    final int? SUPERSEDES_IQC_CIDOffset = _SUPERSEDES_IQC_CID == null ? null
+        : fbBuilder.writeString(_SUPERSEDES_IQC_CID!);
+    fbBuilder.startTable(47);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, ID_ON_ORBIT1Offset);
-    fbBuilder.addUint32(2, _SAT_NO1);
-    fbBuilder.addOffset(3, ID_ON_ORBIT2Offset);
-    fbBuilder.addUint32(4, _SAT_NO2);
-    fbBuilder.addOffset(5, CONSTELLATIONOffset);
-    fbBuilder.addOffset(6, LINK_NAMEOffset);
-    fbBuilder.addInt8(7, _LINK_TYPE?.value);
-    fbBuilder.addInt8(8, _LINK_STATE?.value);
-    fbBuilder.addOffset(9, BANDOffset);
-    fbBuilder.addOffset(10, LINK_START_TIMEOffset);
-    fbBuilder.addOffset(11, LINK_STOP_TIMEOffset);
-    fbBuilder.addOffset(12, ID_BEAM1Offset);
-    fbBuilder.addOffset(13, END_POINT1_NAMEOffset);
-    fbBuilder.addFloat64(14, _END_POINT1_LAT);
-    fbBuilder.addFloat64(15, _END_POINT1_LON);
-    fbBuilder.addOffset(16, ID_BEAM2Offset);
-    fbBuilder.addOffset(17, END_POINT2_NAMEOffset);
-    fbBuilder.addFloat64(18, _END_POINT2_LAT);
-    fbBuilder.addFloat64(19, _END_POINT2_LON);
-    fbBuilder.addFloat64(20, _DATA_RATE1_TO2);
-    fbBuilder.addFloat64(21, _DATA_RATE2_TO1);
-    fbBuilder.addOffset(22, SYS_CAPOffset);
-    fbBuilder.addOffset(23, OPS_CAPOffset);
+    fbBuilder.addOffset(1, CAPTURE_IDOffset);
+    fbBuilder.addOffset(2, SOURCE_NAMEOffset);
+    fbBuilder.addOffset(3, SOURCE_URLOffset);
+    fbBuilder.addOffset(4, SOURCE_RECORD_IDOffset);
+    fbBuilder.addOffset(5, SOURCE_SHA256Offset);
+    fbBuilder.addOffset(6, RETRIEVED_ATOffset);
+    fbBuilder.addOffset(7, TITLEOffset);
+    fbBuilder.addOffset(8, DESCRIPTIONOffset);
+    fbBuilder.addOffset(9, AUTHOROffset);
+    fbBuilder.addOffset(10, SIGMF_VERSIONOffset);
+    fbBuilder.addOffset(11, COLLECTIONOffset);
+    fbBuilder.addOffset(12, EXTENSIONSOffset);
+    fbBuilder.addOffset(13, DATATYPEOffset);
+    fbBuilder.addFloat64(14, _SAMPLE_RATE_HZ);
+    fbBuilder.addUint32(15, _NUM_CHANNELS);
+    fbBuilder.addFloat64(16, _CENTER_FREQ_HZ);
+    fbBuilder.addFloat64(17, _FREQ_LOWER_EDGE_HZ);
+    fbBuilder.addFloat64(18, _FREQ_UPPER_EDGE_HZ);
+    fbBuilder.addUint64(19, _SAMPLE_COUNT);
+    fbBuilder.addFloat64(20, _DURATION_SECONDS);
+    fbBuilder.addUint64(21, _SAMPLE_OFFSET);
+    fbBuilder.addBool(22, _METADATA_ONLY);
+    fbBuilder.addUint64(23, _TRAILING_BYTES);
+    fbBuilder.addOffset(24, CAPTURE_STARTOffset);
+    fbBuilder.addOffset(25, CAPTURE_STOPOffset);
+    fbBuilder.addOffset(26, SEGMENTSOffset);
+    fbBuilder.addOffset(27, ANNOTATIONSOffset);
+    fbBuilder.addOffset(28, LABELSOffset);
+    fbBuilder.addOffset(29, GEOLOCATIONOffset);
+    fbBuilder.addOffset(30, HARDWAREOffset);
+    fbBuilder.addOffset(31, SIGNAL_NAMEOffset);
+    fbBuilder.addOffset(32, MODULATIONOffset);
+    fbBuilder.addInt8(33, _BAND?.value);
+    fbBuilder.addUint32(34, _NORAD_CAT_ID);
+    fbBuilder.addOffset(35, OBJECT_IDOffset);
+    fbBuilder.addOffset(36, EMITTER_IDOffset);
+    fbBuilder.addOffset(37, RFB_IDOffset);
+    fbBuilder.addOffset(38, LICENSEOffset);
+    fbBuilder.addOffset(39, LICENSE_URLOffset);
+    fbBuilder.addOffset(40, ATTRIBUTIONOffset);
+    fbBuilder.addOffset(41, META_DOIOffset);
+    fbBuilder.addOffset(42, DATA_DOIOffset);
+    fbBuilder.addOffset(43, PAYLOADSOffset);
+    fbBuilder.addOffset(44, CREATED_ATOffset);
+    fbBuilder.addOffset(45, UPDATED_ATOffset);
+    fbBuilder.addOffset(46, SUPERSEDES_IQC_CIDOffset);
     return fbBuilder.endTable();
   }
 

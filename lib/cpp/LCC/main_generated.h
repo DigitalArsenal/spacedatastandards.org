@@ -16,7 +16,12 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct LCC;
 struct LCCBuilder;
 
-enum legacyCountryCode : int8_t {
+/// Owner and country codes of the public satellite catalog. An ordinal is a
+/// wire value: members are appended after ZWE, never inserted, so the ones
+/// after it are out of alphabetical order. Some owners have two codes, the
+/// catalog's older one and an ISO 3166-1 alpha-3 code the catalog also uses
+/// (CA and CAN); each code is its own member.
+enum legacyCountryCode : uint8_t {
   /// Arab Satellite Communications Organization
   legacyCountryCode_AB = 0,
   /// Asia Broadcast Satellite
@@ -269,11 +274,41 @@ enum legacyCountryCode : int8_t {
   legacyCountryCode_VTNM = 124,
   /// Republic of Zimbabwe
   legacyCountryCode_ZWE = 125,
+  /// Angola (ISO 3166-1 alpha-3; also ANG)
+  legacyCountryCode_AGO = 126,
+  /// Bulgaria (ISO 3166-1 alpha-3; also BUL)
+  legacyCountryCode_BGR = 127,
+  /// Bahrain
+  legacyCountryCode_BHR = 128,
+  /// Botswana
+  legacyCountryCode_BWA = 129,
+  /// Canada (ISO 3166-1 alpha-3; also CA)
+  legacyCountryCode_CAN = 130,
+  /// Czechia (ISO 3166-1 alpha-3; also CZCH)
+  legacyCountryCode_CZE = 131,
+  /// Croatia
+  legacyCountryCode_HRV = 132,
+  /// Jordan
+  legacyCountryCode_JOR = 133,
+  /// Kuwait
+  legacyCountryCode_KWT = 134,
+  /// Peru (ISO 3166-1 alpha-3; also PERU)
+  legacyCountryCode_PER = 135,
+  /// Puerto Rico
+  legacyCountryCode_PRI = 136,
+  /// Solomon Islands
+  legacyCountryCode_SLB = 137,
+  /// Slovakia
+  legacyCountryCode_SVK = 138,
+  /// Taiwan (ISO 3166-1 alpha-3; also ROC)
+  legacyCountryCode_TWN = 139,
+  /// Uganda
+  legacyCountryCode_UGA = 140,
   legacyCountryCode_MIN = legacyCountryCode_AB,
-  legacyCountryCode_MAX = legacyCountryCode_ZWE
+  legacyCountryCode_MAX = legacyCountryCode_UGA
 };
 
-inline const legacyCountryCode (&EnumValueslegacyCountryCode())[126] {
+inline const legacyCountryCode (&EnumValueslegacyCountryCode())[141] {
   static const legacyCountryCode values[] = {
     legacyCountryCode_AB,
     legacyCountryCode_ABS,
@@ -400,13 +435,28 @@ inline const legacyCountryCode (&EnumValueslegacyCountryCode())[126] {
     legacyCountryCode_VAT,
     legacyCountryCode_VENZ,
     legacyCountryCode_VTNM,
-    legacyCountryCode_ZWE
+    legacyCountryCode_ZWE,
+    legacyCountryCode_AGO,
+    legacyCountryCode_BGR,
+    legacyCountryCode_BHR,
+    legacyCountryCode_BWA,
+    legacyCountryCode_CAN,
+    legacyCountryCode_CZE,
+    legacyCountryCode_HRV,
+    legacyCountryCode_JOR,
+    legacyCountryCode_KWT,
+    legacyCountryCode_PER,
+    legacyCountryCode_PRI,
+    legacyCountryCode_SLB,
+    legacyCountryCode_SVK,
+    legacyCountryCode_TWN,
+    legacyCountryCode_UGA
   };
   return values;
 }
 
 inline const char * const *EnumNameslegacyCountryCode() {
-  static const char * const names[127] = {
+  static const char * const names[142] = {
     "AB",
     "ABS",
     "AC",
@@ -533,13 +583,28 @@ inline const char * const *EnumNameslegacyCountryCode() {
     "VENZ",
     "VTNM",
     "ZWE",
+    "AGO",
+    "BGR",
+    "BHR",
+    "BWA",
+    "CAN",
+    "CZE",
+    "HRV",
+    "JOR",
+    "KWT",
+    "PER",
+    "PRI",
+    "SLB",
+    "SVK",
+    "TWN",
+    "UGA",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamelegacyCountryCode(legacyCountryCode e) {
-  if (::flatbuffers::IsOutRange(e, legacyCountryCode_AB, legacyCountryCode_ZWE)) return "";
+  if (::flatbuffers::IsOutRange(e, legacyCountryCode_AB, legacyCountryCode_UGA)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameslegacyCountryCode()[index];
 }
@@ -556,7 +621,7 @@ struct LCC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RETRIEVED_AT = 14
   };
   legacyCountryCode OWNER() const {
-    return static_cast<legacyCountryCode>(GetField<int8_t>(VT_OWNER, 0));
+    return static_cast<legacyCountryCode>(GetField<uint8_t>(VT_OWNER, 0));
   }
   /// Display name of the owner or source the code stands for.
   const ::flatbuffers::String *NAME() const {
@@ -581,7 +646,7 @@ struct LCC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int8_t>(verifier, VT_OWNER, 1) &&
+           VerifyField<uint8_t>(verifier, VT_OWNER, 1) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
            VerifyOffset(verifier, VT_DESCRIPTION) &&
@@ -600,7 +665,7 @@ struct LCCBuilder {
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_OWNER(legacyCountryCode OWNER) {
-    fbb_.AddElement<int8_t>(LCC::VT_OWNER, static_cast<int8_t>(OWNER), 0);
+    fbb_.AddElement<uint8_t>(LCC::VT_OWNER, static_cast<uint8_t>(OWNER), 0);
   }
   void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
     fbb_.AddOffset(LCC::VT_NAME, NAME);

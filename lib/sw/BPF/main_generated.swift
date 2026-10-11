@@ -8,411 +8,627 @@ import Common
 
 import FlatBuffers
 
-///  Capability class of a distributable software unit (module, application, or
-///  composed flow).
+///  Build Profile ($BPF)
 ///
-///  This enum IS the ratified category vocabulary. A storefront, library, module
-///  manifest and search surface all classify against these members and nothing
-///  else; a category that is not a member here does not exist. Members name
-///  CAPABILITY CLASSES only — what the unit DOES. No member names a vendor,
-///  site, organization, product, protocol brand or algorithm implementation;
-///  that identity belongs in data fields such as PLG.PUBLISHER_NAME, never in
-///  the taxonomy.
+///  The authoring-time configuration of one composed build: which variable
+///  parts of a build template are embedded, which modules roll in and at what
+///  protection tier, the runtime lock the produced artifact enforces, the
+///  distribution-control mode, and the template the profile was authored
+///  against. It is a CONFIGURATION record, not a grant and not an entitlement:
+///  it names no licensee, carries no key material, and confers no rights.
 ///
-///  Ordinals are wire values: APPEND ONLY. Never reorder, never remove, never
-///  reuse an ordinal. A reorder silently re-labels every published listing.
+///  Related records, and why this is not one of them:
+///    - `$PLK` is a per-licensee license key with issuer/licensee identity,
+///      activation counts and a validity window. `$BPF` has no licensee.
+///    - `$LGR` is a delivery-time grant carrying wrapped content keys and a
+///      provider signature. `$BPF` carries neither.
+///    - `$PLG` is the module descriptor. `$BPF` REFERENCES it per selected
+///      module and never restates a module's manifest.
+///    - `$APP` is the launchable-app manifest. It is the portability wrapper
+///      for a `$BPF`, never a substitute for it.
 ///
-///  UNSPECIFIED deliberately holds ordinal 0 so that a zero-filled or
-///  default-constructed classification can never decode as a real category. The
-///  pre-existing `pluginCategory` enum in $PLG made the opposite choice — its
-///  ordinal 0 is a real family — and had to append an `Unspecified` member at
-///  the tail to recover. This enum does not repeat that.
-///
-///  Each member's canonical display name is stated in its doc comment and is
-///  part of the ratified contract: a consumer rendering a category label uses
-///  that string verbatim, so every surface spells a category identically. The
-///  canonical route slug is the member identifier lowercased with `_` replaced
-///  by `-` (PROPAGATION -> "propagation", RF_AND_COMMUNICATIONS ->
-///  "rf-and-communications").
-public enum capabilityClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = UInt8
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  ///  No capability class stated. The publisher did not classify the unit.
-  ///  A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT
-  ///  infer a class from the unit's name, description or tags.
-  ///  Display name: "Unspecified".
+///  The domain-restriction spelling is deliberately the ratified `$PLK`
+///  spelling — `ALLOWED_DOMAINS` / `ALLOWED_TLDS` — so a lock authored here
+///  and a lock issued there are the same vocabulary on the wire.
+///  Class of variable part a build template exposes as a named slot.
+///  Capability classes only; a deployment's own slot names ride in
+///  `BPFPart.PART_ID`, never in this vocabulary. Append new values only;
+///  never reorder or reuse existing values.
+public enum bpfPartKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  The publisher did not classify the part. A consumer renders it by
+  ///  PART_ID and never infers a class.
   case unspecified = 0
-  ///  Advancing an object's state forward or backward in time under a force
-  ///  model, and interpolating between computed states.
-  ///  Display name: "Propagation".
-  case propagation = 1
-  ///  Estimating an object's state or model parameters by fitting to
-  ///  observations or ephemerides.
-  ///  Display name: "Orbit Determination".
-  case orbitDetermination = 2
-  ///  Planning, targeting and optimizing trajectory changes, including
-  ///  station-keeping, transfers and collision-avoidance maneuvers.
-  ///  Display name: "Maneuver Planning".
-  case maneuverPlanning = 3
-  ///  Screening for close approaches between objects and quantifying collision
-  ///  probability and miss distance.
-  ///  Display name: "Conjunction Assessment".
-  case conjunctionAssessment = 4
-  ///  Atmospheric reentry, decay prediction, fragmentation and debris-cloud
-  ///  evolution.
-  ///  Display name: "Reentry & Breakup".
-  case reentryAndBreakup = 5
-  ///  Attitude determination and control, body orientation, and pointing or
-  ///  slew planning.
-  ///  Display name: "Attitude & Pointing".
-  case attitudeAndPointing = 6
-  ///  Coordinate frame realization and transformation, time scale conversion,
-  ///  and earth-orientation parameter handling.
-  ///  Display name: "Reference Frames & Time".
-  case referenceFramesAndTime = 7
-  ///  Sensor modelling and tasking, field-of-regard and access computation, and
-  ///  area or target coverage figures of merit.
-  ///  Display name: "Sensors & Coverage".
-  case sensorsAndCoverage = 8
-  ///  Producing, correlating or associating observations of tracked objects,
-  ///  and maintaining tracks from them.
-  ///  Display name: "Tracking & Observation".
-  case trackingAndObservation = 9
-  ///  Radio-frequency link modelling, emitter and band characterization, signal
-  ///  capture handling, and communications planning.
-  ///  Display name: "RF & Communications".
-  case rfAndCommunications = 10
-  ///  Interference, jamming, spoofing and countermeasure modelling.
-  ///  Display name: "Electronic Warfare".
-  case electronicWarfare = 11
-  ///  Atmospheric density, gravity field, magnetic field, radiation, solar and
-  ///  geomagnetic activity, and ionospheric modelling.
-  ///  Display name: "Space Environment".
-  case spaceEnvironment = 12
-  ///  Acquiring bytes from upstream providers and parsing or exporting them
-  ///  across canonical record formats.
-  ///  Display name: "Data Sources & Ingest".
-  case dataSourcesAndIngest = 13
-  ///  Validating records for integrity, physical plausibility, continuity and
-  ///  schema conformance, and scoring data quality.
-  ///  Display name: "Data Validation & Quality".
-  case dataValidationAndQuality = 14
-  ///  Object catalogue curation, cross-identifier resolution, bus and physical
-  ///  property association, and entity identity.
-  ///  Display name: "Catalog & Identity".
-  case catalogAndIdentity = 15
-  ///  Rendering, scene composition, shading and interactive display of space
-  ///  data.
-  ///  Display name: "Visualization & Rendering".
-  case visualizationAndRendering = 16
-  ///  Ground station operation and control of physical equipment, including
-  ///  antenna rotators, radios and other hardware interfaces.
-  ///  Display name: "Ground Segment & Hardware".
-  case groundSegmentAndHardware = 17
-  ///  Mission and constellation design, trade studies, performance analysis and
-  ///  report generation.
-  ///  Display name: "Mission Design & Analysis".
-  case missionDesignAndAnalysis = 18
-  ///  Composition of other units into a graph. The unit of distribution is a
-  ///  flow of modules, not a leaf algorithm.
-  ///  Display name: "Flows & Composition".
-  case flowAndComposition = 19
-  ///  Persisting, indexing and querying records; storage engines and query
-  ///  surfaces.
-  ///  Display name: "Data Storage & Query".
-  case dataStorageAndQuery = 20
-  ///  Key custody, signing and verification, authentication, authorization and
-  ///  access control.
-  ///  Display name: "Security & Identity".
-  case securityAndIdentity = 21
-  ///  Listing, purchase, subscription, entitlement and license enforcement for
-  ///  distributed units.
-  ///  Display name: "Commerce & Licensing".
-  case commerceAndLicensing = 22
-  ///  Node runtime, artifact delivery, registry, publication and peer transport
-  ///  plumbing.
-  ///  Display name: "Node Infrastructure".
-  case nodeInfrastructure = 23
-  ///  Foundational mathematics and general-purpose utility libraries consumed by
-  ///  other units rather than run on their own.
-  ///  Display name: "Foundation & Math".
-  case foundationAndMath = 24
+  ///  The compiled engine binary payload.
+  case engineBinary = 1
+  ///  Embedded imagery data.
+  case imageryData = 2
+  ///  Embedded endpoint/locator data.
+  case urlData = 3
+  ///  Embedded end-user documentation.
+  case documentation = 4
+  ///  The cross-origin-isolation loader pair required for shared-memory
+  ///  execution in a browsing context.
+  case isolationLoader = 5
+  ///  Debug source maps.
+  case sourceMaps = 6
+  ///  A module payload embedded in the artifact.
+  case module = 7
+  ///  A part outside every class above.
+  case other = 8
 
-  public static var max: capabilityClass { return .foundationAndMath }
-  public static var min: capabilityClass { return .unspecified }
+  public static var max: bpfPartKind { return .other }
+  public static var min: bpfPartKind { return .unspecified }
 }
 
 
-///  One ratified category in the taxonomy.
-///
-///  DISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published
-///  without the label a surface will render, the sentence a browse row will
-///  show, and the route a link will target. This is what stops each consumer
-///  from inventing its own wording for the same code.
-public struct CCTCategory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  How a selected module's payload is protected inside the produced
+///  artifact. Append new values only; never reorder or reuse existing values.
+public enum bpfProtectionTier: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  The publisher did not state a tier. A consumer MUST NOT infer one and
+  ///  MUST NOT treat this as OPEN.
+  case unspecified = 0
+  ///  Plaintext payload; no content-key unwrap is performed.
+  case open_ = 1
+  ///  Ciphertext payload whose content key is wrapped for a recipient key
+  ///  carried by the artifact itself.
+  case encrypted = 2
+  ///  Ciphertext payload whose content key is wrapped for a recipient key
+  ///  derived at runtime from an operator-supplied distribution key; the
+  ///  artifact carries no recipient key.
+  case licensed = 3
+
+  public static var max: bpfProtectionTier { return .licensed }
+  public static var min: bpfProtectionTier { return .unspecified }
+}
+
+
+///  Distribution-control mode of the produced artifact. This is a build
+///  configuration choice, not a commercial term and not an entitlement.
+///  Append new values only; never reorder or reuse existing values.
+public enum bpfLicenseMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  The publisher did not state a mode. A consumer MUST NOT infer one.
+  case unspecified = 0
+  ///  No distribution control: every embedded payload is readable without a
+  ///  key supplied at runtime.
+  case none_ = 1
+  ///  The artifact carries the recipient key that unwraps its protected
+  ///  payloads.
+  case bundledKey = 2
+  ///  The recipient key is derived at runtime from an operator-supplied
+  ///  distribution key; the artifact carries no recipient key.
+  case licenseKey = 3
+
+  public static var max: bpfLicenseMode { return .licenseKey }
+  public static var min: bpfLicenseMode { return .unspecified }
+}
+
+
+///  One variable part of the build template and whether this profile embeds
+///  it.
+public struct BPFPart: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategory.id, addPrefix: prefix) }
+  public static var id: String { "$BPF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BPFPart.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE: VOffset = 4
-    static let DISPLAY_NAME: VOffset = 6
-    static let SUMMARY: VOffset = 8
-    static let SLUG: VOffset = 10
-    static let DESCRIPTION: VOffset = 12
-    static let PARENT: VOffset = 14
-    static let SORT_ORDER: VOffset = 16
-    static let KEYWORDS: VOffset = 18
-    static let ICON_KEY: VOffset = 20
+    static let PART_ID: VOffset = 4
+    static let KIND: VOffset = 6
+    static let INCLUDED: VOffset = 8
+    static let CONTENT_SHA256: VOffset = 10
+    static let BYTE_LENGTH: VOffset = 12
+    static let DESCRIPTION: VOffset = 14
   }
 
-  ///  The ratified category code. This is the join key every consumer uses.
-  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Canonical human-readable label, rendered verbatim. MUST equal the display
-  ///  name stated in the CODE member's doc comment.
-  public var DISPLAY_NAME: String! { let o = _accessor.offset(VT.DISPLAY_NAME); return _accessor.string(at: o) }
-  public var DISPLAY_NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DISPLAY_NAME) }
-  ///  One-sentence description shown on browse rows and category headers.
-  public var SUMMARY: String! { let o = _accessor.offset(VT.SUMMARY); return _accessor.string(at: o) }
-  public var SUMMARYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SUMMARY) }
-  ///  Route-safe identifier: the CODE identifier lowercased with `_` replaced by
-  ///  `-`. Published explicitly rather than derived so every surface routes
-  ///  identically.
-  public var SLUG: String! { let o = _accessor.offset(VT.SLUG); return _accessor.string(at: o) }
-  public var SLUGSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SLUG) }
-  ///  Longer editorial description for a category landing page.
+  ///  Template slot identifier this entry configures, as published by the
+  ///  template's part manifest. Required, unique within the profile.
+  public var PART_ID: String! { let o = _accessor.offset(VT.PART_ID); return _accessor.string(at: o) }
+  public var PART_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PART_ID) }
+  ///  Capability class of the part.
+  public var KIND: bpfPartKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : bpfPartKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  True when the part is embedded in the produced artifact.
+  public var INCLUDED: Bool { let o = _accessor.offset(VT.INCLUDED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  64 lowercase hexadecimal characters encoding SHA-256 of the part's
+  ///  bytes as published by the template, so a composed artifact can be
+  ///  verified against the profile that produced it.
+  public var CONTENT_SHA256: String? { let o = _accessor.offset(VT.CONTENT_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTENT_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_SHA256) }
+  ///  Size of the part's bytes in octets, as published by the template.
+  public var BYTE_LENGTH: UInt64 { let o = _accessor.offset(VT.BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Human-readable summary.
   public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Parent category for hierarchical browse. UNSPECIFIED means this is a
-  ///  top-level category. A category MUST NOT name itself as its parent.
-  public var PARENT: capabilityClass { let o = _accessor.offset(VT.PARENT); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Presentation order within its parent, ascending. Ties break on
-  ///  DISPLAY_NAME.
-  public var SORT_ORDER: UInt16 { let o = _accessor.offset(VT.SORT_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Search synonyms and alternate phrasings that resolve to this category.
-  ///  Feeds type-ahead; never rendered as the category label.
-  public var KEYWORDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.KEYWORDS, byteSize: 4) }
-  ///  Key of a self-hosted icon or capsule asset for this category. A KEY, not a
-  ///  URL: consuming node surfaces load zero external-origin bytes, so the
-  ///  consumer resolves this against its own local asset set.
-  public var ICON_KEY: String? { let o = _accessor.offset(VT.ICON_KEY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICON_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_KEY) }
-  public static func startCCTCategory(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
-  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
-  public static func add(SUMMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUMMARY, at: VT.SUMMARY) }
-  public static func add(SLUG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLUG, at: VT.SLUG) }
+  public static func startBPFPart(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(PART_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PART_ID, at: VT.PART_ID) }
+  public static func add(KIND: bpfPartKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(INCLUDED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLUDED, def: false,
+   at: VT.INCLUDED) }
+  public static func add(CONTENT_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_SHA256, at: VT.CONTENT_SHA256) }
+  public static func add(BYTE_LENGTH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_LENGTH, def: 0, at: VT.BYTE_LENGTH) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
-  public static func add(PARENT: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARENT.rawValue, def: 0, at: VT.PARENT) }
-  public static func add(SORT_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SORT_ORDER, def: 0, at: VT.SORT_ORDER) }
-  public static func addVectorOf(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VT.KEYWORDS) }
-  public static func add(ICON_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_KEY, at: VT.ICON_KEY) }
-  public static func endCCTCategory(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10]); return end }
-  public static func createCCTCategory(
+  public static func endBPFPart(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createBPFPart(
     _ fbb: inout FlatBufferBuilder,
-    CODE: capabilityClass = .unspecified,
-    DISPLAY_NAMEOffset DISPLAY_NAME: Offset,
-    SUMMARYOffset SUMMARY: Offset,
-    SLUGOffset SLUG: Offset,
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    PARENT: capabilityClass = .unspecified,
-    SORT_ORDER: UInt16 = 0,
-    KEYWORDSVectorOffset KEYWORDS: Offset = Offset(),
-    ICON_KEYOffset ICON_KEY: Offset = Offset()
+    PART_IDOffset PART_ID: Offset,
+    KIND: bpfPartKind = .unspecified,
+    INCLUDED: Bool = false,
+    CONTENT_SHA256Offset CONTENT_SHA256: Offset = Offset(),
+    BYTE_LENGTH: UInt64 = 0,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
   ) -> Offset {
-    let __start = CCTCategory.startCCTCategory(&fbb)
-    CCTCategory.add(CODE: CODE, &fbb)
-    CCTCategory.add(DISPLAY_NAME: DISPLAY_NAME, &fbb)
-    CCTCategory.add(SUMMARY: SUMMARY, &fbb)
-    CCTCategory.add(SLUG: SLUG, &fbb)
-    CCTCategory.add(DESCRIPTION: DESCRIPTION, &fbb)
-    CCTCategory.add(PARENT: PARENT, &fbb)
-    CCTCategory.add(SORT_ORDER: SORT_ORDER, &fbb)
-    CCTCategory.addVectorOf(KEYWORDS: KEYWORDS, &fbb)
-    CCTCategory.add(ICON_KEY: ICON_KEY, &fbb)
-    return CCTCategory.endCCTCategory(&fbb, start: __start)
+    let __start = BPFPart.startBPFPart(&fbb)
+    BPFPart.add(PART_ID: PART_ID, &fbb)
+    BPFPart.add(KIND: KIND, &fbb)
+    BPFPart.add(INCLUDED: INCLUDED, &fbb)
+    BPFPart.add(CONTENT_SHA256: CONTENT_SHA256, &fbb)
+    BPFPart.add(BYTE_LENGTH: BYTE_LENGTH, &fbb)
+    BPFPart.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return BPFPart.endBPFPart(&fbb, start: __start)
+  }
+  public static func sortVectorOfBpfpart(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
+    var off = offsets
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
+    return fbb.createVector(ofOffsets: off)
+  }
+  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> BPFPart? {
+    let key = key.utf8.map { $0 }
+    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
+    var start: Int32 = 0
+    while span != 0 {
+      var middle = span / 2
+      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
+      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
+      if comp > 0 {
+        span = middle
+      } else if comp < 0 {
+        middle += 1
+        start += middle
+        span -= middle
+      } else {
+        return BPFPart(fbb, o: tableOffset)
+      }
+    }
+    return nil
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUMMARY, fieldName: "SUMMARY", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SLUG, fieldName: "SLUG", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PART_ID, fieldName: "PART_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: bpfPartKind.self)
+    try _v.visit(field: VT.INCLUDED, fieldName: "INCLUDED", required: false, type: Bool.self)
+    try _v.visit(field: VT.CONTENT_SHA256, fieldName: "CONTENT_SHA256", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BYTE_LENGTH, fieldName: "BYTE_LENGTH", required: false, type: UInt64.self)
     try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PARENT, fieldName: "PARENT", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.SORT_ORDER, fieldName: "SORT_ORDER", required: false, type: UInt16.self)
-    try _v.visit(field: VT.KEYWORDS, fieldName: "KEYWORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.ICON_KEY, fieldName: "ICON_KEY", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  An observed count of catalogue items in one category.
-///
-///  Counts are VOLATILE and are never part of the ratified taxonomy itself. A
-///  rollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published
-///  count can never omit when it was taken or what it was taken over. A consumer
-///  that needs a live number computes it from the items; a consumer rendering a
-///  published rollup MUST show it as of COUNTED_AT.
-public struct CCTCategoryRollup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One module selected into the build and the tier its payload is protected
+///  at.
+public struct BPFModule: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCTCategoryRollup.id, addPrefix: prefix) }
+  public static var id: String { "$BPF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BPFModule.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE: VOffset = 4
-    static let ITEM_COUNT: VOffset = 6
-    static let SOURCE_CATALOG_ID: VOffset = 8
-    static let COUNTED_AT: VOffset = 10
+    static let MODULE_ID: VOffset = 4
+    static let MODULE_VERSION: VOffset = 6
+    static let INCLUDED: VOffset = 8
+    static let PROTECTION: VOffset = 10
+    static let CONTENT_HASH: VOffset = 12
+    static let MODULE_DESCRIPTOR: VOffset = 14
   }
 
-  ///  Category being counted.
-  public var CODE: capabilityClass { let o = _accessor.offset(VT.CODE); return o == 0 ? .unspecified : capabilityClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  ///  Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include
-  ///  CODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.
-  public var ITEM_COUNT: UInt32 { let o = _accessor.offset(VT.ITEM_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Identifier of the catalogue the count was taken over.
-  public var SOURCE_CATALOG_ID: String! { let o = _accessor.offset(VT.SOURCE_CATALOG_ID); return _accessor.string(at: o) }
-  public var SOURCE_CATALOG_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE_CATALOG_ID) }
-  ///  Unix seconds when the count was taken.
-  public var COUNTED_AT: UInt64 { let o = _accessor.offset(VT.COUNTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startCCTCategoryRollup(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CODE: capabilityClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE.rawValue, def: 0, at: VT.CODE) }
-  public static func add(ITEM_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITEM_COUNT, def: 0, at: VT.ITEM_COUNT) }
-  public static func add(SOURCE_CATALOG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CATALOG_ID, at: VT.SOURCE_CATALOG_ID) }
-  public static func add(COUNTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNTED_AT, def: 0, at: VT.COUNTED_AT) }
-  public static func endCCTCategoryRollup(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8]); return end }
-  public static func createCCTCategoryRollup(
+  ///  Canonical module identifier. Required, unique within the profile.
+  public var MODULE_ID: String! { let o = _accessor.offset(VT.MODULE_ID); return _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODULE_ID) }
+  ///  Module version or version range.
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
+  ///  True when the module is embedded in the produced artifact.
+  public var INCLUDED: Bool { let o = _accessor.offset(VT.INCLUDED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Protection tier applied to this module's payload.
+  public var PROTECTION: bpfProtectionTier { let o = _accessor.offset(VT.PROTECTION); return o == 0 ? .unspecified : bpfProtectionTier(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  64 lowercase hexadecimal characters encoding SHA-256 of the module's
+  ///  portable (pre-AOT, publication-trailer-stripped) bytes. This is the
+  ///  identity a capability or signature policy keys on.
+  public var CONTENT_HASH: String? { let o = _accessor.offset(VT.CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_HASH) }
+  ///  Published module descriptor, carried when the authoring context holds
+  ///  it. Advisory: `MODULE_ID` and `CONTENT_HASH` are the identity, and a
+  ///  consumer MUST NOT prefer a carried descriptor over the module's own
+  ///  published manifest.
+  public var MODULE_DESCRIPTOR: PLG? { let o = _accessor.offset(VT.MODULE_DESCRIPTOR); return o == 0 ? nil : PLG(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startBPFModule(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(INCLUDED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLUDED, def: false,
+   at: VT.INCLUDED) }
+  public static func add(PROTECTION: bpfProtectionTier, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROTECTION.rawValue, def: 0, at: VT.PROTECTION) }
+  public static func add(CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_HASH, at: VT.CONTENT_HASH) }
+  public static func add(MODULE_DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_DESCRIPTOR, at: VT.MODULE_DESCRIPTOR) }
+  public static func endBPFModule(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createBPFModule(
     _ fbb: inout FlatBufferBuilder,
-    CODE: capabilityClass = .unspecified,
-    ITEM_COUNT: UInt32 = 0,
-    SOURCE_CATALOG_IDOffset SOURCE_CATALOG_ID: Offset,
-    COUNTED_AT: UInt64 = 0
+    MODULE_IDOffset MODULE_ID: Offset,
+    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
+    INCLUDED: Bool = false,
+    PROTECTION: bpfProtectionTier = .unspecified,
+    CONTENT_HASHOffset CONTENT_HASH: Offset = Offset(),
+    MODULE_DESCRIPTOROffset MODULE_DESCRIPTOR: Offset = Offset()
   ) -> Offset {
-    let __start = CCTCategoryRollup.startCCTCategoryRollup(&fbb)
-    CCTCategoryRollup.add(CODE: CODE, &fbb)
-    CCTCategoryRollup.add(ITEM_COUNT: ITEM_COUNT, &fbb)
-    CCTCategoryRollup.add(SOURCE_CATALOG_ID: SOURCE_CATALOG_ID, &fbb)
-    CCTCategoryRollup.add(COUNTED_AT: COUNTED_AT, &fbb)
-    return CCTCategoryRollup.endCCTCategoryRollup(&fbb, start: __start)
+    let __start = BPFModule.startBPFModule(&fbb)
+    BPFModule.add(MODULE_ID: MODULE_ID, &fbb)
+    BPFModule.add(MODULE_VERSION: MODULE_VERSION, &fbb)
+    BPFModule.add(INCLUDED: INCLUDED, &fbb)
+    BPFModule.add(PROTECTION: PROTECTION, &fbb)
+    BPFModule.add(CONTENT_HASH: CONTENT_HASH, &fbb)
+    BPFModule.add(MODULE_DESCRIPTOR: MODULE_DESCRIPTOR, &fbb)
+    return BPFModule.endBPFModule(&fbb, start: __start)
+  }
+  public static func sortVectorOfBpfmodule(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
+    var off = offsets
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
+    return fbb.createVector(ofOffsets: off)
+  }
+  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> BPFModule? {
+    let key = key.utf8.map { $0 }
+    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
+    var start: Int32 = 0
+    while span != 0 {
+      var middle = span / 2
+      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
+      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
+      if comp > 0 {
+        span = middle
+      } else if comp < 0 {
+        middle += 1
+        start += middle
+        span -= middle
+      } else {
+        return BPFModule(fbb, o: tableOffset)
+      }
+    }
+    return nil
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE, fieldName: "CODE", required: false, type: capabilityClass.self)
-    try _v.visit(field: VT.ITEM_COUNT, fieldName: "ITEM_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VT.SOURCE_CATALOG_ID, fieldName: "SOURCE_CATALOG_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.COUNTED_AT, fieldName: "COUNTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INCLUDED, fieldName: "INCLUDED", required: false, type: Bool.self)
+    try _v.visit(field: VT.PROTECTION, fieldName: "PROTECTION", required: false, type: bpfProtectionTier.self)
+    try _v.visit(field: VT.CONTENT_HASH, fieldName: "CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_DESCRIPTOR, fieldName: "MODULE_DESCRIPTOR", required: false, type: ForwardOffset<PLG>.self)
     _v.finish()
   }
 }
 
-///  $CCT — Capability Category Taxonomy.
+///  The runtime restriction the produced artifact enforces on itself.
 ///
-///  The ratified set of capability classes that distributable units (modules,
-///  applications, composed flows) are classified under, together with the labels
-///  and routes every consuming surface renders. One published $CCT is the single
-///  source of truth shared by a storefront, a library, a search index and the
-///  unit manifests themselves.
+///  AUTHORIZATION. A host is authorized when it equals an `ALLOWED_DOMAINS`
+///  entry, OR ends with an `ALLOWED_TLDS` entry, OR equals a `DEV_DOMAINS`
+///  entry. Suffix rules are DOT-ANCHORED: `.mil` admits `x.mil` and `a.b.mil`
+///  and admits neither `mil` nor `evilmil`; a suffix rule never matches a
+///  host that merely contains it (`x.mil.example` is refused).
 ///
-///  Division of labour: `$CCT` = the category vocabulary and its presentation;
-///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
-///  application's manifest, which cites categories by code; `$PMM` = which
-///  modules a provider serves; `$STO`/`$STF` = commerce.
-public struct CCT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  UNLOCKED IS EXPLICIT. `ALLOWED_DOMAINS` empty AND `ALLOWED_TLDS` empty
+///  means every host is authorized. This is a stated, allowed configuration,
+///  which is why this table is required on `BPF`: an absent lock is never
+///  read as an unlocked one.
+///
+///  EXPIRY IS INDEPENDENT of authorization: an unlocked profile still
+///  expires. There is deliberately no stored expiry instant — expiry is
+///  `COMPILED_AT_MS + TTL_DAYS * 86400000` and a second, storable copy of it
+///  could disagree with the two values that produce it.
+public struct BPFRuntimeLock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CCT" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CCT.id, addPrefix: prefix) }
+  public static var id: String { "$BPF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BPFRuntimeLock.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let TAXONOMY_ID: VOffset = 4
-    static let VERSION: VOffset = 6
-    static let ISSUED_AT: VOffset = 8
-    static let TITLE: VOffset = 10
-    static let CATEGORIES: VOffset = 12
-    static let ROLLUPS: VOffset = 14
-    static let SIGNATURE: VOffset = 16
+    static let ALLOWED_DOMAINS: VOffset = 4
+    static let ALLOWED_TLDS: VOffset = 6
+    static let DEV_DOMAINS: VOffset = 8
+    static let TTL_DAYS: VOffset = 10
+    static let COMPILED_AT_MS: VOffset = 12
   }
 
-  ///  Stable identifier of this taxonomy publication.
-  public var TAXONOMY_ID: String! { let o = _accessor.offset(VT.TAXONOMY_ID); return _accessor.string(at: o) }
-  public var TAXONOMY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TAXONOMY_ID) }
-  ///  SemVer 2.0.0 version of the taxonomy content.
-  public var VERSION: String! { let o = _accessor.offset(VT.VERSION); return _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERSION) }
-  ///  Unix seconds when this taxonomy revision was issued.
-  public var ISSUED_AT: UInt64 { let o = _accessor.offset(VT.ISSUED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Human-readable title of the taxonomy.
-  public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
-  ///  The ratified categories. Every capabilityClass member a consumer may
-  ///  encounter SHOULD appear exactly once; a code appearing twice is invalid.
-  public var CATEGORIES: FlatbufferVector<CCTCategory> { return _accessor.vector(at: VT.CATEGORIES, byteSize: 4) }
-  ///  Optional per-category item counts as observed over a named catalogue.
-  ///  Absent means counts are computed by the consumer.
-  public var ROLLUPS: FlatbufferVector<CCTCategoryRollup> { return _accessor.vector(at: VT.ROLLUPS, byteSize: 4) }
-  ///  Signature from the publishing node key over the canonical taxonomy bytes.
+  ///  Exact hostnames authorized to run the produced artifact. Empty
+  ///  together with `ALLOWED_TLDS` means unrestricted.
+  public var ALLOWED_DOMAINS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALLOWED_DOMAINS, byteSize: 4) }
+  ///  Dot-anchored hostname suffix rules, each written with its leading dot,
+  ///  for example `.gov`. Empty together with `ALLOWED_DOMAINS` means
+  ///  unrestricted.
+  public var ALLOWED_TLDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALLOWED_TLDS, byteSize: 4) }
+  ///  Development hosts authorized in addition to the rules above, so a
+  ///  locked profile remains runnable in a development context. Kept
+  ///  separate from `ALLOWED_DOMAINS` because a development exemption and a
+  ///  deployment authorization are different facts: folded together, a
+  ///  development host would be indistinguishable from a deployment grant
+  ///  and would silently persist into a locked artifact.
+  public var DEV_DOMAINS: FlatbufferVector<String?> { return _accessor.vector(at: VT.DEV_DOMAINS, byteSize: 4) }
+  ///  Lifetime of the produced artifact in days from `COMPILED_AT_MS`.
+  ///  Normative range 1 through 365 inclusive; 180 when unstated. A value of
+  ///  0 or above 365 is invalid and MUST be rejected, never clamped.
+  public var TTL_DAYS: UInt32 { let o = _accessor.offset(VT.TTL_DAYS); return o == 0 ? 180 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Milliseconds since the Unix epoch at which the artifact was composed.
+  ///  0 means the profile has not been used to compose an artifact yet and
+  ///  carries no expiry; the composing step stamps it.
+  public var COMPILED_AT_MS: UInt64 { let o = _accessor.offset(VT.COMPILED_AT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startBPFRuntimeLock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func addVectorOf(ALLOWED_DOMAINS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_DOMAINS, at: VT.ALLOWED_DOMAINS) }
+  public static func addVectorOf(ALLOWED_TLDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_TLDS, at: VT.ALLOWED_TLDS) }
+  public static func addVectorOf(DEV_DOMAINS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEV_DOMAINS, at: VT.DEV_DOMAINS) }
+  public static func add(TTL_DAYS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TTL_DAYS, def: 180, at: VT.TTL_DAYS) }
+  public static func add(COMPILED_AT_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPILED_AT_MS, def: 0, at: VT.COMPILED_AT_MS) }
+  public static func endBPFRuntimeLock(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createBPFRuntimeLock(
+    _ fbb: inout FlatBufferBuilder,
+    ALLOWED_DOMAINSVectorOffset ALLOWED_DOMAINS: Offset = Offset(),
+    ALLOWED_TLDSVectorOffset ALLOWED_TLDS: Offset = Offset(),
+    DEV_DOMAINSVectorOffset DEV_DOMAINS: Offset = Offset(),
+    TTL_DAYS: UInt32 = 180,
+    COMPILED_AT_MS: UInt64 = 0
+  ) -> Offset {
+    let __start = BPFRuntimeLock.startBPFRuntimeLock(&fbb)
+    BPFRuntimeLock.addVectorOf(ALLOWED_DOMAINS: ALLOWED_DOMAINS, &fbb)
+    BPFRuntimeLock.addVectorOf(ALLOWED_TLDS: ALLOWED_TLDS, &fbb)
+    BPFRuntimeLock.addVectorOf(DEV_DOMAINS: DEV_DOMAINS, &fbb)
+    BPFRuntimeLock.add(TTL_DAYS: TTL_DAYS, &fbb)
+    BPFRuntimeLock.add(COMPILED_AT_MS: COMPILED_AT_MS, &fbb)
+    return BPFRuntimeLock.endBPFRuntimeLock(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ALLOWED_DOMAINS, fieldName: "ALLOWED_DOMAINS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ALLOWED_TLDS, fieldName: "ALLOWED_TLDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.DEV_DOMAINS, fieldName: "DEV_DOMAINS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.TTL_DAYS, fieldName: "TTL_DAYS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.COMPILED_AT_MS, fieldName: "COMPILED_AT_MS", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+///  The publisher's attestation over this profile, in BOTH ratified forms.
+///
+///  PRESENCE IS THE STATEMENT. A profile is SIGNED if and only if this table
+///  is present; a profile whose `ATTESTATION` is absent is UNSIGNED, and a
+///  consumer marks it as such. There is deliberately no boolean saying so: a
+///  self-asserted "signed" flag is attacker-controlled and proves nothing,
+///  while presence of the table is checkable.
+///
+///  FAIL CLOSED. When this table is present, every field below MUST be
+///  present and BOTH signatures MUST verify independently against
+///  `SIGNING_PUBLIC_KEY`. A profile whose attestation is incomplete, or
+///  whose either signature fails, is REJECTED — it is NEVER downgraded to
+///  "unsigned and therefore acceptable", which would let stripping one
+///  signature launder a tampered profile past an importer that admits
+///  unsigned input.
+public struct BPFAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$BPF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BPFAttestation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SIGNING_PUBLIC_KEY: VOffset = 4
+    static let SIGNED_AT: VOffset = 6
+    static let SIGNATURE: VOffset = 8
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 10
+  }
+
+  ///  The signer's LITERAL Ed25519 public key, 64 lowercase hexadecimal
+  ///  characters. A derivation ancestor is structurally absent from this
+  ///  standard: publishing one lets any holder of a child key walk the
+  ///  signer's whole key tree. Rotation is republication.
+  public var SIGNING_PUBLIC_KEY: String! { let o = _accessor.offset(VT.SIGNING_PUBLIC_KEY); return _accessor.string(at: o) }
+  public var SIGNING_PUBLIC_KEYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SIGNING_PUBLIC_KEY) }
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  at which the attestation was produced.
+  public var SIGNED_AT: String? { let o = _accessor.offset(VT.SIGNED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNED_AT) }
+  ///  Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  ///  signature payloads zeroed while preserving their vectors and offsets.
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
-  public static func startCCT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(TAXONOMY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAXONOMY_ID, at: VT.TAXONOMY_ID) }
-  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
-  public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VT.ISSUED_AT) }
-  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
-  public static func addVectorOf(CATEGORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORIES, at: VT.CATEGORIES) }
-  public static func addVectorOf(ROLLUPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLLUPS, at: VT.ROLLUPS) }
+  ///  Ed25519 signature over canonical JSON with IDL field order and
+  ///  capitalization, no insignificant whitespace, and both signature fields
+  ///  omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  public static func startBPFAttestation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(SIGNING_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNING_PUBLIC_KEY, at: VT.SIGNING_PUBLIC_KEY) }
+  public static func add(SIGNED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNED_AT, at: VT.SIGNED_AT) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
-  public static func endCCT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 12]); return end }
-  public static func createCCT(
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
+  public static func endBPFAttestation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8, 10]); return end }
+  public static func createBPFAttestation(
     _ fbb: inout FlatBufferBuilder,
-    TAXONOMY_IDOffset TAXONOMY_ID: Offset,
-    VERSIONOffset VERSION: Offset,
-    ISSUED_AT: UInt64 = 0,
-    TITLEOffset TITLE: Offset = Offset(),
-    CATEGORIESVectorOffset CATEGORIES: Offset,
-    ROLLUPSVectorOffset ROLLUPS: Offset = Offset(),
-    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
+    SIGNING_PUBLIC_KEYOffset SIGNING_PUBLIC_KEY: Offset,
+    SIGNED_ATOffset SIGNED_AT: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset,
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset
   ) -> Offset {
-    let __start = CCT.startCCT(&fbb)
-    CCT.add(TAXONOMY_ID: TAXONOMY_ID, &fbb)
-    CCT.add(VERSION: VERSION, &fbb)
-    CCT.add(ISSUED_AT: ISSUED_AT, &fbb)
-    CCT.add(TITLE: TITLE, &fbb)
-    CCT.addVectorOf(CATEGORIES: CATEGORIES, &fbb)
-    CCT.addVectorOf(ROLLUPS: ROLLUPS, &fbb)
-    CCT.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
-    return CCT.endCCT(&fbb, start: __start)
+    let __start = BPFAttestation.startBPFAttestation(&fbb)
+    BPFAttestation.add(SIGNING_PUBLIC_KEY: SIGNING_PUBLIC_KEY, &fbb)
+    BPFAttestation.add(SIGNED_AT: SIGNED_AT, &fbb)
+    BPFAttestation.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    BPFAttestation.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
+    return BPFAttestation.endBPFAttestation(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TAXONOMY_ID, fieldName: "TAXONOMY_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ISSUED_AT, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CATEGORIES, fieldName: "CATEGORIES", required: true, type: ForwardOffset<Vector<ForwardOffset<CCTCategory>, CCTCategory>>.self)
-    try _v.visit(field: VT.ROLLUPS, fieldName: "ROLLUPS", required: false, type: ForwardOffset<Vector<ForwardOffset<CCTCategoryRollup>, CCTCategoryRollup>>.self)
-    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SIGNING_PUBLIC_KEY, fieldName: "SIGNING_PUBLIC_KEY", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNED_AT, fieldName: "SIGNED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    _v.finish()
+  }
+}
+
+///  Build Profile — one saved, portable build configuration.
+///
+///  PORTABILITY. The export unit is a `$REC` collection carrying this record
+///  and, optionally, an `$APP` manifest that names it through an `APPDataRef`
+///  with `SDS_TYPE: "BPF"`. The `$APP` wrapper is launcher metadata and
+///  carries no authority; all authority over a profile lives in
+///  `ATTESTATION`. A bare size-prefixed `$BPF` buffer is also a complete,
+///  valid export.
+public struct BPF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$BPF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BPF.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PROFILE_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let DESCRIPTION: VOffset = 8
+    static let CREATED_AT: VOffset = 10
+    static let UPDATED_AT: VOffset = 12
+    static let TEMPLATE_SHA256: VOffset = 14
+    static let PARTS: VOffset = 16
+    static let MODULES: VOffset = 18
+    static let RUNTIME_LOCK: VOffset = 20
+    static let LICENSE_MODE: VOffset = 22
+    static let ATTESTATION: VOffset = 24
+  }
+
+  ///  Stable profile identity, unique per author. Required.
+  public var PROFILE_ID: String! { let o = _accessor.offset(VT.PROFILE_ID); return _accessor.string(at: o) }
+  public var PROFILE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PROFILE_ID) }
+  ///  Display name of the profile. Required.
+  public var NAME: String! { let o = _accessor.offset(VT.NAME); return _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NAME) }
+  ///  Human-readable summary.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  when the profile was created.
+  public var CREATED_AT: String? { let o = _accessor.offset(VT.CREATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATED_AT) }
+  ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
+  ///  when the profile was last updated.
+  public var UPDATED_AT: String? { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UPDATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATED_AT) }
+  ///  64 lowercase hexadecimal characters encoding SHA-256 of the build
+  ///  template this profile was authored against. Required: a profile that
+  ///  does not say which template it configures cannot be validated against
+  ///  one. A consumer holding a different template MAY still import the
+  ///  profile but MUST mark it as authored against another template and MUST
+  ///  NOT silently re-map its parts.
+  public var TEMPLATE_SHA256: String! { let o = _accessor.offset(VT.TEMPLATE_SHA256); return _accessor.string(at: o) }
+  public var TEMPLATE_SHA256SegmentArray: [UInt8]! { return _accessor.getVector(at: VT.TEMPLATE_SHA256) }
+  ///  Template slots and their inclusion decisions. A slot the template
+  ///  exposes and this vector omits is NOT included.
+  public var PARTS: FlatbufferVector<BPFPart> { return _accessor.vector(at: VT.PARTS, byteSize: 4) }
+  public func PARTSBy(key: String) -> BPFPart? { let o = _accessor.offset(VT.PARTS); return o == 0 ? nil : BPFPart.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
+  ///  Modules selected into the build and their protection tiers.
+  public var MODULES: FlatbufferVector<BPFModule> { return _accessor.vector(at: VT.MODULES, byteSize: 4) }
+  public func MODULESBy(key: String) -> BPFModule? { let o = _accessor.offset(VT.MODULES); return o == 0 ? nil : BPFModule.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
+  ///  The runtime restriction the produced artifact enforces. Required, so
+  ///  that an unlocked build is a stated configuration rather than a missing
+  ///  one.
+  public var RUNTIME_LOCK: BPFRuntimeLock! { let o = _accessor.offset(VT.RUNTIME_LOCK); return BPFRuntimeLock(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Distribution-control mode of the produced artifact.
+  public var LICENSE_MODE: bpfLicenseMode { let o = _accessor.offset(VT.LICENSE_MODE); return o == 0 ? .unspecified : bpfLicenseMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Publisher attestation. Absent means the profile is unsigned; see
+  ///  `BPFAttestation` for the fail-closed rule when it is present.
+  public var ATTESTATION: BPFAttestation? { let o = _accessor.offset(VT.ATTESTATION); return o == 0 ? nil : BPFAttestation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startBPF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(PROFILE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROFILE_ID, at: VT.PROFILE_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VT.CREATED_AT) }
+  public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
+  public static func add(TEMPLATE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEMPLATE_SHA256, at: VT.TEMPLATE_SHA256) }
+  public static func addVectorOf(PARTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTS, at: VT.PARTS) }
+  public static func addVectorOf(MODULES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULES, at: VT.MODULES) }
+  public static func add(RUNTIME_LOCK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RUNTIME_LOCK, at: VT.RUNTIME_LOCK) }
+  public static func add(LICENSE_MODE: bpfLicenseMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LICENSE_MODE.rawValue, def: 0, at: VT.LICENSE_MODE) }
+  public static func add(ATTESTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTESTATION, at: VT.ATTESTATION) }
+  public static func endBPF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 14, 20]); return end }
+  public static func createBPF(
+    _ fbb: inout FlatBufferBuilder,
+    PROFILE_IDOffset PROFILE_ID: Offset,
+    NAMEOffset NAME: Offset,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    CREATED_ATOffset CREATED_AT: Offset = Offset(),
+    UPDATED_ATOffset UPDATED_AT: Offset = Offset(),
+    TEMPLATE_SHA256Offset TEMPLATE_SHA256: Offset,
+    PARTSVectorOffset PARTS: Offset = Offset(),
+    MODULESVectorOffset MODULES: Offset = Offset(),
+    RUNTIME_LOCKOffset RUNTIME_LOCK: Offset,
+    LICENSE_MODE: bpfLicenseMode = .unspecified,
+    ATTESTATIONOffset ATTESTATION: Offset = Offset()
+  ) -> Offset {
+    let __start = BPF.startBPF(&fbb)
+    BPF.add(PROFILE_ID: PROFILE_ID, &fbb)
+    BPF.add(NAME: NAME, &fbb)
+    BPF.add(DESCRIPTION: DESCRIPTION, &fbb)
+    BPF.add(CREATED_AT: CREATED_AT, &fbb)
+    BPF.add(UPDATED_AT: UPDATED_AT, &fbb)
+    BPF.add(TEMPLATE_SHA256: TEMPLATE_SHA256, &fbb)
+    BPF.addVectorOf(PARTS: PARTS, &fbb)
+    BPF.addVectorOf(MODULES: MODULES, &fbb)
+    BPF.add(RUNTIME_LOCK: RUNTIME_LOCK, &fbb)
+    BPF.add(LICENSE_MODE: LICENSE_MODE, &fbb)
+    BPF.add(ATTESTATION: ATTESTATION, &fbb)
+    return BPF.endBPF(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PROFILE_ID, fieldName: "PROFILE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TEMPLATE_SHA256, fieldName: "TEMPLATE_SHA256", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARTS, fieldName: "PARTS", required: false, type: ForwardOffset<Vector<ForwardOffset<BPFPart>, BPFPart>>.self)
+    try _v.visit(field: VT.MODULES, fieldName: "MODULES", required: false, type: ForwardOffset<Vector<ForwardOffset<BPFModule>, BPFModule>>.self)
+    try _v.visit(field: VT.RUNTIME_LOCK, fieldName: "RUNTIME_LOCK", required: true, type: ForwardOffset<BPFRuntimeLock>.self)
+    try _v.visit(field: VT.LICENSE_MODE, fieldName: "LICENSE_MODE", required: false, type: bpfLicenseMode.self)
+    try _v.visit(field: VT.ATTESTATION, fieldName: "ATTESTATION", required: false, type: ForwardOffset<BPFAttestation>.self)
     _v.finish()
   }
 }

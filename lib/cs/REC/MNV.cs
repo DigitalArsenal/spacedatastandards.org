@@ -7,6 +7,12 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Spacecraft Maneuver
+///
+/// U, V and W are the UVW axes of an orbit state: U radial, along the position
+/// vector away from the central body; W cross-track, along the orbit normal
+/// (the direction of r x v); V in-track, W x U, completing the right-handed
+/// frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
+/// pre-maneuver state at EVENT_START_TIME.
 public struct MNV : IFlatbufferObject
 {
   private Table __p;
@@ -101,7 +107,8 @@ public struct MNV : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
   public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(30); }
-  /// Maneuver event identifier
+  /// Maneuver event identifier. Records of one event share it: a merged event
+  /// and the source records it combines.
   public string EVENT_ID { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEVENT_IDBytes() { return __p.__vector_as_span<byte>(32, 1); }
@@ -115,19 +122,19 @@ public struct MNV : IFlatbufferObject
   public double MANEUVER_UNC { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Total delta-V magnitude (km/s)
   public double DELTA_VEL { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Delta-V along-track/U component (km/s)
+  /// Delta-V along U, radial (km/s)
   public double DELTA_VEL_U { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Delta-V cross-track/V component (km/s)
+  /// Delta-V along V, in-track (km/s)
   public double DELTA_VEL_V { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Delta-V radial/W component (km/s)
+  /// Delta-V along W, cross-track (km/s)
   public double DELTA_VEL_W { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Total delta position (km)
   public double DELTA_POS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Delta position U component (km)
+  /// Delta position along U, radial (km)
   public double DELTA_POS_U { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Delta position V component (km)
+  /// Delta position along V, in-track (km)
   public double DELTA_POS_V { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Delta position W component (km)
+  /// Delta position along W, cross-track (km)
   public double DELTA_POS_W { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Propellant mass consumed (kg)
   public double DELTA_MASS { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
@@ -165,7 +172,8 @@ public struct MNV : IFlatbufferObject
   /// Acceleration profile times (ISO 8601)
   public string MNVR_ACCEL_TIMES(int j) { int o = __p.__offset(74); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int MNVR_ACCEL_TIMESLength { get { int o = __p.__offset(74); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Acceleration values (km/s^2, 3 components per point)
+  /// Acceleration values (km/s^2): U, V and W per point, in the UVW frame of
+  /// the state at that point's MNVR_ACCEL_TIMES entry
   public double MNVR_ACCELS(int j) { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int MNVR_ACCELSLength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -210,7 +218,9 @@ public struct MNV : IFlatbufferObject
   /// Associated tags
   public string TAGS(int j) { int o = __p.__offset(86); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int TAGSLength { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Sourced data references
+  /// Sourced data references: identifiers of the records this one was
+  /// determined from (CIDv1 for records of this network), such as the source
+  /// records a merged event combines
   public string SOURCED_DATA(int j) { int o = __p.__offset(88); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int SOURCED_DATALength { get { int o = __p.__offset(88); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Sourced data types
@@ -229,6 +239,8 @@ public struct MNV : IFlatbufferObject
   public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(92); }
 #endif
   public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(92); }
+  /// Where the maneuver's data comes from and the terms it travels under.
+  public PVN? PROVENANCE { get { int o = __p.__offset(94); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<MNV> CreateMNV(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -275,8 +287,9 @@ public struct MNV : IFlatbufferObject
       VectorOffset TAGSOffset = default(VectorOffset),
       VectorOffset SOURCED_DATAOffset = default(VectorOffset),
       StringOffset SOURCED_DATA_TYPESOffset = default(StringOffset),
-      StringOffset TRANSACTION_IDOffset = default(StringOffset)) {
-    builder.StartTable(45);
+      StringOffset TRANSACTION_IDOffset = default(StringOffset),
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>)) {
+    builder.StartTable(46);
     MNV.AddSTATE_MODEL_VERSION(builder, STATE_MODEL_VERSION);
     MNV.AddPOST_AREA(builder, POST_AREA);
     MNV.AddPOST_MASS(builder, POST_MASS);
@@ -292,6 +305,7 @@ public struct MNV : IFlatbufferObject
     MNV.AddMANEUVER_UNC(builder, MANEUVER_UNC);
     MNV.AddTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME);
     MNV.AddCHARACTERIZATION_UNC(builder, CHARACTERIZATION_UNC);
+    MNV.AddPROVENANCE(builder, PROVENANCEOffset);
     MNV.AddTRANSACTION_ID(builder, TRANSACTION_IDOffset);
     MNV.AddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPESOffset);
     MNV.AddSOURCED_DATA(builder, SOURCED_DATAOffset);
@@ -325,7 +339,7 @@ public struct MNV : IFlatbufferObject
     return MNV.EndMNV(builder);
   }
 
-  public static void StartMNV(FlatBufferBuilder builder) { builder.StartTable(45); }
+  public static void StartMNV(FlatBufferBuilder builder) { builder.StartTable(46); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(1, SAT_NO, 0); }
   public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(2, ORIG_OBJECT_IDOffset.Value, 0); }
@@ -401,6 +415,7 @@ public struct MNV : IFlatbufferObject
   public static void StartSOURCED_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddSOURCED_DATA_TYPES(FlatBufferBuilder builder, StringOffset SOURCED_DATA_TYPESOffset) { builder.AddOffset(43, SOURCED_DATA_TYPESOffset.Value, 0); }
   public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(44, TRANSACTION_IDOffset.Value, 0); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(45, PROVENANCEOffset.Value, 0); }
   public static Offset<MNV> EndMNV(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MNV>(o);
@@ -464,6 +479,7 @@ public struct MNV : IFlatbufferObject
     for (var _j = 0; _j < this.SOURCED_DATALength; ++_j) {_o.SOURCED_DATA.Add(this.SOURCED_DATA(_j));}
     _o.SOURCED_DATA_TYPES = this.SOURCED_DATA_TYPES;
     _o.TRANSACTION_ID = this.TRANSACTION_ID;
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
   }
   public static Offset<MNV> Pack(FlatBufferBuilder builder, MNVT _o) {
     if (_o == null) return default(Offset<MNV>);
@@ -518,6 +534,7 @@ public struct MNV : IFlatbufferObject
     }
     var _SOURCED_DATA_TYPES = _o.SOURCED_DATA_TYPES == null ? default(StringOffset) : builder.CreateString(_o.SOURCED_DATA_TYPES);
     var _TRANSACTION_ID = _o.TRANSACTION_ID == null ? default(StringOffset) : builder.CreateString(_o.TRANSACTION_ID);
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
     return CreateMNV(
       builder,
       _ID,
@@ -564,7 +581,8 @@ public struct MNV : IFlatbufferObject
       _TAGS,
       _SOURCED_DATA,
       _SOURCED_DATA_TYPES,
-      _TRANSACTION_ID);
+      _TRANSACTION_ID,
+      _PROVENANCE);
   }
 }
 
@@ -615,6 +633,7 @@ public class MNVT
   public List<string> SOURCED_DATA { get; set; }
   public string SOURCED_DATA_TYPES { get; set; }
   public string TRANSACTION_ID { get; set; }
+  public PVNT PROVENANCE { get; set; }
 
   public MNVT() {
     this.ID = null;
@@ -662,6 +681,7 @@ public class MNVT
     this.SOURCED_DATA = null;
     this.SOURCED_DATA_TYPES = null;
     this.TRANSACTION_ID = null;
+    this.PROVENANCE = null;
   }
   public static MNVT DeserializeFromBinary(byte[] fbBuffer) {
     return MNV.GetRootAsMNV(new ByteBuffer(fbBuffer)).UnPack();
@@ -724,6 +744,7 @@ static public class MNVVerify
       && verifier.VerifyVectorOfStrings(tablePos, 88 /*SOURCED_DATA*/, false)
       && verifier.VerifyString(tablePos, 90 /*SOURCED_DATA_TYPES*/, false)
       && verifier.VerifyString(tablePos, 92 /*TRANSACTION_ID*/, false)
+      && verifier.VerifyTable(tablePos, 94 /*PROVENANCE*/, PVNVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

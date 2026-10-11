@@ -5,278 +5,327 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum timingStandard {
-  GMST(0),
-  GPS(1),
-  MET(2),
-  MRT(3),
-  SCLK(4),
-  TAI(5),
-  TCB(6),
-  TDB(7),
-  TCG(8),
-  TT(9),
-  UT1(10),
-  UTC(11),
-  GLONASS(12),
-  GST(13),
-  QZSS(14),
-  BDT(15),
-  NAVIC(16),
-  SBAS(17),
-  A1(18);
+///  Whether a ring bounds coverage or punches a hole in it.
+///
+///  `UNSPECIFIED` holds ordinal 0 deliberately, and a consumer MUST refuse a
+///  ring that does not state its role rather than assume OUTER: assuming turns
+///  a keep-out hole into a coverage claim.
+enum cvpRingRole {
+  UNSPECIFIED(0),
+  OUTER(1),
+  INNER(2);
 
   final int value;
-  const timingStandard(this.value);
+  const cvpRingRole(this.value);
 
-  factory timingStandard.fromValue(int value) {
+  factory cvpRingRole.fromValue(int value) {
     switch (value) {
-      case 0: return timingStandard.GMST;
-      case 1: return timingStandard.GPS;
-      case 2: return timingStandard.MET;
-      case 3: return timingStandard.MRT;
-      case 4: return timingStandard.SCLK;
-      case 5: return timingStandard.TAI;
-      case 6: return timingStandard.TCB;
-      case 7: return timingStandard.TDB;
-      case 8: return timingStandard.TCG;
-      case 9: return timingStandard.TT;
-      case 10: return timingStandard.UT1;
-      case 11: return timingStandard.UTC;
-      case 12: return timingStandard.GLONASS;
-      case 13: return timingStandard.GST;
-      case 14: return timingStandard.QZSS;
-      case 15: return timingStandard.BDT;
-      case 16: return timingStandard.NAVIC;
-      case 17: return timingStandard.SBAS;
-      case 18: return timingStandard.A1;
+      case 0: return cvpRingRole.UNSPECIFIED;
+      case 1: return cvpRingRole.OUTER;
+      case 2: return cvpRingRole.INNER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timingStandard? _createOrNull(int? value) =>
-      value == null ? null : timingStandard.fromValue(value);
+  static cvpRingRole? _createOrNull(int? value) =>
+      value == null ? null : cvpRingRole.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 18;
-  static const fb.Reader<timingStandard> reader = _timingStandardReader();
+  static const int maxValue = 2;
+  static const fb.Reader<cvpRingRole> reader = _cvpRingRoleReader();
 }
 
-class _timingStandardReader extends fb.Reader<timingStandard> {
-  const _timingStandardReader();
+class _cvpRingRoleReader extends fb.Reader<cvpRingRole> {
+  const _cvpRingRoleReader();
 
   @override
   int get size => 1;
 
   @override
-  timingStandard read(fb.BufferContext bc, int offset) =>
-      timingStandard.fromValue(const fb.Int8Reader().read(bc, offset));
+  cvpRingRole read(fb.BufferContext bc, int offset) =>
+      cvpRingRole.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timEpochRepresentation {
-  JULIAN_DATE(0),
-  MODIFIED_JULIAN_DATE(1),
-  UNIX_SECONDS(2),
-  ISO8601(3),
-  GPS_SECONDS(4),
-  GNSS_WEEK_SECONDS(5),
-  CCSDS_TIME_CODE(6),
-  MISSION_ELAPSED_SECONDS(7);
+///  What the polygons of this record represent.
+enum cvpGeometryKind {
+  UNSPECIFIED(0),
+  THRESHOLD_CONTOUR(1),
+  ISO_METRIC_CONTOUR(2),
+  FOOTPRINT(3),
+  HORIZON_MASK(4),
+  INTERFERENCE_ZONE(5),
+  UNION_COVERAGE(6),
+  INTERSECTION_COVERAGE(7),
+  GAP_REGION(8),
+  KEEP_OUT_ZONE(9);
 
   final int value;
-  const timEpochRepresentation(this.value);
+  const cvpGeometryKind(this.value);
 
-  factory timEpochRepresentation.fromValue(int value) {
+  factory cvpGeometryKind.fromValue(int value) {
     switch (value) {
-      case 0: return timEpochRepresentation.JULIAN_DATE;
-      case 1: return timEpochRepresentation.MODIFIED_JULIAN_DATE;
-      case 2: return timEpochRepresentation.UNIX_SECONDS;
-      case 3: return timEpochRepresentation.ISO8601;
-      case 4: return timEpochRepresentation.GPS_SECONDS;
-      case 5: return timEpochRepresentation.GNSS_WEEK_SECONDS;
-      case 6: return timEpochRepresentation.CCSDS_TIME_CODE;
-      case 7: return timEpochRepresentation.MISSION_ELAPSED_SECONDS;
+      case 0: return cvpGeometryKind.UNSPECIFIED;
+      case 1: return cvpGeometryKind.THRESHOLD_CONTOUR;
+      case 2: return cvpGeometryKind.ISO_METRIC_CONTOUR;
+      case 3: return cvpGeometryKind.FOOTPRINT;
+      case 4: return cvpGeometryKind.HORIZON_MASK;
+      case 5: return cvpGeometryKind.INTERFERENCE_ZONE;
+      case 6: return cvpGeometryKind.UNION_COVERAGE;
+      case 7: return cvpGeometryKind.INTERSECTION_COVERAGE;
+      case 8: return cvpGeometryKind.GAP_REGION;
+      case 9: return cvpGeometryKind.KEEP_OUT_ZONE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timEpochRepresentation? _createOrNull(int? value) =>
-      value == null ? null : timEpochRepresentation.fromValue(value);
+  static cvpGeometryKind? _createOrNull(int? value) =>
+      value == null ? null : cvpGeometryKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
-  static const fb.Reader<timEpochRepresentation> reader = _timEpochRepresentationReader();
+  static const int maxValue = 9;
+  static const fb.Reader<cvpGeometryKind> reader = _cvpGeometryKindReader();
 }
 
-class _timEpochRepresentationReader extends fb.Reader<timEpochRepresentation> {
-  const _timEpochRepresentationReader();
+class _cvpGeometryKindReader extends fb.Reader<cvpGeometryKind> {
+  const _cvpGeometryKindReader();
 
   @override
   int get size => 1;
 
   @override
-  timEpochRepresentation read(fb.BufferContext bc, int offset) =>
-      timEpochRepresentation.fromValue(const fb.Int8Reader().read(bc, offset));
+  cvpGeometryKind read(fb.BufferContext bc, int offset) =>
+      cvpGeometryKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timCcsdsTimeCodeKind {
-  NONE(0),
-  UNSEGMENTED(1),
-  DAY_SEGMENTED(2),
-  CALENDAR_SEGMENTED(3);
+///  The surface the vertex altitudes are referenced to.
+enum cvpAltitudeReference {
+  UNSPECIFIED(0),
+  WGS84_ELLIPSOID(1),
+  MEAN_SEA_LEVEL(2),
+  TERRAIN(3),
+  FIXED_ALTITUDE(4);
 
   final int value;
-  const timCcsdsTimeCodeKind(this.value);
+  const cvpAltitudeReference(this.value);
 
-  factory timCcsdsTimeCodeKind.fromValue(int value) {
+  factory cvpAltitudeReference.fromValue(int value) {
     switch (value) {
-      case 0: return timCcsdsTimeCodeKind.NONE;
-      case 1: return timCcsdsTimeCodeKind.UNSEGMENTED;
-      case 2: return timCcsdsTimeCodeKind.DAY_SEGMENTED;
-      case 3: return timCcsdsTimeCodeKind.CALENDAR_SEGMENTED;
+      case 0: return cvpAltitudeReference.UNSPECIFIED;
+      case 1: return cvpAltitudeReference.WGS84_ELLIPSOID;
+      case 2: return cvpAltitudeReference.MEAN_SEA_LEVEL;
+      case 3: return cvpAltitudeReference.TERRAIN;
+      case 4: return cvpAltitudeReference.FIXED_ALTITUDE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timCcsdsTimeCodeKind? _createOrNull(int? value) =>
-      value == null ? null : timCcsdsTimeCodeKind.fromValue(value);
+  static cvpAltitudeReference? _createOrNull(int? value) =>
+      value == null ? null : cvpAltitudeReference.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<cvpAltitudeReference> reader = _cvpAltitudeReferenceReader();
+}
+
+class _cvpAltitudeReferenceReader extends fb.Reader<cvpAltitudeReference> {
+  const _cvpAltitudeReferenceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  cvpAltitudeReference read(fb.BufferContext bc, int offset) =>
+      cvpAltitudeReference.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  The part an emitter played in producing this geometry.
+enum cvpEmitterRole {
+  UNSPECIFIED(0),
+  WANTED(1),
+  INTERFERER(2),
+  RELAY(3);
+
+  final int value;
+  const cvpEmitterRole(this.value);
+
+  factory cvpEmitterRole.fromValue(int value) {
+    switch (value) {
+      case 0: return cvpEmitterRole.UNSPECIFIED;
+      case 1: return cvpEmitterRole.WANTED;
+      case 2: return cvpEmitterRole.INTERFERER;
+      case 3: return cvpEmitterRole.RELAY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static cvpEmitterRole? _createOrNull(int? value) =>
+      value == null ? null : cvpEmitterRole.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<timCcsdsTimeCodeKind> reader = _timCcsdsTimeCodeKindReader();
+  static const fb.Reader<cvpEmitterRole> reader = _cvpEmitterRoleReader();
 }
 
-class _timCcsdsTimeCodeKindReader extends fb.Reader<timCcsdsTimeCodeKind> {
-  const _timCcsdsTimeCodeKindReader();
+class _cvpEmitterRoleReader extends fb.Reader<cvpEmitterRole> {
+  const _cvpEmitterRoleReader();
 
   @override
   int get size => 1;
 
   @override
-  timCcsdsTimeCodeKind read(fb.BufferContext bc, int offset) =>
-      timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().read(bc, offset));
+  cvpEmitterRole read(fb.BufferContext bc, int offset) =>
+      cvpEmitterRole.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum timConversionStatus {
-  OK(0),
-  INVALID_INPUT(1),
-  UNSUPPORTED_TIME_SYSTEM(2),
-  LEAP_SECOND_DATA_REQUIRED(3),
-  EOP_DATA_REQUIRED(4),
-  OUT_OF_RANGE(5);
-
-  final int value;
-  const timConversionStatus(this.value);
-
-  factory timConversionStatus.fromValue(int value) {
-    switch (value) {
-      case 0: return timConversionStatus.OK;
-      case 1: return timConversionStatus.INVALID_INPUT;
-      case 2: return timConversionStatus.UNSUPPORTED_TIME_SYSTEM;
-      case 3: return timConversionStatus.LEAP_SECOND_DATA_REQUIRED;
-      case 4: return timConversionStatus.EOP_DATA_REQUIRED;
-      case 5: return timConversionStatus.OUT_OF_RANGE;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static timConversionStatus? _createOrNull(int? value) =>
-      value == null ? null : timConversionStatus.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<timConversionStatus> reader = _timConversionStatusReader();
-}
-
-class _timConversionStatusReader extends fb.Reader<timConversionStatus> {
-  const _timConversionStatusReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  timConversionStatus read(fb.BufferContext bc, int offset) =>
-      timConversionStatus.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  CCSDS time-code payload and preamble metadata.
-class TIMCcsdsTimeCode {
-  TIMCcsdsTimeCode._(this._bc, this._bcOffset);
-  factory TIMCcsdsTimeCode(List<int> bytes) {
+///  An emitter that contributed to this geometry. Identity and the few
+///  parameters that determine the boundary; everything else is joined from
+///  `$RFB` and `$RFE`.
+class CVPEmitterRef {
+  CVPEmitterRef._(this._bc, this._bcOffset);
+  factory CVPEmitterRef(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMCcsdsTimeCode> reader = _TIMCcsdsTimeCodeReader();
+  static const fb.Reader<CVPEmitterRef> reader = _CVPEmitterRefReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  CCSDS time-code family.
-  timCcsdsTimeCodeKind get CODE_KIND => timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timCcsdsTimeCodeKind get codeKind => CODE_KIND;
-  ///  First CCSDS preamble field octet.
-  int get PREAMBLE_FIELD1 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get preambleField1 => PREAMBLE_FIELD1;
-  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
-  int get PREAMBLE_FIELD2 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get preambleField2 => PREAMBLE_FIELD2;
-  ///  Raw CCSDS time field octets.
-  List<int>? get TIME_FIELD => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
-  List<int>? get timeField => TIME_FIELD;
-  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
-  String? get AGENCY_DEFINED_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get agencyDefinedEpochIso8601 => AGENCY_DEFINED_EPOCH_ISO8601;
-  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
-  String? get CCSDS_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get ccsdsEpochIso8601 => CCSDS_EPOCH_ISO8601;
+  ///  Producer-stable emitter identifier within this record.
+  String? get EMITTER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get emitterId => EMITTER_ID;
+  cvpEmitterRole get EMITTER_ROLE => cvpEmitterRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  cvpEmitterRole get emitterRole => EMITTER_ROLE;
+  ///  `$RFE.ID` — the parametric emitter description.
+  String? get RFE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get rfeId => RFE_ID;
+  ///  `$RFB.ID` — the band specification.
+  String? get RFB_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get rfbId => RFB_ID;
+  ///  `$CAT.NORAD_CAT_ID` when the emitter is on orbit. 0 when unbound.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  `$CAT.OBJECT_ID` international designator.
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get objectId => OBJECT_ID;
+  ///  `$TBS.SITE_ID` when the emitter is a terrestrial site.
+  String? get TBS_SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get tbsSiteId => TBS_SITE_ID;
+  ///  Beam and channel within the emitter.
+  String? get ID_BEAM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get idBeam => ID_BEAM;
+  String? get CHANNEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get channelId => CHANNEL_ID;
+  ///  Carrier centre frequency, megahertz — the `$RFB` convention.
+  double get CENTER_FREQUENCY_MHZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get centerFrequencyMhz => CENTER_FREQUENCY_MHZ;
+  ///  EIRP toward boresight used in the evaluation, dBW.
+  double get EIRP_DBW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get eirpDbw => EIRP_DBW;
+  ///  Polarization, defaulted to UNKNOWN explicitly because `rfPolarization`
+  ///  ordinal 0 is LHCP.
+  rfPolarization get POLARIZATION => rfPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 26, 6));
+  ///  Emitter position at EPOCH, when the geometry is instantaneous. Geodetic
+  ///  degrees and metres. Absent means "join it from the source record" — a
+  ///  stale copied position is worse than none.
+  double get LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get latitudeDeg => LATITUDE_DEG;
+  double get LONGITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get longitudeDeg => LONGITUDE_DEG;
+  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get altitudeM => ALTITUDE_M;
+  ///  Weight of this emitter's contribution to a union or aggregate [0-1].
+  double get CONTRIBUTION_WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get contributionWeight => CONTRIBUTION_WEIGHT;
 
   @override
   String toString() {
-    return 'TIMCcsdsTimeCode{codeKind: ${codeKind}, preambleField1: ${preambleField1}, preambleField2: ${preambleField2}, timeField: ${timeField}, agencyDefinedEpochIso8601: ${agencyDefinedEpochIso8601}, ccsdsEpochIso8601: ${ccsdsEpochIso8601}}';
+    return 'CVPEmitterRef{emitterId: ${emitterId}, emitterRole: ${emitterRole}, rfeId: ${rfeId}, rfbId: ${rfbId}, noradCatId: ${noradCatId}, objectId: ${objectId}, tbsSiteId: ${tbsSiteId}, idBeam: ${idBeam}, channelId: ${channelId}, centerFrequencyMhz: ${centerFrequencyMhz}, eirpDbw: ${eirpDbw}, POLARIZATION: ${POLARIZATION}, latitudeDeg: ${latitudeDeg}, longitudeDeg: ${longitudeDeg}, altitudeM: ${altitudeM}, contributionWeight: ${contributionWeight}}';
   }
 }
 
-class _TIMCcsdsTimeCodeReader extends fb.TableReader<TIMCcsdsTimeCode> {
-  const _TIMCcsdsTimeCodeReader();
+class _CVPEmitterRefReader extends fb.TableReader<CVPEmitterRef> {
+  const _CVPEmitterRefReader();
 
   @override
-  TIMCcsdsTimeCode createObject(fb.BufferContext bc, int offset) =>
-    TIMCcsdsTimeCode._(bc, offset);
+  CVPEmitterRef createObject(fb.BufferContext bc, int offset) =>
+    CVPEmitterRef._(bc, offset);
 }
 
-class TIMCcsdsTimeCodeBuilder {
-  TIMCcsdsTimeCodeBuilder(this.fbBuilder);
+class CVPEmitterRefBuilder {
+  CVPEmitterRefBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(16);
   }
 
-  int addCodeKind(timCcsdsTimeCodeKind? CODE_KIND) {
-    fbBuilder.addInt8(0, CODE_KIND?.value);
+  int addEmitterIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addPreambleField1(int? PREAMBLE_FIELD1) {
-    fbBuilder.addUint8(1, PREAMBLE_FIELD1);
+  int addEmitterRole(cvpEmitterRole? EMITTER_ROLE) {
+    fbBuilder.addInt8(1, EMITTER_ROLE?.value);
     return fbBuilder.offset;
   }
-  int addPreambleField2(int? PREAMBLE_FIELD2) {
-    fbBuilder.addUint8(2, PREAMBLE_FIELD2);
+  int addRfeIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addTimeFieldOffset(int? offset) {
+  int addRfbIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addAgencyDefinedEpochIso8601Offset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(4, NORAD_CAT_ID);
     return fbBuilder.offset;
   }
-  int addCcsdsEpochIso8601Offset(int? offset) {
+  int addObjectIdOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addTbsSiteIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addIdBeamOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addChannelIdOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterFrequencyMhz(double? CENTER_FREQUENCY_MHZ) {
+    fbBuilder.addFloat64(9, CENTER_FREQUENCY_MHZ);
+    return fbBuilder.offset;
+  }
+  int addEirpDbw(double? EIRP_DBW) {
+    fbBuilder.addFloat64(10, EIRP_DBW);
+    return fbBuilder.offset;
+  }
+  int addPolarization(rfPolarization? POLARIZATION) {
+    fbBuilder.addInt8(11, POLARIZATION?.value);
+    return fbBuilder.offset;
+  }
+  int addLatitudeDeg(double? LATITUDE_DEG) {
+    fbBuilder.addFloat64(12, LATITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addLongitudeDeg(double? LONGITUDE_DEG) {
+    fbBuilder.addFloat64(13, LONGITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addAltitudeM(double? ALTITUDE_M) {
+    fbBuilder.addFloat64(14, ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addContributionWeight(double? CONTRIBUTION_WEIGHT) {
+    fbBuilder.addFloat64(15, CONTRIBUTION_WEIGHT);
     return fbBuilder.offset;
   }
 
@@ -285,51 +334,108 @@ class TIMCcsdsTimeCodeBuilder {
   }
 }
 
-class TIMCcsdsTimeCodeObjectBuilder extends fb.ObjectBuilder {
-  final timCcsdsTimeCodeKind? _CODE_KIND;
-  final int? _PREAMBLE_FIELD1;
-  final int? _PREAMBLE_FIELD2;
-  final List<int>? _TIME_FIELD;
-  final String? _AGENCY_DEFINED_EPOCH_ISO8601;
-  final String? _CCSDS_EPOCH_ISO8601;
+class CVPEmitterRefObjectBuilder extends fb.ObjectBuilder {
+  final String? _EMITTER_ID;
+  final cvpEmitterRole? _EMITTER_ROLE;
+  final String? _RFE_ID;
+  final String? _RFB_ID;
+  final int? _NORAD_CAT_ID;
+  final String? _OBJECT_ID;
+  final String? _TBS_SITE_ID;
+  final String? _ID_BEAM;
+  final String? _CHANNEL_ID;
+  final double? _CENTER_FREQUENCY_MHZ;
+  final double? _EIRP_DBW;
+  final rfPolarization? _POLARIZATION;
+  final double? _LATITUDE_DEG;
+  final double? _LONGITUDE_DEG;
+  final double? _ALTITUDE_M;
+  final double? _CONTRIBUTION_WEIGHT;
 
-  TIMCcsdsTimeCodeObjectBuilder({
-    timCcsdsTimeCodeKind? CODE_KIND,
-    timCcsdsTimeCodeKind? codeKind,
-    int? PREAMBLE_FIELD1,
-    int? preambleField1,
-    int? PREAMBLE_FIELD2,
-    int? preambleField2,
-    List<int>? TIME_FIELD,
-    List<int>? timeField,
-    String? AGENCY_DEFINED_EPOCH_ISO8601,
-    String? agencyDefinedEpochIso8601,
-    String? CCSDS_EPOCH_ISO8601,
-    String? ccsdsEpochIso8601,
+  CVPEmitterRefObjectBuilder({
+    String? EMITTER_ID,
+    String? emitterId,
+    cvpEmitterRole? EMITTER_ROLE,
+    cvpEmitterRole? emitterRole,
+    String? RFE_ID,
+    String? rfeId,
+    String? RFB_ID,
+    String? rfbId,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? OBJECT_ID,
+    String? objectId,
+    String? TBS_SITE_ID,
+    String? tbsSiteId,
+    String? ID_BEAM,
+    String? idBeam,
+    String? CHANNEL_ID,
+    String? channelId,
+    double? CENTER_FREQUENCY_MHZ,
+    double? centerFrequencyMhz,
+    double? EIRP_DBW,
+    double? eirpDbw,
+    rfPolarization? POLARIZATION,
+    double? LATITUDE_DEG,
+    double? latitudeDeg,
+    double? LONGITUDE_DEG,
+    double? longitudeDeg,
+    double? ALTITUDE_M,
+    double? altitudeM,
+    double? CONTRIBUTION_WEIGHT,
+    double? contributionWeight,
   })
-      : _CODE_KIND = codeKind ?? CODE_KIND,
-        _PREAMBLE_FIELD1 = preambleField1 ?? PREAMBLE_FIELD1,
-        _PREAMBLE_FIELD2 = preambleField2 ?? PREAMBLE_FIELD2,
-        _TIME_FIELD = timeField ?? TIME_FIELD,
-        _AGENCY_DEFINED_EPOCH_ISO8601 = agencyDefinedEpochIso8601 ?? AGENCY_DEFINED_EPOCH_ISO8601,
-        _CCSDS_EPOCH_ISO8601 = ccsdsEpochIso8601 ?? CCSDS_EPOCH_ISO8601;
+      : _EMITTER_ID = emitterId ?? EMITTER_ID,
+        _EMITTER_ROLE = emitterRole ?? EMITTER_ROLE,
+        _RFE_ID = rfeId ?? RFE_ID,
+        _RFB_ID = rfbId ?? RFB_ID,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _TBS_SITE_ID = tbsSiteId ?? TBS_SITE_ID,
+        _ID_BEAM = idBeam ?? ID_BEAM,
+        _CHANNEL_ID = channelId ?? CHANNEL_ID,
+        _CENTER_FREQUENCY_MHZ = centerFrequencyMhz ?? CENTER_FREQUENCY_MHZ,
+        _EIRP_DBW = eirpDbw ?? EIRP_DBW,
+        _POLARIZATION = POLARIZATION,
+        _LATITUDE_DEG = latitudeDeg ?? LATITUDE_DEG,
+        _LONGITUDE_DEG = longitudeDeg ?? LONGITUDE_DEG,
+        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _CONTRIBUTION_WEIGHT = contributionWeight ?? CONTRIBUTION_WEIGHT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? TIME_FIELDOffset = _TIME_FIELD == null ? null
-        : fbBuilder.writeListUint8(_TIME_FIELD!);
-    final int? AGENCY_DEFINED_EPOCH_ISO8601Offset = _AGENCY_DEFINED_EPOCH_ISO8601 == null ? null
-        : fbBuilder.writeString(_AGENCY_DEFINED_EPOCH_ISO8601!);
-    final int? CCSDS_EPOCH_ISO8601Offset = _CCSDS_EPOCH_ISO8601 == null ? null
-        : fbBuilder.writeString(_CCSDS_EPOCH_ISO8601!);
-    fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _CODE_KIND?.value);
-    fbBuilder.addUint8(1, _PREAMBLE_FIELD1);
-    fbBuilder.addUint8(2, _PREAMBLE_FIELD2);
-    fbBuilder.addOffset(3, TIME_FIELDOffset);
-    fbBuilder.addOffset(4, AGENCY_DEFINED_EPOCH_ISO8601Offset);
-    fbBuilder.addOffset(5, CCSDS_EPOCH_ISO8601Offset);
+    final int? EMITTER_IDOffset = _EMITTER_ID == null ? null
+        : fbBuilder.writeString(_EMITTER_ID!);
+    final int? RFE_IDOffset = _RFE_ID == null ? null
+        : fbBuilder.writeString(_RFE_ID!);
+    final int? RFB_IDOffset = _RFB_ID == null ? null
+        : fbBuilder.writeString(_RFB_ID!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? TBS_SITE_IDOffset = _TBS_SITE_ID == null ? null
+        : fbBuilder.writeString(_TBS_SITE_ID!);
+    final int? ID_BEAMOffset = _ID_BEAM == null ? null
+        : fbBuilder.writeString(_ID_BEAM!);
+    final int? CHANNEL_IDOffset = _CHANNEL_ID == null ? null
+        : fbBuilder.writeString(_CHANNEL_ID!);
+    fbBuilder.startTable(16);
+    fbBuilder.addOffset(0, EMITTER_IDOffset);
+    fbBuilder.addInt8(1, _EMITTER_ROLE?.value);
+    fbBuilder.addOffset(2, RFE_IDOffset);
+    fbBuilder.addOffset(3, RFB_IDOffset);
+    fbBuilder.addUint32(4, _NORAD_CAT_ID);
+    fbBuilder.addOffset(5, OBJECT_IDOffset);
+    fbBuilder.addOffset(6, TBS_SITE_IDOffset);
+    fbBuilder.addOffset(7, ID_BEAMOffset);
+    fbBuilder.addOffset(8, CHANNEL_IDOffset);
+    fbBuilder.addFloat64(9, _CENTER_FREQUENCY_MHZ);
+    fbBuilder.addFloat64(10, _EIRP_DBW);
+    fbBuilder.addInt8(11, _POLARIZATION?.value);
+    fbBuilder.addFloat64(12, _LATITUDE_DEG);
+    fbBuilder.addFloat64(13, _LONGITUDE_DEG);
+    fbBuilder.addFloat64(14, _ALTITUDE_M);
+    fbBuilder.addFloat64(15, _CONTRIBUTION_WEIGHT);
     return fbBuilder.endTable();
   }
 
@@ -341,67 +447,67 @@ class TIMCcsdsTimeCodeObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Numeric or textual instant tagged with its time system and representation.
-class TIMInstant {
-  TIMInstant._(this._bc, this._bcOffset);
-  factory TIMInstant(List<int> bytes) {
+///  A receiver the coverage was evaluated FOR. Coverage is never absolute: a
+///  -110 dBW contour means one thing for a 60 cm terminal and another for a
+///  12 m dish, so the assumed receiver is part of the record.
+class CVPReceiverRef {
+  CVPReceiverRef._(this._bc, this._bcOffset);
+  factory CVPReceiverRef(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMInstant> reader = _TIMInstantReader();
+  static const fb.Reader<CVPReceiverRef> reader = _CVPReceiverRefReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Time system for this instant.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timingStandard get timeSystem => TIME_SYSTEM;
-  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
-  timEpochRepresentation get EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  timEpochRepresentation get epochFormat => EPOCH_FORMAT;
-  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
-  double get JULIAN_DATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get julianDate => JULIAN_DATE;
-  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
-  double get SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
-  String? get ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Additional nanoseconds beyond the fractional scalar/text value.
-  int get SUBSECOND_NANOS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get subsecondNanos => SUBSECOND_NANOS;
-  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
-  String? get EPOCH_LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get epochLabel => EPOCH_LABEL;
-  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
-  int get GNSS_WEEK => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get gnssWeek => GNSS_WEEK;
-  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
-  bool get HAS_GNSS_ROLLOVER_REFERENCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
-  bool get hasGnssRolloverReference => HAS_GNSS_ROLLOVER_REFERENCE;
-  ///  Optional Orekit-style GNSS week rollover reference timestamp.
-  String? get GNSS_ROLLOVER_REFERENCE_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get gnssRolloverReferenceIso8601 => GNSS_ROLLOVER_REFERENCE_ISO8601;
-  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
-  TIMCcsdsTimeCode? get CCSDS_TIME_CODE => TIMCcsdsTimeCode.reader.vTableGetNullable(_bc, _bcOffset, 24);
-  TIMCcsdsTimeCode? get ccsdsTimeCode => CCSDS_TIME_CODE;
+  String? get RECEIVER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get receiverId => RECEIVER_ID;
+  rflEndpointKind get ENDPOINT_KIND => rflEndpointKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  rflEndpointKind get endpointKind => ENDPOINT_KIND;
+  ///  `$GST.STATION_ID`, `$SIT` or `$TBS.SITE_ID`, per ENDPOINT_KIND.
+  String? get GST_STATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get gstStationId => GST_STATION_ID;
+  String? get SIT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get sitId => SIT_ID;
+  String? get TBS_SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get tbsSiteId => TBS_SITE_ID;
+  ///  Receive antenna gain assumed, dBi.
+  double get ANTENNA_GAIN_DBI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get antennaGainDbi => ANTENNA_GAIN_DBI;
+  ///  System noise temperature assumed, kelvin.
+  double get SYSTEM_NOISE_TEMPERATURE_K => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get systemNoiseTemperatureK => SYSTEM_NOISE_TEMPERATURE_K;
+  ///  Figure of merit assumed, dB/K.
+  double get GAIN_TO_NOISE_TEMPERATURE_DB_PER_K => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get gainToNoiseTemperatureDbPerK => GAIN_TO_NOISE_TEMPERATURE_DB_PER_K;
+  ///  Minimum elevation the receiver can work at, degrees.
+  double get MIN_ELEVATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get minElevationDeg => MIN_ELEVATION_DEG;
+  ///  Polarization, defaulted to UNKNOWN explicitly.
+  rfPolarization get POLARIZATION => rfPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 6));
+  ///  Receiver group this receiver belongs to, matching
+  ///  `$RFL.RFLLink.RECEIVER_GROUP_ID`.
+  String? get RECEIVER_GROUP_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get receiverGroupId => RECEIVER_GROUP_ID;
 
   @override
   String toString() {
-    return 'TIMInstant{timeSystem: ${timeSystem}, epochFormat: ${epochFormat}, julianDate: ${julianDate}, SECONDS: ${SECONDS}, ISO8601: ${ISO8601}, subsecondNanos: ${subsecondNanos}, epochLabel: ${epochLabel}, gnssWeek: ${gnssWeek}, hasGnssRolloverReference: ${hasGnssRolloverReference}, gnssRolloverReferenceIso8601: ${gnssRolloverReferenceIso8601}, ccsdsTimeCode: ${ccsdsTimeCode}}';
+    return 'CVPReceiverRef{receiverId: ${receiverId}, endpointKind: ${endpointKind}, gstStationId: ${gstStationId}, sitId: ${sitId}, tbsSiteId: ${tbsSiteId}, antennaGainDbi: ${antennaGainDbi}, systemNoiseTemperatureK: ${systemNoiseTemperatureK}, gainToNoiseTemperatureDbPerK: ${gainToNoiseTemperatureDbPerK}, minElevationDeg: ${minElevationDeg}, POLARIZATION: ${POLARIZATION}, receiverGroupId: ${receiverGroupId}}';
   }
 }
 
-class _TIMInstantReader extends fb.TableReader<TIMInstant> {
-  const _TIMInstantReader();
+class _CVPReceiverRefReader extends fb.TableReader<CVPReceiverRef> {
+  const _CVPReceiverRefReader();
 
   @override
-  TIMInstant createObject(fb.BufferContext bc, int offset) =>
-    TIMInstant._(bc, offset);
+  CVPReceiverRef createObject(fb.BufferContext bc, int offset) =>
+    CVPReceiverRef._(bc, offset);
 }
 
-class TIMInstantBuilder {
-  TIMInstantBuilder(this.fbBuilder);
+class CVPReceiverRefBuilder {
+  CVPReceiverRefBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -409,47 +515,47 @@ class TIMInstantBuilder {
     fbBuilder.startTable(11);
   }
 
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
+  int addReceiverIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addEpochFormat(timEpochRepresentation? EPOCH_FORMAT) {
-    fbBuilder.addInt8(1, EPOCH_FORMAT?.value);
+  int addEndpointKind(rflEndpointKind? ENDPOINT_KIND) {
+    fbBuilder.addInt8(1, ENDPOINT_KIND?.value);
     return fbBuilder.offset;
   }
-  int addJulianDate(double? JULIAN_DATE) {
-    fbBuilder.addFloat64(2, JULIAN_DATE);
+  int addGstStationIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addSeconds(double? SECONDS) {
-    fbBuilder.addFloat64(3, SECONDS);
+  int addSitIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addIso8601Offset(int? offset) {
+  int addTbsSiteIdOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addSubsecondNanos(int? SUBSECOND_NANOS) {
-    fbBuilder.addInt32(5, SUBSECOND_NANOS);
+  int addAntennaGainDbi(double? ANTENNA_GAIN_DBI) {
+    fbBuilder.addFloat64(5, ANTENNA_GAIN_DBI);
     return fbBuilder.offset;
   }
-  int addEpochLabelOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addSystemNoiseTemperatureK(double? SYSTEM_NOISE_TEMPERATURE_K) {
+    fbBuilder.addFloat64(6, SYSTEM_NOISE_TEMPERATURE_K);
     return fbBuilder.offset;
   }
-  int addGnssWeek(int? GNSS_WEEK) {
-    fbBuilder.addInt32(7, GNSS_WEEK);
+  int addGainToNoiseTemperatureDbPerK(double? GAIN_TO_NOISE_TEMPERATURE_DB_PER_K) {
+    fbBuilder.addFloat64(7, GAIN_TO_NOISE_TEMPERATURE_DB_PER_K);
     return fbBuilder.offset;
   }
-  int addHasGnssRolloverReference(bool? HAS_GNSS_ROLLOVER_REFERENCE) {
-    fbBuilder.addBool(8, HAS_GNSS_ROLLOVER_REFERENCE);
+  int addMinElevationDeg(double? MIN_ELEVATION_DEG) {
+    fbBuilder.addFloat64(8, MIN_ELEVATION_DEG);
     return fbBuilder.offset;
   }
-  int addGnssRolloverReferenceIso8601Offset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addPolarization(rfPolarization? POLARIZATION) {
+    fbBuilder.addInt8(9, POLARIZATION?.value);
     return fbBuilder.offset;
   }
-  int addCcsdsTimeCodeOffset(int? offset) {
+  int addReceiverGroupIdOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
@@ -459,75 +565,79 @@ class TIMInstantBuilder {
   }
 }
 
-class TIMInstantObjectBuilder extends fb.ObjectBuilder {
-  final timingStandard? _TIME_SYSTEM;
-  final timEpochRepresentation? _EPOCH_FORMAT;
-  final double? _JULIAN_DATE;
-  final double? _SECONDS;
-  final String? _ISO8601;
-  final int? _SUBSECOND_NANOS;
-  final String? _EPOCH_LABEL;
-  final int? _GNSS_WEEK;
-  final bool? _HAS_GNSS_ROLLOVER_REFERENCE;
-  final String? _GNSS_ROLLOVER_REFERENCE_ISO8601;
-  final TIMCcsdsTimeCodeObjectBuilder? _CCSDS_TIME_CODE;
+class CVPReceiverRefObjectBuilder extends fb.ObjectBuilder {
+  final String? _RECEIVER_ID;
+  final rflEndpointKind? _ENDPOINT_KIND;
+  final String? _GST_STATION_ID;
+  final String? _SIT_ID;
+  final String? _TBS_SITE_ID;
+  final double? _ANTENNA_GAIN_DBI;
+  final double? _SYSTEM_NOISE_TEMPERATURE_K;
+  final double? _GAIN_TO_NOISE_TEMPERATURE_DB_PER_K;
+  final double? _MIN_ELEVATION_DEG;
+  final rfPolarization? _POLARIZATION;
+  final String? _RECEIVER_GROUP_ID;
 
-  TIMInstantObjectBuilder({
-    timingStandard? TIME_SYSTEM,
-    timingStandard? timeSystem,
-    timEpochRepresentation? EPOCH_FORMAT,
-    timEpochRepresentation? epochFormat,
-    double? JULIAN_DATE,
-    double? julianDate,
-    double? SECONDS,
-    String? ISO8601,
-    int? SUBSECOND_NANOS,
-    int? subsecondNanos,
-    String? EPOCH_LABEL,
-    String? epochLabel,
-    int? GNSS_WEEK,
-    int? gnssWeek,
-    bool? HAS_GNSS_ROLLOVER_REFERENCE,
-    bool? hasGnssRolloverReference,
-    String? GNSS_ROLLOVER_REFERENCE_ISO8601,
-    String? gnssRolloverReferenceIso8601,
-    TIMCcsdsTimeCodeObjectBuilder? CCSDS_TIME_CODE,
-    TIMCcsdsTimeCodeObjectBuilder? ccsdsTimeCode,
+  CVPReceiverRefObjectBuilder({
+    String? RECEIVER_ID,
+    String? receiverId,
+    rflEndpointKind? ENDPOINT_KIND,
+    rflEndpointKind? endpointKind,
+    String? GST_STATION_ID,
+    String? gstStationId,
+    String? SIT_ID,
+    String? sitId,
+    String? TBS_SITE_ID,
+    String? tbsSiteId,
+    double? ANTENNA_GAIN_DBI,
+    double? antennaGainDbi,
+    double? SYSTEM_NOISE_TEMPERATURE_K,
+    double? systemNoiseTemperatureK,
+    double? GAIN_TO_NOISE_TEMPERATURE_DB_PER_K,
+    double? gainToNoiseTemperatureDbPerK,
+    double? MIN_ELEVATION_DEG,
+    double? minElevationDeg,
+    rfPolarization? POLARIZATION,
+    String? RECEIVER_GROUP_ID,
+    String? receiverGroupId,
   })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
-        _EPOCH_FORMAT = epochFormat ?? EPOCH_FORMAT,
-        _JULIAN_DATE = julianDate ?? JULIAN_DATE,
-        _SECONDS = SECONDS,
-        _ISO8601 = ISO8601,
-        _SUBSECOND_NANOS = subsecondNanos ?? SUBSECOND_NANOS,
-        _EPOCH_LABEL = epochLabel ?? EPOCH_LABEL,
-        _GNSS_WEEK = gnssWeek ?? GNSS_WEEK,
-        _HAS_GNSS_ROLLOVER_REFERENCE = hasGnssRolloverReference ?? HAS_GNSS_ROLLOVER_REFERENCE,
-        _GNSS_ROLLOVER_REFERENCE_ISO8601 = gnssRolloverReferenceIso8601 ?? GNSS_ROLLOVER_REFERENCE_ISO8601,
-        _CCSDS_TIME_CODE = ccsdsTimeCode ?? CCSDS_TIME_CODE;
+      : _RECEIVER_ID = receiverId ?? RECEIVER_ID,
+        _ENDPOINT_KIND = endpointKind ?? ENDPOINT_KIND,
+        _GST_STATION_ID = gstStationId ?? GST_STATION_ID,
+        _SIT_ID = sitId ?? SIT_ID,
+        _TBS_SITE_ID = tbsSiteId ?? TBS_SITE_ID,
+        _ANTENNA_GAIN_DBI = antennaGainDbi ?? ANTENNA_GAIN_DBI,
+        _SYSTEM_NOISE_TEMPERATURE_K = systemNoiseTemperatureK ?? SYSTEM_NOISE_TEMPERATURE_K,
+        _GAIN_TO_NOISE_TEMPERATURE_DB_PER_K = gainToNoiseTemperatureDbPerK ?? GAIN_TO_NOISE_TEMPERATURE_DB_PER_K,
+        _MIN_ELEVATION_DEG = minElevationDeg ?? MIN_ELEVATION_DEG,
+        _POLARIZATION = POLARIZATION,
+        _RECEIVER_GROUP_ID = receiverGroupId ?? RECEIVER_GROUP_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? ISO8601Offset = _ISO8601 == null ? null
-        : fbBuilder.writeString(_ISO8601!);
-    final int? EPOCH_LABELOffset = _EPOCH_LABEL == null ? null
-        : fbBuilder.writeString(_EPOCH_LABEL!);
-    final int? GNSS_ROLLOVER_REFERENCE_ISO8601Offset = _GNSS_ROLLOVER_REFERENCE_ISO8601 == null ? null
-        : fbBuilder.writeString(_GNSS_ROLLOVER_REFERENCE_ISO8601!);
-    final int? CCSDS_TIME_CODEOffset = _CCSDS_TIME_CODE?.getOrCreateOffset(fbBuilder);
+    final int? RECEIVER_IDOffset = _RECEIVER_ID == null ? null
+        : fbBuilder.writeString(_RECEIVER_ID!);
+    final int? GST_STATION_IDOffset = _GST_STATION_ID == null ? null
+        : fbBuilder.writeString(_GST_STATION_ID!);
+    final int? SIT_IDOffset = _SIT_ID == null ? null
+        : fbBuilder.writeString(_SIT_ID!);
+    final int? TBS_SITE_IDOffset = _TBS_SITE_ID == null ? null
+        : fbBuilder.writeString(_TBS_SITE_ID!);
+    final int? RECEIVER_GROUP_IDOffset = _RECEIVER_GROUP_ID == null ? null
+        : fbBuilder.writeString(_RECEIVER_GROUP_ID!);
     fbBuilder.startTable(11);
-    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
-    fbBuilder.addInt8(1, _EPOCH_FORMAT?.value);
-    fbBuilder.addFloat64(2, _JULIAN_DATE);
-    fbBuilder.addFloat64(3, _SECONDS);
-    fbBuilder.addOffset(4, ISO8601Offset);
-    fbBuilder.addInt32(5, _SUBSECOND_NANOS);
-    fbBuilder.addOffset(6, EPOCH_LABELOffset);
-    fbBuilder.addInt32(7, _GNSS_WEEK);
-    fbBuilder.addBool(8, _HAS_GNSS_ROLLOVER_REFERENCE);
-    fbBuilder.addOffset(9, GNSS_ROLLOVER_REFERENCE_ISO8601Offset);
-    fbBuilder.addOffset(10, CCSDS_TIME_CODEOffset);
+    fbBuilder.addOffset(0, RECEIVER_IDOffset);
+    fbBuilder.addInt8(1, _ENDPOINT_KIND?.value);
+    fbBuilder.addOffset(2, GST_STATION_IDOffset);
+    fbBuilder.addOffset(3, SIT_IDOffset);
+    fbBuilder.addOffset(4, TBS_SITE_IDOffset);
+    fbBuilder.addFloat64(5, _ANTENNA_GAIN_DBI);
+    fbBuilder.addFloat64(6, _SYSTEM_NOISE_TEMPERATURE_K);
+    fbBuilder.addFloat64(7, _GAIN_TO_NOISE_TEMPERATURE_DB_PER_K);
+    fbBuilder.addFloat64(8, _MIN_ELEVATION_DEG);
+    fbBuilder.addInt8(9, _POLARIZATION?.value);
+    fbBuilder.addOffset(10, RECEIVER_GROUP_IDOffset);
     return fbBuilder.endTable();
   }
 
@@ -539,363 +649,131 @@ class TIMInstantObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Request to convert one instant into another time system/representation.
-class TIMConversionRequest {
-  TIMConversionRequest._(this._bc, this._bcOffset);
-  factory TIMConversionRequest(List<int> bytes) {
+///  A 3D obstacle that shaped this coverage boundary. A footprint clipped by
+///  buildings, a spacecraft structure or terrain is a claim about those
+///  objects; publishing the obstacle set with its `$RFS` materials is what
+///  makes the clipped boundary reproducible.
+class CVPObstacleRef {
+  CVPObstacleRef._(this._bc, this._bcOffset);
+  factory CVPObstacleRef(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TIMConversionRequest> reader = _TIMConversionRequestReader();
+  static const fb.Reader<CVPObstacleRef> reader = _CVPObstacleRefReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Source instant to convert.
-  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Target time system.
-  timingStandard get TARGET_TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  timingStandard get targetTimeSystem => TARGET_TIME_SYSTEM;
-  ///  Preferred target representation.
-  timEpochRepresentation get TARGET_EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  timEpochRepresentation get targetEpochFormat => TARGET_EPOCH_FORMAT;
-  ///  Optional TAI-UTC override in seconds for the source instant.
-  double get TAI_MINUS_UTC_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get taiMinusUtcSeconds => TAI_MINUS_UTC_SECONDS;
-  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
-  bool get HAS_TAI_MINUS_UTC => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
-  bool get hasTaiMinusUtc => HAS_TAI_MINUS_UTC;
-  ///  Optional UT1-UTC override in seconds for UT1 conversions.
-  double get DUT1_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get dut1Seconds => DUT1_SECONDS;
-  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
-  bool get HAS_DUT1 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  bool get hasDut1 => HAS_DUT1;
-  ///  Optional caller trace/correlation identifier.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get traceId => TRACE_ID;
+  ///  Producer's identifier for the obstacle instance.
+  String? get OBSTACLE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get obstacleId => OBSTACLE_ID;
+  ///  `$RFS.MATERIAL_ID` of the surface. Absent means the obstacle was treated
+  ///  as an opaque blocker with no material physics — which a consumer is
+  ///  entitled to know.
+  String? get MATERIAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get materialId => MATERIAL_ID;
+  ///  `$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry used.
+  String? get GEOMETRY_REF_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get geometryRefId => GEOMETRY_REF_ID;
+  ///  `$VAM` asset identity of the obstacle mesh.
+  String? get VAM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get vamId => VAM_ID;
+  String? get VARIANT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get variantId => VARIANT_ID;
+  ///  `$CAT` identity when the obstacle is a catalogued object. 0 when unbound.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get objectId => OBJECT_ID;
+  ///  `$TBS.SITE_ID` when the obstacle is a structure at a terrestrial site.
+  String? get TBS_SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get tbsSiteId => TBS_SITE_ID;
+  ///  How the obstacle acted on the field.
+  rflObstacleInteraction get INTERACTION => rflObstacleInteraction.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  Geodetic placement of a fixed obstacle, degrees and metres.
+  double get LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get latitudeDeg => LATITUDE_DEG;
+  double get LONGITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get longitudeDeg => LONGITUDE_DEG;
+  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get altitudeM => ALTITUDE_M;
+  double get HEIGHT_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get heightM => HEIGHT_M;
 
   @override
   String toString() {
-    return 'TIMConversionRequest{SOURCE: ${SOURCE}, targetTimeSystem: ${targetTimeSystem}, targetEpochFormat: ${targetEpochFormat}, taiMinusUtcSeconds: ${taiMinusUtcSeconds}, hasTaiMinusUtc: ${hasTaiMinusUtc}, dut1Seconds: ${dut1Seconds}, hasDut1: ${hasDut1}, traceId: ${traceId}}';
+    return 'CVPObstacleRef{obstacleId: ${obstacleId}, materialId: ${materialId}, geometryRefId: ${geometryRefId}, vamId: ${vamId}, variantId: ${variantId}, noradCatId: ${noradCatId}, objectId: ${objectId}, tbsSiteId: ${tbsSiteId}, INTERACTION: ${INTERACTION}, latitudeDeg: ${latitudeDeg}, longitudeDeg: ${longitudeDeg}, altitudeM: ${altitudeM}, heightM: ${heightM}}';
   }
 }
 
-class _TIMConversionRequestReader extends fb.TableReader<TIMConversionRequest> {
-  const _TIMConversionRequestReader();
+class _CVPObstacleRefReader extends fb.TableReader<CVPObstacleRef> {
+  const _CVPObstacleRefReader();
 
   @override
-  TIMConversionRequest createObject(fb.BufferContext bc, int offset) =>
-    TIMConversionRequest._(bc, offset);
+  CVPObstacleRef createObject(fb.BufferContext bc, int offset) =>
+    CVPObstacleRef._(bc, offset);
 }
 
-class TIMConversionRequestBuilder {
-  TIMConversionRequestBuilder(this.fbBuilder);
+class CVPObstacleRefBuilder {
+  CVPObstacleRefBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(13);
   }
 
-  int addSourceOffset(int? offset) {
+  int addObstacleIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addTargetTimeSystem(timingStandard? TARGET_TIME_SYSTEM) {
-    fbBuilder.addInt8(1, TARGET_TIME_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addTargetEpochFormat(timEpochRepresentation? TARGET_EPOCH_FORMAT) {
-    fbBuilder.addInt8(2, TARGET_EPOCH_FORMAT?.value);
-    return fbBuilder.offset;
-  }
-  int addTaiMinusUtcSeconds(double? TAI_MINUS_UTC_SECONDS) {
-    fbBuilder.addFloat64(3, TAI_MINUS_UTC_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addHasTaiMinusUtc(bool? HAS_TAI_MINUS_UTC) {
-    fbBuilder.addBool(4, HAS_TAI_MINUS_UTC);
-    return fbBuilder.offset;
-  }
-  int addDut1Seconds(double? DUT1_SECONDS) {
-    fbBuilder.addFloat64(5, DUT1_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addHasDut1(bool? HAS_DUT1) {
-    fbBuilder.addBool(6, HAS_DUT1);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMConversionRequestObjectBuilder extends fb.ObjectBuilder {
-  final TIMInstantObjectBuilder? _SOURCE;
-  final timingStandard? _TARGET_TIME_SYSTEM;
-  final timEpochRepresentation? _TARGET_EPOCH_FORMAT;
-  final double? _TAI_MINUS_UTC_SECONDS;
-  final bool? _HAS_TAI_MINUS_UTC;
-  final double? _DUT1_SECONDS;
-  final bool? _HAS_DUT1;
-  final String? _TRACE_ID;
-
-  TIMConversionRequestObjectBuilder({
-    TIMInstantObjectBuilder? SOURCE,
-    timingStandard? TARGET_TIME_SYSTEM,
-    timingStandard? targetTimeSystem,
-    timEpochRepresentation? TARGET_EPOCH_FORMAT,
-    timEpochRepresentation? targetEpochFormat,
-    double? TAI_MINUS_UTC_SECONDS,
-    double? taiMinusUtcSeconds,
-    bool? HAS_TAI_MINUS_UTC,
-    bool? hasTaiMinusUtc,
-    double? DUT1_SECONDS,
-    double? dut1Seconds,
-    bool? HAS_DUT1,
-    bool? hasDut1,
-    String? TRACE_ID,
-    String? traceId,
-  })
-      : _SOURCE = SOURCE,
-        _TARGET_TIME_SYSTEM = targetTimeSystem ?? TARGET_TIME_SYSTEM,
-        _TARGET_EPOCH_FORMAT = targetEpochFormat ?? TARGET_EPOCH_FORMAT,
-        _TAI_MINUS_UTC_SECONDS = taiMinusUtcSeconds ?? TAI_MINUS_UTC_SECONDS,
-        _HAS_TAI_MINUS_UTC = hasTaiMinusUtc ?? HAS_TAI_MINUS_UTC,
-        _DUT1_SECONDS = dut1Seconds ?? DUT1_SECONDS,
-        _HAS_DUT1 = hasDut1 ?? HAS_DUT1,
-        _TRACE_ID = traceId ?? TRACE_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, SOURCEOffset);
-    fbBuilder.addInt8(1, _TARGET_TIME_SYSTEM?.value);
-    fbBuilder.addInt8(2, _TARGET_EPOCH_FORMAT?.value);
-    fbBuilder.addFloat64(3, _TAI_MINUS_UTC_SECONDS);
-    fbBuilder.addBool(4, _HAS_TAI_MINUS_UTC);
-    fbBuilder.addFloat64(5, _DUT1_SECONDS);
-    fbBuilder.addBool(6, _HAS_DUT1);
-    fbBuilder.addOffset(7, TRACE_IDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Result of a time conversion request.
-class TIMConversionResult {
-  TIMConversionResult._(this._bc, this._bcOffset);
-  factory TIMConversionResult(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIMConversionResult> reader = _TIMConversionResultReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Original source instant.
-  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Converted target instant.
-  TIMInstant? get TARGET => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Target minus source offset in SI seconds for the requested conversion.
-  double get DELTA_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get deltaSeconds => DELTA_SECONDS;
-  ///  Conversion status.
-  timConversionStatus get STATUS => timConversionStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  ///  Optional error detail when STATUS is not OK.
-  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get errorMessage => ERROR_MESSAGE;
-  ///  Caller trace/correlation identifier copied from the request when present.
-  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get traceId => TRACE_ID;
-
-  @override
-  String toString() {
-    return 'TIMConversionResult{SOURCE: ${SOURCE}, TARGET: ${TARGET}, deltaSeconds: ${deltaSeconds}, STATUS: ${STATUS}, errorMessage: ${errorMessage}, traceId: ${traceId}}';
-  }
-}
-
-class _TIMConversionResultReader extends fb.TableReader<TIMConversionResult> {
-  const _TIMConversionResultReader();
-
-  @override
-  TIMConversionResult createObject(fb.BufferContext bc, int offset) =>
-    TIMConversionResult._(bc, offset);
-}
-
-class TIMConversionResultBuilder {
-  TIMConversionResultBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addSourceOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addTargetOffset(int? offset) {
+  int addMaterialIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDeltaSeconds(double? DELTA_SECONDS) {
-    fbBuilder.addFloat64(2, DELTA_SECONDS);
-    return fbBuilder.offset;
-  }
-  int addStatus(timConversionStatus? STATUS) {
-    fbBuilder.addInt8(3, STATUS?.value);
-    return fbBuilder.offset;
-  }
-  int addErrorMessageOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addTraceIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TIMConversionResultObjectBuilder extends fb.ObjectBuilder {
-  final TIMInstantObjectBuilder? _SOURCE;
-  final TIMInstantObjectBuilder? _TARGET;
-  final double? _DELTA_SECONDS;
-  final timConversionStatus? _STATUS;
-  final String? _ERROR_MESSAGE;
-  final String? _TRACE_ID;
-
-  TIMConversionResultObjectBuilder({
-    TIMInstantObjectBuilder? SOURCE,
-    TIMInstantObjectBuilder? TARGET,
-    double? DELTA_SECONDS,
-    double? deltaSeconds,
-    timConversionStatus? STATUS,
-    String? ERROR_MESSAGE,
-    String? errorMessage,
-    String? TRACE_ID,
-    String? traceId,
-  })
-      : _SOURCE = SOURCE,
-        _TARGET = TARGET,
-        _DELTA_SECONDS = deltaSeconds ?? DELTA_SECONDS,
-        _STATUS = STATUS,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
-        _TRACE_ID = traceId ?? TRACE_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
-    final int? TARGETOffset = _TARGET?.getOrCreateOffset(fbBuilder);
-    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
-        : fbBuilder.writeString(_ERROR_MESSAGE!);
-    final int? TRACE_IDOffset = _TRACE_ID == null ? null
-        : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, SOURCEOffset);
-    fbBuilder.addOffset(1, TARGETOffset);
-    fbBuilder.addFloat64(2, _DELTA_SECONDS);
-    fbBuilder.addInt8(3, _STATUS?.value);
-    fbBuilder.addOffset(4, ERROR_MESSAGEOffset);
-    fbBuilder.addOffset(5, TRACE_IDOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Time System and time-conversion envelope.
-class TIM {
-  TIM._(this._bc, this._bcOffset);
-  factory TIM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TIM> reader = _TIMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Legacy time-system selector retained for existing TIM consumers.
-  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timingStandard get timeSystem => TIME_SYSTEM;
-  ///  A single tagged instant.
-  TIMInstant? get INSTANT => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Time conversion request.
-  TIMConversionRequest? get CONVERSION_REQUEST => TIMConversionRequest.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  TIMConversionRequest? get conversionRequest => CONVERSION_REQUEST;
-  ///  Time conversion result.
-  TIMConversionResult? get CONVERSION_RESULT => TIMConversionResult.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  TIMConversionResult? get conversionResult => CONVERSION_RESULT;
-
-  @override
-  String toString() {
-    return 'TIM{timeSystem: ${timeSystem}, INSTANT: ${INSTANT}, conversionRequest: ${conversionRequest}, conversionResult: ${conversionResult}}';
-  }
-}
-
-class _TIMReader extends fb.TableReader<TIM> {
-  const _TIMReader();
-
-  @override
-  TIM createObject(fb.BufferContext bc, int offset) =>
-    TIM._(bc, offset);
-}
-
-class TIMBuilder {
-  TIMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addTimeSystem(timingStandard? TIME_SYSTEM) {
-    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
-    return fbBuilder.offset;
-  }
-  int addInstantOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addConversionRequestOffset(int? offset) {
+  int addGeometryRefIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addConversionResultOffset(int? offset) {
+  int addVamIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addVariantIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(5, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTbsSiteIdOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addInteraction(rflObstacleInteraction? INTERACTION) {
+    fbBuilder.addInt8(8, INTERACTION?.value);
+    return fbBuilder.offset;
+  }
+  int addLatitudeDeg(double? LATITUDE_DEG) {
+    fbBuilder.addFloat64(9, LATITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addLongitudeDeg(double? LONGITUDE_DEG) {
+    fbBuilder.addFloat64(10, LONGITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addAltitudeM(double? ALTITUDE_M) {
+    fbBuilder.addFloat64(11, ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addHeightM(double? HEIGHT_M) {
+    fbBuilder.addFloat64(12, HEIGHT_M);
     return fbBuilder.offset;
   }
 
@@ -904,37 +782,1237 @@ class TIMBuilder {
   }
 }
 
-class TIMObjectBuilder extends fb.ObjectBuilder {
-  final timingStandard? _TIME_SYSTEM;
-  final TIMInstantObjectBuilder? _INSTANT;
-  final TIMConversionRequestObjectBuilder? _CONVERSION_REQUEST;
-  final TIMConversionResultObjectBuilder? _CONVERSION_RESULT;
+class CVPObstacleRefObjectBuilder extends fb.ObjectBuilder {
+  final String? _OBSTACLE_ID;
+  final String? _MATERIAL_ID;
+  final String? _GEOMETRY_REF_ID;
+  final String? _VAM_ID;
+  final String? _VARIANT_ID;
+  final int? _NORAD_CAT_ID;
+  final String? _OBJECT_ID;
+  final String? _TBS_SITE_ID;
+  final rflObstacleInteraction? _INTERACTION;
+  final double? _LATITUDE_DEG;
+  final double? _LONGITUDE_DEG;
+  final double? _ALTITUDE_M;
+  final double? _HEIGHT_M;
 
-  TIMObjectBuilder({
-    timingStandard? TIME_SYSTEM,
-    timingStandard? timeSystem,
-    TIMInstantObjectBuilder? INSTANT,
-    TIMConversionRequestObjectBuilder? CONVERSION_REQUEST,
-    TIMConversionRequestObjectBuilder? conversionRequest,
-    TIMConversionResultObjectBuilder? CONVERSION_RESULT,
-    TIMConversionResultObjectBuilder? conversionResult,
+  CVPObstacleRefObjectBuilder({
+    String? OBSTACLE_ID,
+    String? obstacleId,
+    String? MATERIAL_ID,
+    String? materialId,
+    String? GEOMETRY_REF_ID,
+    String? geometryRefId,
+    String? VAM_ID,
+    String? vamId,
+    String? VARIANT_ID,
+    String? variantId,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? OBJECT_ID,
+    String? objectId,
+    String? TBS_SITE_ID,
+    String? tbsSiteId,
+    rflObstacleInteraction? INTERACTION,
+    double? LATITUDE_DEG,
+    double? latitudeDeg,
+    double? LONGITUDE_DEG,
+    double? longitudeDeg,
+    double? ALTITUDE_M,
+    double? altitudeM,
+    double? HEIGHT_M,
+    double? heightM,
   })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
-        _INSTANT = INSTANT,
-        _CONVERSION_REQUEST = conversionRequest ?? CONVERSION_REQUEST,
-        _CONVERSION_RESULT = conversionResult ?? CONVERSION_RESULT;
+      : _OBSTACLE_ID = obstacleId ?? OBSTACLE_ID,
+        _MATERIAL_ID = materialId ?? MATERIAL_ID,
+        _GEOMETRY_REF_ID = geometryRefId ?? GEOMETRY_REF_ID,
+        _VAM_ID = vamId ?? VAM_ID,
+        _VARIANT_ID = variantId ?? VARIANT_ID,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _TBS_SITE_ID = tbsSiteId ?? TBS_SITE_ID,
+        _INTERACTION = INTERACTION,
+        _LATITUDE_DEG = latitudeDeg ?? LATITUDE_DEG,
+        _LONGITUDE_DEG = longitudeDeg ?? LONGITUDE_DEG,
+        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
+        _HEIGHT_M = heightM ?? HEIGHT_M;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? INSTANTOffset = _INSTANT?.getOrCreateOffset(fbBuilder);
-    final int? CONVERSION_REQUESTOffset = _CONVERSION_REQUEST?.getOrCreateOffset(fbBuilder);
-    final int? CONVERSION_RESULTOffset = _CONVERSION_RESULT?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
-    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
-    fbBuilder.addOffset(1, INSTANTOffset);
-    fbBuilder.addOffset(2, CONVERSION_REQUESTOffset);
-    fbBuilder.addOffset(3, CONVERSION_RESULTOffset);
+    final int? OBSTACLE_IDOffset = _OBSTACLE_ID == null ? null
+        : fbBuilder.writeString(_OBSTACLE_ID!);
+    final int? MATERIAL_IDOffset = _MATERIAL_ID == null ? null
+        : fbBuilder.writeString(_MATERIAL_ID!);
+    final int? GEOMETRY_REF_IDOffset = _GEOMETRY_REF_ID == null ? null
+        : fbBuilder.writeString(_GEOMETRY_REF_ID!);
+    final int? VAM_IDOffset = _VAM_ID == null ? null
+        : fbBuilder.writeString(_VAM_ID!);
+    final int? VARIANT_IDOffset = _VARIANT_ID == null ? null
+        : fbBuilder.writeString(_VARIANT_ID!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? TBS_SITE_IDOffset = _TBS_SITE_ID == null ? null
+        : fbBuilder.writeString(_TBS_SITE_ID!);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, OBSTACLE_IDOffset);
+    fbBuilder.addOffset(1, MATERIAL_IDOffset);
+    fbBuilder.addOffset(2, GEOMETRY_REF_IDOffset);
+    fbBuilder.addOffset(3, VAM_IDOffset);
+    fbBuilder.addOffset(4, VARIANT_IDOffset);
+    fbBuilder.addUint32(5, _NORAD_CAT_ID);
+    fbBuilder.addOffset(6, OBJECT_IDOffset);
+    fbBuilder.addOffset(7, TBS_SITE_IDOffset);
+    fbBuilder.addInt8(8, _INTERACTION?.value);
+    fbBuilder.addFloat64(9, _LATITUDE_DEG);
+    fbBuilder.addFloat64(10, _LONGITUDE_DEG);
+    fbBuilder.addFloat64(11, _ALTITUDE_M);
+    fbBuilder.addFloat64(12, _HEIGHT_M);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  How wrong this geometry can be. A contour with no uncertainty is a drawing,
+///  not a measurement.
+class CVPUncertainty {
+  CVPUncertainty._(this._bc, this._bcOffset);
+  factory CVPUncertainty(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CVPUncertainty> reader = _CVPUncertaintyReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  1-sigma horizontal position uncertainty of the boundary, metres. Applies
+  ///  to every vertex unless VERTEX_POSITION_UNCERTAINTY_M is present.
+  double get HORIZONTAL_POSITION_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get horizontalPositionM => HORIZONTAL_POSITION_M;
+  ///  1-sigma uncertainty of the level the contour was drawn at, in
+  ///  LEVEL_UNCERTAINTY_UNITS.
+  double get LEVEL_UNCERTAINTY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get levelUncertainty => LEVEL_UNCERTAINTY;
+  String? get LEVEL_UNCERTAINTY_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get levelUncertaintyUnits => LEVEL_UNCERTAINTY_UNITS;
+  ///  Confidence the stated uncertainties correspond to [0-1], e.g. 0.68.
+  double get CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Tolerance the contour extractor converged to, in the metric's units.
+  double get EXTRACTION_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get extractionTolerance => EXTRACTION_TOLERANCE;
+  ///  Simplification tolerance applied to the rings, metres. A simplified ring
+  ///  is not the computed boundary and MUST say so.
+  double get SIMPLIFICATION_TOLERANCE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get simplificationToleranceM => SIMPLIFICATION_TOLERANCE_M;
+  ///  How the uncertainty was established (e.g. "grid resolution bound",
+  ///  "Monte Carlo over emitter state covariance").
+  String? get METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'CVPUncertainty{horizontalPositionM: ${horizontalPositionM}, levelUncertainty: ${levelUncertainty}, levelUncertaintyUnits: ${levelUncertaintyUnits}, CONFIDENCE: ${CONFIDENCE}, extractionTolerance: ${extractionTolerance}, simplificationToleranceM: ${simplificationToleranceM}, METHOD: ${METHOD}}';
+  }
+}
+
+class _CVPUncertaintyReader extends fb.TableReader<CVPUncertainty> {
+  const _CVPUncertaintyReader();
+
+  @override
+  CVPUncertainty createObject(fb.BufferContext bc, int offset) =>
+    CVPUncertainty._(bc, offset);
+}
+
+class CVPUncertaintyBuilder {
+  CVPUncertaintyBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addHorizontalPositionM(double? HORIZONTAL_POSITION_M) {
+    fbBuilder.addFloat64(0, HORIZONTAL_POSITION_M);
+    return fbBuilder.offset;
+  }
+  int addLevelUncertainty(double? LEVEL_UNCERTAINTY) {
+    fbBuilder.addFloat64(1, LEVEL_UNCERTAINTY);
+    return fbBuilder.offset;
+  }
+  int addLevelUncertaintyUnitsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addConfidence(double? CONFIDENCE) {
+    fbBuilder.addFloat64(3, CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addExtractionTolerance(double? EXTRACTION_TOLERANCE) {
+    fbBuilder.addFloat64(4, EXTRACTION_TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addSimplificationToleranceM(double? SIMPLIFICATION_TOLERANCE_M) {
+    fbBuilder.addFloat64(5, SIMPLIFICATION_TOLERANCE_M);
+    return fbBuilder.offset;
+  }
+  int addMethodOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CVPUncertaintyObjectBuilder extends fb.ObjectBuilder {
+  final double? _HORIZONTAL_POSITION_M;
+  final double? _LEVEL_UNCERTAINTY;
+  final String? _LEVEL_UNCERTAINTY_UNITS;
+  final double? _CONFIDENCE;
+  final double? _EXTRACTION_TOLERANCE;
+  final double? _SIMPLIFICATION_TOLERANCE_M;
+  final String? _METHOD;
+
+  CVPUncertaintyObjectBuilder({
+    double? HORIZONTAL_POSITION_M,
+    double? horizontalPositionM,
+    double? LEVEL_UNCERTAINTY,
+    double? levelUncertainty,
+    String? LEVEL_UNCERTAINTY_UNITS,
+    String? levelUncertaintyUnits,
+    double? CONFIDENCE,
+    double? EXTRACTION_TOLERANCE,
+    double? extractionTolerance,
+    double? SIMPLIFICATION_TOLERANCE_M,
+    double? simplificationToleranceM,
+    String? METHOD,
+  })
+      : _HORIZONTAL_POSITION_M = horizontalPositionM ?? HORIZONTAL_POSITION_M,
+        _LEVEL_UNCERTAINTY = levelUncertainty ?? LEVEL_UNCERTAINTY,
+        _LEVEL_UNCERTAINTY_UNITS = levelUncertaintyUnits ?? LEVEL_UNCERTAINTY_UNITS,
+        _CONFIDENCE = CONFIDENCE,
+        _EXTRACTION_TOLERANCE = extractionTolerance ?? EXTRACTION_TOLERANCE,
+        _SIMPLIFICATION_TOLERANCE_M = simplificationToleranceM ?? SIMPLIFICATION_TOLERANCE_M,
+        _METHOD = METHOD;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LEVEL_UNCERTAINTY_UNITSOffset = _LEVEL_UNCERTAINTY_UNITS == null ? null
+        : fbBuilder.writeString(_LEVEL_UNCERTAINTY_UNITS!);
+    final int? METHODOffset = _METHOD == null ? null
+        : fbBuilder.writeString(_METHOD!);
+    fbBuilder.startTable(7);
+    fbBuilder.addFloat64(0, _HORIZONTAL_POSITION_M);
+    fbBuilder.addFloat64(1, _LEVEL_UNCERTAINTY);
+    fbBuilder.addOffset(2, LEVEL_UNCERTAINTY_UNITSOffset);
+    fbBuilder.addFloat64(3, _CONFIDENCE);
+    fbBuilder.addFloat64(4, _EXTRACTION_TOLERANCE);
+    fbBuilder.addFloat64(5, _SIMPLIFICATION_TOLERANCE_M);
+    fbBuilder.addOffset(6, METHODOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Where this geometry came from.
+class CVPProvenance {
+  CVPProvenance._(this._bc, this._bcOffset);
+  factory CVPProvenance(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CVPProvenance> reader = _CVPProvenanceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  rflMethod get METHOD => rflMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Producing system, dataset or campaign. Required.
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Replayable query or scenario reference.
+  String? get SOURCE_QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sourceQuery => SOURCE_QUERY;
+  ///  Propagator that produced the emitter geometry. A MODELED or HYBRID
+  ///  product MUST name it.
+  String? get PROPAGATOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get propagatorId => PROPAGATOR_ID;
+  String? get PROPAGATOR_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get propagatorVersion => PROPAGATOR_VERSION;
+  String? get PROPAGATOR_CONFIGURATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get propagatorConfiguration => PROPAGATOR_CONFIGURATION;
+  ///  `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced the rings.
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get moduleId => MODULE_ID;
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get moduleVersion => MODULE_VERSION;
+  String? get MODULE_CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get moduleContentHash => MODULE_CONTENT_HASH;
+  ///  Per-term model bindings for the metric that was contoured, reusing the
+  ///  `$RFL` binding so a footprint and the samples behind it cite the same
+  ///  models.
+  List<RFLModelBinding>? get MODELS => const fb.ListReader<RFLModelBinding>(RFLModelBinding.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Algorithm that turned the sampled field into rings (e.g. "marching
+  ///  squares", "alpha shape", "H3 cell union").
+  String? get CONTOUR_ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get contourAlgorithm => CONTOUR_ALGORITHM;
+  ///  Environment and terrain datasets the evaluation used.
+  String? get ENVIRONMENT_DATASET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get environmentDataset => ENVIRONMENT_DATASET;
+  String? get TERRAIN_DATASET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get terrainDataset => TERRAIN_DATASET;
+  ///  Dataset the 3D obstacles and their materials were drawn from.
+  String? get OBSTACLE_DATASET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get obstacleDataset => OBSTACLE_DATASET;
+  ///  Unix ms computed and retrieved.
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 32, 0);
+  int get computedAt => COMPUTED_AT;
+  int get RETRIEVED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 34, 0);
+  int get retrievedAt => RETRIEVED_AT;
+  ///  Licence terms. Empty means UNKNOWN TERMS.
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  bool get NON_COMMERCIAL_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 38, false);
+  bool get nonCommercialOnly => NON_COMMERCIAL_ONLY;
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+
+  @override
+  String toString() {
+    return 'CVPProvenance{METHOD: ${METHOD}, SOURCE: ${SOURCE}, sourceQuery: ${sourceQuery}, propagatorId: ${propagatorId}, propagatorVersion: ${propagatorVersion}, propagatorConfiguration: ${propagatorConfiguration}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, moduleContentHash: ${moduleContentHash}, MODELS: ${MODELS}, contourAlgorithm: ${contourAlgorithm}, environmentDataset: ${environmentDataset}, terrainDataset: ${terrainDataset}, obstacleDataset: ${obstacleDataset}, computedAt: ${computedAt}, retrievedAt: ${retrievedAt}, LICENSE: ${LICENSE}, nonCommercialOnly: ${nonCommercialOnly}, CITATION: ${CITATION}}';
+  }
+}
+
+class _CVPProvenanceReader extends fb.TableReader<CVPProvenance> {
+  const _CVPProvenanceReader();
+
+  @override
+  CVPProvenance createObject(fb.BufferContext bc, int offset) =>
+    CVPProvenance._(bc, offset);
+}
+
+class CVPProvenanceBuilder {
+  CVPProvenanceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(19);
+  }
+
+  int addMethod(rflMethod? METHOD) {
+    fbBuilder.addInt8(0, METHOD?.value);
+    return fbBuilder.offset;
+  }
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceQueryOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorVersionOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleContentHashOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addModelsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addContourAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addEnvironmentDatasetOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addTerrainDatasetOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addObstacleDatasetOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(14, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAt(int? RETRIEVED_AT) {
+    fbBuilder.addUint64(15, RETRIEVED_AT);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addNonCommercialOnly(bool? NON_COMMERCIAL_ONLY) {
+    fbBuilder.addBool(17, NON_COMMERCIAL_ONLY);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CVPProvenanceObjectBuilder extends fb.ObjectBuilder {
+  final rflMethod? _METHOD;
+  final String? _SOURCE;
+  final String? _SOURCE_QUERY;
+  final String? _PROPAGATOR_ID;
+  final String? _PROPAGATOR_VERSION;
+  final String? _PROPAGATOR_CONFIGURATION;
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final String? _MODULE_CONTENT_HASH;
+  final List<RFLModelBindingObjectBuilder>? _MODELS;
+  final String? _CONTOUR_ALGORITHM;
+  final String? _ENVIRONMENT_DATASET;
+  final String? _TERRAIN_DATASET;
+  final String? _OBSTACLE_DATASET;
+  final int? _COMPUTED_AT;
+  final int? _RETRIEVED_AT;
+  final String? _LICENSE;
+  final bool? _NON_COMMERCIAL_ONLY;
+  final String? _CITATION;
+
+  CVPProvenanceObjectBuilder({
+    rflMethod? METHOD,
+    String? SOURCE,
+    String? SOURCE_QUERY,
+    String? sourceQuery,
+    String? PROPAGATOR_ID,
+    String? propagatorId,
+    String? PROPAGATOR_VERSION,
+    String? propagatorVersion,
+    String? PROPAGATOR_CONFIGURATION,
+    String? propagatorConfiguration,
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    String? MODULE_CONTENT_HASH,
+    String? moduleContentHash,
+    List<RFLModelBindingObjectBuilder>? MODELS,
+    String? CONTOUR_ALGORITHM,
+    String? contourAlgorithm,
+    String? ENVIRONMENT_DATASET,
+    String? environmentDataset,
+    String? TERRAIN_DATASET,
+    String? terrainDataset,
+    String? OBSTACLE_DATASET,
+    String? obstacleDataset,
+    int? COMPUTED_AT,
+    int? computedAt,
+    int? RETRIEVED_AT,
+    int? retrievedAt,
+    String? LICENSE,
+    bool? NON_COMMERCIAL_ONLY,
+    bool? nonCommercialOnly,
+    String? CITATION,
+  })
+      : _METHOD = METHOD,
+        _SOURCE = SOURCE,
+        _SOURCE_QUERY = sourceQuery ?? SOURCE_QUERY,
+        _PROPAGATOR_ID = propagatorId ?? PROPAGATOR_ID,
+        _PROPAGATOR_VERSION = propagatorVersion ?? PROPAGATOR_VERSION,
+        _PROPAGATOR_CONFIGURATION = propagatorConfiguration ?? PROPAGATOR_CONFIGURATION,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _MODULE_CONTENT_HASH = moduleContentHash ?? MODULE_CONTENT_HASH,
+        _MODELS = MODELS,
+        _CONTOUR_ALGORITHM = contourAlgorithm ?? CONTOUR_ALGORITHM,
+        _ENVIRONMENT_DATASET = environmentDataset ?? ENVIRONMENT_DATASET,
+        _TERRAIN_DATASET = terrainDataset ?? TERRAIN_DATASET,
+        _OBSTACLE_DATASET = obstacleDataset ?? OBSTACLE_DATASET,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
+        _LICENSE = LICENSE,
+        _NON_COMMERCIAL_ONLY = nonCommercialOnly ?? NON_COMMERCIAL_ONLY,
+        _CITATION = CITATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    final int? SOURCE_QUERYOffset = _SOURCE_QUERY == null ? null
+        : fbBuilder.writeString(_SOURCE_QUERY!);
+    final int? PROPAGATOR_IDOffset = _PROPAGATOR_ID == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_ID!);
+    final int? PROPAGATOR_VERSIONOffset = _PROPAGATOR_VERSION == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_VERSION!);
+    final int? PROPAGATOR_CONFIGURATIONOffset = _PROPAGATOR_CONFIGURATION == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_CONFIGURATION!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? MODULE_CONTENT_HASHOffset = _MODULE_CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_MODULE_CONTENT_HASH!);
+    final int? MODELSOffset = _MODELS == null ? null
+        : fbBuilder.writeList(_MODELS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CONTOUR_ALGORITHMOffset = _CONTOUR_ALGORITHM == null ? null
+        : fbBuilder.writeString(_CONTOUR_ALGORITHM!);
+    final int? ENVIRONMENT_DATASETOffset = _ENVIRONMENT_DATASET == null ? null
+        : fbBuilder.writeString(_ENVIRONMENT_DATASET!);
+    final int? TERRAIN_DATASETOffset = _TERRAIN_DATASET == null ? null
+        : fbBuilder.writeString(_TERRAIN_DATASET!);
+    final int? OBSTACLE_DATASETOffset = _OBSTACLE_DATASET == null ? null
+        : fbBuilder.writeString(_OBSTACLE_DATASET!);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? CITATIONOffset = _CITATION == null ? null
+        : fbBuilder.writeString(_CITATION!);
+    fbBuilder.startTable(19);
+    fbBuilder.addInt8(0, _METHOD?.value);
+    fbBuilder.addOffset(1, SOURCEOffset);
+    fbBuilder.addOffset(2, SOURCE_QUERYOffset);
+    fbBuilder.addOffset(3, PROPAGATOR_IDOffset);
+    fbBuilder.addOffset(4, PROPAGATOR_VERSIONOffset);
+    fbBuilder.addOffset(5, PROPAGATOR_CONFIGURATIONOffset);
+    fbBuilder.addOffset(6, MODULE_IDOffset);
+    fbBuilder.addOffset(7, MODULE_VERSIONOffset);
+    fbBuilder.addOffset(8, MODULE_CONTENT_HASHOffset);
+    fbBuilder.addOffset(9, MODELSOffset);
+    fbBuilder.addOffset(10, CONTOUR_ALGORITHMOffset);
+    fbBuilder.addOffset(11, ENVIRONMENT_DATASETOffset);
+    fbBuilder.addOffset(12, TERRAIN_DATASETOffset);
+    fbBuilder.addOffset(13, OBSTACLE_DATASETOffset);
+    fbBuilder.addUint64(14, _COMPUTED_AT);
+    fbBuilder.addUint64(15, _RETRIEVED_AT);
+    fbBuilder.addOffset(16, LICENSEOffset);
+    fbBuilder.addBool(17, _NON_COMMERCIAL_ONLY);
+    fbBuilder.addOffset(18, CITATIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Coverage Geometry
+class CVP {
+  CVP._(this._bc, this._bcOffset);
+  factory CVP(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CVP> reader = _CVPReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable identifier of this geometry product.
+  String? get COVERAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get coverageId => COVERAGE_ID;
+  ///  Display name.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Analysis or scenario grouping identifier shared with the `$RFL` samples
+  ///  and `$ACI` intervals of the same study.
+  String? get SCENARIO_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get scenarioId => SCENARIO_ID;
+  cvpGeometryKind get GEOMETRY_KIND => cvpGeometryKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  cvpGeometryKind get geometryKind => GEOMETRY_KIND;
+  ///  The metric the rings contour.
+  rflBudgetTerm get METRIC => rflBudgetTerm.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Units of the metric and of POLYGON_LEVEL_VALUES.
+  String? get METRIC_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get metricUnits => METRIC_UNITS;
+  ///  The threshold the boundary was drawn at, for a THRESHOLD_CONTOUR.
+  double get THRESHOLD_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get thresholdValue => THRESHOLD_VALUE;
+  String? get THRESHOLD_UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get thresholdUnits => THRESHOLD_UNITS;
+  rflComparison get THRESHOLD_COMPARISON => rflComparison.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  rflComparison get thresholdComparison => THRESHOLD_COMPARISON;
+  ///  Instantaneous epoch, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM.
+  ///  Set for FOOTPRINT and other instantaneous products; NaN for aggregates.
+  double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Interval this geometry holds over, same encoding. Set for aggregated
+  ///  products (union over a window, availability contour); NaN for
+  ///  instantaneous ones. A product that states neither EPOCH nor an interval
+  ///  is untethered in time and MUST be refused.
+  double get INTERVAL_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get intervalStart => INTERVAL_START;
+  double get INTERVAL_STOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get intervalStop => INTERVAL_STOP;
+  ///  Time scale all epochs in this record are expressed in. Defaults to UTC
+  ///  explicitly: `timingStandard` ordinal 0 is GMST.
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 11));
+  timingStandard get timeSystem => TIME_SYSTEM;
+  ///  Monotonic generation of this coverage product within its COVERAGE_ID
+  ///  lineage. A streaming producer increments it per emission; a consumer
+  ///  holding a higher generation MUST NOT be overwritten by a lower one.
+  int get GENERATION => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  ///  COVERAGE_ID this record replaces, when the lineage was re-identified.
+  String? get SUPERSEDES_COVERAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get supersedesCoverageId => SUPERSEDES_COVERAGE_ID;
+  ///  Vertex longitudes, geodetic degrees in [-180, 180].
+  List<double>? get VERTEX_LONGITUDE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 34);
+  List<double>? get vertexLongitudeDeg => VERTEX_LONGITUDE_DEG;
+  ///  Vertex latitudes, geodetic degrees in [-90, 90]. Same length as
+  ///  VERTEX_LONGITUDE_DEG.
+  List<double>? get VERTEX_LATITUDE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<double>? get vertexLatitudeDeg => VERTEX_LATITUDE_DEG;
+  ///  Vertex altitudes, metres above ALTITUDE_REFERENCE. Absent when the
+  ///  geometry lies on the reference surface.
+  List<double>? get VERTEX_ALTITUDE_M => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 38);
+  List<double>? get vertexAltitudeM => VERTEX_ALTITUDE_M;
+  cvpAltitudeReference get ALTITUDE_REFERENCE => cvpAltitudeReference.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 40, 0));
+  cvpAltitudeReference get altitudeReference => ALTITUDE_REFERENCE;
+  ///  The constant altitude, metres, when ALTITUDE_REFERENCE is FIXED_ALTITUDE.
+  double get FIXED_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get fixedAltitudeM => FIXED_ALTITUDE_M;
+  ///  Ring start indexes; RING_COUNT + 1 entries, last equals the vertex count.
+  List<int>? get RING_OFFSETS => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<int>? get ringOffsets => RING_OFFSETS;
+  ///  Polygon each ring belongs to. Same length as RING_COUNT.
+  List<int>? get RING_POLYGON_INDEXES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 46);
+  List<int>? get ringPolygonIndexes => RING_POLYGON_INDEXES;
+  ///  Role of each ring. Same length as RING_COUNT.
+  List<cvpRingRole>? get RING_ROLES => const fb.ListReader<cvpRingRole>(cvpRingRole.reader).vTableGetNullable(_bc, _bcOffset, 48);
+  List<cvpRingRole>? get ringRoles => RING_ROLES;
+  ///  Number of polygons; equals max(RING_POLYGON_INDEXES) + 1 and is published
+  ///  so an empty coverage field (zero polygons, zero rings) is representable
+  ///  and distinguishable from an unpopulated record.
+  int get POLYGON_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get polygonCount => POLYGON_COUNT;
+  ///  Metric value each polygon is drawn at, in METRIC_UNITS. Same length as
+  ///  POLYGON_COUNT. Carried for ISO_METRIC_CONTOUR; for a THRESHOLD_CONTOUR
+  ///  every entry equals THRESHOLD_VALUE.
+  List<double>? get POLYGON_LEVEL_VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 52);
+  List<double>? get polygonLevelValues => POLYGON_LEVEL_VALUES;
+  ///  1-sigma uncertainty of each polygon's level, same units and length.
+  List<double>? get POLYGON_LEVEL_UNCERTAINTIES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 54);
+  List<double>? get polygonLevelUncertainties => POLYGON_LEVEL_UNCERTAINTIES;
+  ///  Surface area enclosed by each polygon, square kilometres.
+  List<double>? get POLYGON_AREA_KM2 => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 56);
+  List<double>? get polygonAreaKm2 => POLYGON_AREA_KM2;
+  ///  Per-vertex 1-sigma horizontal uncertainty, metres. Same length as the
+  ///  vertex arrays. Absent means CVPUncertainty.HORIZONTAL_POSITION_M governs
+  ///  the whole boundary.
+  List<double>? get VERTEX_POSITION_UNCERTAINTY_M => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 58);
+  List<double>? get vertexPositionUncertaintyM => VERTEX_POSITION_UNCERTAINTY_M;
+  ///  Grid the field was sampled on before contouring, e.g. "H3" or
+  ///  "GEODETIC_LATLON". A contour is never finer than the grid behind it.
+  String? get GRID_SCHEME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get gridScheme => GRID_SCHEME;
+  ///  Grid resolution in the scheme's own convention (H3 resolution 0-15).
+  int get GRID_RESOLUTION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 62, 0);
+  int get gridResolution => GRID_RESOLUTION;
+  ///  Grid spacing in degrees, for a geodetic lat/lon grid.
+  double get GRID_SPACING_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get gridSpacingDeg => GRID_SPACING_DEG;
+  ///  Number of grid cells evaluated.
+  int get GRID_CELL_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 66, 0);
+  int get gridCellCount => GRID_CELL_COUNT;
+  ///  `$CVG.COVERAGE_ID` of the figure-of-merit grid this geometry was
+  ///  contoured from, when one was published.
+  String? get CVG_COVERAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  String? get cvgCoverageId => CVG_COVERAGE_ID;
+  ///  `$RFL.RFL_ID` of the sample set the field was evaluated from, when one
+  ///  was published.
+  String? get RFL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  String? get rflId => RFL_ID;
+  ///  `$ACI.ACI_ID` of the interval set an availability or gap product was
+  ///  aggregated from, when one was published.
+  String? get ACI_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  String? get aciId => ACI_ID;
+  ///  Emitters that contributed. Required: coverage with no stated emitter is
+  ///  an unattributable claim about the sky.
+  List<CVPEmitterRef>? get CONTRIBUTING_EMITTERS => const fb.ListReader<CVPEmitterRef>(CVPEmitterRef.reader).vTableGetNullable(_bc, _bcOffset, 74);
+  List<CVPEmitterRef>? get contributingEmitters => CONTRIBUTING_EMITTERS;
+  ///  Identifier of the receiver set this coverage is stated for.
+  String? get RECEIVER_SET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  String? get receiverSetId => RECEIVER_SET_ID;
+  ///  The receivers themselves, when the set is enumerable.
+  List<CVPReceiverRef>? get RECEIVERS => const fb.ListReader<CVPReceiverRef>(CVPReceiverRef.reader).vTableGetNullable(_bc, _bcOffset, 78);
+  ///  3D obstacles that clipped or shaped the boundary, each naming the `$RFS`
+  ///  material that produced its effect.
+  List<CVPObstacleRef>? get CONTRIBUTING_OBSTACLES => const fb.ListReader<CVPObstacleRef>(CVPObstacleRef.reader).vTableGetNullable(_bc, _bcOffset, 80);
+  List<CVPObstacleRef>? get contributingObstacles => CONTRIBUTING_OBSTACLES;
+  ///  Identifier of the obstacle set used, when it is published as a set rather
+  ///  than enumerated here.
+  String? get OBSTACLE_SET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get obstacleSetId => OBSTACLE_SET_ID;
+  ///  The condition that bounds the boundary — why the contour is where it is.
+  rflConstraint get LIMITING_CONSTRAINT => rflConstraint.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 84, 0));
+  rflConstraint get limitingConstraint => LIMITING_CONSTRAINT;
+  ///  Verbatim description, required when LIMITING_CONSTRAINT is OTHER.
+  String? get LIMITING_CONSTRAINT_NOTE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  String? get limitingConstraintNote => LIMITING_CONSTRAINT_NOTE;
+  ///  Uncertainty of level and boundary.
+  CVPUncertainty? get UNCERTAINTY => CVPUncertainty.reader.vTableGetNullable(_bc, _bcOffset, 88);
+  ///  Provenance. Required.
+  CVPProvenance? get PROVENANCE => CVPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 90);
+  ///  Unix ms this record was serialized.
+  int get COMPUTED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 92, 0);
+  int get computedAt => COMPUTED_AT;
+  ///  `$EPM` identifier of the producing node.
+  String? get PRODUCER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  String? get producerId => PRODUCER_ID;
+  ///  Ed25519 signature by the producing `$EPM`.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 96);
+
+  @override
+  String toString() {
+    return 'CVP{coverageId: ${coverageId}, NAME: ${NAME}, scenarioId: ${scenarioId}, geometryKind: ${geometryKind}, METRIC: ${METRIC}, metricUnits: ${metricUnits}, thresholdValue: ${thresholdValue}, thresholdUnits: ${thresholdUnits}, thresholdComparison: ${thresholdComparison}, EPOCH: ${EPOCH}, intervalStart: ${intervalStart}, intervalStop: ${intervalStop}, timeSystem: ${timeSystem}, GENERATION: ${GENERATION}, supersedesCoverageId: ${supersedesCoverageId}, vertexLongitudeDeg: ${vertexLongitudeDeg}, vertexLatitudeDeg: ${vertexLatitudeDeg}, vertexAltitudeM: ${vertexAltitudeM}, altitudeReference: ${altitudeReference}, fixedAltitudeM: ${fixedAltitudeM}, ringOffsets: ${ringOffsets}, ringPolygonIndexes: ${ringPolygonIndexes}, ringRoles: ${ringRoles}, polygonCount: ${polygonCount}, polygonLevelValues: ${polygonLevelValues}, polygonLevelUncertainties: ${polygonLevelUncertainties}, polygonAreaKm2: ${polygonAreaKm2}, vertexPositionUncertaintyM: ${vertexPositionUncertaintyM}, gridScheme: ${gridScheme}, gridResolution: ${gridResolution}, gridSpacingDeg: ${gridSpacingDeg}, gridCellCount: ${gridCellCount}, cvgCoverageId: ${cvgCoverageId}, rflId: ${rflId}, aciId: ${aciId}, contributingEmitters: ${contributingEmitters}, receiverSetId: ${receiverSetId}, RECEIVERS: ${RECEIVERS}, contributingObstacles: ${contributingObstacles}, obstacleSetId: ${obstacleSetId}, limitingConstraint: ${limitingConstraint}, limitingConstraintNote: ${limitingConstraintNote}, UNCERTAINTY: ${UNCERTAINTY}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}}';
+  }
+}
+
+class _CVPReader extends fb.TableReader<CVP> {
+  const _CVPReader();
+
+  @override
+  CVP createObject(fb.BufferContext bc, int offset) =>
+    CVP._(bc, offset);
+}
+
+class CVPBuilder {
+  CVPBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(47);
+  }
+
+  int addCoverageIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addScenarioIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addGeometryKind(cvpGeometryKind? GEOMETRY_KIND) {
+    fbBuilder.addInt8(3, GEOMETRY_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addMetric(rflBudgetTerm? METRIC) {
+    fbBuilder.addInt8(4, METRIC?.value);
+    return fbBuilder.offset;
+  }
+  int addMetricUnitsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addThresholdValue(double? THRESHOLD_VALUE) {
+    fbBuilder.addFloat64(6, THRESHOLD_VALUE);
+    return fbBuilder.offset;
+  }
+  int addThresholdUnitsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addThresholdComparison(rflComparison? THRESHOLD_COMPARISON) {
+    fbBuilder.addInt8(8, THRESHOLD_COMPARISON?.value);
+    return fbBuilder.offset;
+  }
+  int addEpoch(double? EPOCH) {
+    fbBuilder.addFloat64(9, EPOCH);
+    return fbBuilder.offset;
+  }
+  int addIntervalStart(double? INTERVAL_START) {
+    fbBuilder.addFloat64(10, INTERVAL_START);
+    return fbBuilder.offset;
+  }
+  int addIntervalStop(double? INTERVAL_STOP) {
+    fbBuilder.addFloat64(11, INTERVAL_STOP);
+    return fbBuilder.offset;
+  }
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
+    fbBuilder.addInt8(12, TIME_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
+  int addGeneration(int? GENERATION) {
+    fbBuilder.addUint64(13, GENERATION);
+    return fbBuilder.offset;
+  }
+  int addSupersedesCoverageIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addVertexLongitudeDegOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addVertexLatitudeDegOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addVertexAltitudeMOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addAltitudeReference(cvpAltitudeReference? ALTITUDE_REFERENCE) {
+    fbBuilder.addInt8(18, ALTITUDE_REFERENCE?.value);
+    return fbBuilder.offset;
+  }
+  int addFixedAltitudeM(double? FIXED_ALTITUDE_M) {
+    fbBuilder.addFloat64(19, FIXED_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addRingOffsetsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addRingPolygonIndexesOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addRingRolesOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addPolygonCount(int? POLYGON_COUNT) {
+    fbBuilder.addUint32(23, POLYGON_COUNT);
+    return fbBuilder.offset;
+  }
+  int addPolygonLevelValuesOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addPolygonLevelUncertaintiesOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addPolygonAreaKm2Offset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addVertexPositionUncertaintyMOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addGridSchemeOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addGridResolution(int? GRID_RESOLUTION) {
+    fbBuilder.addUint8(29, GRID_RESOLUTION);
+    return fbBuilder.offset;
+  }
+  int addGridSpacingDeg(double? GRID_SPACING_DEG) {
+    fbBuilder.addFloat64(30, GRID_SPACING_DEG);
+    return fbBuilder.offset;
+  }
+  int addGridCellCount(int? GRID_CELL_COUNT) {
+    fbBuilder.addUint64(31, GRID_CELL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addCvgCoverageIdOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addRflIdOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addAciIdOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addContributingEmittersOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiverSetIdOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addReceiversOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addContributingObstaclesOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addObstacleSetIdOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addLimitingConstraint(rflConstraint? LIMITING_CONSTRAINT) {
+    fbBuilder.addInt8(40, LIMITING_CONSTRAINT?.value);
+    return fbBuilder.offset;
+  }
+  int addLimitingConstraintNoteOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addUncertaintyOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addComputedAt(int? COMPUTED_AT) {
+    fbBuilder.addUint64(44, COMPUTED_AT);
+    return fbBuilder.offset;
+  }
+  int addProducerIdOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CVPObjectBuilder extends fb.ObjectBuilder {
+  final String? _COVERAGE_ID;
+  final String? _NAME;
+  final String? _SCENARIO_ID;
+  final cvpGeometryKind? _GEOMETRY_KIND;
+  final rflBudgetTerm? _METRIC;
+  final String? _METRIC_UNITS;
+  final double? _THRESHOLD_VALUE;
+  final String? _THRESHOLD_UNITS;
+  final rflComparison? _THRESHOLD_COMPARISON;
+  final double? _EPOCH;
+  final double? _INTERVAL_START;
+  final double? _INTERVAL_STOP;
+  final timingStandard? _TIME_SYSTEM;
+  final int? _GENERATION;
+  final String? _SUPERSEDES_COVERAGE_ID;
+  final List<double>? _VERTEX_LONGITUDE_DEG;
+  final List<double>? _VERTEX_LATITUDE_DEG;
+  final List<double>? _VERTEX_ALTITUDE_M;
+  final cvpAltitudeReference? _ALTITUDE_REFERENCE;
+  final double? _FIXED_ALTITUDE_M;
+  final List<int>? _RING_OFFSETS;
+  final List<int>? _RING_POLYGON_INDEXES;
+  final List<cvpRingRole>? _RING_ROLES;
+  final int? _POLYGON_COUNT;
+  final List<double>? _POLYGON_LEVEL_VALUES;
+  final List<double>? _POLYGON_LEVEL_UNCERTAINTIES;
+  final List<double>? _POLYGON_AREA_KM2;
+  final List<double>? _VERTEX_POSITION_UNCERTAINTY_M;
+  final String? _GRID_SCHEME;
+  final int? _GRID_RESOLUTION;
+  final double? _GRID_SPACING_DEG;
+  final int? _GRID_CELL_COUNT;
+  final String? _CVG_COVERAGE_ID;
+  final String? _RFL_ID;
+  final String? _ACI_ID;
+  final List<CVPEmitterRefObjectBuilder>? _CONTRIBUTING_EMITTERS;
+  final String? _RECEIVER_SET_ID;
+  final List<CVPReceiverRefObjectBuilder>? _RECEIVERS;
+  final List<CVPObstacleRefObjectBuilder>? _CONTRIBUTING_OBSTACLES;
+  final String? _OBSTACLE_SET_ID;
+  final rflConstraint? _LIMITING_CONSTRAINT;
+  final String? _LIMITING_CONSTRAINT_NOTE;
+  final CVPUncertaintyObjectBuilder? _UNCERTAINTY;
+  final CVPProvenanceObjectBuilder? _PROVENANCE;
+  final int? _COMPUTED_AT;
+  final String? _PRODUCER_ID;
+  final List<int>? _SIGNATURE;
+
+  CVPObjectBuilder({
+    String? COVERAGE_ID,
+    String? coverageId,
+    String? NAME,
+    String? SCENARIO_ID,
+    String? scenarioId,
+    cvpGeometryKind? GEOMETRY_KIND,
+    cvpGeometryKind? geometryKind,
+    rflBudgetTerm? METRIC,
+    String? METRIC_UNITS,
+    String? metricUnits,
+    double? THRESHOLD_VALUE,
+    double? thresholdValue,
+    String? THRESHOLD_UNITS,
+    String? thresholdUnits,
+    rflComparison? THRESHOLD_COMPARISON,
+    rflComparison? thresholdComparison,
+    double? EPOCH,
+    double? INTERVAL_START,
+    double? intervalStart,
+    double? INTERVAL_STOP,
+    double? intervalStop,
+    timingStandard? TIME_SYSTEM,
+    timingStandard? timeSystem,
+    int? GENERATION,
+    String? SUPERSEDES_COVERAGE_ID,
+    String? supersedesCoverageId,
+    List<double>? VERTEX_LONGITUDE_DEG,
+    List<double>? vertexLongitudeDeg,
+    List<double>? VERTEX_LATITUDE_DEG,
+    List<double>? vertexLatitudeDeg,
+    List<double>? VERTEX_ALTITUDE_M,
+    List<double>? vertexAltitudeM,
+    cvpAltitudeReference? ALTITUDE_REFERENCE,
+    cvpAltitudeReference? altitudeReference,
+    double? FIXED_ALTITUDE_M,
+    double? fixedAltitudeM,
+    List<int>? RING_OFFSETS,
+    List<int>? ringOffsets,
+    List<int>? RING_POLYGON_INDEXES,
+    List<int>? ringPolygonIndexes,
+    List<cvpRingRole>? RING_ROLES,
+    List<cvpRingRole>? ringRoles,
+    int? POLYGON_COUNT,
+    int? polygonCount,
+    List<double>? POLYGON_LEVEL_VALUES,
+    List<double>? polygonLevelValues,
+    List<double>? POLYGON_LEVEL_UNCERTAINTIES,
+    List<double>? polygonLevelUncertainties,
+    List<double>? POLYGON_AREA_KM2,
+    List<double>? polygonAreaKm2,
+    List<double>? VERTEX_POSITION_UNCERTAINTY_M,
+    List<double>? vertexPositionUncertaintyM,
+    String? GRID_SCHEME,
+    String? gridScheme,
+    int? GRID_RESOLUTION,
+    int? gridResolution,
+    double? GRID_SPACING_DEG,
+    double? gridSpacingDeg,
+    int? GRID_CELL_COUNT,
+    int? gridCellCount,
+    String? CVG_COVERAGE_ID,
+    String? cvgCoverageId,
+    String? RFL_ID,
+    String? rflId,
+    String? ACI_ID,
+    String? aciId,
+    List<CVPEmitterRefObjectBuilder>? CONTRIBUTING_EMITTERS,
+    List<CVPEmitterRefObjectBuilder>? contributingEmitters,
+    String? RECEIVER_SET_ID,
+    String? receiverSetId,
+    List<CVPReceiverRefObjectBuilder>? RECEIVERS,
+    List<CVPObstacleRefObjectBuilder>? CONTRIBUTING_OBSTACLES,
+    List<CVPObstacleRefObjectBuilder>? contributingObstacles,
+    String? OBSTACLE_SET_ID,
+    String? obstacleSetId,
+    rflConstraint? LIMITING_CONSTRAINT,
+    rflConstraint? limitingConstraint,
+    String? LIMITING_CONSTRAINT_NOTE,
+    String? limitingConstraintNote,
+    CVPUncertaintyObjectBuilder? UNCERTAINTY,
+    CVPProvenanceObjectBuilder? PROVENANCE,
+    int? COMPUTED_AT,
+    int? computedAt,
+    String? PRODUCER_ID,
+    String? producerId,
+    List<int>? SIGNATURE,
+  })
+      : _COVERAGE_ID = coverageId ?? COVERAGE_ID,
+        _NAME = NAME,
+        _SCENARIO_ID = scenarioId ?? SCENARIO_ID,
+        _GEOMETRY_KIND = geometryKind ?? GEOMETRY_KIND,
+        _METRIC = METRIC,
+        _METRIC_UNITS = metricUnits ?? METRIC_UNITS,
+        _THRESHOLD_VALUE = thresholdValue ?? THRESHOLD_VALUE,
+        _THRESHOLD_UNITS = thresholdUnits ?? THRESHOLD_UNITS,
+        _THRESHOLD_COMPARISON = thresholdComparison ?? THRESHOLD_COMPARISON,
+        _EPOCH = EPOCH,
+        _INTERVAL_START = intervalStart ?? INTERVAL_START,
+        _INTERVAL_STOP = intervalStop ?? INTERVAL_STOP,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _GENERATION = GENERATION,
+        _SUPERSEDES_COVERAGE_ID = supersedesCoverageId ?? SUPERSEDES_COVERAGE_ID,
+        _VERTEX_LONGITUDE_DEG = vertexLongitudeDeg ?? VERTEX_LONGITUDE_DEG,
+        _VERTEX_LATITUDE_DEG = vertexLatitudeDeg ?? VERTEX_LATITUDE_DEG,
+        _VERTEX_ALTITUDE_M = vertexAltitudeM ?? VERTEX_ALTITUDE_M,
+        _ALTITUDE_REFERENCE = altitudeReference ?? ALTITUDE_REFERENCE,
+        _FIXED_ALTITUDE_M = fixedAltitudeM ?? FIXED_ALTITUDE_M,
+        _RING_OFFSETS = ringOffsets ?? RING_OFFSETS,
+        _RING_POLYGON_INDEXES = ringPolygonIndexes ?? RING_POLYGON_INDEXES,
+        _RING_ROLES = ringRoles ?? RING_ROLES,
+        _POLYGON_COUNT = polygonCount ?? POLYGON_COUNT,
+        _POLYGON_LEVEL_VALUES = polygonLevelValues ?? POLYGON_LEVEL_VALUES,
+        _POLYGON_LEVEL_UNCERTAINTIES = polygonLevelUncertainties ?? POLYGON_LEVEL_UNCERTAINTIES,
+        _POLYGON_AREA_KM2 = polygonAreaKm2 ?? POLYGON_AREA_KM2,
+        _VERTEX_POSITION_UNCERTAINTY_M = vertexPositionUncertaintyM ?? VERTEX_POSITION_UNCERTAINTY_M,
+        _GRID_SCHEME = gridScheme ?? GRID_SCHEME,
+        _GRID_RESOLUTION = gridResolution ?? GRID_RESOLUTION,
+        _GRID_SPACING_DEG = gridSpacingDeg ?? GRID_SPACING_DEG,
+        _GRID_CELL_COUNT = gridCellCount ?? GRID_CELL_COUNT,
+        _CVG_COVERAGE_ID = cvgCoverageId ?? CVG_COVERAGE_ID,
+        _RFL_ID = rflId ?? RFL_ID,
+        _ACI_ID = aciId ?? ACI_ID,
+        _CONTRIBUTING_EMITTERS = contributingEmitters ?? CONTRIBUTING_EMITTERS,
+        _RECEIVER_SET_ID = receiverSetId ?? RECEIVER_SET_ID,
+        _RECEIVERS = RECEIVERS,
+        _CONTRIBUTING_OBSTACLES = contributingObstacles ?? CONTRIBUTING_OBSTACLES,
+        _OBSTACLE_SET_ID = obstacleSetId ?? OBSTACLE_SET_ID,
+        _LIMITING_CONSTRAINT = limitingConstraint ?? LIMITING_CONSTRAINT,
+        _LIMITING_CONSTRAINT_NOTE = limitingConstraintNote ?? LIMITING_CONSTRAINT_NOTE,
+        _UNCERTAINTY = UNCERTAINTY,
+        _PROVENANCE = PROVENANCE,
+        _COMPUTED_AT = computedAt ?? COMPUTED_AT,
+        _PRODUCER_ID = producerId ?? PRODUCER_ID,
+        _SIGNATURE = SIGNATURE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COVERAGE_IDOffset = _COVERAGE_ID == null ? null
+        : fbBuilder.writeString(_COVERAGE_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? SCENARIO_IDOffset = _SCENARIO_ID == null ? null
+        : fbBuilder.writeString(_SCENARIO_ID!);
+    final int? METRIC_UNITSOffset = _METRIC_UNITS == null ? null
+        : fbBuilder.writeString(_METRIC_UNITS!);
+    final int? THRESHOLD_UNITSOffset = _THRESHOLD_UNITS == null ? null
+        : fbBuilder.writeString(_THRESHOLD_UNITS!);
+    final int? SUPERSEDES_COVERAGE_IDOffset = _SUPERSEDES_COVERAGE_ID == null ? null
+        : fbBuilder.writeString(_SUPERSEDES_COVERAGE_ID!);
+    final int? VERTEX_LONGITUDE_DEGOffset = _VERTEX_LONGITUDE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_VERTEX_LONGITUDE_DEG!);
+    final int? VERTEX_LATITUDE_DEGOffset = _VERTEX_LATITUDE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_VERTEX_LATITUDE_DEG!);
+    final int? VERTEX_ALTITUDE_MOffset = _VERTEX_ALTITUDE_M == null ? null
+        : fbBuilder.writeListFloat64(_VERTEX_ALTITUDE_M!);
+    final int? RING_OFFSETSOffset = _RING_OFFSETS == null ? null
+        : fbBuilder.writeListUint32(_RING_OFFSETS!);
+    final int? RING_POLYGON_INDEXESOffset = _RING_POLYGON_INDEXES == null ? null
+        : fbBuilder.writeListUint32(_RING_POLYGON_INDEXES!);
+    final int? RING_ROLESOffset = _RING_ROLES == null ? null
+        : fbBuilder.writeListInt8(_RING_ROLES!.map((f) => f.value).toList());
+    final int? POLYGON_LEVEL_VALUESOffset = _POLYGON_LEVEL_VALUES == null ? null
+        : fbBuilder.writeListFloat64(_POLYGON_LEVEL_VALUES!);
+    final int? POLYGON_LEVEL_UNCERTAINTIESOffset = _POLYGON_LEVEL_UNCERTAINTIES == null ? null
+        : fbBuilder.writeListFloat64(_POLYGON_LEVEL_UNCERTAINTIES!);
+    final int? POLYGON_AREA_KM2Offset = _POLYGON_AREA_KM2 == null ? null
+        : fbBuilder.writeListFloat64(_POLYGON_AREA_KM2!);
+    final int? VERTEX_POSITION_UNCERTAINTY_MOffset = _VERTEX_POSITION_UNCERTAINTY_M == null ? null
+        : fbBuilder.writeListFloat64(_VERTEX_POSITION_UNCERTAINTY_M!);
+    final int? GRID_SCHEMEOffset = _GRID_SCHEME == null ? null
+        : fbBuilder.writeString(_GRID_SCHEME!);
+    final int? CVG_COVERAGE_IDOffset = _CVG_COVERAGE_ID == null ? null
+        : fbBuilder.writeString(_CVG_COVERAGE_ID!);
+    final int? RFL_IDOffset = _RFL_ID == null ? null
+        : fbBuilder.writeString(_RFL_ID!);
+    final int? ACI_IDOffset = _ACI_ID == null ? null
+        : fbBuilder.writeString(_ACI_ID!);
+    final int? CONTRIBUTING_EMITTERSOffset = _CONTRIBUTING_EMITTERS == null ? null
+        : fbBuilder.writeList(_CONTRIBUTING_EMITTERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? RECEIVER_SET_IDOffset = _RECEIVER_SET_ID == null ? null
+        : fbBuilder.writeString(_RECEIVER_SET_ID!);
+    final int? RECEIVERSOffset = _RECEIVERS == null ? null
+        : fbBuilder.writeList(_RECEIVERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CONTRIBUTING_OBSTACLESOffset = _CONTRIBUTING_OBSTACLES == null ? null
+        : fbBuilder.writeList(_CONTRIBUTING_OBSTACLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? OBSTACLE_SET_IDOffset = _OBSTACLE_SET_ID == null ? null
+        : fbBuilder.writeString(_OBSTACLE_SET_ID!);
+    final int? LIMITING_CONSTRAINT_NOTEOffset = _LIMITING_CONSTRAINT_NOTE == null ? null
+        : fbBuilder.writeString(_LIMITING_CONSTRAINT_NOTE!);
+    final int? UNCERTAINTYOffset = _UNCERTAINTY?.getOrCreateOffset(fbBuilder);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? PRODUCER_IDOffset = _PRODUCER_ID == null ? null
+        : fbBuilder.writeString(_PRODUCER_ID!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    fbBuilder.startTable(47);
+    fbBuilder.addOffset(0, COVERAGE_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, SCENARIO_IDOffset);
+    fbBuilder.addInt8(3, _GEOMETRY_KIND?.value);
+    fbBuilder.addInt8(4, _METRIC?.value);
+    fbBuilder.addOffset(5, METRIC_UNITSOffset);
+    fbBuilder.addFloat64(6, _THRESHOLD_VALUE);
+    fbBuilder.addOffset(7, THRESHOLD_UNITSOffset);
+    fbBuilder.addInt8(8, _THRESHOLD_COMPARISON?.value);
+    fbBuilder.addFloat64(9, _EPOCH);
+    fbBuilder.addFloat64(10, _INTERVAL_START);
+    fbBuilder.addFloat64(11, _INTERVAL_STOP);
+    fbBuilder.addInt8(12, _TIME_SYSTEM?.value);
+    fbBuilder.addUint64(13, _GENERATION);
+    fbBuilder.addOffset(14, SUPERSEDES_COVERAGE_IDOffset);
+    fbBuilder.addOffset(15, VERTEX_LONGITUDE_DEGOffset);
+    fbBuilder.addOffset(16, VERTEX_LATITUDE_DEGOffset);
+    fbBuilder.addOffset(17, VERTEX_ALTITUDE_MOffset);
+    fbBuilder.addInt8(18, _ALTITUDE_REFERENCE?.value);
+    fbBuilder.addFloat64(19, _FIXED_ALTITUDE_M);
+    fbBuilder.addOffset(20, RING_OFFSETSOffset);
+    fbBuilder.addOffset(21, RING_POLYGON_INDEXESOffset);
+    fbBuilder.addOffset(22, RING_ROLESOffset);
+    fbBuilder.addUint32(23, _POLYGON_COUNT);
+    fbBuilder.addOffset(24, POLYGON_LEVEL_VALUESOffset);
+    fbBuilder.addOffset(25, POLYGON_LEVEL_UNCERTAINTIESOffset);
+    fbBuilder.addOffset(26, POLYGON_AREA_KM2Offset);
+    fbBuilder.addOffset(27, VERTEX_POSITION_UNCERTAINTY_MOffset);
+    fbBuilder.addOffset(28, GRID_SCHEMEOffset);
+    fbBuilder.addUint8(29, _GRID_RESOLUTION);
+    fbBuilder.addFloat64(30, _GRID_SPACING_DEG);
+    fbBuilder.addUint64(31, _GRID_CELL_COUNT);
+    fbBuilder.addOffset(32, CVG_COVERAGE_IDOffset);
+    fbBuilder.addOffset(33, RFL_IDOffset);
+    fbBuilder.addOffset(34, ACI_IDOffset);
+    fbBuilder.addOffset(35, CONTRIBUTING_EMITTERSOffset);
+    fbBuilder.addOffset(36, RECEIVER_SET_IDOffset);
+    fbBuilder.addOffset(37, RECEIVERSOffset);
+    fbBuilder.addOffset(38, CONTRIBUTING_OBSTACLESOffset);
+    fbBuilder.addOffset(39, OBSTACLE_SET_IDOffset);
+    fbBuilder.addInt8(40, _LIMITING_CONSTRAINT?.value);
+    fbBuilder.addOffset(41, LIMITING_CONSTRAINT_NOTEOffset);
+    fbBuilder.addOffset(42, UNCERTAINTYOffset);
+    fbBuilder.addOffset(43, PROVENANCEOffset);
+    fbBuilder.addUint64(44, _COMPUTED_AT);
+    fbBuilder.addOffset(45, PRODUCER_IDOffset);
+    fbBuilder.addOffset(46, SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

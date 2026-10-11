@@ -553,6 +553,404 @@ impl<'a> ::flatbuffers::Verifiable for massCategory {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for massCategory {}
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CATALOG_PRODUCT_KIND: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CATALOG_PRODUCT_KIND: i8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CATALOG_PRODUCT_KIND: [catalogProductKind; 4] = [
+    catalogProductKind::Unspecified,
+    catalogProductKind::Sgp4Elements,
+    catalogProductKind::Sgp4XpElements,
+    catalogProductKind::StateCovariance,
+];
+
+/// What a product the catalog selected for an object is.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct catalogProductKind(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl catalogProductKind {
+    /// Not stated
+    pub const Unspecified: Self = Self(0);
+    /// $OMM with MEAN_ELEMENT_THEORY SGP4
+    pub const Sgp4Elements: Self = Self(1);
+    /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+    pub const Sgp4XpElements: Self = Self(2);
+    /// $OCM: a state and its covariance
+    pub const StateCovariance: Self = Self(3);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::Unspecified,
+        Self::Sgp4Elements,
+        Self::Sgp4XpElements,
+        Self::StateCovariance,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::Unspecified => Some("Unspecified"),
+            Self::Sgp4Elements => Some("Sgp4Elements"),
+            Self::Sgp4XpElements => Some("Sgp4XpElements"),
+            Self::StateCovariance => Some("StateCovariance"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for catalogProductKind {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for catalogProductKind {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for catalogProductKind {
+    type Output = catalogProductKind;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for catalogProductKind {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for catalogProductKind {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for catalogProductKind {}
+
+pub enum CATProductOffset {}
+
+/// One product the catalog selected for the object, by content identifier.
+#[derive(Copy, Clone, PartialEq)]
+pub struct CATProduct<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CATProduct<'a> {
+    type Inner = CATProduct<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> CATProduct<'a> {
+    pub const VT_KIND: ::flatbuffers::VOffsetT = 4;
+    pub const VT_RECORD_CID: ::flatbuffers::VOffsetT = 6;
+    pub const VT_SOURCE_ID: ::flatbuffers::VOffsetT = 8;
+    pub const VT_EPOCH: ::flatbuffers::VOffsetT = 10;
+    pub const VT_SELECTION_REASON: ::flatbuffers::VOffsetT = 12;
+    pub const VT_STALE: ::flatbuffers::VOffsetT = 14;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        CATProduct { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args CATProductArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<CATProduct<'bldr>> {
+        let mut builder = CATProductBuilder::new(_fbb);
+        if let Some(x) = args.SELECTION_REASON { builder.add_SELECTION_REASON(x); }
+        if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+        if let Some(x) = args.SOURCE_ID { builder.add_SOURCE_ID(x); }
+        if let Some(x) = args.RECORD_CID { builder.add_RECORD_CID(x); }
+        builder.add_STALE(args.STALE);
+        builder.add_KIND(args.KIND);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> CATProductT {
+        let KIND = self.KIND();
+        let RECORD_CID = self.RECORD_CID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SOURCE_ID = self.SOURCE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let EPOCH = self.EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SELECTION_REASON = self.SELECTION_REASON().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let STALE = self.STALE();
+        CATProductT {
+            KIND,
+            RECORD_CID,
+            SOURCE_ID,
+            EPOCH,
+            SELECTION_REASON,
+            STALE,
+        }
+    }
+
+    /// What the product is.
+    #[inline]
+    pub fn KIND(&self) -> catalogProductKind {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<catalogProductKind>(CATProduct::VT_KIND, Some(catalogProductKind::Unspecified)).unwrap()}
+    }
+
+    /// CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as
+    /// published, a size-prefixed FlatBuffer.
+    #[inline]
+    pub fn RECORD_CID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CATProduct::VT_RECORD_CID, None)}
+    }
+
+    /// The product's source: its PROVENANCE SOURCE_ID.
+    #[inline]
+    pub fn SOURCE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CATProduct::VT_SOURCE_ID, None)}
+    }
+
+    /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
+    /// epoch.
+    #[inline]
+    pub fn EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CATProduct::VT_EPOCH, None)}
+    }
+
+    /// Why the catalog selected this product over the other candidates of its
+    /// KIND, as the selecting integrator states it (for example, the lowest
+    /// measured median error for the object's orbit regime and prediction
+    /// horizon).
+    #[inline]
+    pub fn SELECTION_REASON(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CATProduct::VT_SELECTION_REASON, None)}
+    }
+
+    /// True when a maneuver after EPOCH retired the product and no product of its
+    /// KIND from after the maneuver has been selected yet.
+    #[inline]
+    pub fn STALE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(CATProduct::VT_STALE, Some(false)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for CATProduct<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<catalogProductKind>("KIND", Self::VT_KIND, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RECORD_CID", Self::VT_RECORD_CID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_ID", Self::VT_SOURCE_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SELECTION_REASON", Self::VT_SELECTION_REASON, false)?
+            .visit_field::<bool>("STALE", Self::VT_STALE, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct CATProductArgs<'a> {
+    pub KIND: catalogProductKind,
+    pub RECORD_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SELECTION_REASON: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STALE: bool,
+}
+
+impl<'a> Default for CATProductArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        CATProductArgs {
+            KIND: catalogProductKind::Unspecified,
+            RECORD_CID: None,
+            SOURCE_ID: None,
+            EPOCH: None,
+            SELECTION_REASON: None,
+            STALE: false,
+        }
+    }
+}
+
+pub struct CATProductBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CATProductBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_KIND(&mut self, KIND: catalogProductKind) {
+        self.fbb_.push_slot::<catalogProductKind>(CATProduct::VT_KIND, KIND, catalogProductKind::Unspecified);
+    }
+
+    #[inline]
+    pub fn add_RECORD_CID(&mut self, RECORD_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CATProduct::VT_RECORD_CID, RECORD_CID);
+    }
+
+    #[inline]
+    pub fn add_SOURCE_ID(&mut self, SOURCE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CATProduct::VT_SOURCE_ID, SOURCE_ID);
+    }
+
+    #[inline]
+    pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CATProduct::VT_EPOCH, EPOCH);
+    }
+
+    #[inline]
+    pub fn add_SELECTION_REASON(&mut self, SELECTION_REASON: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CATProduct::VT_SELECTION_REASON, SELECTION_REASON);
+    }
+
+    #[inline]
+    pub fn add_STALE(&mut self, STALE: bool) {
+        self.fbb_.push_slot::<bool>(CATProduct::VT_STALE, STALE, false);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CATProductBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        CATProductBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<CATProduct<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for CATProduct<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("CATProduct");
+        ds.field("KIND", &self.KIND());
+        ds.field("RECORD_CID", &self.RECORD_CID());
+        ds.field("SOURCE_ID", &self.SOURCE_ID());
+        ds.field("EPOCH", &self.EPOCH());
+        ds.field("SELECTION_REASON", &self.SELECTION_REASON());
+        ds.field("STALE", &self.STALE());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CATProductT {
+    pub KIND: catalogProductKind,
+    pub RECORD_CID: Option<alloc::string::String>,
+    pub SOURCE_ID: Option<alloc::string::String>,
+    pub EPOCH: Option<alloc::string::String>,
+    pub SELECTION_REASON: Option<alloc::string::String>,
+    pub STALE: bool,
+}
+
+impl Default for CATProductT {
+    fn default() -> Self {
+        Self {
+            KIND: catalogProductKind::Unspecified,
+            RECORD_CID: None,
+            SOURCE_ID: None,
+            EPOCH: None,
+            SELECTION_REASON: None,
+            STALE: false,
+        }
+    }
+}
+
+impl CATProductT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<CATProduct<'b>> {
+        let KIND = self.KIND;
+        let RECORD_CID = self.RECORD_CID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SOURCE_ID = self.SOURCE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let EPOCH = self.EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SELECTION_REASON = self.SELECTION_REASON.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let STALE = self.STALE;
+        CATProduct::create(_fbb, &CATProductArgs{
+            KIND,
+            RECORD_CID,
+            SOURCE_ID,
+            EPOCH,
+            SELECTION_REASON,
+            STALE,
+        })
+    }
+}
+
 pub enum CATOffset {}
 
 /// Catalog Entity Message
@@ -597,6 +995,8 @@ impl<'a> CAT<'a> {
     pub const VT_BUS_ID: ::flatbuffers::VOffsetT = 50;
     pub const VT_CATALOG_URI: ::flatbuffers::VOffsetT = 52;
     pub const VT_CATALOG_OBJECT_ID: ::flatbuffers::VOffsetT = 54;
+    pub const VT_PRODUCTS: ::flatbuffers::VOffsetT = 56;
+    pub const VT_PRODUCTS_AS_OF: ::flatbuffers::VOffsetT = 58;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -616,6 +1016,8 @@ impl<'a> CAT<'a> {
         builder.add_APOGEE(args.APOGEE);
         builder.add_INCLINATION(args.INCLINATION);
         builder.add_PERIOD(args.PERIOD);
+        if let Some(x) = args.PRODUCTS_AS_OF { builder.add_PRODUCTS_AS_OF(x); }
+        if let Some(x) = args.PRODUCTS { builder.add_PRODUCTS(x); }
         if let Some(x) = args.CATALOG_OBJECT_ID { builder.add_CATALOG_OBJECT_ID(x); }
         if let Some(x) = args.CATALOG_URI { builder.add_CATALOG_URI(x); }
         if let Some(x) = args.BUS_ID { builder.add_BUS_ID(x); }
@@ -687,6 +1089,12 @@ impl<'a> CAT<'a> {
         let CATALOG_OBJECT_ID = self.CATALOG_OBJECT_ID().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let PRODUCTS = self.PRODUCTS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let PRODUCTS_AS_OF = self.PRODUCTS_AS_OF().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         CATT {
             OBJECT_NAME,
             OBJECT_ID,
@@ -714,6 +1122,8 @@ impl<'a> CAT<'a> {
             BUS_ID,
             CATALOG_URI,
             CATALOG_OBJECT_ID,
+            PRODUCTS,
+            PRODUCTS_AS_OF,
         }
     }
 
@@ -963,6 +1373,27 @@ impl<'a> CAT<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_CATALOG_OBJECT_ID, None)}
     }
+
+    /// The products an integrating catalog selected for the object as of
+    /// PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+    /// the same source and epoch where there is one. The object's maneuvers are
+    /// its $MNV stream, not references here.
+    #[inline]
+    pub fn PRODUCTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATProduct<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATProduct>>>>(CAT::VT_PRODUCTS, None)}
+    }
+
+    /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
+    #[inline]
+    pub fn PRODUCTS_AS_OF(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_PRODUCTS_AS_OF, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CAT<'_> {
@@ -997,6 +1428,8 @@ impl ::flatbuffers::Verifiable for CAT<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BUS_ID", Self::VT_BUS_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATALOG_URI", Self::VT_CATALOG_URI, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATALOG_OBJECT_ID", Self::VT_CATALOG_OBJECT_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CATProduct>>>>("PRODUCTS", Self::VT_PRODUCTS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCTS_AS_OF", Self::VT_PRODUCTS_AS_OF, false)?
             .finish();
         Ok(())
     }
@@ -1029,6 +1462,8 @@ pub struct CATArgs<'a> {
     pub BUS_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CATALOG_URI: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CATALOG_OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PRODUCTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATProduct<'a>>>>>,
+    pub PRODUCTS_AS_OF: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for CATArgs<'a> {
@@ -1061,6 +1496,8 @@ impl<'a> Default for CATArgs<'a> {
             BUS_ID: None,
             CATALOG_URI: None,
             CATALOG_OBJECT_ID: None,
+            PRODUCTS: None,
+            PRODUCTS_AS_OF: None,
         }
     }
 }
@@ -1202,6 +1639,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CATBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PRODUCTS(&mut self, PRODUCTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CATProduct<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_PRODUCTS, PRODUCTS);
+    }
+
+    #[inline]
+    pub fn add_PRODUCTS_AS_OF(&mut self, PRODUCTS_AS_OF: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_PRODUCTS_AS_OF, PRODUCTS_AS_OF);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CATBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CATBuilder {
@@ -1246,6 +1693,8 @@ impl ::core::fmt::Debug for CAT<'_> {
         ds.field("BUS_ID", &self.BUS_ID());
         ds.field("CATALOG_URI", &self.CATALOG_URI());
         ds.field("CATALOG_OBJECT_ID", &self.CATALOG_OBJECT_ID());
+        ds.field("PRODUCTS", &self.PRODUCTS());
+        ds.field("PRODUCTS_AS_OF", &self.PRODUCTS_AS_OF());
         ds.finish()
     }
 }
@@ -1279,6 +1728,8 @@ pub struct CATT {
     pub BUS_ID: Option<alloc::string::String>,
     pub CATALOG_URI: Option<alloc::string::String>,
     pub CATALOG_OBJECT_ID: Option<alloc::string::String>,
+    pub PRODUCTS: Option<alloc::vec::Vec<CATProductT>>,
+    pub PRODUCTS_AS_OF: Option<alloc::string::String>,
 }
 
 impl Default for CATT {
@@ -1310,6 +1761,8 @@ impl Default for CATT {
             BUS_ID: None,
             CATALOG_URI: None,
             CATALOG_OBJECT_ID: None,
+            PRODUCTS: None,
+            PRODUCTS_AS_OF: None,
         }
     }
 }
@@ -1367,6 +1820,12 @@ impl CATT {
         let CATALOG_OBJECT_ID = self.CATALOG_OBJECT_ID.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let PRODUCTS = self.PRODUCTS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let PRODUCTS_AS_OF = self.PRODUCTS_AS_OF.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         CAT::create(_fbb, &CATArgs{
             OBJECT_NAME,
             OBJECT_ID,
@@ -1394,6 +1853,8 @@ impl CATT {
             BUS_ID,
             CATALOG_URI,
             CATALOG_OBJECT_ID,
+            PRODUCTS,
+            PRODUCTS_AS_OF,
         })
     }
 }

@@ -42,7 +42,7 @@ public struct CAT : IFlatbufferObject
   /// Operational Status Code
   public operationalState OPS_STATUS_CODE { get { int o = __p.__offset(12); return o != 0 ? (operationalState)__p.bb.GetSbyte(o + __p.bb_pos) : operationalState.UNKNOWN; } }
   /// Ownership, typically country or company
-  public legacyCountryCode OWNER { get { int o = __p.__offset(14); return o != 0 ? (legacyCountryCode)__p.bb.GetSbyte(o + __p.bb_pos) : legacyCountryCode.AB; } }
+  public legacyCountryCode OWNER { get { int o = __p.__offset(14); return o != 0 ? (legacyCountryCode)__p.bb.Get(o + __p.bb_pos) : legacyCountryCode.AB; } }
   /// Launch Date [year-month-day] (ISO 8601)
   public string LAUNCH_DATE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -145,6 +145,20 @@ public struct CAT : IFlatbufferObject
   public ArraySegment<byte>? GetCATALOG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(54); }
 #endif
   public byte[] GetCATALOG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(54); }
+  /// The products an integrating catalog selected for the object as of
+  /// PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+  /// the same source and epoch where there is one. The object's maneuvers are
+  /// its $MNV stream, not references here.
+  public CATProduct? PRODUCTS(int j) { int o = __p.__offset(56); return o != 0 ? (CATProduct?)(new CATProduct()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PRODUCTSLength { get { int o = __p.__offset(56); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
+  public string PRODUCTS_AS_OF { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPRODUCTS_AS_OFBytes() { return __p.__vector_as_span<byte>(58, 1); }
+#else
+  public ArraySegment<byte>? GetPRODUCTS_AS_OFBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public byte[] GetPRODUCTS_AS_OFArray() { return __p.__vector_as_array<byte>(58); }
 
   public static Offset<CAT> CreateCAT(FlatBufferBuilder builder,
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
@@ -172,8 +186,10 @@ public struct CAT : IFlatbufferObject
       VectorOffset PAYLOADSOffset = default(VectorOffset),
       StringOffset BUS_IDOffset = default(StringOffset),
       StringOffset CATALOG_URIOffset = default(StringOffset),
-      StringOffset CATALOG_OBJECT_IDOffset = default(StringOffset)) {
-    builder.StartTable(26);
+      StringOffset CATALOG_OBJECT_IDOffset = default(StringOffset),
+      VectorOffset PRODUCTSOffset = default(VectorOffset),
+      StringOffset PRODUCTS_AS_OFOffset = default(StringOffset)) {
+    builder.StartTable(28);
     CAT.AddMASS(builder, MASS);
     CAT.AddSIZE(builder, SIZE);
     CAT.AddRCS(builder, RCS);
@@ -181,6 +197,8 @@ public struct CAT : IFlatbufferObject
     CAT.AddAPOGEE(builder, APOGEE);
     CAT.AddINCLINATION(builder, INCLINATION);
     CAT.AddPERIOD(builder, PERIOD);
+    CAT.AddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OFOffset);
+    CAT.AddPRODUCTS(builder, PRODUCTSOffset);
     CAT.AddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_IDOffset);
     CAT.AddCATALOG_URI(builder, CATALOG_URIOffset);
     CAT.AddBUS_ID(builder, BUS_IDOffset);
@@ -203,13 +221,13 @@ public struct CAT : IFlatbufferObject
     return CAT.EndCAT(builder);
   }
 
-  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(26); }
+  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(28); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(0, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
   public static void AddOBJECT_TYPE(FlatBufferBuilder builder, spaceObjectClass OBJECT_TYPE) { builder.AddSbyte(3, (sbyte)OBJECT_TYPE, 3); }
   public static void AddOPS_STATUS_CODE(FlatBufferBuilder builder, operationalState OPS_STATUS_CODE) { builder.AddSbyte(4, (sbyte)OPS_STATUS_CODE, 7); }
-  public static void AddOWNER(FlatBufferBuilder builder, legacyCountryCode OWNER) { builder.AddSbyte(5, (sbyte)OWNER, 0); }
+  public static void AddOWNER(FlatBufferBuilder builder, legacyCountryCode OWNER) { builder.AddByte(5, (byte)OWNER, 0); }
   public static void AddLAUNCH_DATE(FlatBufferBuilder builder, StringOffset LAUNCH_DATEOffset) { builder.AddOffset(6, LAUNCH_DATEOffset.Value, 0); }
   public static void AddLAUNCH_SITE(FlatBufferBuilder builder, StringOffset LAUNCH_SITEOffset) { builder.AddOffset(7, LAUNCH_SITEOffset.Value, 0); }
   public static void AddDECAY_DATE(FlatBufferBuilder builder, StringOffset DECAY_DATEOffset) { builder.AddOffset(8, DECAY_DATEOffset.Value, 0); }
@@ -235,6 +253,13 @@ public struct CAT : IFlatbufferObject
   public static void AddBUS_ID(FlatBufferBuilder builder, StringOffset BUS_IDOffset) { builder.AddOffset(23, BUS_IDOffset.Value, 0); }
   public static void AddCATALOG_URI(FlatBufferBuilder builder, StringOffset CATALOG_URIOffset) { builder.AddOffset(24, CATALOG_URIOffset.Value, 0); }
   public static void AddCATALOG_OBJECT_ID(FlatBufferBuilder builder, StringOffset CATALOG_OBJECT_IDOffset) { builder.AddOffset(25, CATALOG_OBJECT_IDOffset.Value, 0); }
+  public static void AddPRODUCTS(FlatBufferBuilder builder, VectorOffset PRODUCTSOffset) { builder.AddOffset(26, PRODUCTSOffset.Value, 0); }
+  public static VectorOffset CreatePRODUCTSVector(FlatBufferBuilder builder, Offset<CATProduct>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePRODUCTSVectorBlock(FlatBufferBuilder builder, Offset<CATProduct>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePRODUCTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CATProduct>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePRODUCTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CATProduct>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPRODUCTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPRODUCTS_AS_OF(FlatBufferBuilder builder, StringOffset PRODUCTS_AS_OFOffset) { builder.AddOffset(27, PRODUCTS_AS_OFOffset.Value, 0); }
   public static Offset<CAT> EndCAT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CAT>(o);
@@ -274,6 +299,9 @@ public struct CAT : IFlatbufferObject
     _o.BUS_ID = this.BUS_ID;
     _o.CATALOG_URI = this.CATALOG_URI;
     _o.CATALOG_OBJECT_ID = this.CATALOG_OBJECT_ID;
+    _o.PRODUCTS = new List<CATProductT>();
+    for (var _j = 0; _j < this.PRODUCTSLength; ++_j) {_o.PRODUCTS.Add(this.PRODUCTS(_j).HasValue ? this.PRODUCTS(_j).Value.UnPack() : null);}
+    _o.PRODUCTS_AS_OF = this.PRODUCTS_AS_OF;
   }
   public static Offset<CAT> Pack(FlatBufferBuilder builder, CATT _o) {
     if (_o == null) return default(Offset<CAT>);
@@ -293,6 +321,13 @@ public struct CAT : IFlatbufferObject
     var _BUS_ID = _o.BUS_ID == null ? default(StringOffset) : builder.CreateString(_o.BUS_ID);
     var _CATALOG_URI = _o.CATALOG_URI == null ? default(StringOffset) : builder.CreateString(_o.CATALOG_URI);
     var _CATALOG_OBJECT_ID = _o.CATALOG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.CATALOG_OBJECT_ID);
+    var _PRODUCTS = default(VectorOffset);
+    if (_o.PRODUCTS != null) {
+      var __PRODUCTS = new Offset<CATProduct>[_o.PRODUCTS.Count];
+      for (var _j = 0; _j < __PRODUCTS.Length; ++_j) { __PRODUCTS[_j] = CATProduct.Pack(builder, _o.PRODUCTS[_j]); }
+      _PRODUCTS = CreatePRODUCTSVector(builder, __PRODUCTS);
+    }
+    var _PRODUCTS_AS_OF = _o.PRODUCTS_AS_OF == null ? default(StringOffset) : builder.CreateString(_o.PRODUCTS_AS_OF);
     return CreateCAT(
       builder,
       _OBJECT_NAME,
@@ -320,7 +355,9 @@ public struct CAT : IFlatbufferObject
       _PAYLOADS,
       _BUS_ID,
       _CATALOG_URI,
-      _CATALOG_OBJECT_ID);
+      _CATALOG_OBJECT_ID,
+      _PRODUCTS,
+      _PRODUCTS_AS_OF);
   }
 }
 
@@ -352,6 +389,8 @@ public class CATT
   public string BUS_ID { get; set; }
   public string CATALOG_URI { get; set; }
   public string CATALOG_OBJECT_ID { get; set; }
+  public List<CATProductT> PRODUCTS { get; set; }
+  public string PRODUCTS_AS_OF { get; set; }
 
   public CATT() {
     this.OBJECT_NAME = null;
@@ -380,6 +419,8 @@ public class CATT
     this.BUS_ID = null;
     this.CATALOG_URI = null;
     this.CATALOG_OBJECT_ID = null;
+    this.PRODUCTS = null;
+    this.PRODUCTS_AS_OF = null;
   }
   public static CATT DeserializeFromBinary(byte[] fbBuffer) {
     return CAT.GetRootAsCAT(new ByteBuffer(fbBuffer)).UnPack();
@@ -423,6 +464,8 @@ static public class CATVerify
       && verifier.VerifyString(tablePos, 50 /*BUS_ID*/, false)
       && verifier.VerifyString(tablePos, 52 /*CATALOG_URI*/, false)
       && verifier.VerifyString(tablePos, 54 /*CATALOG_OBJECT_ID*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 56 /*PRODUCTS*/, CATProductVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 58 /*PRODUCTS_AS_OF*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

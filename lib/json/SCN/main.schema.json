@@ -85,6 +85,22 @@
       "type" : "string",
       "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
     },
+    "covarianceCalibration" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Uncalibrated", "Calibrated"]
+    },
+    "covarianceRule" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Operator", "ScaledFit", "SourceModel", "PooledModel"]
+    },
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
     "ephemerisFormat" : {
       "type" : "string",
       "enum": ["SGP", "SGP4", "SDP4", "SGP8", "SDP8"]
@@ -1524,6 +1540,108 @@
       },
       "additionalProperties" : false
     },
+    "CVR" : {
+      "type" : "object",
+      "description" : "Covariance Realism",
+      "properties" : {
+        "RULE" : {
+                "$ref" : "#/definitions/covarianceRule",
+                "description" : "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+              },
+        "MODEL_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+              },
+        "REGIME" : {
+                "type" : "string",
+                "description" : "Orbit regime of the cell, as the model names it."
+              },
+        "AGE_DAYS" : {
+                "type" : "number",
+                "description" : "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+              },
+        "HORIZON_DAYS" : {
+                "type" : "number",
+                "description" : "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+              },
+        "MEASURED_LINEAGE" : {
+                "type" : "string",
+                "description" : "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+              },
+        "TEST_WINDOW" : {
+                "type" : "string",
+                "description" : "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+              },
+        "MEAN_D2_OVER_3" : {
+                "type" : "number",
+                "description" : "Mean of d2/3 over the held-out samples. NaN when not measured."
+              },
+        "COVERAGE_95" : {
+                "type" : "number",
+                "description" : "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+              },
+        "SAMPLES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of held-out samples the test used."
+              },
+        "OBJECTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of distinct objects the samples came from."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+              },
+        "CALIBRATION" : {
+                "$ref" : "#/definitions/covarianceCalibration",
+                "description" : "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+              },
+        "EVIDENCE" : {
+                "type" : "string",
+                "description" : "Identifier of the report or record that holds the test."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
     "OMM" : {
       "type" : "object",
       "description" : "Orbit Mean Elements Message",
@@ -1699,6 +1817,14 @@
         "USER_DEFINED_PARAMETERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/OMMUserDefinedParameter"},
                 "description" : "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where the element set comes from and the terms it travels under."
+              },
+        "COV_REALISM" : {
+                "$ref" : "#/definitions/CVR",
+                "description" : "Realism of COVARIANCE."
               }
       },
       "additionalProperties" : false
@@ -1845,22 +1971,22 @@
               },
         "SIGMA_U" : {
                 "type" : "number",
-                "description" : "Position uncertainty U (km, 1-sigma)"
+                "description" : "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)"
               },
         "SIGMA_V" : {
                 "type" : "number",
-                "description" : "Position uncertainty V (km, 1-sigma)"
+                "description" : "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)"
               },
         "SIGMA_W" : {
                 "type" : "number",
-                "description" : "Position uncertainty W (km, 1-sigma)"
+                "description" : "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)"
               }
       },
       "additionalProperties" : false
     },
     "MNV" : {
       "type" : "object",
-      "description" : "Spacecraft Maneuver",
+      "description" : "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
       "properties" : {
         "ID" : {
                 "type" : "string",
@@ -1920,7 +2046,7 @@
               },
         "EVENT_ID" : {
                 "type" : "string",
-                "description" : "Maneuver event identifier"
+                "description" : "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines."
               },
         "UCT" : {
                 "type" : "boolean",
@@ -1936,15 +2062,15 @@
               },
         "DELTA_VEL_U" : {
                 "type" : "number",
-                "description" : "Delta-V along-track/U component (km/s)"
+                "description" : "Delta-V along U, radial (km/s)"
               },
         "DELTA_VEL_V" : {
                 "type" : "number",
-                "description" : "Delta-V cross-track/V component (km/s)"
+                "description" : "Delta-V along V, in-track (km/s)"
               },
         "DELTA_VEL_W" : {
                 "type" : "number",
-                "description" : "Delta-V radial/W component (km/s)"
+                "description" : "Delta-V along W, cross-track (km/s)"
               },
         "DELTA_POS" : {
                 "type" : "number",
@@ -1952,15 +2078,15 @@
               },
         "DELTA_POS_U" : {
                 "type" : "number",
-                "description" : "Delta position U component (km)"
+                "description" : "Delta position along U, radial (km)"
               },
         "DELTA_POS_V" : {
                 "type" : "number",
-                "description" : "Delta position V component (km)"
+                "description" : "Delta position along V, in-track (km)"
               },
         "DELTA_POS_W" : {
                 "type" : "number",
-                "description" : "Delta position W component (km)"
+                "description" : "Delta position along W, cross-track (km)"
               },
         "DELTA_MASS" : {
                 "type" : "number",
@@ -2008,7 +2134,7 @@
               },
         "MNVR_ACCELS" : {
                 "type" : "array", "items" : {"type" : "number"},
-                "description" : "Acceleration values (km/s^2, 3 components per point)"
+                "description" : "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry"
               },
         "MNVR_ACCEL_UNCS" : {
                 "type" : "array", "items" : {"type" : "number"},
@@ -2032,7 +2158,7 @@
               },
         "SOURCED_DATA" : {
                 "type" : "array", "items" : {"type" : "string"},
-                "description" : "Sourced data references"
+                "description" : "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines"
               },
         "SOURCED_DATA_TYPES" : {
                 "type" : "string",
@@ -2041,6 +2167,10 @@
         "TRANSACTION_ID" : {
                 "type" : "string",
                 "description" : "Transaction identifier"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where the maneuver's data comes from and the terms it travels under."
               }
       },
       "additionalProperties" : false

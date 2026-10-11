@@ -1,5 +1,5 @@
-// Hash: 5488387f24cfcb1bce091f9e3b111780bad649ca5b4dd08093511281f2c52fb7
-// Version: 1.44.79
+// Hash: d78ec00ba1a6e56d5501acda4e2933bcdd7a5631b9bcb60d5e7fdcd90a6c351a
+// Version: 1.44.80
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -51,6 +51,7 @@ include "../CSO/main.fbs";
 include "../CTR/main.fbs";
 include "../CVG/main.fbs";
 include "../CVP/main.fbs";
+include "../CVR/main.fbs";
 include "../CZM/main.fbs";
 include "../DFH/main.fbs";
 include "../DMG/main.fbs";
@@ -172,6 +173,7 @@ include "../PRR/main.fbs";
 include "../PRW/main.fbs";
 include "../PSS/main.fbs";
 include "../PUR/main.fbs";
+include "../PVN/main.fbs";
 include "../QEM/main.fbs";
 include "../QRP/main.fbs";
 include "../RAF/main.fbs";
@@ -348,7 +350,9 @@ union RecordType {
 /// Guard:    node scripts/checkRecordTypeOrdinals.mjs
 enum RecordTypeExtended : ushort {
   NONE = 0,
-  ABA = 256
+  ABA = 256,
+  CVR = 257,
+  PVN = 258
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

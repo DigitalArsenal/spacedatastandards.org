@@ -8,525 +8,1809 @@ import Common
 
 import FlatBuffers
 
-public enum timingStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Whether the link existed at a sample epoch, and how far the evaluation got.
+///
+///  `NOT_EVALUATED` holds ordinal 0 so an unset field can never decode as a
+///  claim that the link was up or down.
+public enum rflAccessState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Greenwich Mean Sidereal Time
-  case gmst = 0
-  ///  Global Positioning System
-  case gps = 1
-  ///  Mission Elapsed Time
-  case met = 2
-  ///  Mission Relative Time
-  case mrt = 3
-  ///  Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  case sclk = 4
-  ///  International Atomic Time
-  case tai = 5
-  ///  Barycentric Coordinate Time
-  case tcb = 6
-  ///  Barycentric Dynamical Time
-  case tdb = 7
-  ///  Geocentric Coordinate Time
-  case tcg = 8
-  ///  Terrestrial Time
-  case tt = 9
-  ///  Universal Time
-  case ut1 = 10
-  ///  Coordinated Universal Time
-  case utc = 11
-  ///  GLONASS Time
-  case glonass = 12
-  ///  Galileo System Time
-  case gst = 13
-  ///  Quasi-Zenith Satellite System Time
-  case qzss = 14
-  ///  BeiDou Time
-  case bdt = 15
-  ///  Navigation with Indian Constellation Time
-  case navic = 16
-  ///  Satellite-Based Augmentation System Time
-  case sbas = 17
-  ///  Atomic time scale of the reference atomic-time network, offset from
-  ///  International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s
-  ///  exactly. Appended last; never reorder or reuse existing values.
-  case a1 = 18
+  ///  The sample epoch was not evaluated for this link.
+  case notEvaluated = 0
+  ///  Geometry denies the link (below the elevation mask, occulted, out of
+  ///  range, outside the beam).
+  case noAccess = 1
+  ///  Geometry permits the link; the budget was not evaluated at this sample.
+  case geometricAccess = 2
+  ///  Geometry permits the link, the budget was evaluated, and the stated
+  ///  threshold is NOT met.
+  case belowThreshold = 3
+  ///  Geometry permits the link and the budget meets the stated threshold.
+  case thresholdSatisfied = 4
+  ///  The link had access and lost it to the stated LIMITING_CONSTRAINT (rain
+  ///  fade, sun outage, blockage) rather than to geometry.
+  case outage = 5
+  ///  The emitter was deliberately not radiating (scheduled off, regulatory
+  ///  keep-out, power-safe mode). Distinct from NO_ACCESS: the geometry may be
+  ///  perfectly good.
+  case suppressed = 6
 
-  public static var max: timingStandard { return .a1 }
-  public static var min: timingStandard { return .gmst }
+  public static var max: rflAccessState { return .suppressed }
+  public static var min: rflAccessState { return .notEvaluated }
 }
 
 
-public enum timEpochRepresentation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  A named term of the link budget. Used to declare which quantity a
+///  threshold, a contour or a best-server selection is stated against, so a
+///  consumer never has to infer it from a units string.
+///
+///  ORDINALS ARE WIRE VALUES. New terms are APPENDED ONLY.
+public enum rflBudgetTerm: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Julian Date day count.
-  case julianDate = 0
-  ///  Modified Julian Date day count (JD - 2400000.5).
-  case modifiedJulianDate = 1
-  ///  Seconds since 1970-01-01T00:00:00 UTC.
-  case unixSeconds = 2
-  ///  ISO 8601 timestamp text.
-  case iso8601 = 3
-  ///  Seconds since 1980-01-06T00:00:00 GPS.
-  case gpsSeconds = 4
-  ///  GNSS week number plus seconds within the week.
-  case gnssWeekSeconds = 5
-  ///  CCSDS binary time-code field with preamble metadata.
-  case ccsdsTimeCode = 6
-  ///  Seconds from an application-defined mission epoch.
-  case missionElapsedSeconds = 7
+  case unspecified = 0
+  case range = 1
+  case rangeRate = 2
+  case azimuth = 3
+  case elevation = 4
+  case dopplerShift = 5
+  case eirp = 6
+  case transmitAntennaGain = 7
+  case receiveAntennaGain = 8
+  case freeSpacePathLoss = 9
+  case gaseousAbsorptionLoss = 10
+  case rainLoss = 11
+  case cloudFogLoss = 12
+  case scintillationLoss = 13
+  case terrainDiffractionLoss = 14
+  ///  Loss caused by an obstacle with stated `$RFS` material properties.
+  case obstructionLoss = 15
+  case polarizationLoss = 16
+  case pointingLoss = 17
+  case implementationLoss = 18
+  case receivedPower = 19
+  case systemNoiseTemperature = 20
+  case gainToNoiseTemperature = 21
+  case carrierToNoiseDensity = 22
+  case carrierToNoise = 23
+  case energyPerBitToNoiseDensity = 24
+  case bitErrorRate = 25
+  case linkMargin = 26
+  case channelCapacity = 27
+  case interferencePower = 28
+  case carrierToNoisePlusInterference = 29
+  case signalToInterferencePlusNoise = 30
+  ///  Energy per transmitted symbol divided by noise spectral density.
+  case symbolEnergyToNoiseDensity = 31
+  ///  Error probability for a decoded transport block or frame.
+  case blockErrorRate = 32
+  ///  Delivered information bits per second per hertz.
+  case spectralEfficiency = 33
+  ///  Data rate delivered by the selected modulation and coding entry.
+  case achievedDataRate = 34
+  ///  Margin above the threshold of the selected adaptive entry.
+  case acmMargin = 35
 
-  public static var max: timEpochRepresentation { return .missionElapsedSeconds }
-  public static var min: timEpochRepresentation { return .julianDate }
+  public static var max: rflBudgetTerm { return .acmMargin }
+  public static var min: rflBudgetTerm { return .unspecified }
 }
 
 
-public enum timCcsdsTimeCodeKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  The single condition that bound the link at a sample epoch — the answer to
+///  "why is this link not better than it is". Shared by `$ACI` intervals and
+///  `$CVP` contours so one vocabulary explains a sample, a pass and a footprint.
+///
+///  ORDINALS ARE WIRE VALUES. New constraints are APPENDED ONLY.
+public enum rflConstraint: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  No CCSDS time code selected.
-  case none_ = 0
-  ///  CCSDS Unsegmented Time Code (CUC).
-  case unsegmented = 1
-  ///  CCSDS Day Segmented Time Code (CDS).
-  case daySegmented = 2
-  ///  CCSDS Calendar Segmented Time Code (CCS).
-  case calendarSegmented = 3
+  case unspecified = 0
+  case elevationMask = 1
+  case terrainBlockage = 2
+  ///  A 3D obstacle intersected the path. The material that did it is named in
+  ///  RFLObstruction.MATERIAL_ID (`$RFS`).
+  case obstacleBlockage = 3
+  ///  The path passed THROUGH an obstacle and paid its penetration loss.
+  case materialPenetration = 4
+  case rangeLimit = 5
+  case beamEdge = 6
+  case slewRate = 7
+  case antennaKeyhole = 8
+  case transmitPowerLimit = 9
+  case regulatoryPowerLimit = 10
+  case gaseousAbsorption = 11
+  case rainAttenuation = 12
+  case cloudFogAttenuation = 13
+  case scintillation = 14
+  case polarizationMismatch = 15
+  case pointingError = 16
+  case receiverSensitivity = 17
+  case noiseTemperature = 18
+  case interference = 19
+  case sunOutage = 20
+  case bandwidthLimit = 21
+  case modulationThreshold = 22
+  case codingThreshold = 23
+  case scheduleConflict = 24
+  case channelCapacityLimit = 25
+  case emitterUnavailable = 26
+  ///  The producer states a binding condition this enum cannot express. The
+  ///  verbatim description MUST be preserved in LIMITING_CONSTRAINT_NOTE.
+  case other = 27
 
-  public static var max: timCcsdsTimeCodeKind { return .calendarSegmented }
-  public static var min: timCcsdsTimeCodeKind { return .none_ }
+  public static var max: rflConstraint { return .other }
+  public static var min: rflConstraint { return .unspecified }
 }
 
 
-public enum timConversionStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  How a stated threshold is compared against the metric it is stated for.
+///
+///  `UNSPECIFIED` holds ordinal 0: a threshold whose sense is unstated is
+///  unusable, and MUST NOT be silently read as "greater than or equal".
+public enum rflComparison: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Conversion completed.
-  case ok = 0
-  ///  Input epoch or requested representation is invalid.
-  case invalidInput = 1
-  ///  Requested source or target time system is not supported.
-  case unsupportedTimeSystem = 2
-  ///  Conversion requires leap-second data that was not available.
-  case leapSecondDataRequired = 3
-  ///  Conversion requires Earth-orientation data that was not available.
-  case eopDataRequired = 4
-  ///  Requested instant is outside the supported conversion range.
-  case outOfRange = 5
+  case unspecified = 0
+  case greaterThanOrEqual = 1
+  case greaterThan = 2
+  case lessThanOrEqual = 3
+  case lessThan = 4
 
-  public static var max: timConversionStatus { return .outOfRange }
-  public static var min: timConversionStatus { return .ok }
+  public static var max: rflComparison { return .lessThan }
+  public static var min: rflComparison { return .unspecified }
 }
 
 
-///  CCSDS time-code payload and preamble metadata.
-public struct TIMCcsdsTimeCode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  What kind of thing an endpoint is, which selects the standard it joins to.
+public enum rflEndpointKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  On-orbit object; joins `$CAT` by NORAD_CAT_ID / OBJECT_ID.
+  case spacecraft = 1
+  ///  Geodetic tracking station; joins `$GST` by STATION_ID.
+  case geodeticTrackingStation = 2
+  ///  Satellite ground station / teleport; joins `$SIT`.
+  case satelliteGroundStation = 3
+  ///  Terrestrial base-station site; joins `$TBS`.
+  case terrestrialSite = 4
+  ///  User terminal, fixed or mobile.
+  case userTerminal = 5
+  case airborne = 6
+  case maritime = 7
+  ///  A relay payload acting as an intermediate endpoint of a multi-hop chain.
+  case relayPayload = 8
+
+  public static var max: rflEndpointKind { return .relayPayload }
+  public static var min: rflEndpointKind { return .unspecified }
+}
+
+
+///  Direction of a link relative to its endpoints.
+///
+///  This enum deliberately mirrors `$LKS.linkCategory` member-for-member with
+///  an added `UNSPECIFIED` at ordinal 0. `linkCategory` places `UPLINK` at
+///  ordinal 0, so an unset field there silently decodes as a real direction;
+///  a durable analytical record may not carry that hazard.
+public enum rflLinkKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  case uplink = 1
+  case downlink = 2
+  case crosslink = 3
+  case interSatellite = 4
+  case groundToGround = 5
+  case relay = 6
+  ///  Service link to an end-user terminal.
+  case userBeam = 7
+  ///  Gateway link carrying aggregated traffic to the network core.
+  case feeder = 8
+
+  public static var max: rflLinkKind { return .feeder }
+  public static var min: rflLinkKind { return .unspecified }
+}
+
+
+///  How the values in this record came to exist.
+///
+///  `MODELED` exists so a modelled number can be REFUSED where a measurement
+///  is required.
+public enum rflMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  Values recorded by instrumentation on a real link.
+  case measured = 1
+  ///  Values produced by propagation and RF models.
+  case modeled = 2
+  ///  Modelled geometry reconciled against measured RF terms, or vice versa.
+  case hybrid = 3
+
+  public static var max: rflMethod { return .hybrid }
+  public static var min: rflMethod { return .unspecified }
+}
+
+
+///  How the path interacted with an obstacle. A solver that only ever reports
+///  blockage cannot express a reflected multipath component or a wall the
+///  signal went through, so the interaction is named per contribution.
+public enum rflObstacleInteraction: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  The obstacle blocked line of sight; no energy was propagated through it.
+  case lineOfSightBlockage = 1
+  ///  Energy passed through the obstacle and paid its penetration loss.
+  case transmission = 2
+  ///  Energy reached the receiver by reflecting off the obstacle.
+  case reflection = 3
+  ///  Energy reached the receiver by diffracting around an edge.
+  case diffraction = 4
+  ///  Energy reached the receiver by rough-surface scattering.
+  case scattering = 5
+  ///  The obstacle intruded into the Fresnel zone without blocking the direct
+  ///  ray.
+  case fresnelIntrusion = 6
+
+  public static var max: rflObstacleInteraction { return .fresnelIntrusion }
+  public static var min: rflObstacleInteraction { return .unspecified }
+}
+
+
+///  One obstacle interaction on one sample's path. SPARSE: entries exist only
+///  where an interaction was computed, so a clear path is never encoded as a
+///  row of zeroes.
+///
+///  This is the join that makes an arbitrary 3D object a first-class part of
+///  the link budget: MATERIAL_ID names the `$RFS` record whose permittivity,
+///  conductivity, penetration loss and roughness produced LOSS_DB, and
+///  GEOMETRY_REF_ID names the exact mesh, face set, panel or analytic shape
+///  inside it that was hit.
+public struct RFLObstruction: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMCcsdsTimeCode.id, addPrefix: prefix) }
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLObstruction.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let CODE_KIND: VOffset = 4
-    static let PREAMBLE_FIELD1: VOffset = 6
-    static let PREAMBLE_FIELD2: VOffset = 8
-    static let TIME_FIELD: VOffset = 10
-    static let AGENCY_DEFINED_EPOCH_ISO8601: VOffset = 12
-    static let CCSDS_EPOCH_ISO8601: VOffset = 14
+    static let SAMPLE_INDEX: VOffset = 4
+    static let OBSTACLE_ID: VOffset = 6
+    static let MATERIAL_ID: VOffset = 8
+    static let GEOMETRY_REF_ID: VOffset = 10
+    static let VAM_ID: VOffset = 12
+    static let VARIANT_ID: VOffset = 14
+    static let NORAD_CAT_ID: VOffset = 16
+    static let INTERACTION: VOffset = 18
+    static let INCIDENCE_ANGLE_DEG: VOffset = 20
+    static let PATH_LENGTH_IN_MATERIAL_M: VOffset = 22
+    static let LOSS_DB: VOffset = 24
+    static let EXCESS_DELAY_S: VOffset = 26
+    static let FRESNEL_CLEARANCE_FRACTION: VOffset = 28
+    static let DISTANCE_FROM_TRANSMITTER_M: VOffset = 30
   }
 
-  ///  CCSDS time-code family.
-  public var CODE_KIND: timCcsdsTimeCodeKind { let o = _accessor.offset(VT.CODE_KIND); return o == 0 ? .none_ : timCcsdsTimeCodeKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
-  ///  First CCSDS preamble field octet.
-  public var PREAMBLE_FIELD1: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
-  public var PREAMBLE_FIELD2: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD2); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Raw CCSDS time field octets.
-  public var TIME_FIELD: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.TIME_FIELD, byteSize: 1) }
-  public func withUnsafePointerToTimeField<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TIME_FIELD, body: body) }
-  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
-  public var AGENCY_DEFINED_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.AGENCY_DEFINED_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AGENCY_DEFINED_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
-  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
-  public var CCSDS_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.CCSDS_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CCSDS_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_EPOCH_ISO8601) }
-  public static func startTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(CODE_KIND: timCcsdsTimeCodeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE_KIND.rawValue, def: 0, at: VT.CODE_KIND) }
-  public static func add(PREAMBLE_FIELD1: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD1, def: 0, at: VT.PREAMBLE_FIELD1) }
-  public static func add(PREAMBLE_FIELD2: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD2, def: 0, at: VT.PREAMBLE_FIELD2) }
-  public static func addVectorOf(TIME_FIELD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_FIELD, at: VT.TIME_FIELD) }
-  public static func add(AGENCY_DEFINED_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGENCY_DEFINED_EPOCH_ISO8601, at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
-  public static func add(CCSDS_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_EPOCH_ISO8601, at: VT.CCSDS_EPOCH_ISO8601) }
-  public static func endTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMCcsdsTimeCode(
+  ///  Index into the sample arrays this interaction applies to.
+  public var SAMPLE_INDEX: UInt32 { let o = _accessor.offset(VT.SAMPLE_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Producer's identifier for the obstacle instance.
+  public var OBSTACLE_ID: String? { let o = _accessor.offset(VT.OBSTACLE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSTACLE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSTACLE_ID) }
+  ///  `$RFS.MATERIAL_ID` of the surface that was hit. An obstruction loss with
+  ///  no material is an unattributed number: a metal panel and a plasterboard
+  ///  wall of the same size do entirely different things to a link.
+  public var MATERIAL_ID: String? { let o = _accessor.offset(VT.MATERIAL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MATERIAL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MATERIAL_ID) }
+  ///  `$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry hit.
+  public var GEOMETRY_REF_ID: String? { let o = _accessor.offset(VT.GEOMETRY_REF_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GEOMETRY_REF_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GEOMETRY_REF_ID) }
+  ///  `$VAM` asset identity of the obstacle mesh, when the obstacle is a
+  ///  reviewed 3D asset.
+  public var VAM_ID: String? { let o = _accessor.offset(VT.VAM_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VAM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VAM_ID) }
+  public var VARIANT_ID: String? { let o = _accessor.offset(VT.VARIANT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VARIANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VARIANT_ID) }
+  ///  `$CAT.NORAD_CAT_ID` when the obstacle is a catalogued object (an
+  ///  occulting spacecraft, a structure on another vehicle). 0 when unbound.
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INTERACTION: rflObstacleInteraction { let o = _accessor.offset(VT.INTERACTION); return o == 0 ? .unspecified : rflObstacleInteraction(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Angle between the incident ray and the surface normal, degrees [0-90).
+  public var INCIDENCE_ANGLE_DEG: Double { let o = _accessor.offset(VT.INCIDENCE_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Path length travelled INSIDE the material, metres. With
+  ///  `$RFS.ATTENUATION_DB_PER_M` this is what makes penetration loss
+  ///  reproducible instead of a stated constant.
+  public var PATH_LENGTH_IN_MATERIAL_M: Double { let o = _accessor.offset(VT.PATH_LENGTH_IN_MATERIAL_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Loss this interaction contributed, dB (positive).
+  public var LOSS_DB: Double { let o = _accessor.offset(VT.LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Extra propagation delay of a reflected or scattered component, seconds.
+  public var EXCESS_DELAY_S: Double { let o = _accessor.offset(VT.EXCESS_DELAY_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fraction of the first Fresnel zone still clear [0-1]. 1 means the zone is
+  ///  untouched.
+  public var FRESNEL_CLEARANCE_FRACTION: Double { let o = _accessor.offset(VT.FRESNEL_CLEARANCE_FRACTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Distance from the transmitter to the interaction point, metres.
+  public var DISTANCE_FROM_TRANSMITTER_M: Double { let o = _accessor.offset(VT.DISTANCE_FROM_TRANSMITTER_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startRFLObstruction(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func add(SAMPLE_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_INDEX, def: 0, at: VT.SAMPLE_INDEX) }
+  public static func add(OBSTACLE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSTACLE_ID, at: VT.OBSTACLE_ID) }
+  public static func add(MATERIAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL_ID, at: VT.MATERIAL_ID) }
+  public static func add(GEOMETRY_REF_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY_REF_ID, at: VT.GEOMETRY_REF_ID) }
+  public static func add(VAM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VAM_ID, at: VT.VAM_ID) }
+  public static func add(VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT_ID, at: VT.VARIANT_ID) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(INTERACTION: rflObstacleInteraction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERACTION.rawValue, def: 0, at: VT.INTERACTION) }
+  public static func add(INCIDENCE_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCIDENCE_ANGLE_DEG, def: 0.0, at: VT.INCIDENCE_ANGLE_DEG) }
+  public static func add(PATH_LENGTH_IN_MATERIAL_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PATH_LENGTH_IN_MATERIAL_M, def: 0.0, at: VT.PATH_LENGTH_IN_MATERIAL_M) }
+  public static func add(LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOSS_DB, def: 0.0, at: VT.LOSS_DB) }
+  public static func add(EXCESS_DELAY_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXCESS_DELAY_S, def: 0.0, at: VT.EXCESS_DELAY_S) }
+  public static func add(FRESNEL_CLEARANCE_FRACTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRESNEL_CLEARANCE_FRACTION, def: 0.0, at: VT.FRESNEL_CLEARANCE_FRACTION) }
+  public static func add(DISTANCE_FROM_TRANSMITTER_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_FROM_TRANSMITTER_M, def: 0.0, at: VT.DISTANCE_FROM_TRANSMITTER_M) }
+  public static func endRFLObstruction(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createRFLObstruction(
     _ fbb: inout FlatBufferBuilder,
-    CODE_KIND: timCcsdsTimeCodeKind = .none_,
-    PREAMBLE_FIELD1: UInt8 = 0,
-    PREAMBLE_FIELD2: UInt8 = 0,
-    TIME_FIELDVectorOffset TIME_FIELD: Offset = Offset(),
-    AGENCY_DEFINED_EPOCH_ISO8601Offset AGENCY_DEFINED_EPOCH_ISO8601: Offset = Offset(),
-    CCSDS_EPOCH_ISO8601Offset CCSDS_EPOCH_ISO8601: Offset = Offset()
+    SAMPLE_INDEX: UInt32 = 0,
+    OBSTACLE_IDOffset OBSTACLE_ID: Offset = Offset(),
+    MATERIAL_IDOffset MATERIAL_ID: Offset = Offset(),
+    GEOMETRY_REF_IDOffset GEOMETRY_REF_ID: Offset = Offset(),
+    VAM_IDOffset VAM_ID: Offset = Offset(),
+    VARIANT_IDOffset VARIANT_ID: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    INTERACTION: rflObstacleInteraction = .unspecified,
+    INCIDENCE_ANGLE_DEG: Double = 0.0,
+    PATH_LENGTH_IN_MATERIAL_M: Double = 0.0,
+    LOSS_DB: Double = 0.0,
+    EXCESS_DELAY_S: Double = 0.0,
+    FRESNEL_CLEARANCE_FRACTION: Double = 0.0,
+    DISTANCE_FROM_TRANSMITTER_M: Double = 0.0
   ) -> Offset {
-    let __start = TIMCcsdsTimeCode.startTIMCcsdsTimeCode(&fbb)
-    TIMCcsdsTimeCode.add(CODE_KIND: CODE_KIND, &fbb)
-    TIMCcsdsTimeCode.add(PREAMBLE_FIELD1: PREAMBLE_FIELD1, &fbb)
-    TIMCcsdsTimeCode.add(PREAMBLE_FIELD2: PREAMBLE_FIELD2, &fbb)
-    TIMCcsdsTimeCode.addVectorOf(TIME_FIELD: TIME_FIELD, &fbb)
-    TIMCcsdsTimeCode.add(AGENCY_DEFINED_EPOCH_ISO8601: AGENCY_DEFINED_EPOCH_ISO8601, &fbb)
-    TIMCcsdsTimeCode.add(CCSDS_EPOCH_ISO8601: CCSDS_EPOCH_ISO8601, &fbb)
-    return TIMCcsdsTimeCode.endTIMCcsdsTimeCode(&fbb, start: __start)
+    let __start = RFLObstruction.startRFLObstruction(&fbb)
+    RFLObstruction.add(SAMPLE_INDEX: SAMPLE_INDEX, &fbb)
+    RFLObstruction.add(OBSTACLE_ID: OBSTACLE_ID, &fbb)
+    RFLObstruction.add(MATERIAL_ID: MATERIAL_ID, &fbb)
+    RFLObstruction.add(GEOMETRY_REF_ID: GEOMETRY_REF_ID, &fbb)
+    RFLObstruction.add(VAM_ID: VAM_ID, &fbb)
+    RFLObstruction.add(VARIANT_ID: VARIANT_ID, &fbb)
+    RFLObstruction.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    RFLObstruction.add(INTERACTION: INTERACTION, &fbb)
+    RFLObstruction.add(INCIDENCE_ANGLE_DEG: INCIDENCE_ANGLE_DEG, &fbb)
+    RFLObstruction.add(PATH_LENGTH_IN_MATERIAL_M: PATH_LENGTH_IN_MATERIAL_M, &fbb)
+    RFLObstruction.add(LOSS_DB: LOSS_DB, &fbb)
+    RFLObstruction.add(EXCESS_DELAY_S: EXCESS_DELAY_S, &fbb)
+    RFLObstruction.add(FRESNEL_CLEARANCE_FRACTION: FRESNEL_CLEARANCE_FRACTION, &fbb)
+    RFLObstruction.add(DISTANCE_FROM_TRANSMITTER_M: DISTANCE_FROM_TRANSMITTER_M, &fbb)
+    return RFLObstruction.endRFLObstruction(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CODE_KIND, fieldName: "CODE_KIND", required: false, type: timCcsdsTimeCodeKind.self)
-    try _v.visit(field: VT.PREAMBLE_FIELD1, fieldName: "PREAMBLE_FIELD1", required: false, type: UInt8.self)
-    try _v.visit(field: VT.PREAMBLE_FIELD2, fieldName: "PREAMBLE_FIELD2", required: false, type: UInt8.self)
-    try _v.visit(field: VT.TIME_FIELD, fieldName: "TIME_FIELD", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VT.AGENCY_DEFINED_EPOCH_ISO8601, fieldName: "AGENCY_DEFINED_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CCSDS_EPOCH_ISO8601, fieldName: "CCSDS_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAMPLE_INDEX, fieldName: "SAMPLE_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBSTACLE_ID, fieldName: "OBSTACLE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MATERIAL_ID, fieldName: "MATERIAL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOMETRY_REF_ID, fieldName: "GEOMETRY_REF_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VAM_ID, fieldName: "VAM_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VARIANT_ID, fieldName: "VARIANT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INTERACTION, fieldName: "INTERACTION", required: false, type: rflObstacleInteraction.self)
+    try _v.visit(field: VT.INCIDENCE_ANGLE_DEG, fieldName: "INCIDENCE_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.PATH_LENGTH_IN_MATERIAL_M, fieldName: "PATH_LENGTH_IN_MATERIAL_M", required: false, type: Double.self)
+    try _v.visit(field: VT.LOSS_DB, fieldName: "LOSS_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.EXCESS_DELAY_S, fieldName: "EXCESS_DELAY_S", required: false, type: Double.self)
+    try _v.visit(field: VT.FRESNEL_CLEARANCE_FRACTION, fieldName: "FRESNEL_CLEARANCE_FRACTION", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_FROM_TRANSMITTER_M, fieldName: "DISTANCE_FROM_TRANSMITTER_M", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-///  Numeric or textual instant tagged with its time system and representation.
-public struct TIMInstant: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One endpoint of a link. Identity ONLY — position, antenna geometry and band
+///  capability are NOT copied here; they are joined from the standard named by
+///  ENDPOINT_KIND. A copied position silently goes stale against its source.
+public struct RFLEndpoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMInstant.id, addPrefix: prefix) }
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLEndpoint.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let TIME_SYSTEM: VOffset = 4
-    static let EPOCH_FORMAT: VOffset = 6
-    static let JULIAN_DATE: VOffset = 8
-    static let SECONDS: VOffset = 10
-    static let ISO8601: VOffset = 12
-    static let SUBSECOND_NANOS: VOffset = 14
-    static let EPOCH_LABEL: VOffset = 16
-    static let GNSS_WEEK: VOffset = 18
-    static let HAS_GNSS_ROLLOVER_REFERENCE: VOffset = 20
-    static let GNSS_ROLLOVER_REFERENCE_ISO8601: VOffset = 22
-    static let CCSDS_TIME_CODE: VOffset = 24
+    static let ENDPOINT_ID: VOffset = 4
+    static let ENDPOINT_KIND: VOffset = 6
+    static let NAME: VOffset = 8
+    static let GST_STATION_ID: VOffset = 10
+    static let SIT_ID: VOffset = 12
+    static let TBS_SITE_ID: VOffset = 14
+    static let NORAD_CAT_ID: VOffset = 16
+    static let OBJECT_ID: VOffset = 18
+    static let RFB_ID: VOffset = 20
+    static let RFE_ID: VOffset = 22
+    static let IQC_ID: VOffset = 24
+    static let ID_BEAM: VOffset = 26
+    static let CHANNEL_ID: VOffset = 28
+    static let POLARIZATION: VOffset = 30
   }
 
-  ///  Time system for this instant.
-  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
-  public var EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
-  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
-  public var JULIAN_DATE: Double { let o = _accessor.offset(VT.JULIAN_DATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
-  public var SECONDS: Double { let o = _accessor.offset(VT.SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
-  public var ISO8601: String? { let o = _accessor.offset(VT.ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ISO8601) }
-  ///  Additional nanoseconds beyond the fractional scalar/text value.
-  public var SUBSECOND_NANOS: Int32 { let o = _accessor.offset(VT.SUBSECOND_NANOS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
-  public var EPOCH_LABEL: String? { let o = _accessor.offset(VT.EPOCH_LABEL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_LABEL) }
-  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
-  public var GNSS_WEEK: Int32 { let o = _accessor.offset(VT.GNSS_WEEK); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
-  public var HAS_GNSS_ROLLOVER_REFERENCE: Bool { let o = _accessor.offset(VT.HAS_GNSS_ROLLOVER_REFERENCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional Orekit-style GNSS week rollover reference timestamp.
-  public var GNSS_ROLLOVER_REFERENCE_ISO8601: String? { let o = _accessor.offset(VT.GNSS_ROLLOVER_REFERENCE_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GNSS_ROLLOVER_REFERENCE_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
-  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
-  public var CCSDS_TIME_CODE: TIMCcsdsTimeCode? { let o = _accessor.offset(VT.CCSDS_TIME_CODE); return o == 0 ? nil : TIMCcsdsTimeCode(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTIMInstant(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
-  public static func add(EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_FORMAT.rawValue, def: 0, at: VT.EPOCH_FORMAT) }
-  public static func add(JULIAN_DATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JULIAN_DATE, def: 0.0, at: VT.JULIAN_DATE) }
-  public static func add(SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDS, def: 0.0, at: VT.SECONDS) }
-  public static func add(ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISO8601, at: VT.ISO8601) }
-  public static func add(SUBSECOND_NANOS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSECOND_NANOS, def: 0, at: VT.SUBSECOND_NANOS) }
-  public static func add(EPOCH_LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_LABEL, at: VT.EPOCH_LABEL) }
-  public static func add(GNSS_WEEK: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNSS_WEEK, def: 0, at: VT.GNSS_WEEK) }
-  public static func add(HAS_GNSS_ROLLOVER_REFERENCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GNSS_ROLLOVER_REFERENCE, def: false,
-   at: VT.HAS_GNSS_ROLLOVER_REFERENCE) }
-  public static func add(GNSS_ROLLOVER_REFERENCE_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_ROLLOVER_REFERENCE_ISO8601, at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
-  public static func add(CCSDS_TIME_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_TIME_CODE, at: VT.CCSDS_TIME_CODE) }
-  public static func endTIMInstant(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMInstant(
+  ///  Producer-stable identifier for this endpoint within the record.
+  public var ENDPOINT_ID: String! { let o = _accessor.offset(VT.ENDPOINT_ID); return _accessor.string(at: o) }
+  public var ENDPOINT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ENDPOINT_ID) }
+  public var ENDPOINT_KIND: rflEndpointKind { let o = _accessor.offset(VT.ENDPOINT_KIND); return o == 0 ? .unspecified : rflEndpointKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Human-readable name.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  `$GST.STATION_ID` when ENDPOINT_KIND is GEODETIC_TRACKING_STATION.
+  public var GST_STATION_ID: String? { let o = _accessor.offset(VT.GST_STATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GST_STATION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GST_STATION_ID) }
+  ///  `$SIT` identifier when ENDPOINT_KIND is SATELLITE_GROUND_STATION.
+  public var SIT_ID: String? { let o = _accessor.offset(VT.SIT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIT_ID) }
+  ///  `$TBS.SITE_ID` when ENDPOINT_KIND is TERRESTRIAL_SITE.
+  public var TBS_SITE_ID: String? { let o = _accessor.offset(VT.TBS_SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TBS_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TBS_SITE_ID) }
+  ///  `$CAT.NORAD_CAT_ID` when the endpoint is an on-orbit object. 0 when
+  ///  unbound — never a placeholder catalogue number.
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator, `$CAT.OBJECT_ID`.
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  ///  `$RFB.ID` — the band specification (frequency, bandwidth, EIRP, gains,
+  ///  polarization) this endpoint transmits or receives on.
+  public var RFB_ID: String? { let o = _accessor.offset(VT.RFB_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFB_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFB_ID) }
+  ///  `$RFE.ID` — the parametric emitter description, when one exists.
+  public var RFE_ID: String? { let o = _accessor.offset(VT.RFE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFE_ID) }
+  ///  `$IQC` capture identifier, when the samples were derived from a recording.
+  public var IQC_ID: String? { let o = _accessor.offset(VT.IQC_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IQC_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IQC_ID) }
+  ///  Beam identifier within the emitter.
+  public var ID_BEAM: String? { let o = _accessor.offset(VT.ID_BEAM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_BEAMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_BEAM) }
+  ///  Channel or carrier identifier within the beam.
+  public var CHANNEL_ID: String? { let o = _accessor.offset(VT.CHANNEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANNEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHANNEL_ID) }
+  ///  Polarization actually used on this link. Defaults to UNKNOWN explicitly:
+  ///  `rfPolarization` ordinal 0 is LHCP, so an unset field would otherwise
+  ///  decode as a real polarization.
+  public var POLARIZATION: rfPolarization { let o = _accessor.offset(VT.POLARIZATION); return o == 0 ? .unknown : rfPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  public static func startRFLEndpoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func add(ENDPOINT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENDPOINT_ID, at: VT.ENDPOINT_ID) }
+  public static func add(ENDPOINT_KIND: rflEndpointKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENDPOINT_KIND.rawValue, def: 0, at: VT.ENDPOINT_KIND) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(GST_STATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GST_STATION_ID, at: VT.GST_STATION_ID) }
+  public static func add(SIT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIT_ID, at: VT.SIT_ID) }
+  public static func add(TBS_SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TBS_SITE_ID, at: VT.TBS_SITE_ID) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(RFB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFB_ID, at: VT.RFB_ID) }
+  public static func add(RFE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFE_ID, at: VT.RFE_ID) }
+  public static func add(IQC_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IQC_ID, at: VT.IQC_ID) }
+  public static func add(ID_BEAM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BEAM, at: VT.ID_BEAM) }
+  public static func add(CHANNEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNEL_ID, at: VT.CHANNEL_ID) }
+  public static func add(POLARIZATION: rfPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION.rawValue, def: 6, at: VT.POLARIZATION) }
+  public static func endRFLEndpoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createRFLEndpoint(
     _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst,
-    EPOCH_FORMAT: timEpochRepresentation = .julianDate,
-    JULIAN_DATE: Double = 0.0,
-    SECONDS: Double = 0.0,
-    ISO8601Offset ISO8601: Offset = Offset(),
-    SUBSECOND_NANOS: Int32 = 0,
-    EPOCH_LABELOffset EPOCH_LABEL: Offset = Offset(),
-    GNSS_WEEK: Int32 = 0,
-    HAS_GNSS_ROLLOVER_REFERENCE: Bool = false,
-    GNSS_ROLLOVER_REFERENCE_ISO8601Offset GNSS_ROLLOVER_REFERENCE_ISO8601: Offset = Offset(),
-    CCSDS_TIME_CODEOffset CCSDS_TIME_CODE: Offset = Offset()
+    ENDPOINT_IDOffset ENDPOINT_ID: Offset,
+    ENDPOINT_KIND: rflEndpointKind = .unspecified,
+    NAMEOffset NAME: Offset = Offset(),
+    GST_STATION_IDOffset GST_STATION_ID: Offset = Offset(),
+    SIT_IDOffset SIT_ID: Offset = Offset(),
+    TBS_SITE_IDOffset TBS_SITE_ID: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    RFB_IDOffset RFB_ID: Offset = Offset(),
+    RFE_IDOffset RFE_ID: Offset = Offset(),
+    IQC_IDOffset IQC_ID: Offset = Offset(),
+    ID_BEAMOffset ID_BEAM: Offset = Offset(),
+    CHANNEL_IDOffset CHANNEL_ID: Offset = Offset(),
+    POLARIZATION: rfPolarization = .unknown
   ) -> Offset {
-    let __start = TIMInstant.startTIMInstant(&fbb)
-    TIMInstant.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    TIMInstant.add(EPOCH_FORMAT: EPOCH_FORMAT, &fbb)
-    TIMInstant.add(JULIAN_DATE: JULIAN_DATE, &fbb)
-    TIMInstant.add(SECONDS: SECONDS, &fbb)
-    TIMInstant.add(ISO8601: ISO8601, &fbb)
-    TIMInstant.add(SUBSECOND_NANOS: SUBSECOND_NANOS, &fbb)
-    TIMInstant.add(EPOCH_LABEL: EPOCH_LABEL, &fbb)
-    TIMInstant.add(GNSS_WEEK: GNSS_WEEK, &fbb)
-    TIMInstant.add(HAS_GNSS_ROLLOVER_REFERENCE: HAS_GNSS_ROLLOVER_REFERENCE, &fbb)
-    TIMInstant.add(GNSS_ROLLOVER_REFERENCE_ISO8601: GNSS_ROLLOVER_REFERENCE_ISO8601, &fbb)
-    TIMInstant.add(CCSDS_TIME_CODE: CCSDS_TIME_CODE, &fbb)
-    return TIMInstant.endTIMInstant(&fbb, start: __start)
+    let __start = RFLEndpoint.startRFLEndpoint(&fbb)
+    RFLEndpoint.add(ENDPOINT_ID: ENDPOINT_ID, &fbb)
+    RFLEndpoint.add(ENDPOINT_KIND: ENDPOINT_KIND, &fbb)
+    RFLEndpoint.add(NAME: NAME, &fbb)
+    RFLEndpoint.add(GST_STATION_ID: GST_STATION_ID, &fbb)
+    RFLEndpoint.add(SIT_ID: SIT_ID, &fbb)
+    RFLEndpoint.add(TBS_SITE_ID: TBS_SITE_ID, &fbb)
+    RFLEndpoint.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    RFLEndpoint.add(OBJECT_ID: OBJECT_ID, &fbb)
+    RFLEndpoint.add(RFB_ID: RFB_ID, &fbb)
+    RFLEndpoint.add(RFE_ID: RFE_ID, &fbb)
+    RFLEndpoint.add(IQC_ID: IQC_ID, &fbb)
+    RFLEndpoint.add(ID_BEAM: ID_BEAM, &fbb)
+    RFLEndpoint.add(CHANNEL_ID: CHANNEL_ID, &fbb)
+    RFLEndpoint.add(POLARIZATION: POLARIZATION, &fbb)
+    return RFLEndpoint.endRFLEndpoint(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.EPOCH_FORMAT, fieldName: "EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
-    try _v.visit(field: VT.JULIAN_DATE, fieldName: "JULIAN_DATE", required: false, type: Double.self)
-    try _v.visit(field: VT.SECONDS, fieldName: "SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.ISO8601, fieldName: "ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SUBSECOND_NANOS, fieldName: "SUBSECOND_NANOS", required: false, type: Int32.self)
-    try _v.visit(field: VT.EPOCH_LABEL, fieldName: "EPOCH_LABEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GNSS_WEEK, fieldName: "GNSS_WEEK", required: false, type: Int32.self)
-    try _v.visit(field: VT.HAS_GNSS_ROLLOVER_REFERENCE, fieldName: "HAS_GNSS_ROLLOVER_REFERENCE", required: false, type: Bool.self)
-    try _v.visit(field: VT.GNSS_ROLLOVER_REFERENCE_ISO8601, fieldName: "GNSS_ROLLOVER_REFERENCE_ISO8601", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.CCSDS_TIME_CODE, fieldName: "CCSDS_TIME_CODE", required: false, type: ForwardOffset<TIMCcsdsTimeCode>.self)
+    try _v.visit(field: VT.ENDPOINT_ID, fieldName: "ENDPOINT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENDPOINT_KIND, fieldName: "ENDPOINT_KIND", required: false, type: rflEndpointKind.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GST_STATION_ID, fieldName: "GST_STATION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIT_ID, fieldName: "SIT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TBS_SITE_ID, fieldName: "TBS_SITE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFB_ID, fieldName: "RFB_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFE_ID, fieldName: "RFE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IQC_ID, fieldName: "IQC_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_BEAM, fieldName: "ID_BEAM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANNEL_ID, fieldName: "CHANNEL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POLARIZATION, fieldName: "POLARIZATION", required: false, type: rfPolarization.self)
     _v.finish()
   }
 }
 
-///  Request to convert one instant into another time system/representation.
-public struct TIMConversionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  One modulation-and-coding choice available to a link. The table carries
+///  engineering capability only; catalogue or recommendation names belong in
+///  ID / NAME and provenance data, never in the schema vocabulary.
+public struct RFLModCod: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionRequest.id, addPrefix: prefix) }
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLModCod.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SOURCE: VOffset = 4
-    static let TARGET_TIME_SYSTEM: VOffset = 6
-    static let TARGET_EPOCH_FORMAT: VOffset = 8
-    static let TAI_MINUS_UTC_SECONDS: VOffset = 10
-    static let HAS_TAI_MINUS_UTC: VOffset = 12
-    static let DUT1_SECONDS: VOffset = 14
-    static let HAS_DUT1: VOffset = 16
-    static let TRACE_ID: VOffset = 18
+    static let MODCOD_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let MODULATION: VOffset = 8
+    static let CODING: VOffset = 10
+    static let CODE_RATE: VOffset = 12
+    static let BITS_PER_SYMBOL: VOffset = 14
+    static let SPECTRAL_EFFICIENCY_BPS_HZ: VOffset = 16
+    static let REQUIRED_ES_N0_DB: VOffset = 18
+    static let REQUIRED_EB_N0_DB: VOffset = 20
+    static let TARGET_BIT_ERROR_RATE: VOffset = 22
+    static let TARGET_BLOCK_ERROR_RATE: VOffset = 24
+    static let REQUIRED_MARGIN_DB: VOffset = 26
+    static let MAXIMUM_DATA_RATE_BPS: VOffset = 28
   }
 
-  ///  Source instant to convert.
-  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Target time system.
-  public var TARGET_TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TARGET_TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Preferred target representation.
-  public var TARGET_EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.TARGET_EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
-  ///  Optional TAI-UTC override in seconds for the source instant.
-  public var TAI_MINUS_UTC_SECONDS: Double { let o = _accessor.offset(VT.TAI_MINUS_UTC_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
-  public var HAS_TAI_MINUS_UTC: Bool { let o = _accessor.offset(VT.HAS_TAI_MINUS_UTC); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional UT1-UTC override in seconds for UT1 conversions.
-  public var DUT1_SECONDS: Double { let o = _accessor.offset(VT.DUT1_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
-  public var HAS_DUT1: Bool { let o = _accessor.offset(VT.HAS_DUT1); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Optional caller trace/correlation identifier.
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startTIMConversionRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  ///  Stable identifier within the containing link's MODCOD_SET.
+  public var MODCOD_ID: String! { let o = _accessor.offset(VT.MODCOD_ID); return _accessor.string(at: o) }
+  public var MODCOD_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODCOD_ID) }
+  ///  Producer-supplied display name.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var MODULATION: String? { let o = _accessor.offset(VT.MODULATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULATION) }
+  public var CODING: String? { let o = _accessor.offset(VT.CODING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CODING) }
+  ///  Information bits divided by coded bits, in (0,1].
+  public var CODE_RATE: Double { let o = _accessor.offset(VT.CODE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BITS_PER_SYMBOL: Double { let o = _accessor.offset(VT.BITS_PER_SYMBOL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SPECTRAL_EFFICIENCY_BPS_HZ: Double { let o = _accessor.offset(VT.SPECTRAL_EFFICIENCY_BPS_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REQUIRED_ES_N0_DB: Double { let o = _accessor.offset(VT.REQUIRED_ES_N0_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REQUIRED_EB_N0_DB: Double { let o = _accessor.offset(VT.REQUIRED_EB_N0_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_BIT_ERROR_RATE: Double { let o = _accessor.offset(VT.TARGET_BIT_ERROR_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_BLOCK_ERROR_RATE: Double { let o = _accessor.offset(VT.TARGET_BLOCK_ERROR_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Additional implementation margin required before this entry is selected.
+  public var REQUIRED_MARGIN_DB: Double { let o = _accessor.offset(VT.REQUIRED_MARGIN_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional ceiling imposed by framing or implementation, bits per second.
+  public var MAXIMUM_DATA_RATE_BPS: Double { let o = _accessor.offset(VT.MAXIMUM_DATA_RATE_BPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startRFLModCod(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(MODCOD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODCOD_ID, at: VT.MODCOD_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(MODULATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULATION, at: VT.MODULATION) }
+  public static func add(CODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CODING, at: VT.CODING) }
+  public static func add(CODE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE_RATE, def: 0.0, at: VT.CODE_RATE) }
+  public static func add(BITS_PER_SYMBOL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BITS_PER_SYMBOL, def: 0.0, at: VT.BITS_PER_SYMBOL) }
+  public static func add(SPECTRAL_EFFICIENCY_BPS_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECTRAL_EFFICIENCY_BPS_HZ, def: 0.0, at: VT.SPECTRAL_EFFICIENCY_BPS_HZ) }
+  public static func add(REQUIRED_ES_N0_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_ES_N0_DB, def: 0.0, at: VT.REQUIRED_ES_N0_DB) }
+  public static func add(REQUIRED_EB_N0_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_EB_N0_DB, def: 0.0, at: VT.REQUIRED_EB_N0_DB) }
+  public static func add(TARGET_BIT_ERROR_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_BIT_ERROR_RATE, def: 0.0, at: VT.TARGET_BIT_ERROR_RATE) }
+  public static func add(TARGET_BLOCK_ERROR_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_BLOCK_ERROR_RATE, def: 0.0, at: VT.TARGET_BLOCK_ERROR_RATE) }
+  public static func add(REQUIRED_MARGIN_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_MARGIN_DB, def: 0.0, at: VT.REQUIRED_MARGIN_DB) }
+  public static func add(MAXIMUM_DATA_RATE_BPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_DATA_RATE_BPS, def: 0.0, at: VT.MAXIMUM_DATA_RATE_BPS) }
+  public static func endRFLModCod(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createRFLModCod(
+    _ fbb: inout FlatBufferBuilder,
+    MODCOD_IDOffset MODCOD_ID: Offset,
+    NAMEOffset NAME: Offset = Offset(),
+    MODULATIONOffset MODULATION: Offset = Offset(),
+    CODINGOffset CODING: Offset = Offset(),
+    CODE_RATE: Double = 0.0,
+    BITS_PER_SYMBOL: Double = 0.0,
+    SPECTRAL_EFFICIENCY_BPS_HZ: Double = 0.0,
+    REQUIRED_ES_N0_DB: Double = 0.0,
+    REQUIRED_EB_N0_DB: Double = 0.0,
+    TARGET_BIT_ERROR_RATE: Double = 0.0,
+    TARGET_BLOCK_ERROR_RATE: Double = 0.0,
+    REQUIRED_MARGIN_DB: Double = 0.0,
+    MAXIMUM_DATA_RATE_BPS: Double = 0.0
+  ) -> Offset {
+    let __start = RFLModCod.startRFLModCod(&fbb)
+    RFLModCod.add(MODCOD_ID: MODCOD_ID, &fbb)
+    RFLModCod.add(NAME: NAME, &fbb)
+    RFLModCod.add(MODULATION: MODULATION, &fbb)
+    RFLModCod.add(CODING: CODING, &fbb)
+    RFLModCod.add(CODE_RATE: CODE_RATE, &fbb)
+    RFLModCod.add(BITS_PER_SYMBOL: BITS_PER_SYMBOL, &fbb)
+    RFLModCod.add(SPECTRAL_EFFICIENCY_BPS_HZ: SPECTRAL_EFFICIENCY_BPS_HZ, &fbb)
+    RFLModCod.add(REQUIRED_ES_N0_DB: REQUIRED_ES_N0_DB, &fbb)
+    RFLModCod.add(REQUIRED_EB_N0_DB: REQUIRED_EB_N0_DB, &fbb)
+    RFLModCod.add(TARGET_BIT_ERROR_RATE: TARGET_BIT_ERROR_RATE, &fbb)
+    RFLModCod.add(TARGET_BLOCK_ERROR_RATE: TARGET_BLOCK_ERROR_RATE, &fbb)
+    RFLModCod.add(REQUIRED_MARGIN_DB: REQUIRED_MARGIN_DB, &fbb)
+    RFLModCod.add(MAXIMUM_DATA_RATE_BPS: MAXIMUM_DATA_RATE_BPS, &fbb)
+    return RFLModCod.endRFLModCod(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MODCOD_ID, fieldName: "MODCOD_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULATION, fieldName: "MODULATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CODING, fieldName: "CODING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CODE_RATE, fieldName: "CODE_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.BITS_PER_SYMBOL, fieldName: "BITS_PER_SYMBOL", required: false, type: Double.self)
+    try _v.visit(field: VT.SPECTRAL_EFFICIENCY_BPS_HZ, fieldName: "SPECTRAL_EFFICIENCY_BPS_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.REQUIRED_ES_N0_DB, fieldName: "REQUIRED_ES_N0_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.REQUIRED_EB_N0_DB, fieldName: "REQUIRED_EB_N0_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_BIT_ERROR_RATE, fieldName: "TARGET_BIT_ERROR_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_BLOCK_ERROR_RATE, fieldName: "TARGET_BLOCK_ERROR_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.REQUIRED_MARGIN_DB, fieldName: "REQUIRED_MARGIN_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_DATA_RATE_BPS, fieldName: "MAXIMUM_DATA_RATE_BPS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  One link whose budget is sampled by this record.
+public struct RFLLink: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLLink.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let LINK_ID: VOffset = 4
+    static let LINK_NAME: VOffset = 6
+    static let LINK_KIND: VOffset = 8
+    static let TRANSMIT_ENDPOINT: VOffset = 10
+    static let RECEIVE_ENDPOINT: VOffset = 12
+    static let CENTER_FREQUENCY_MHZ: VOffset = 14
+    static let BANDWIDTH_MHZ: VOffset = 16
+    static let MODULATION: VOffset = 18
+    static let CODING: VOffset = 20
+    static let CODE_RATE: VOffset = 22
+    static let SYMBOL_RATE_BAUD: VOffset = 24
+    static let DATA_RATE_BPS: VOffset = 26
+    static let THRESHOLD_TERM: VOffset = 28
+    static let THRESHOLD_VALUE: VOffset = 30
+    static let THRESHOLD_UNITS: VOffset = 32
+    static let THRESHOLD_COMPARISON: VOffset = 34
+    static let RECEIVER_GROUP_ID: VOffset = 36
+    static let CHANNEL_GROUP_ID: VOffset = 38
+    static let CONSTELLATION: VOffset = 40
+    static let SERVICE: VOffset = 42
+    static let MODCOD_SET: VOffset = 44
+    static let ACM_ENABLED: VOffset = 46
+  }
+
+  ///  Producer-stable link identifier. Joins `$ACI.ACIInterval.LINK_ID` and
+  ///  `$LKS.ID` when the same link also has an operational-state record.
+  public var LINK_ID: String! { let o = _accessor.offset(VT.LINK_ID); return _accessor.string(at: o) }
+  public var LINK_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.LINK_ID) }
+  ///  Human-readable link name.
+  public var LINK_NAME: String? { let o = _accessor.offset(VT.LINK_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_NAME) }
+  public var LINK_KIND: rflLinkKind { let o = _accessor.offset(VT.LINK_KIND); return o == 0 ? .unspecified : rflLinkKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Transmitting endpoint.
+  public var TRANSMIT_ENDPOINT: RFLEndpoint! { let o = _accessor.offset(VT.TRANSMIT_ENDPOINT); return RFLEndpoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Receiving endpoint.
+  public var RECEIVE_ENDPOINT: RFLEndpoint! { let o = _accessor.offset(VT.RECEIVE_ENDPOINT); return RFLEndpoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Carrier centre frequency actually used, megahertz — the `$RFB` MHz
+  ///  convention, NOT the `$IQC` hertz convention. A consumer joining the two
+  ///  converts explicitly at the join. Band designation is NOT duplicated here:
+  ///  it is joined from `$RFB.BAND`.
+  public var CENTER_FREQUENCY_MHZ: Double { let o = _accessor.offset(VT.CENTER_FREQUENCY_MHZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Occupied bandwidth, megahertz.
+  public var BANDWIDTH_MHZ: Double { let o = _accessor.offset(VT.BANDWIDTH_MHZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Modulation as the producer states it (e.g. "QPSK", "8PSK", "16APSK").
+  public var MODULATION: String? { let o = _accessor.offset(VT.MODULATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULATION) }
+  ///  Forward error correction scheme as the producer states it.
+  public var CODING: String? { let o = _accessor.offset(VT.CODING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CODING) }
+  ///  Code rate as a fraction (0-1].
+  public var CODE_RATE: Double { let o = _accessor.offset(VT.CODE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Symbol rate in baud (symbols per second), NOT kilobaud — the `$RFB.BAUD`
+  ///  convention.
+  public var SYMBOL_RATE_BAUD: Double { let o = _accessor.offset(VT.SYMBOL_RATE_BAUD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Information bit rate the budget is stated for, bits per second.
+  public var DATA_RATE_BPS: Double { let o = _accessor.offset(VT.DATA_RATE_BPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Required threshold this link is evaluated against. THRESHOLD_TERM,
+  ///  THRESHOLD_VALUE, THRESHOLD_UNITS and THRESHOLD_COMPARISON are meaningful
+  ///  only together; a LINK_MARGIN_DB column without them states a margin
+  ///  against an unstated requirement and MUST be refused.
+  public var THRESHOLD_TERM: rflBudgetTerm { let o = _accessor.offset(VT.THRESHOLD_TERM); return o == 0 ? .unspecified : rflBudgetTerm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var THRESHOLD_VALUE: Double { let o = _accessor.offset(VT.THRESHOLD_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var THRESHOLD_UNITS: String? { let o = _accessor.offset(VT.THRESHOLD_UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var THRESHOLD_UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.THRESHOLD_UNITS) }
+  public var THRESHOLD_COMPARISON: rflComparison { let o = _accessor.offset(VT.THRESHOLD_COMPARISON); return o == 0 ? .unspecified : rflComparison(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Receiver group this link belongs to. Links sharing a RECEIVER_GROUP_ID
+  ///  and CHANNEL_GROUP_ID are mutually interfering and MUST be evaluated
+  ///  together; a producer that shards a link matrix MUST keep a group intact
+  ///  within one shard.
+  public var RECEIVER_GROUP_ID: String? { let o = _accessor.offset(VT.RECEIVER_GROUP_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECEIVER_GROUP_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECEIVER_GROUP_ID) }
+  public var CHANNEL_GROUP_ID: String? { let o = _accessor.offset(VT.CHANNEL_GROUP_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANNEL_GROUP_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHANNEL_GROUP_ID) }
+  ///  Constellation or network this link belongs to.
+  public var CONSTELLATION: String? { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTELLATION) }
+  ///  Operator-facing service or mission designation.
+  public var SERVICE: String? { let o = _accessor.offset(VT.SERVICE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SERVICESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SERVICE) }
+  ///  Ordered adaptive modulation-and-coding choices. Per-sample
+  ///  SELECTED_MODCOD_INDEX indexes this vector for the sample's selected link.
+  public var MODCOD_SET: FlatbufferVector<RFLModCod> { return _accessor.vector(at: VT.MODCOD_SET, byteSize: 4) }
+  ///  Whether the producer evaluated adaptive selection for this link.
+  public var ACM_ENABLED: Bool { let o = _accessor.offset(VT.ACM_ENABLED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startRFLLink(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
+  public static func add(LINK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_ID, at: VT.LINK_ID) }
+  public static func add(LINK_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_NAME, at: VT.LINK_NAME) }
+  public static func add(LINK_KIND: rflLinkKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_KIND.rawValue, def: 0, at: VT.LINK_KIND) }
+  public static func add(TRANSMIT_ENDPOINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSMIT_ENDPOINT, at: VT.TRANSMIT_ENDPOINT) }
+  public static func add(RECEIVE_ENDPOINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVE_ENDPOINT, at: VT.RECEIVE_ENDPOINT) }
+  public static func add(CENTER_FREQUENCY_MHZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_FREQUENCY_MHZ, def: 0.0, at: VT.CENTER_FREQUENCY_MHZ) }
+  public static func add(BANDWIDTH_MHZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH_MHZ, def: 0.0, at: VT.BANDWIDTH_MHZ) }
+  public static func add(MODULATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULATION, at: VT.MODULATION) }
+  public static func add(CODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CODING, at: VT.CODING) }
+  public static func add(CODE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE_RATE, def: 0.0, at: VT.CODE_RATE) }
+  public static func add(SYMBOL_RATE_BAUD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYMBOL_RATE_BAUD, def: 0.0, at: VT.SYMBOL_RATE_BAUD) }
+  public static func add(DATA_RATE_BPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE_BPS, def: 0.0, at: VT.DATA_RATE_BPS) }
+  public static func add(THRESHOLD_TERM: rflBudgetTerm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_TERM.rawValue, def: 0, at: VT.THRESHOLD_TERM) }
+  public static func add(THRESHOLD_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_VALUE, def: 0.0, at: VT.THRESHOLD_VALUE) }
+  public static func add(THRESHOLD_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THRESHOLD_UNITS, at: VT.THRESHOLD_UNITS) }
+  public static func add(THRESHOLD_COMPARISON: rflComparison, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_COMPARISON.rawValue, def: 0, at: VT.THRESHOLD_COMPARISON) }
+  public static func add(RECEIVER_GROUP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_GROUP_ID, at: VT.RECEIVER_GROUP_ID) }
+  public static func add(CHANNEL_GROUP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNEL_GROUP_ID, at: VT.CHANNEL_GROUP_ID) }
+  public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VT.CONSTELLATION) }
+  public static func add(SERVICE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SERVICE, at: VT.SERVICE) }
+  public static func addVectorOf(MODCOD_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODCOD_SET, at: VT.MODCOD_SET) }
+  public static func add(ACM_ENABLED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACM_ENABLED, def: false,
+   at: VT.ACM_ENABLED) }
+  public static func endRFLLink(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10, 12]); return end }
+  public static func createRFLLink(
+    _ fbb: inout FlatBufferBuilder,
+    LINK_IDOffset LINK_ID: Offset,
+    LINK_NAMEOffset LINK_NAME: Offset = Offset(),
+    LINK_KIND: rflLinkKind = .unspecified,
+    TRANSMIT_ENDPOINTOffset TRANSMIT_ENDPOINT: Offset,
+    RECEIVE_ENDPOINTOffset RECEIVE_ENDPOINT: Offset,
+    CENTER_FREQUENCY_MHZ: Double = 0.0,
+    BANDWIDTH_MHZ: Double = 0.0,
+    MODULATIONOffset MODULATION: Offset = Offset(),
+    CODINGOffset CODING: Offset = Offset(),
+    CODE_RATE: Double = 0.0,
+    SYMBOL_RATE_BAUD: Double = 0.0,
+    DATA_RATE_BPS: Double = 0.0,
+    THRESHOLD_TERM: rflBudgetTerm = .unspecified,
+    THRESHOLD_VALUE: Double = 0.0,
+    THRESHOLD_UNITSOffset THRESHOLD_UNITS: Offset = Offset(),
+    THRESHOLD_COMPARISON: rflComparison = .unspecified,
+    RECEIVER_GROUP_IDOffset RECEIVER_GROUP_ID: Offset = Offset(),
+    CHANNEL_GROUP_IDOffset CHANNEL_GROUP_ID: Offset = Offset(),
+    CONSTELLATIONOffset CONSTELLATION: Offset = Offset(),
+    SERVICEOffset SERVICE: Offset = Offset(),
+    MODCOD_SETVectorOffset MODCOD_SET: Offset = Offset(),
+    ACM_ENABLED: Bool = false
+  ) -> Offset {
+    let __start = RFLLink.startRFLLink(&fbb)
+    RFLLink.add(LINK_ID: LINK_ID, &fbb)
+    RFLLink.add(LINK_NAME: LINK_NAME, &fbb)
+    RFLLink.add(LINK_KIND: LINK_KIND, &fbb)
+    RFLLink.add(TRANSMIT_ENDPOINT: TRANSMIT_ENDPOINT, &fbb)
+    RFLLink.add(RECEIVE_ENDPOINT: RECEIVE_ENDPOINT, &fbb)
+    RFLLink.add(CENTER_FREQUENCY_MHZ: CENTER_FREQUENCY_MHZ, &fbb)
+    RFLLink.add(BANDWIDTH_MHZ: BANDWIDTH_MHZ, &fbb)
+    RFLLink.add(MODULATION: MODULATION, &fbb)
+    RFLLink.add(CODING: CODING, &fbb)
+    RFLLink.add(CODE_RATE: CODE_RATE, &fbb)
+    RFLLink.add(SYMBOL_RATE_BAUD: SYMBOL_RATE_BAUD, &fbb)
+    RFLLink.add(DATA_RATE_BPS: DATA_RATE_BPS, &fbb)
+    RFLLink.add(THRESHOLD_TERM: THRESHOLD_TERM, &fbb)
+    RFLLink.add(THRESHOLD_VALUE: THRESHOLD_VALUE, &fbb)
+    RFLLink.add(THRESHOLD_UNITS: THRESHOLD_UNITS, &fbb)
+    RFLLink.add(THRESHOLD_COMPARISON: THRESHOLD_COMPARISON, &fbb)
+    RFLLink.add(RECEIVER_GROUP_ID: RECEIVER_GROUP_ID, &fbb)
+    RFLLink.add(CHANNEL_GROUP_ID: CHANNEL_GROUP_ID, &fbb)
+    RFLLink.add(CONSTELLATION: CONSTELLATION, &fbb)
+    RFLLink.add(SERVICE: SERVICE, &fbb)
+    RFLLink.addVectorOf(MODCOD_SET: MODCOD_SET, &fbb)
+    RFLLink.add(ACM_ENABLED: ACM_ENABLED, &fbb)
+    return RFLLink.endRFLLink(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.LINK_ID, fieldName: "LINK_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_NAME, fieldName: "LINK_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_KIND, fieldName: "LINK_KIND", required: false, type: rflLinkKind.self)
+    try _v.visit(field: VT.TRANSMIT_ENDPOINT, fieldName: "TRANSMIT_ENDPOINT", required: true, type: ForwardOffset<RFLEndpoint>.self)
+    try _v.visit(field: VT.RECEIVE_ENDPOINT, fieldName: "RECEIVE_ENDPOINT", required: true, type: ForwardOffset<RFLEndpoint>.self)
+    try _v.visit(field: VT.CENTER_FREQUENCY_MHZ, fieldName: "CENTER_FREQUENCY_MHZ", required: false, type: Double.self)
+    try _v.visit(field: VT.BANDWIDTH_MHZ, fieldName: "BANDWIDTH_MHZ", required: false, type: Double.self)
+    try _v.visit(field: VT.MODULATION, fieldName: "MODULATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CODING, fieldName: "CODING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CODE_RATE, fieldName: "CODE_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.SYMBOL_RATE_BAUD, fieldName: "SYMBOL_RATE_BAUD", required: false, type: Double.self)
+    try _v.visit(field: VT.DATA_RATE_BPS, fieldName: "DATA_RATE_BPS", required: false, type: Double.self)
+    try _v.visit(field: VT.THRESHOLD_TERM, fieldName: "THRESHOLD_TERM", required: false, type: rflBudgetTerm.self)
+    try _v.visit(field: VT.THRESHOLD_VALUE, fieldName: "THRESHOLD_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.THRESHOLD_UNITS, fieldName: "THRESHOLD_UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THRESHOLD_COMPARISON, fieldName: "THRESHOLD_COMPARISON", required: false, type: rflComparison.self)
+    try _v.visit(field: VT.RECEIVER_GROUP_ID, fieldName: "RECEIVER_GROUP_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANNEL_GROUP_ID, fieldName: "CHANNEL_GROUP_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSTELLATION, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SERVICE, fieldName: "SERVICE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODCOD_SET, fieldName: "MODCOD_SET", required: false, type: ForwardOffset<Vector<ForwardOffset<RFLModCod>, RFLModCod>>.self)
+    try _v.visit(field: VT.ACM_ENABLED, fieldName: "ACM_ENABLED", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  One interfering contribution to one sample. SPARSE: entries exist only
+///  where a contribution was computed, so a dense matrix is never forced into
+///  existence to say "no interference computed".
+public struct RFLInterferenceContribution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLInterferenceContribution.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SAMPLE_INDEX: VOffset = 4
+    static let SOURCE_ENDPOINT_ID: VOffset = 6
+    static let RFE_ID: VOffset = 8
+    static let RFB_ID: VOffset = 10
+    static let NORAD_CAT_ID: VOffset = 12
+    static let INTERFERENCE_POWER_DBW: VOffset = 14
+    static let TOPOCENTRIC_SEPARATION_DEG: VOffset = 16
+    static let SPECTRAL_OVERLAP_FRACTION: VOffset = 18
+    static let POLARIZATION_ISOLATION_DB: VOffset = 20
+    static let ANTENNA_DISCRIMINATION_DB: VOffset = 22
+  }
+
+  ///  Index into the sample arrays this contribution applies to.
+  public var SAMPLE_INDEX: UInt32 { let o = _accessor.offset(VT.SAMPLE_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Endpoint identifier of the interfering emitter, when it is an endpoint of
+  ///  this record.
+  public var SOURCE_ENDPOINT_ID: String? { let o = _accessor.offset(VT.SOURCE_ENDPOINT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_ENDPOINT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_ENDPOINT_ID) }
+  ///  `$RFE.ID` of the interfering emitter.
+  public var RFE_ID: String? { let o = _accessor.offset(VT.RFE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFE_ID) }
+  ///  `$RFB.ID` of the interfering emission.
+  public var RFB_ID: String? { let o = _accessor.offset(VT.RFB_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RFB_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RFB_ID) }
+  ///  Interfering object's catalogue number, 0 when unbound.
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Received interfering power at the victim receiver, dBW.
+  public var INTERFERENCE_POWER_DBW: Double { let o = _accessor.offset(VT.INTERFERENCE_POWER_DBW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular separation between the wanted and interfering paths at the
+  ///  victim receiver, degrees.
+  public var TOPOCENTRIC_SEPARATION_DEG: Double { let o = _accessor.offset(VT.TOPOCENTRIC_SEPARATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fraction of the victim's bandwidth overlapped by this emission [0-1].
+  public var SPECTRAL_OVERLAP_FRACTION: Double { let o = _accessor.offset(VT.SPECTRAL_OVERLAP_FRACTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Polarization isolation applied to this contribution, dB.
+  public var POLARIZATION_ISOLATION_DB: Double { let o = _accessor.offset(VT.POLARIZATION_ISOLATION_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Discrimination applied from the victim antenna pattern, dB.
+  public var ANTENNA_DISCRIMINATION_DB: Double { let o = _accessor.offset(VT.ANTENNA_DISCRIMINATION_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startRFLInterferenceContribution(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(SAMPLE_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_INDEX, def: 0, at: VT.SAMPLE_INDEX) }
+  public static func add(SOURCE_ENDPOINT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ENDPOINT_ID, at: VT.SOURCE_ENDPOINT_ID) }
+  public static func add(RFE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFE_ID, at: VT.RFE_ID) }
+  public static func add(RFB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFB_ID, at: VT.RFB_ID) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(INTERFERENCE_POWER_DBW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERFERENCE_POWER_DBW, def: 0.0, at: VT.INTERFERENCE_POWER_DBW) }
+  public static func add(TOPOCENTRIC_SEPARATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOPOCENTRIC_SEPARATION_DEG, def: 0.0, at: VT.TOPOCENTRIC_SEPARATION_DEG) }
+  public static func add(SPECTRAL_OVERLAP_FRACTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECTRAL_OVERLAP_FRACTION, def: 0.0, at: VT.SPECTRAL_OVERLAP_FRACTION) }
+  public static func add(POLARIZATION_ISOLATION_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION_ISOLATION_DB, def: 0.0, at: VT.POLARIZATION_ISOLATION_DB) }
+  public static func add(ANTENNA_DISCRIMINATION_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANTENNA_DISCRIMINATION_DB, def: 0.0, at: VT.ANTENNA_DISCRIMINATION_DB) }
+  public static func endRFLInterferenceContribution(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createRFLInterferenceContribution(
+    _ fbb: inout FlatBufferBuilder,
+    SAMPLE_INDEX: UInt32 = 0,
+    SOURCE_ENDPOINT_IDOffset SOURCE_ENDPOINT_ID: Offset = Offset(),
+    RFE_IDOffset RFE_ID: Offset = Offset(),
+    RFB_IDOffset RFB_ID: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    INTERFERENCE_POWER_DBW: Double = 0.0,
+    TOPOCENTRIC_SEPARATION_DEG: Double = 0.0,
+    SPECTRAL_OVERLAP_FRACTION: Double = 0.0,
+    POLARIZATION_ISOLATION_DB: Double = 0.0,
+    ANTENNA_DISCRIMINATION_DB: Double = 0.0
+  ) -> Offset {
+    let __start = RFLInterferenceContribution.startRFLInterferenceContribution(&fbb)
+    RFLInterferenceContribution.add(SAMPLE_INDEX: SAMPLE_INDEX, &fbb)
+    RFLInterferenceContribution.add(SOURCE_ENDPOINT_ID: SOURCE_ENDPOINT_ID, &fbb)
+    RFLInterferenceContribution.add(RFE_ID: RFE_ID, &fbb)
+    RFLInterferenceContribution.add(RFB_ID: RFB_ID, &fbb)
+    RFLInterferenceContribution.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    RFLInterferenceContribution.add(INTERFERENCE_POWER_DBW: INTERFERENCE_POWER_DBW, &fbb)
+    RFLInterferenceContribution.add(TOPOCENTRIC_SEPARATION_DEG: TOPOCENTRIC_SEPARATION_DEG, &fbb)
+    RFLInterferenceContribution.add(SPECTRAL_OVERLAP_FRACTION: SPECTRAL_OVERLAP_FRACTION, &fbb)
+    RFLInterferenceContribution.add(POLARIZATION_ISOLATION_DB: POLARIZATION_ISOLATION_DB, &fbb)
+    RFLInterferenceContribution.add(ANTENNA_DISCRIMINATION_DB: ANTENNA_DISCRIMINATION_DB, &fbb)
+    return RFLInterferenceContribution.endRFLInterferenceContribution(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SAMPLE_INDEX, fieldName: "SAMPLE_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_ENDPOINT_ID, fieldName: "SOURCE_ENDPOINT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFE_ID, fieldName: "RFE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RFB_ID, fieldName: "RFB_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INTERFERENCE_POWER_DBW, fieldName: "INTERFERENCE_POWER_DBW", required: false, type: Double.self)
+    try _v.visit(field: VT.TOPOCENTRIC_SEPARATION_DEG, fieldName: "TOPOCENTRIC_SEPARATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.SPECTRAL_OVERLAP_FRACTION, fieldName: "SPECTRAL_OVERLAP_FRACTION", required: false, type: Double.self)
+    try _v.visit(field: VT.POLARIZATION_ISOLATION_DB, fieldName: "POLARIZATION_ISOLATION_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.ANTENNA_DISCRIMINATION_DB, fieldName: "ANTENNA_DISCRIMINATION_DB", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  A named parameter of a model binding, with its unit stated. There is no
+///  encoding for a parameter value without a unit.
+public struct RFLModelParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLModelParameter.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let VALUE: VOffset = 6
+    static let UNITS: VOffset = 8
+    static let TEXT_VALUE: VOffset = 10
+  }
+
+  public var NAME: String! { let o = _accessor.offset(VT.NAME); return _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NAME) }
+  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UNITS: String! { let o = _accessor.offset(VT.UNITS); return _accessor.string(at: o) }
+  public var UNITSSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.UNITS) }
+  ///  Non-numeric parameter value, when the parameter is categorical.
+  public var TEXT_VALUE: String? { let o = _accessor.offset(VT.TEXT_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TEXT_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TEXT_VALUE) }
+  public static func startRFLModelParameter(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
+  public static func add(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(TEXT_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT_VALUE, at: VT.TEXT_VALUE) }
+  public static func endRFLModelParameter(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8]); return end }
+  public static func createRFLModelParameter(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset,
+    VALUE: Double = 0.0,
+    UNITSOffset UNITS: Offset,
+    TEXT_VALUEOffset TEXT_VALUE: Offset = Offset()
+  ) -> Offset {
+    let __start = RFLModelParameter.startRFLModelParameter(&fbb)
+    RFLModelParameter.add(NAME: NAME, &fbb)
+    RFLModelParameter.add(VALUE: VALUE, &fbb)
+    RFLModelParameter.add(UNITS: UNITS, &fbb)
+    RFLModelParameter.add(TEXT_VALUE: TEXT_VALUE, &fbb)
+    return RFLModelParameter.endRFLModelParameter(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TEXT_VALUE, fieldName: "TEXT_VALUE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Which model produced one term of the budget. A loss term without a model
+///  binding is an unattributed number: rain attenuation from two different
+///  recommendations differs by decibels, and a consumer must be able to tell
+///  which one it is holding.
+public struct RFLModelBinding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLModelBinding.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TERM: VOffset = 4
+    static let MODEL_NAME: VOffset = 6
+    static let MODEL_VERSION: VOffset = 8
+    static let MODULE_ID: VOffset = 10
+    static let MODULE_VERSION: VOffset = 12
+    static let MODULE_CONTENT_HASH: VOffset = 14
+    static let PARAMETERS: VOffset = 16
+  }
+
+  ///  The budget term this binding produced.
+  public var TERM: rflBudgetTerm { let o = _accessor.offset(VT.TERM); return o == 0 ? .unspecified : rflBudgetTerm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Model or recommendation identifier as its publisher states it (e.g. an
+  ///  ITU-R recommendation number with its revision).
+  public var MODEL_NAME: String! { let o = _accessor.offset(VT.MODEL_NAME); return _accessor.string(at: o) }
+  public var MODEL_NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODEL_NAME) }
+  public var MODEL_VERSION: String? { let o = _accessor.offset(VT.MODEL_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODEL_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_VERSION) }
+  ///  `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` of the module that evaluated it.
+  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
+  ///  Content hash of the exact artifact that produced the values.
+  public var MODULE_CONTENT_HASH: String? { let o = _accessor.offset(VT.MODULE_CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_CONTENT_HASH) }
+  public var PARAMETERS: FlatbufferVector<RFLModelParameter> { return _accessor.vector(at: VT.PARAMETERS, byteSize: 4) }
+  public static func startRFLModelBinding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(TERM: rflBudgetTerm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TERM.rawValue, def: 0, at: VT.TERM) }
+  public static func add(MODEL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_NAME, at: VT.MODEL_NAME) }
+  public static func add(MODEL_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_VERSION, at: VT.MODEL_VERSION) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(MODULE_CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_CONTENT_HASH, at: VT.MODULE_CONTENT_HASH) }
+  public static func addVectorOf(PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETERS, at: VT.PARAMETERS) }
+  public static func endRFLModelBinding(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
+  public static func createRFLModelBinding(
+    _ fbb: inout FlatBufferBuilder,
+    TERM: rflBudgetTerm = .unspecified,
+    MODEL_NAMEOffset MODEL_NAME: Offset,
+    MODEL_VERSIONOffset MODEL_VERSION: Offset = Offset(),
+    MODULE_IDOffset MODULE_ID: Offset = Offset(),
+    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
+    MODULE_CONTENT_HASHOffset MODULE_CONTENT_HASH: Offset = Offset(),
+    PARAMETERSVectorOffset PARAMETERS: Offset = Offset()
+  ) -> Offset {
+    let __start = RFLModelBinding.startRFLModelBinding(&fbb)
+    RFLModelBinding.add(TERM: TERM, &fbb)
+    RFLModelBinding.add(MODEL_NAME: MODEL_NAME, &fbb)
+    RFLModelBinding.add(MODEL_VERSION: MODEL_VERSION, &fbb)
+    RFLModelBinding.add(MODULE_ID: MODULE_ID, &fbb)
+    RFLModelBinding.add(MODULE_VERSION: MODULE_VERSION, &fbb)
+    RFLModelBinding.add(MODULE_CONTENT_HASH: MODULE_CONTENT_HASH, &fbb)
+    RFLModelBinding.addVectorOf(PARAMETERS: PARAMETERS, &fbb)
+    return RFLModelBinding.endRFLModelBinding(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TERM, fieldName: "TERM", required: false, type: rflBudgetTerm.self)
+    try _v.visit(field: VT.MODEL_NAME, fieldName: "MODEL_NAME", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODEL_VERSION, fieldName: "MODEL_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_CONTENT_HASH, fieldName: "MODULE_CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETERS, fieldName: "PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<RFLModelParameter>, RFLModelParameter>>.self)
+    _v.finish()
+  }
+}
+
+///  Where this sample set came from, stated once for the record.
+public struct RFLProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLProvenance.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let METHOD: VOffset = 4
+    static let SOURCE: VOffset = 6
+    static let SOURCE_QUERY: VOffset = 8
+    static let PROPAGATOR_ID: VOffset = 10
+    static let PROPAGATOR_VERSION: VOffset = 12
+    static let PROPAGATOR_CONFIGURATION: VOffset = 14
+    static let SAMPLING_STEP_S: VOffset = 16
+    static let MODELS: VOffset = 18
+    static let ENVIRONMENT_DATASET: VOffset = 20
+    static let TERRAIN_DATASET: VOffset = 22
+    static let COMPUTED_AT: VOffset = 24
+    static let RETRIEVED_AT: VOffset = 26
+    static let LICENSE: VOffset = 28
+    static let NON_COMMERCIAL_ONLY: VOffset = 30
+    static let CITATION: VOffset = 32
+    static let MODULE_ID: VOffset = 34
+    static let MODULE_VERSION: VOffset = 36
+    static let MODULE_CONTENT_HASH: VOffset = 38
+  }
+
+  public var METHOD: rflMethod { let o = _accessor.offset(VT.METHOD); return o == 0 ? .unspecified : rflMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  The producing system, dataset or measurement campaign. Required: a
+  ///  budget time series with no stated source is not publishable.
+  public var SOURCE: String! { let o = _accessor.offset(VT.SOURCE); return _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE) }
+  ///  Replayable query or scenario reference that regenerates this set.
+  public var SOURCE_QUERY: String? { let o = _accessor.offset(VT.SOURCE_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_QUERY) }
+  ///  Identifier of the propagator that produced the geometry columns. A record
+  ///  whose METHOD is MODELED or HYBRID and which carries geometry columns MUST
+  ///  name it: geometry is only as good as the propagator, and the propagator is
+  ///  a pluggable choice, never an assumed default.
+  public var PROPAGATOR_ID: String? { let o = _accessor.offset(VT.PROPAGATOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_ID) }
+  public var PROPAGATOR_VERSION: String? { let o = _accessor.offset(VT.PROPAGATOR_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_VERSION) }
+  ///  Force model or configuration identifier handed to the propagator.
+  public var PROPAGATOR_CONFIGURATION: String? { let o = _accessor.offset(VT.PROPAGATOR_CONFIGURATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_CONFIGURATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_CONFIGURATION) }
+  ///  Uniform sampling step, seconds. Absent when SAMPLE_EPOCHS are irregular.
+  public var SAMPLING_STEP_S: Double { let o = _accessor.offset(VT.SAMPLING_STEP_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Per-term model bindings.
+  public var MODELS: FlatbufferVector<RFLModelBinding> { return _accessor.vector(at: VT.MODELS, byteSize: 4) }
+  ///  Weather or environment dataset the atmospheric terms were evaluated
+  ///  against, when they were not evaluated against a statistical model.
+  public var ENVIRONMENT_DATASET: String? { let o = _accessor.offset(VT.ENVIRONMENT_DATASET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENVIRONMENT_DATASETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENVIRONMENT_DATASET) }
+  ///  Terrain or surface dataset the blockage terms were evaluated against.
+  public var TERRAIN_DATASET: String? { let o = _accessor.offset(VT.TERRAIN_DATASET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TERRAIN_DATASETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TERRAIN_DATASET) }
+  ///  Unix ms this set was computed or recorded.
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Unix ms the upstream inputs were retrieved.
+  public var RETRIEVED_AT: UInt64 { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Licence the source imposes on redistribution. An empty LICENSE means
+  ///  UNKNOWN TERMS — never public domain, never a grant to redistribute.
+  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
+  ///  True when the licence forbids commercial use of this set.
+  public var NON_COMMERCIAL_ONLY: Bool { let o = _accessor.offset(VT.NON_COMMERCIAL_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Attribution the licence requires this record to carry downstream.
+  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
+  ///  Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.
+  ///  MODELS remains the per-budget-term attribution surface.
+  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
+  ///  Content hash of the exact producing WASM artifact.
+  public var MODULE_CONTENT_HASH: String? { let o = _accessor.offset(VT.MODULE_CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_CONTENT_HASH) }
+  public static func startRFLProvenance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  public static func add(METHOD: rflMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METHOD.rawValue, def: 0, at: VT.METHOD) }
   public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(TARGET_TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_TIME_SYSTEM.rawValue, def: 0, at: VT.TARGET_TIME_SYSTEM) }
-  public static func add(TARGET_EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_EPOCH_FORMAT.rawValue, def: 0, at: VT.TARGET_EPOCH_FORMAT) }
-  public static func add(TAI_MINUS_UTC_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAI_MINUS_UTC_SECONDS, def: 0.0, at: VT.TAI_MINUS_UTC_SECONDS) }
-  public static func add(HAS_TAI_MINUS_UTC: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TAI_MINUS_UTC, def: false,
-   at: VT.HAS_TAI_MINUS_UTC) }
-  public static func add(DUT1_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DUT1_SECONDS, def: 0.0, at: VT.DUT1_SECONDS) }
-  public static func add(HAS_DUT1: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DUT1, def: false,
-   at: VT.HAS_DUT1) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endTIMConversionRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMConversionRequest(
+  public static func add(SOURCE_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_QUERY, at: VT.SOURCE_QUERY) }
+  public static func add(PROPAGATOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_ID, at: VT.PROPAGATOR_ID) }
+  public static func add(PROPAGATOR_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_VERSION, at: VT.PROPAGATOR_VERSION) }
+  public static func add(PROPAGATOR_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_CONFIGURATION, at: VT.PROPAGATOR_CONFIGURATION) }
+  public static func add(SAMPLING_STEP_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLING_STEP_S, def: 0.0, at: VT.SAMPLING_STEP_S) }
+  public static func addVectorOf(MODELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODELS, at: VT.MODELS) }
+  public static func add(ENVIRONMENT_DATASET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENT_DATASET, at: VT.ENVIRONMENT_DATASET) }
+  public static func add(TERRAIN_DATASET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TERRAIN_DATASET, at: VT.TERRAIN_DATASET) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func add(RETRIEVED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RETRIEVED_AT, def: 0, at: VT.RETRIEVED_AT) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(NON_COMMERCIAL_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NON_COMMERCIAL_ONLY, def: false,
+   at: VT.NON_COMMERCIAL_ONLY) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(MODULE_CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_CONTENT_HASH, at: VT.MODULE_CONTENT_HASH) }
+  public static func endRFLProvenance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
+  public static func createRFLProvenance(
     _ fbb: inout FlatBufferBuilder,
-    SOURCEOffset SOURCE: Offset = Offset(),
-    TARGET_TIME_SYSTEM: timingStandard = .gmst,
-    TARGET_EPOCH_FORMAT: timEpochRepresentation = .julianDate,
-    TAI_MINUS_UTC_SECONDS: Double = 0.0,
-    HAS_TAI_MINUS_UTC: Bool = false,
-    DUT1_SECONDS: Double = 0.0,
-    HAS_DUT1: Bool = false,
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    METHOD: rflMethod = .unspecified,
+    SOURCEOffset SOURCE: Offset,
+    SOURCE_QUERYOffset SOURCE_QUERY: Offset = Offset(),
+    PROPAGATOR_IDOffset PROPAGATOR_ID: Offset = Offset(),
+    PROPAGATOR_VERSIONOffset PROPAGATOR_VERSION: Offset = Offset(),
+    PROPAGATOR_CONFIGURATIONOffset PROPAGATOR_CONFIGURATION: Offset = Offset(),
+    SAMPLING_STEP_S: Double = 0.0,
+    MODELSVectorOffset MODELS: Offset = Offset(),
+    ENVIRONMENT_DATASETOffset ENVIRONMENT_DATASET: Offset = Offset(),
+    TERRAIN_DATASETOffset TERRAIN_DATASET: Offset = Offset(),
+    COMPUTED_AT: UInt64 = 0,
+    RETRIEVED_AT: UInt64 = 0,
+    LICENSEOffset LICENSE: Offset = Offset(),
+    NON_COMMERCIAL_ONLY: Bool = false,
+    CITATIONOffset CITATION: Offset = Offset(),
+    MODULE_IDOffset MODULE_ID: Offset = Offset(),
+    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
+    MODULE_CONTENT_HASHOffset MODULE_CONTENT_HASH: Offset = Offset()
   ) -> Offset {
-    let __start = TIMConversionRequest.startTIMConversionRequest(&fbb)
-    TIMConversionRequest.add(SOURCE: SOURCE, &fbb)
-    TIMConversionRequest.add(TARGET_TIME_SYSTEM: TARGET_TIME_SYSTEM, &fbb)
-    TIMConversionRequest.add(TARGET_EPOCH_FORMAT: TARGET_EPOCH_FORMAT, &fbb)
-    TIMConversionRequest.add(TAI_MINUS_UTC_SECONDS: TAI_MINUS_UTC_SECONDS, &fbb)
-    TIMConversionRequest.add(HAS_TAI_MINUS_UTC: HAS_TAI_MINUS_UTC, &fbb)
-    TIMConversionRequest.add(DUT1_SECONDS: DUT1_SECONDS, &fbb)
-    TIMConversionRequest.add(HAS_DUT1: HAS_DUT1, &fbb)
-    TIMConversionRequest.add(TRACE_ID: TRACE_ID, &fbb)
-    return TIMConversionRequest.endTIMConversionRequest(&fbb, start: __start)
+    let __start = RFLProvenance.startRFLProvenance(&fbb)
+    RFLProvenance.add(METHOD: METHOD, &fbb)
+    RFLProvenance.add(SOURCE: SOURCE, &fbb)
+    RFLProvenance.add(SOURCE_QUERY: SOURCE_QUERY, &fbb)
+    RFLProvenance.add(PROPAGATOR_ID: PROPAGATOR_ID, &fbb)
+    RFLProvenance.add(PROPAGATOR_VERSION: PROPAGATOR_VERSION, &fbb)
+    RFLProvenance.add(PROPAGATOR_CONFIGURATION: PROPAGATOR_CONFIGURATION, &fbb)
+    RFLProvenance.add(SAMPLING_STEP_S: SAMPLING_STEP_S, &fbb)
+    RFLProvenance.addVectorOf(MODELS: MODELS, &fbb)
+    RFLProvenance.add(ENVIRONMENT_DATASET: ENVIRONMENT_DATASET, &fbb)
+    RFLProvenance.add(TERRAIN_DATASET: TERRAIN_DATASET, &fbb)
+    RFLProvenance.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    RFLProvenance.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
+    RFLProvenance.add(LICENSE: LICENSE, &fbb)
+    RFLProvenance.add(NON_COMMERCIAL_ONLY: NON_COMMERCIAL_ONLY, &fbb)
+    RFLProvenance.add(CITATION: CITATION, &fbb)
+    RFLProvenance.add(MODULE_ID: MODULE_ID, &fbb)
+    RFLProvenance.add(MODULE_VERSION: MODULE_VERSION, &fbb)
+    RFLProvenance.add(MODULE_CONTENT_HASH: MODULE_CONTENT_HASH, &fbb)
+    return RFLProvenance.endRFLProvenance(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.TARGET_TIME_SYSTEM, fieldName: "TARGET_TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.TARGET_EPOCH_FORMAT, fieldName: "TARGET_EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
-    try _v.visit(field: VT.TAI_MINUS_UTC_SECONDS, fieldName: "TAI_MINUS_UTC_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_TAI_MINUS_UTC, fieldName: "HAS_TAI_MINUS_UTC", required: false, type: Bool.self)
-    try _v.visit(field: VT.DUT1_SECONDS, fieldName: "DUT1_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.HAS_DUT1, fieldName: "HAS_DUT1", required: false, type: Bool.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.METHOD, fieldName: "METHOD", required: false, type: rflMethod.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_QUERY, fieldName: "SOURCE_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_ID, fieldName: "PROPAGATOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_VERSION, fieldName: "PROPAGATOR_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_CONFIGURATION, fieldName: "PROPAGATOR_CONFIGURATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAMPLING_STEP_S, fieldName: "SAMPLING_STEP_S", required: false, type: Double.self)
+    try _v.visit(field: VT.MODELS, fieldName: "MODELS", required: false, type: ForwardOffset<Vector<ForwardOffset<RFLModelBinding>, RFLModelBinding>>.self)
+    try _v.visit(field: VT.ENVIRONMENT_DATASET, fieldName: "ENVIRONMENT_DATASET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TERRAIN_DATASET, fieldName: "TERRAIN_DATASET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NON_COMMERCIAL_ONLY, fieldName: "NON_COMMERCIAL_ONLY", required: false, type: Bool.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_CONTENT_HASH, fieldName: "MODULE_CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Result of a time conversion request.
-public struct TIMConversionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  RF Link Sample
+public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionResult.id, addPrefix: prefix) }
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFL.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let SOURCE: VOffset = 4
-    static let TARGET: VOffset = 6
-    static let DELTA_SECONDS: VOffset = 8
-    static let STATUS: VOffset = 10
-    static let ERROR_MESSAGE: VOffset = 12
-    static let TRACE_ID: VOffset = 14
+    static let RFL_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let SCENARIO_ID: VOffset = 8
+    static let LINKS: VOffset = 10
+    static let SAMPLE_COUNT: VOffset = 12
+    static let SAMPLE_LINK_INDEXES: VOffset = 14
+    static let SAMPLE_EPOCHS: VOffset = 16
+    static let TIME_SYSTEM: VOffset = 18
+    static let ACCESS_STATES: VOffset = 20
+    static let RANGE_M: VOffset = 22
+    static let RANGE_RATE_M_S: VOffset = 24
+    static let AZIMUTH_DEG: VOffset = 26
+    static let ELEVATION_DEG: VOffset = 28
+    static let TRANSMIT_AZIMUTH_DEG: VOffset = 30
+    static let TRANSMIT_ELEVATION_DEG: VOffset = 32
+    static let DOPPLER_SHIFT_HZ: VOffset = 34
+    static let DOPPLER_RATE_HZ_S: VOffset = 36
+    static let EIRP_DBW: VOffset = 38
+    static let TRANSMIT_ANTENNA_GAIN_DBI: VOffset = 40
+    static let RECEIVE_ANTENNA_GAIN_DBI: VOffset = 42
+    static let FREE_SPACE_PATH_LOSS_DB: VOffset = 44
+    static let GASEOUS_ABSORPTION_LOSS_DB: VOffset = 46
+    static let RAIN_LOSS_DB: VOffset = 48
+    static let CLOUD_FOG_LOSS_DB: VOffset = 50
+    static let SCINTILLATION_LOSS_DB: VOffset = 52
+    static let TERRAIN_DIFFRACTION_LOSS_DB: VOffset = 54
+    static let OBSTRUCTION_LOSS_DB: VOffset = 56
+    static let POLARIZATION_LOSS_DB: VOffset = 58
+    static let POINTING_LOSS_DB: VOffset = 60
+    static let IMPLEMENTATION_LOSS_DB: VOffset = 62
+    static let TOTAL_PATH_LOSS_DB: VOffset = 64
+    static let RECEIVED_POWER_DBW: VOffset = 66
+    static let SYSTEM_NOISE_TEMPERATURE_K: VOffset = 68
+    static let GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: VOffset = 70
+    static let CARRIER_TO_NOISE_DENSITY_DBHZ: VOffset = 72
+    static let CARRIER_TO_NOISE_DB: VOffset = 74
+    static let ENERGY_PER_BIT_TO_NOISE_DENSITY_DB: VOffset = 76
+    static let BIT_ERROR_RATE: VOffset = 78
+    static let LINK_MARGIN_DB: VOffset = 80
+    static let CHANNEL_CAPACITY_BPS: VOffset = 82
+    static let INTERFERENCE_POWER_DBW: VOffset = 84
+    static let CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB: VOffset = 86
+    static let SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB: VOffset = 88
+    static let INTERFERENCE_CONTRIBUTIONS: VOffset = 90
+    static let OBSTRUCTIONS: VOffset = 92
+    static let LIMITING_CONSTRAINTS: VOffset = 94
+    static let LIMITING_CONSTRAINT_NOTE: VOffset = 96
+    static let PROVENANCE: VOffset = 98
+    static let COMPUTED_AT: VOffset = 100
+    static let PRODUCER_ID: VOffset = 102
+    static let SIGNATURE: VOffset = 104
+    static let CANONICAL_JSON_SIGNATURE: VOffset = 106
+    static let SELECTED_MODCOD_INDEX: VOffset = 108
+    static let SELECTED_MODCOD_VALID: VOffset = 110
+    static let SPECTRAL_EFFICIENCY_BPS_HZ: VOffset = 112
+    static let ACHIEVED_DATA_RATE_BPS: VOffset = 114
+    static let ACM_MARGIN_DB: VOffset = 116
+    static let ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: VOffset = 118
+    static let BLOCK_ERROR_RATE: VOffset = 120
   }
 
-  ///  Original source instant.
-  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Converted target instant.
-  public var TARGET: TIMInstant? { let o = _accessor.offset(VT.TARGET); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Target minus source offset in SI seconds for the requested conversion.
-  public var DELTA_SECONDS: Double { let o = _accessor.offset(VT.DELTA_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Conversion status.
-  public var STATUS: timConversionStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : timConversionStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ok }
-  ///  Optional error detail when STATUS is not OK.
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  ///  Caller trace/correlation identifier copied from the request when present.
-  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startTIMConversionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
-  public static func add(TARGET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET, at: VT.TARGET) }
-  public static func add(DELTA_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_SECONDS, def: 0.0, at: VT.DELTA_SECONDS) }
-  public static func add(STATUS: timConversionStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
-  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
-  public static func endTIMConversionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIMConversionResult(
+  ///  Stable identifier of this sample set.
+  public var RFL_ID: String! { let o = _accessor.offset(VT.RFL_ID); return _accessor.string(at: o) }
+  public var RFL_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.RFL_ID) }
+  ///  Display name.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Analysis or scenario grouping identifier shared with the `$ACI` and
+  ///  `$CVP` products derived from this set.
+  public var SCENARIO_ID: String? { let o = _accessor.offset(VT.SCENARIO_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCENARIO_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCENARIO_ID) }
+  ///  Link definitions. SAMPLE_LINK_INDEXES index into this vector.
+  public var LINKS: FlatbufferVector<RFLLink> { return _accessor.vector(at: VT.LINKS, byteSize: 4) }
+  ///  Number of samples. Every present metric array MUST have exactly this
+  ///  many entries.
+  public var SAMPLE_COUNT: UInt32 { let o = _accessor.offset(VT.SAMPLE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Index into LINKS for each sample.
+  public var SAMPLE_LINK_INDEXES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.SAMPLE_LINK_INDEXES, byteSize: 4) }
+  public func withUnsafePointerToSampleLinkIndexes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SAMPLE_LINK_INDEXES, body: body) }
+  ///  Sample epochs, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM. Samples
+  ///  need not be uniformly spaced and need not be grouped by link, but MUST be
+  ///  non-decreasing within each link.
+  public var SAMPLE_EPOCHS: FlatbufferVector<Double> { return _accessor.vector(at: VT.SAMPLE_EPOCHS, byteSize: 8) }
+  public func withUnsafePointerToSampleEpochs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SAMPLE_EPOCHS, body: body) }
+  ///  Time scale SAMPLE_EPOCHS are expressed in. Defaults to UTC explicitly:
+  ///  `timingStandard` ordinal 0 is GMST, so an unset field would otherwise
+  ///  decode as sidereal time.
+  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .utc : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .utc }
+  ///  Access state per sample.
+  public var ACCESS_STATES: FlatbufferVector<rflAccessState> { return _accessor.vector(at: VT.ACCESS_STATES, byteSize: 1) }
+  ///  Slant range, metres.
+  public var RANGE_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.RANGE_M, byteSize: 8) }
+  public func withUnsafePointerToRangeM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RANGE_M, body: body) }
+  ///  Range rate, metres per second; positive is opening.
+  public var RANGE_RATE_M_S: FlatbufferVector<Double> { return _accessor.vector(at: VT.RANGE_RATE_M_S, byteSize: 8) }
+  public func withUnsafePointerToRangeRateMS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RANGE_RATE_M_S, body: body) }
+  ///  Azimuth at the receiving endpoint, degrees east of north [0-360).
+  public var AZIMUTH_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.AZIMUTH_DEG, byteSize: 8) }
+  public func withUnsafePointerToAzimuthDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.AZIMUTH_DEG, body: body) }
+  ///  Elevation at the receiving endpoint, degrees above the local horizon.
+  public var ELEVATION_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.ELEVATION_DEG, byteSize: 8) }
+  public func withUnsafePointerToElevationDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ELEVATION_DEG, body: body) }
+  ///  Azimuth at the transmitting endpoint, degrees east of north [0-360).
+  public var TRANSMIT_AZIMUTH_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.TRANSMIT_AZIMUTH_DEG, byteSize: 8) }
+  public func withUnsafePointerToTransmitAzimuthDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TRANSMIT_AZIMUTH_DEG, body: body) }
+  ///  Elevation at the transmitting endpoint, degrees.
+  public var TRANSMIT_ELEVATION_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.TRANSMIT_ELEVATION_DEG, byteSize: 8) }
+  public func withUnsafePointerToTransmitElevationDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TRANSMIT_ELEVATION_DEG, body: body) }
+  ///  One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+  ///  positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+  ///  this record — a shift of a few kHz on a GHz carrier is destroyed by an
+  ///  MHz encoding.
+  public var DOPPLER_SHIFT_HZ: FlatbufferVector<Double> { return _accessor.vector(at: VT.DOPPLER_SHIFT_HZ, byteSize: 8) }
+  public func withUnsafePointerToDopplerShiftHz<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DOPPLER_SHIFT_HZ, body: body) }
+  ///  Doppler rate, hertz per second.
+  public var DOPPLER_RATE_HZ_S: FlatbufferVector<Double> { return _accessor.vector(at: VT.DOPPLER_RATE_HZ_S, byteSize: 8) }
+  public func withUnsafePointerToDopplerRateHzS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DOPPLER_RATE_HZ_S, body: body) }
+  ///  Effective isotropic radiated power toward the receiver, dBW.
+  public var EIRP_DBW: FlatbufferVector<Double> { return _accessor.vector(at: VT.EIRP_DBW, byteSize: 8) }
+  public func withUnsafePointerToEirpDbw<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.EIRP_DBW, body: body) }
+  ///  Transmit antenna gain in the direction of the receiver, dBi.
+  public var TRANSMIT_ANTENNA_GAIN_DBI: FlatbufferVector<Double> { return _accessor.vector(at: VT.TRANSMIT_ANTENNA_GAIN_DBI, byteSize: 8) }
+  public func withUnsafePointerToTransmitAntennaGainDbi<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TRANSMIT_ANTENNA_GAIN_DBI, body: body) }
+  ///  Receive antenna gain in the direction of the transmitter, dBi.
+  public var RECEIVE_ANTENNA_GAIN_DBI: FlatbufferVector<Double> { return _accessor.vector(at: VT.RECEIVE_ANTENNA_GAIN_DBI, byteSize: 8) }
+  public func withUnsafePointerToReceiveAntennaGainDbi<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RECEIVE_ANTENNA_GAIN_DBI, body: body) }
+  ///  Free-space path loss, dB.
+  public var FREE_SPACE_PATH_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.FREE_SPACE_PATH_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToFreeSpacePathLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FREE_SPACE_PATH_LOSS_DB, body: body) }
+  ///  Gaseous (oxygen and water vapour) absorption, dB.
+  public var GASEOUS_ABSORPTION_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.GASEOUS_ABSORPTION_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToGaseousAbsorptionLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.GASEOUS_ABSORPTION_LOSS_DB, body: body) }
+  ///  Rain attenuation, dB.
+  public var RAIN_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.RAIN_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToRainLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RAIN_LOSS_DB, body: body) }
+  ///  Cloud and fog attenuation, dB.
+  public var CLOUD_FOG_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.CLOUD_FOG_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToCloudFogLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CLOUD_FOG_LOSS_DB, body: body) }
+  ///  Tropospheric or ionospheric scintillation, dB.
+  public var SCINTILLATION_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.SCINTILLATION_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToScintillationLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SCINTILLATION_LOSS_DB, body: body) }
+  ///  Terrain diffraction and blockage, dB.
+  public var TERRAIN_DIFFRACTION_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.TERRAIN_DIFFRACTION_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToTerrainDiffractionLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TERRAIN_DIFFRACTION_LOSS_DB, body: body) }
+  ///  Total loss from 3D obstacles on the path, dB. The per-obstacle detail —
+  ///  which object, which material, at what angle, through how much of it — is
+  ///  in OBSTRUCTIONS.
+  public var OBSTRUCTION_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.OBSTRUCTION_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToObstructionLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OBSTRUCTION_LOSS_DB, body: body) }
+  ///  Polarization mismatch, dB.
+  public var POLARIZATION_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.POLARIZATION_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToPolarizationLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POLARIZATION_LOSS_DB, body: body) }
+  ///  Antenna pointing error, dB.
+  public var POINTING_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.POINTING_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToPointingLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POINTING_LOSS_DB, body: body) }
+  ///  Implementation and hardware losses, dB.
+  public var IMPLEMENTATION_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.IMPLEMENTATION_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToImplementationLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.IMPLEMENTATION_LOSS_DB, body: body) }
+  ///  Total of all path terms actually applied, dB. Published as its own column
+  ///  rather than left to the consumer to sum: a producer that applied a term
+  ///  this schema has no column for MUST still report an honest total, and the
+  ///  discrepancy against the itemised columns is then visible.
+  public var TOTAL_PATH_LOSS_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.TOTAL_PATH_LOSS_DB, byteSize: 8) }
+  public func withUnsafePointerToTotalPathLossDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TOTAL_PATH_LOSS_DB, body: body) }
+  ///  Received carrier power at the receiver input, dBW.
+  public var RECEIVED_POWER_DBW: FlatbufferVector<Double> { return _accessor.vector(at: VT.RECEIVED_POWER_DBW, byteSize: 8) }
+  public func withUnsafePointerToReceivedPowerDbw<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RECEIVED_POWER_DBW, body: body) }
+  ///  Receiving system noise temperature, kelvin.
+  public var SYSTEM_NOISE_TEMPERATURE_K: FlatbufferVector<Double> { return _accessor.vector(at: VT.SYSTEM_NOISE_TEMPERATURE_K, byteSize: 8) }
+  public func withUnsafePointerToSystemNoiseTemperatureK<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SYSTEM_NOISE_TEMPERATURE_K, body: body) }
+  ///  Receiving system figure of merit G/T, dB/K.
+  public var GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: FlatbufferVector<Double> { return _accessor.vector(at: VT.GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, byteSize: 8) }
+  public func withUnsafePointerToGainToNoiseTemperatureDbPerK<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, body: body) }
+  ///  Carrier-to-noise-density ratio C/N0, dB-Hz.
+  public var CARRIER_TO_NOISE_DENSITY_DBHZ: FlatbufferVector<Double> { return _accessor.vector(at: VT.CARRIER_TO_NOISE_DENSITY_DBHZ, byteSize: 8) }
+  public func withUnsafePointerToCarrierToNoiseDensityDbhz<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CARRIER_TO_NOISE_DENSITY_DBHZ, body: body) }
+  ///  Carrier-to-noise ratio C/N in the occupied bandwidth, dB.
+  public var CARRIER_TO_NOISE_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.CARRIER_TO_NOISE_DB, byteSize: 8) }
+  public func withUnsafePointerToCarrierToNoiseDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CARRIER_TO_NOISE_DB, body: body) }
+  ///  Energy per bit to noise density Eb/N0, dB.
+  public var ENERGY_PER_BIT_TO_NOISE_DENSITY_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.ENERGY_PER_BIT_TO_NOISE_DENSITY_DB, byteSize: 8) }
+  public func withUnsafePointerToEnergyPerBitToNoiseDensityDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENERGY_PER_BIT_TO_NOISE_DENSITY_DB, body: body) }
+  ///  Bit error rate as a probability [0-1], NOT an exponent and NOT a
+  ///  percentage. 1e-6 is encoded 1e-6.
+  public var BIT_ERROR_RATE: FlatbufferVector<Double> { return _accessor.vector(at: VT.BIT_ERROR_RATE, byteSize: 8) }
+  public func withUnsafePointerToBitErrorRate<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BIT_ERROR_RATE, body: body) }
+  ///  Link margin against the link's stated threshold, dB. Meaningless without
+  ///  RFLLink.THRESHOLD_TERM / THRESHOLD_VALUE / THRESHOLD_COMPARISON.
+  public var LINK_MARGIN_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.LINK_MARGIN_DB, byteSize: 8) }
+  public func withUnsafePointerToLinkMarginDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LINK_MARGIN_DB, body: body) }
+  ///  Achievable channel capacity, bits per second.
+  public var CHANNEL_CAPACITY_BPS: FlatbufferVector<Double> { return _accessor.vector(at: VT.CHANNEL_CAPACITY_BPS, byteSize: 8) }
+  public func withUnsafePointerToChannelCapacityBps<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CHANNEL_CAPACITY_BPS, body: body) }
+  ///  Aggregate received interfering power, dBW.
+  public var INTERFERENCE_POWER_DBW: FlatbufferVector<Double> { return _accessor.vector(at: VT.INTERFERENCE_POWER_DBW, byteSize: 8) }
+  public func withUnsafePointerToInterferencePowerDbw<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INTERFERENCE_POWER_DBW, body: body) }
+  ///  Carrier to noise-plus-interference ratio C/(N+I), dB.
+  public var CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB, byteSize: 8) }
+  public func withUnsafePointerToCarrierToNoisePlusInterferenceDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB, body: body) }
+  ///  Signal to interference-plus-noise ratio, dB.
+  public var SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB, byteSize: 8) }
+  public func withUnsafePointerToSignalToInterferencePlusNoiseDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB, body: body) }
+  ///  Per-contribution interference detail, sparse.
+  public var INTERFERENCE_CONTRIBUTIONS: FlatbufferVector<RFLInterferenceContribution> { return _accessor.vector(at: VT.INTERFERENCE_CONTRIBUTIONS, byteSize: 4) }
+  ///  Per-interaction obstacle detail, sparse. Each entry names the `$RFS`
+  ///  material it went through, reflected off or was blocked by.
+  public var OBSTRUCTIONS: FlatbufferVector<RFLObstruction> { return _accessor.vector(at: VT.OBSTRUCTIONS, byteSize: 4) }
+  ///  The single condition that bound the link at each sample.
+  public var LIMITING_CONSTRAINTS: FlatbufferVector<rflConstraint> { return _accessor.vector(at: VT.LIMITING_CONSTRAINTS, byteSize: 1) }
+  ///  Verbatim description required when a LIMITING_CONSTRAINTS entry is OTHER.
+  public var LIMITING_CONSTRAINT_NOTE: String? { let o = _accessor.offset(VT.LIMITING_CONSTRAINT_NOTE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LIMITING_CONSTRAINT_NOTESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LIMITING_CONSTRAINT_NOTE) }
+  ///  Provenance of the whole set. Required: an unattributed budget is not
+  ///  publishable.
+  public var PROVENANCE: RFLProvenance! { let o = _accessor.offset(VT.PROVENANCE); return RFLProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Unix ms this record was serialized.
+  public var COMPUTED_AT: UInt64 { let o = _accessor.offset(VT.COMPUTED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  `$EPM` identifier of the producing node.
+  public var PRODUCER_ID: String? { let o = _accessor.offset(VT.PRODUCER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_ID) }
+  ///  Ed25519 signature by the producing `$EPM` over the size-prefixed
+  ///  FlatBuffer projection with both 64-byte signature payloads zeroed while
+  ///  preserving their vectors and offsets.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  ///  Ed25519 signature by the producing `$EPM` over canonical JSON with IDL
+  ///  field order, IDL capitalization, no insignificant whitespace, and both
+  ///  signature fields omitted.
+  public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
+  ///  Index into the selected link's RFLLink.MODCOD_SET for each sample.
+  ///  SELECTED_MODCOD_VALID distinguishes index 0 from no selection.
+  public var SELECTED_MODCOD_INDEX: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.SELECTED_MODCOD_INDEX, byteSize: 4) }
+  public func withUnsafePointerToSelectedModcodIndex<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SELECTED_MODCOD_INDEX, body: body) }
+  public var SELECTED_MODCOD_VALID: FlatbufferVector<Bool> { return _accessor.vector(at: VT.SELECTED_MODCOD_VALID, byteSize: 1) }
+  public func withUnsafePointerToSelectedModcodValid<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SELECTED_MODCOD_VALID, body: body) }
+  ///  Spectral efficiency delivered by the selected entry, bit/s/Hz.
+  public var SPECTRAL_EFFICIENCY_BPS_HZ: FlatbufferVector<Double> { return _accessor.vector(at: VT.SPECTRAL_EFFICIENCY_BPS_HZ, byteSize: 8) }
+  public func withUnsafePointerToSpectralEfficiencyBpsHz<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SPECTRAL_EFFICIENCY_BPS_HZ, body: body) }
+  ///  Delivered information rate after adaptive selection, bits per second.
+  public var ACHIEVED_DATA_RATE_BPS: FlatbufferVector<Double> { return _accessor.vector(at: VT.ACHIEVED_DATA_RATE_BPS, byteSize: 8) }
+  public func withUnsafePointerToAchievedDataRateBps<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ACHIEVED_DATA_RATE_BPS, body: body) }
+  ///  Margin above the selected entry's threshold, dB.
+  public var ACM_MARGIN_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.ACM_MARGIN_DB, byteSize: 8) }
+  public func withUnsafePointerToAcmMarginDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ACM_MARGIN_DB, body: body) }
+  ///  Symbol energy to noise spectral density, dB.
+  public var ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: FlatbufferVector<Double> { return _accessor.vector(at: VT.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, byteSize: 8) }
+  public func withUnsafePointerToEnergyPerSymbolToNoiseDensityDb<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, body: body) }
+  ///  Decoded block error probability [0-1].
+  public var BLOCK_ERROR_RATE: FlatbufferVector<Double> { return _accessor.vector(at: VT.BLOCK_ERROR_RATE, byteSize: 8) }
+  public func withUnsafePointerToBlockErrorRate<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BLOCK_ERROR_RATE, body: body) }
+  public static func startRFL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
+  public static func add(RFL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFL_ID, at: VT.RFL_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
+  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VT.LINKS) }
+  public static func add(SAMPLE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_COUNT, def: 0, at: VT.SAMPLE_COUNT) }
+  public static func addVectorOf(SAMPLE_LINK_INDEXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_LINK_INDEXES, at: VT.SAMPLE_LINK_INDEXES) }
+  public static func addVectorOf(SAMPLE_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_EPOCHS, at: VT.SAMPLE_EPOCHS) }
+  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 11, at: VT.TIME_SYSTEM) }
+  public static func addVectorOf(ACCESS_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCESS_STATES, at: VT.ACCESS_STATES) }
+  public static func addVectorOf(RANGE_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RANGE_M, at: VT.RANGE_M) }
+  public static func addVectorOf(RANGE_RATE_M_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RANGE_RATE_M_S, at: VT.RANGE_RATE_M_S) }
+  public static func addVectorOf(AZIMUTH_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AZIMUTH_DEG, at: VT.AZIMUTH_DEG) }
+  public static func addVectorOf(ELEVATION_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEVATION_DEG, at: VT.ELEVATION_DEG) }
+  public static func addVectorOf(TRANSMIT_AZIMUTH_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSMIT_AZIMUTH_DEG, at: VT.TRANSMIT_AZIMUTH_DEG) }
+  public static func addVectorOf(TRANSMIT_ELEVATION_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSMIT_ELEVATION_DEG, at: VT.TRANSMIT_ELEVATION_DEG) }
+  public static func addVectorOf(DOPPLER_SHIFT_HZ: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOPPLER_SHIFT_HZ, at: VT.DOPPLER_SHIFT_HZ) }
+  public static func addVectorOf(DOPPLER_RATE_HZ_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOPPLER_RATE_HZ_S, at: VT.DOPPLER_RATE_HZ_S) }
+  public static func addVectorOf(EIRP_DBW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EIRP_DBW, at: VT.EIRP_DBW) }
+  public static func addVectorOf(TRANSMIT_ANTENNA_GAIN_DBI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSMIT_ANTENNA_GAIN_DBI, at: VT.TRANSMIT_ANTENNA_GAIN_DBI) }
+  public static func addVectorOf(RECEIVE_ANTENNA_GAIN_DBI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVE_ANTENNA_GAIN_DBI, at: VT.RECEIVE_ANTENNA_GAIN_DBI) }
+  public static func addVectorOf(FREE_SPACE_PATH_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FREE_SPACE_PATH_LOSS_DB, at: VT.FREE_SPACE_PATH_LOSS_DB) }
+  public static func addVectorOf(GASEOUS_ABSORPTION_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GASEOUS_ABSORPTION_LOSS_DB, at: VT.GASEOUS_ABSORPTION_LOSS_DB) }
+  public static func addVectorOf(RAIN_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAIN_LOSS_DB, at: VT.RAIN_LOSS_DB) }
+  public static func addVectorOf(CLOUD_FOG_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOUD_FOG_LOSS_DB, at: VT.CLOUD_FOG_LOSS_DB) }
+  public static func addVectorOf(SCINTILLATION_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCINTILLATION_LOSS_DB, at: VT.SCINTILLATION_LOSS_DB) }
+  public static func addVectorOf(TERRAIN_DIFFRACTION_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TERRAIN_DIFFRACTION_LOSS_DB, at: VT.TERRAIN_DIFFRACTION_LOSS_DB) }
+  public static func addVectorOf(OBSTRUCTION_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSTRUCTION_LOSS_DB, at: VT.OBSTRUCTION_LOSS_DB) }
+  public static func addVectorOf(POLARIZATION_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLARIZATION_LOSS_DB, at: VT.POLARIZATION_LOSS_DB) }
+  public static func addVectorOf(POINTING_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTING_LOSS_DB, at: VT.POINTING_LOSS_DB) }
+  public static func addVectorOf(IMPLEMENTATION_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPLEMENTATION_LOSS_DB, at: VT.IMPLEMENTATION_LOSS_DB) }
+  public static func addVectorOf(TOTAL_PATH_LOSS_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOTAL_PATH_LOSS_DB, at: VT.TOTAL_PATH_LOSS_DB) }
+  public static func addVectorOf(RECEIVED_POWER_DBW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVED_POWER_DBW, at: VT.RECEIVED_POWER_DBW) }
+  public static func addVectorOf(SYSTEM_NOISE_TEMPERATURE_K: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYSTEM_NOISE_TEMPERATURE_K, at: VT.SYSTEM_NOISE_TEMPERATURE_K) }
+  public static func addVectorOf(GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, at: VT.GAIN_TO_NOISE_TEMPERATURE_DB_PER_K) }
+  public static func addVectorOf(CARRIER_TO_NOISE_DENSITY_DBHZ: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CARRIER_TO_NOISE_DENSITY_DBHZ, at: VT.CARRIER_TO_NOISE_DENSITY_DBHZ) }
+  public static func addVectorOf(CARRIER_TO_NOISE_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CARRIER_TO_NOISE_DB, at: VT.CARRIER_TO_NOISE_DB) }
+  public static func addVectorOf(ENERGY_PER_BIT_TO_NOISE_DENSITY_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENERGY_PER_BIT_TO_NOISE_DENSITY_DB, at: VT.ENERGY_PER_BIT_TO_NOISE_DENSITY_DB) }
+  public static func addVectorOf(BIT_ERROR_RATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BIT_ERROR_RATE, at: VT.BIT_ERROR_RATE) }
+  public static func addVectorOf(LINK_MARGIN_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_MARGIN_DB, at: VT.LINK_MARGIN_DB) }
+  public static func addVectorOf(CHANNEL_CAPACITY_BPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNEL_CAPACITY_BPS, at: VT.CHANNEL_CAPACITY_BPS) }
+  public static func addVectorOf(INTERFERENCE_POWER_DBW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERFERENCE_POWER_DBW, at: VT.INTERFERENCE_POWER_DBW) }
+  public static func addVectorOf(CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB, at: VT.CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB) }
+  public static func addVectorOf(SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB, at: VT.SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB) }
+  public static func addVectorOf(INTERFERENCE_CONTRIBUTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERFERENCE_CONTRIBUTIONS, at: VT.INTERFERENCE_CONTRIBUTIONS) }
+  public static func addVectorOf(OBSTRUCTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSTRUCTIONS, at: VT.OBSTRUCTIONS) }
+  public static func addVectorOf(LIMITING_CONSTRAINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIMITING_CONSTRAINTS, at: VT.LIMITING_CONSTRAINTS) }
+  public static func add(LIMITING_CONSTRAINT_NOTE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIMITING_CONSTRAINT_NOTE, at: VT.LIMITING_CONSTRAINT_NOTE) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(COMPUTED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_AT, def: 0, at: VT.COMPUTED_AT) }
+  public static func add(PRODUCER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_ID, at: VT.PRODUCER_ID) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
+  public static func addVectorOf(SELECTED_MODCOD_INDEX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECTED_MODCOD_INDEX, at: VT.SELECTED_MODCOD_INDEX) }
+  public static func addVectorOf(SELECTED_MODCOD_VALID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECTED_MODCOD_VALID, at: VT.SELECTED_MODCOD_VALID) }
+  public static func addVectorOf(SPECTRAL_EFFICIENCY_BPS_HZ: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_EFFICIENCY_BPS_HZ, at: VT.SPECTRAL_EFFICIENCY_BPS_HZ) }
+  public static func addVectorOf(ACHIEVED_DATA_RATE_BPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACHIEVED_DATA_RATE_BPS, at: VT.ACHIEVED_DATA_RATE_BPS) }
+  public static func addVectorOf(ACM_MARGIN_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACM_MARGIN_DB, at: VT.ACM_MARGIN_DB) }
+  public static func addVectorOf(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, at: VT.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB) }
+  public static func addVectorOf(BLOCK_ERROR_RATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLOCK_ERROR_RATE, at: VT.BLOCK_ERROR_RATE) }
+  public static func endRFL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10, 14, 16, 98]); return end }
+  public static func createRFL(
     _ fbb: inout FlatBufferBuilder,
-    SOURCEOffset SOURCE: Offset = Offset(),
-    TARGETOffset TARGET: Offset = Offset(),
-    DELTA_SECONDS: Double = 0.0,
-    STATUS: timConversionStatus = .ok,
-    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    RFL_IDOffset RFL_ID: Offset,
+    NAMEOffset NAME: Offset = Offset(),
+    SCENARIO_IDOffset SCENARIO_ID: Offset = Offset(),
+    LINKSVectorOffset LINKS: Offset,
+    SAMPLE_COUNT: UInt32 = 0,
+    SAMPLE_LINK_INDEXESVectorOffset SAMPLE_LINK_INDEXES: Offset,
+    SAMPLE_EPOCHSVectorOffset SAMPLE_EPOCHS: Offset,
+    TIME_SYSTEM: timingStandard = .utc,
+    ACCESS_STATESVectorOffset ACCESS_STATES: Offset = Offset(),
+    RANGE_MVectorOffset RANGE_M: Offset = Offset(),
+    RANGE_RATE_M_SVectorOffset RANGE_RATE_M_S: Offset = Offset(),
+    AZIMUTH_DEGVectorOffset AZIMUTH_DEG: Offset = Offset(),
+    ELEVATION_DEGVectorOffset ELEVATION_DEG: Offset = Offset(),
+    TRANSMIT_AZIMUTH_DEGVectorOffset TRANSMIT_AZIMUTH_DEG: Offset = Offset(),
+    TRANSMIT_ELEVATION_DEGVectorOffset TRANSMIT_ELEVATION_DEG: Offset = Offset(),
+    DOPPLER_SHIFT_HZVectorOffset DOPPLER_SHIFT_HZ: Offset = Offset(),
+    DOPPLER_RATE_HZ_SVectorOffset DOPPLER_RATE_HZ_S: Offset = Offset(),
+    EIRP_DBWVectorOffset EIRP_DBW: Offset = Offset(),
+    TRANSMIT_ANTENNA_GAIN_DBIVectorOffset TRANSMIT_ANTENNA_GAIN_DBI: Offset = Offset(),
+    RECEIVE_ANTENNA_GAIN_DBIVectorOffset RECEIVE_ANTENNA_GAIN_DBI: Offset = Offset(),
+    FREE_SPACE_PATH_LOSS_DBVectorOffset FREE_SPACE_PATH_LOSS_DB: Offset = Offset(),
+    GASEOUS_ABSORPTION_LOSS_DBVectorOffset GASEOUS_ABSORPTION_LOSS_DB: Offset = Offset(),
+    RAIN_LOSS_DBVectorOffset RAIN_LOSS_DB: Offset = Offset(),
+    CLOUD_FOG_LOSS_DBVectorOffset CLOUD_FOG_LOSS_DB: Offset = Offset(),
+    SCINTILLATION_LOSS_DBVectorOffset SCINTILLATION_LOSS_DB: Offset = Offset(),
+    TERRAIN_DIFFRACTION_LOSS_DBVectorOffset TERRAIN_DIFFRACTION_LOSS_DB: Offset = Offset(),
+    OBSTRUCTION_LOSS_DBVectorOffset OBSTRUCTION_LOSS_DB: Offset = Offset(),
+    POLARIZATION_LOSS_DBVectorOffset POLARIZATION_LOSS_DB: Offset = Offset(),
+    POINTING_LOSS_DBVectorOffset POINTING_LOSS_DB: Offset = Offset(),
+    IMPLEMENTATION_LOSS_DBVectorOffset IMPLEMENTATION_LOSS_DB: Offset = Offset(),
+    TOTAL_PATH_LOSS_DBVectorOffset TOTAL_PATH_LOSS_DB: Offset = Offset(),
+    RECEIVED_POWER_DBWVectorOffset RECEIVED_POWER_DBW: Offset = Offset(),
+    SYSTEM_NOISE_TEMPERATURE_KVectorOffset SYSTEM_NOISE_TEMPERATURE_K: Offset = Offset(),
+    GAIN_TO_NOISE_TEMPERATURE_DB_PER_KVectorOffset GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: Offset = Offset(),
+    CARRIER_TO_NOISE_DENSITY_DBHZVectorOffset CARRIER_TO_NOISE_DENSITY_DBHZ: Offset = Offset(),
+    CARRIER_TO_NOISE_DBVectorOffset CARRIER_TO_NOISE_DB: Offset = Offset(),
+    ENERGY_PER_BIT_TO_NOISE_DENSITY_DBVectorOffset ENERGY_PER_BIT_TO_NOISE_DENSITY_DB: Offset = Offset(),
+    BIT_ERROR_RATEVectorOffset BIT_ERROR_RATE: Offset = Offset(),
+    LINK_MARGIN_DBVectorOffset LINK_MARGIN_DB: Offset = Offset(),
+    CHANNEL_CAPACITY_BPSVectorOffset CHANNEL_CAPACITY_BPS: Offset = Offset(),
+    INTERFERENCE_POWER_DBWVectorOffset INTERFERENCE_POWER_DBW: Offset = Offset(),
+    CARRIER_TO_NOISE_PLUS_INTERFERENCE_DBVectorOffset CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB: Offset = Offset(),
+    SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DBVectorOffset SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB: Offset = Offset(),
+    INTERFERENCE_CONTRIBUTIONSVectorOffset INTERFERENCE_CONTRIBUTIONS: Offset = Offset(),
+    OBSTRUCTIONSVectorOffset OBSTRUCTIONS: Offset = Offset(),
+    LIMITING_CONSTRAINTSVectorOffset LIMITING_CONSTRAINTS: Offset = Offset(),
+    LIMITING_CONSTRAINT_NOTEOffset LIMITING_CONSTRAINT_NOTE: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset,
+    COMPUTED_AT: UInt64 = 0,
+    PRODUCER_IDOffset PRODUCER_ID: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset(),
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset = Offset(),
+    SELECTED_MODCOD_INDEXVectorOffset SELECTED_MODCOD_INDEX: Offset = Offset(),
+    SELECTED_MODCOD_VALIDVectorOffset SELECTED_MODCOD_VALID: Offset = Offset(),
+    SPECTRAL_EFFICIENCY_BPS_HZVectorOffset SPECTRAL_EFFICIENCY_BPS_HZ: Offset = Offset(),
+    ACHIEVED_DATA_RATE_BPSVectorOffset ACHIEVED_DATA_RATE_BPS: Offset = Offset(),
+    ACM_MARGIN_DBVectorOffset ACM_MARGIN_DB: Offset = Offset(),
+    ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVectorOffset ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: Offset = Offset(),
+    BLOCK_ERROR_RATEVectorOffset BLOCK_ERROR_RATE: Offset = Offset()
   ) -> Offset {
-    let __start = TIMConversionResult.startTIMConversionResult(&fbb)
-    TIMConversionResult.add(SOURCE: SOURCE, &fbb)
-    TIMConversionResult.add(TARGET: TARGET, &fbb)
-    TIMConversionResult.add(DELTA_SECONDS: DELTA_SECONDS, &fbb)
-    TIMConversionResult.add(STATUS: STATUS, &fbb)
-    TIMConversionResult.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
-    TIMConversionResult.add(TRACE_ID: TRACE_ID, &fbb)
-    return TIMConversionResult.endTIMConversionResult(&fbb, start: __start)
+    let __start = RFL.startRFL(&fbb)
+    RFL.add(RFL_ID: RFL_ID, &fbb)
+    RFL.add(NAME: NAME, &fbb)
+    RFL.add(SCENARIO_ID: SCENARIO_ID, &fbb)
+    RFL.addVectorOf(LINKS: LINKS, &fbb)
+    RFL.add(SAMPLE_COUNT: SAMPLE_COUNT, &fbb)
+    RFL.addVectorOf(SAMPLE_LINK_INDEXES: SAMPLE_LINK_INDEXES, &fbb)
+    RFL.addVectorOf(SAMPLE_EPOCHS: SAMPLE_EPOCHS, &fbb)
+    RFL.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    RFL.addVectorOf(ACCESS_STATES: ACCESS_STATES, &fbb)
+    RFL.addVectorOf(RANGE_M: RANGE_M, &fbb)
+    RFL.addVectorOf(RANGE_RATE_M_S: RANGE_RATE_M_S, &fbb)
+    RFL.addVectorOf(AZIMUTH_DEG: AZIMUTH_DEG, &fbb)
+    RFL.addVectorOf(ELEVATION_DEG: ELEVATION_DEG, &fbb)
+    RFL.addVectorOf(TRANSMIT_AZIMUTH_DEG: TRANSMIT_AZIMUTH_DEG, &fbb)
+    RFL.addVectorOf(TRANSMIT_ELEVATION_DEG: TRANSMIT_ELEVATION_DEG, &fbb)
+    RFL.addVectorOf(DOPPLER_SHIFT_HZ: DOPPLER_SHIFT_HZ, &fbb)
+    RFL.addVectorOf(DOPPLER_RATE_HZ_S: DOPPLER_RATE_HZ_S, &fbb)
+    RFL.addVectorOf(EIRP_DBW: EIRP_DBW, &fbb)
+    RFL.addVectorOf(TRANSMIT_ANTENNA_GAIN_DBI: TRANSMIT_ANTENNA_GAIN_DBI, &fbb)
+    RFL.addVectorOf(RECEIVE_ANTENNA_GAIN_DBI: RECEIVE_ANTENNA_GAIN_DBI, &fbb)
+    RFL.addVectorOf(FREE_SPACE_PATH_LOSS_DB: FREE_SPACE_PATH_LOSS_DB, &fbb)
+    RFL.addVectorOf(GASEOUS_ABSORPTION_LOSS_DB: GASEOUS_ABSORPTION_LOSS_DB, &fbb)
+    RFL.addVectorOf(RAIN_LOSS_DB: RAIN_LOSS_DB, &fbb)
+    RFL.addVectorOf(CLOUD_FOG_LOSS_DB: CLOUD_FOG_LOSS_DB, &fbb)
+    RFL.addVectorOf(SCINTILLATION_LOSS_DB: SCINTILLATION_LOSS_DB, &fbb)
+    RFL.addVectorOf(TERRAIN_DIFFRACTION_LOSS_DB: TERRAIN_DIFFRACTION_LOSS_DB, &fbb)
+    RFL.addVectorOf(OBSTRUCTION_LOSS_DB: OBSTRUCTION_LOSS_DB, &fbb)
+    RFL.addVectorOf(POLARIZATION_LOSS_DB: POLARIZATION_LOSS_DB, &fbb)
+    RFL.addVectorOf(POINTING_LOSS_DB: POINTING_LOSS_DB, &fbb)
+    RFL.addVectorOf(IMPLEMENTATION_LOSS_DB: IMPLEMENTATION_LOSS_DB, &fbb)
+    RFL.addVectorOf(TOTAL_PATH_LOSS_DB: TOTAL_PATH_LOSS_DB, &fbb)
+    RFL.addVectorOf(RECEIVED_POWER_DBW: RECEIVED_POWER_DBW, &fbb)
+    RFL.addVectorOf(SYSTEM_NOISE_TEMPERATURE_K: SYSTEM_NOISE_TEMPERATURE_K, &fbb)
+    RFL.addVectorOf(GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, &fbb)
+    RFL.addVectorOf(CARRIER_TO_NOISE_DENSITY_DBHZ: CARRIER_TO_NOISE_DENSITY_DBHZ, &fbb)
+    RFL.addVectorOf(CARRIER_TO_NOISE_DB: CARRIER_TO_NOISE_DB, &fbb)
+    RFL.addVectorOf(ENERGY_PER_BIT_TO_NOISE_DENSITY_DB: ENERGY_PER_BIT_TO_NOISE_DENSITY_DB, &fbb)
+    RFL.addVectorOf(BIT_ERROR_RATE: BIT_ERROR_RATE, &fbb)
+    RFL.addVectorOf(LINK_MARGIN_DB: LINK_MARGIN_DB, &fbb)
+    RFL.addVectorOf(CHANNEL_CAPACITY_BPS: CHANNEL_CAPACITY_BPS, &fbb)
+    RFL.addVectorOf(INTERFERENCE_POWER_DBW: INTERFERENCE_POWER_DBW, &fbb)
+    RFL.addVectorOf(CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB: CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB, &fbb)
+    RFL.addVectorOf(SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB: SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB, &fbb)
+    RFL.addVectorOf(INTERFERENCE_CONTRIBUTIONS: INTERFERENCE_CONTRIBUTIONS, &fbb)
+    RFL.addVectorOf(OBSTRUCTIONS: OBSTRUCTIONS, &fbb)
+    RFL.addVectorOf(LIMITING_CONSTRAINTS: LIMITING_CONSTRAINTS, &fbb)
+    RFL.add(LIMITING_CONSTRAINT_NOTE: LIMITING_CONSTRAINT_NOTE, &fbb)
+    RFL.add(PROVENANCE: PROVENANCE, &fbb)
+    RFL.add(COMPUTED_AT: COMPUTED_AT, &fbb)
+    RFL.add(PRODUCER_ID: PRODUCER_ID, &fbb)
+    RFL.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    RFL.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
+    RFL.addVectorOf(SELECTED_MODCOD_INDEX: SELECTED_MODCOD_INDEX, &fbb)
+    RFL.addVectorOf(SELECTED_MODCOD_VALID: SELECTED_MODCOD_VALID, &fbb)
+    RFL.addVectorOf(SPECTRAL_EFFICIENCY_BPS_HZ: SPECTRAL_EFFICIENCY_BPS_HZ, &fbb)
+    RFL.addVectorOf(ACHIEVED_DATA_RATE_BPS: ACHIEVED_DATA_RATE_BPS, &fbb)
+    RFL.addVectorOf(ACM_MARGIN_DB: ACM_MARGIN_DB, &fbb)
+    RFL.addVectorOf(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, &fbb)
+    RFL.addVectorOf(BLOCK_ERROR_RATE: BLOCK_ERROR_RATE, &fbb)
+    return RFL.endRFL(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.DELTA_SECONDS, fieldName: "DELTA_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: timConversionStatus.self)
-    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Time System and time-conversion envelope.
-public struct TIM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$TIM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let TIME_SYSTEM: VOffset = 4
-    static let INSTANT: VOffset = 6
-    static let CONVERSION_REQUEST: VOffset = 8
-    static let CONVERSION_RESULT: VOffset = 10
-  }
-
-  ///  Legacy time-system selector retained for existing TIM consumers.
-  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  A single tagged instant.
-  public var INSTANT: TIMInstant? { let o = _accessor.offset(VT.INSTANT); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time conversion request.
-  public var CONVERSION_REQUEST: TIMConversionRequest? { let o = _accessor.offset(VT.CONVERSION_REQUEST); return o == 0 ? nil : TIMConversionRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Time conversion result.
-  public var CONVERSION_RESULT: TIMConversionResult? { let o = _accessor.offset(VT.CONVERSION_RESULT); return o == 0 ? nil : TIMConversionResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTIM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
-  public static func add(INSTANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANT, at: VT.INSTANT) }
-  public static func add(CONVERSION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_REQUEST, at: VT.CONVERSION_REQUEST) }
-  public static func add(CONVERSION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_RESULT, at: VT.CONVERSION_RESULT) }
-  public static func endTIM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createTIM(
-    _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst,
-    INSTANTOffset INSTANT: Offset = Offset(),
-    CONVERSION_REQUESTOffset CONVERSION_REQUEST: Offset = Offset(),
-    CONVERSION_RESULTOffset CONVERSION_RESULT: Offset = Offset()
-  ) -> Offset {
-    let __start = TIM.startTIM(&fbb)
-    TIM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    TIM.add(INSTANT: INSTANT, &fbb)
-    TIM.add(CONVERSION_REQUEST: CONVERSION_REQUEST, &fbb)
-    TIM.add(CONVERSION_RESULT: CONVERSION_RESULT, &fbb)
-    return TIM.endTIM(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.RFL_ID, fieldName: "RFL_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCENARIO_ID, fieldName: "SCENARIO_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINKS, fieldName: "LINKS", required: true, type: ForwardOffset<Vector<ForwardOffset<RFLLink>, RFLLink>>.self)
+    try _v.visit(field: VT.SAMPLE_COUNT, fieldName: "SAMPLE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SAMPLE_LINK_INDEXES, fieldName: "SAMPLE_LINK_INDEXES", required: true, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.SAMPLE_EPOCHS, fieldName: "SAMPLE_EPOCHS", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
-    try _v.visit(field: VT.INSTANT, fieldName: "INSTANT", required: false, type: ForwardOffset<TIMInstant>.self)
-    try _v.visit(field: VT.CONVERSION_REQUEST, fieldName: "CONVERSION_REQUEST", required: false, type: ForwardOffset<TIMConversionRequest>.self)
-    try _v.visit(field: VT.CONVERSION_RESULT, fieldName: "CONVERSION_RESULT", required: false, type: ForwardOffset<TIMConversionResult>.self)
+    try _v.visit(field: VT.ACCESS_STATES, fieldName: "ACCESS_STATES", required: false, type: ForwardOffset<Vector<rflAccessState, rflAccessState>>.self)
+    try _v.visit(field: VT.RANGE_M, fieldName: "RANGE_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.RANGE_RATE_M_S, fieldName: "RANGE_RATE_M_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.AZIMUTH_DEG, fieldName: "AZIMUTH_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ELEVATION_DEG, fieldName: "ELEVATION_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TRANSMIT_AZIMUTH_DEG, fieldName: "TRANSMIT_AZIMUTH_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TRANSMIT_ELEVATION_DEG, fieldName: "TRANSMIT_ELEVATION_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DOPPLER_SHIFT_HZ, fieldName: "DOPPLER_SHIFT_HZ", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DOPPLER_RATE_HZ_S, fieldName: "DOPPLER_RATE_HZ_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.EIRP_DBW, fieldName: "EIRP_DBW", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TRANSMIT_ANTENNA_GAIN_DBI, fieldName: "TRANSMIT_ANTENNA_GAIN_DBI", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.RECEIVE_ANTENNA_GAIN_DBI, fieldName: "RECEIVE_ANTENNA_GAIN_DBI", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.FREE_SPACE_PATH_LOSS_DB, fieldName: "FREE_SPACE_PATH_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.GASEOUS_ABSORPTION_LOSS_DB, fieldName: "GASEOUS_ABSORPTION_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.RAIN_LOSS_DB, fieldName: "RAIN_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CLOUD_FOG_LOSS_DB, fieldName: "CLOUD_FOG_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SCINTILLATION_LOSS_DB, fieldName: "SCINTILLATION_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TERRAIN_DIFFRACTION_LOSS_DB, fieldName: "TERRAIN_DIFFRACTION_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OBSTRUCTION_LOSS_DB, fieldName: "OBSTRUCTION_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POLARIZATION_LOSS_DB, fieldName: "POLARIZATION_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POINTING_LOSS_DB, fieldName: "POINTING_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.IMPLEMENTATION_LOSS_DB, fieldName: "IMPLEMENTATION_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TOTAL_PATH_LOSS_DB, fieldName: "TOTAL_PATH_LOSS_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.RECEIVED_POWER_DBW, fieldName: "RECEIVED_POWER_DBW", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SYSTEM_NOISE_TEMPERATURE_K, fieldName: "SYSTEM_NOISE_TEMPERATURE_K", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.GAIN_TO_NOISE_TEMPERATURE_DB_PER_K, fieldName: "GAIN_TO_NOISE_TEMPERATURE_DB_PER_K", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CARRIER_TO_NOISE_DENSITY_DBHZ, fieldName: "CARRIER_TO_NOISE_DENSITY_DBHZ", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CARRIER_TO_NOISE_DB, fieldName: "CARRIER_TO_NOISE_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ENERGY_PER_BIT_TO_NOISE_DENSITY_DB, fieldName: "ENERGY_PER_BIT_TO_NOISE_DENSITY_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.BIT_ERROR_RATE, fieldName: "BIT_ERROR_RATE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.LINK_MARGIN_DB, fieldName: "LINK_MARGIN_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CHANNEL_CAPACITY_BPS, fieldName: "CHANNEL_CAPACITY_BPS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.INTERFERENCE_POWER_DBW, fieldName: "INTERFERENCE_POWER_DBW", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB, fieldName: "CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB, fieldName: "SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.INTERFERENCE_CONTRIBUTIONS, fieldName: "INTERFERENCE_CONTRIBUTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<RFLInterferenceContribution>, RFLInterferenceContribution>>.self)
+    try _v.visit(field: VT.OBSTRUCTIONS, fieldName: "OBSTRUCTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<RFLObstruction>, RFLObstruction>>.self)
+    try _v.visit(field: VT.LIMITING_CONSTRAINTS, fieldName: "LIMITING_CONSTRAINTS", required: false, type: ForwardOffset<Vector<rflConstraint, rflConstraint>>.self)
+    try _v.visit(field: VT.LIMITING_CONSTRAINT_NOTE, fieldName: "LIMITING_CONSTRAINT_NOTE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<RFLProvenance>.self)
+    try _v.visit(field: VT.COMPUTED_AT, fieldName: "COMPUTED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SELECTED_MODCOD_INDEX, fieldName: "SELECTED_MODCOD_INDEX", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.SELECTED_MODCOD_VALID, fieldName: "SELECTED_MODCOD_VALID", required: false, type: ForwardOffset<Vector<Bool, Bool>>.self)
+    try _v.visit(field: VT.SPECTRAL_EFFICIENCY_BPS_HZ, fieldName: "SPECTRAL_EFFICIENCY_BPS_HZ", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ACHIEVED_DATA_RATE_BPS, fieldName: "ACHIEVED_DATA_RATE_BPS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ACM_MARGIN_DB, fieldName: "ACM_MARGIN_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, fieldName: "ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.BLOCK_ERROR_RATE, fieldName: "BLOCK_ERROR_RATE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }

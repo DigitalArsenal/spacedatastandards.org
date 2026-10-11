@@ -951,8 +951,46 @@ func (rcv *OMM) UserDefinedParametersLength() int {
 
 /// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
 /// message that has no dedicated field above, in message order.
+/// Where the element set comes from and the terms it travels under.
+func (rcv *OMM) PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OMM) Provenance(obj *PVN) *PVN {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Where the element set comes from and the terms it travels under.
+/// Realism of COVARIANCE.
+func (rcv *OMM) COV_REALISM(obj *CVR) *CVR {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CVR)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OMM) CovRealism(obj *CVR) *CVR {
+	return rcv.COV_REALISM(obj)
+}
+
+/// Realism of COVARIANCE.
 func OMMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(43)
+	builder.StartObject(45)
 }
 func OMMAddCCSDS_OMM_VERS(builder *flatbuffers.Builder, CCSDS_OMM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
@@ -1223,6 +1261,18 @@ func OMMStartUSER_DEFINED_PARAMETERSVector(builder *flatbuffers.Builder, numElem
 }
 func OMMStartUserDefinedParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OMMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
+}
+func OMMAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func OMMAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	OMMAddPROVENANCE(builder, PROVENANCE)
+}
+func OMMAddCOV_REALISM(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(COV_REALISM), 0)
+}
+func OMMAddCovRealism(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
+	OMMAddCOV_REALISM(builder, COV_REALISM)
 }
 func OMMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

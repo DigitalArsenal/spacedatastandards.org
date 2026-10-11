@@ -152,7 +152,7 @@ func (rcv *CAT) MutateOpsStatusCode(n operationalState) bool {
 func (rcv *CAT) OWNER() legacyCountryCode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return legacyCountryCode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return legacyCountryCode(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
@@ -163,7 +163,7 @@ func (rcv *CAT) Owner() legacyCountryCode {
 
 /// Ownership, typically country or company
 func (rcv *CAT) MutateOWNER(n legacyCountryCode) bool {
-	return rcv._tab.MutateInt8Slot(14, int8(n))
+	return rcv._tab.MutateByteSlot(14, byte(n))
 }
 
 func (rcv *CAT) MutateOwner(n legacyCountryCode) bool {
@@ -583,8 +583,61 @@ func (rcv *CAT) CatalogObjectId() []byte {
 /// are not NORAD_CAT_ID values. Neither a matching name nor a native ID
 /// in a different namespace establishes that two records describe the same
 /// physical object. Publication provenance retains source and edition data.
+/// The products an integrating catalog selected for the object as of
+/// PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+/// the same source and epoch where there is one. The object's maneuvers are
+/// its $MNV stream, not references here.
+func (rcv *CAT) PRODUCTS(obj *CATProduct, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CATProduct)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *CAT) Products(obj *CATProduct, j int) bool {
+	return rcv.PRODUCTS(obj, j)
+}
+
+func (rcv *CAT) PRODUCTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *CAT) ProductsLength() int {
+	return rcv.PRODUCTSLength()
+}
+
+/// The products an integrating catalog selected for the object as of
+/// PRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of
+/// the same source and epoch where there is one. The object's maneuvers are
+/// its $MNV stream, not references here.
+/// ISO 8601 UTC instant the selection in PRODUCTS holds at.
+func (rcv *CAT) PRODUCTS_AS_OF() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CAT) ProductsAsOf() []byte {
+	return rcv.PRODUCTS_AS_OF()
+}
+
+/// ISO 8601 UTC instant the selection in PRODUCTS holds at.
 func CATStart(builder *flatbuffers.Builder) {
-	builder.StartObject(26)
+	builder.StartObject(28)
 }
 func CATAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
@@ -617,7 +670,7 @@ func CATAddOpsStatusCode(builder *flatbuffers.Builder, OPS_STATUS_CODE operation
 	CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
 }
 func CATAddOWNER(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
-	builder.PrependInt8Slot(5, int8(OWNER), 0)
+	builder.PrependByteSlot(5, byte(OWNER), 0)
 }
 func CATAddOwner(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
 	CATAddOWNER(builder, OWNER)
@@ -747,6 +800,24 @@ func CATAddCATALOG_OBJECT_ID(builder *flatbuffers.Builder, CATALOG_OBJECT_ID fla
 }
 func CATAddCatalogObjectId(builder *flatbuffers.Builder, CATALOG_OBJECT_ID flatbuffers.UOffsetT) {
 	CATAddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_ID)
+}
+func CATAddPRODUCTS(builder *flatbuffers.Builder, PRODUCTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(PRODUCTS), 0)
+}
+func CATAddProducts(builder *flatbuffers.Builder, PRODUCTS flatbuffers.UOffsetT) {
+	CATAddPRODUCTS(builder, PRODUCTS)
+}
+func CATStartPRODUCTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func CATStartProductsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CATStartPRODUCTSVector(builder, numElems)
+}
+func CATAddPRODUCTS_AS_OF(builder *flatbuffers.Builder, PRODUCTS_AS_OF flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(PRODUCTS_AS_OF), 0)
+}
+func CATAddProductsAsOf(builder *flatbuffers.Builder, PRODUCTS_AS_OF flatbuffers.UOffsetT) {
+	CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF)
 }
 func CATEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

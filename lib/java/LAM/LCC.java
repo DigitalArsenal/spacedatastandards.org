@@ -28,7 +28,7 @@ public final class LCC extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public LCC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public byte OWNER() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public int OWNER() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
    * Display name of the owner or source the code stands for.
    */
@@ -59,7 +59,7 @@ public final class LCC extends com.google.flatbuffers.Table {
   public ByteBuffer RETRIEVED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
 
   public static int createLCC(FlatBufferBuilder builder,
-      byte OWNER,
+      int OWNER,
       int NAMEOffset,
       int DESCRIPTIONOffset,
       boolean ACTIVE,
@@ -76,7 +76,7 @@ public final class LCC extends com.google.flatbuffers.Table {
   }
 
   public static void startLCC(FlatBufferBuilder builder) { builder.startTable(6); }
-  public static void addOwner(FlatBufferBuilder builder, byte OWNER) { builder.addByte(0, OWNER, 0); }
+  public static void addOwner(FlatBufferBuilder builder, int OWNER) { builder.addByte(0, (byte) OWNER, (byte) 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(2, DESCRIPTIONOffset, 0); }
   public static void addActive(FlatBufferBuilder builder, boolean ACTIVE) { builder.addBoolean(3, ACTIVE, false); }

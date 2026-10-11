@@ -9,6 +9,8 @@
  */
 export declare enum RecordTypeExtended {
     NONE = 0,
-    ABA = 256
+    ABA = 256,
+    CVR = 257,
+    PVN = 258
 }
 //# sourceMappingURL=RecordTypeExtended.d.ts.map

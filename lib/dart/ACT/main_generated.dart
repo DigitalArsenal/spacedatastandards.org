@@ -5,99 +5,123 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Peer Registry Record - Durable trusted-peer registry state for an SDN node.
-///
-///  PRR records describe one libp2p peer entry in a node's local peer registry.
-///  The current registry is a projection over the latest PRR records by PEER_ID,
-///  with deleted records acting as tombstones.
-enum peerRegistryTrustCategory {
-  Untrusted(0),
-  Limited(1),
-  Standard(2),
-  Trusted(3),
-  Admin(4);
+///  Account Record (ACT)
+///  Description
+///  A node-local operator account, a signed-in session, a sign-in challenge or
+///  an external wallet link, keyed by the extended public key the operator
+///  proves control of. Sign-in is a challenge the node issues and a signature
+///  the operator returns over it; a session is the node's record of a verified
+///  signature until EXPIRES_AT. Key slots list the derivation paths the node
+///  uses for each purpose key so an operator can see and rotate them. A record
+///  never carries private key material.
+///  Role of the record. Append new values only; never reorder or reuse
+///  existing values.
+enum actKind {
+  Operator(0),
+  Session(1),
+  Challenge(2),
+  ExternalLink(3);
 
   final int value;
-  const peerRegistryTrustCategory(this.value);
+  const actKind(this.value);
 
-  factory peerRegistryTrustCategory.fromValue(int value) {
+  factory actKind.fromValue(int value) {
     switch (value) {
-      case 0: return peerRegistryTrustCategory.Untrusted;
-      case 1: return peerRegistryTrustCategory.Limited;
-      case 2: return peerRegistryTrustCategory.Standard;
-      case 3: return peerRegistryTrustCategory.Trusted;
-      case 4: return peerRegistryTrustCategory.Admin;
+      case 0: return actKind.Operator;
+      case 1: return actKind.Session;
+      case 2: return actKind.Challenge;
+      case 3: return actKind.ExternalLink;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static peerRegistryTrustCategory? _createOrNull(int? value) =>
-      value == null ? null : peerRegistryTrustCategory.fromValue(value);
+  static actKind? _createOrNull(int? value) =>
+      value == null ? null : actKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<peerRegistryTrustCategory> reader = _peerRegistryTrustCategoryReader();
+  static const int maxValue = 3;
+  static const fb.Reader<actKind> reader = _actKindReader();
 }
 
-class _peerRegistryTrustCategoryReader extends fb.Reader<peerRegistryTrustCategory> {
-  const _peerRegistryTrustCategoryReader();
+class _actKindReader extends fb.Reader<actKind> {
+  const _actKindReader();
 
   @override
   int get size => 1;
 
   @override
-  peerRegistryTrustCategory read(fb.BufferContext bc, int offset) =>
-      peerRegistryTrustCategory.fromValue(const fb.Int8Reader().read(bc, offset));
+  actKind read(fb.BufferContext bc, int offset) =>
+      actKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  String metadata key/value attached to a peer registry entry.
-class PRRMetadataEntry {
-  PRRMetadataEntry._(this._bc, this._bcOffset);
-  factory PRRMetadataEntry(List<int> bytes) {
+///  One purpose-key slot of an operator.
+class ACTKeySlot {
+  ACTKeySlot._(this._bc, this._bcOffset);
+  factory ACTKeySlot(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PRRMetadataEntry> reader = _PRRMetadataEntryReader();
+  static const fb.Reader<ACTKeySlot> reader = _ACTKeySlotReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Metadata key.
-  String? get KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Metadata value.
-  String? get VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Slot name, e.g. "signing", "encryption", "publication".
+  String? get SLOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Derivation path currently in use.
+  String? get KEY_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get keyPath => KEY_PATH;
+  ///  Derivation path the next rotation will use.
+  String? get NEXT_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get nextPath => NEXT_PATH;
+  bool get ROTATABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  ///  Key algorithm, e.g. "secp256k1", "ed25519", "x25519".
+  String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
 
   @override
   String toString() {
-    return 'PRRMetadataEntry{KEY: ${KEY}, VALUE: ${VALUE}}';
+    return 'ACTKeySlot{SLOT: ${SLOT}, keyPath: ${keyPath}, nextPath: ${nextPath}, ROTATABLE: ${ROTATABLE}, ALGORITHM: ${ALGORITHM}}';
   }
 }
 
-class _PRRMetadataEntryReader extends fb.TableReader<PRRMetadataEntry> {
-  const _PRRMetadataEntryReader();
+class _ACTKeySlotReader extends fb.TableReader<ACTKeySlot> {
+  const _ACTKeySlotReader();
 
   @override
-  PRRMetadataEntry createObject(fb.BufferContext bc, int offset) =>
-    PRRMetadataEntry._(bc, offset);
+  ACTKeySlot createObject(fb.BufferContext bc, int offset) =>
+    ACTKeySlot._(bc, offset);
 }
 
-class PRRMetadataEntryBuilder {
-  PRRMetadataEntryBuilder(this.fbBuilder);
+class ACTKeySlotBuilder {
+  ACTKeySlotBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(5);
   }
 
-  int addKeyOffset(int? offset) {
+  int addSlotOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addValueOffset(int? offset) {
+  int addKeyPathOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addNextPathOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRotatable(bool? ROTATABLE) {
+    fbBuilder.addBool(3, ROTATABLE);
+    return fbBuilder.offset;
+  }
+  int addAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
 
@@ -106,27 +130,45 @@ class PRRMetadataEntryBuilder {
   }
 }
 
-class PRRMetadataEntryObjectBuilder extends fb.ObjectBuilder {
-  final String? _KEY;
-  final String? _VALUE;
+class ACTKeySlotObjectBuilder extends fb.ObjectBuilder {
+  final String? _SLOT;
+  final String? _KEY_PATH;
+  final String? _NEXT_PATH;
+  final bool? _ROTATABLE;
+  final String? _ALGORITHM;
 
-  PRRMetadataEntryObjectBuilder({
-    String? KEY,
-    String? VALUE,
+  ACTKeySlotObjectBuilder({
+    String? SLOT,
+    String? KEY_PATH,
+    String? keyPath,
+    String? NEXT_PATH,
+    String? nextPath,
+    bool? ROTATABLE,
+    String? ALGORITHM,
   })
-      : _KEY = KEY,
-        _VALUE = VALUE;
+      : _SLOT = SLOT,
+        _KEY_PATH = keyPath ?? KEY_PATH,
+        _NEXT_PATH = nextPath ?? NEXT_PATH,
+        _ROTATABLE = ROTATABLE,
+        _ALGORITHM = ALGORITHM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? KEYOffset = _KEY == null ? null
-        : fbBuilder.writeString(_KEY!);
-    final int? VALUEOffset = _VALUE == null ? null
-        : fbBuilder.writeString(_VALUE!);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, KEYOffset);
-    fbBuilder.addOffset(1, VALUEOffset);
+    final int? SLOTOffset = _SLOT == null ? null
+        : fbBuilder.writeString(_SLOT!);
+    final int? KEY_PATHOffset = _KEY_PATH == null ? null
+        : fbBuilder.writeString(_KEY_PATH!);
+    final int? NEXT_PATHOffset = _NEXT_PATH == null ? null
+        : fbBuilder.writeString(_NEXT_PATH!);
+    final int? ALGORITHMOffset = _ALGORITHM == null ? null
+        : fbBuilder.writeString(_ALGORITHM!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, SLOTOffset);
+    fbBuilder.addOffset(1, KEY_PATHOffset);
+    fbBuilder.addOffset(2, NEXT_PATHOffset);
+    fbBuilder.addBool(3, _ROTATABLE);
+    fbBuilder.addOffset(4, ALGORITHMOffset);
     return fbBuilder.endTable();
   }
 
@@ -138,188 +180,168 @@ class PRRMetadataEntryObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-class PRR {
-  PRR._(this._bc, this._bcOffset);
-  factory PRR(List<int> bytes) {
+///  Account Record - operator, session, challenge or external link.
+class ACT {
+  ACT._(this._bc, this._bcOffset);
+  factory ACT(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PRR> reader = _PRRReader();
+  static const fb.Reader<ACT> reader = _ACTReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  libp2p peer ID.
-  String? get PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get peerId => PEER_ID;
-  ///  Known libp2p/IPFS multiaddresses for this peer.
-  List<String>? get MULTIFORMAT_ADDRESS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 6);
-  List<String>? get multiformatAddress => MULTIFORMAT_ADDRESS;
-  ///  Trust level assigned to this peer by the local registry.
-  peerRegistryTrustCategory get TRUST_LEVEL => peerRegistryTrustCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 2));
+  String? get ACCOUNT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get accountId => ACCOUNT_ID;
+  actKind get KIND => actKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Extended public key the operator proves control of.
+  String? get XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Fingerprint of XPUB.
+  String? get XPUB_FINGERPRINT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get xpubFingerprint => XPUB_FINGERPRINT;
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  peerRegistryTrustCategory get TRUST_LEVEL => peerRegistryTrustCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
   peerRegistryTrustCategory get trustLevel => TRUST_LEVEL;
-  ///  Optional display name.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Optional organization name.
-  String? get ORGANIZATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Peer group names this peer belongs to.
-  List<String>? get GROUPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Operator notes for this peer.
-  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  ///  Unix timestamp in milliseconds when this peer was added.
-  int get ADDED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get addedAt => ADDED_AT;
-  ///  Unix timestamp in milliseconds when this peer was last observed.
-  int get LAST_SEEN => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  String? get SIGNING_PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get signingPublicKey => SIGNING_PUBLIC_KEY;
+  ///  Content identifier of the operator's identity record.
+  String? get EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get epmCid => EPM_CID;
+  ///  Peer identifier the account is bound to.
+  String? get PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get peerId => PEER_ID;
+  ///  Unix milliseconds.
+  int get CREATED_AT => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get createdAt => CREATED_AT;
+  ///  Unix milliseconds; 0 = never.
+  int get LAST_SEEN => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 24, 0);
   int get lastSeen => LAST_SEEN;
-  ///  Unix timestamp in milliseconds when this peer last connected.
-  int get LAST_CONNECTED => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get lastConnected => LAST_CONNECTED;
-  ///  Number of successful connections observed by this node.
-  int get CONNECTION_COUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  int get connectionCount => CONNECTION_COUNT;
-  ///  Number of messages received from this peer.
-  int get MESSAGES_RECEIVED => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 26, 0);
-  int get messagesReceived => MESSAGES_RECEIVED;
-  ///  Number of messages sent to this peer.
-  int get MESSAGES_SENT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 28, 0);
-  int get messagesSent => MESSAGES_SENT;
-  ///  Number of bytes received from this peer.
-  int get BYTES_RECEIVED => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 30, 0);
-  int get bytesReceived => BYTES_RECEIVED;
-  ///  Number of bytes sent to this peer.
-  int get BYTES_SENT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 32, 0);
-  int get bytesSent => BYTES_SENT;
-  ///  Optional EPM.fbs bytes for the peer identity profile.
-  List<int>? get EPM_DATA => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 34);
-  List<int>? get epmData => EPM_DATA;
-  ///  Optional vCard projection for compatibility views.
-  String? get VCARD_DATA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  String? get vcardData => VCARD_DATA;
-  ///  Additional peer metadata as string key/value entries.
-  List<PRRMetadataEntry>? get METADATA => const fb.ListReader<PRRMetadataEntry>(PRRMetadataEntry.reader).vTableGetNullable(_bc, _bcOffset, 38);
-  ///  Unix timestamp in milliseconds when this registry record was last updated.
-  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 40, 0);
-  int get updatedAt => UPDATED_AT;
-  ///  True when this record tombstones the peer from the current registry.
-  bool get DELETED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
-  ///  Peer ID of the node/provider that issued this registry record.
-  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
-  String? get providerPeerId => PROVIDER_PEER_ID;
-  ///  Provider signature over the peer registry record.
-  List<int>? get PROVIDER_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 46);
-  List<int>? get providerSignature => PROVIDER_SIGNATURE;
+  ///  Unix milliseconds a session or challenge expires; 0 = none.
+  int get EXPIRES_AT => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get expiresAt => EXPIRES_AT;
+  String? get CHALLENGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get challengeId => CHALLENGE_ID;
+  ///  Challenge text the operator signs.
+  String? get CHALLENGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Signature over CHALLENGE.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Signature scheme identifier.
+  String? get SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get signatureType => SIGNATURE_TYPE;
+  ///  External chain identifier of a linked wallet (CAIP-2 form).
+  String? get EXTERNAL_CHAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get externalChain => EXTERNAL_CHAIN;
+  ///  External address of a linked wallet.
+  String? get EXTERNAL_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get externalAddress => EXTERNAL_ADDRESS;
+  ///  True when the external link has been verified.
+  bool get LINKED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
+  List<ACTKeySlot>? get KEY_SLOTS => const fb.ListReader<ACTKeySlot>(ACTKeySlot.reader).vTableGetNullable(_bc, _bcOffset, 42);
+  List<ACTKeySlot>? get keySlots => KEY_SLOTS;
 
   @override
   String toString() {
-    return 'PRR{peerId: ${peerId}, multiformatAddress: ${multiformatAddress}, trustLevel: ${trustLevel}, NAME: ${NAME}, ORGANIZATION: ${ORGANIZATION}, GROUPS: ${GROUPS}, NOTES: ${NOTES}, addedAt: ${addedAt}, lastSeen: ${lastSeen}, lastConnected: ${lastConnected}, connectionCount: ${connectionCount}, messagesReceived: ${messagesReceived}, messagesSent: ${messagesSent}, bytesReceived: ${bytesReceived}, bytesSent: ${bytesSent}, epmData: ${epmData}, vcardData: ${vcardData}, METADATA: ${METADATA}, updatedAt: ${updatedAt}, DELETED: ${DELETED}, providerPeerId: ${providerPeerId}, providerSignature: ${providerSignature}}';
+    return 'ACT{accountId: ${accountId}, KIND: ${KIND}, XPUB: ${XPUB}, xpubFingerprint: ${xpubFingerprint}, NAME: ${NAME}, trustLevel: ${trustLevel}, signingPublicKey: ${signingPublicKey}, epmCid: ${epmCid}, peerId: ${peerId}, createdAt: ${createdAt}, lastSeen: ${lastSeen}, expiresAt: ${expiresAt}, challengeId: ${challengeId}, CHALLENGE: ${CHALLENGE}, SIGNATURE: ${SIGNATURE}, signatureType: ${signatureType}, externalChain: ${externalChain}, externalAddress: ${externalAddress}, LINKED: ${LINKED}, keySlots: ${keySlots}}';
   }
 }
 
-class _PRRReader extends fb.TableReader<PRR> {
-  const _PRRReader();
+class _ACTReader extends fb.TableReader<ACT> {
+  const _ACTReader();
 
   @override
-  PRR createObject(fb.BufferContext bc, int offset) =>
-    PRR._(bc, offset);
+  ACT createObject(fb.BufferContext bc, int offset) =>
+    ACT._(bc, offset);
 }
 
-class PRRBuilder {
-  PRRBuilder(this.fbBuilder);
+class ACTBuilder {
+  ACTBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(22);
+    fbBuilder.startTable(20);
   }
 
-  int addPeerIdOffset(int? offset) {
+  int addAccountIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addMultiformatAddressOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addKind(actKind? KIND) {
+    fbBuilder.addInt8(1, KIND?.value);
     return fbBuilder.offset;
   }
-  int addTrustLevel(peerRegistryTrustCategory? TRUST_LEVEL) {
-    fbBuilder.addInt8(2, TRUST_LEVEL?.value);
+  int addXpubOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addXpubFingerprintOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addOrganizationOffset(int? offset) {
+  int addNameOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addGroupsOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addTrustLevel(peerRegistryTrustCategory? TRUST_LEVEL) {
+    fbBuilder.addInt8(5, TRUST_LEVEL?.value);
     return fbBuilder.offset;
   }
-  int addNotesOffset(int? offset) {
+  int addSigningPublicKeyOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addAddedAt(int? ADDED_AT) {
-    fbBuilder.addUint64(7, ADDED_AT);
+  int addEpmCidOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addCreatedAt(int? CREATED_AT) {
+    fbBuilder.addInt64(9, CREATED_AT);
     return fbBuilder.offset;
   }
   int addLastSeen(int? LAST_SEEN) {
-    fbBuilder.addUint64(8, LAST_SEEN);
+    fbBuilder.addInt64(10, LAST_SEEN);
     return fbBuilder.offset;
   }
-  int addLastConnected(int? LAST_CONNECTED) {
-    fbBuilder.addUint64(9, LAST_CONNECTED);
+  int addExpiresAt(int? EXPIRES_AT) {
+    fbBuilder.addInt64(11, EXPIRES_AT);
     return fbBuilder.offset;
   }
-  int addConnectionCount(int? CONNECTION_COUNT) {
-    fbBuilder.addUint64(10, CONNECTION_COUNT);
+  int addChallengeIdOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addMessagesReceived(int? MESSAGES_RECEIVED) {
-    fbBuilder.addUint64(11, MESSAGES_RECEIVED);
+  int addChallengeOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addMessagesSent(int? MESSAGES_SENT) {
-    fbBuilder.addUint64(12, MESSAGES_SENT);
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
-  int addBytesReceived(int? BYTES_RECEIVED) {
-    fbBuilder.addUint64(13, BYTES_RECEIVED);
-    return fbBuilder.offset;
-  }
-  int addBytesSent(int? BYTES_SENT) {
-    fbBuilder.addUint64(14, BYTES_SENT);
-    return fbBuilder.offset;
-  }
-  int addEpmDataOffset(int? offset) {
+  int addSignatureTypeOffset(int? offset) {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
-  int addVcardDataOffset(int? offset) {
+  int addExternalChainOffset(int? offset) {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
-  int addMetadataOffset(int? offset) {
+  int addExternalAddressOffset(int? offset) {
     fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
-  int addUpdatedAt(int? UPDATED_AT) {
-    fbBuilder.addUint64(18, UPDATED_AT);
+  int addLinked(bool? LINKED) {
+    fbBuilder.addBool(18, LINKED);
     return fbBuilder.offset;
   }
-  int addDeleted(bool? DELETED) {
-    fbBuilder.addBool(19, DELETED);
-    return fbBuilder.offset;
-  }
-  int addProviderPeerIdOffset(int? offset) {
-    fbBuilder.addOffset(20, offset);
-    return fbBuilder.offset;
-  }
-  int addProviderSignatureOffset(int? offset) {
-    fbBuilder.addOffset(21, offset);
+  int addKeySlotsOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
 
@@ -328,141 +350,137 @@ class PRRBuilder {
   }
 }
 
-class PRRObjectBuilder extends fb.ObjectBuilder {
-  final String? _PEER_ID;
-  final List<String>? _MULTIFORMAT_ADDRESS;
-  final peerRegistryTrustCategory? _TRUST_LEVEL;
+class ACTObjectBuilder extends fb.ObjectBuilder {
+  final String? _ACCOUNT_ID;
+  final actKind? _KIND;
+  final String? _XPUB;
+  final String? _XPUB_FINGERPRINT;
   final String? _NAME;
-  final String? _ORGANIZATION;
-  final List<String>? _GROUPS;
-  final String? _NOTES;
-  final int? _ADDED_AT;
+  final peerRegistryTrustCategory? _TRUST_LEVEL;
+  final String? _SIGNING_PUBLIC_KEY;
+  final String? _EPM_CID;
+  final String? _PEER_ID;
+  final int? _CREATED_AT;
   final int? _LAST_SEEN;
-  final int? _LAST_CONNECTED;
-  final int? _CONNECTION_COUNT;
-  final int? _MESSAGES_RECEIVED;
-  final int? _MESSAGES_SENT;
-  final int? _BYTES_RECEIVED;
-  final int? _BYTES_SENT;
-  final List<int>? _EPM_DATA;
-  final String? _VCARD_DATA;
-  final List<PRRMetadataEntryObjectBuilder>? _METADATA;
-  final int? _UPDATED_AT;
-  final bool? _DELETED;
-  final String? _PROVIDER_PEER_ID;
-  final List<int>? _PROVIDER_SIGNATURE;
+  final int? _EXPIRES_AT;
+  final String? _CHALLENGE_ID;
+  final String? _CHALLENGE;
+  final List<int>? _SIGNATURE;
+  final String? _SIGNATURE_TYPE;
+  final String? _EXTERNAL_CHAIN;
+  final String? _EXTERNAL_ADDRESS;
+  final bool? _LINKED;
+  final List<ACTKeySlotObjectBuilder>? _KEY_SLOTS;
 
-  PRRObjectBuilder({
-    String? PEER_ID,
-    String? peerId,
-    List<String>? MULTIFORMAT_ADDRESS,
-    List<String>? multiformatAddress,
+  ACTObjectBuilder({
+    String? ACCOUNT_ID,
+    String? accountId,
+    actKind? KIND,
+    String? XPUB,
+    String? XPUB_FINGERPRINT,
+    String? xpubFingerprint,
+    String? NAME,
     peerRegistryTrustCategory? TRUST_LEVEL,
     peerRegistryTrustCategory? trustLevel,
-    String? NAME,
-    String? ORGANIZATION,
-    List<String>? GROUPS,
-    String? NOTES,
-    int? ADDED_AT,
-    int? addedAt,
+    String? SIGNING_PUBLIC_KEY,
+    String? signingPublicKey,
+    String? EPM_CID,
+    String? epmCid,
+    String? PEER_ID,
+    String? peerId,
+    int? CREATED_AT,
+    int? createdAt,
     int? LAST_SEEN,
     int? lastSeen,
-    int? LAST_CONNECTED,
-    int? lastConnected,
-    int? CONNECTION_COUNT,
-    int? connectionCount,
-    int? MESSAGES_RECEIVED,
-    int? messagesReceived,
-    int? MESSAGES_SENT,
-    int? messagesSent,
-    int? BYTES_RECEIVED,
-    int? bytesReceived,
-    int? BYTES_SENT,
-    int? bytesSent,
-    List<int>? EPM_DATA,
-    List<int>? epmData,
-    String? VCARD_DATA,
-    String? vcardData,
-    List<PRRMetadataEntryObjectBuilder>? METADATA,
-    int? UPDATED_AT,
-    int? updatedAt,
-    bool? DELETED,
-    String? PROVIDER_PEER_ID,
-    String? providerPeerId,
-    List<int>? PROVIDER_SIGNATURE,
-    List<int>? providerSignature,
+    int? EXPIRES_AT,
+    int? expiresAt,
+    String? CHALLENGE_ID,
+    String? challengeId,
+    String? CHALLENGE,
+    List<int>? SIGNATURE,
+    String? SIGNATURE_TYPE,
+    String? signatureType,
+    String? EXTERNAL_CHAIN,
+    String? externalChain,
+    String? EXTERNAL_ADDRESS,
+    String? externalAddress,
+    bool? LINKED,
+    List<ACTKeySlotObjectBuilder>? KEY_SLOTS,
+    List<ACTKeySlotObjectBuilder>? keySlots,
   })
-      : _PEER_ID = peerId ?? PEER_ID,
-        _MULTIFORMAT_ADDRESS = multiformatAddress ?? MULTIFORMAT_ADDRESS,
-        _TRUST_LEVEL = trustLevel ?? TRUST_LEVEL,
+      : _ACCOUNT_ID = accountId ?? ACCOUNT_ID,
+        _KIND = KIND,
+        _XPUB = XPUB,
+        _XPUB_FINGERPRINT = xpubFingerprint ?? XPUB_FINGERPRINT,
         _NAME = NAME,
-        _ORGANIZATION = ORGANIZATION,
-        _GROUPS = GROUPS,
-        _NOTES = NOTES,
-        _ADDED_AT = addedAt ?? ADDED_AT,
+        _TRUST_LEVEL = trustLevel ?? TRUST_LEVEL,
+        _SIGNING_PUBLIC_KEY = signingPublicKey ?? SIGNING_PUBLIC_KEY,
+        _EPM_CID = epmCid ?? EPM_CID,
+        _PEER_ID = peerId ?? PEER_ID,
+        _CREATED_AT = createdAt ?? CREATED_AT,
         _LAST_SEEN = lastSeen ?? LAST_SEEN,
-        _LAST_CONNECTED = lastConnected ?? LAST_CONNECTED,
-        _CONNECTION_COUNT = connectionCount ?? CONNECTION_COUNT,
-        _MESSAGES_RECEIVED = messagesReceived ?? MESSAGES_RECEIVED,
-        _MESSAGES_SENT = messagesSent ?? MESSAGES_SENT,
-        _BYTES_RECEIVED = bytesReceived ?? BYTES_RECEIVED,
-        _BYTES_SENT = bytesSent ?? BYTES_SENT,
-        _EPM_DATA = epmData ?? EPM_DATA,
-        _VCARD_DATA = vcardData ?? VCARD_DATA,
-        _METADATA = METADATA,
-        _UPDATED_AT = updatedAt ?? UPDATED_AT,
-        _DELETED = DELETED,
-        _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
-        _PROVIDER_SIGNATURE = providerSignature ?? PROVIDER_SIGNATURE;
+        _EXPIRES_AT = expiresAt ?? EXPIRES_AT,
+        _CHALLENGE_ID = challengeId ?? CHALLENGE_ID,
+        _CHALLENGE = CHALLENGE,
+        _SIGNATURE = SIGNATURE,
+        _SIGNATURE_TYPE = signatureType ?? SIGNATURE_TYPE,
+        _EXTERNAL_CHAIN = externalChain ?? EXTERNAL_CHAIN,
+        _EXTERNAL_ADDRESS = externalAddress ?? EXTERNAL_ADDRESS,
+        _LINKED = LINKED,
+        _KEY_SLOTS = keySlots ?? KEY_SLOTS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? PEER_IDOffset = _PEER_ID == null ? null
-        : fbBuilder.writeString(_PEER_ID!);
-    final int? MULTIFORMAT_ADDRESSOffset = _MULTIFORMAT_ADDRESS == null ? null
-        : fbBuilder.writeList(_MULTIFORMAT_ADDRESS!.map(fbBuilder.writeString).toList());
+    final int? ACCOUNT_IDOffset = _ACCOUNT_ID == null ? null
+        : fbBuilder.writeString(_ACCOUNT_ID!);
+    final int? XPUBOffset = _XPUB == null ? null
+        : fbBuilder.writeString(_XPUB!);
+    final int? XPUB_FINGERPRINTOffset = _XPUB_FINGERPRINT == null ? null
+        : fbBuilder.writeString(_XPUB_FINGERPRINT!);
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
-    final int? ORGANIZATIONOffset = _ORGANIZATION == null ? null
-        : fbBuilder.writeString(_ORGANIZATION!);
-    final int? GROUPSOffset = _GROUPS == null ? null
-        : fbBuilder.writeList(_GROUPS!.map(fbBuilder.writeString).toList());
-    final int? NOTESOffset = _NOTES == null ? null
-        : fbBuilder.writeString(_NOTES!);
-    final int? EPM_DATAOffset = _EPM_DATA == null ? null
-        : fbBuilder.writeListUint8(_EPM_DATA!);
-    final int? VCARD_DATAOffset = _VCARD_DATA == null ? null
-        : fbBuilder.writeString(_VCARD_DATA!);
-    final int? METADATAOffset = _METADATA == null ? null
-        : fbBuilder.writeList(_METADATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? PROVIDER_PEER_IDOffset = _PROVIDER_PEER_ID == null ? null
-        : fbBuilder.writeString(_PROVIDER_PEER_ID!);
-    final int? PROVIDER_SIGNATUREOffset = _PROVIDER_SIGNATURE == null ? null
-        : fbBuilder.writeListUint8(_PROVIDER_SIGNATURE!);
-    fbBuilder.startTable(22);
-    fbBuilder.addOffset(0, PEER_IDOffset);
-    fbBuilder.addOffset(1, MULTIFORMAT_ADDRESSOffset);
-    fbBuilder.addInt8(2, _TRUST_LEVEL?.value);
-    fbBuilder.addOffset(3, NAMEOffset);
-    fbBuilder.addOffset(4, ORGANIZATIONOffset);
-    fbBuilder.addOffset(5, GROUPSOffset);
-    fbBuilder.addOffset(6, NOTESOffset);
-    fbBuilder.addUint64(7, _ADDED_AT);
-    fbBuilder.addUint64(8, _LAST_SEEN);
-    fbBuilder.addUint64(9, _LAST_CONNECTED);
-    fbBuilder.addUint64(10, _CONNECTION_COUNT);
-    fbBuilder.addUint64(11, _MESSAGES_RECEIVED);
-    fbBuilder.addUint64(12, _MESSAGES_SENT);
-    fbBuilder.addUint64(13, _BYTES_RECEIVED);
-    fbBuilder.addUint64(14, _BYTES_SENT);
-    fbBuilder.addOffset(15, EPM_DATAOffset);
-    fbBuilder.addOffset(16, VCARD_DATAOffset);
-    fbBuilder.addOffset(17, METADATAOffset);
-    fbBuilder.addUint64(18, _UPDATED_AT);
-    fbBuilder.addBool(19, _DELETED);
-    fbBuilder.addOffset(20, PROVIDER_PEER_IDOffset);
-    fbBuilder.addOffset(21, PROVIDER_SIGNATUREOffset);
+    final int? SIGNING_PUBLIC_KEYOffset = _SIGNING_PUBLIC_KEY == null ? null
+        : fbBuilder.writeString(_SIGNING_PUBLIC_KEY!);
+    final int? EPM_CIDOffset = _EPM_CID == null ? null
+        : fbBuilder.writeString(_EPM_CID!);
+    final int? PEER_IDOffset = _PEER_ID == null ? null
+        : fbBuilder.writeString(_PEER_ID!);
+    final int? CHALLENGE_IDOffset = _CHALLENGE_ID == null ? null
+        : fbBuilder.writeString(_CHALLENGE_ID!);
+    final int? CHALLENGEOffset = _CHALLENGE == null ? null
+        : fbBuilder.writeString(_CHALLENGE!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? SIGNATURE_TYPEOffset = _SIGNATURE_TYPE == null ? null
+        : fbBuilder.writeString(_SIGNATURE_TYPE!);
+    final int? EXTERNAL_CHAINOffset = _EXTERNAL_CHAIN == null ? null
+        : fbBuilder.writeString(_EXTERNAL_CHAIN!);
+    final int? EXTERNAL_ADDRESSOffset = _EXTERNAL_ADDRESS == null ? null
+        : fbBuilder.writeString(_EXTERNAL_ADDRESS!);
+    final int? KEY_SLOTSOffset = _KEY_SLOTS == null ? null
+        : fbBuilder.writeList(_KEY_SLOTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(20);
+    fbBuilder.addOffset(0, ACCOUNT_IDOffset);
+    fbBuilder.addInt8(1, _KIND?.value);
+    fbBuilder.addOffset(2, XPUBOffset);
+    fbBuilder.addOffset(3, XPUB_FINGERPRINTOffset);
+    fbBuilder.addOffset(4, NAMEOffset);
+    fbBuilder.addInt8(5, _TRUST_LEVEL?.value);
+    fbBuilder.addOffset(6, SIGNING_PUBLIC_KEYOffset);
+    fbBuilder.addOffset(7, EPM_CIDOffset);
+    fbBuilder.addOffset(8, PEER_IDOffset);
+    fbBuilder.addInt64(9, _CREATED_AT);
+    fbBuilder.addInt64(10, _LAST_SEEN);
+    fbBuilder.addInt64(11, _EXPIRES_AT);
+    fbBuilder.addOffset(12, CHALLENGE_IDOffset);
+    fbBuilder.addOffset(13, CHALLENGEOffset);
+    fbBuilder.addOffset(14, SIGNATUREOffset);
+    fbBuilder.addOffset(15, SIGNATURE_TYPEOffset);
+    fbBuilder.addOffset(16, EXTERNAL_CHAINOffset);
+    fbBuilder.addOffset(17, EXTERNAL_ADDRESSOffset);
+    fbBuilder.addBool(18, _LINKED);
+    fbBuilder.addOffset(19, KEY_SLOTSOffset);
     return fbBuilder.endTable();
   }
 

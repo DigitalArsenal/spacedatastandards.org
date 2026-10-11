@@ -5,331 +5,202 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  On-chain settlement mechanism a buyer's payment targets.
-enum settlementMechanism {
-  NativeTransfer(0),
-  Erc20Transfer(1),
-  EthSplitter(2),
-  SolSplitter(3),
-  DirectAddress(4);
+///  On-chain recurring charge mechanism.
+enum recurringChargeMethod {
+  Erc20Allowance(0),
+  EvmDelegate(1),
+  SolDelegate(2),
+  ReAuthorizePerPeriod(3);
 
   final int value;
-  const settlementMechanism(this.value);
+  const recurringChargeMethod(this.value);
 
-  factory settlementMechanism.fromValue(int value) {
+  factory recurringChargeMethod.fromValue(int value) {
     switch (value) {
-      case 0: return settlementMechanism.NativeTransfer;
-      case 1: return settlementMechanism.Erc20Transfer;
-      case 2: return settlementMechanism.EthSplitter;
-      case 3: return settlementMechanism.SolSplitter;
-      case 4: return settlementMechanism.DirectAddress;
+      case 0: return recurringChargeMethod.Erc20Allowance;
+      case 1: return recurringChargeMethod.EvmDelegate;
+      case 2: return recurringChargeMethod.SolDelegate;
+      case 3: return recurringChargeMethod.ReAuthorizePerPeriod;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static settlementMechanism? _createOrNull(int? value) =>
-      value == null ? null : settlementMechanism.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<settlementMechanism> reader = _settlementMechanismReader();
-}
-
-class _settlementMechanismReader extends fb.Reader<settlementMechanism> {
-  const _settlementMechanismReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  settlementMechanism read(fb.BufferContext bc, int offset) =>
-      settlementMechanism.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  How the purchase reference (`$PUR.REQUEST_ID`) is bound on-chain so a
-///  payment can be matched to an order replay-safely.
-enum memoBindingScheme {
-  NoMemo(0),
-  TxData(1),
-  SolMemo(2),
-  OpReturn(3);
-
-  final int value;
-  const memoBindingScheme(this.value);
-
-  factory memoBindingScheme.fromValue(int value) {
-    switch (value) {
-      case 0: return memoBindingScheme.NoMemo;
-      case 1: return memoBindingScheme.TxData;
-      case 2: return memoBindingScheme.SolMemo;
-      case 3: return memoBindingScheme.OpReturn;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static memoBindingScheme? _createOrNull(int? value) =>
-      value == null ? null : memoBindingScheme.fromValue(value);
+  static recurringChargeMethod? _createOrNull(int? value) =>
+      value == null ? null : recurringChargeMethod.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<memoBindingScheme> reader = _memoBindingSchemeReader();
+  static const fb.Reader<recurringChargeMethod> reader = _recurringChargeMethodReader();
 }
 
-class _memoBindingSchemeReader extends fb.Reader<memoBindingScheme> {
-  const _memoBindingSchemeReader();
+class _recurringChargeMethodReader extends fb.Reader<recurringChargeMethod> {
+  const _recurringChargeMethodReader();
 
   @override
   int get size => 1;
 
   @override
-  memoBindingScheme read(fb.BufferContext bc, int offset) =>
-      memoBindingScheme.fromValue(const fb.Int8Reader().read(bc, offset));
+  recurringChargeMethod read(fb.BufferContext bc, int offset) =>
+      recurringChargeMethod.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Recipient of an on-chain revenue split. The identity binds to an `$EPM`
-///  via CHAIN_PROOFS so a payout address is provably the recipient's.
-class SplitRecipient {
-  SplitRecipient._(this._bc, this._bcOffset);
-  factory SplitRecipient(List<int> bytes) {
+///  Lifecycle of a crypto-native subscription authorization.
+enum subscriptionLifecycleStatus {
+  Active(0),
+  Paused(1),
+  Cancelled(2),
+  Lapsed(3);
+
+  final int value;
+  const subscriptionLifecycleStatus(this.value);
+
+  factory subscriptionLifecycleStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return subscriptionLifecycleStatus.Active;
+      case 1: return subscriptionLifecycleStatus.Paused;
+      case 2: return subscriptionLifecycleStatus.Cancelled;
+      case 3: return subscriptionLifecycleStatus.Lapsed;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static subscriptionLifecycleStatus? _createOrNull(int? value) =>
+      value == null ? null : subscriptionLifecycleStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<subscriptionLifecycleStatus> reader = _subscriptionLifecycleStatusReader();
+}
+
+class _subscriptionLifecycleStatusReader extends fb.Reader<subscriptionLifecycleStatus> {
+  const _subscriptionLifecycleStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  subscriptionLifecycleStatus read(fb.BufferContext bc, int offset) =>
+      subscriptionLifecycleStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Crypto-native Subscription Authorization
+class SUB {
+  SUB._(this._bc, this._bcOffset);
+  factory SUB(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<SplitRecipient> reader = _SplitRecipientReader();
+  static const fb.Reader<SUB> reader = _SUBReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  IPFS CID of the recipient's Entity Profile Message (`$EPM`)
-  String? get EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get epmCid => EPM_CID;
-  ///  Settlement chain, e.g. "ethereum", "solana", "bitcoin"
-  String? get CHAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  On-chain payout address (EVM 0x / SOL base58 / BTC address)
-  String? get ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Account xpub the address derives from
-  String? get XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Stable subscription identifier
+  String? get SUBSCRIPTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get subscriptionId => SUBSCRIPTION_ID;
+  ///  Reference to the durable entitlement (`$ENT.ENTITLEMENT_ID`)
+  String? get ENTITLEMENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get entitlementId => ENTITLEMENT_ID;
+  ///  Listing this subscription pays for (`$PLG.PLUGIN_ID` / `$STF.LISTING_ID`)
+  String? get LISTING_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get listingId => LISTING_ID;
+  ///  On-chain recurring mechanism
+  recurringChargeMethod get AUTH_KIND => recurringChargeMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  recurringChargeMethod get authKind => AUTH_KIND;
+  ///  Settlement descriptor (chain, splitter, token) that charges each period
+  SCX? get CHAIN_SETTLEMENT => SCX.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  SCX? get chainSettlement => CHAIN_SETTLEMENT;
+  ///  Billing period length in days (mirrors `$PLG.SUBSCRIPTION_PERIOD_DAYS`)
+  int get PERIOD_DAYS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get periodDays => PERIOD_DAYS;
+  ///  Charge per period in the smallest unit of CURRENCY
+  int get AMOUNT_PER_PERIOD => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get amountPerPeriod => AMOUNT_PER_PERIOD;
+  ///  Currency / token symbol, e.g. "USDC"
+  String? get CURRENCY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Unix ms of the next scheduled charge
+  int get NEXT_CHARGE_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get nextChargeAt => NEXT_CHARGE_AT;
+  ///  Maximum number of periods; 0 = until cancelled
+  int get MAX_PERIODS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get maxPeriods => MAX_PERIODS;
+  ///  Subscription lifecycle status
+  subscriptionLifecycleStatus get STATUS => subscriptionLifecycleStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+  ///  Buyer's Ed25519 authorization signature over the terms
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 26);
 
   @override
   String toString() {
-    return 'SplitRecipient{epmCid: ${epmCid}, CHAIN: ${CHAIN}, ADDRESS: ${ADDRESS}, XPUB: ${XPUB}}';
+    return 'SUB{subscriptionId: ${subscriptionId}, entitlementId: ${entitlementId}, listingId: ${listingId}, authKind: ${authKind}, chainSettlement: ${chainSettlement}, periodDays: ${periodDays}, amountPerPeriod: ${amountPerPeriod}, CURRENCY: ${CURRENCY}, nextChargeAt: ${nextChargeAt}, maxPeriods: ${maxPeriods}, STATUS: ${STATUS}, SIGNATURE: ${SIGNATURE}}';
   }
 }
 
-class _SplitRecipientReader extends fb.TableReader<SplitRecipient> {
-  const _SplitRecipientReader();
+class _SUBReader extends fb.TableReader<SUB> {
+  const _SUBReader();
 
   @override
-  SplitRecipient createObject(fb.BufferContext bc, int offset) =>
-    SplitRecipient._(bc, offset);
+  SUB createObject(fb.BufferContext bc, int offset) =>
+    SUB._(bc, offset);
 }
 
-class SplitRecipientBuilder {
-  SplitRecipientBuilder(this.fbBuilder);
+class SUBBuilder {
+  SUBBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(12);
   }
 
-  int addEpmCidOffset(int? offset) {
+  int addSubscriptionIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addChainOffset(int? offset) {
+  int addEntitlementIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addAddressOffset(int? offset) {
+  int addListingIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addXpubOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addAuthKind(recurringChargeMethod? AUTH_KIND) {
+    fbBuilder.addInt8(3, AUTH_KIND?.value);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SplitRecipientObjectBuilder extends fb.ObjectBuilder {
-  final String? _EPM_CID;
-  final String? _CHAIN;
-  final String? _ADDRESS;
-  final String? _XPUB;
-
-  SplitRecipientObjectBuilder({
-    String? EPM_CID,
-    String? epmCid,
-    String? CHAIN,
-    String? ADDRESS,
-    String? XPUB,
-  })
-      : _EPM_CID = epmCid ?? EPM_CID,
-        _CHAIN = CHAIN,
-        _ADDRESS = ADDRESS,
-        _XPUB = XPUB;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? EPM_CIDOffset = _EPM_CID == null ? null
-        : fbBuilder.writeString(_EPM_CID!);
-    final int? CHAINOffset = _CHAIN == null ? null
-        : fbBuilder.writeString(_CHAIN!);
-    final int? ADDRESSOffset = _ADDRESS == null ? null
-        : fbBuilder.writeString(_ADDRESS!);
-    final int? XPUBOffset = _XPUB == null ? null
-        : fbBuilder.writeString(_XPUB!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, EPM_CIDOffset);
-    fbBuilder.addOffset(1, CHAINOffset);
-    fbBuilder.addOffset(2, ADDRESSOffset);
-    fbBuilder.addOffset(3, XPUBOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Chain Settlement / Smart-Contract Descriptor. The forward description of the
-///  exact established splitter contract/program a buyer's wallet targets so
-///  payment and platform commission settle atomically on-chain. Referenced by
-///  `$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is
-///  realized by the splitter contract itself when the buyer pays it; there is no
-///  off-chain or manual settlement step.
-class SCX {
-  SCX._(this._bc, this._bcOffset);
-  factory SCX(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SCX> reader = _SCXReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Settlement chain identifier, e.g. "ethereum", "solana", "bitcoin"
-  ///  (matches `$PUR.PAYMENT_CHAIN`)
-  String? get CHAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  EVM chainId; 0 for non-EVM chains
-  int get CHAIN_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get chainId => CHAIN_ID;
-  ///  On-chain settlement mechanism
-  settlementMechanism get SETTLEMENT_KIND => settlementMechanism.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  settlementMechanism get settlementKind => SETTLEMENT_KIND;
-  ///  Established split standard id, e.g. "0xsplits.v2" (ETH) or the SOL
-  ///  splitter program name. An audited off-the-shelf standard, not a custom
-  ///  contract.
-  String? get SPLITTER_STANDARD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get splitterStandard => SPLITTER_STANDARD;
-  ///  Deployed splitter contract address (ETH) or splitter program id (SOL) the
-  ///  buyer's payment routes into
-  String? get SPLITTER_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get splitterAddress => SPLITTER_ADDRESS;
-  ///  The specific split configuration (recipient set + basis points) registered
-  ///  with the splitter
-  String? get SPLIT_CONFIG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get splitConfigId => SPLIT_CONFIG_ID;
-  ///  ERC-20 / SPL mint address for stablecoin settlement; empty = native asset
-  String? get TOKEN_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get tokenAddress => TOKEN_ADDRESS;
-  ///  Token symbol, e.g. "USDC"
-  String? get TOKEN_SYMBOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get tokenSymbol => TOKEN_SYMBOL;
-  ///  Token decimals, e.g. 6 for USDC
-  int get TOKEN_DECIMALS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get tokenDecimals => TOKEN_DECIMALS;
-  ///  The recipient set the split configuration encodes (platform + publisher…),
-  ///  mirrored here for independent verification
-  List<SplitRecipient>? get SPLIT_RECIPIENTS => const fb.ListReader<SplitRecipient>(SplitRecipient.reader).vTableGetNullable(_bc, _bcOffset, 22);
-  List<SplitRecipient>? get splitRecipients => SPLIT_RECIPIENTS;
-  ///  Confirmations required before the payment is accepted
-  int get MIN_CONFIRMATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 24, 0);
-  int get minConfirmations => MIN_CONFIRMATIONS;
-  ///  How the order reference is bound on-chain for replay-safe matching
-  memoBindingScheme get MEMO_SCHEME => memoBindingScheme.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 26, 0));
-  memoBindingScheme get memoScheme => MEMO_SCHEME;
-
-  @override
-  String toString() {
-    return 'SCX{CHAIN: ${CHAIN}, chainId: ${chainId}, settlementKind: ${settlementKind}, splitterStandard: ${splitterStandard}, splitterAddress: ${splitterAddress}, splitConfigId: ${splitConfigId}, tokenAddress: ${tokenAddress}, tokenSymbol: ${tokenSymbol}, tokenDecimals: ${tokenDecimals}, splitRecipients: ${splitRecipients}, minConfirmations: ${minConfirmations}, memoScheme: ${memoScheme}}';
-  }
-}
-
-class _SCXReader extends fb.TableReader<SCX> {
-  const _SCXReader();
-
-  @override
-  SCX createObject(fb.BufferContext bc, int offset) =>
-    SCX._(bc, offset);
-}
-
-class SCXBuilder {
-  SCXBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(12);
-  }
-
-  int addChainOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addChainId(int? CHAIN_ID) {
-    fbBuilder.addUint64(1, CHAIN_ID);
-    return fbBuilder.offset;
-  }
-  int addSettlementKind(settlementMechanism? SETTLEMENT_KIND) {
-    fbBuilder.addInt8(2, SETTLEMENT_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addSplitterStandardOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addSplitterAddressOffset(int? offset) {
+  int addChainSettlementOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addSplitConfigIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addPeriodDays(int? PERIOD_DAYS) {
+    fbBuilder.addUint32(5, PERIOD_DAYS);
     return fbBuilder.offset;
   }
-  int addTokenAddressOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addAmountPerPeriod(int? AMOUNT_PER_PERIOD) {
+    fbBuilder.addUint64(6, AMOUNT_PER_PERIOD);
     return fbBuilder.offset;
   }
-  int addTokenSymbolOffset(int? offset) {
+  int addCurrencyOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addTokenDecimals(int? TOKEN_DECIMALS) {
-    fbBuilder.addUint8(8, TOKEN_DECIMALS);
+  int addNextChargeAt(int? NEXT_CHARGE_AT) {
+    fbBuilder.addUint64(8, NEXT_CHARGE_AT);
     return fbBuilder.offset;
   }
-  int addSplitRecipientsOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addMaxPeriods(int? MAX_PERIODS) {
+    fbBuilder.addUint32(9, MAX_PERIODS);
     return fbBuilder.offset;
   }
-  int addMinConfirmations(int? MIN_CONFIRMATIONS) {
-    fbBuilder.addUint32(10, MIN_CONFIRMATIONS);
+  int addStatus(subscriptionLifecycleStatus? STATUS) {
+    fbBuilder.addInt8(10, STATUS?.value);
     return fbBuilder.offset;
   }
-  int addMemoScheme(memoBindingScheme? MEMO_SCHEME) {
-    fbBuilder.addInt8(11, MEMO_SCHEME?.value);
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
 
@@ -338,88 +209,83 @@ class SCXBuilder {
   }
 }
 
-class SCXObjectBuilder extends fb.ObjectBuilder {
-  final String? _CHAIN;
-  final int? _CHAIN_ID;
-  final settlementMechanism? _SETTLEMENT_KIND;
-  final String? _SPLITTER_STANDARD;
-  final String? _SPLITTER_ADDRESS;
-  final String? _SPLIT_CONFIG_ID;
-  final String? _TOKEN_ADDRESS;
-  final String? _TOKEN_SYMBOL;
-  final int? _TOKEN_DECIMALS;
-  final List<SplitRecipientObjectBuilder>? _SPLIT_RECIPIENTS;
-  final int? _MIN_CONFIRMATIONS;
-  final memoBindingScheme? _MEMO_SCHEME;
+class SUBObjectBuilder extends fb.ObjectBuilder {
+  final String? _SUBSCRIPTION_ID;
+  final String? _ENTITLEMENT_ID;
+  final String? _LISTING_ID;
+  final recurringChargeMethod? _AUTH_KIND;
+  final SCXObjectBuilder? _CHAIN_SETTLEMENT;
+  final int? _PERIOD_DAYS;
+  final int? _AMOUNT_PER_PERIOD;
+  final String? _CURRENCY;
+  final int? _NEXT_CHARGE_AT;
+  final int? _MAX_PERIODS;
+  final subscriptionLifecycleStatus? _STATUS;
+  final List<int>? _SIGNATURE;
 
-  SCXObjectBuilder({
-    String? CHAIN,
-    int? CHAIN_ID,
-    int? chainId,
-    settlementMechanism? SETTLEMENT_KIND,
-    settlementMechanism? settlementKind,
-    String? SPLITTER_STANDARD,
-    String? splitterStandard,
-    String? SPLITTER_ADDRESS,
-    String? splitterAddress,
-    String? SPLIT_CONFIG_ID,
-    String? splitConfigId,
-    String? TOKEN_ADDRESS,
-    String? tokenAddress,
-    String? TOKEN_SYMBOL,
-    String? tokenSymbol,
-    int? TOKEN_DECIMALS,
-    int? tokenDecimals,
-    List<SplitRecipientObjectBuilder>? SPLIT_RECIPIENTS,
-    List<SplitRecipientObjectBuilder>? splitRecipients,
-    int? MIN_CONFIRMATIONS,
-    int? minConfirmations,
-    memoBindingScheme? MEMO_SCHEME,
-    memoBindingScheme? memoScheme,
+  SUBObjectBuilder({
+    String? SUBSCRIPTION_ID,
+    String? subscriptionId,
+    String? ENTITLEMENT_ID,
+    String? entitlementId,
+    String? LISTING_ID,
+    String? listingId,
+    recurringChargeMethod? AUTH_KIND,
+    recurringChargeMethod? authKind,
+    SCXObjectBuilder? CHAIN_SETTLEMENT,
+    SCXObjectBuilder? chainSettlement,
+    int? PERIOD_DAYS,
+    int? periodDays,
+    int? AMOUNT_PER_PERIOD,
+    int? amountPerPeriod,
+    String? CURRENCY,
+    int? NEXT_CHARGE_AT,
+    int? nextChargeAt,
+    int? MAX_PERIODS,
+    int? maxPeriods,
+    subscriptionLifecycleStatus? STATUS,
+    List<int>? SIGNATURE,
   })
-      : _CHAIN = CHAIN,
-        _CHAIN_ID = chainId ?? CHAIN_ID,
-        _SETTLEMENT_KIND = settlementKind ?? SETTLEMENT_KIND,
-        _SPLITTER_STANDARD = splitterStandard ?? SPLITTER_STANDARD,
-        _SPLITTER_ADDRESS = splitterAddress ?? SPLITTER_ADDRESS,
-        _SPLIT_CONFIG_ID = splitConfigId ?? SPLIT_CONFIG_ID,
-        _TOKEN_ADDRESS = tokenAddress ?? TOKEN_ADDRESS,
-        _TOKEN_SYMBOL = tokenSymbol ?? TOKEN_SYMBOL,
-        _TOKEN_DECIMALS = tokenDecimals ?? TOKEN_DECIMALS,
-        _SPLIT_RECIPIENTS = splitRecipients ?? SPLIT_RECIPIENTS,
-        _MIN_CONFIRMATIONS = minConfirmations ?? MIN_CONFIRMATIONS,
-        _MEMO_SCHEME = memoScheme ?? MEMO_SCHEME;
+      : _SUBSCRIPTION_ID = subscriptionId ?? SUBSCRIPTION_ID,
+        _ENTITLEMENT_ID = entitlementId ?? ENTITLEMENT_ID,
+        _LISTING_ID = listingId ?? LISTING_ID,
+        _AUTH_KIND = authKind ?? AUTH_KIND,
+        _CHAIN_SETTLEMENT = chainSettlement ?? CHAIN_SETTLEMENT,
+        _PERIOD_DAYS = periodDays ?? PERIOD_DAYS,
+        _AMOUNT_PER_PERIOD = amountPerPeriod ?? AMOUNT_PER_PERIOD,
+        _CURRENCY = CURRENCY,
+        _NEXT_CHARGE_AT = nextChargeAt ?? NEXT_CHARGE_AT,
+        _MAX_PERIODS = maxPeriods ?? MAX_PERIODS,
+        _STATUS = STATUS,
+        _SIGNATURE = SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? CHAINOffset = _CHAIN == null ? null
-        : fbBuilder.writeString(_CHAIN!);
-    final int? SPLITTER_STANDARDOffset = _SPLITTER_STANDARD == null ? null
-        : fbBuilder.writeString(_SPLITTER_STANDARD!);
-    final int? SPLITTER_ADDRESSOffset = _SPLITTER_ADDRESS == null ? null
-        : fbBuilder.writeString(_SPLITTER_ADDRESS!);
-    final int? SPLIT_CONFIG_IDOffset = _SPLIT_CONFIG_ID == null ? null
-        : fbBuilder.writeString(_SPLIT_CONFIG_ID!);
-    final int? TOKEN_ADDRESSOffset = _TOKEN_ADDRESS == null ? null
-        : fbBuilder.writeString(_TOKEN_ADDRESS!);
-    final int? TOKEN_SYMBOLOffset = _TOKEN_SYMBOL == null ? null
-        : fbBuilder.writeString(_TOKEN_SYMBOL!);
-    final int? SPLIT_RECIPIENTSOffset = _SPLIT_RECIPIENTS == null ? null
-        : fbBuilder.writeList(_SPLIT_RECIPIENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SUBSCRIPTION_IDOffset = _SUBSCRIPTION_ID == null ? null
+        : fbBuilder.writeString(_SUBSCRIPTION_ID!);
+    final int? ENTITLEMENT_IDOffset = _ENTITLEMENT_ID == null ? null
+        : fbBuilder.writeString(_ENTITLEMENT_ID!);
+    final int? LISTING_IDOffset = _LISTING_ID == null ? null
+        : fbBuilder.writeString(_LISTING_ID!);
+    final int? CHAIN_SETTLEMENTOffset = _CHAIN_SETTLEMENT?.getOrCreateOffset(fbBuilder);
+    final int? CURRENCYOffset = _CURRENCY == null ? null
+        : fbBuilder.writeString(_CURRENCY!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
     fbBuilder.startTable(12);
-    fbBuilder.addOffset(0, CHAINOffset);
-    fbBuilder.addUint64(1, _CHAIN_ID);
-    fbBuilder.addInt8(2, _SETTLEMENT_KIND?.value);
-    fbBuilder.addOffset(3, SPLITTER_STANDARDOffset);
-    fbBuilder.addOffset(4, SPLITTER_ADDRESSOffset);
-    fbBuilder.addOffset(5, SPLIT_CONFIG_IDOffset);
-    fbBuilder.addOffset(6, TOKEN_ADDRESSOffset);
-    fbBuilder.addOffset(7, TOKEN_SYMBOLOffset);
-    fbBuilder.addUint8(8, _TOKEN_DECIMALS);
-    fbBuilder.addOffset(9, SPLIT_RECIPIENTSOffset);
-    fbBuilder.addUint32(10, _MIN_CONFIRMATIONS);
-    fbBuilder.addInt8(11, _MEMO_SCHEME?.value);
+    fbBuilder.addOffset(0, SUBSCRIPTION_IDOffset);
+    fbBuilder.addOffset(1, ENTITLEMENT_IDOffset);
+    fbBuilder.addOffset(2, LISTING_IDOffset);
+    fbBuilder.addInt8(3, _AUTH_KIND?.value);
+    fbBuilder.addOffset(4, CHAIN_SETTLEMENTOffset);
+    fbBuilder.addUint32(5, _PERIOD_DAYS);
+    fbBuilder.addUint64(6, _AMOUNT_PER_PERIOD);
+    fbBuilder.addOffset(7, CURRENCYOffset);
+    fbBuilder.addUint64(8, _NEXT_CHARGE_AT);
+    fbBuilder.addUint32(9, _MAX_PERIODS);
+    fbBuilder.addInt8(10, _STATUS?.value);
+    fbBuilder.addOffset(11, SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

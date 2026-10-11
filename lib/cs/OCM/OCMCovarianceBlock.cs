@@ -111,6 +111,10 @@ public struct OCMCovarianceBlock : IFlatbufferObject
   /// The data lines, as written.
   public string LINES(int j) { int o = __p.__offset(32); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int LINESLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Realism of the block's covariance: one entry per line of LINES, in order,
+  /// or one entry for every line.
+  public CVR? COV_REALISM(int j) { int o = __p.__offset(34); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int COV_REALISMLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OCMCovarianceBlock> CreateOCMCovarianceBlock(FlatBufferBuilder builder,
       StringOffset COMMENTOffset = default(StringOffset),
@@ -127,11 +131,13 @@ public struct OCMCovarianceBlock : IFlatbufferObject
       StringOffset COV_TYPEOffset = default(StringOffset),
       covarianceOrdering COV_ORDERING = covarianceOrdering.LTM,
       StringOffset COV_UNITSOffset = default(StringOffset),
-      VectorOffset LINESOffset = default(VectorOffset)) {
-    builder.StartTable(15);
+      VectorOffset LINESOffset = default(VectorOffset),
+      VectorOffset COV_REALISMOffset = default(VectorOffset)) {
+    builder.StartTable(16);
     OCMCovarianceBlock.AddCOV_CONFIDENCE(builder, COV_CONFIDENCE);
     OCMCovarianceBlock.AddCOV_SCALE_MAX(builder, COV_SCALE_MAX);
     OCMCovarianceBlock.AddCOV_SCALE_MIN(builder, COV_SCALE_MIN);
+    OCMCovarianceBlock.AddCOV_REALISM(builder, COV_REALISMOffset);
     OCMCovarianceBlock.AddLINES(builder, LINESOffset);
     OCMCovarianceBlock.AddCOV_UNITS(builder, COV_UNITSOffset);
     OCMCovarianceBlock.AddCOV_TYPE(builder, COV_TYPEOffset);
@@ -147,7 +153,7 @@ public struct OCMCovarianceBlock : IFlatbufferObject
     return OCMCovarianceBlock.EndOCMCovarianceBlock(builder);
   }
 
-  public static void StartOCMCovarianceBlock(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartOCMCovarianceBlock(FlatBufferBuilder builder) { builder.StartTable(16); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static void AddCOV_ID(FlatBufferBuilder builder, StringOffset COV_IDOffset) { builder.AddOffset(1, COV_IDOffset.Value, 0); }
   public static void AddCOV_PREV_ID(FlatBufferBuilder builder, StringOffset COV_PREV_IDOffset) { builder.AddOffset(2, COV_PREV_IDOffset.Value, 0); }
@@ -168,6 +174,12 @@ public struct OCMCovarianceBlock : IFlatbufferObject
   public static VectorOffset CreateLINESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateLINESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartLINESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCOV_REALISM(FlatBufferBuilder builder, VectorOffset COV_REALISMOffset) { builder.AddOffset(15, COV_REALISMOffset.Value, 0); }
+  public static VectorOffset CreateCOV_REALISMVector(FlatBufferBuilder builder, Offset<CVR>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, Offset<CVR>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CVR>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CVR>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOV_REALISMVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OCMCovarianceBlock> EndOCMCovarianceBlock(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCMCovarianceBlock>(o);
@@ -194,6 +206,8 @@ public struct OCMCovarianceBlock : IFlatbufferObject
     _o.COV_UNITS = this.COV_UNITS;
     _o.LINES = new List<string>();
     for (var _j = 0; _j < this.LINESLength; ++_j) {_o.LINES.Add(this.LINES(_j));}
+    _o.COV_REALISM = new List<CVRT>();
+    for (var _j = 0; _j < this.COV_REALISMLength; ++_j) {_o.COV_REALISM.Add(this.COV_REALISM(_j).HasValue ? this.COV_REALISM(_j).Value.UnPack() : null);}
   }
   public static Offset<OCMCovarianceBlock> Pack(FlatBufferBuilder builder, OCMCovarianceBlockT _o) {
     if (_o == null) return default(Offset<OCMCovarianceBlock>);
@@ -213,6 +227,12 @@ public struct OCMCovarianceBlock : IFlatbufferObject
       for (var _j = 0; _j < __LINES.Length; ++_j) { __LINES[_j] = builder.CreateString(_o.LINES[_j]); }
       _LINES = CreateLINESVector(builder, __LINES);
     }
+    var _COV_REALISM = default(VectorOffset);
+    if (_o.COV_REALISM != null) {
+      var __COV_REALISM = new Offset<CVR>[_o.COV_REALISM.Count];
+      for (var _j = 0; _j < __COV_REALISM.Length; ++_j) { __COV_REALISM[_j] = CVR.Pack(builder, _o.COV_REALISM[_j]); }
+      _COV_REALISM = CreateCOV_REALISMVector(builder, __COV_REALISM);
+    }
     return CreateOCMCovarianceBlock(
       builder,
       _COMMENT,
@@ -229,7 +249,8 @@ public struct OCMCovarianceBlock : IFlatbufferObject
       _COV_TYPE,
       _o.COV_ORDERING,
       _COV_UNITS,
-      _LINES);
+      _LINES,
+      _COV_REALISM);
   }
 }
 
@@ -250,6 +271,7 @@ public class OCMCovarianceBlockT
   public covarianceOrdering COV_ORDERING { get; set; }
   public string COV_UNITS { get; set; }
   public List<string> LINES { get; set; }
+  public List<CVRT> COV_REALISM { get; set; }
 
   public OCMCovarianceBlockT() {
     this.COMMENT = null;
@@ -267,6 +289,7 @@ public class OCMCovarianceBlockT
     this.COV_ORDERING = covarianceOrdering.LTM;
     this.COV_UNITS = null;
     this.LINES = null;
+    this.COV_REALISM = null;
   }
 }
 
@@ -291,6 +314,7 @@ static public class OCMCovarianceBlockVerify
       && verifier.VerifyField(tablePos, 28 /*COV_ORDERING*/, 1 /*covarianceOrdering*/, 1, false)
       && verifier.VerifyString(tablePos, 30 /*COV_UNITS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 32 /*LINES*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 34 /*COV_REALISM*/, CVRVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

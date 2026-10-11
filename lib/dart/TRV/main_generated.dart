@@ -5,148 +5,118 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-///  Trust predicate evaluated by a rule policy. Append new values only; never
-///  reorder or reuse existing values.
-enum trpPredicateKind {
-  MinValueLocked(0),
-  ValueForDuration(1),
-  AllowedTokens(2),
-  TrustedConnections(3);
-
-  final int value;
-  const trpPredicateKind(this.value);
-
-  factory trpPredicateKind.fromValue(int value) {
-    switch (value) {
-      case 0: return trpPredicateKind.MinValueLocked;
-      case 1: return trpPredicateKind.ValueForDuration;
-      case 2: return trpPredicateKind.AllowedTokens;
-      case 3: return trpPredicateKind.TrustedConnections;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static trpPredicateKind? _createOrNull(int? value) =>
-      value == null ? null : trpPredicateKind.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static const fb.Reader<trpPredicateKind> reader = _trpPredicateKindReader();
-}
-
-class _trpPredicateKindReader extends fb.Reader<trpPredicateKind> {
-  const _trpPredicateKindReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  trpPredicateKind read(fb.BufferContext bc, int offset) =>
-      trpPredicateKind.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Boolean combinator applied to a predicate group. Append new values only;
-///  never reorder or reuse existing values. A policy's rules are a flat list
-///  that must all pass, so evaluators accept only All.
-enum trpCombinator {
-  All(0),
-  Any(1);
-
-  final int value;
-  const trpCombinator(this.value);
-
-  factory trpCombinator.fromValue(int value) {
-    switch (value) {
-      case 0: return trpCombinator.All;
-      case 1: return trpCombinator.Any;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static trpCombinator? _createOrNull(int? value) =>
-      value == null ? null : trpCombinator.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<trpCombinator> reader = _trpCombinatorReader();
-}
-
-class _trpCombinatorReader extends fb.Reader<trpCombinator> {
-  const _trpCombinatorReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  trpCombinator read(fb.BufferContext bc, int offset) =>
-      trpCombinator.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Asset admitted by a value or token predicate.
-class TRPAsset {
-  TRPAsset._(this._bc, this._bcOffset);
-  factory TRPAsset(List<int> bytes) {
+///  Chain evidence supporting a value-based predicate result.
+class TRVBondEvidence {
+  TRVBondEvidence._(this._bc, this._bcOffset);
+  factory TRVBondEvidence(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TRPAsset> reader = _TRPAssetReader();
+  static const fb.Reader<TRVBondEvidence> reader = _TRVBondEvidenceReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  CAIP-2 style chain identifier, e.g. "eip155:1" or
-  ///  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp". Vendor and organization names
-  ///  are forbidden; a chain is named only by its identifier.
+  ///  Chain identifier using the same identifier-only convention as TRPAsset.
   String? get CHAIN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get chainId => CHAIN_ID;
+  ///  Chain-local address whose balance was evaluated.
+  String? get ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Chain-local token address, or empty for the chain's native asset.
-  String? get TOKEN_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get TOKEN_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get tokenAddress => TOKEN_ADDRESS;
-  ///  Published token symbol used for display and matching.
-  String? get TOKEN_SYMBOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get tokenSymbol => TOKEN_SYMBOL;
-  ///  Number of decimal places used by the smallest-unit integer balance.
-  int get DECIMALS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  Observed uint64 balance expressed in the asset's smallest unit.
+  int get BALANCE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  Number of decimal places used by BALANCE.
+  int get DECIMALS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  ///  Currency or unit used for normalized valuation.
+  String? get VALUE_CURRENCY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get valueCurrency => VALUE_CURRENCY;
+  ///  Balance normalized into VALUE_CURRENCY.
+  double get NORMALIZED_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get normalizedValue => NORMALIZED_VALUE;
+  ///  Unix timestamp in milliseconds from which the balance is proven to have
+  ///  been continuously held, established from chain history.
+  int get HELD_SINCE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get heldSince => HELD_SINCE;
+  ///  Unix timestamp in milliseconds when the balance was observed.
+  int get OBSERVED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get observedAt => OBSERVED_AT;
+  ///  Chain-specific block identifier anchoring the observation.
+  String? get BLOCK_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get blockReference => BLOCK_REFERENCE;
+  ///  Replayable query or query description used to obtain the evidence.
+  String? get SOURCE_QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get sourceQuery => SOURCE_QUERY;
 
   @override
   String toString() {
-    return 'TRPAsset{chainId: ${chainId}, tokenAddress: ${tokenAddress}, tokenSymbol: ${tokenSymbol}, DECIMALS: ${DECIMALS}}';
+    return 'TRVBondEvidence{chainId: ${chainId}, ADDRESS: ${ADDRESS}, tokenAddress: ${tokenAddress}, BALANCE: ${BALANCE}, DECIMALS: ${DECIMALS}, valueCurrency: ${valueCurrency}, normalizedValue: ${normalizedValue}, heldSince: ${heldSince}, observedAt: ${observedAt}, blockReference: ${blockReference}, sourceQuery: ${sourceQuery}}';
   }
 }
 
-class _TRPAssetReader extends fb.TableReader<TRPAsset> {
-  const _TRPAssetReader();
+class _TRVBondEvidenceReader extends fb.TableReader<TRVBondEvidence> {
+  const _TRVBondEvidenceReader();
 
   @override
-  TRPAsset createObject(fb.BufferContext bc, int offset) =>
-    TRPAsset._(bc, offset);
+  TRVBondEvidence createObject(fb.BufferContext bc, int offset) =>
+    TRVBondEvidence._(bc, offset);
 }
 
-class TRPAssetBuilder {
-  TRPAssetBuilder(this.fbBuilder);
+class TRVBondEvidenceBuilder {
+  TRVBondEvidenceBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(11);
   }
 
   int addChainIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addTokenAddressOffset(int? offset) {
+  int addAddressOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addTokenSymbolOffset(int? offset) {
+  int addTokenAddressOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addBalance(int? BALANCE) {
+    fbBuilder.addUint64(3, BALANCE);
+    return fbBuilder.offset;
+  }
   int addDecimals(int? DECIMALS) {
-    fbBuilder.addUint8(3, DECIMALS);
+    fbBuilder.addUint8(4, DECIMALS);
+    return fbBuilder.offset;
+  }
+  int addValueCurrencyOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addNormalizedValue(double? NORMALIZED_VALUE) {
+    fbBuilder.addFloat64(6, NORMALIZED_VALUE);
+    return fbBuilder.offset;
+  }
+  int addHeldSince(int? HELD_SINCE) {
+    fbBuilder.addUint64(7, HELD_SINCE);
+    return fbBuilder.offset;
+  }
+  int addObservedAt(int? OBSERVED_AT) {
+    fbBuilder.addUint64(8, OBSERVED_AT);
+    return fbBuilder.offset;
+  }
+  int addBlockReferenceOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceQueryOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
 
@@ -155,40 +125,79 @@ class TRPAssetBuilder {
   }
 }
 
-class TRPAssetObjectBuilder extends fb.ObjectBuilder {
+class TRVBondEvidenceObjectBuilder extends fb.ObjectBuilder {
   final String? _CHAIN_ID;
+  final String? _ADDRESS;
   final String? _TOKEN_ADDRESS;
-  final String? _TOKEN_SYMBOL;
+  final int? _BALANCE;
   final int? _DECIMALS;
+  final String? _VALUE_CURRENCY;
+  final double? _NORMALIZED_VALUE;
+  final int? _HELD_SINCE;
+  final int? _OBSERVED_AT;
+  final String? _BLOCK_REFERENCE;
+  final String? _SOURCE_QUERY;
 
-  TRPAssetObjectBuilder({
+  TRVBondEvidenceObjectBuilder({
     String? CHAIN_ID,
     String? chainId,
+    String? ADDRESS,
     String? TOKEN_ADDRESS,
     String? tokenAddress,
-    String? TOKEN_SYMBOL,
-    String? tokenSymbol,
+    int? BALANCE,
     int? DECIMALS,
+    String? VALUE_CURRENCY,
+    String? valueCurrency,
+    double? NORMALIZED_VALUE,
+    double? normalizedValue,
+    int? HELD_SINCE,
+    int? heldSince,
+    int? OBSERVED_AT,
+    int? observedAt,
+    String? BLOCK_REFERENCE,
+    String? blockReference,
+    String? SOURCE_QUERY,
+    String? sourceQuery,
   })
       : _CHAIN_ID = chainId ?? CHAIN_ID,
+        _ADDRESS = ADDRESS,
         _TOKEN_ADDRESS = tokenAddress ?? TOKEN_ADDRESS,
-        _TOKEN_SYMBOL = tokenSymbol ?? TOKEN_SYMBOL,
-        _DECIMALS = DECIMALS;
+        _BALANCE = BALANCE,
+        _DECIMALS = DECIMALS,
+        _VALUE_CURRENCY = valueCurrency ?? VALUE_CURRENCY,
+        _NORMALIZED_VALUE = normalizedValue ?? NORMALIZED_VALUE,
+        _HELD_SINCE = heldSince ?? HELD_SINCE,
+        _OBSERVED_AT = observedAt ?? OBSERVED_AT,
+        _BLOCK_REFERENCE = blockReference ?? BLOCK_REFERENCE,
+        _SOURCE_QUERY = sourceQuery ?? SOURCE_QUERY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? CHAIN_IDOffset = _CHAIN_ID == null ? null
         : fbBuilder.writeString(_CHAIN_ID!);
+    final int? ADDRESSOffset = _ADDRESS == null ? null
+        : fbBuilder.writeString(_ADDRESS!);
     final int? TOKEN_ADDRESSOffset = _TOKEN_ADDRESS == null ? null
         : fbBuilder.writeString(_TOKEN_ADDRESS!);
-    final int? TOKEN_SYMBOLOffset = _TOKEN_SYMBOL == null ? null
-        : fbBuilder.writeString(_TOKEN_SYMBOL!);
-    fbBuilder.startTable(4);
+    final int? VALUE_CURRENCYOffset = _VALUE_CURRENCY == null ? null
+        : fbBuilder.writeString(_VALUE_CURRENCY!);
+    final int? BLOCK_REFERENCEOffset = _BLOCK_REFERENCE == null ? null
+        : fbBuilder.writeString(_BLOCK_REFERENCE!);
+    final int? SOURCE_QUERYOffset = _SOURCE_QUERY == null ? null
+        : fbBuilder.writeString(_SOURCE_QUERY!);
+    fbBuilder.startTable(11);
     fbBuilder.addOffset(0, CHAIN_IDOffset);
-    fbBuilder.addOffset(1, TOKEN_ADDRESSOffset);
-    fbBuilder.addOffset(2, TOKEN_SYMBOLOffset);
-    fbBuilder.addUint8(3, _DECIMALS);
+    fbBuilder.addOffset(1, ADDRESSOffset);
+    fbBuilder.addOffset(2, TOKEN_ADDRESSOffset);
+    fbBuilder.addUint64(3, _BALANCE);
+    fbBuilder.addUint8(4, _DECIMALS);
+    fbBuilder.addOffset(5, VALUE_CURRENCYOffset);
+    fbBuilder.addFloat64(6, _NORMALIZED_VALUE);
+    fbBuilder.addUint64(7, _HELD_SINCE);
+    fbBuilder.addUint64(8, _OBSERVED_AT);
+    fbBuilder.addOffset(9, BLOCK_REFERENCEOffset);
+    fbBuilder.addOffset(10, SOURCE_QUERYOffset);
     return fbBuilder.endTable();
   }
 
@@ -200,70 +209,63 @@ class TRPAssetObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  One named rule in a trust rule policy: a predicate and the values it
-///  needs. A subject meets the policy only when every rule passes.
-class TRPPredicate {
-  TRPPredicate._(this._bc, this._bcOffset);
-  factory TRPPredicate(List<int> bytes) {
+///  Outcome and evidence for one policy predicate.
+class TRVPredicateResult {
+  TRVPredicateResult._(this._bc, this._bcOffset);
+  factory TRVPredicateResult(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TRPPredicate> reader = _TRPPredicateReader();
+  static const fb.Reader<TRVPredicateResult> reader = _TRVPredicateResultReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Stable identifier unique within the policy.
+  ///  Identifier of the evaluated `$TRP` predicate.
   String? get PREDICATE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get predicateId => PREDICATE_ID;
-  ///  Predicate operation to evaluate.
+  ///  Predicate operation copied from the evaluated policy.
   trpPredicateKind get KIND => trpPredicateKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ///  Minimum qualifying value expressed as a uint64 in the smallest unit.
-  int get MIN_VALUE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get minValue => MIN_VALUE;
-  ///  Currency or unit used to compare normalized values.
-  String? get VALUE_CURRENCY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get valueCurrency => VALUE_CURRENCY;
-  ///  Minimum continuous holding duration in seconds.
-  int get MIN_HELD_SECONDS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get minHeldSeconds => MIN_HELD_SECONDS;
-  ///  Assets admitted by this predicate.
-  List<TRPAsset>? get ASSETS => const fb.ListReader<TRPAsset>(TRPAsset.reader).vTableGetNullable(_bc, _bcOffset, 14);
-  ///  X, the number of named trusters that must match.
-  int get REQUIRED_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get requiredCount => REQUIRED_COUNT;
-  ///  The N named `$TRE` trusters considered by a trusted-connections predicate.
-  List<String>? get TRUSTER_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
-  List<String>? get trusterIds => TRUSTER_IDS;
-  ///  Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
-  double get MIN_EDGE_WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get minEdgeWeight => MIN_EDGE_WEIGHT;
-  ///  The rule's name as its author wrote it, shown wherever the rule and its
-  ///  results are listed.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Whether this predicate passed.
+  bool get PASSED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Value measured by the evaluator.
+  double get MEASURED_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get measuredValue => MEASURED_VALUE;
+  ///  Threshold required by the evaluated predicate.
+  double get REQUIRED_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get requiredValue => REQUIRED_VALUE;
+  ///  Chain evidence used by value and duration predicates.
+  List<TRVBondEvidence>? get BOND_EVIDENCE => const fb.ListReader<TRVBondEvidence>(TRVBondEvidence.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<TRVBondEvidence>? get bondEvidence => BOND_EVIDENCE;
+  ///  Named `$TRE` trusters whose qualifying edges matched.
+  List<String>? get TRUSTER_IDS_MATCHED => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<String>? get trusterIdsMatched => TRUSTER_IDS_MATCHED;
+  ///  Human-readable evidence summary.
+  String? get EVIDENCE_TEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get evidenceText => EVIDENCE_TEXT;
 
   @override
   String toString() {
-    return 'TRPPredicate{predicateId: ${predicateId}, KIND: ${KIND}, minValue: ${minValue}, valueCurrency: ${valueCurrency}, minHeldSeconds: ${minHeldSeconds}, ASSETS: ${ASSETS}, requiredCount: ${requiredCount}, trusterIds: ${trusterIds}, minEdgeWeight: ${minEdgeWeight}, NAME: ${NAME}}';
+    return 'TRVPredicateResult{predicateId: ${predicateId}, KIND: ${KIND}, PASSED: ${PASSED}, measuredValue: ${measuredValue}, requiredValue: ${requiredValue}, bondEvidence: ${bondEvidence}, trusterIdsMatched: ${trusterIdsMatched}, evidenceText: ${evidenceText}}';
   }
 }
 
-class _TRPPredicateReader extends fb.TableReader<TRPPredicate> {
-  const _TRPPredicateReader();
+class _TRVPredicateResultReader extends fb.TableReader<TRVPredicateResult> {
+  const _TRVPredicateResultReader();
 
   @override
-  TRPPredicate createObject(fb.BufferContext bc, int offset) =>
-    TRPPredicate._(bc, offset);
+  TRVPredicateResult createObject(fb.BufferContext bc, int offset) =>
+    TRVPredicateResult._(bc, offset);
 }
 
-class TRPPredicateBuilder {
-  TRPPredicateBuilder(this.fbBuilder);
+class TRVPredicateResultBuilder {
+  TRVPredicateResultBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(8);
   }
 
   int addPredicateIdOffset(int? offset) {
@@ -274,36 +276,28 @@ class TRPPredicateBuilder {
     fbBuilder.addInt8(1, KIND?.value);
     return fbBuilder.offset;
   }
-  int addMinValue(int? MIN_VALUE) {
-    fbBuilder.addUint64(2, MIN_VALUE);
+  int addPassed(bool? PASSED) {
+    fbBuilder.addBool(2, PASSED);
     return fbBuilder.offset;
   }
-  int addValueCurrencyOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addMeasuredValue(double? MEASURED_VALUE) {
+    fbBuilder.addFloat64(3, MEASURED_VALUE);
     return fbBuilder.offset;
   }
-  int addMinHeldSeconds(int? MIN_HELD_SECONDS) {
-    fbBuilder.addUint64(4, MIN_HELD_SECONDS);
+  int addRequiredValue(double? REQUIRED_VALUE) {
+    fbBuilder.addFloat64(4, REQUIRED_VALUE);
     return fbBuilder.offset;
   }
-  int addAssetsOffset(int? offset) {
+  int addBondEvidenceOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addRequiredCount(int? REQUIRED_COUNT) {
-    fbBuilder.addUint32(6, REQUIRED_COUNT);
+  int addTrusterIdsMatchedOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addTrusterIdsOffset(int? offset) {
+  int addEvidenceTextOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addMinEdgeWeight(double? MIN_EDGE_WEIGHT) {
-    fbBuilder.addFloat64(8, MIN_EDGE_WEIGHT);
-    return fbBuilder.offset;
-  }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
 
@@ -312,72 +306,61 @@ class TRPPredicateBuilder {
   }
 }
 
-class TRPPredicateObjectBuilder extends fb.ObjectBuilder {
+class TRVPredicateResultObjectBuilder extends fb.ObjectBuilder {
   final String? _PREDICATE_ID;
   final trpPredicateKind? _KIND;
-  final int? _MIN_VALUE;
-  final String? _VALUE_CURRENCY;
-  final int? _MIN_HELD_SECONDS;
-  final List<TRPAssetObjectBuilder>? _ASSETS;
-  final int? _REQUIRED_COUNT;
-  final List<String>? _TRUSTER_IDS;
-  final double? _MIN_EDGE_WEIGHT;
-  final String? _NAME;
+  final bool? _PASSED;
+  final double? _MEASURED_VALUE;
+  final double? _REQUIRED_VALUE;
+  final List<TRVBondEvidenceObjectBuilder>? _BOND_EVIDENCE;
+  final List<String>? _TRUSTER_IDS_MATCHED;
+  final String? _EVIDENCE_TEXT;
 
-  TRPPredicateObjectBuilder({
+  TRVPredicateResultObjectBuilder({
     String? PREDICATE_ID,
     String? predicateId,
     trpPredicateKind? KIND,
-    int? MIN_VALUE,
-    int? minValue,
-    String? VALUE_CURRENCY,
-    String? valueCurrency,
-    int? MIN_HELD_SECONDS,
-    int? minHeldSeconds,
-    List<TRPAssetObjectBuilder>? ASSETS,
-    int? REQUIRED_COUNT,
-    int? requiredCount,
-    List<String>? TRUSTER_IDS,
-    List<String>? trusterIds,
-    double? MIN_EDGE_WEIGHT,
-    double? minEdgeWeight,
-    String? NAME,
+    bool? PASSED,
+    double? MEASURED_VALUE,
+    double? measuredValue,
+    double? REQUIRED_VALUE,
+    double? requiredValue,
+    List<TRVBondEvidenceObjectBuilder>? BOND_EVIDENCE,
+    List<TRVBondEvidenceObjectBuilder>? bondEvidence,
+    List<String>? TRUSTER_IDS_MATCHED,
+    List<String>? trusterIdsMatched,
+    String? EVIDENCE_TEXT,
+    String? evidenceText,
   })
       : _PREDICATE_ID = predicateId ?? PREDICATE_ID,
         _KIND = KIND,
-        _MIN_VALUE = minValue ?? MIN_VALUE,
-        _VALUE_CURRENCY = valueCurrency ?? VALUE_CURRENCY,
-        _MIN_HELD_SECONDS = minHeldSeconds ?? MIN_HELD_SECONDS,
-        _ASSETS = ASSETS,
-        _REQUIRED_COUNT = requiredCount ?? REQUIRED_COUNT,
-        _TRUSTER_IDS = trusterIds ?? TRUSTER_IDS,
-        _MIN_EDGE_WEIGHT = minEdgeWeight ?? MIN_EDGE_WEIGHT,
-        _NAME = NAME;
+        _PASSED = PASSED,
+        _MEASURED_VALUE = measuredValue ?? MEASURED_VALUE,
+        _REQUIRED_VALUE = requiredValue ?? REQUIRED_VALUE,
+        _BOND_EVIDENCE = bondEvidence ?? BOND_EVIDENCE,
+        _TRUSTER_IDS_MATCHED = trusterIdsMatched ?? TRUSTER_IDS_MATCHED,
+        _EVIDENCE_TEXT = evidenceText ?? EVIDENCE_TEXT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? PREDICATE_IDOffset = _PREDICATE_ID == null ? null
         : fbBuilder.writeString(_PREDICATE_ID!);
-    final int? VALUE_CURRENCYOffset = _VALUE_CURRENCY == null ? null
-        : fbBuilder.writeString(_VALUE_CURRENCY!);
-    final int? ASSETSOffset = _ASSETS == null ? null
-        : fbBuilder.writeList(_ASSETS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? TRUSTER_IDSOffset = _TRUSTER_IDS == null ? null
-        : fbBuilder.writeList(_TRUSTER_IDS!.map(fbBuilder.writeString).toList());
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    fbBuilder.startTable(10);
+    final int? BOND_EVIDENCEOffset = _BOND_EVIDENCE == null ? null
+        : fbBuilder.writeList(_BOND_EVIDENCE!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TRUSTER_IDS_MATCHEDOffset = _TRUSTER_IDS_MATCHED == null ? null
+        : fbBuilder.writeList(_TRUSTER_IDS_MATCHED!.map(fbBuilder.writeString).toList());
+    final int? EVIDENCE_TEXTOffset = _EVIDENCE_TEXT == null ? null
+        : fbBuilder.writeString(_EVIDENCE_TEXT!);
+    fbBuilder.startTable(8);
     fbBuilder.addOffset(0, PREDICATE_IDOffset);
     fbBuilder.addInt8(1, _KIND?.value);
-    fbBuilder.addUint64(2, _MIN_VALUE);
-    fbBuilder.addOffset(3, VALUE_CURRENCYOffset);
-    fbBuilder.addUint64(4, _MIN_HELD_SECONDS);
-    fbBuilder.addOffset(5, ASSETSOffset);
-    fbBuilder.addUint32(6, _REQUIRED_COUNT);
-    fbBuilder.addOffset(7, TRUSTER_IDSOffset);
-    fbBuilder.addFloat64(8, _MIN_EDGE_WEIGHT);
-    fbBuilder.addOffset(9, NAMEOffset);
+    fbBuilder.addBool(2, _PASSED);
+    fbBuilder.addFloat64(3, _MEASURED_VALUE);
+    fbBuilder.addFloat64(4, _REQUIRED_VALUE);
+    fbBuilder.addOffset(5, BOND_EVIDENCEOffset);
+    fbBuilder.addOffset(6, TRUSTER_IDS_MATCHEDOffset);
+    fbBuilder.addOffset(7, EVIDENCE_TEXTOffset);
     return fbBuilder.endTable();
   }
 
@@ -389,229 +372,124 @@ class TRPPredicateObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  The rules of a trust rule policy.
-class TRPGroup {
-  TRPGroup._(this._bc, this._bcOffset);
-  factory TRPGroup(List<int> bytes) {
+///  Trust Rule Verdict.
+///
+///  A TRV records one reproducible evaluation of a `$TRP` policy for a subject.
+///  This record replaces ad-hoc trust status events.
+class TRV {
+  TRV._(this._bc, this._bcOffset);
+  factory TRV(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<TRPGroup> reader = _TRPGroupReader();
+  static const fb.Reader<TRV> reader = _TRVReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Stable identifier unique within the policy.
-  String? get GROUP_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get groupId => GROUP_ID;
-  ///  Always All: every rule must pass.
-  trpCombinator get COMBINATOR => trpCombinator.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ///  The policy's rules, all of which must pass.
-  List<TRPPredicate>? get PREDICATES => const fb.ListReader<TRPPredicate>(TRPPredicate.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Retired: rules do not nest. Evaluators refuse a policy with child groups.
-  List<TRPGroup>? get GROUPS => const fb.ListReader<TRPGroup>(TRPGroup.reader).vTableGetNullable(_bc, _bcOffset, 10);
-
-  @override
-  String toString() {
-    return 'TRPGroup{groupId: ${groupId}, COMBINATOR: ${COMBINATOR}, PREDICATES: ${PREDICATES}, GROUPS: ${GROUPS}}';
-  }
-}
-
-class _TRPGroupReader extends fb.TableReader<TRPGroup> {
-  const _TRPGroupReader();
-
-  @override
-  TRPGroup createObject(fb.BufferContext bc, int offset) =>
-    TRPGroup._(bc, offset);
-}
-
-class TRPGroupBuilder {
-  TRPGroupBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(4);
-  }
-
-  int addGroupIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addCombinator(trpCombinator? COMBINATOR) {
-    fbBuilder.addInt8(1, COMBINATOR?.value);
-    return fbBuilder.offset;
-  }
-  int addPredicatesOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addGroupsOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class TRPGroupObjectBuilder extends fb.ObjectBuilder {
-  final String? _GROUP_ID;
-  final trpCombinator? _COMBINATOR;
-  final List<TRPPredicateObjectBuilder>? _PREDICATES;
-  final List<TRPGroupObjectBuilder>? _GROUPS;
-
-  TRPGroupObjectBuilder({
-    String? GROUP_ID,
-    String? groupId,
-    trpCombinator? COMBINATOR,
-    List<TRPPredicateObjectBuilder>? PREDICATES,
-    List<TRPGroupObjectBuilder>? GROUPS,
-  })
-      : _GROUP_ID = groupId ?? GROUP_ID,
-        _COMBINATOR = COMBINATOR,
-        _PREDICATES = PREDICATES,
-        _GROUPS = GROUPS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? GROUP_IDOffset = _GROUP_ID == null ? null
-        : fbBuilder.writeString(_GROUP_ID!);
-    final int? PREDICATESOffset = _PREDICATES == null ? null
-        : fbBuilder.writeList(_PREDICATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? GROUPSOffset = _GROUPS == null ? null
-        : fbBuilder.writeList(_GROUPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, GROUP_IDOffset);
-    fbBuilder.addInt8(1, _COMBINATOR?.value);
-    fbBuilder.addOffset(2, PREDICATESOffset);
-    fbBuilder.addOffset(3, GROUPSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Trust Rule Policy - a signed list of named rules for evaluating a subject.
-///  The subject meets the policy when every rule passes; there is no
-///  alternative and no nesting.
-class TRP {
-  TRP._(this._bc, this._bcOffset);
-  factory TRP(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<TRP> reader = _TRPReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Stable policy identifier.
-  String? get POLICY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Stable identifier for this evaluation.
+  String? get VERDICT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get verdictId => VERDICT_ID;
+  ///  Identifier of the evaluated `$TRP` policy.
+  String? get POLICY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get policyId => POLICY_ID;
-  ///  Human-readable policy name.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Human-readable policy description.
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  The policy's rules.
-  TRPGroup? get ROOT => TRPGroup.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Periodic evaluation cadence in milliseconds. The 10000 default is the
-  ///  0.1 Hz baseline and is configurable by the policy author.
-  int get EVALUATION_INTERVAL_MS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 10000);
-  int get evaluationIntervalMs => EVALUATION_INTERVAL_MS;
-  ///  Event names that may trigger evaluation, e.g. "trust-edge", "trust-node",
-  ///  "entity-profile", or "chain-balance".
-  List<String>? get EVENT_SOURCES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
-  List<String>? get eventSources => EVENT_SOURCES;
-  ///  Whether evaluators should currently apply this policy.
-  bool get ACTIVE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  ///  Unix timestamp in milliseconds when this policy was created.
-  int get CREATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get createdAt => CREATED_AT;
-  ///  Unix timestamp in milliseconds when this policy was last updated.
-  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get updatedAt => UPDATED_AT;
-  ///  Peer identifier of the evaluator that issued this policy record.
-  String? get EVALUATOR_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Identifier of the subject evaluated by the policy.
+  String? get SUBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get subjectId => SUBJECT_ID;
+  ///  Whether the complete policy passed.
+  bool get PASSED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  ///  Pass state produced by the immediately preceding evaluation.
+  bool get PREVIOUS_PASSED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get previousPassed => PREVIOUS_PASSED;
+  ///  Score produced by this evaluation.
+  double get SCORE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Score produced by the immediately preceding evaluation.
+  double get PREVIOUS_SCORE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get previousScore => PREVIOUS_SCORE;
+  ///  Per-predicate results and their evidence.
+  List<TRVPredicateResult>? get RESULTS => const fb.ListReader<TRVPredicateResult>(TRVPredicateResult.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Evaluation trigger: "interval" or an event source name.
+  String? get TRIGGER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Unix timestamp in milliseconds when the evaluation completed.
+  int get EVALUATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get evaluatedAt => EVALUATED_AT;
+  ///  Peer identifier of the evaluator that issued this verdict.
+  String? get EVALUATOR_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   String? get evaluatorPeerId => EVALUATOR_PEER_ID;
-  ///  Evaluator signature over the policy record.
-  List<int>? get EVALUATOR_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Evaluator signature over the verdict record.
+  List<int>? get EVALUATOR_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 26);
   List<int>? get evaluatorSignature => EVALUATOR_SIGNATURE;
 
   @override
   String toString() {
-    return 'TRP{policyId: ${policyId}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ROOT: ${ROOT}, evaluationIntervalMs: ${evaluationIntervalMs}, eventSources: ${eventSources}, ACTIVE: ${ACTIVE}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, evaluatorPeerId: ${evaluatorPeerId}, evaluatorSignature: ${evaluatorSignature}}';
+    return 'TRV{verdictId: ${verdictId}, policyId: ${policyId}, subjectId: ${subjectId}, PASSED: ${PASSED}, previousPassed: ${previousPassed}, SCORE: ${SCORE}, previousScore: ${previousScore}, RESULTS: ${RESULTS}, TRIGGER: ${TRIGGER}, evaluatedAt: ${evaluatedAt}, evaluatorPeerId: ${evaluatorPeerId}, evaluatorSignature: ${evaluatorSignature}}';
   }
 }
 
-class _TRPReader extends fb.TableReader<TRP> {
-  const _TRPReader();
+class _TRVReader extends fb.TableReader<TRV> {
+  const _TRVReader();
 
   @override
-  TRP createObject(fb.BufferContext bc, int offset) =>
-    TRP._(bc, offset);
+  TRV createObject(fb.BufferContext bc, int offset) =>
+    TRV._(bc, offset);
 }
 
-class TRPBuilder {
-  TRPBuilder(this.fbBuilder);
+class TRVBuilder {
+  TRVBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(12);
   }
 
-  int addPolicyIdOffset(int? offset) {
+  int addVerdictIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addPolicyIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDescriptionOffset(int? offset) {
+  int addSubjectIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addRootOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addPassed(bool? PASSED) {
+    fbBuilder.addBool(3, PASSED);
     return fbBuilder.offset;
   }
-  int addEvaluationIntervalMs(int? EVALUATION_INTERVAL_MS) {
-    fbBuilder.addUint32(4, EVALUATION_INTERVAL_MS);
+  int addPreviousPassed(bool? PREVIOUS_PASSED) {
+    fbBuilder.addBool(4, PREVIOUS_PASSED);
     return fbBuilder.offset;
   }
-  int addEventSourcesOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addScore(double? SCORE) {
+    fbBuilder.addFloat64(5, SCORE);
     return fbBuilder.offset;
   }
-  int addActive(bool? ACTIVE) {
-    fbBuilder.addBool(6, ACTIVE);
+  int addPreviousScore(double? PREVIOUS_SCORE) {
+    fbBuilder.addFloat64(6, PREVIOUS_SCORE);
     return fbBuilder.offset;
   }
-  int addCreatedAt(int? CREATED_AT) {
-    fbBuilder.addUint64(7, CREATED_AT);
+  int addResultsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addUpdatedAt(int? UPDATED_AT) {
-    fbBuilder.addUint64(8, UPDATED_AT);
+  int addTriggerOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addEvaluatedAt(int? EVALUATED_AT) {
+    fbBuilder.addUint64(9, EVALUATED_AT);
     return fbBuilder.offset;
   }
   int addEvaluatorPeerIdOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
   int addEvaluatorSignatureOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
 
@@ -620,79 +498,85 @@ class TRPBuilder {
   }
 }
 
-class TRPObjectBuilder extends fb.ObjectBuilder {
+class TRVObjectBuilder extends fb.ObjectBuilder {
+  final String? _VERDICT_ID;
   final String? _POLICY_ID;
-  final String? _NAME;
-  final String? _DESCRIPTION;
-  final TRPGroupObjectBuilder? _ROOT;
-  final int? _EVALUATION_INTERVAL_MS;
-  final List<String>? _EVENT_SOURCES;
-  final bool? _ACTIVE;
-  final int? _CREATED_AT;
-  final int? _UPDATED_AT;
+  final String? _SUBJECT_ID;
+  final bool? _PASSED;
+  final bool? _PREVIOUS_PASSED;
+  final double? _SCORE;
+  final double? _PREVIOUS_SCORE;
+  final List<TRVPredicateResultObjectBuilder>? _RESULTS;
+  final String? _TRIGGER;
+  final int? _EVALUATED_AT;
   final String? _EVALUATOR_PEER_ID;
   final List<int>? _EVALUATOR_SIGNATURE;
 
-  TRPObjectBuilder({
+  TRVObjectBuilder({
+    String? VERDICT_ID,
+    String? verdictId,
     String? POLICY_ID,
     String? policyId,
-    String? NAME,
-    String? DESCRIPTION,
-    TRPGroupObjectBuilder? ROOT,
-    int? EVALUATION_INTERVAL_MS,
-    int? evaluationIntervalMs,
-    List<String>? EVENT_SOURCES,
-    List<String>? eventSources,
-    bool? ACTIVE,
-    int? CREATED_AT,
-    int? createdAt,
-    int? UPDATED_AT,
-    int? updatedAt,
+    String? SUBJECT_ID,
+    String? subjectId,
+    bool? PASSED,
+    bool? PREVIOUS_PASSED,
+    bool? previousPassed,
+    double? SCORE,
+    double? PREVIOUS_SCORE,
+    double? previousScore,
+    List<TRVPredicateResultObjectBuilder>? RESULTS,
+    String? TRIGGER,
+    int? EVALUATED_AT,
+    int? evaluatedAt,
     String? EVALUATOR_PEER_ID,
     String? evaluatorPeerId,
     List<int>? EVALUATOR_SIGNATURE,
     List<int>? evaluatorSignature,
   })
-      : _POLICY_ID = policyId ?? POLICY_ID,
-        _NAME = NAME,
-        _DESCRIPTION = DESCRIPTION,
-        _ROOT = ROOT,
-        _EVALUATION_INTERVAL_MS = evaluationIntervalMs ?? EVALUATION_INTERVAL_MS,
-        _EVENT_SOURCES = eventSources ?? EVENT_SOURCES,
-        _ACTIVE = ACTIVE,
-        _CREATED_AT = createdAt ?? CREATED_AT,
-        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+      : _VERDICT_ID = verdictId ?? VERDICT_ID,
+        _POLICY_ID = policyId ?? POLICY_ID,
+        _SUBJECT_ID = subjectId ?? SUBJECT_ID,
+        _PASSED = PASSED,
+        _PREVIOUS_PASSED = previousPassed ?? PREVIOUS_PASSED,
+        _SCORE = SCORE,
+        _PREVIOUS_SCORE = previousScore ?? PREVIOUS_SCORE,
+        _RESULTS = RESULTS,
+        _TRIGGER = TRIGGER,
+        _EVALUATED_AT = evaluatedAt ?? EVALUATED_AT,
         _EVALUATOR_PEER_ID = evaluatorPeerId ?? EVALUATOR_PEER_ID,
         _EVALUATOR_SIGNATURE = evaluatorSignature ?? EVALUATOR_SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
+    final int? VERDICT_IDOffset = _VERDICT_ID == null ? null
+        : fbBuilder.writeString(_VERDICT_ID!);
     final int? POLICY_IDOffset = _POLICY_ID == null ? null
         : fbBuilder.writeString(_POLICY_ID!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? ROOTOffset = _ROOT?.getOrCreateOffset(fbBuilder);
-    final int? EVENT_SOURCESOffset = _EVENT_SOURCES == null ? null
-        : fbBuilder.writeList(_EVENT_SOURCES!.map(fbBuilder.writeString).toList());
+    final int? SUBJECT_IDOffset = _SUBJECT_ID == null ? null
+        : fbBuilder.writeString(_SUBJECT_ID!);
+    final int? RESULTSOffset = _RESULTS == null ? null
+        : fbBuilder.writeList(_RESULTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TRIGGEROffset = _TRIGGER == null ? null
+        : fbBuilder.writeString(_TRIGGER!);
     final int? EVALUATOR_PEER_IDOffset = _EVALUATOR_PEER_ID == null ? null
         : fbBuilder.writeString(_EVALUATOR_PEER_ID!);
     final int? EVALUATOR_SIGNATUREOffset = _EVALUATOR_SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_EVALUATOR_SIGNATURE!);
-    fbBuilder.startTable(11);
-    fbBuilder.addOffset(0, POLICY_IDOffset);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, DESCRIPTIONOffset);
-    fbBuilder.addOffset(3, ROOTOffset);
-    fbBuilder.addUint32(4, _EVALUATION_INTERVAL_MS);
-    fbBuilder.addOffset(5, EVENT_SOURCESOffset);
-    fbBuilder.addBool(6, _ACTIVE);
-    fbBuilder.addUint64(7, _CREATED_AT);
-    fbBuilder.addUint64(8, _UPDATED_AT);
-    fbBuilder.addOffset(9, EVALUATOR_PEER_IDOffset);
-    fbBuilder.addOffset(10, EVALUATOR_SIGNATUREOffset);
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, VERDICT_IDOffset);
+    fbBuilder.addOffset(1, POLICY_IDOffset);
+    fbBuilder.addOffset(2, SUBJECT_IDOffset);
+    fbBuilder.addBool(3, _PASSED);
+    fbBuilder.addBool(4, _PREVIOUS_PASSED);
+    fbBuilder.addFloat64(5, _SCORE);
+    fbBuilder.addFloat64(6, _PREVIOUS_SCORE);
+    fbBuilder.addOffset(7, RESULTSOffset);
+    fbBuilder.addOffset(8, TRIGGEROffset);
+    fbBuilder.addUint64(9, _EVALUATED_AT);
+    fbBuilder.addOffset(10, EVALUATOR_PEER_IDOffset);
+    fbBuilder.addOffset(11, EVALUATOR_SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

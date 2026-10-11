@@ -5,183 +5,214 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum keyReferenceRole {
-  Unknown(0),
-  ProviderSigning(1),
-  ProviderWrapping(2),
-  RequesterSigning(3),
-  PublicationContent(4),
-  VerificationKey(5),
-  DecryptKey(6);
+enum licensingConfigMessageType {
+  Configure(0),
+  Status(1);
 
   final int value;
-  const keyReferenceRole(this.value);
+  const licensingConfigMessageType(this.value);
 
-  factory keyReferenceRole.fromValue(int value) {
+  factory licensingConfigMessageType.fromValue(int value) {
     switch (value) {
-      case 0: return keyReferenceRole.Unknown;
-      case 1: return keyReferenceRole.ProviderSigning;
-      case 2: return keyReferenceRole.ProviderWrapping;
-      case 3: return keyReferenceRole.RequesterSigning;
-      case 4: return keyReferenceRole.PublicationContent;
-      case 5: return keyReferenceRole.VerificationKey;
-      case 6: return keyReferenceRole.DecryptKey;
+      case 0: return licensingConfigMessageType.Configure;
+      case 1: return licensingConfigMessageType.Status;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static keyReferenceRole? _createOrNull(int? value) =>
-      value == null ? null : keyReferenceRole.fromValue(value);
+  static licensingConfigMessageType? _createOrNull(int? value) =>
+      value == null ? null : licensingConfigMessageType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
-  static const fb.Reader<keyReferenceRole> reader = _keyReferenceRoleReader();
+  static const int maxValue = 1;
+  static const fb.Reader<licensingConfigMessageType> reader = _licensingConfigMessageTypeReader();
 }
 
-class _keyReferenceRoleReader extends fb.Reader<keyReferenceRole> {
-  const _keyReferenceRoleReader();
+class _licensingConfigMessageTypeReader extends fb.Reader<licensingConfigMessageType> {
+  const _licensingConfigMessageTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  keyReferenceRole read(fb.BufferContext bc, int offset) =>
-      keyReferenceRole.fromValue(const fb.Int8Reader().read(bc, offset));
+  licensingConfigMessageType read(fb.BufferContext bc, int offset) =>
+      licensingConfigMessageType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum keyReferenceAlgorithm {
-  Unknown(0),
-  Ed25519Seed(1),
-  Ed25519Public(2),
-  X25519Private(3),
-  X25519Public(4),
-  Aes256Gcm(5),
-  Opaque(6);
+enum licensingConfigRole {
+  Provider(0),
+  Requester(1);
 
   final int value;
-  const keyReferenceAlgorithm(this.value);
+  const licensingConfigRole(this.value);
 
-  factory keyReferenceAlgorithm.fromValue(int value) {
+  factory licensingConfigRole.fromValue(int value) {
     switch (value) {
-      case 0: return keyReferenceAlgorithm.Unknown;
-      case 1: return keyReferenceAlgorithm.Ed25519Seed;
-      case 2: return keyReferenceAlgorithm.Ed25519Public;
-      case 3: return keyReferenceAlgorithm.X25519Private;
-      case 4: return keyReferenceAlgorithm.X25519Public;
-      case 5: return keyReferenceAlgorithm.Aes256Gcm;
-      case 6: return keyReferenceAlgorithm.Opaque;
+      case 0: return licensingConfigRole.Provider;
+      case 1: return licensingConfigRole.Requester;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static keyReferenceAlgorithm? _createOrNull(int? value) =>
-      value == null ? null : keyReferenceAlgorithm.fromValue(value);
+  static licensingConfigRole? _createOrNull(int? value) =>
+      value == null ? null : licensingConfigRole.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
-  static const fb.Reader<keyReferenceAlgorithm> reader = _keyReferenceAlgorithmReader();
+  static const int maxValue = 1;
+  static const fb.Reader<licensingConfigRole> reader = _licensingConfigRoleReader();
 }
 
-class _keyReferenceAlgorithmReader extends fb.Reader<keyReferenceAlgorithm> {
-  const _keyReferenceAlgorithmReader();
+class _licensingConfigRoleReader extends fb.Reader<licensingConfigRole> {
+  const _licensingConfigRoleReader();
 
   @override
   int get size => 1;
 
   @override
-  keyReferenceAlgorithm read(fb.BufferContext bc, int offset) =>
-      keyReferenceAlgorithm.fromValue(const fb.Int8Reader().read(bc, offset));
+  licensingConfigRole read(fb.BufferContext bc, int offset) =>
+      licensingConfigRole.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Key Reference Frame
-class KRF {
-  KRF._(this._bc, this._bcOffset);
-  factory KRF(List<int> bytes) {
+///  Licensing Configuration Frame
+class LCF {
+  LCF._(this._bc, this._bcOffset);
+  factory LCF(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<KRF> reader = _KRFReader();
+  static const fb.Reader<LCF> reader = _LCFReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Logical key identifier used across publication and grant records.
-  String? get KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get keyId => KEY_ID;
-  ///  Host-managed key slot or key handle identifier.
-  String? get SLOT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get slotId => SLOT_ID;
-  ///  Role the referenced key fulfills for the module flow.
-  keyReferenceRole get ROLE => keyReferenceRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  ///  Algorithm or key family for the referenced key.
-  keyReferenceAlgorithm get ALGORITHM => keyReferenceAlgorithm.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  ///  Optional public bytes for verification or peer identity binding.
-  List<int>? get PUBLIC_KEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
-  List<int>? get publicKey => PUBLIC_KEY;
-  ///  Logical version of the referenced key.
-  int get VERSION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  ///  Expiration time in unix milliseconds, or 0 if unbounded.
-  int get EXPIRES_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  Distinguishes configuration inputs from runtime status outputs.
+  licensingConfigMessageType get MESSAGE_TYPE => licensingConfigMessageType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  licensingConfigMessageType get messageType => MESSAGE_TYPE;
+  ///  Indicates whether the configuration/status applies to server/provider or requester/client behavior.
+  licensingConfigRole get ROLE => licensingConfigRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Peer ID advertised by the licensing provider.
+  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get providerPeerId => PROVIDER_PEER_ID;
+  ///  Host-managed long-lived signing key used for grant signatures.
+  KRF? get PROVIDER_SIGNING_KEY => KRF.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  KRF? get providerSigningKey => PROVIDER_SIGNING_KEY;
+  ///  Host-managed wrapping key used to protect per-publication content keys for requesters.
+  KRF? get PROVIDER_WRAPPING_KEY => KRF.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  KRF? get providerWrappingKey => PROVIDER_WRAPPING_KEY;
+  ///  Optional requester signing key reference for requester-hosted flows.
+  KRF? get REQUESTER_SIGNING_KEY => KRF.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  KRF? get requesterSigningKey => REQUESTER_SIGNING_KEY;
+  ///  Logical active publication/grant key version.
+  int get ACTIVE_KEY_VERSION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get activeKeyVersion => ACTIVE_KEY_VERSION;
+  ///  Runtime expiry in unix milliseconds, or 0 if unbounded.
+  int get EXPIRES_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
   int get expiresAt => EXPIRES_AT;
-  ///  True when the secret material remains in the host key slot.
-  bool get HOST_MANAGED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, true);
-  bool get hostManaged => HOST_MANAGED;
+  ///  Maximum accepted requester/provider clock skew in milliseconds.
+  int get MAX_CLOCK_SKEW_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get maxClockSkewMs => MAX_CLOCK_SKEW_MS;
+  ///  Challenge time-to-live in milliseconds.
+  int get CHALLENGE_TTL_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get challengeTtlMs => CHALLENGE_TTL_MS;
+  ///  Optional capability token bytes returned with successful grants.
+  List<int>? get CAPABILITY_TOKEN => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
+  List<int>? get capabilityToken => CAPABILITY_TOKEN;
+  ///  Whether the runtime has been initialized successfully.
+  bool get INITIALIZED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  ///  Whether the runtime needs issuer key rotation or refreshed configuration.
+  bool get NEEDS_ROTATION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  bool get needsRotation => NEEDS_ROTATION;
+  ///  Optional machine-readable status code for status/error responses.
+  String? get STATUS_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get statusCode => STATUS_CODE;
+  ///  Optional human-readable status or error message.
+  String? get STATUS_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get statusMessage => STATUS_MESSAGE;
 
   @override
   String toString() {
-    return 'KRF{keyId: ${keyId}, slotId: ${slotId}, ROLE: ${ROLE}, ALGORITHM: ${ALGORITHM}, publicKey: ${publicKey}, VERSION: ${VERSION}, expiresAt: ${expiresAt}, hostManaged: ${hostManaged}}';
+    return 'LCF{messageType: ${messageType}, ROLE: ${ROLE}, providerPeerId: ${providerPeerId}, providerSigningKey: ${providerSigningKey}, providerWrappingKey: ${providerWrappingKey}, requesterSigningKey: ${requesterSigningKey}, activeKeyVersion: ${activeKeyVersion}, expiresAt: ${expiresAt}, maxClockSkewMs: ${maxClockSkewMs}, challengeTtlMs: ${challengeTtlMs}, capabilityToken: ${capabilityToken}, INITIALIZED: ${INITIALIZED}, needsRotation: ${needsRotation}, statusCode: ${statusCode}, statusMessage: ${statusMessage}}';
   }
 }
 
-class _KRFReader extends fb.TableReader<KRF> {
-  const _KRFReader();
+class _LCFReader extends fb.TableReader<LCF> {
+  const _LCFReader();
 
   @override
-  KRF createObject(fb.BufferContext bc, int offset) =>
-    KRF._(bc, offset);
+  LCF createObject(fb.BufferContext bc, int offset) =>
+    LCF._(bc, offset);
 }
 
-class KRFBuilder {
-  KRFBuilder(this.fbBuilder);
+class LCFBuilder {
+  LCFBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(15);
   }
 
-  int addKeyIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addMessageType(licensingConfigMessageType? MESSAGE_TYPE) {
+    fbBuilder.addInt8(0, MESSAGE_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addSlotIdOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addRole(licensingConfigRole? ROLE) {
+    fbBuilder.addInt8(1, ROLE?.value);
     return fbBuilder.offset;
   }
-  int addRole(keyReferenceRole? ROLE) {
-    fbBuilder.addInt8(2, ROLE?.value);
+  int addProviderPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addAlgorithm(keyReferenceAlgorithm? ALGORITHM) {
-    fbBuilder.addInt8(3, ALGORITHM?.value);
+  int addProviderSigningKeyOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addPublicKeyOffset(int? offset) {
+  int addProviderWrappingKeyOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addVersion(int? VERSION) {
-    fbBuilder.addUint32(5, VERSION);
+  int addRequesterSigningKeyOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addActiveKeyVersion(int? ACTIVE_KEY_VERSION) {
+    fbBuilder.addUint32(6, ACTIVE_KEY_VERSION);
     return fbBuilder.offset;
   }
   int addExpiresAt(int? EXPIRES_AT) {
-    fbBuilder.addUint64(6, EXPIRES_AT);
+    fbBuilder.addUint64(7, EXPIRES_AT);
     return fbBuilder.offset;
   }
-  int addHostManaged(bool? HOST_MANAGED) {
-    fbBuilder.addBool(7, HOST_MANAGED);
+  int addMaxClockSkewMs(int? MAX_CLOCK_SKEW_MS) {
+    fbBuilder.addUint64(8, MAX_CLOCK_SKEW_MS);
+    return fbBuilder.offset;
+  }
+  int addChallengeTtlMs(int? CHALLENGE_TTL_MS) {
+    fbBuilder.addUint64(9, CHALLENGE_TTL_MS);
+    return fbBuilder.offset;
+  }
+  int addCapabilityTokenOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addInitialized(bool? INITIALIZED) {
+    fbBuilder.addBool(11, INITIALIZED);
+    return fbBuilder.offset;
+  }
+  int addNeedsRotation(bool? NEEDS_ROTATION) {
+    fbBuilder.addBool(12, NEEDS_ROTATION);
+    return fbBuilder.offset;
+  }
+  int addStatusCodeOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addStatusMessageOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
 
@@ -190,58 +221,99 @@ class KRFBuilder {
   }
 }
 
-class KRFObjectBuilder extends fb.ObjectBuilder {
-  final String? _KEY_ID;
-  final String? _SLOT_ID;
-  final keyReferenceRole? _ROLE;
-  final keyReferenceAlgorithm? _ALGORITHM;
-  final List<int>? _PUBLIC_KEY;
-  final int? _VERSION;
+class LCFObjectBuilder extends fb.ObjectBuilder {
+  final licensingConfigMessageType? _MESSAGE_TYPE;
+  final licensingConfigRole? _ROLE;
+  final String? _PROVIDER_PEER_ID;
+  final KRFObjectBuilder? _PROVIDER_SIGNING_KEY;
+  final KRFObjectBuilder? _PROVIDER_WRAPPING_KEY;
+  final KRFObjectBuilder? _REQUESTER_SIGNING_KEY;
+  final int? _ACTIVE_KEY_VERSION;
   final int? _EXPIRES_AT;
-  final bool? _HOST_MANAGED;
+  final int? _MAX_CLOCK_SKEW_MS;
+  final int? _CHALLENGE_TTL_MS;
+  final List<int>? _CAPABILITY_TOKEN;
+  final bool? _INITIALIZED;
+  final bool? _NEEDS_ROTATION;
+  final String? _STATUS_CODE;
+  final String? _STATUS_MESSAGE;
 
-  KRFObjectBuilder({
-    String? KEY_ID,
-    String? keyId,
-    String? SLOT_ID,
-    String? slotId,
-    keyReferenceRole? ROLE,
-    keyReferenceAlgorithm? ALGORITHM,
-    List<int>? PUBLIC_KEY,
-    List<int>? publicKey,
-    int? VERSION,
+  LCFObjectBuilder({
+    licensingConfigMessageType? MESSAGE_TYPE,
+    licensingConfigMessageType? messageType,
+    licensingConfigRole? ROLE,
+    String? PROVIDER_PEER_ID,
+    String? providerPeerId,
+    KRFObjectBuilder? PROVIDER_SIGNING_KEY,
+    KRFObjectBuilder? providerSigningKey,
+    KRFObjectBuilder? PROVIDER_WRAPPING_KEY,
+    KRFObjectBuilder? providerWrappingKey,
+    KRFObjectBuilder? REQUESTER_SIGNING_KEY,
+    KRFObjectBuilder? requesterSigningKey,
+    int? ACTIVE_KEY_VERSION,
+    int? activeKeyVersion,
     int? EXPIRES_AT,
     int? expiresAt,
-    bool? HOST_MANAGED,
-    bool? hostManaged,
+    int? MAX_CLOCK_SKEW_MS,
+    int? maxClockSkewMs,
+    int? CHALLENGE_TTL_MS,
+    int? challengeTtlMs,
+    List<int>? CAPABILITY_TOKEN,
+    List<int>? capabilityToken,
+    bool? INITIALIZED,
+    bool? NEEDS_ROTATION,
+    bool? needsRotation,
+    String? STATUS_CODE,
+    String? statusCode,
+    String? STATUS_MESSAGE,
+    String? statusMessage,
   })
-      : _KEY_ID = keyId ?? KEY_ID,
-        _SLOT_ID = slotId ?? SLOT_ID,
+      : _MESSAGE_TYPE = messageType ?? MESSAGE_TYPE,
         _ROLE = ROLE,
-        _ALGORITHM = ALGORITHM,
-        _PUBLIC_KEY = publicKey ?? PUBLIC_KEY,
-        _VERSION = VERSION,
+        _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
+        _PROVIDER_SIGNING_KEY = providerSigningKey ?? PROVIDER_SIGNING_KEY,
+        _PROVIDER_WRAPPING_KEY = providerWrappingKey ?? PROVIDER_WRAPPING_KEY,
+        _REQUESTER_SIGNING_KEY = requesterSigningKey ?? REQUESTER_SIGNING_KEY,
+        _ACTIVE_KEY_VERSION = activeKeyVersion ?? ACTIVE_KEY_VERSION,
         _EXPIRES_AT = expiresAt ?? EXPIRES_AT,
-        _HOST_MANAGED = hostManaged ?? HOST_MANAGED;
+        _MAX_CLOCK_SKEW_MS = maxClockSkewMs ?? MAX_CLOCK_SKEW_MS,
+        _CHALLENGE_TTL_MS = challengeTtlMs ?? CHALLENGE_TTL_MS,
+        _CAPABILITY_TOKEN = capabilityToken ?? CAPABILITY_TOKEN,
+        _INITIALIZED = INITIALIZED,
+        _NEEDS_ROTATION = needsRotation ?? NEEDS_ROTATION,
+        _STATUS_CODE = statusCode ?? STATUS_CODE,
+        _STATUS_MESSAGE = statusMessage ?? STATUS_MESSAGE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? KEY_IDOffset = _KEY_ID == null ? null
-        : fbBuilder.writeString(_KEY_ID!);
-    final int? SLOT_IDOffset = _SLOT_ID == null ? null
-        : fbBuilder.writeString(_SLOT_ID!);
-    final int? PUBLIC_KEYOffset = _PUBLIC_KEY == null ? null
-        : fbBuilder.writeListUint8(_PUBLIC_KEY!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, KEY_IDOffset);
-    fbBuilder.addOffset(1, SLOT_IDOffset);
-    fbBuilder.addInt8(2, _ROLE?.value);
-    fbBuilder.addInt8(3, _ALGORITHM?.value);
-    fbBuilder.addOffset(4, PUBLIC_KEYOffset);
-    fbBuilder.addUint32(5, _VERSION);
-    fbBuilder.addUint64(6, _EXPIRES_AT);
-    fbBuilder.addBool(7, _HOST_MANAGED);
+    final int? PROVIDER_PEER_IDOffset = _PROVIDER_PEER_ID == null ? null
+        : fbBuilder.writeString(_PROVIDER_PEER_ID!);
+    final int? PROVIDER_SIGNING_KEYOffset = _PROVIDER_SIGNING_KEY?.getOrCreateOffset(fbBuilder);
+    final int? PROVIDER_WRAPPING_KEYOffset = _PROVIDER_WRAPPING_KEY?.getOrCreateOffset(fbBuilder);
+    final int? REQUESTER_SIGNING_KEYOffset = _REQUESTER_SIGNING_KEY?.getOrCreateOffset(fbBuilder);
+    final int? CAPABILITY_TOKENOffset = _CAPABILITY_TOKEN == null ? null
+        : fbBuilder.writeListUint8(_CAPABILITY_TOKEN!);
+    final int? STATUS_CODEOffset = _STATUS_CODE == null ? null
+        : fbBuilder.writeString(_STATUS_CODE!);
+    final int? STATUS_MESSAGEOffset = _STATUS_MESSAGE == null ? null
+        : fbBuilder.writeString(_STATUS_MESSAGE!);
+    fbBuilder.startTable(15);
+    fbBuilder.addInt8(0, _MESSAGE_TYPE?.value);
+    fbBuilder.addInt8(1, _ROLE?.value);
+    fbBuilder.addOffset(2, PROVIDER_PEER_IDOffset);
+    fbBuilder.addOffset(3, PROVIDER_SIGNING_KEYOffset);
+    fbBuilder.addOffset(4, PROVIDER_WRAPPING_KEYOffset);
+    fbBuilder.addOffset(5, REQUESTER_SIGNING_KEYOffset);
+    fbBuilder.addUint32(6, _ACTIVE_KEY_VERSION);
+    fbBuilder.addUint64(7, _EXPIRES_AT);
+    fbBuilder.addUint64(8, _MAX_CLOCK_SKEW_MS);
+    fbBuilder.addUint64(9, _CHALLENGE_TTL_MS);
+    fbBuilder.addOffset(10, CAPABILITY_TOKENOffset);
+    fbBuilder.addBool(11, _INITIALIZED);
+    fbBuilder.addBool(12, _NEEDS_ROTATION);
+    fbBuilder.addOffset(13, STATUS_CODEOffset);
+    fbBuilder.addOffset(14, STATUS_MESSAGEOffset);
     return fbBuilder.endTable();
   }
 

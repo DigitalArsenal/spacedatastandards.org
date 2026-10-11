@@ -310,7 +310,7 @@ class OCM extends Table
     }
 
     /// Whether COVARIANCE_DATA's coverage was measured against independent
-    /// reference states.
+    /// reference states: Calibrated only when every COV_REALISM entry is.
     /**
      * @return sbyte
      */
@@ -467,22 +467,51 @@ class OCM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Where the message's data comes from and the terms it travels under.
+    public function getPROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(66);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+    /// STATE_DATA epochs, or one entry for every epoch.
+    /**
+     * @returnVectorOffset
+     */
+    public function getCOV_REALISM($j)
+    {
+        $o = $this->__offset(68);
+        $obj = new CVR();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_REALISMLength()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(31);
+        $builder->StartObject(33);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS, $TRAJECTORY_BLOCKS, $COVARIANCE_BLOCKS)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS, $TRAJECTORY_BLOCKS, $COVARIANCE_BLOCKS, $PROVENANCE, $COV_REALISM)
     {
-        $builder->startObject(31);
+        $builder->startObject(33);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
@@ -514,6 +543,8 @@ class OCM extends Table
         self::addCOV_UNITS($builder, $COV_UNITS);
         self::addTRAJECTORY_BLOCKS($builder, $TRAJECTORY_BLOCKS);
         self::addCOVARIANCE_BLOCKS($builder, $COVARIANCE_BLOCKS);
+        self::addPROVENANCE($builder, $PROVENANCE);
+        self::addCOV_REALISM($builder, $COV_REALISM);
         $o = $builder->endObject();
         return $o;
     }
@@ -1088,6 +1119,50 @@ class OCM extends Table
      * @return void
      */
     public static function startCOVARIANCE_BLOCKSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(31, $PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_REALISM(FlatBufferBuilder $builder, $COV_REALISM)
+    {
+        $builder->addOffsetX(32, $COV_REALISM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_REALISMVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_REALISMVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

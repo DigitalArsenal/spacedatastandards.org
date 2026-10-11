@@ -1,9 +1,11 @@
-// Hash: 1c37f690faccf43ab53626283dc07431c57c903cbf4bf4bd96d80fe1ab629e0b
-// Version: 2.0.4
+// Hash: 7e9ecace0ebca05afa2963b7c6391569e7f7dfa59629782cff5e63893c284bec
+// Version: 2.0.5
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../MET/main.fbs";
+include "../CVR/main.fbs";
+include "../PVN/main.fbs";
 
 // Orbit Mean Elements Message (OMM)
 //
@@ -139,6 +141,10 @@ table OMM {
   /// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
   /// message that has no dedicated field above, in message order.
   USER_DEFINED_PARAMETERS:[OMMUserDefinedParameter];
+  /// Where the element set comes from and the terms it travels under.
+  PROVENANCE:PVN;
+  /// Realism of COVARIANCE.
+  COV_REALISM:CVR;
 }
 
 /// One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML

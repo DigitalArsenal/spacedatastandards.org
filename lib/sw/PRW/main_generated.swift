@@ -8,316 +8,3592 @@ import Common
 
 import FlatBuffers
 
-public enum FluxQualifier: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case observed = 0
-  case burstAdjusted = 1
-  case interpolatedExtrapolated = 2
-  case noObservation = 3
-  ///  Interpolated by the upstream data provider rather than the issuing
-  ///  observatory. Wire value 4 is unchanged from prior releases.
-  case providerInterpolated = 4
+///  Propagator Runtime Wire — arena-addressed init / batch request / batch
+///  response envelopes for orbital propagators that produce state vectors
+///  into a shared memory arena.
+///
+///  Data interchange for the underlying content (state vectors, covariance,
+///  maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,
+///  Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +
+///  `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those
+///  across a JS ↔ WASM boundary, not a substitute for any of them.
+///  Runtime state-flag bitfield (sized to match a single uint).
+///  Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
+///  HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining
+///  flags live here because they describe runtime propagation health, not
+///  a persisted record.
+public enum propagatorStateFlags: UInt32, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt32
+  public static var byteSize: Int { return MemoryLayout<UInt32>.size }
+  public var value: UInt32 { return self.rawValue }
+  ///  State vector data is valid.
+  case valid = 1
+  ///  Satellite is in Earth's shadow at this epoch.
+  case inEclipse = 2
+  ///  Orbit has decayed (re-entry imminent or complete).
+  case decayed = 4
+  ///  Propagation extrapolated beyond the input epoch.
+  case extrapolated = 8
+  ///  Reserved.
+  case reserved4 = 16
+  ///  Reserved.
+  case reserved5 = 32
+  ///  Reserved.
+  case reserved6 = 64
+  ///  Reserved.
+  case reserved7 = 128
 
-  public static var max: FluxQualifier { return .providerInterpolated }
-  public static var min: FluxQualifier { return .observed }
+  public static var max: propagatorStateFlags { return .reserved7 }
+  public static var min: propagatorStateFlags { return .valid }
 }
 
 
-public enum F107DataType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case obs = 0
-  case int = 1
-  case prd = 2
-  case prm = 3
+///  Error codes surfaced by runtime propagation calls.
+public enum propagatorErrorCode: Int32, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int32
+  public static var byteSize: Int { return MemoryLayout<Int32>.size }
+  public var value: Int32 { return self.rawValue }
+  ///  No error.
+  case ok = 0
+  ///  Unknown / unspecified error.
+  case unknown = 1
+  ///  One or more entity handles not found.
+  case unknownEntity = 2
+  ///  Invalid epoch (NaN, out of range, before earliest init epoch, etc.).
+  case invalidEpoch = 3
+  ///  Output buffer too small for the requested count.
+  case outputBufferOverflow = 4
+  ///  Propagator not initialized.
+  case notInitialized = 5
 
-  public static var max: F107DataType { return .prm }
-  public static var min: F107DataType { return .obs }
+  public static var max: propagatorErrorCode { return .notInitialized }
+  public static var min: propagatorErrorCode { return .ok }
 }
 
 
-///  Space Weather Data Record
-public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public enum prwSourceKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Source is an OMM (CCSDS mean elements) FlatBuffer.
+  case omm = 0
+  ///  Source is a raw TLE line pair (3LE supported via NAME).
+  case tle = 1
+  ///  Source is an OCM FlatBuffer.
+  case ocm = 2
+  ///  Source is an OEM FlatBuffer.
+  case oem = 3
+  ///  Source is a PPE (polynomial ephemeris) FlatBuffer.
+  case ppe = 4
+  ///  Source is a single classical Keplerian element set.
+  case keplerian = 5
+
+  public static var max: prwSourceKind { return .keplerian }
+  public static var min: prwSourceKind { return .omm }
+}
+
+
+///  Propagator Runtime Wire — envelope that carries either an init request,
+///  a batch request, or a batch response across a runtime boundary.
+///  New numeric choices are append-only and are not legacy C++ enum ordinals.
+public enum prwSolverAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case rk4 = 1
+  case rkf45 = 2
+  case rkf78 = 3
+  case rk78 = 4
+  case rkdp87 = 5
+  case abm = 6
+  case bs = 7
+  case cowell = 8
+  case encke = 9
+  case equinoctialVop = 10
+
+  public static var max: prwSolverAlgorithm { return .equinoctialVop }
+  public static var min: prwSolverAlgorithm { return .unspecified }
+}
+
+
+public enum prwGravitySelection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case inferFlags = 0
+  case pointMass = 1
+  case j2Only = 2
+  case j2ToJ4 = 3
+  case sphericalHarmonics = 4
+  case egm2008 = 5
+  ///  NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+  case egm96 = 6
+
+  public static var max: prwGravitySelection { return .egm96 }
+  public static var min: prwGravitySelection { return .inferFlags }
+}
+
+
+public enum prwAtmosphereFamily: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case nrlmsise00 = 1
+  case exponential = 2
+  case ussa1976 = 3
+  case harrisPriester = 4
+  ///  Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form
+  ///  evaluation of Jacchia's static diffusion model with the constants NASA
+  ///  GTDS and GMAT use (inflection temperature, mean molecular mass and
+  ///  100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:
+  ///  F10.7 of the previous day, that day's 81-day centred average, and the
+  ///  three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held
+  ///  constant). A VCM's JACCHIA_70 is carried here.
+  case jacchiaRoberts = 5
+  ///  Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
+  ///  Dst-derived temperature change from PRW.JB2008_INDICES.
+  case jb2008 = 6
+
+  public static var max: prwAtmosphereFamily { return .jb2008 }
+  public static var min: prwAtmosphereFamily { return .unspecified }
+}
+
+
+public enum prwDerivativeTechnique: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case analytic = 1
+  case finiteDifference = 2
+
+  public static var max: prwDerivativeTechnique { return .finiteDifference }
+  public static var min: prwDerivativeTechnique { return .unspecified }
+}
+
+
+public enum prwDensityTreatment: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case neglected = 1
+  case finiteDifference = 2
+
+  public static var max: prwDensityTreatment { return .finiteDifference }
+  public static var min: prwDensityTreatment { return .unspecified }
+}
+
+
+public enum prwSteeringBasis: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case integrationFrame = 1
+  case rtnAxes = 2
+  case vncAxes = 3
+  case alongVelocity = 4
+  case oppositeVelocity = 5
+
+  public static var max: prwSteeringBasis { return .oppositeVelocity }
+  public static var min: prwSteeringBasis { return .unspecified }
+}
+
+
+public enum prwThrustPrescription: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case force = 1
+  case acceleration = 2
+
+  public static var max: prwThrustPrescription { return .acceleration }
+  public static var min: prwThrustPrescription { return .unspecified }
+}
+
+
+public enum prwQualityEvidence: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unmeasured = 0
+  case sampledResidual = 1
+  case provenBound = 2
+
+  public static var max: prwQualityEvidence { return .provenBound }
+  public static var min: prwQualityEvidence { return .unmeasured }
+}
+
+
+///  Process noise added to a propagated covariance. WHITE_ACCELERATION is
+///  zero-mean white acceleration noise (state noise compensation): over each
+///  discretization interval h it adds, per axis with spectral density q,
+///  q * [[h^3/3, h^2/2], [h^2/2, h]] to the position-velocity block, which the
+///  linearized dynamics then carry forward with the covariance.
+public enum prwProcessNoiseModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case none_ = 1
+  case whiteAcceleration = 2
+
+  public static var max: prwProcessNoiseModel { return .whiteAcceleration }
+  public static var min: prwProcessNoiseModel { return .unspecified }
+}
+
+
+///  Axes of the process noise spectral densities.
+public enum prwProcessNoiseAxes: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case inertial = 1
+  case radialTransverseNormal = 2
+
+  public static var max: prwProcessNoiseAxes { return .radialTransverseNormal }
+  public static var min: prwProcessNoiseAxes { return .unspecified }
+}
+
+
+public enum prwDensitySpecies: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case helium = 1
+  case atomicOxygen = 2
+  case molecularNitrogen = 3
+  case molecularOxygen = 4
+  case argon = 5
+  case hydrogen = 6
+  case atomicNitrogen = 7
+  case anomalousOxygen = 8
+
+  public static var max: prwDensitySpecies { return .anomalousOxygen }
+  public static var min: prwDensitySpecies { return .unspecified }
+}
+
+
+///  Solid Earth tide model for the central body's field. NONE leaves the
+///  tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
+///  and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
+///  numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
+///  frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
+///  the permanent tide handled for the field's own tide system. Pole tide is
+///  not included.
+public enum prwSolidTideModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case iers2010 = 1
+
+  public static var max: prwSolidTideModel { return .iers2010 }
+  public static var min: prwSolidTideModel { return .none_ }
+}
+
+
+///  Post-Newtonian corrections to the central body's acceleration (IERS
+///  Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
+///  point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
+///  (geodesic) precession.
+public enum prwRelativityTerms: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case schwarzschild = 1
+  case iers2010 = 2
+
+  public static var max: prwRelativityTerms { return .iers2010 }
+  public static var min: prwRelativityTerms { return .none_ }
+}
+
+
+///  Dynamical model parameters a covariance and STM may carry after the state
+///  (a VCM's B, BDOT, AGOM and T). Values are the request's FORCES, in SI:
+///  DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /
+///  INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
+///  DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
+///  REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
+///  IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+public enum prwDynamicParameter: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case dragAreaOverMass = 1
+  case dragAreaOverMassRate = 2
+  case srpAreaOverMass = 3
+  case inTrackAcceleration = 4
+  ///  ECOM2 coefficients (PRWEcom2), in their order there.
+  case ecom2D0 = 5
+  case ecom2Y0 = 6
+  case ecom2B0 = 7
+  case ecom2D2Cos = 8
+  case ecom2D2Sin = 9
+  case ecom2D4Cos = 10
+  case ecom2D4Sin = 11
+  case ecom2B1Cos = 12
+  case ecom2B1Sin = 13
+  case ecom2B3Cos = 14
+  case ecom2B3Sin = 15
+
+  public static var max: prwDynamicParameter { return .ecom2B3Sin }
+  public static var min: prwDynamicParameter { return .unspecified }
+}
+
+
+///  Solar radiation pressure model family. CANNONBALL uses the
+///  radiation-pressure coefficient and area-to-mass ratio of the force
+///  configuration; GNSS_BOX_WING is the a priori box-wing model of the
+///  spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
+///  Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
+///  under nominal yaw steering, with the mass INITIAL_MASS_KG.
+public enum prwRadiationPressureFamily: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case cannonball = 0
+  case gnssBoxWing = 1
+  case none_ = 2
+
+  public static var max: prwRadiationPressureFamily { return .none_ }
+  public static var min: prwRadiationPressureFamily { return .cannonball }
+}
+
+
+///  Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
+///  infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
+///  is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
+///  emissivity zonal to the second Legendre degree with the annual term of
+///  the first, from the elements of the Earth's surface the spacecraft sees
+///  (as Orekit's KnockeRediffusedForceModel evaluates it).
+public enum prwEarthRadiationModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case knocke = 1
+
+  public static var max: prwEarthRadiationModel { return .knocke }
+  public static var min: prwEarthRadiationModel { return .none_ }
+}
+
+
+///  Ocean tide model for the central body's field. FES2004 is IERS
+///  Conventions (2010) section 6.3: the variations of the normalized Stokes
+///  coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
+///  eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
+///  The ocean pole tide is not included.
+public enum prwOceanTideModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case fes2004 = 1
+
+  public static var max: prwOceanTideModel { return .fes2004 }
+  public static var min: prwOceanTideModel { return .none_ }
+}
+
+
+///  GNSS spacecraft block, selecting the box-wing surfaces.
+public enum prwGnssSpacecraftBlock: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case gpsIir = 1
+  case gpsIirM = 2
+  case gpsIif = 3
+
+  public static var max: prwGnssSpacecraftBlock { return .gpsIif }
+  public static var min: prwGnssSpacecraftBlock { return .unspecified }
+}
+
+
+///  Propagator initialization request — assigns TLE / OMM / Keplerian /
+///  polynomial inputs to entity handles.
+///
+///  The actual per-entity source record is carried inline as raw bytes
+///  tagged with SOURCE_KIND and, where useful, a SDS file_identifier.
+///  Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
+///  bytes verbatim; the propagator uses SOURCE_KIND to decide how to
+///  consume them.
+public struct PRWInit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SPW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SPW.id, addPrefix: prefix) }
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWInit.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ENTITY_HANDLES: VOffset = 4
+    static let SOURCES: VOffset = 6
+  }
+
+  ///  Entity handles to assign results to (same order as SOURCES[]).
+  public var ENTITY_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.ENTITY_HANDLES, byteSize: 4) }
+  public func withUnsafePointerToEntityHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENTITY_HANDLES, body: body) }
+  ///  Per-entity source records, encoded as SDS FlatBuffers.
+  public var SOURCES: FlatbufferVector<PRWInitSource> { return _accessor.vector(at: VT.SOURCES, byteSize: 4) }
+  public static func startPRWInit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func addVectorOf(ENTITY_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_HANDLES, at: VT.ENTITY_HANDLES) }
+  public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VT.SOURCES) }
+  public static func endPRWInit(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWInit(
+    _ fbb: inout FlatBufferBuilder,
+    ENTITY_HANDLESVectorOffset ENTITY_HANDLES: Offset = Offset(),
+    SOURCESVectorOffset SOURCES: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWInit.startPRWInit(&fbb)
+    PRWInit.addVectorOf(ENTITY_HANDLES: ENTITY_HANDLES, &fbb)
+    PRWInit.addVectorOf(SOURCES: SOURCES, &fbb)
+    return PRWInit.endPRWInit(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ENTITY_HANDLES, fieldName: "ENTITY_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.SOURCES, fieldName: "SOURCES", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWInitSource>, PRWInitSource>>.self)
+    _v.finish()
+  }
+}
+
+public struct PRWKeplerianElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWKeplerianElements.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MU: VOffset = 4
+    static let SEMI_MAJOR_AXIS: VOffset = 6
+    static let ECCENTRICITY: VOffset = 8
+    static let INCLINATION: VOffset = 10
+    static let RAAN: VOffset = 12
+    static let ARG_PERIAPSIS: VOffset = 14
+    static let TRUE_ANOMALY: VOffset = 16
+    static let EPOCH: VOffset = 18
+  }
+
+  ///  Gravitational parameter of the central body (km^3 / s^2).
+  public var MU: Double { let o = _accessor.offset(VT.MU); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Semi-major axis (km).
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentricity (0 = circular, <1 = ellipse).
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Inclination (radians).
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of the ascending node (radians).
+  public var RAAN: Double { let o = _accessor.offset(VT.RAAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Argument of periapsis (radians).
+  public var ARG_PERIAPSIS: Double { let o = _accessor.offset(VT.ARG_PERIAPSIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True anomaly (radians).
+  public var TRUE_ANOMALY: Double { let o = _accessor.offset(VT.TRUE_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch as Julian date.
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPRWKeplerianElements(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(MU: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MU, def: 0.0, at: VT.MU) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(RAAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN, def: 0.0, at: VT.RAAN) }
+  public static func add(ARG_PERIAPSIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_PERIAPSIS, def: 0.0, at: VT.ARG_PERIAPSIS) }
+  public static func add(TRUE_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUE_ANOMALY, def: 0.0, at: VT.TRUE_ANOMALY) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
+  public static func endPRWKeplerianElements(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWKeplerianElements(
+    _ fbb: inout FlatBufferBuilder,
+    MU: Double = 0.0,
+    SEMI_MAJOR_AXIS: Double = 0.0,
+    ECCENTRICITY: Double = 0.0,
+    INCLINATION: Double = 0.0,
+    RAAN: Double = 0.0,
+    ARG_PERIAPSIS: Double = 0.0,
+    TRUE_ANOMALY: Double = 0.0,
+    EPOCH: Double = 0.0
+  ) -> Offset {
+    let __start = PRWKeplerianElements.startPRWKeplerianElements(&fbb)
+    PRWKeplerianElements.add(MU: MU, &fbb)
+    PRWKeplerianElements.add(SEMI_MAJOR_AXIS: SEMI_MAJOR_AXIS, &fbb)
+    PRWKeplerianElements.add(ECCENTRICITY: ECCENTRICITY, &fbb)
+    PRWKeplerianElements.add(INCLINATION: INCLINATION, &fbb)
+    PRWKeplerianElements.add(RAAN: RAAN, &fbb)
+    PRWKeplerianElements.add(ARG_PERIAPSIS: ARG_PERIAPSIS, &fbb)
+    PRWKeplerianElements.add(TRUE_ANOMALY: TRUE_ANOMALY, &fbb)
+    PRWKeplerianElements.add(EPOCH: EPOCH, &fbb)
+    return PRWKeplerianElements.endPRWKeplerianElements(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MU, fieldName: "MU", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.RAAN, fieldName: "RAAN", required: false, type: Double.self)
+    try _v.visit(field: VT.ARG_PERIAPSIS, fieldName: "ARG_PERIAPSIS", required: false, type: Double.self)
+    try _v.visit(field: VT.TRUE_ANOMALY, fieldName: "TRUE_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct PRWTleLines: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWTleLines.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let LINE1: VOffset = 4
+    static let LINE2: VOffset = 6
+    static let NAME: VOffset = 8
+    static let NORAD_ID: VOffset = 10
+  }
+
+  ///  TLE line 1 (69 characters).
+  public var LINE1: String? { let o = _accessor.offset(VT.LINE1); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINE1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINE1) }
+  ///  TLE line 2 (69 characters).
+  public var LINE2: String? { let o = _accessor.offset(VT.LINE2); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINE2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINE2) }
+  ///  Satellite name (optional, line 0 of 3LE).
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  NORAD catalog number parsed from the TLE.
+  public var NORAD_ID: UInt32 { let o = _accessor.offset(VT.NORAD_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startPRWTleLines(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(LINE1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE1, at: VT.LINE1) }
+  public static func add(LINE2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE2, at: VT.LINE2) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(NORAD_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_ID, def: 0, at: VT.NORAD_ID) }
+  public static func endPRWTleLines(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWTleLines(
+    _ fbb: inout FlatBufferBuilder,
+    LINE1Offset LINE1: Offset = Offset(),
+    LINE2Offset LINE2: Offset = Offset(),
+    NAMEOffset NAME: Offset = Offset(),
+    NORAD_ID: UInt32 = 0
+  ) -> Offset {
+    let __start = PRWTleLines.startPRWTleLines(&fbb)
+    PRWTleLines.add(LINE1: LINE1, &fbb)
+    PRWTleLines.add(LINE2: LINE2, &fbb)
+    PRWTleLines.add(NAME: NAME, &fbb)
+    PRWTleLines.add(NORAD_ID: NORAD_ID, &fbb)
+    return PRWTleLines.endPRWTleLines(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.LINE1, fieldName: "LINE1", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINE2, fieldName: "LINE2", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_ID, fieldName: "NORAD_ID", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+public struct PRWInitSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWInitSource.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let KIND: VOffset = 4
+    static let FILE_IDENTIFIER: VOffset = 6
+    static let BYTES: VOffset = 8
+    static let KEPLERIAN: VOffset = 10
+    static let TLE: VOffset = 12
+  }
+
+  ///  Wire kind identifier for BYTES.
+  public var KIND: prwSourceKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .omm : prwSourceKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .omm }
+  ///  Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).
+  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VT.FILE_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_IDENTIFIER) }
+  ///  Encoded source record as a FlatBuffer (consumed per KIND).
+  public var BYTES: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.BYTES, byteSize: 1) }
+  public func withUnsafePointerToBytes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BYTES, body: body) }
+  ///  Convenience inline form when KIND == KEPLERIAN.
+  public var KEPLERIAN: PRWKeplerianElements? { let o = _accessor.offset(VT.KEPLERIAN); return o == 0 ? nil : PRWKeplerianElements(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Convenience inline form when KIND == TLE.
+  public var TLE: PRWTleLines? { let o = _accessor.offset(VT.TLE); return o == 0 ? nil : PRWTleLines(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPRWInitSource(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(KIND: prwSourceKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
+  public static func addVectorOf(BYTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BYTES, at: VT.BYTES) }
+  public static func add(KEPLERIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEPLERIAN, at: VT.KEPLERIAN) }
+  public static func add(TLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TLE, at: VT.TLE) }
+  public static func endPRWInitSource(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWInitSource(
+    _ fbb: inout FlatBufferBuilder,
+    KIND: prwSourceKind = .omm,
+    FILE_IDENTIFIEROffset FILE_IDENTIFIER: Offset = Offset(),
+    BYTESVectorOffset BYTES: Offset = Offset(),
+    KEPLERIANOffset KEPLERIAN: Offset = Offset(),
+    TLEOffset TLE: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWInitSource.startPRWInitSource(&fbb)
+    PRWInitSource.add(KIND: KIND, &fbb)
+    PRWInitSource.add(FILE_IDENTIFIER: FILE_IDENTIFIER, &fbb)
+    PRWInitSource.addVectorOf(BYTES: BYTES, &fbb)
+    PRWInitSource.add(KEPLERIAN: KEPLERIAN, &fbb)
+    PRWInitSource.add(TLE: TLE, &fbb)
+    return PRWInitSource.endPRWInitSource(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: prwSourceKind.self)
+    try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BYTES, fieldName: "BYTES", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.KEPLERIAN, fieldName: "KEPLERIAN", required: false, type: ForwardOffset<PRWKeplerianElements>.self)
+    try _v.visit(field: VT.TLE, fieldName: "TLE", required: false, type: ForwardOffset<PRWTleLines>.self)
+    _v.finish()
+  }
+}
+
+///  Batch propagation request — propagate every entity in ENTITY_HANDLES[] to
+///  EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the
+///  shared arena.
+public struct PRWBatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWBatchRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let ENTITY_HANDLES: VOffset = 6
+    static let OUTPUT_OFFSET: VOffset = 8
+    static let MAX_COUNT: VOffset = 10
+    static let TARGET_FRAME: VOffset = 12
+  }
+
+  ///  Target epoch as a Julian date (TIME_SYSTEM is configured on the host).
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Entity handles to propagate (empty = all initialized entities).
+  public var ENTITY_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.ENTITY_HANDLES, byteSize: 4) }
+  public func withUnsafePointerToEntityHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENTITY_HANDLES, body: body) }
+  ///  Output buffer offset in the arena where the StateVector stream begins.
+  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Maximum entities to process in this call (0 = unbounded).
+  public var MAX_COUNT: UInt32 { let o = _accessor.offset(VT.MAX_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Target reference frame for the output state stream. Matches enum
+  ///  values in SDS `RFM`. If zero, the propagator chooses its native frame.
+  public var TARGET_FRAME: String? { let o = _accessor.offset(VT.TARGET_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_FRAME) }
+  public static func startPRWBatchRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
+  public static func addVectorOf(ENTITY_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_HANDLES, at: VT.ENTITY_HANDLES) }
+  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
+  public static func add(MAX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_COUNT, def: 0, at: VT.MAX_COUNT) }
+  public static func add(TARGET_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_FRAME, at: VT.TARGET_FRAME) }
+  public static func endPRWBatchRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWBatchRequest(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCH: Double = 0.0,
+    ENTITY_HANDLESVectorOffset ENTITY_HANDLES: Offset = Offset(),
+    OUTPUT_OFFSET: UInt32 = 0,
+    MAX_COUNT: UInt32 = 0,
+    TARGET_FRAMEOffset TARGET_FRAME: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWBatchRequest.startPRWBatchRequest(&fbb)
+    PRWBatchRequest.add(EPOCH: EPOCH, &fbb)
+    PRWBatchRequest.addVectorOf(ENTITY_HANDLES: ENTITY_HANDLES, &fbb)
+    PRWBatchRequest.add(OUTPUT_OFFSET: OUTPUT_OFFSET, &fbb)
+    PRWBatchRequest.add(MAX_COUNT: MAX_COUNT, &fbb)
+    PRWBatchRequest.add(TARGET_FRAME: TARGET_FRAME, &fbb)
+    return PRWBatchRequest.endPRWBatchRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.ENTITY_HANDLES, fieldName: "ENTITY_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MAX_COUNT, fieldName: "MAX_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TARGET_FRAME, fieldName: "TARGET_FRAME", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Batch propagation response header — describes the stream written to
+///  OUTPUT_OFFSET and reports errors. The stream itself is
+///  `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.
+public struct PRWBatchResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWBatchResponse.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COUNT: VOffset = 4
+    static let OUTPUT_OFFSET: VOffset = 6
+    static let STATE_VECTOR_SIZE: VOffset = 8
+    static let REFERENCE_FRAME: VOffset = 10
+    static let FLAGS: VOffset = 12
+    static let ERROR_CODE: VOffset = 14
+    static let ERROR_MESSAGE: VOffset = 16
+  }
+
+  ///  Number of state vectors written.
+  public var COUNT: UInt32 { let o = _accessor.offset(VT.COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Offset in the arena where the state-vector stream begins.
+  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.
+  public var STATE_VECTOR_SIZE: UInt8 { let o = _accessor.offset(VT.STATE_VECTOR_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Reference frame for the stream (SDS `RFM`-compatible string tag).
+  public var REFERENCE_FRAME: String? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_FRAME) }
+  ///  Per-entity status flags (same cardinality as COUNT).
+  public var FLAGS: FlatbufferVector<propagatorStateFlags> { return _accessor.vector(at: VT.FLAGS, byteSize: 4) }
+  ///  Error code (0 == OK).
+  public var ERROR_CODE: propagatorErrorCode { let o = _accessor.offset(VT.ERROR_CODE); return o == 0 ? .ok : propagatorErrorCode(rawValue: _accessor.readBuffer(of: Int32.self, at: o)) ?? .ok }
+  ///  Optional error message when ERROR_CODE != OK.
+  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
+  public static func startPRWBatchResponse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VT.COUNT) }
+  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
+  public static func add(STATE_VECTOR_SIZE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_VECTOR_SIZE, def: 0, at: VT.STATE_VECTOR_SIZE) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VT.REFERENCE_FRAME) }
+  public static func addVectorOf(FLAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLAGS, at: VT.FLAGS) }
+  public static func add(ERROR_CODE: propagatorErrorCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_CODE.rawValue, def: 0, at: VT.ERROR_CODE) }
+  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
+  public static func endPRWBatchResponse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWBatchResponse(
+    _ fbb: inout FlatBufferBuilder,
+    COUNT: UInt32 = 0,
+    OUTPUT_OFFSET: UInt32 = 0,
+    STATE_VECTOR_SIZE: UInt8 = 0,
+    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
+    FLAGSVectorOffset FLAGS: Offset = Offset(),
+    ERROR_CODE: propagatorErrorCode = .ok,
+    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWBatchResponse.startPRWBatchResponse(&fbb)
+    PRWBatchResponse.add(COUNT: COUNT, &fbb)
+    PRWBatchResponse.add(OUTPUT_OFFSET: OUTPUT_OFFSET, &fbb)
+    PRWBatchResponse.add(STATE_VECTOR_SIZE: STATE_VECTOR_SIZE, &fbb)
+    PRWBatchResponse.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
+    PRWBatchResponse.addVectorOf(FLAGS: FLAGS, &fbb)
+    PRWBatchResponse.add(ERROR_CODE: ERROR_CODE, &fbb)
+    PRWBatchResponse.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
+    return PRWBatchResponse.endPRWBatchResponse(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COUNT, fieldName: "COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.STATE_VECTOR_SIZE, fieldName: "STATE_VECTOR_SIZE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.REFERENCE_FRAME, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FLAGS, fieldName: "FLAGS", required: false, type: ForwardOffset<Vector<propagatorStateFlags, propagatorStateFlags>>.self)
+    try _v.visit(field: VT.ERROR_CODE, fieldName: "ERROR_CODE", required: false, type: propagatorErrorCode.self)
+    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
+///  doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
+///  added to the a priori model and scaled by the visible Sun fraction.
+public struct PRWEcom2: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWEcom2.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let D0_M_S2: VOffset = 4
+    static let Y0_M_S2: VOffset = 6
+    static let B0_M_S2: VOffset = 8
+    static let D2_COS_M_S2: VOffset = 10
+    static let D2_SIN_M_S2: VOffset = 12
+    static let D4_COS_M_S2: VOffset = 14
+    static let D4_SIN_M_S2: VOffset = 16
+    static let B1_COS_M_S2: VOffset = 18
+    static let B1_SIN_M_S2: VOffset = 20
+    static let B3_COS_M_S2: VOffset = 22
+    static let B3_SIN_M_S2: VOffset = 24
+  }
+
+  public var D0_M_S2: Double { let o = _accessor.offset(VT.D0_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y0_M_S2: Double { let o = _accessor.offset(VT.Y0_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B0_M_S2: Double { let o = _accessor.offset(VT.B0_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var D2_COS_M_S2: Double { let o = _accessor.offset(VT.D2_COS_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var D2_SIN_M_S2: Double { let o = _accessor.offset(VT.D2_SIN_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var D4_COS_M_S2: Double { let o = _accessor.offset(VT.D4_COS_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var D4_SIN_M_S2: Double { let o = _accessor.offset(VT.D4_SIN_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B1_COS_M_S2: Double { let o = _accessor.offset(VT.B1_COS_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B1_SIN_M_S2: Double { let o = _accessor.offset(VT.B1_SIN_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B3_COS_M_S2: Double { let o = _accessor.offset(VT.B3_COS_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B3_SIN_M_S2: Double { let o = _accessor.offset(VT.B3_SIN_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPRWEcom2(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(D0_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D0_M_S2, def: 0.0, at: VT.D0_M_S2) }
+  public static func add(Y0_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y0_M_S2, def: 0.0, at: VT.Y0_M_S2) }
+  public static func add(B0_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B0_M_S2, def: 0.0, at: VT.B0_M_S2) }
+  public static func add(D2_COS_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D2_COS_M_S2, def: 0.0, at: VT.D2_COS_M_S2) }
+  public static func add(D2_SIN_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D2_SIN_M_S2, def: 0.0, at: VT.D2_SIN_M_S2) }
+  public static func add(D4_COS_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D4_COS_M_S2, def: 0.0, at: VT.D4_COS_M_S2) }
+  public static func add(D4_SIN_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D4_SIN_M_S2, def: 0.0, at: VT.D4_SIN_M_S2) }
+  public static func add(B1_COS_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B1_COS_M_S2, def: 0.0, at: VT.B1_COS_M_S2) }
+  public static func add(B1_SIN_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B1_SIN_M_S2, def: 0.0, at: VT.B1_SIN_M_S2) }
+  public static func add(B3_COS_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B3_COS_M_S2, def: 0.0, at: VT.B3_COS_M_S2) }
+  public static func add(B3_SIN_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B3_SIN_M_S2, def: 0.0, at: VT.B3_SIN_M_S2) }
+  public static func endPRWEcom2(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWEcom2(
+    _ fbb: inout FlatBufferBuilder,
+    D0_M_S2: Double = 0.0,
+    Y0_M_S2: Double = 0.0,
+    B0_M_S2: Double = 0.0,
+    D2_COS_M_S2: Double = 0.0,
+    D2_SIN_M_S2: Double = 0.0,
+    D4_COS_M_S2: Double = 0.0,
+    D4_SIN_M_S2: Double = 0.0,
+    B1_COS_M_S2: Double = 0.0,
+    B1_SIN_M_S2: Double = 0.0,
+    B3_COS_M_S2: Double = 0.0,
+    B3_SIN_M_S2: Double = 0.0
+  ) -> Offset {
+    let __start = PRWEcom2.startPRWEcom2(&fbb)
+    PRWEcom2.add(D0_M_S2: D0_M_S2, &fbb)
+    PRWEcom2.add(Y0_M_S2: Y0_M_S2, &fbb)
+    PRWEcom2.add(B0_M_S2: B0_M_S2, &fbb)
+    PRWEcom2.add(D2_COS_M_S2: D2_COS_M_S2, &fbb)
+    PRWEcom2.add(D2_SIN_M_S2: D2_SIN_M_S2, &fbb)
+    PRWEcom2.add(D4_COS_M_S2: D4_COS_M_S2, &fbb)
+    PRWEcom2.add(D4_SIN_M_S2: D4_SIN_M_S2, &fbb)
+    PRWEcom2.add(B1_COS_M_S2: B1_COS_M_S2, &fbb)
+    PRWEcom2.add(B1_SIN_M_S2: B1_SIN_M_S2, &fbb)
+    PRWEcom2.add(B3_COS_M_S2: B3_COS_M_S2, &fbb)
+    PRWEcom2.add(B3_SIN_M_S2: B3_SIN_M_S2, &fbb)
+    return PRWEcom2.endPRWEcom2(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.D0_M_S2, fieldName: "D0_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.Y0_M_S2, fieldName: "Y0_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B0_M_S2, fieldName: "B0_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.D2_COS_M_S2, fieldName: "D2_COS_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.D2_SIN_M_S2, fieldName: "D2_SIN_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.D4_COS_M_S2, fieldName: "D4_COS_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.D4_SIN_M_S2, fieldName: "D4_SIN_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B1_COS_M_S2, fieldName: "B1_COS_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B1_SIN_M_S2, fieldName: "B1_SIN_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B3_COS_M_S2, fieldName: "B3_COS_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B3_SIN_M_S2, fieldName: "B3_SIN_M_S2", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Instance identity is host-provided, opaque, and not a physical quantity.
+public struct PRWInstance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWInstance.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MODULE_ID: VOffset = 4
+    static let INSTANCE_ID: VOffset = 6
+    static let GENERATION: VOffset = 8
+  }
+
+  public var MODULE_ID: String! { let o = _accessor.offset(VT.MODULE_ID); return _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODULE_ID) }
+  public var INSTANCE_ID: String! { let o = _accessor.offset(VT.INSTANCE_ID); return _accessor.string(at: o) }
+  public var INSTANCE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.INSTANCE_ID) }
+  ///  Incremented on reinitialization or configuration invalidation.
+  public var GENERATION: UInt64 { let o = _accessor.offset(VT.GENERATION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startPRWInstance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(INSTANCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE_ID, at: VT.INSTANCE_ID) }
+  public static func add(GENERATION: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GENERATION, def: 0, at: VT.GENERATION) }
+  public static func endPRWInstance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createPRWInstance(
+    _ fbb: inout FlatBufferBuilder,
+    MODULE_IDOffset MODULE_ID: Offset,
+    INSTANCE_IDOffset INSTANCE_ID: Offset,
+    GENERATION: UInt64 = 0
+  ) -> Offset {
+    let __start = PRWInstance.startPRWInstance(&fbb)
+    PRWInstance.add(MODULE_ID: MODULE_ID, &fbb)
+    PRWInstance.add(INSTANCE_ID: INSTANCE_ID, &fbb)
+    PRWInstance.add(GENERATION: GENERATION, &fbb)
+    return PRWInstance.endPRWInstance(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INSTANCE_ID, fieldName: "INSTANCE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GENERATION, fieldName: "GENERATION", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
+
+///  Units are SI. A scalar legacy tolerance must be expanded by the adapter.
+public struct PRWIntegratorSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWIntegratorSettings.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ALGORITHM: VOffset = 4
+    static let INITIAL_STEP_SECONDS: VOffset = 6
+    static let MINIMUM_STEP_SECONDS: VOffset = 8
+    static let MAXIMUM_STEP_SECONDS: VOffset = 10
+    static let ABSOLUTE_TOLERANCES: VOffset = 12
+    static let RELATIVE_TOLERANCE: VOffset = 14
+    static let MAXIMUM_STEPS: VOffset = 16
+  }
+
+  public var ALGORITHM: prwSolverAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .unspecified : prwSolverAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var INITIAL_STEP_SECONDS: Double { let o = _accessor.offset(VT.INITIAL_STEP_SECONDS); return o == 0 ? 60.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MINIMUM_STEP_SECONDS: Double { let o = _accessor.offset(VT.MINIMUM_STEP_SECONDS); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAXIMUM_STEP_SECONDS: Double { let o = _accessor.offset(VT.MAXIMUM_STEP_SECONDS); return o == 0 ? 3600.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Six or seven positive tolerances, respectively m, m/s and optional kg.
+  public var ABSOLUTE_TOLERANCES: FlatbufferVector<Double> { return _accessor.vector(at: VT.ABSOLUTE_TOLERANCES, byteSize: 8) }
+  public func withUnsafePointerToAbsoluteTolerances<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ABSOLUTE_TOLERANCES, body: body) }
+  public var RELATIVE_TOLERANCE: Double { let o = _accessor.offset(VT.RELATIVE_TOLERANCE); return o == 0 ? 1e-12 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAXIMUM_STEPS: UInt32 { let o = _accessor.offset(VT.MAXIMUM_STEPS); return o == 0 ? 100000 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startPRWIntegratorSettings(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(ALGORITHM: prwSolverAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
+  public static func add(INITIAL_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_STEP_SECONDS, def: 60.0, at: VT.INITIAL_STEP_SECONDS) }
+  public static func add(MINIMUM_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_STEP_SECONDS, def: 1.0, at: VT.MINIMUM_STEP_SECONDS) }
+  public static func add(MAXIMUM_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_STEP_SECONDS, def: 3600.0, at: VT.MAXIMUM_STEP_SECONDS) }
+  public static func addVectorOf(ABSOLUTE_TOLERANCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABSOLUTE_TOLERANCES, at: VT.ABSOLUTE_TOLERANCES) }
+  public static func add(RELATIVE_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_TOLERANCE, def: 1e-12, at: VT.RELATIVE_TOLERANCE) }
+  public static func add(MAXIMUM_STEPS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_STEPS, def: 100000, at: VT.MAXIMUM_STEPS) }
+  public static func endPRWIntegratorSettings(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [12]); return end }
+  public static func createPRWIntegratorSettings(
+    _ fbb: inout FlatBufferBuilder,
+    ALGORITHM: prwSolverAlgorithm = .unspecified,
+    INITIAL_STEP_SECONDS: Double = 60.0,
+    MINIMUM_STEP_SECONDS: Double = 1.0,
+    MAXIMUM_STEP_SECONDS: Double = 3600.0,
+    ABSOLUTE_TOLERANCESVectorOffset ABSOLUTE_TOLERANCES: Offset,
+    RELATIVE_TOLERANCE: Double = 1e-12,
+    MAXIMUM_STEPS: UInt32 = 100000
+  ) -> Offset {
+    let __start = PRWIntegratorSettings.startPRWIntegratorSettings(&fbb)
+    PRWIntegratorSettings.add(ALGORITHM: ALGORITHM, &fbb)
+    PRWIntegratorSettings.add(INITIAL_STEP_SECONDS: INITIAL_STEP_SECONDS, &fbb)
+    PRWIntegratorSettings.add(MINIMUM_STEP_SECONDS: MINIMUM_STEP_SECONDS, &fbb)
+    PRWIntegratorSettings.add(MAXIMUM_STEP_SECONDS: MAXIMUM_STEP_SECONDS, &fbb)
+    PRWIntegratorSettings.addVectorOf(ABSOLUTE_TOLERANCES: ABSOLUTE_TOLERANCES, &fbb)
+    PRWIntegratorSettings.add(RELATIVE_TOLERANCE: RELATIVE_TOLERANCE, &fbb)
+    PRWIntegratorSettings.add(MAXIMUM_STEPS: MAXIMUM_STEPS, &fbb)
+    return PRWIntegratorSettings.endPRWIntegratorSettings(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: prwSolverAlgorithm.self)
+    try _v.visit(field: VT.INITIAL_STEP_SECONDS, fieldName: "INITIAL_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.MINIMUM_STEP_SECONDS, fieldName: "MINIMUM_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_STEP_SECONDS, fieldName: "MAXIMUM_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.ABSOLUTE_TOLERANCES, fieldName: "ABSOLUTE_TOLERANCES", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.RELATIVE_TOLERANCE, fieldName: "RELATIVE_TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_STEPS, fieldName: "MAXIMUM_STEPS", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
+public struct PRWSpaceWeather: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWSpaceWeather.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let F107: VOffset = 6
+    static let F107_AVERAGE: VOffset = 8
+    static let AP_INDEX: VOffset = 10
+    static let KP_INDEX: VOffset = 12
+  }
+
+  public var EPOCH: TIMInstant! { let o = _accessor.offset(VT.EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var F107: Double { let o = _accessor.offset(VT.F107); return o == 0 ? 150.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var F107_AVERAGE: Double { let o = _accessor.offset(VT.F107_AVERAGE); return o == 0 ? 150.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Conventional daily Ap and three-hour Kp index values; not accelerations.
+  public var AP_INDEX: Double { let o = _accessor.offset(VT.AP_INDEX); return o == 0 ? 15.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var KP_INDEX: Double { let o = _accessor.offset(VT.KP_INDEX); return o == 0 ? 3.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPRWSpaceWeather(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(F107: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107, def: 150.0, at: VT.F107) }
+  public static func add(F107_AVERAGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_AVERAGE, def: 150.0, at: VT.F107_AVERAGE) }
+  public static func add(AP_INDEX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP_INDEX, def: 15.0, at: VT.AP_INDEX) }
+  public static func add(KP_INDEX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP_INDEX, def: 3.0, at: VT.KP_INDEX) }
+  public static func endPRWSpaceWeather(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWSpaceWeather(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset,
+    F107: Double = 150.0,
+    F107_AVERAGE: Double = 150.0,
+    AP_INDEX: Double = 15.0,
+    KP_INDEX: Double = 3.0
+  ) -> Offset {
+    let __start = PRWSpaceWeather.startPRWSpaceWeather(&fbb)
+    PRWSpaceWeather.add(EPOCH: EPOCH, &fbb)
+    PRWSpaceWeather.add(F107: F107, &fbb)
+    PRWSpaceWeather.add(F107_AVERAGE: F107_AVERAGE, &fbb)
+    PRWSpaceWeather.add(AP_INDEX: AP_INDEX, &fbb)
+    PRWSpaceWeather.add(KP_INDEX: KP_INDEX, &fbb)
+    return PRWSpaceWeather.endPRWSpaceWeather(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.F107, fieldName: "F107", required: false, type: Double.self)
+    try _v.visit(field: VT.F107_AVERAGE, fieldName: "F107_AVERAGE", required: false, type: Double.self)
+    try _v.visit(field: VT.AP_INDEX, fieldName: "AP_INDEX", required: false, type: Double.self)
+    try _v.visit(field: VT.KP_INDEX, fieldName: "KP_INDEX", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Executable subset currently reachable through HPOP invoke. No implied
+///  support for coefficients, drag models or bodies the provider cannot supply.
+public struct PRWForceConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWForceConfiguration.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let GRAVITY_CHOICE: VOffset = 4
+    static let ENABLE_POINT_MASS: VOffset = 6
+    static let GRAVITATIONAL_PARAMETER: VOffset = 8
+    static let ENABLE_J2: VOffset = 10
+    static let ENABLE_J3: VOffset = 12
+    static let ENABLE_J4: VOffset = 14
+    static let ENABLE_HIGHER_ZONALS: VOffset = 16
+    static let MAXIMUM_DEGREE: VOffset = 18
+    static let HAS_MAXIMUM_DEGREE: VOffset = 20
+    static let MAXIMUM_ORDER: VOffset = 22
+    static let HAS_MAXIMUM_ORDER: VOffset = 24
+    static let ENABLE_THIRD_BODY: VOffset = 26
+    static let THIRD_BODY_IDS: VOffset = 28
+    static let ENABLE_SRP: VOffset = 30
+    static let ENABLE_DRAG: VOffset = 32
+    static let INITIAL_MASS_KG: VOffset = 34
+    static let AREA_M2: VOffset = 36
+    static let REFLECTIVITY_COEFFICIENT: VOffset = 38
+    static let DRAG_COEFFICIENT: VOffset = 40
+    static let ATMOSPHERE_MODEL: VOffset = 42
+    static let WEATHER: VOffset = 44
+    static let EPHEMERIS_SOURCE: VOffset = 46
+    static let SOLID_TIDES: VOffset = 48
+    static let RELATIVITY: VOffset = 50
+    static let IN_TRACK_ACCELERATION_M_S2: VOffset = 52
+    static let HAS_IN_TRACK_ACCELERATION_M_S2: VOffset = 54
+    static let DRAG_AREA_OVER_MASS_RATE_M2_KG_S: VOffset = 56
+    static let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: VOffset = 58
+    static let MAXIMUM_TESSERAL_DEGREE: VOffset = 60
+    static let HAS_MAXIMUM_TESSERAL_DEGREE: VOffset = 62
+    static let RADIATION_PRESSURE_MODEL: VOffset = 64
+    static let GNSS_BLOCK: VOffset = 66
+    static let ECOM2: VOffset = 68
+    static let EARTH_RADIATION: VOffset = 70
+    static let EARTH_RADIATION_RESOLUTION_DEG: VOffset = 72
+    static let EARTH_RADIATION_AREA_OVER_MASS_M2_KG: VOffset = 74
+    static let HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: VOffset = 76
+    static let OCEAN_TIDES: VOffset = 78
+    static let OCEAN_TIDE_MAXIMUM_DEGREE: VOffset = 80
+    static let OCEAN_TIDE_MAXIMUM_ORDER: VOffset = 82
+  }
+
+  public var GRAVITY_CHOICE: prwGravitySelection { let o = _accessor.offset(VT.GRAVITY_CHOICE); return o == 0 ? .inferFlags : prwGravitySelection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .inferFlags }
+  public var ENABLE_POINT_MASS: Bool { let o = _accessor.offset(VT.ENABLE_POINT_MASS); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  m3/s2; required positive when a central gravity term is enabled.
+  public var GRAVITATIONAL_PARAMETER: Double { let o = _accessor.offset(VT.GRAVITATIONAL_PARAMETER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ENABLE_J2: Bool { let o = _accessor.offset(VT.ENABLE_J2); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ENABLE_J3: Bool { let o = _accessor.offset(VT.ENABLE_J3); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ENABLE_J4: Bool { let o = _accessor.offset(VT.ENABLE_J4); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ENABLE_HIGHER_ZONALS: Bool { let o = _accessor.offset(VT.ENABLE_HIGHER_ZONALS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Optional truncations; absent selects the explicitly reported model default.
+  public var MAXIMUM_DEGREE: UInt16 { let o = _accessor.offset(VT.MAXIMUM_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  True when MAXIMUM_DEGREE carries a value; false means absent.
+  public var HAS_MAXIMUM_DEGREE: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_DEGREE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var MAXIMUM_ORDER: UInt16 { let o = _accessor.offset(VT.MAXIMUM_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  True when MAXIMUM_ORDER carries a value; false means absent.
+  public var HAS_MAXIMUM_ORDER: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_ORDER); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ENABLE_THIRD_BODY: Bool { let o = _accessor.offset(VT.ENABLE_THIRD_BODY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.
+  public var THIRD_BODY_IDS: FlatbufferVector<Int32> { return _accessor.vector(at: VT.THIRD_BODY_IDS, byteSize: 4) }
+  public func withUnsafePointerToThirdBodyIds<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.THIRD_BODY_IDS, body: body) }
+  public var ENABLE_SRP: Bool { let o = _accessor.offset(VT.ENABLE_SRP); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ENABLE_DRAG: Bool { let o = _accessor.offset(VT.ENABLE_DRAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var INITIAL_MASS_KG: Double { let o = _accessor.offset(VT.INITIAL_MASS_KG); return o == 0 ? 1000.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AREA_M2: Double { let o = _accessor.offset(VT.AREA_M2); return o == 0 ? 10.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REFLECTIVITY_COEFFICIENT: Double { let o = _accessor.offset(VT.REFLECTIVITY_COEFFICIENT); return o == 0 ? 1.5 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRAG_COEFFICIENT: Double { let o = _accessor.offset(VT.DRAG_COEFFICIENT); return o == 0 ? 2.2 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATMOSPHERE_MODEL: prwAtmosphereFamily { let o = _accessor.offset(VT.ATMOSPHERE_MODEL); return o == 0 ? .nrlmsise00 : prwAtmosphereFamily(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .nrlmsise00 }
+  public var WEATHER: PRWSpaceWeather? { let o = _accessor.offset(VT.WEATHER); return o == 0 ? nil : PRWSpaceWeather(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
+  public var EPHEMERIS_SOURCE: String! { let o = _accessor.offset(VT.EPHEMERIS_SOURCE); return _accessor.string(at: o) }
+  public var EPHEMERIS_SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.EPHEMERIS_SOURCE) }
+  ///  Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+  ///  orientation (PRW.EARTH_ORIENTATION) to apply them.
+  public var SOLID_TIDES: prwSolidTideModel { let o = _accessor.offset(VT.SOLID_TIDES); return o == 0 ? .none_ : prwSolidTideModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  public var RELATIVITY: prwRelativityTerms { let o = _accessor.offset(VT.RELATIVITY); return o == 0 ? .none_ : prwRelativityTerms(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Constant acceleration along the in-track axis, m/s2: T of RTN,
+  ///  N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+  public var IN_TRACK_ACCELERATION_M_S2: Double { let o = _accessor.offset(VT.IN_TRACK_ACCELERATION_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  public var HAS_IN_TRACK_ACCELERATION_M_S2: Bool { let o = _accessor.offset(VT.HAS_IN_TRACK_ACCELERATION_M_S2); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+  ///  BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+  public var DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double { let o = _accessor.offset(VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  public var HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool { let o = _accessor.offset(VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Highest degree of the tesseral and sectorial terms (order >= 1); the
+  ///  zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+  ///  MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+  public var MAXIMUM_TESSERAL_DEGREE: UInt16 { let o = _accessor.offset(VT.MAXIMUM_TESSERAL_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+  public var HAS_MAXIMUM_TESSERAL_DEGREE: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_TESSERAL_DEGREE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Solar radiation pressure model family (default: the cannonball).
+  public var RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily { let o = _accessor.offset(VT.RADIATION_PRESSURE_MODEL); return o == 0 ? .cannonball : prwRadiationPressureFamily(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .cannonball }
+  ///  Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+  public var GNSS_BLOCK: prwGnssSpacecraftBlock { let o = _accessor.offset(VT.GNSS_BLOCK); return o == 0 ? .unspecified : prwGnssSpacecraftBlock(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  ECOM2 coefficients; absent means no ECOM2 term.
+  public var ECOM2: PRWEcom2? { let o = _accessor.offset(VT.ECOM2); return o == 0 ? nil : PRWEcom2(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Earth radiation pressure (albedo and infrared). It reads the Sun's
+  ///  position from the request's ephemeris source.
+  public var EARTH_RADIATION: prwEarthRadiationModel { let o = _accessor.offset(VT.EARTH_RADIATION); return o == 0 ? .none_ : prwEarthRadiationModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Angular size of the Earth surface elements it sums, degrees.
+  public var EARTH_RADIATION_RESOLUTION_DEG: Double { let o = _accessor.offset(VT.EARTH_RADIATION_RESOLUTION_DEG); return o == 0 ? 15.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+  ///  cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+  ///  fitting SRP_AREA_OVER_MASS scales both.
+  public var EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Double { let o = _accessor.offset(VT.EARTH_RADIATION_AREA_OVER_MASS_M2_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  public var HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Bool { let o = _accessor.offset(VT.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+  ///  orientation (PRW.EARTH_ORIENTATION) to apply them.
+  public var OCEAN_TIDES: prwOceanTideModel { let o = _accessor.offset(VT.OCEAN_TIDES); return o == 0 ? .none_ : prwOceanTideModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Truncation of the ocean tide field.
+  public var OCEAN_TIDE_MAXIMUM_DEGREE: UInt16 { let o = _accessor.offset(VT.OCEAN_TIDE_MAXIMUM_DEGREE); return o == 0 ? 30 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var OCEAN_TIDE_MAXIMUM_ORDER: UInt16 { let o = _accessor.offset(VT.OCEAN_TIDE_MAXIMUM_ORDER); return o == 0 ? 30 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public static func startPRWForceConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 40) }
+  public static func add(GRAVITY_CHOICE: prwGravitySelection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_CHOICE.rawValue, def: 0, at: VT.GRAVITY_CHOICE) }
+  public static func add(ENABLE_POINT_MASS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_POINT_MASS, def: true,
+   at: VT.ENABLE_POINT_MASS) }
+  public static func add(GRAVITATIONAL_PARAMETER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITATIONAL_PARAMETER, def: 0.0, at: VT.GRAVITATIONAL_PARAMETER) }
+  public static func add(ENABLE_J2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_J2, def: true,
+   at: VT.ENABLE_J2) }
+  public static func add(ENABLE_J3: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_J3, def: false,
+   at: VT.ENABLE_J3) }
+  public static func add(ENABLE_J4: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_J4, def: false,
+   at: VT.ENABLE_J4) }
+  public static func add(ENABLE_HIGHER_ZONALS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_HIGHER_ZONALS, def: false,
+   at: VT.ENABLE_HIGHER_ZONALS) }
+  public static func add(MAXIMUM_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_DEGREE, def: 0, at: VT.MAXIMUM_DEGREE) }
+  public static func add(HAS_MAXIMUM_DEGREE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_DEGREE, def: false,
+   at: VT.HAS_MAXIMUM_DEGREE) }
+  public static func add(MAXIMUM_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_ORDER, def: 0, at: VT.MAXIMUM_ORDER) }
+  public static func add(HAS_MAXIMUM_ORDER: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_ORDER, def: false,
+   at: VT.HAS_MAXIMUM_ORDER) }
+  public static func add(ENABLE_THIRD_BODY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_THIRD_BODY, def: false,
+   at: VT.ENABLE_THIRD_BODY) }
+  public static func addVectorOf(THIRD_BODY_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THIRD_BODY_IDS, at: VT.THIRD_BODY_IDS) }
+  public static func add(ENABLE_SRP: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_SRP, def: false,
+   at: VT.ENABLE_SRP) }
+  public static func add(ENABLE_DRAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_DRAG, def: false,
+   at: VT.ENABLE_DRAG) }
+  public static func add(INITIAL_MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_MASS_KG, def: 1000.0, at: VT.INITIAL_MASS_KG) }
+  public static func add(AREA_M2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_M2, def: 10.0, at: VT.AREA_M2) }
+  public static func add(REFLECTIVITY_COEFFICIENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTIVITY_COEFFICIENT, def: 1.5, at: VT.REFLECTIVITY_COEFFICIENT) }
+  public static func add(DRAG_COEFFICIENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFFICIENT, def: 2.2, at: VT.DRAG_COEFFICIENT) }
+  public static func add(ATMOSPHERE_MODEL: prwAtmosphereFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATMOSPHERE_MODEL.rawValue, def: 1, at: VT.ATMOSPHERE_MODEL) }
+  public static func add(WEATHER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEATHER, at: VT.WEATHER) }
+  public static func add(EPHEMERIS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_SOURCE, at: VT.EPHEMERIS_SOURCE) }
+  public static func add(SOLID_TIDES: prwSolidTideModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLID_TIDES.rawValue, def: 0, at: VT.SOLID_TIDES) }
+  public static func add(RELATIVITY: prwRelativityTerms, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVITY.rawValue, def: 0, at: VT.RELATIVITY) }
+  public static func add(IN_TRACK_ACCELERATION_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IN_TRACK_ACCELERATION_M_S2, def: 0.0, at: VT.IN_TRACK_ACCELERATION_M_S2) }
+  public static func add(HAS_IN_TRACK_ACCELERATION_M_S2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_IN_TRACK_ACCELERATION_M_S2, def: false,
+   at: VT.HAS_IN_TRACK_ACCELERATION_M_S2) }
+  public static func add(DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA_OVER_MASS_RATE_M2_KG_S, def: 0.0, at: VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S) }
+  public static func add(HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, def: false,
+   at: VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) }
+  public static func add(MAXIMUM_TESSERAL_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_TESSERAL_DEGREE, def: 0, at: VT.MAXIMUM_TESSERAL_DEGREE) }
+  public static func add(HAS_MAXIMUM_TESSERAL_DEGREE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_TESSERAL_DEGREE, def: false,
+   at: VT.HAS_MAXIMUM_TESSERAL_DEGREE) }
+  public static func add(RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIATION_PRESSURE_MODEL.rawValue, def: 0, at: VT.RADIATION_PRESSURE_MODEL) }
+  public static func add(GNSS_BLOCK: prwGnssSpacecraftBlock, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNSS_BLOCK.rawValue, def: 0, at: VT.GNSS_BLOCK) }
+  public static func add(ECOM2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECOM2, at: VT.ECOM2) }
+  public static func add(EARTH_RADIATION: prwEarthRadiationModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EARTH_RADIATION.rawValue, def: 0, at: VT.EARTH_RADIATION) }
+  public static func add(EARTH_RADIATION_RESOLUTION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EARTH_RADIATION_RESOLUTION_DEG, def: 15.0, at: VT.EARTH_RADIATION_RESOLUTION_DEG) }
+  public static func add(EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EARTH_RADIATION_AREA_OVER_MASS_M2_KG, def: 0.0, at: VT.EARTH_RADIATION_AREA_OVER_MASS_M2_KG) }
+  public static func add(HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, def: false,
+   at: VT.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG) }
+  public static func add(OCEAN_TIDES: prwOceanTideModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCEAN_TIDES.rawValue, def: 0, at: VT.OCEAN_TIDES) }
+  public static func add(OCEAN_TIDE_MAXIMUM_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCEAN_TIDE_MAXIMUM_DEGREE, def: 30, at: VT.OCEAN_TIDE_MAXIMUM_DEGREE) }
+  public static func add(OCEAN_TIDE_MAXIMUM_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCEAN_TIDE_MAXIMUM_ORDER, def: 30, at: VT.OCEAN_TIDE_MAXIMUM_ORDER) }
+  public static func endPRWForceConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [46]); return end }
+  public static func createPRWForceConfiguration(
+    _ fbb: inout FlatBufferBuilder,
+    GRAVITY_CHOICE: prwGravitySelection = .inferFlags,
+    ENABLE_POINT_MASS: Bool = true,
+    GRAVITATIONAL_PARAMETER: Double = 0.0,
+    ENABLE_J2: Bool = true,
+    ENABLE_J3: Bool = false,
+    ENABLE_J4: Bool = false,
+    ENABLE_HIGHER_ZONALS: Bool = false,
+    MAXIMUM_DEGREE: UInt16 = 0,
+    HAS_MAXIMUM_DEGREE: Bool = false,
+    MAXIMUM_ORDER: UInt16 = 0,
+    HAS_MAXIMUM_ORDER: Bool = false,
+    ENABLE_THIRD_BODY: Bool = false,
+    THIRD_BODY_IDSVectorOffset THIRD_BODY_IDS: Offset = Offset(),
+    ENABLE_SRP: Bool = false,
+    ENABLE_DRAG: Bool = false,
+    INITIAL_MASS_KG: Double = 1000.0,
+    AREA_M2: Double = 10.0,
+    REFLECTIVITY_COEFFICIENT: Double = 1.5,
+    DRAG_COEFFICIENT: Double = 2.2,
+    ATMOSPHERE_MODEL: prwAtmosphereFamily = .nrlmsise00,
+    WEATHEROffset WEATHER: Offset = Offset(),
+    EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset,
+    SOLID_TIDES: prwSolidTideModel = .none_,
+    RELATIVITY: prwRelativityTerms = .none_,
+    IN_TRACK_ACCELERATION_M_S2: Double = 0.0,
+    HAS_IN_TRACK_ACCELERATION_M_S2: Bool = false,
+    DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double = 0.0,
+    HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool = false,
+    MAXIMUM_TESSERAL_DEGREE: UInt16 = 0,
+    HAS_MAXIMUM_TESSERAL_DEGREE: Bool = false,
+    RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily = .cannonball,
+    GNSS_BLOCK: prwGnssSpacecraftBlock = .unspecified,
+    ECOM2Offset ECOM2: Offset = Offset(),
+    EARTH_RADIATION: prwEarthRadiationModel = .none_,
+    EARTH_RADIATION_RESOLUTION_DEG: Double = 15.0,
+    EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Double = 0.0,
+    HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Bool = false,
+    OCEAN_TIDES: prwOceanTideModel = .none_,
+    OCEAN_TIDE_MAXIMUM_DEGREE: UInt16 = 30,
+    OCEAN_TIDE_MAXIMUM_ORDER: UInt16 = 30
+  ) -> Offset {
+    let __start = PRWForceConfiguration.startPRWForceConfiguration(&fbb)
+    PRWForceConfiguration.add(GRAVITY_CHOICE: GRAVITY_CHOICE, &fbb)
+    PRWForceConfiguration.add(ENABLE_POINT_MASS: ENABLE_POINT_MASS, &fbb)
+    PRWForceConfiguration.add(GRAVITATIONAL_PARAMETER: GRAVITATIONAL_PARAMETER, &fbb)
+    PRWForceConfiguration.add(ENABLE_J2: ENABLE_J2, &fbb)
+    PRWForceConfiguration.add(ENABLE_J3: ENABLE_J3, &fbb)
+    PRWForceConfiguration.add(ENABLE_J4: ENABLE_J4, &fbb)
+    PRWForceConfiguration.add(ENABLE_HIGHER_ZONALS: ENABLE_HIGHER_ZONALS, &fbb)
+    PRWForceConfiguration.add(MAXIMUM_DEGREE: MAXIMUM_DEGREE, &fbb)
+    PRWForceConfiguration.add(HAS_MAXIMUM_DEGREE: HAS_MAXIMUM_DEGREE, &fbb)
+    PRWForceConfiguration.add(MAXIMUM_ORDER: MAXIMUM_ORDER, &fbb)
+    PRWForceConfiguration.add(HAS_MAXIMUM_ORDER: HAS_MAXIMUM_ORDER, &fbb)
+    PRWForceConfiguration.add(ENABLE_THIRD_BODY: ENABLE_THIRD_BODY, &fbb)
+    PRWForceConfiguration.addVectorOf(THIRD_BODY_IDS: THIRD_BODY_IDS, &fbb)
+    PRWForceConfiguration.add(ENABLE_SRP: ENABLE_SRP, &fbb)
+    PRWForceConfiguration.add(ENABLE_DRAG: ENABLE_DRAG, &fbb)
+    PRWForceConfiguration.add(INITIAL_MASS_KG: INITIAL_MASS_KG, &fbb)
+    PRWForceConfiguration.add(AREA_M2: AREA_M2, &fbb)
+    PRWForceConfiguration.add(REFLECTIVITY_COEFFICIENT: REFLECTIVITY_COEFFICIENT, &fbb)
+    PRWForceConfiguration.add(DRAG_COEFFICIENT: DRAG_COEFFICIENT, &fbb)
+    PRWForceConfiguration.add(ATMOSPHERE_MODEL: ATMOSPHERE_MODEL, &fbb)
+    PRWForceConfiguration.add(WEATHER: WEATHER, &fbb)
+    PRWForceConfiguration.add(EPHEMERIS_SOURCE: EPHEMERIS_SOURCE, &fbb)
+    PRWForceConfiguration.add(SOLID_TIDES: SOLID_TIDES, &fbb)
+    PRWForceConfiguration.add(RELATIVITY: RELATIVITY, &fbb)
+    PRWForceConfiguration.add(IN_TRACK_ACCELERATION_M_S2: IN_TRACK_ACCELERATION_M_S2, &fbb)
+    PRWForceConfiguration.add(HAS_IN_TRACK_ACCELERATION_M_S2: HAS_IN_TRACK_ACCELERATION_M_S2, &fbb)
+    PRWForceConfiguration.add(DRAG_AREA_OVER_MASS_RATE_M2_KG_S: DRAG_AREA_OVER_MASS_RATE_M2_KG_S, &fbb)
+    PRWForceConfiguration.add(HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, &fbb)
+    PRWForceConfiguration.add(MAXIMUM_TESSERAL_DEGREE: MAXIMUM_TESSERAL_DEGREE, &fbb)
+    PRWForceConfiguration.add(HAS_MAXIMUM_TESSERAL_DEGREE: HAS_MAXIMUM_TESSERAL_DEGREE, &fbb)
+    PRWForceConfiguration.add(RADIATION_PRESSURE_MODEL: RADIATION_PRESSURE_MODEL, &fbb)
+    PRWForceConfiguration.add(GNSS_BLOCK: GNSS_BLOCK, &fbb)
+    PRWForceConfiguration.add(ECOM2: ECOM2, &fbb)
+    PRWForceConfiguration.add(EARTH_RADIATION: EARTH_RADIATION, &fbb)
+    PRWForceConfiguration.add(EARTH_RADIATION_RESOLUTION_DEG: EARTH_RADIATION_RESOLUTION_DEG, &fbb)
+    PRWForceConfiguration.add(EARTH_RADIATION_AREA_OVER_MASS_M2_KG: EARTH_RADIATION_AREA_OVER_MASS_M2_KG, &fbb)
+    PRWForceConfiguration.add(HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, &fbb)
+    PRWForceConfiguration.add(OCEAN_TIDES: OCEAN_TIDES, &fbb)
+    PRWForceConfiguration.add(OCEAN_TIDE_MAXIMUM_DEGREE: OCEAN_TIDE_MAXIMUM_DEGREE, &fbb)
+    PRWForceConfiguration.add(OCEAN_TIDE_MAXIMUM_ORDER: OCEAN_TIDE_MAXIMUM_ORDER, &fbb)
+    return PRWForceConfiguration.endPRWForceConfiguration(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.GRAVITY_CHOICE, fieldName: "GRAVITY_CHOICE", required: false, type: prwGravitySelection.self)
+    try _v.visit(field: VT.ENABLE_POINT_MASS, fieldName: "ENABLE_POINT_MASS", required: false, type: Bool.self)
+    try _v.visit(field: VT.GRAVITATIONAL_PARAMETER, fieldName: "GRAVITATIONAL_PARAMETER", required: false, type: Double.self)
+    try _v.visit(field: VT.ENABLE_J2, fieldName: "ENABLE_J2", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_J3, fieldName: "ENABLE_J3", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_J4, fieldName: "ENABLE_J4", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_HIGHER_ZONALS, fieldName: "ENABLE_HIGHER_ZONALS", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAXIMUM_DEGREE, fieldName: "MAXIMUM_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_DEGREE, fieldName: "HAS_MAXIMUM_DEGREE", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAXIMUM_ORDER, fieldName: "MAXIMUM_ORDER", required: false, type: UInt16.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_ORDER, fieldName: "HAS_MAXIMUM_ORDER", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_THIRD_BODY, fieldName: "ENABLE_THIRD_BODY", required: false, type: Bool.self)
+    try _v.visit(field: VT.THIRD_BODY_IDS, fieldName: "THIRD_BODY_IDS", required: false, type: ForwardOffset<Vector<Int32, Int32>>.self)
+    try _v.visit(field: VT.ENABLE_SRP, fieldName: "ENABLE_SRP", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_DRAG, fieldName: "ENABLE_DRAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.INITIAL_MASS_KG, fieldName: "INITIAL_MASS_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_M2, fieldName: "AREA_M2", required: false, type: Double.self)
+    try _v.visit(field: VT.REFLECTIVITY_COEFFICIENT, fieldName: "REFLECTIVITY_COEFFICIENT", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_COEFFICIENT, fieldName: "DRAG_COEFFICIENT", required: false, type: Double.self)
+    try _v.visit(field: VT.ATMOSPHERE_MODEL, fieldName: "ATMOSPHERE_MODEL", required: false, type: prwAtmosphereFamily.self)
+    try _v.visit(field: VT.WEATHER, fieldName: "WEATHER", required: false, type: ForwardOffset<PRWSpaceWeather>.self)
+    try _v.visit(field: VT.EPHEMERIS_SOURCE, fieldName: "EPHEMERIS_SOURCE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLID_TIDES, fieldName: "SOLID_TIDES", required: false, type: prwSolidTideModel.self)
+    try _v.visit(field: VT.RELATIVITY, fieldName: "RELATIVITY", required: false, type: prwRelativityTerms.self)
+    try _v.visit(field: VT.IN_TRACK_ACCELERATION_M_S2, fieldName: "IN_TRACK_ACCELERATION_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_IN_TRACK_ACCELERATION_M_S2, fieldName: "HAS_IN_TRACK_ACCELERATION_M_S2", required: false, type: Bool.self)
+    try _v.visit(field: VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S, fieldName: "DRAG_AREA_OVER_MASS_RATE_M2_KG_S", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, fieldName: "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAXIMUM_TESSERAL_DEGREE, fieldName: "MAXIMUM_TESSERAL_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_TESSERAL_DEGREE, fieldName: "HAS_MAXIMUM_TESSERAL_DEGREE", required: false, type: Bool.self)
+    try _v.visit(field: VT.RADIATION_PRESSURE_MODEL, fieldName: "RADIATION_PRESSURE_MODEL", required: false, type: prwRadiationPressureFamily.self)
+    try _v.visit(field: VT.GNSS_BLOCK, fieldName: "GNSS_BLOCK", required: false, type: prwGnssSpacecraftBlock.self)
+    try _v.visit(field: VT.ECOM2, fieldName: "ECOM2", required: false, type: ForwardOffset<PRWEcom2>.self)
+    try _v.visit(field: VT.EARTH_RADIATION, fieldName: "EARTH_RADIATION", required: false, type: prwEarthRadiationModel.self)
+    try _v.visit(field: VT.EARTH_RADIATION_RESOLUTION_DEG, fieldName: "EARTH_RADIATION_RESOLUTION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.EARTH_RADIATION_AREA_OVER_MASS_M2_KG, fieldName: "EARTH_RADIATION_AREA_OVER_MASS_M2_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, fieldName: "HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG", required: false, type: Bool.self)
+    try _v.visit(field: VT.OCEAN_TIDES, fieldName: "OCEAN_TIDES", required: false, type: prwOceanTideModel.self)
+    try _v.visit(field: VT.OCEAN_TIDE_MAXIMUM_DEGREE, fieldName: "OCEAN_TIDE_MAXIMUM_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.OCEAN_TIDE_MAXIMUM_ORDER, fieldName: "OCEAN_TIDE_MAXIMUM_ORDER", required: false, type: UInt16.self)
+    _v.finish()
+  }
+}
+
+///  Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
+///  request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+///  Covariance entries have row*column units; STM entries row/column units;
+///  an STM's parameter rows are the identity (parameters are constant).
+public struct PRWStateMatrix: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWStateMatrix.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let DIMENSION: VOffset = 4
+    static let VALUES: VOffset = 6
+  }
+
+  public var DIMENSION: UInt8 { let o = _accessor.offset(VT.DIMENSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.VALUES, byteSize: 8) }
+  public func withUnsafePointerToValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VALUES, body: body) }
+  public static func startPRWStateMatrix(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(DIMENSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIMENSION, def: 0, at: VT.DIMENSION) }
+  public static func addVectorOf(VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUES, at: VT.VALUES) }
+  public static func endPRWStateMatrix(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
+  public static func createPRWStateMatrix(
+    _ fbb: inout FlatBufferBuilder,
+    DIMENSION: UInt8 = 0,
+    VALUESVectorOffset VALUES: Offset
+  ) -> Offset {
+    let __start = PRWStateMatrix.startPRWStateMatrix(&fbb)
+    PRWStateMatrix.add(DIMENSION: DIMENSION, &fbb)
+    PRWStateMatrix.addVectorOf(VALUES: VALUES, &fbb)
+    return PRWStateMatrix.endPRWStateMatrix(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.DIMENSION, fieldName: "DIMENSION", required: false, type: UInt8.self)
+    try _v.visit(field: VT.VALUES, fieldName: "VALUES", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    _v.finish()
+  }
+}
+
+///  The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.
+public struct PRWProcessNoise: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWProcessNoise.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MODEL: VOffset = 4
+    static let AXES: VOffset = 6
+    static let SPECTRAL_DENSITY_M2_S3: VOffset = 8
+    static let DISCRETIZATION_SECONDS: VOffset = 10
+  }
+
+  public var MODEL: prwProcessNoiseModel { let o = _accessor.offset(VT.MODEL); return o == 0 ? .unspecified : prwProcessNoiseModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var AXES: prwProcessNoiseAxes { let o = _accessor.offset(VT.AXES); return o == 0 ? .unspecified : prwProcessNoiseAxes(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Acceleration power spectral density per axis (x, y, z or R, T, N), m^2/s^3.
+  public var SPECTRAL_DENSITY_M2_S3: FlatbufferVector<Double> { return _accessor.vector(at: VT.SPECTRAL_DENSITY_M2_S3, byteSize: 8) }
+  public func withUnsafePointerToSpectralDensityM2S3<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SPECTRAL_DENSITY_M2_S3, body: body) }
+  ///  Interval over which each noise increment enters, seconds.
+  public var DISCRETIZATION_SECONDS: Double { let o = _accessor.offset(VT.DISCRETIZATION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPRWProcessNoise(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(MODEL: prwProcessNoiseModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL.rawValue, def: 0, at: VT.MODEL) }
+  public static func add(AXES: prwProcessNoiseAxes, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXES.rawValue, def: 0, at: VT.AXES) }
+  public static func addVectorOf(SPECTRAL_DENSITY_M2_S3: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_DENSITY_M2_S3, at: VT.SPECTRAL_DENSITY_M2_S3) }
+  public static func add(DISCRETIZATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISCRETIZATION_SECONDS, def: 0.0, at: VT.DISCRETIZATION_SECONDS) }
+  public static func endPRWProcessNoise(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWProcessNoise(
+    _ fbb: inout FlatBufferBuilder,
+    MODEL: prwProcessNoiseModel = .unspecified,
+    AXES: prwProcessNoiseAxes = .unspecified,
+    SPECTRAL_DENSITY_M2_S3VectorOffset SPECTRAL_DENSITY_M2_S3: Offset = Offset(),
+    DISCRETIZATION_SECONDS: Double = 0.0
+  ) -> Offset {
+    let __start = PRWProcessNoise.startPRWProcessNoise(&fbb)
+    PRWProcessNoise.add(MODEL: MODEL, &fbb)
+    PRWProcessNoise.add(AXES: AXES, &fbb)
+    PRWProcessNoise.addVectorOf(SPECTRAL_DENSITY_M2_S3: SPECTRAL_DENSITY_M2_S3, &fbb)
+    PRWProcessNoise.add(DISCRETIZATION_SECONDS: DISCRETIZATION_SECONDS, &fbb)
+    return PRWProcessNoise.endPRWProcessNoise(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MODEL, fieldName: "MODEL", required: false, type: prwProcessNoiseModel.self)
+    try _v.visit(field: VT.AXES, fieldName: "AXES", required: false, type: prwProcessNoiseAxes.self)
+    try _v.visit(field: VT.SPECTRAL_DENSITY_M2_S3, fieldName: "SPECTRAL_DENSITY_M2_S3", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DISCRETIZATION_SECONDS, fieldName: "DISCRETIZATION_SECONDS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.
+public struct PRWResidentState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWResidentState.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let ENTITY_HANDLE: VOffset = 6
+    static let CATALOG_NUMBER: VOffset = 8
+    static let OBJECT_ID: VOffset = 10
+    static let STATE: VOffset = 12
+    static let COORDINATE_SYSTEM: VOffset = 14
+    static let COVARIANCE: VOffset = 16
+    static let MASS_KG: VOffset = 18
+    static let HAS_MASS_KG: VOffset = 20
+    static let DRAG_AREA_OVER_MASS_M2_KG: VOffset = 22
+    static let HAS_DRAG_AREA_OVER_MASS_M2_KG: VOffset = 24
+    static let SRP_AREA_OVER_MASS_M2_KG: VOffset = 26
+    static let HAS_SRP_AREA_OVER_MASS_M2_KG: VOffset = 28
+    static let VALID: VOffset = 30
+    static let PROCESS_NOISE: VOffset = 32
+    static let DRAG_AREA_OVER_MASS_RATE_M2_KG_S: VOffset = 34
+    static let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: VOffset = 36
+    static let IN_TRACK_ACCELERATION_M_S2: VOffset = 38
+    static let HAS_IN_TRACK_ACCELERATION_M_S2: VOffset = 40
+  }
+
+  public var INSTANCE: PRWInstance? { let o = _accessor.offset(VT.INSTANCE); return o == 0 ? nil : PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ENTITY_HANDLE: UInt32 { let o = _accessor.offset(VT.ENTITY_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var CATALOG_NUMBER: UInt32 { let o = _accessor.offset(VT.CATALOG_NUMBER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  public var STATE: FRMStateVector! { let o = _accessor.offset(VT.STATE); return FRMStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COORDINATE_SYSTEM: RFMCoordinateSystem! { let o = _accessor.offset(VT.COORDINATE_SYSTEM); return RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COVARIANCE: PRWStateMatrix? { let o = _accessor.offset(VT.COVARIANCE); return o == 0 ? nil : PRWStateMatrix(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Optional initial dynamical mass in kg; distinct from a missing mass.
+  public var MASS_KG: Double { let o = _accessor.offset(VT.MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when MASS_KG carries a value; false means absent.
+  public var HAS_MASS_KG: Bool { let o = _accessor.offset(VT.HAS_MASS_KG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Explicit SI concepts Cd*A/m and Cr*A/m. Do not infer these from legacy
+  ///  ignored/underspecified coefficients; require a caller-provided mapping.
+  public var DRAG_AREA_OVER_MASS_M2_KG: Double { let o = _accessor.offset(VT.DRAG_AREA_OVER_MASS_M2_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when DRAG_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  public var HAS_DRAG_AREA_OVER_MASS_M2_KG: Bool { let o = _accessor.offset(VT.HAS_DRAG_AREA_OVER_MASS_M2_KG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SRP_AREA_OVER_MASS_M2_KG: Double { let o = _accessor.offset(VT.SRP_AREA_OVER_MASS_M2_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when SRP_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  public var HAS_SRP_AREA_OVER_MASS_M2_KG: Bool { let o = _accessor.offset(VT.HAS_SRP_AREA_OVER_MASS_M2_KG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VALID: Bool { let o = _accessor.offset(VT.VALID); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Process noise for COVARIANCE: on input, what propagation adds; on
+  ///  output, what the propagated COVARIANCE includes. Absent means none.
+  public var PROCESS_NOISE: PRWProcessNoise? { let o = _accessor.offset(VT.PROCESS_NOISE); return o == 0 ? nil : PRWProcessNoise(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+  ///  (the BDOT of a VCM).
+  public var DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double { let o = _accessor.offset(VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  public var HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool { let o = _accessor.offset(VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+  public var IN_TRACK_ACCELERATION_M_S2: Double { let o = _accessor.offset(VT.IN_TRACK_ACCELERATION_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  public var HAS_IN_TRACK_ACCELERATION_M_S2: Bool { let o = _accessor.offset(VT.HAS_IN_TRACK_ACCELERATION_M_S2); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPRWResidentState(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(ENTITY_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_HANDLE, def: 0, at: VT.ENTITY_HANDLE) }
+  public static func add(CATALOG_NUMBER: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CATALOG_NUMBER, def: 0, at: VT.CATALOG_NUMBER) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE, at: VT.STATE) }
+  public static func add(COORDINATE_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATE_SYSTEM, at: VT.COORDINATE_SYSTEM) }
+  public static func add(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VT.COVARIANCE) }
+  public static func add(MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS_KG, def: 0.0, at: VT.MASS_KG) }
+  public static func add(HAS_MASS_KG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MASS_KG, def: false,
+   at: VT.HAS_MASS_KG) }
+  public static func add(DRAG_AREA_OVER_MASS_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA_OVER_MASS_M2_KG, def: 0.0, at: VT.DRAG_AREA_OVER_MASS_M2_KG) }
+  public static func add(HAS_DRAG_AREA_OVER_MASS_M2_KG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DRAG_AREA_OVER_MASS_M2_KG, def: false,
+   at: VT.HAS_DRAG_AREA_OVER_MASS_M2_KG) }
+  public static func add(SRP_AREA_OVER_MASS_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_AREA_OVER_MASS_M2_KG, def: 0.0, at: VT.SRP_AREA_OVER_MASS_M2_KG) }
+  public static func add(HAS_SRP_AREA_OVER_MASS_M2_KG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SRP_AREA_OVER_MASS_M2_KG, def: false,
+   at: VT.HAS_SRP_AREA_OVER_MASS_M2_KG) }
+  public static func add(VALID: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID, def: true,
+   at: VT.VALID) }
+  public static func add(PROCESS_NOISE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESS_NOISE, at: VT.PROCESS_NOISE) }
+  public static func add(DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA_OVER_MASS_RATE_M2_KG_S, def: 0.0, at: VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S) }
+  public static func add(HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, def: false,
+   at: VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) }
+  public static func add(IN_TRACK_ACCELERATION_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IN_TRACK_ACCELERATION_M_S2, def: 0.0, at: VT.IN_TRACK_ACCELERATION_M_S2) }
+  public static func add(HAS_IN_TRACK_ACCELERATION_M_S2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_IN_TRACK_ACCELERATION_M_S2, def: false,
+   at: VT.HAS_IN_TRACK_ACCELERATION_M_S2) }
+  public static func endPRWResidentState(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [12, 14]); return end }
+  public static func createPRWResidentState(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset = Offset(),
+    ENTITY_HANDLE: UInt32 = 0,
+    CATALOG_NUMBER: UInt32 = 0,
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    STATEOffset STATE: Offset,
+    COORDINATE_SYSTEMOffset COORDINATE_SYSTEM: Offset,
+    COVARIANCEOffset COVARIANCE: Offset = Offset(),
+    MASS_KG: Double = 0.0,
+    HAS_MASS_KG: Bool = false,
+    DRAG_AREA_OVER_MASS_M2_KG: Double = 0.0,
+    HAS_DRAG_AREA_OVER_MASS_M2_KG: Bool = false,
+    SRP_AREA_OVER_MASS_M2_KG: Double = 0.0,
+    HAS_SRP_AREA_OVER_MASS_M2_KG: Bool = false,
+    VALID: Bool = true,
+    PROCESS_NOISEOffset PROCESS_NOISE: Offset = Offset(),
+    DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double = 0.0,
+    HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool = false,
+    IN_TRACK_ACCELERATION_M_S2: Double = 0.0,
+    HAS_IN_TRACK_ACCELERATION_M_S2: Bool = false
+  ) -> Offset {
+    let __start = PRWResidentState.startPRWResidentState(&fbb)
+    PRWResidentState.add(INSTANCE: INSTANCE, &fbb)
+    PRWResidentState.add(ENTITY_HANDLE: ENTITY_HANDLE, &fbb)
+    PRWResidentState.add(CATALOG_NUMBER: CATALOG_NUMBER, &fbb)
+    PRWResidentState.add(OBJECT_ID: OBJECT_ID, &fbb)
+    PRWResidentState.add(STATE: STATE, &fbb)
+    PRWResidentState.add(COORDINATE_SYSTEM: COORDINATE_SYSTEM, &fbb)
+    PRWResidentState.add(COVARIANCE: COVARIANCE, &fbb)
+    PRWResidentState.add(MASS_KG: MASS_KG, &fbb)
+    PRWResidentState.add(HAS_MASS_KG: HAS_MASS_KG, &fbb)
+    PRWResidentState.add(DRAG_AREA_OVER_MASS_M2_KG: DRAG_AREA_OVER_MASS_M2_KG, &fbb)
+    PRWResidentState.add(HAS_DRAG_AREA_OVER_MASS_M2_KG: HAS_DRAG_AREA_OVER_MASS_M2_KG, &fbb)
+    PRWResidentState.add(SRP_AREA_OVER_MASS_M2_KG: SRP_AREA_OVER_MASS_M2_KG, &fbb)
+    PRWResidentState.add(HAS_SRP_AREA_OVER_MASS_M2_KG: HAS_SRP_AREA_OVER_MASS_M2_KG, &fbb)
+    PRWResidentState.add(VALID: VALID, &fbb)
+    PRWResidentState.add(PROCESS_NOISE: PROCESS_NOISE, &fbb)
+    PRWResidentState.add(DRAG_AREA_OVER_MASS_RATE_M2_KG_S: DRAG_AREA_OVER_MASS_RATE_M2_KG_S, &fbb)
+    PRWResidentState.add(HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, &fbb)
+    PRWResidentState.add(IN_TRACK_ACCELERATION_M_S2: IN_TRACK_ACCELERATION_M_S2, &fbb)
+    PRWResidentState.add(HAS_IN_TRACK_ACCELERATION_M_S2: HAS_IN_TRACK_ACCELERATION_M_S2, &fbb)
+    return PRWResidentState.endPRWResidentState(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: false, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.ENTITY_HANDLE, fieldName: "ENTITY_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CATALOG_NUMBER, fieldName: "CATALOG_NUMBER", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE, fieldName: "STATE", required: true, type: ForwardOffset<FRMStateVector>.self)
+    try _v.visit(field: VT.COORDINATE_SYSTEM, fieldName: "COORDINATE_SYSTEM", required: true, type: ForwardOffset<RFMCoordinateSystem>.self)
+    try _v.visit(field: VT.COVARIANCE, fieldName: "COVARIANCE", required: false, type: ForwardOffset<PRWStateMatrix>.self)
+    try _v.visit(field: VT.MASS_KG, fieldName: "MASS_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_MASS_KG, fieldName: "HAS_MASS_KG", required: false, type: Bool.self)
+    try _v.visit(field: VT.DRAG_AREA_OVER_MASS_M2_KG, fieldName: "DRAG_AREA_OVER_MASS_M2_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_DRAG_AREA_OVER_MASS_M2_KG, fieldName: "HAS_DRAG_AREA_OVER_MASS_M2_KG", required: false, type: Bool.self)
+    try _v.visit(field: VT.SRP_AREA_OVER_MASS_M2_KG, fieldName: "SRP_AREA_OVER_MASS_M2_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_SRP_AREA_OVER_MASS_M2_KG, fieldName: "HAS_SRP_AREA_OVER_MASS_M2_KG", required: false, type: Bool.self)
+    try _v.visit(field: VT.VALID, fieldName: "VALID", required: false, type: Bool.self)
+    try _v.visit(field: VT.PROCESS_NOISE, fieldName: "PROCESS_NOISE", required: false, type: ForwardOffset<PRWProcessNoise>.self)
+    try _v.visit(field: VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S, fieldName: "DRAG_AREA_OVER_MASS_RATE_M2_KG_S", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, fieldName: "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", required: false, type: Bool.self)
+    try _v.visit(field: VT.IN_TRACK_ACCELERATION_M_S2, fieldName: "IN_TRACK_ACCELERATION_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_IN_TRACK_ACCELERATION_M_S2, fieldName: "HAS_IN_TRACK_ACCELERATION_M_S2", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Impulsive change at TDB epoch; delta velocity is m/s in the named basis.
+public struct PRWImpulse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWImpulse.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let DELTA_V: VOffset = 6
+    static let VECTOR_BASIS: VOffset = 8
+  }
+
+  public var EPOCH: TIMInstant! { let o = _accessor.offset(VT.EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DELTA_V: FRMVector3! { let o = _accessor.offset(VT.DELTA_V); return FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var VECTOR_BASIS: prwSteeringBasis { let o = _accessor.offset(VT.VECTOR_BASIS); return o == 0 ? .unspecified : prwSteeringBasis(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public static func startPRWImpulse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(DELTA_V: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DELTA_V, at: VT.DELTA_V) }
+  public static func add(VECTOR_BASIS: prwSteeringBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_BASIS.rawValue, def: 0, at: VT.VECTOR_BASIS) }
+  public static func endPRWImpulse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createPRWImpulse(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset,
+    DELTA_VOffset DELTA_V: Offset,
+    VECTOR_BASIS: prwSteeringBasis = .unspecified
+  ) -> Offset {
+    let __start = PRWImpulse.startPRWImpulse(&fbb)
+    PRWImpulse.add(EPOCH: EPOCH, &fbb)
+    PRWImpulse.add(DELTA_V: DELTA_V, &fbb)
+    PRWImpulse.add(VECTOR_BASIS: VECTOR_BASIS, &fbb)
+    return PRWImpulse.endPRWImpulse(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.DELTA_V, fieldName: "DELTA_V", required: true, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.VECTOR_BASIS, fieldName: "VECTOR_BASIS", required: false, type: prwSteeringBasis.self)
+    _v.finish()
+  }
+}
+
+///  Piecewise-linear throttle. Clock is seconds from initial propagation epoch.
+public struct PRWThrottlePoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWThrottlePoint.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ELAPSED_SECONDS: VOffset = 4
+    static let FRACTION: VOffset = 6
+  }
+
+  public var ELAPSED_SECONDS: Double { let o = _accessor.offset(VT.ELAPSED_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FRACTION: Double { let o = _accessor.offset(VT.FRACTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPRWThrottlePoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(ELAPSED_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELAPSED_SECONDS, def: 0.0, at: VT.ELAPSED_SECONDS) }
+  public static func add(FRACTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRACTION, def: 0.0, at: VT.FRACTION) }
+  public static func endPRWThrottlePoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWThrottlePoint(
+    _ fbb: inout FlatBufferBuilder,
+    ELAPSED_SECONDS: Double = 0.0,
+    FRACTION: Double = 0.0
+  ) -> Offset {
+    let __start = PRWThrottlePoint.startPRWThrottlePoint(&fbb)
+    PRWThrottlePoint.add(ELAPSED_SECONDS: ELAPSED_SECONDS, &fbb)
+    PRWThrottlePoint.add(FRACTION: FRACTION, &fbb)
+    return PRWThrottlePoint.endPRWThrottlePoint(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ELAPSED_SECONDS, fieldName: "ELAPSED_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.FRACTION, fieldName: "FRACTION", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Scheduled time gates an optional condition. At least one must be present.
+public struct PRWBurnBoundary: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWBurnBoundary.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ELAPSED_SECONDS: VOffset = 4
+    static let HAS_ELAPSED_SECONDS: VOffset = 6
+    static let CONDITION: VOffset = 8
+  }
+
+  public var ELAPSED_SECONDS: Double { let o = _accessor.offset(VT.ELAPSED_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when ELAPSED_SECONDS carries a value; false means absent.
+  public var HAS_ELAPSED_SECONDS: Bool { let o = _accessor.offset(VT.HAS_ELAPSED_SECONDS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  SI PCE predicate; direction and goal tolerance explicitly populated.
+  public var CONDITION: PCEParameterCondition? { let o = _accessor.offset(VT.CONDITION); return o == 0 ? nil : PCEParameterCondition(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPRWBurnBoundary(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(ELAPSED_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELAPSED_SECONDS, def: 0.0, at: VT.ELAPSED_SECONDS) }
+  public static func add(HAS_ELAPSED_SECONDS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_ELAPSED_SECONDS, def: false,
+   at: VT.HAS_ELAPSED_SECONDS) }
+  public static func add(CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITION, at: VT.CONDITION) }
+  public static func endPRWBurnBoundary(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWBurnBoundary(
+    _ fbb: inout FlatBufferBuilder,
+    ELAPSED_SECONDS: Double = 0.0,
+    HAS_ELAPSED_SECONDS: Bool = false,
+    CONDITIONOffset CONDITION: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWBurnBoundary.startPRWBurnBoundary(&fbb)
+    PRWBurnBoundary.add(ELAPSED_SECONDS: ELAPSED_SECONDS, &fbb)
+    PRWBurnBoundary.add(HAS_ELAPSED_SECONDS: HAS_ELAPSED_SECONDS, &fbb)
+    PRWBurnBoundary.add(CONDITION: CONDITION, &fbb)
+    return PRWBurnBoundary.endPRWBurnBoundary(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ELAPSED_SECONDS, fieldName: "ELAPSED_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_ELAPSED_SECONDS, fieldName: "HAS_ELAPSED_SECONDS", required: false, type: Bool.self)
+    try _v.visit(field: VT.CONDITION, fieldName: "CONDITION", required: false, type: ForwardOffset<PCEParameterCondition>.self)
+    _v.finish()
+  }
+}
+
+///  Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).
+///  VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).
+public struct PRWFiniteBurn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWFiniteBurn.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let START: VOffset = 4
+    static let STOP: VOffset = 6
+    static let THRUST_LAW: VOffset = 8
+    static let FORCE_NEWTONS: VOffset = 10
+    static let HAS_FORCE_NEWTONS: VOffset = 12
+    static let ACCELERATION_M_S2: VOffset = 14
+    static let HAS_ACCELERATION_M_S2: VOffset = 16
+    static let SPECIFIC_IMPULSE_SECONDS: VOffset = 18
+    static let VECTOR_BASIS: VOffset = 20
+    static let DIRECTION: VOffset = 22
+    static let DIRECTION_RATE: VOffset = 24
+    static let THROTTLE: VOffset = 26
+  }
+
+  public var START: PRWBurnBoundary! { let o = _accessor.offset(VT.START); return PRWBurnBoundary(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STOP: PRWBurnBoundary! { let o = _accessor.offset(VT.STOP); return PRWBurnBoundary(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var THRUST_LAW: prwThrustPrescription { let o = _accessor.offset(VT.THRUST_LAW); return o == 0 ? .unspecified : prwThrustPrescription(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var FORCE_NEWTONS: Double { let o = _accessor.offset(VT.FORCE_NEWTONS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when FORCE_NEWTONS carries a value; false means absent.
+  public var HAS_FORCE_NEWTONS: Bool { let o = _accessor.offset(VT.HAS_FORCE_NEWTONS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ACCELERATION_M_S2: Double { let o = _accessor.offset(VT.ACCELERATION_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when ACCELERATION_M_S2 carries a value; false means absent.
+  public var HAS_ACCELERATION_M_S2: Bool { let o = _accessor.offset(VT.HAS_ACCELERATION_M_S2); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SPECIFIC_IMPULSE_SECONDS: Double { let o = _accessor.offset(VT.SPECIFIC_IMPULSE_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VECTOR_BASIS: prwSteeringBasis { let o = _accessor.offset(VT.VECTOR_BASIS); return o == 0 ? .unspecified : prwSteeringBasis(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Dimensionless components; normalized after adding elapsed*time rate.
+  public var DIRECTION: FRMVector3? { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Direction-component change per second, not radians/second.
+  public var DIRECTION_RATE: FRMVector3? { let o = _accessor.offset(VT.DIRECTION_RATE); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var THROTTLE: FlatbufferVector<PRWThrottlePoint> { return _accessor.vector(at: VT.THROTTLE, byteSize: 4) }
+  public static func startPRWFiniteBurn(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START, at: VT.START) }
+  public static func add(STOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP, at: VT.STOP) }
+  public static func add(THRUST_LAW: prwThrustPrescription, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST_LAW.rawValue, def: 0, at: VT.THRUST_LAW) }
+  public static func add(FORCE_NEWTONS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORCE_NEWTONS, def: 0.0, at: VT.FORCE_NEWTONS) }
+  public static func add(HAS_FORCE_NEWTONS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_FORCE_NEWTONS, def: false,
+   at: VT.HAS_FORCE_NEWTONS) }
+  public static func add(ACCELERATION_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCELERATION_M_S2, def: 0.0, at: VT.ACCELERATION_M_S2) }
+  public static func add(HAS_ACCELERATION_M_S2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_ACCELERATION_M_S2, def: false,
+   at: VT.HAS_ACCELERATION_M_S2) }
+  public static func add(SPECIFIC_IMPULSE_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECIFIC_IMPULSE_SECONDS, def: 0.0, at: VT.SPECIFIC_IMPULSE_SECONDS) }
+  public static func add(VECTOR_BASIS: prwSteeringBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_BASIS.rawValue, def: 0, at: VT.VECTOR_BASIS) }
+  public static func add(DIRECTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DIRECTION, at: VT.DIRECTION) }
+  public static func add(DIRECTION_RATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DIRECTION_RATE, at: VT.DIRECTION_RATE) }
+  public static func addVectorOf(THROTTLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THROTTLE, at: VT.THROTTLE) }
+  public static func endPRWFiniteBurn(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createPRWFiniteBurn(
+    _ fbb: inout FlatBufferBuilder,
+    STARTOffset START: Offset,
+    STOPOffset STOP: Offset,
+    THRUST_LAW: prwThrustPrescription = .unspecified,
+    FORCE_NEWTONS: Double = 0.0,
+    HAS_FORCE_NEWTONS: Bool = false,
+    ACCELERATION_M_S2: Double = 0.0,
+    HAS_ACCELERATION_M_S2: Bool = false,
+    SPECIFIC_IMPULSE_SECONDS: Double = 0.0,
+    VECTOR_BASIS: prwSteeringBasis = .unspecified,
+    DIRECTIONOffset DIRECTION: Offset = Offset(),
+    DIRECTION_RATEOffset DIRECTION_RATE: Offset = Offset(),
+    THROTTLEVectorOffset THROTTLE: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWFiniteBurn.startPRWFiniteBurn(&fbb)
+    PRWFiniteBurn.add(START: START, &fbb)
+    PRWFiniteBurn.add(STOP: STOP, &fbb)
+    PRWFiniteBurn.add(THRUST_LAW: THRUST_LAW, &fbb)
+    PRWFiniteBurn.add(FORCE_NEWTONS: FORCE_NEWTONS, &fbb)
+    PRWFiniteBurn.add(HAS_FORCE_NEWTONS: HAS_FORCE_NEWTONS, &fbb)
+    PRWFiniteBurn.add(ACCELERATION_M_S2: ACCELERATION_M_S2, &fbb)
+    PRWFiniteBurn.add(HAS_ACCELERATION_M_S2: HAS_ACCELERATION_M_S2, &fbb)
+    PRWFiniteBurn.add(SPECIFIC_IMPULSE_SECONDS: SPECIFIC_IMPULSE_SECONDS, &fbb)
+    PRWFiniteBurn.add(VECTOR_BASIS: VECTOR_BASIS, &fbb)
+    PRWFiniteBurn.add(DIRECTION: DIRECTION, &fbb)
+    PRWFiniteBurn.add(DIRECTION_RATE: DIRECTION_RATE, &fbb)
+    PRWFiniteBurn.addVectorOf(THROTTLE: THROTTLE, &fbb)
+    return PRWFiniteBurn.endPRWFiniteBurn(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.START, fieldName: "START", required: true, type: ForwardOffset<PRWBurnBoundary>.self)
+    try _v.visit(field: VT.STOP, fieldName: "STOP", required: true, type: ForwardOffset<PRWBurnBoundary>.self)
+    try _v.visit(field: VT.THRUST_LAW, fieldName: "THRUST_LAW", required: false, type: prwThrustPrescription.self)
+    try _v.visit(field: VT.FORCE_NEWTONS, fieldName: "FORCE_NEWTONS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_FORCE_NEWTONS, fieldName: "HAS_FORCE_NEWTONS", required: false, type: Bool.self)
+    try _v.visit(field: VT.ACCELERATION_M_S2, fieldName: "ACCELERATION_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_ACCELERATION_M_S2, fieldName: "HAS_ACCELERATION_M_S2", required: false, type: Bool.self)
+    try _v.visit(field: VT.SPECIFIC_IMPULSE_SECONDS, fieldName: "SPECIFIC_IMPULSE_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.VECTOR_BASIS, fieldName: "VECTOR_BASIS", required: false, type: prwSteeringBasis.self)
+    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.DIRECTION_RATE, fieldName: "DIRECTION_RATE", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.THROTTLE, fieldName: "THROTTLE", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWThrottlePoint>, PRWThrottlePoint>>.self)
+    _v.finish()
+  }
+}
+
+///  Fixed endpoint propagation. Provider selected by the host's connected port.
+public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWExecutionRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INITIAL: VOffset = 4
+    static let TARGET_EPOCH: VOffset = 6
+    static let INTEGRATOR: VOffset = 8
+    static let FORCES: VOffset = 10
+    static let INCLUDE_STM: VOffset = 12
+    static let STM_TECHNIQUE: VOffset = 14
+    static let DENSITY_TREATMENT: VOffset = 16
+    static let INITIAL_COVARIANCE: VOffset = 18
+    static let INITIAL_MASS_COVARIANCE: VOffset = 20
+    static let SAMPLE_EPOCHS: VOffset = 22
+    static let IMPULSES: VOffset = 24
+    static let INCLUDE_MASS_DYNAMICS: VOffset = 26
+    static let FINITE_BURNS: VOffset = 28
+    static let PROCESS_NOISE: VOffset = 30
+    static let DYNAMIC_PARAMETERS: VOffset = 32
+  }
+
+  public var INITIAL: PRWResidentState! { let o = _accessor.offset(VT.INITIAL); return PRWResidentState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TARGET_EPOCH: TIMInstant! { let o = _accessor.offset(VT.TARGET_EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INTEGRATOR: PRWIntegratorSettings! { let o = _accessor.offset(VT.INTEGRATOR); return PRWIntegratorSettings(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var FORCES: PRWForceConfiguration! { let o = _accessor.offset(VT.FORCES); return PRWForceConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INCLUDE_STM: Bool { let o = _accessor.offset(VT.INCLUDE_STM); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var STM_TECHNIQUE: prwDerivativeTechnique { let o = _accessor.offset(VT.STM_TECHNIQUE); return o == 0 ? .analytic : prwDerivativeTechnique(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .analytic }
+  public var DENSITY_TREATMENT: prwDensityTreatment { let o = _accessor.offset(VT.DENSITY_TREATMENT); return o == 0 ? .neglected : prwDensityTreatment(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .neglected }
+  public var INITIAL_COVARIANCE: PRWStateMatrix? { let o = _accessor.offset(VT.INITIAL_COVARIANCE); return o == 0 ? nil : PRWStateMatrix(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INITIAL_MASS_COVARIANCE: PRWStateMatrix? { let o = _accessor.offset(VT.INITIAL_MASS_COVARIANCE); return o == 0 ? nil : PRWStateMatrix(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SAMPLE_EPOCHS: FlatbufferVector<TIMInstant> { return _accessor.vector(at: VT.SAMPLE_EPOCHS, byteSize: 4) }
+  public var IMPULSES: FlatbufferVector<PRWImpulse> { return _accessor.vector(at: VT.IMPULSES, byteSize: 4) }
+  ///  Explicitly selects 7-state integration even if FINITE_BURNS is empty.
+  public var INCLUDE_MASS_DYNAMICS: Bool { let o = _accessor.offset(VT.INCLUDE_MASS_DYNAMICS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FINITE_BURNS: FlatbufferVector<PRWFiniteBurn> { return _accessor.vector(at: VT.FINITE_BURNS, byteSize: 4) }
+  ///  Process noise added to the propagated covariance. Absent means none.
+  public var PROCESS_NOISE: PRWProcessNoise? { let o = _accessor.offset(VT.PROCESS_NOISE); return o == 0 ? nil : PRWProcessNoise(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Model parameters appended, in this order and without repeats, to
+  ///  INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+  ///  covariance carries their uncertainty and correlation (a VCM's 7x7 to
+  ///  10x10). Each must be active in FORCES. Empty means the state alone.
+  public var DYNAMIC_PARAMETERS: FlatbufferVector<prwDynamicParameter> { return _accessor.vector(at: VT.DYNAMIC_PARAMETERS, byteSize: 1) }
+  public static func startPRWExecutionRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  public static func add(INITIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL, at: VT.INITIAL) }
+  public static func add(TARGET_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_EPOCH, at: VT.TARGET_EPOCH) }
+  public static func add(INTEGRATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGRATOR, at: VT.INTEGRATOR) }
+  public static func add(FORCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORCES, at: VT.FORCES) }
+  public static func add(INCLUDE_STM: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLUDE_STM, def: false,
+   at: VT.INCLUDE_STM) }
+  public static func add(STM_TECHNIQUE: prwDerivativeTechnique, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STM_TECHNIQUE.rawValue, def: 1, at: VT.STM_TECHNIQUE) }
+  public static func add(DENSITY_TREATMENT: prwDensityTreatment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_TREATMENT.rawValue, def: 1, at: VT.DENSITY_TREATMENT) }
+  public static func add(INITIAL_COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_COVARIANCE, at: VT.INITIAL_COVARIANCE) }
+  public static func add(INITIAL_MASS_COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_MASS_COVARIANCE, at: VT.INITIAL_MASS_COVARIANCE) }
+  public static func addVectorOf(SAMPLE_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_EPOCHS, at: VT.SAMPLE_EPOCHS) }
+  public static func addVectorOf(IMPULSES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPULSES, at: VT.IMPULSES) }
+  public static func add(INCLUDE_MASS_DYNAMICS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLUDE_MASS_DYNAMICS, def: false,
+   at: VT.INCLUDE_MASS_DYNAMICS) }
+  public static func addVectorOf(FINITE_BURNS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FINITE_BURNS, at: VT.FINITE_BURNS) }
+  public static func add(PROCESS_NOISE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESS_NOISE, at: VT.PROCESS_NOISE) }
+  public static func addVectorOf(DYNAMIC_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DYNAMIC_PARAMETERS, at: VT.DYNAMIC_PARAMETERS) }
+  public static func endPRWExecutionRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8, 10]); return end }
+  public static func createPRWExecutionRequest(
+    _ fbb: inout FlatBufferBuilder,
+    INITIALOffset INITIAL: Offset,
+    TARGET_EPOCHOffset TARGET_EPOCH: Offset,
+    INTEGRATOROffset INTEGRATOR: Offset,
+    FORCESOffset FORCES: Offset,
+    INCLUDE_STM: Bool = false,
+    STM_TECHNIQUE: prwDerivativeTechnique = .analytic,
+    DENSITY_TREATMENT: prwDensityTreatment = .neglected,
+    INITIAL_COVARIANCEOffset INITIAL_COVARIANCE: Offset = Offset(),
+    INITIAL_MASS_COVARIANCEOffset INITIAL_MASS_COVARIANCE: Offset = Offset(),
+    SAMPLE_EPOCHSVectorOffset SAMPLE_EPOCHS: Offset = Offset(),
+    IMPULSESVectorOffset IMPULSES: Offset = Offset(),
+    INCLUDE_MASS_DYNAMICS: Bool = false,
+    FINITE_BURNSVectorOffset FINITE_BURNS: Offset = Offset(),
+    PROCESS_NOISEOffset PROCESS_NOISE: Offset = Offset(),
+    DYNAMIC_PARAMETERSVectorOffset DYNAMIC_PARAMETERS: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWExecutionRequest.startPRWExecutionRequest(&fbb)
+    PRWExecutionRequest.add(INITIAL: INITIAL, &fbb)
+    PRWExecutionRequest.add(TARGET_EPOCH: TARGET_EPOCH, &fbb)
+    PRWExecutionRequest.add(INTEGRATOR: INTEGRATOR, &fbb)
+    PRWExecutionRequest.add(FORCES: FORCES, &fbb)
+    PRWExecutionRequest.add(INCLUDE_STM: INCLUDE_STM, &fbb)
+    PRWExecutionRequest.add(STM_TECHNIQUE: STM_TECHNIQUE, &fbb)
+    PRWExecutionRequest.add(DENSITY_TREATMENT: DENSITY_TREATMENT, &fbb)
+    PRWExecutionRequest.add(INITIAL_COVARIANCE: INITIAL_COVARIANCE, &fbb)
+    PRWExecutionRequest.add(INITIAL_MASS_COVARIANCE: INITIAL_MASS_COVARIANCE, &fbb)
+    PRWExecutionRequest.addVectorOf(SAMPLE_EPOCHS: SAMPLE_EPOCHS, &fbb)
+    PRWExecutionRequest.addVectorOf(IMPULSES: IMPULSES, &fbb)
+    PRWExecutionRequest.add(INCLUDE_MASS_DYNAMICS: INCLUDE_MASS_DYNAMICS, &fbb)
+    PRWExecutionRequest.addVectorOf(FINITE_BURNS: FINITE_BURNS, &fbb)
+    PRWExecutionRequest.add(PROCESS_NOISE: PROCESS_NOISE, &fbb)
+    PRWExecutionRequest.addVectorOf(DYNAMIC_PARAMETERS: DYNAMIC_PARAMETERS, &fbb)
+    return PRWExecutionRequest.endPRWExecutionRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INITIAL, fieldName: "INITIAL", required: true, type: ForwardOffset<PRWResidentState>.self)
+    try _v.visit(field: VT.TARGET_EPOCH, fieldName: "TARGET_EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.INTEGRATOR, fieldName: "INTEGRATOR", required: true, type: ForwardOffset<PRWIntegratorSettings>.self)
+    try _v.visit(field: VT.FORCES, fieldName: "FORCES", required: true, type: ForwardOffset<PRWForceConfiguration>.self)
+    try _v.visit(field: VT.INCLUDE_STM, fieldName: "INCLUDE_STM", required: false, type: Bool.self)
+    try _v.visit(field: VT.STM_TECHNIQUE, fieldName: "STM_TECHNIQUE", required: false, type: prwDerivativeTechnique.self)
+    try _v.visit(field: VT.DENSITY_TREATMENT, fieldName: "DENSITY_TREATMENT", required: false, type: prwDensityTreatment.self)
+    try _v.visit(field: VT.INITIAL_COVARIANCE, fieldName: "INITIAL_COVARIANCE", required: false, type: ForwardOffset<PRWStateMatrix>.self)
+    try _v.visit(field: VT.INITIAL_MASS_COVARIANCE, fieldName: "INITIAL_MASS_COVARIANCE", required: false, type: ForwardOffset<PRWStateMatrix>.self)
+    try _v.visit(field: VT.SAMPLE_EPOCHS, fieldName: "SAMPLE_EPOCHS", required: false, type: ForwardOffset<Vector<ForwardOffset<TIMInstant>, TIMInstant>>.self)
+    try _v.visit(field: VT.IMPULSES, fieldName: "IMPULSES", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWImpulse>, PRWImpulse>>.self)
+    try _v.visit(field: VT.INCLUDE_MASS_DYNAMICS, fieldName: "INCLUDE_MASS_DYNAMICS", required: false, type: Bool.self)
+    try _v.visit(field: VT.FINITE_BURNS, fieldName: "FINITE_BURNS", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWFiniteBurn>, PRWFiniteBurn>>.self)
+    try _v.visit(field: VT.PROCESS_NOISE, fieldName: "PROCESS_NOISE", required: false, type: ForwardOffset<PRWProcessNoise>.self)
+    try _v.visit(field: VT.DYNAMIC_PARAMETERS, fieldName: "DYNAMIC_PARAMETERS", required: false, type: ForwardOffset<Vector<prwDynamicParameter, prwDynamicParameter>>.self)
+    _v.finish()
+  }
+}
+
+///  Burn times absent until reached; zero means an actual edge at initial epoch.
+public struct PRWBurnReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWBurnReport.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let BURN_INDEX: VOffset = 4
+    static let STARTED: VOffset = 6
+    static let STOPPED: VOffset = 8
+    static let START_BY_EVENT: VOffset = 10
+    static let STOP_BY_EVENT: VOffset = 12
+    static let START_SECONDS: VOffset = 14
+    static let HAS_START_SECONDS: VOffset = 16
+    static let STOP_SECONDS: VOffset = 18
+    static let HAS_STOP_SECONDS: VOffset = 20
+    static let START_EPOCH: VOffset = 22
+    static let STOP_EPOCH: VOffset = 24
+    static let DELTA_V_M_S: VOffset = 26
+    static let PROPELLANT_KG: VOffset = 28
+  }
+
+  public var BURN_INDEX: UInt32 { let o = _accessor.offset(VT.BURN_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var STARTED: Bool { let o = _accessor.offset(VT.STARTED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var STOPPED: Bool { let o = _accessor.offset(VT.STOPPED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var START_BY_EVENT: Bool { let o = _accessor.offset(VT.START_BY_EVENT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var STOP_BY_EVENT: Bool { let o = _accessor.offset(VT.STOP_BY_EVENT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var START_SECONDS: Double { let o = _accessor.offset(VT.START_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when START_SECONDS carries a value; false means absent.
+  public var HAS_START_SECONDS: Bool { let o = _accessor.offset(VT.HAS_START_SECONDS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var STOP_SECONDS: Double { let o = _accessor.offset(VT.STOP_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when STOP_SECONDS carries a value; false means absent.
+  public var HAS_STOP_SECONDS: Bool { let o = _accessor.offset(VT.HAS_STOP_SECONDS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var START_EPOCH: TIMInstant? { let o = _accessor.offset(VT.START_EPOCH); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STOP_EPOCH: TIMInstant? { let o = _accessor.offset(VT.STOP_EPOCH); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Integral of thrust acceleration magnitude, m/s; not vector net delta-v.
+  public var DELTA_V_M_S: Double { let o = _accessor.offset(VT.DELTA_V_M_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PROPELLANT_KG: Double { let o = _accessor.offset(VT.PROPELLANT_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPRWBurnReport(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(BURN_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURN_INDEX, def: 0, at: VT.BURN_INDEX) }
+  public static func add(STARTED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STARTED, def: false,
+   at: VT.STARTED) }
+  public static func add(STOPPED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOPPED, def: false,
+   at: VT.STOPPED) }
+  public static func add(START_BY_EVENT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_BY_EVENT, def: false,
+   at: VT.START_BY_EVENT) }
+  public static func add(STOP_BY_EVENT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_BY_EVENT, def: false,
+   at: VT.STOP_BY_EVENT) }
+  public static func add(START_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_SECONDS, def: 0.0, at: VT.START_SECONDS) }
+  public static func add(HAS_START_SECONDS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_START_SECONDS, def: false,
+   at: VT.HAS_START_SECONDS) }
+  public static func add(STOP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_SECONDS, def: 0.0, at: VT.STOP_SECONDS) }
+  public static func add(HAS_STOP_SECONDS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_STOP_SECONDS, def: false,
+   at: VT.HAS_STOP_SECONDS) }
+  public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
+  public static func add(STOP_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_EPOCH, at: VT.STOP_EPOCH) }
+  public static func add(DELTA_V_M_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_M_S, def: 0.0, at: VT.DELTA_V_M_S) }
+  public static func add(PROPELLANT_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPELLANT_KG, def: 0.0, at: VT.PROPELLANT_KG) }
+  public static func endPRWBurnReport(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWBurnReport(
+    _ fbb: inout FlatBufferBuilder,
+    BURN_INDEX: UInt32 = 0,
+    STARTED: Bool = false,
+    STOPPED: Bool = false,
+    START_BY_EVENT: Bool = false,
+    STOP_BY_EVENT: Bool = false,
+    START_SECONDS: Double = 0.0,
+    HAS_START_SECONDS: Bool = false,
+    STOP_SECONDS: Double = 0.0,
+    HAS_STOP_SECONDS: Bool = false,
+    START_EPOCHOffset START_EPOCH: Offset = Offset(),
+    STOP_EPOCHOffset STOP_EPOCH: Offset = Offset(),
+    DELTA_V_M_S: Double = 0.0,
+    PROPELLANT_KG: Double = 0.0
+  ) -> Offset {
+    let __start = PRWBurnReport.startPRWBurnReport(&fbb)
+    PRWBurnReport.add(BURN_INDEX: BURN_INDEX, &fbb)
+    PRWBurnReport.add(STARTED: STARTED, &fbb)
+    PRWBurnReport.add(STOPPED: STOPPED, &fbb)
+    PRWBurnReport.add(START_BY_EVENT: START_BY_EVENT, &fbb)
+    PRWBurnReport.add(STOP_BY_EVENT: STOP_BY_EVENT, &fbb)
+    PRWBurnReport.add(START_SECONDS: START_SECONDS, &fbb)
+    PRWBurnReport.add(HAS_START_SECONDS: HAS_START_SECONDS, &fbb)
+    PRWBurnReport.add(STOP_SECONDS: STOP_SECONDS, &fbb)
+    PRWBurnReport.add(HAS_STOP_SECONDS: HAS_STOP_SECONDS, &fbb)
+    PRWBurnReport.add(START_EPOCH: START_EPOCH, &fbb)
+    PRWBurnReport.add(STOP_EPOCH: STOP_EPOCH, &fbb)
+    PRWBurnReport.add(DELTA_V_M_S: DELTA_V_M_S, &fbb)
+    PRWBurnReport.add(PROPELLANT_KG: PROPELLANT_KG, &fbb)
+    return PRWBurnReport.endPRWBurnReport(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.BURN_INDEX, fieldName: "BURN_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.STARTED, fieldName: "STARTED", required: false, type: Bool.self)
+    try _v.visit(field: VT.STOPPED, fieldName: "STOPPED", required: false, type: Bool.self)
+    try _v.visit(field: VT.START_BY_EVENT, fieldName: "START_BY_EVENT", required: false, type: Bool.self)
+    try _v.visit(field: VT.STOP_BY_EVENT, fieldName: "STOP_BY_EVENT", required: false, type: Bool.self)
+    try _v.visit(field: VT.START_SECONDS, fieldName: "START_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_START_SECONDS, fieldName: "HAS_START_SECONDS", required: false, type: Bool.self)
+    try _v.visit(field: VT.STOP_SECONDS, fieldName: "STOP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_STOP_SECONDS, fieldName: "HAS_STOP_SECONDS", required: false, type: Bool.self)
+    try _v.visit(field: VT.START_EPOCH, fieldName: "START_EPOCH", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.STOP_EPOCH, fieldName: "STOP_EPOCH", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.DELTA_V_M_S, fieldName: "DELTA_V_M_S", required: false, type: Double.self)
+    try _v.visit(field: VT.PROPELLANT_KG, fieldName: "PROPELLANT_KG", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct PRWPropagationSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWPropagationSample.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let STATE: VOffset = 4
+    static let STM: VOffset = 6
+    static let MASS_STM: VOffset = 8
+    static let COVARIANCE: VOffset = 10
+    static let MASS_COVARIANCE: VOffset = 12
+    static let ACCEPTED_STEPS: VOffset = 14
+    static let REJECTED_STEPS: VOffset = 16
+    static let BURNS: VOffset = 18
+    static let PROCESS_NOISE: VOffset = 20
+  }
+
+  public var STATE: PRWResidentState! { let o = _accessor.offset(VT.STATE); return PRWResidentState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Both STMs cumulative from request initial epoch; SI state units.
+  public var STM: PRWStateMatrix? { let o = _accessor.offset(VT.STM); return o == 0 ? nil : PRWStateMatrix(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MASS_STM: PRWStateMatrix? { let o = _accessor.offset(VT.MASS_STM); return o == 0 ? nil : PRWStateMatrix(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COVARIANCE: PRWStateMatrix? { let o = _accessor.offset(VT.COVARIANCE); return o == 0 ? nil : PRWStateMatrix(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MASS_COVARIANCE: PRWStateMatrix? { let o = _accessor.offset(VT.MASS_COVARIANCE); return o == 0 ? nil : PRWStateMatrix(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ACCEPTED_STEPS: UInt64 { let o = _accessor.offset(VT.ACCEPTED_STEPS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var REJECTED_STEPS: UInt64 { let o = _accessor.offset(VT.REJECTED_STEPS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var BURNS: FlatbufferVector<PRWBurnReport> { return _accessor.vector(at: VT.BURNS, byteSize: 4) }
+  ///  The process noise COVARIANCE includes. Absent means none.
+  public var PROCESS_NOISE: PRWProcessNoise? { let o = _accessor.offset(VT.PROCESS_NOISE); return o == 0 ? nil : PRWProcessNoise(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPRWPropagationSample(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE, at: VT.STATE) }
+  public static func add(STM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STM, at: VT.STM) }
+  public static func add(MASS_STM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MASS_STM, at: VT.MASS_STM) }
+  public static func add(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VT.COVARIANCE) }
+  public static func add(MASS_COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MASS_COVARIANCE, at: VT.MASS_COVARIANCE) }
+  public static func add(ACCEPTED_STEPS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCEPTED_STEPS, def: 0, at: VT.ACCEPTED_STEPS) }
+  public static func add(REJECTED_STEPS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REJECTED_STEPS, def: 0, at: VT.REJECTED_STEPS) }
+  public static func addVectorOf(BURNS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BURNS, at: VT.BURNS) }
+  public static func add(PROCESS_NOISE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESS_NOISE, at: VT.PROCESS_NOISE) }
+  public static func endPRWPropagationSample(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWPropagationSample(
+    _ fbb: inout FlatBufferBuilder,
+    STATEOffset STATE: Offset,
+    STMOffset STM: Offset = Offset(),
+    MASS_STMOffset MASS_STM: Offset = Offset(),
+    COVARIANCEOffset COVARIANCE: Offset = Offset(),
+    MASS_COVARIANCEOffset MASS_COVARIANCE: Offset = Offset(),
+    ACCEPTED_STEPS: UInt64 = 0,
+    REJECTED_STEPS: UInt64 = 0,
+    BURNSVectorOffset BURNS: Offset = Offset(),
+    PROCESS_NOISEOffset PROCESS_NOISE: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWPropagationSample.startPRWPropagationSample(&fbb)
+    PRWPropagationSample.add(STATE: STATE, &fbb)
+    PRWPropagationSample.add(STM: STM, &fbb)
+    PRWPropagationSample.add(MASS_STM: MASS_STM, &fbb)
+    PRWPropagationSample.add(COVARIANCE: COVARIANCE, &fbb)
+    PRWPropagationSample.add(MASS_COVARIANCE: MASS_COVARIANCE, &fbb)
+    PRWPropagationSample.add(ACCEPTED_STEPS: ACCEPTED_STEPS, &fbb)
+    PRWPropagationSample.add(REJECTED_STEPS: REJECTED_STEPS, &fbb)
+    PRWPropagationSample.addVectorOf(BURNS: BURNS, &fbb)
+    PRWPropagationSample.add(PROCESS_NOISE: PROCESS_NOISE, &fbb)
+    return PRWPropagationSample.endPRWPropagationSample(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.STATE, fieldName: "STATE", required: true, type: ForwardOffset<PRWResidentState>.self)
+    try _v.visit(field: VT.STM, fieldName: "STM", required: false, type: ForwardOffset<PRWStateMatrix>.self)
+    try _v.visit(field: VT.MASS_STM, fieldName: "MASS_STM", required: false, type: ForwardOffset<PRWStateMatrix>.self)
+    try _v.visit(field: VT.COVARIANCE, fieldName: "COVARIANCE", required: false, type: ForwardOffset<PRWStateMatrix>.self)
+    try _v.visit(field: VT.MASS_COVARIANCE, fieldName: "MASS_COVARIANCE", required: false, type: ForwardOffset<PRWStateMatrix>.self)
+    try _v.visit(field: VT.ACCEPTED_STEPS, fieldName: "ACCEPTED_STEPS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.REJECTED_STEPS, fieldName: "REJECTED_STEPS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.BURNS, fieldName: "BURNS", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWBurnReport>, PRWBurnReport>>.self)
+    try _v.visit(field: VT.PROCESS_NOISE, fieldName: "PROCESS_NOISE", required: false, type: ForwardOffset<PRWProcessNoise>.self)
+    _v.finish()
+  }
+}
+
+public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWExecutionResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let FINAL_SAMPLE: VOffset = 4
+    static let SAMPLES: VOffset = 6
+    static let ELAPSED_SECONDS: VOffset = 8
+    static let EPHEMERIS_SOURCE: VOffset = 10
+    static let STM_TECHNIQUE: VOffset = 12
+    static let DENSITY_TREATMENT: VOffset = 14
+    static let DYNAMIC_PARAMETERS: VOffset = 16
+  }
+
+  public var FINAL_SAMPLE: PRWPropagationSample! { let o = _accessor.offset(VT.FINAL_SAMPLE); return PRWPropagationSample(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SAMPLES: FlatbufferVector<PRWPropagationSample> { return _accessor.vector(at: VT.SAMPLES, byteSize: 4) }
+  public var ELAPSED_SECONDS: Double { let o = _accessor.offset(VT.ELAPSED_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EPHEMERIS_SOURCE: String! { let o = _accessor.offset(VT.EPHEMERIS_SOURCE); return _accessor.string(at: o) }
+  public var EPHEMERIS_SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.EPHEMERIS_SOURCE) }
+  public var STM_TECHNIQUE: prwDerivativeTechnique { let o = _accessor.offset(VT.STM_TECHNIQUE); return o == 0 ? .unspecified : prwDerivativeTechnique(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var DENSITY_TREATMENT: prwDensityTreatment { let o = _accessor.offset(VT.DENSITY_TREATMENT); return o == 0 ? .unspecified : prwDensityTreatment(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  The parameters the samples' STM and COVARIANCE carry after the state.
+  public var DYNAMIC_PARAMETERS: FlatbufferVector<prwDynamicParameter> { return _accessor.vector(at: VT.DYNAMIC_PARAMETERS, byteSize: 1) }
+  public static func startPRWExecutionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(FINAL_SAMPLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FINAL_SAMPLE, at: VT.FINAL_SAMPLE) }
+  public static func addVectorOf(SAMPLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLES, at: VT.SAMPLES) }
+  public static func add(ELAPSED_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELAPSED_SECONDS, def: 0.0, at: VT.ELAPSED_SECONDS) }
+  public static func add(EPHEMERIS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_SOURCE, at: VT.EPHEMERIS_SOURCE) }
+  public static func add(STM_TECHNIQUE: prwDerivativeTechnique, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STM_TECHNIQUE.rawValue, def: 0, at: VT.STM_TECHNIQUE) }
+  public static func add(DENSITY_TREATMENT: prwDensityTreatment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_TREATMENT.rawValue, def: 0, at: VT.DENSITY_TREATMENT) }
+  public static func addVectorOf(DYNAMIC_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DYNAMIC_PARAMETERS, at: VT.DYNAMIC_PARAMETERS) }
+  public static func endPRWExecutionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10]); return end }
+  public static func createPRWExecutionResult(
+    _ fbb: inout FlatBufferBuilder,
+    FINAL_SAMPLEOffset FINAL_SAMPLE: Offset,
+    SAMPLESVectorOffset SAMPLES: Offset = Offset(),
+    ELAPSED_SECONDS: Double = 0.0,
+    EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset,
+    STM_TECHNIQUE: prwDerivativeTechnique = .unspecified,
+    DENSITY_TREATMENT: prwDensityTreatment = .unspecified,
+    DYNAMIC_PARAMETERSVectorOffset DYNAMIC_PARAMETERS: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWExecutionResult.startPRWExecutionResult(&fbb)
+    PRWExecutionResult.add(FINAL_SAMPLE: FINAL_SAMPLE, &fbb)
+    PRWExecutionResult.addVectorOf(SAMPLES: SAMPLES, &fbb)
+    PRWExecutionResult.add(ELAPSED_SECONDS: ELAPSED_SECONDS, &fbb)
+    PRWExecutionResult.add(EPHEMERIS_SOURCE: EPHEMERIS_SOURCE, &fbb)
+    PRWExecutionResult.add(STM_TECHNIQUE: STM_TECHNIQUE, &fbb)
+    PRWExecutionResult.add(DENSITY_TREATMENT: DENSITY_TREATMENT, &fbb)
+    PRWExecutionResult.addVectorOf(DYNAMIC_PARAMETERS: DYNAMIC_PARAMETERS, &fbb)
+    return PRWExecutionResult.endPRWExecutionResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.FINAL_SAMPLE, fieldName: "FINAL_SAMPLE", required: true, type: ForwardOffset<PRWPropagationSample>.self)
+    try _v.visit(field: VT.SAMPLES, fieldName: "SAMPLES", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWPropagationSample>, PRWPropagationSample>>.self)
+    try _v.visit(field: VT.ELAPSED_SECONDS, fieldName: "ELAPSED_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.EPHEMERIS_SOURCE, fieldName: "EPHEMERIS_SOURCE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STM_TECHNIQUE, fieldName: "STM_TECHNIQUE", required: false, type: prwDerivativeTechnique.self)
+    try _v.visit(field: VT.DENSITY_TREATMENT, fieldName: "DENSITY_TREATMENT", required: false, type: prwDensityTreatment.self)
+    try _v.visit(field: VT.DYNAMIC_PARAMETERS, fieldName: "DYNAMIC_PARAMETERS", required: false, type: ForwardOffset<Vector<prwDynamicParameter, prwDynamicParameter>>.self)
+    _v.finish()
+  }
+}
+
+///  Portable batch request: no output pointer; state records returned via TAB.
+public struct PRWResidentRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWResidentRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let TARGET_EPOCH: VOffset = 6
+    static let ENTITY_HANDLES: VOffset = 8
+    static let MAXIMUM_COUNT: VOffset = 10
+    static let TARGET_COORDINATE_SYSTEM: VOffset = 12
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TARGET_EPOCH: TIMInstant! { let o = _accessor.offset(VT.TARGET_EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ENTITY_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.ENTITY_HANDLES, byteSize: 4) }
+  public func withUnsafePointerToEntityHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENTITY_HANDLES, body: body) }
+  public var MAXIMUM_COUNT: UInt32 { let o = _accessor.offset(VT.MAXIMUM_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TARGET_COORDINATE_SYSTEM: RFMCoordinateSystem! { let o = _accessor.offset(VT.TARGET_COORDINATE_SYSTEM); return RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPRWResidentRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(TARGET_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_EPOCH, at: VT.TARGET_EPOCH) }
+  public static func addVectorOf(ENTITY_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_HANDLES, at: VT.ENTITY_HANDLES) }
+  public static func add(MAXIMUM_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_COUNT, def: 0, at: VT.MAXIMUM_COUNT) }
+  public static func add(TARGET_COORDINATE_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_COORDINATE_SYSTEM, at: VT.TARGET_COORDINATE_SYSTEM) }
+  public static func endPRWResidentRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 12]); return end }
+  public static func createPRWResidentRequest(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    TARGET_EPOCHOffset TARGET_EPOCH: Offset,
+    ENTITY_HANDLESVectorOffset ENTITY_HANDLES: Offset = Offset(),
+    MAXIMUM_COUNT: UInt32 = 0,
+    TARGET_COORDINATE_SYSTEMOffset TARGET_COORDINATE_SYSTEM: Offset
+  ) -> Offset {
+    let __start = PRWResidentRequest.startPRWResidentRequest(&fbb)
+    PRWResidentRequest.add(INSTANCE: INSTANCE, &fbb)
+    PRWResidentRequest.add(TARGET_EPOCH: TARGET_EPOCH, &fbb)
+    PRWResidentRequest.addVectorOf(ENTITY_HANDLES: ENTITY_HANDLES, &fbb)
+    PRWResidentRequest.add(MAXIMUM_COUNT: MAXIMUM_COUNT, &fbb)
+    PRWResidentRequest.add(TARGET_COORDINATE_SYSTEM: TARGET_COORDINATE_SYSTEM, &fbb)
+    return PRWResidentRequest.endPRWResidentRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.TARGET_EPOCH, fieldName: "TARGET_EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.ENTITY_HANDLES, fieldName: "ENTITY_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.MAXIMUM_COUNT, fieldName: "MAXIMUM_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TARGET_COORDINATE_SYSTEM, fieldName: "TARGET_COORDINATE_SYSTEM", required: true, type: ForwardOffset<RFMCoordinateSystem>.self)
+    _v.finish()
+  }
+}
+
+///  All epochs explicit; duration seconds >=0; empty handles means all resident.
+public struct PRWPrepareRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWPrepareRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let CATALOG_HANDLE: VOffset = 6
+    static let SOURCE_HANDLES: VOffset = 8
+    static let START_EPOCH: VOffset = 10
+    static let DURATION_SECONDS: VOffset = 12
+    static let PROFILE: VOffset = 14
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CATALOG_HANDLE: UInt32 { let o = _accessor.offset(VT.CATALOG_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCE_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.SOURCE_HANDLES, byteSize: 4) }
+  public func withUnsafePointerToSourceHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SOURCE_HANDLES, body: body) }
+  public var START_EPOCH: TIMInstant! { let o = _accessor.offset(VT.START_EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DURATION_SECONDS: Double { let o = _accessor.offset(VT.DURATION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Provider-advertised profile name; unrecognized nonempty values fail.
+  public var PROFILE: String? { let o = _accessor.offset(VT.PROFILE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROFILESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROFILE) }
+  public static func startPRWPrepareRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(CATALOG_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CATALOG_HANDLE, def: 0, at: VT.CATALOG_HANDLE) }
+  public static func addVectorOf(SOURCE_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_HANDLES, at: VT.SOURCE_HANDLES) }
+  public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
+  public static func add(DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_SECONDS, def: 0.0, at: VT.DURATION_SECONDS) }
+  public static func add(PROFILE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROFILE, at: VT.PROFILE) }
+  public static func endPRWPrepareRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10]); return end }
+  public static func createPRWPrepareRequest(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    CATALOG_HANDLE: UInt32 = 0,
+    SOURCE_HANDLESVectorOffset SOURCE_HANDLES: Offset = Offset(),
+    START_EPOCHOffset START_EPOCH: Offset,
+    DURATION_SECONDS: Double = 0.0,
+    PROFILEOffset PROFILE: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWPrepareRequest.startPRWPrepareRequest(&fbb)
+    PRWPrepareRequest.add(INSTANCE: INSTANCE, &fbb)
+    PRWPrepareRequest.add(CATALOG_HANDLE: CATALOG_HANDLE, &fbb)
+    PRWPrepareRequest.addVectorOf(SOURCE_HANDLES: SOURCE_HANDLES, &fbb)
+    PRWPrepareRequest.add(START_EPOCH: START_EPOCH, &fbb)
+    PRWPrepareRequest.add(DURATION_SECONDS: DURATION_SECONDS, &fbb)
+    PRWPrepareRequest.add(PROFILE: PROFILE, &fbb)
+    return PRWPrepareRequest.endPRWPrepareRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.CATALOG_HANDLE, fieldName: "CATALOG_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_HANDLES, fieldName: "SOURCE_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.START_EPOCH, fieldName: "START_EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.DURATION_SECONDS, fieldName: "DURATION_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.PROFILE, fieldName: "PROFILE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+public struct PRWFitQuality: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWFitQuality.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EVIDENCE_KIND: VOffset = 4
+    static let MAXIMUM_POSITION_ERROR_M: VOffset = 6
+    static let HAS_MAXIMUM_POSITION_ERROR_M: VOffset = 8
+    static let MAXIMUM_VELOCITY_ERROR_M_S: VOffset = 10
+    static let HAS_MAXIMUM_VELOCITY_ERROR_M_S: VOffset = 12
+    static let METHOD: VOffset = 14
+    static let REFERENCE_CONTENT_ID: VOffset = 16
+  }
+
+  public var EVIDENCE_KIND: prwQualityEvidence { let o = _accessor.offset(VT.EVIDENCE_KIND); return o == 0 ? .unmeasured : prwQualityEvidence(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unmeasured }
+  ///  SI metres and metres/second; absent when UNMEASURED.
+  public var MAXIMUM_POSITION_ERROR_M: Double { let o = _accessor.offset(VT.MAXIMUM_POSITION_ERROR_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when MAXIMUM_POSITION_ERROR_M carries a value; false means absent.
+  public var HAS_MAXIMUM_POSITION_ERROR_M: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_POSITION_ERROR_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var MAXIMUM_VELOCITY_ERROR_M_S: Double { let o = _accessor.offset(VT.MAXIMUM_VELOCITY_ERROR_M_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when MAXIMUM_VELOCITY_ERROR_M_S carries a value; false means absent.
+  public var HAS_MAXIMUM_VELOCITY_ERROR_M_S: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_VELOCITY_ERROR_M_S); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var METHOD: String? { let o = _accessor.offset(VT.METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.METHOD) }
+  public var REFERENCE_CONTENT_ID: String? { let o = _accessor.offset(VT.REFERENCE_CONTENT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCE_CONTENT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_CONTENT_ID) }
+  public static func startPRWFitQuality(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(EVIDENCE_KIND: prwQualityEvidence, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVIDENCE_KIND.rawValue, def: 0, at: VT.EVIDENCE_KIND) }
+  public static func add(MAXIMUM_POSITION_ERROR_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_POSITION_ERROR_M, def: 0.0, at: VT.MAXIMUM_POSITION_ERROR_M) }
+  public static func add(HAS_MAXIMUM_POSITION_ERROR_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_POSITION_ERROR_M, def: false,
+   at: VT.HAS_MAXIMUM_POSITION_ERROR_M) }
+  public static func add(MAXIMUM_VELOCITY_ERROR_M_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_VELOCITY_ERROR_M_S, def: 0.0, at: VT.MAXIMUM_VELOCITY_ERROR_M_S) }
+  public static func add(HAS_MAXIMUM_VELOCITY_ERROR_M_S: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_VELOCITY_ERROR_M_S, def: false,
+   at: VT.HAS_MAXIMUM_VELOCITY_ERROR_M_S) }
+  public static func add(METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD, at: VT.METHOD) }
+  public static func add(REFERENCE_CONTENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_CONTENT_ID, at: VT.REFERENCE_CONTENT_ID) }
+  public static func endPRWFitQuality(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWFitQuality(
+    _ fbb: inout FlatBufferBuilder,
+    EVIDENCE_KIND: prwQualityEvidence = .unmeasured,
+    MAXIMUM_POSITION_ERROR_M: Double = 0.0,
+    HAS_MAXIMUM_POSITION_ERROR_M: Bool = false,
+    MAXIMUM_VELOCITY_ERROR_M_S: Double = 0.0,
+    HAS_MAXIMUM_VELOCITY_ERROR_M_S: Bool = false,
+    METHODOffset METHOD: Offset = Offset(),
+    REFERENCE_CONTENT_IDOffset REFERENCE_CONTENT_ID: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWFitQuality.startPRWFitQuality(&fbb)
+    PRWFitQuality.add(EVIDENCE_KIND: EVIDENCE_KIND, &fbb)
+    PRWFitQuality.add(MAXIMUM_POSITION_ERROR_M: MAXIMUM_POSITION_ERROR_M, &fbb)
+    PRWFitQuality.add(HAS_MAXIMUM_POSITION_ERROR_M: HAS_MAXIMUM_POSITION_ERROR_M, &fbb)
+    PRWFitQuality.add(MAXIMUM_VELOCITY_ERROR_M_S: MAXIMUM_VELOCITY_ERROR_M_S, &fbb)
+    PRWFitQuality.add(HAS_MAXIMUM_VELOCITY_ERROR_M_S: HAS_MAXIMUM_VELOCITY_ERROR_M_S, &fbb)
+    PRWFitQuality.add(METHOD: METHOD, &fbb)
+    PRWFitQuality.add(REFERENCE_CONTENT_ID: REFERENCE_CONTENT_ID, &fbb)
+    return PRWFitQuality.endPRWFitQuality(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EVIDENCE_KIND, fieldName: "EVIDENCE_KIND", required: false, type: prwQualityEvidence.self)
+    try _v.visit(field: VT.MAXIMUM_POSITION_ERROR_M, fieldName: "MAXIMUM_POSITION_ERROR_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_POSITION_ERROR_M, fieldName: "HAS_MAXIMUM_POSITION_ERROR_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAXIMUM_VELOCITY_ERROR_M_S, fieldName: "MAXIMUM_VELOCITY_ERROR_M_S", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_VELOCITY_ERROR_M_S, fieldName: "HAS_MAXIMUM_VELOCITY_ERROR_M_S", required: false, type: Bool.self)
+    try _v.visit(field: VT.METHOD, fieldName: "METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFERENCE_CONTENT_ID, fieldName: "REFERENCE_CONTENT_ID", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+public struct PRWPrepareResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWPrepareResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let SEGMENT_SET_HANDLE: VOffset = 6
+    static let COVERAGE_COMPLETE: VOffset = 8
+    static let QUALITY: VOffset = 10
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SEGMENT_SET_HANDLE: UInt32 { let o = _accessor.offset(VT.SEGMENT_SET_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var COVERAGE_COMPLETE: Bool { let o = _accessor.offset(VT.COVERAGE_COMPLETE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var QUALITY: PRWFitQuality! { let o = _accessor.offset(VT.QUALITY); return PRWFitQuality(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPRWPrepareResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(SEGMENT_SET_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEGMENT_SET_HANDLE, def: 0, at: VT.SEGMENT_SET_HANDLE) }
+  public static func add(COVERAGE_COMPLETE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVERAGE_COMPLETE, def: false,
+   at: VT.COVERAGE_COMPLETE) }
+  public static func add(QUALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUALITY, at: VT.QUALITY) }
+  public static func endPRWPrepareResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10]); return end }
+  public static func createPRWPrepareResult(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    SEGMENT_SET_HANDLE: UInt32 = 0,
+    COVERAGE_COMPLETE: Bool = false,
+    QUALITYOffset QUALITY: Offset
+  ) -> Offset {
+    let __start = PRWPrepareResult.startPRWPrepareResult(&fbb)
+    PRWPrepareResult.add(INSTANCE: INSTANCE, &fbb)
+    PRWPrepareResult.add(SEGMENT_SET_HANDLE: SEGMENT_SET_HANDLE, &fbb)
+    PRWPrepareResult.add(COVERAGE_COMPLETE: COVERAGE_COMPLETE, &fbb)
+    PRWPrepareResult.add(QUALITY: QUALITY, &fbb)
+    return PRWPrepareResult.endPRWPrepareResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.SEGMENT_SET_HANDLE, fieldName: "SEGMENT_SET_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.COVERAGE_COMPLETE, fieldName: "COVERAGE_COMPLETE", required: false, type: Bool.self)
+    try _v.visit(field: VT.QUALITY, fieldName: "QUALITY", required: true, type: ForwardOffset<PRWFitQuality>.self)
+    _v.finish()
+  }
+}
+
+public struct PRWDescribeRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWDescribeRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let SEGMENT_SET_HANDLE: VOffset = 6
+    static let SOURCE_HANDLES: VOffset = 8
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SEGMENT_SET_HANDLE: UInt32 { let o = _accessor.offset(VT.SEGMENT_SET_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCE_HANDLES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.SOURCE_HANDLES, byteSize: 4) }
+  public func withUnsafePointerToSourceHandles<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SOURCE_HANDLES, body: body) }
+  public static func startPRWDescribeRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(SEGMENT_SET_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEGMENT_SET_HANDLE, def: 0, at: VT.SEGMENT_SET_HANDLE) }
+  public static func addVectorOf(SOURCE_HANDLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_HANDLES, at: VT.SOURCE_HANDLES) }
+  public static func endPRWDescribeRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWDescribeRequest(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    SEGMENT_SET_HANDLE: UInt32 = 0,
+    SOURCE_HANDLESVectorOffset SOURCE_HANDLES: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWDescribeRequest.startPRWDescribeRequest(&fbb)
+    PRWDescribeRequest.add(INSTANCE: INSTANCE, &fbb)
+    PRWDescribeRequest.add(SEGMENT_SET_HANDLE: SEGMENT_SET_HANDLE, &fbb)
+    PRWDescribeRequest.addVectorOf(SOURCE_HANDLES: SOURCE_HANDLES, &fbb)
+    return PRWDescribeRequest.endPRWDescribeRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.SEGMENT_SET_HANDLE, fieldName: "SEGMENT_SET_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_HANDLES, fieldName: "SOURCE_HANDLES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    _v.finish()
+  }
+}
+
+///  Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.
+public struct PRWTrajectorySource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWTrajectorySource.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SOURCE_HANDLE: VOffset = 4
+    static let OBJECT_ID: VOffset = 6
+    static let EPHEMERIS: VOffset = 8
+    static let SEGMENT_QUALITY: VOffset = 10
+  }
+
+  public var SOURCE_HANDLE: UInt32 { let o = _accessor.offset(VT.SOURCE_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  public var EPHEMERIS: PPE! { let o = _accessor.offset(VT.EPHEMERIS); return PPE(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  One quality record per PPE.POSITION_RECORDS entry, same order.
+  public var SEGMENT_QUALITY: FlatbufferVector<PRWFitQuality> { return _accessor.vector(at: VT.SEGMENT_QUALITY, byteSize: 4) }
+  public static func startPRWTrajectorySource(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(SOURCE_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_HANDLE, def: 0, at: VT.SOURCE_HANDLE) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(EPHEMERIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS, at: VT.EPHEMERIS) }
+  public static func addVectorOf(SEGMENT_QUALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENT_QUALITY, at: VT.SEGMENT_QUALITY) }
+  public static func endPRWTrajectorySource(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8]); return end }
+  public static func createPRWTrajectorySource(
+    _ fbb: inout FlatBufferBuilder,
+    SOURCE_HANDLE: UInt32 = 0,
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    EPHEMERISOffset EPHEMERIS: Offset,
+    SEGMENT_QUALITYVectorOffset SEGMENT_QUALITY: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWTrajectorySource.startPRWTrajectorySource(&fbb)
+    PRWTrajectorySource.add(SOURCE_HANDLE: SOURCE_HANDLE, &fbb)
+    PRWTrajectorySource.add(OBJECT_ID: OBJECT_ID, &fbb)
+    PRWTrajectorySource.add(EPHEMERIS: EPHEMERIS, &fbb)
+    PRWTrajectorySource.addVectorOf(SEGMENT_QUALITY: SEGMENT_QUALITY, &fbb)
+    return PRWTrajectorySource.endPRWTrajectorySource(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SOURCE_HANDLE, fieldName: "SOURCE_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPHEMERIS, fieldName: "EPHEMERIS", required: true, type: ForwardOffset<PPE>.self)
+    try _v.visit(field: VT.SEGMENT_QUALITY, fieldName: "SEGMENT_QUALITY", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWFitQuality>, PRWFitQuality>>.self)
+    _v.finish()
+  }
+}
+
+public struct PRWDescribeResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWDescribeResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INSTANCE: VOffset = 4
+    static let SEGMENT_SET_HANDLE: VOffset = 6
+    static let SOURCES: VOffset = 8
+    static let SOURCE_OFFSET: VOffset = 10
+    static let FINAL_CHUNK: VOffset = 12
+  }
+
+  public var INSTANCE: PRWInstance! { let o = _accessor.offset(VT.INSTANCE); return PRWInstance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SEGMENT_SET_HANDLE: UInt32 { let o = _accessor.offset(VT.SEGMENT_SET_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCES: FlatbufferVector<PRWTrajectorySource> { return _accessor.vector(at: VT.SOURCES, byteSize: 4) }
+  ///  Chunking indexes SOURCES; no partial polynomial coefficient vector.
+  public var SOURCE_OFFSET: UInt64 { let o = _accessor.offset(VT.SOURCE_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var FINAL_CHUNK: Bool { let o = _accessor.offset(VT.FINAL_CHUNK); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPRWDescribeResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(INSTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE, at: VT.INSTANCE) }
+  public static func add(SEGMENT_SET_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEGMENT_SET_HANDLE, def: 0, at: VT.SEGMENT_SET_HANDLE) }
+  public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VT.SOURCES) }
+  public static func add(SOURCE_OFFSET: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_OFFSET, def: 0, at: VT.SOURCE_OFFSET) }
+  public static func add(FINAL_CHUNK: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FINAL_CHUNK, def: true,
+   at: VT.FINAL_CHUNK) }
+  public static func endPRWDescribeResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWDescribeResult(
+    _ fbb: inout FlatBufferBuilder,
+    INSTANCEOffset INSTANCE: Offset,
+    SEGMENT_SET_HANDLE: UInt32 = 0,
+    SOURCESVectorOffset SOURCES: Offset = Offset(),
+    SOURCE_OFFSET: UInt64 = 0,
+    FINAL_CHUNK: Bool = true
+  ) -> Offset {
+    let __start = PRWDescribeResult.startPRWDescribeResult(&fbb)
+    PRWDescribeResult.add(INSTANCE: INSTANCE, &fbb)
+    PRWDescribeResult.add(SEGMENT_SET_HANDLE: SEGMENT_SET_HANDLE, &fbb)
+    PRWDescribeResult.addVectorOf(SOURCES: SOURCES, &fbb)
+    PRWDescribeResult.add(SOURCE_OFFSET: SOURCE_OFFSET, &fbb)
+    PRWDescribeResult.add(FINAL_CHUNK: FINAL_CHUNK, &fbb)
+    return PRWDescribeResult.endPRWDescribeResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INSTANCE, fieldName: "INSTANCE", required: true, type: ForwardOffset<PRWInstance>.self)
+    try _v.visit(field: VT.SEGMENT_SET_HANDLE, fieldName: "SEGMENT_SET_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCES, fieldName: "SOURCES", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWTrajectorySource>, PRWTrajectorySource>>.self)
+    try _v.visit(field: VT.SOURCE_OFFSET, fieldName: "SOURCE_OFFSET", required: false, type: UInt64.self)
+    try _v.visit(field: VT.FINAL_CHUNK, fieldName: "FINAL_CHUNK", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Native container bytes wholly inside the FlatBuffer; not an NCD trailer.
+public struct PRWNativeInput: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWNativeInput.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let DESCRIPTOR: VOffset = 4
+    static let CONTENT: VOffset = 6
+  }
+
+  public var DESCRIPTOR: NCD! { let o = _accessor.offset(VT.DESCRIPTOR); return NCD(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Exactly DESCRIPTOR.SOURCE_BYTE_LENGTH bytes; verify declared hash.
+  public var CONTENT: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CONTENT, byteSize: 1) }
+  public func withUnsafePointerToContent<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CONTENT, body: body) }
+  public static func startPRWNativeInput(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VT.DESCRIPTOR) }
+  public static func addVectorOf(CONTENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT, at: VT.CONTENT) }
+  public static func endPRWNativeInput(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createPRWNativeInput(
+    _ fbb: inout FlatBufferBuilder,
+    DESCRIPTOROffset DESCRIPTOR: Offset,
+    CONTENTVectorOffset CONTENT: Offset
+  ) -> Offset {
+    let __start = PRWNativeInput.startPRWNativeInput(&fbb)
+    PRWNativeInput.add(DESCRIPTOR: DESCRIPTOR, &fbb)
+    PRWNativeInput.addVectorOf(CONTENT: CONTENT, &fbb)
+    return PRWNativeInput.endPRWNativeInput(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.DESCRIPTOR, fieldName: "DESCRIPTOR", required: true, type: ForwardOffset<NCD>.self)
+    try _v.visit(field: VT.CONTENT, fieldName: "CONTENT", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    _v.finish()
+  }
+}
+
+///  Earth orientation for a propagation: one instantaneous row, or daily rows
+///  of one series (same SERIES, IAU_CONVENTION and data-set provenance) with
+///  strictly increasing MJD that cover the arc. A provider interpolates as
+///  published by the series and does not extrapolate.
+public struct PRWEarthOrientation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWEarthOrientation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ROWS: VOffset = 4
+  }
+
+  public var ROWS: FlatbufferVector<EOP> { return _accessor.vector(at: VT.ROWS, byteSize: 4) }
+  public static func startPRWEarthOrientation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func addVectorOf(ROWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROWS, at: VT.ROWS) }
+  public static func endPRWEarthOrientation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWEarthOrientation(
+    _ fbb: inout FlatBufferBuilder,
+    ROWSVectorOffset ROWS: Offset
+  ) -> Offset {
+    let __start = PRWEarthOrientation.startPRWEarthOrientation(&fbb)
+    PRWEarthOrientation.addVectorOf(ROWS: ROWS, &fbb)
+    return PRWEarthOrientation.endPRWEarthOrientation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ROWS, fieldName: "ROWS", required: true, type: ForwardOffset<Vector<ForwardOffset<EOP>, EOP>>.self)
+    _v.finish()
+  }
+}
+
+///  Daily space weather for a propagation, as published (`SPW`), with strictly
+///  increasing DATE covering the arc plus what the atmosphere model reads
+///  before it (NRLMSISE-00 reads the previous day's F10.7). A provider derives
+///  its model inputs from these rows and reports which ones it reads.
+public struct PRWSpaceWeatherTable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWSpaceWeatherTable.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ROWS: VOffset = 4
+  }
+
+  public var ROWS: FlatbufferVector<SPW> { return _accessor.vector(at: VT.ROWS, byteSize: 4) }
+  public static func startPRWSpaceWeatherTable(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func addVectorOf(ROWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROWS, at: VT.ROWS) }
+  public static func endPRWSpaceWeatherTable(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWSpaceWeatherTable(
+    _ fbb: inout FlatBufferBuilder,
+    ROWSVectorOffset ROWS: Offset
+  ) -> Offset {
+    let __start = PRWSpaceWeatherTable.startPRWSpaceWeatherTable(&fbb)
+    PRWSpaceWeatherTable.addVectorOf(ROWS: ROWS, &fbb)
+    return PRWSpaceWeatherTable.endPRWSpaceWeatherTable(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ROWS, fieldName: "ROWS", required: true, type: ForwardOffset<Vector<ForwardOffset<SPW>, SPW>>.self)
+    _v.finish()
+  }
+}
+
+///  One UTC day of JB2008 drivers, as Space Environment Technologies publishes
+///  them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their
+///  81-day centred averages, reported at 12 UT of DATE, and the hourly
+///  Dst-derived exospheric temperature change. A provider applies the model's
+///  own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier
+///  rows, and states how it interpolates between them.
+public struct PRWJB2008Indices: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWJB2008Indices.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let DATE: VOffset = 4
-    static let BSRN: VOffset = 6
-    static let ND: VOffset = 8
-    static let KP1: VOffset = 10
-    static let KP2: VOffset = 12
-    static let KP3: VOffset = 14
-    static let KP4: VOffset = 16
-    static let KP5: VOffset = 18
-    static let KP6: VOffset = 20
-    static let KP7: VOffset = 22
-    static let KP8: VOffset = 24
-    static let KP_SUM: VOffset = 26
-    static let AP1: VOffset = 28
-    static let AP2: VOffset = 30
-    static let AP3: VOffset = 32
-    static let AP4: VOffset = 34
-    static let AP5: VOffset = 36
-    static let AP6: VOffset = 38
-    static let AP7: VOffset = 40
-    static let AP8: VOffset = 42
-    static let AP_AVG: VOffset = 44
-    static let CP: VOffset = 46
-    static let C9: VOffset = 48
-    static let ISN: VOffset = 50
-    static let F107_OBS: VOffset = 52
-    static let F107_ADJ: VOffset = 54
-    static let F107_DATA_TYPE: VOffset = 56
-    static let F107_OBS_CENTER81: VOffset = 58
-    static let F107_OBS_LAST81: VOffset = 60
-    static let F107_ADJ_CENTER81: VOffset = 62
-    static let F107_ADJ_LAST81: VOffset = 64
+    static let F10: VOffset = 6
+    static let F10_CENTRED_81: VOffset = 8
+    static let S10: VOffset = 10
+    static let S10_CENTRED_81: VOffset = 12
+    static let M10: VOffset = 14
+    static let M10_CENTRED_81: VOffset = 16
+    static let Y10: VOffset = 18
+    static let Y10_CENTRED_81: VOffset = 20
+    static let DTC_HOURLY_K: VOffset = 22
+    static let SOURCE_FLAGS: VOffset = 24
   }
 
-  ///  Date in ISO 8601 format
-  public var DATE: String? { let o = _accessor.offset(VT.DATE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATE) }
-  ///  Bartels Solar Rotation Number
-  public var BSRN: Int32 { let o = _accessor.offset(VT.BSRN); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Day within Bartels cycle (1-27)
-  public var ND: Int32 { let o = _accessor.offset(VT.ND); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10
-  public var KP1: Int32 { let o = _accessor.offset(VT.KP1); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10
-  public var KP2: Int32 { let o = _accessor.offset(VT.KP2); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10
-  public var KP3: Int32 { let o = _accessor.offset(VT.KP3); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10
-  public var KP4: Int32 { let o = _accessor.offset(VT.KP4); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10
-  public var KP5: Int32 { let o = _accessor.offset(VT.KP5); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10
-  public var KP6: Int32 { let o = _accessor.offset(VT.KP6); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10
-  public var KP7: Int32 { let o = _accessor.offset(VT.KP7); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10
-  public var KP8: Int32 { let o = _accessor.offset(VT.KP8); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Sum of the 8 Kp indices for the day
-  public var KP_SUM: Int32 { let o = _accessor.offset(VT.KP_SUM); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Equivalent Amplitude (Ap) for 0000-0300 UT
-  public var AP1: Int32 { let o = _accessor.offset(VT.AP1); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Equivalent Amplitude (Ap) for 0300-0600 UT
-  public var AP2: Int32 { let o = _accessor.offset(VT.AP2); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Equivalent Amplitude (Ap) for 0600-0900 UT
-  public var AP3: Int32 { let o = _accessor.offset(VT.AP3); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Equivalent Amplitude (Ap) for 0900-1200 UT
-  public var AP4: Int32 { let o = _accessor.offset(VT.AP4); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Equivalent Amplitude (Ap) for 1200-1500 UT
-  public var AP5: Int32 { let o = _accessor.offset(VT.AP5); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Equivalent Amplitude (Ap) for 1500-1800 UT
-  public var AP6: Int32 { let o = _accessor.offset(VT.AP6); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Equivalent Amplitude (Ap) for 1800-2100 UT
-  public var AP7: Int32 { let o = _accessor.offset(VT.AP7); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Equivalent Amplitude (Ap) for 2100-0000 UT
-  public var AP8: Int32 { let o = _accessor.offset(VT.AP8); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Arithmetic average of the 8 Ap indices for the day
-  public var AP_AVG: Int32 { let o = _accessor.offset(VT.AP_AVG); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Planetary Daily Character Figure (0.0 to 2.5)
-  public var CP: Float32 { let o = _accessor.offset(VT.CP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  C9 index (0-9)
-  public var C9: Int32 { let o = _accessor.offset(VT.C9); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  International Sunspot Number
-  public var ISN: Int32 { let o = _accessor.offset(VT.ISN); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Observed 10.7cm Solar Radio Flux
-  public var F107_OBS: Float32 { let o = _accessor.offset(VT.F107_OBS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Adjusted 10.7cm Solar Radio Flux (to 1 AU)
-  public var F107_ADJ: Float32 { let o = _accessor.offset(VT.F107_ADJ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  F10.7 Data Type
-  public var F107_DATA_TYPE: F107DataType { let o = _accessor.offset(VT.F107_DATA_TYPE); return o == 0 ? .obs : F107DataType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .obs }
-  ///  81-day centered average of observed F10.7
-  public var F107_OBS_CENTER81: Float32 { let o = _accessor.offset(VT.F107_OBS_CENTER81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  81-day trailing average of observed F10.7
-  public var F107_OBS_LAST81: Float32 { let o = _accessor.offset(VT.F107_OBS_LAST81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  81-day centered average of adjusted F10.7
-  public var F107_ADJ_CENTER81: Float32 { let o = _accessor.offset(VT.F107_ADJ_CENTER81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  81-day trailing average of adjusted F10.7
-  public var F107_ADJ_LAST81: Float32 { let o = _accessor.offset(VT.F107_ADJ_LAST81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public static func startSPW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 31) }
+  ///  ISO 8601 calendar date (UTC) the row's values apply to.
+  public var DATE: String! { let o = _accessor.offset(VT.DATE); return _accessor.string(at: o) }
+  public var DATESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DATE) }
+  public var F10: Double { let o = _accessor.offset(VT.F10); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var F10_CENTRED_81: Double { let o = _accessor.offset(VT.F10_CENTRED_81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var S10: Double { let o = _accessor.offset(VT.S10); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var S10_CENTRED_81: Double { let o = _accessor.offset(VT.S10_CENTRED_81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var M10: Double { let o = _accessor.offset(VT.M10); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var M10_CENTRED_81: Double { let o = _accessor.offset(VT.M10_CENTRED_81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y10: Double { let o = _accessor.offset(VT.Y10); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y10_CENTRED_81: Double { let o = _accessor.offset(VT.Y10_CENTRED_81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Exospheric temperature change from Dst (K), hours 00 through 23 UTC.
+  public var DTC_HOURLY_K: FlatbufferVector<Double> { return _accessor.vector(at: VT.DTC_HOURLY_K, byteSize: 8) }
+  public func withUnsafePointerToDtcHourlyK<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DTC_HOURLY_K, body: body) }
+  ///  Source flags as published (SOLFSMY Ssrc), e.g. "4B".
+  public var SOURCE_FLAGS: String? { let o = _accessor.offset(VT.SOURCE_FLAGS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_FLAGSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_FLAGS) }
+  public static func startPRWJB2008Indices(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
-  public static func add(BSRN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSRN, def: 0, at: VT.BSRN) }
-  public static func add(ND: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ND, def: 0, at: VT.ND) }
-  public static func add(KP1: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP1, def: 0, at: VT.KP1) }
-  public static func add(KP2: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP2, def: 0, at: VT.KP2) }
-  public static func add(KP3: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP3, def: 0, at: VT.KP3) }
-  public static func add(KP4: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP4, def: 0, at: VT.KP4) }
-  public static func add(KP5: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP5, def: 0, at: VT.KP5) }
-  public static func add(KP6: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP6, def: 0, at: VT.KP6) }
-  public static func add(KP7: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP7, def: 0, at: VT.KP7) }
-  public static func add(KP8: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP8, def: 0, at: VT.KP8) }
-  public static func add(KP_SUM: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP_SUM, def: 0, at: VT.KP_SUM) }
-  public static func add(AP1: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP1, def: 0, at: VT.AP1) }
-  public static func add(AP2: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP2, def: 0, at: VT.AP2) }
-  public static func add(AP3: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP3, def: 0, at: VT.AP3) }
-  public static func add(AP4: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP4, def: 0, at: VT.AP4) }
-  public static func add(AP5: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP5, def: 0, at: VT.AP5) }
-  public static func add(AP6: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP6, def: 0, at: VT.AP6) }
-  public static func add(AP7: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP7, def: 0, at: VT.AP7) }
-  public static func add(AP8: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP8, def: 0, at: VT.AP8) }
-  public static func add(AP_AVG: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP_AVG, def: 0, at: VT.AP_AVG) }
-  public static func add(CP: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CP, def: 0.0, at: VT.CP) }
-  public static func add(C9: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: C9, def: 0, at: VT.C9) }
-  public static func add(ISN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISN, def: 0, at: VT.ISN) }
-  public static func add(F107_OBS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS, def: 0.0, at: VT.F107_OBS) }
-  public static func add(F107_ADJ: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ, def: 0.0, at: VT.F107_ADJ) }
-  public static func add(F107_DATA_TYPE: F107DataType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_DATA_TYPE.rawValue, def: 0, at: VT.F107_DATA_TYPE) }
-  public static func add(F107_OBS_CENTER81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS_CENTER81, def: 0.0, at: VT.F107_OBS_CENTER81) }
-  public static func add(F107_OBS_LAST81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS_LAST81, def: 0.0, at: VT.F107_OBS_LAST81) }
-  public static func add(F107_ADJ_CENTER81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ_CENTER81, def: 0.0, at: VT.F107_ADJ_CENTER81) }
-  public static func add(F107_ADJ_LAST81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ_LAST81, def: 0.0, at: VT.F107_ADJ_LAST81) }
-  public static func endSPW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createSPW(
+  public static func add(F10: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F10, def: 0.0, at: VT.F10) }
+  public static func add(F10_CENTRED_81: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F10_CENTRED_81, def: 0.0, at: VT.F10_CENTRED_81) }
+  public static func add(S10: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: S10, def: 0.0, at: VT.S10) }
+  public static func add(S10_CENTRED_81: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: S10_CENTRED_81, def: 0.0, at: VT.S10_CENTRED_81) }
+  public static func add(M10: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M10, def: 0.0, at: VT.M10) }
+  public static func add(M10_CENTRED_81: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M10_CENTRED_81, def: 0.0, at: VT.M10_CENTRED_81) }
+  public static func add(Y10: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y10, def: 0.0, at: VT.Y10) }
+  public static func add(Y10_CENTRED_81: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y10_CENTRED_81, def: 0.0, at: VT.Y10_CENTRED_81) }
+  public static func addVectorOf(DTC_HOURLY_K: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DTC_HOURLY_K, at: VT.DTC_HOURLY_K) }
+  public static func add(SOURCE_FLAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_FLAGS, at: VT.SOURCE_FLAGS) }
+  public static func endPRWJB2008Indices(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWJB2008Indices(
     _ fbb: inout FlatBufferBuilder,
-    DATEOffset DATE: Offset = Offset(),
-    BSRN: Int32 = 0,
-    ND: Int32 = 0,
-    KP1: Int32 = 0,
-    KP2: Int32 = 0,
-    KP3: Int32 = 0,
-    KP4: Int32 = 0,
-    KP5: Int32 = 0,
-    KP6: Int32 = 0,
-    KP7: Int32 = 0,
-    KP8: Int32 = 0,
-    KP_SUM: Int32 = 0,
-    AP1: Int32 = 0,
-    AP2: Int32 = 0,
-    AP3: Int32 = 0,
-    AP4: Int32 = 0,
-    AP5: Int32 = 0,
-    AP6: Int32 = 0,
-    AP7: Int32 = 0,
-    AP8: Int32 = 0,
-    AP_AVG: Int32 = 0,
-    CP: Float32 = 0.0,
-    C9: Int32 = 0,
-    ISN: Int32 = 0,
-    F107_OBS: Float32 = 0.0,
-    F107_ADJ: Float32 = 0.0,
-    F107_DATA_TYPE: F107DataType = .obs,
-    F107_OBS_CENTER81: Float32 = 0.0,
-    F107_OBS_LAST81: Float32 = 0.0,
-    F107_ADJ_CENTER81: Float32 = 0.0,
-    F107_ADJ_LAST81: Float32 = 0.0
+    DATEOffset DATE: Offset,
+    F10: Double = 0.0,
+    F10_CENTRED_81: Double = 0.0,
+    S10: Double = 0.0,
+    S10_CENTRED_81: Double = 0.0,
+    M10: Double = 0.0,
+    M10_CENTRED_81: Double = 0.0,
+    Y10: Double = 0.0,
+    Y10_CENTRED_81: Double = 0.0,
+    DTC_HOURLY_KVectorOffset DTC_HOURLY_K: Offset = Offset(),
+    SOURCE_FLAGSOffset SOURCE_FLAGS: Offset = Offset()
   ) -> Offset {
-    let __start = SPW.startSPW(&fbb)
-    SPW.add(DATE: DATE, &fbb)
-    SPW.add(BSRN: BSRN, &fbb)
-    SPW.add(ND: ND, &fbb)
-    SPW.add(KP1: KP1, &fbb)
-    SPW.add(KP2: KP2, &fbb)
-    SPW.add(KP3: KP3, &fbb)
-    SPW.add(KP4: KP4, &fbb)
-    SPW.add(KP5: KP5, &fbb)
-    SPW.add(KP6: KP6, &fbb)
-    SPW.add(KP7: KP7, &fbb)
-    SPW.add(KP8: KP8, &fbb)
-    SPW.add(KP_SUM: KP_SUM, &fbb)
-    SPW.add(AP1: AP1, &fbb)
-    SPW.add(AP2: AP2, &fbb)
-    SPW.add(AP3: AP3, &fbb)
-    SPW.add(AP4: AP4, &fbb)
-    SPW.add(AP5: AP5, &fbb)
-    SPW.add(AP6: AP6, &fbb)
-    SPW.add(AP7: AP7, &fbb)
-    SPW.add(AP8: AP8, &fbb)
-    SPW.add(AP_AVG: AP_AVG, &fbb)
-    SPW.add(CP: CP, &fbb)
-    SPW.add(C9: C9, &fbb)
-    SPW.add(ISN: ISN, &fbb)
-    SPW.add(F107_OBS: F107_OBS, &fbb)
-    SPW.add(F107_ADJ: F107_ADJ, &fbb)
-    SPW.add(F107_DATA_TYPE: F107_DATA_TYPE, &fbb)
-    SPW.add(F107_OBS_CENTER81: F107_OBS_CENTER81, &fbb)
-    SPW.add(F107_OBS_LAST81: F107_OBS_LAST81, &fbb)
-    SPW.add(F107_ADJ_CENTER81: F107_ADJ_CENTER81, &fbb)
-    SPW.add(F107_ADJ_LAST81: F107_ADJ_LAST81, &fbb)
-    return SPW.endSPW(&fbb, start: __start)
+    let __start = PRWJB2008Indices.startPRWJB2008Indices(&fbb)
+    PRWJB2008Indices.add(DATE: DATE, &fbb)
+    PRWJB2008Indices.add(F10: F10, &fbb)
+    PRWJB2008Indices.add(F10_CENTRED_81: F10_CENTRED_81, &fbb)
+    PRWJB2008Indices.add(S10: S10, &fbb)
+    PRWJB2008Indices.add(S10_CENTRED_81: S10_CENTRED_81, &fbb)
+    PRWJB2008Indices.add(M10: M10, &fbb)
+    PRWJB2008Indices.add(M10_CENTRED_81: M10_CENTRED_81, &fbb)
+    PRWJB2008Indices.add(Y10: Y10, &fbb)
+    PRWJB2008Indices.add(Y10_CENTRED_81: Y10_CENTRED_81, &fbb)
+    PRWJB2008Indices.addVectorOf(DTC_HOURLY_K: DTC_HOURLY_K, &fbb)
+    PRWJB2008Indices.add(SOURCE_FLAGS: SOURCE_FLAGS, &fbb)
+    return PRWJB2008Indices.endPRWJB2008Indices(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.DATE, fieldName: "DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.BSRN, fieldName: "BSRN", required: false, type: Int32.self)
-    try _v.visit(field: VT.ND, fieldName: "ND", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP1, fieldName: "KP1", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP2, fieldName: "KP2", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP3, fieldName: "KP3", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP4, fieldName: "KP4", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP5, fieldName: "KP5", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP6, fieldName: "KP6", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP7, fieldName: "KP7", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP8, fieldName: "KP8", required: false, type: Int32.self)
-    try _v.visit(field: VT.KP_SUM, fieldName: "KP_SUM", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP1, fieldName: "AP1", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP2, fieldName: "AP2", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP3, fieldName: "AP3", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP4, fieldName: "AP4", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP5, fieldName: "AP5", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP6, fieldName: "AP6", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP7, fieldName: "AP7", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP8, fieldName: "AP8", required: false, type: Int32.self)
-    try _v.visit(field: VT.AP_AVG, fieldName: "AP_AVG", required: false, type: Int32.self)
-    try _v.visit(field: VT.CP, fieldName: "CP", required: false, type: Float32.self)
-    try _v.visit(field: VT.C9, fieldName: "C9", required: false, type: Int32.self)
-    try _v.visit(field: VT.ISN, fieldName: "ISN", required: false, type: Int32.self)
-    try _v.visit(field: VT.F107_OBS, fieldName: "F107_OBS", required: false, type: Float32.self)
-    try _v.visit(field: VT.F107_ADJ, fieldName: "F107_ADJ", required: false, type: Float32.self)
-    try _v.visit(field: VT.F107_DATA_TYPE, fieldName: "F107_DATA_TYPE", required: false, type: F107DataType.self)
-    try _v.visit(field: VT.F107_OBS_CENTER81, fieldName: "F107_OBS_CENTER81", required: false, type: Float32.self)
-    try _v.visit(field: VT.F107_OBS_LAST81, fieldName: "F107_OBS_LAST81", required: false, type: Float32.self)
-    try _v.visit(field: VT.F107_ADJ_CENTER81, fieldName: "F107_ADJ_CENTER81", required: false, type: Float32.self)
-    try _v.visit(field: VT.F107_ADJ_LAST81, fieldName: "F107_ADJ_LAST81", required: false, type: Float32.self)
+    try _v.visit(field: VT.DATE, fieldName: "DATE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.F10, fieldName: "F10", required: false, type: Double.self)
+    try _v.visit(field: VT.F10_CENTRED_81, fieldName: "F10_CENTRED_81", required: false, type: Double.self)
+    try _v.visit(field: VT.S10, fieldName: "S10", required: false, type: Double.self)
+    try _v.visit(field: VT.S10_CENTRED_81, fieldName: "S10_CENTRED_81", required: false, type: Double.self)
+    try _v.visit(field: VT.M10, fieldName: "M10", required: false, type: Double.self)
+    try _v.visit(field: VT.M10_CENTRED_81, fieldName: "M10_CENTRED_81", required: false, type: Double.self)
+    try _v.visit(field: VT.Y10, fieldName: "Y10", required: false, type: Double.self)
+    try _v.visit(field: VT.Y10_CENTRED_81, fieldName: "Y10_CENTRED_81", required: false, type: Double.self)
+    try _v.visit(field: VT.DTC_HOURLY_K, fieldName: "DTC_HOURLY_K", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SOURCE_FLAGS, fieldName: "SOURCE_FLAGS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-public struct SPWCOLLECTION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+///  JB2008 drivers for a propagation: daily rows with strictly increasing
+///  DATE covering the arc plus the days the model's lags read before it.
+public struct PRWJB2008IndicesTable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SPW" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SPWCOLLECTION.id, addPrefix: prefix) }
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWJB2008IndicesTable.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let RECORDS: VOffset = 4
+    static let ROWS: VOffset = 4
   }
 
-  public var RECORDS: FlatbufferVector<SPW> { return _accessor.vector(at: VT.RECORDS, byteSize: 4) }
-  public static func startSPWCOLLECTION(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VT.RECORDS) }
-  public static func endSPWCOLLECTION(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createSPWCOLLECTION(
+  public var ROWS: FlatbufferVector<PRWJB2008Indices> { return _accessor.vector(at: VT.ROWS, byteSize: 4) }
+  public static func startPRWJB2008IndicesTable(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func addVectorOf(ROWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROWS, at: VT.ROWS) }
+  public static func endPRWJB2008IndicesTable(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWJB2008IndicesTable(
     _ fbb: inout FlatBufferBuilder,
-    RECORDSVectorOffset RECORDS: Offset = Offset()
+    ROWSVectorOffset ROWS: Offset
   ) -> Offset {
-    let __start = SPWCOLLECTION.startSPWCOLLECTION(&fbb)
-    SPWCOLLECTION.addVectorOf(RECORDS: RECORDS, &fbb)
-    return SPWCOLLECTION.endSPWCOLLECTION(&fbb, start: __start)
+    let __start = PRWJB2008IndicesTable.startPRWJB2008IndicesTable(&fbb)
+    PRWJB2008IndicesTable.addVectorOf(ROWS: ROWS, &fbb)
+    return PRWJB2008IndicesTable.endPRWJB2008IndicesTable(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.RECORDS, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SPW>, SPW>>.self)
+    try _v.visit(field: VT.ROWS, fieldName: "ROWS", required: true, type: ForwardOffset<Vector<ForwardOffset<PRWJB2008Indices>, PRWJB2008Indices>>.self)
+    _v.finish()
+  }
+}
+
+///  Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.
+public struct PRWEphemerisRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWEphemerisRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let TARGET_NAIF_ID: VOffset = 6
+    static let CENTER_NAIF_ID: VOffset = 8
+  }
+
+  public var EPOCH: TIMInstant! { let o = _accessor.offset(VT.EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TARGET_NAIF_ID: Int32 { let o = _accessor.offset(VT.TARGET_NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var CENTER_NAIF_ID: Int32 { let o = _accessor.offset(VT.CENTER_NAIF_ID); return o == 0 ? 399 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public static func startPRWEphemerisRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(TARGET_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_NAIF_ID, def: 0, at: VT.TARGET_NAIF_ID) }
+  public static func add(CENTER_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_NAIF_ID, def: 399, at: VT.CENTER_NAIF_ID) }
+  public static func endPRWEphemerisRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPRWEphemerisRequest(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset,
+    TARGET_NAIF_ID: Int32 = 0,
+    CENTER_NAIF_ID: Int32 = 399
+  ) -> Offset {
+    let __start = PRWEphemerisRequest.startPRWEphemerisRequest(&fbb)
+    PRWEphemerisRequest.add(EPOCH: EPOCH, &fbb)
+    PRWEphemerisRequest.add(TARGET_NAIF_ID: TARGET_NAIF_ID, &fbb)
+    PRWEphemerisRequest.add(CENTER_NAIF_ID: CENTER_NAIF_ID, &fbb)
+    return PRWEphemerisRequest.endPRWEphemerisRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.TARGET_NAIF_ID, fieldName: "TARGET_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.CENTER_NAIF_ID, fieldName: "CENTER_NAIF_ID", required: false, type: Int32.self)
+    _v.finish()
+  }
+}
+
+public struct PRWEphemerisResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWEphemerisResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TARGET_NAIF_ID: VOffset = 4
+    static let CENTER_NAIF_ID: VOffset = 6
+    static let STATE: VOffset = 8
+    static let EPHEMERIS_SOURCE: VOffset = 10
+  }
+
+  public var TARGET_NAIF_ID: Int32 { let o = _accessor.offset(VT.TARGET_NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var CENTER_NAIF_ID: Int32 { let o = _accessor.offset(VT.CENTER_NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Explicit ICRF axes and named NAIF origin; FRM state in SI m/m/s.
+  public var STATE: PRWResidentState! { let o = _accessor.offset(VT.STATE); return PRWResidentState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EPHEMERIS_SOURCE: String! { let o = _accessor.offset(VT.EPHEMERIS_SOURCE); return _accessor.string(at: o) }
+  public var EPHEMERIS_SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.EPHEMERIS_SOURCE) }
+  public static func startPRWEphemerisResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(TARGET_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_NAIF_ID, def: 0, at: VT.TARGET_NAIF_ID) }
+  public static func add(CENTER_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_NAIF_ID, def: 0, at: VT.CENTER_NAIF_ID) }
+  public static func add(STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE, at: VT.STATE) }
+  public static func add(EPHEMERIS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_SOURCE, at: VT.EPHEMERIS_SOURCE) }
+  public static func endPRWEphemerisResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8, 10]); return end }
+  public static func createPRWEphemerisResult(
+    _ fbb: inout FlatBufferBuilder,
+    TARGET_NAIF_ID: Int32 = 0,
+    CENTER_NAIF_ID: Int32 = 0,
+    STATEOffset STATE: Offset,
+    EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset
+  ) -> Offset {
+    let __start = PRWEphemerisResult.startPRWEphemerisResult(&fbb)
+    PRWEphemerisResult.add(TARGET_NAIF_ID: TARGET_NAIF_ID, &fbb)
+    PRWEphemerisResult.add(CENTER_NAIF_ID: CENTER_NAIF_ID, &fbb)
+    PRWEphemerisResult.add(STATE: STATE, &fbb)
+    PRWEphemerisResult.add(EPHEMERIS_SOURCE: EPHEMERIS_SOURCE, &fbb)
+    return PRWEphemerisResult.endPRWEphemerisResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TARGET_NAIF_ID, fieldName: "TARGET_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.CENTER_NAIF_ID, fieldName: "CENTER_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.STATE, fieldName: "STATE", required: true, type: ForwardOffset<PRWResidentState>.self)
+    try _v.visit(field: VT.EPHEMERIS_SOURCE, fieldName: "EPHEMERIS_SOURCE", required: true, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
+public struct PRWAtmosphereRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWAtmosphereRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ATMOSPHERE_MODEL: VOffset = 4
+    static let EPOCH: VOffset = 6
+    static let ALTITUDE_M: VOffset = 8
+    static let LATITUDE_RAD: VOffset = 10
+    static let LONGITUDE_RAD: VOffset = 12
+    static let LOCAL_SOLAR_TIME_HOURS: VOffset = 14
+    static let HAS_LOCAL_SOLAR_TIME_HOURS: VOffset = 16
+    static let F107: VOffset = 18
+    static let F107_AVERAGE: VOffset = 20
+    static let AP_INDEX: VOffset = 22
+    static let INCLUDE_ANOMALOUS_OXYGEN: VOffset = 24
+  }
+
+  public var ATMOSPHERE_MODEL: prwAtmosphereFamily { let o = _accessor.offset(VT.ATMOSPHERE_MODEL); return o == 0 ? .nrlmsise00 : prwAtmosphereFamily(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .nrlmsise00 }
+  public var EPOCH: TIMInstant! { let o = _accessor.offset(VT.EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE_RAD: Double { let o = _accessor.offset(VT.LATITUDE_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE_RAD: Double { let o = _accessor.offset(VT.LONGITUDE_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional local solar time; hours [0,24); absent derives from UTC/longitude.
+  public var LOCAL_SOLAR_TIME_HOURS: Double { let o = _accessor.offset(VT.LOCAL_SOLAR_TIME_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when LOCAL_SOLAR_TIME_HOURS carries a value; false means absent.
+  public var HAS_LOCAL_SOLAR_TIME_HOURS: Bool { let o = _accessor.offset(VT.HAS_LOCAL_SOLAR_TIME_HOURS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var F107: Double { let o = _accessor.offset(VT.F107); return o == 0 ? 150.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var F107_AVERAGE: Double { let o = _accessor.offset(VT.F107_AVERAGE); return o == 0 ? 150.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AP_INDEX: Double { let o = _accessor.offset(VT.AP_INDEX); return o == 0 ? 4.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCLUDE_ANOMALOUS_OXYGEN: Bool { let o = _accessor.offset(VT.INCLUDE_ANOMALOUS_OXYGEN); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPRWAtmosphereRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(ATMOSPHERE_MODEL: prwAtmosphereFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATMOSPHERE_MODEL.rawValue, def: 1, at: VT.ATMOSPHERE_MODEL) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_M, def: 0.0, at: VT.ALTITUDE_M) }
+  public static func add(LATITUDE_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE_RAD, def: 0.0, at: VT.LATITUDE_RAD) }
+  public static func add(LONGITUDE_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_RAD, def: 0.0, at: VT.LONGITUDE_RAD) }
+  public static func add(LOCAL_SOLAR_TIME_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCAL_SOLAR_TIME_HOURS, def: 0.0, at: VT.LOCAL_SOLAR_TIME_HOURS) }
+  public static func add(HAS_LOCAL_SOLAR_TIME_HOURS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_LOCAL_SOLAR_TIME_HOURS, def: false,
+   at: VT.HAS_LOCAL_SOLAR_TIME_HOURS) }
+  public static func add(F107: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107, def: 150.0, at: VT.F107) }
+  public static func add(F107_AVERAGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_AVERAGE, def: 150.0, at: VT.F107_AVERAGE) }
+  public static func add(AP_INDEX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP_INDEX, def: 4.0, at: VT.AP_INDEX) }
+  public static func add(INCLUDE_ANOMALOUS_OXYGEN: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLUDE_ANOMALOUS_OXYGEN, def: false,
+   at: VT.INCLUDE_ANOMALOUS_OXYGEN) }
+  public static func endPRWAtmosphereRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
+  public static func createPRWAtmosphereRequest(
+    _ fbb: inout FlatBufferBuilder,
+    ATMOSPHERE_MODEL: prwAtmosphereFamily = .nrlmsise00,
+    EPOCHOffset EPOCH: Offset,
+    ALTITUDE_M: Double = 0.0,
+    LATITUDE_RAD: Double = 0.0,
+    LONGITUDE_RAD: Double = 0.0,
+    LOCAL_SOLAR_TIME_HOURS: Double = 0.0,
+    HAS_LOCAL_SOLAR_TIME_HOURS: Bool = false,
+    F107: Double = 150.0,
+    F107_AVERAGE: Double = 150.0,
+    AP_INDEX: Double = 4.0,
+    INCLUDE_ANOMALOUS_OXYGEN: Bool = false
+  ) -> Offset {
+    let __start = PRWAtmosphereRequest.startPRWAtmosphereRequest(&fbb)
+    PRWAtmosphereRequest.add(ATMOSPHERE_MODEL: ATMOSPHERE_MODEL, &fbb)
+    PRWAtmosphereRequest.add(EPOCH: EPOCH, &fbb)
+    PRWAtmosphereRequest.add(ALTITUDE_M: ALTITUDE_M, &fbb)
+    PRWAtmosphereRequest.add(LATITUDE_RAD: LATITUDE_RAD, &fbb)
+    PRWAtmosphereRequest.add(LONGITUDE_RAD: LONGITUDE_RAD, &fbb)
+    PRWAtmosphereRequest.add(LOCAL_SOLAR_TIME_HOURS: LOCAL_SOLAR_TIME_HOURS, &fbb)
+    PRWAtmosphereRequest.add(HAS_LOCAL_SOLAR_TIME_HOURS: HAS_LOCAL_SOLAR_TIME_HOURS, &fbb)
+    PRWAtmosphereRequest.add(F107: F107, &fbb)
+    PRWAtmosphereRequest.add(F107_AVERAGE: F107_AVERAGE, &fbb)
+    PRWAtmosphereRequest.add(AP_INDEX: AP_INDEX, &fbb)
+    PRWAtmosphereRequest.add(INCLUDE_ANOMALOUS_OXYGEN: INCLUDE_ANOMALOUS_OXYGEN, &fbb)
+    return PRWAtmosphereRequest.endPRWAtmosphereRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ATMOSPHERE_MODEL, fieldName: "ATMOSPHERE_MODEL", required: false, type: prwAtmosphereFamily.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE_RAD, fieldName: "LATITUDE_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE_RAD, fieldName: "LONGITUDE_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.LOCAL_SOLAR_TIME_HOURS, fieldName: "LOCAL_SOLAR_TIME_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_LOCAL_SOLAR_TIME_HOURS, fieldName: "HAS_LOCAL_SOLAR_TIME_HOURS", required: false, type: Bool.self)
+    try _v.visit(field: VT.F107, fieldName: "F107", required: false, type: Double.self)
+    try _v.visit(field: VT.F107_AVERAGE, fieldName: "F107_AVERAGE", required: false, type: Double.self)
+    try _v.visit(field: VT.AP_INDEX, fieldName: "AP_INDEX", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLUDE_ANOMALOUS_OXYGEN, fieldName: "INCLUDE_ANOMALOUS_OXYGEN", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+public struct PRWSpeciesDensity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWSpeciesDensity.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CONSTITUENT: VOffset = 4
+    static let NUMBER_PER_M3: VOffset = 6
+  }
+
+  public var CONSTITUENT: prwDensitySpecies { let o = _accessor.offset(VT.CONSTITUENT); return o == 0 ? .unspecified : prwDensitySpecies(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var NUMBER_PER_M3: Double { let o = _accessor.offset(VT.NUMBER_PER_M3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPRWSpeciesDensity(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(CONSTITUENT: prwDensitySpecies, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSTITUENT.rawValue, def: 0, at: VT.CONSTITUENT) }
+  public static func add(NUMBER_PER_M3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_PER_M3, def: 0.0, at: VT.NUMBER_PER_M3) }
+  public static func endPRWSpeciesDensity(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWSpeciesDensity(
+    _ fbb: inout FlatBufferBuilder,
+    CONSTITUENT: prwDensitySpecies = .unspecified,
+    NUMBER_PER_M3: Double = 0.0
+  ) -> Offset {
+    let __start = PRWSpeciesDensity.startPRWSpeciesDensity(&fbb)
+    PRWSpeciesDensity.add(CONSTITUENT: CONSTITUENT, &fbb)
+    PRWSpeciesDensity.add(NUMBER_PER_M3: NUMBER_PER_M3, &fbb)
+    return PRWSpeciesDensity.endPRWSpeciesDensity(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CONSTITUENT, fieldName: "CONSTITUENT", required: false, type: prwDensitySpecies.self)
+    try _v.visit(field: VT.NUMBER_PER_M3, fieldName: "NUMBER_PER_M3", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+public struct PRWAtmosphereResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWAtmosphereResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ATMOSPHERE_MODEL: VOffset = 4
+    static let VARIANT: VOffset = 6
+    static let ALTITUDE_M: VOffset = 8
+    static let DENSITY_KG_M3: VOffset = 10
+    static let TEMPERATURE_K: VOffset = 12
+    static let HAS_TEMPERATURE_K: VOffset = 14
+    static let EXOSPHERIC_TEMPERATURE_K: VOffset = 16
+    static let HAS_EXOSPHERIC_TEMPERATURE_K: VOffset = 18
+    static let SCALE_HEIGHT_M: VOffset = 20
+    static let HAS_SCALE_HEIGHT_M: VOffset = 22
+    static let NUMBER_DENSITIES: VOffset = 24
+  }
+
+  public var ATMOSPHERE_MODEL: prwAtmosphereFamily { let o = _accessor.offset(VT.ATMOSPHERE_MODEL); return o == 0 ? .unspecified : prwAtmosphereFamily(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public var VARIANT: String? { let o = _accessor.offset(VT.VARIANT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VARIANTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VARIANT) }
+  public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DENSITY_KG_M3: Double { let o = _accessor.offset(VT.DENSITY_KG_M3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TEMPERATURE_K: Double { let o = _accessor.offset(VT.TEMPERATURE_K); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when TEMPERATURE_K carries a value; false means absent.
+  public var HAS_TEMPERATURE_K: Bool { let o = _accessor.offset(VT.HAS_TEMPERATURE_K); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EXOSPHERIC_TEMPERATURE_K: Double { let o = _accessor.offset(VT.EXOSPHERIC_TEMPERATURE_K); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when EXOSPHERIC_TEMPERATURE_K carries a value; false means absent.
+  public var HAS_EXOSPHERIC_TEMPERATURE_K: Bool { let o = _accessor.offset(VT.HAS_EXOSPHERIC_TEMPERATURE_K); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SCALE_HEIGHT_M: Double { let o = _accessor.offset(VT.SCALE_HEIGHT_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when SCALE_HEIGHT_M carries a value; false means absent.
+  public var HAS_SCALE_HEIGHT_M: Bool { let o = _accessor.offset(VT.HAS_SCALE_HEIGHT_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var NUMBER_DENSITIES: FlatbufferVector<PRWSpeciesDensity> { return _accessor.vector(at: VT.NUMBER_DENSITIES, byteSize: 4) }
+  public static func startPRWAtmosphereResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(ATMOSPHERE_MODEL: prwAtmosphereFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATMOSPHERE_MODEL.rawValue, def: 0, at: VT.ATMOSPHERE_MODEL) }
+  public static func add(VARIANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT, at: VT.VARIANT) }
+  public static func add(ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_M, def: 0.0, at: VT.ALTITUDE_M) }
+  public static func add(DENSITY_KG_M3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_KG_M3, def: 0.0, at: VT.DENSITY_KG_M3) }
+  public static func add(TEMPERATURE_K: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPERATURE_K, def: 0.0, at: VT.TEMPERATURE_K) }
+  public static func add(HAS_TEMPERATURE_K: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TEMPERATURE_K, def: false,
+   at: VT.HAS_TEMPERATURE_K) }
+  public static func add(EXOSPHERIC_TEMPERATURE_K: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXOSPHERIC_TEMPERATURE_K, def: 0.0, at: VT.EXOSPHERIC_TEMPERATURE_K) }
+  public static func add(HAS_EXOSPHERIC_TEMPERATURE_K: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_EXOSPHERIC_TEMPERATURE_K, def: false,
+   at: VT.HAS_EXOSPHERIC_TEMPERATURE_K) }
+  public static func add(SCALE_HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_HEIGHT_M, def: 0.0, at: VT.SCALE_HEIGHT_M) }
+  public static func add(HAS_SCALE_HEIGHT_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SCALE_HEIGHT_M, def: false,
+   at: VT.HAS_SCALE_HEIGHT_M) }
+  public static func addVectorOf(NUMBER_DENSITIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NUMBER_DENSITIES, at: VT.NUMBER_DENSITIES) }
+  public static func endPRWAtmosphereResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWAtmosphereResult(
+    _ fbb: inout FlatBufferBuilder,
+    ATMOSPHERE_MODEL: prwAtmosphereFamily = .unspecified,
+    VARIANTOffset VARIANT: Offset = Offset(),
+    ALTITUDE_M: Double = 0.0,
+    DENSITY_KG_M3: Double = 0.0,
+    TEMPERATURE_K: Double = 0.0,
+    HAS_TEMPERATURE_K: Bool = false,
+    EXOSPHERIC_TEMPERATURE_K: Double = 0.0,
+    HAS_EXOSPHERIC_TEMPERATURE_K: Bool = false,
+    SCALE_HEIGHT_M: Double = 0.0,
+    HAS_SCALE_HEIGHT_M: Bool = false,
+    NUMBER_DENSITIESVectorOffset NUMBER_DENSITIES: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWAtmosphereResult.startPRWAtmosphereResult(&fbb)
+    PRWAtmosphereResult.add(ATMOSPHERE_MODEL: ATMOSPHERE_MODEL, &fbb)
+    PRWAtmosphereResult.add(VARIANT: VARIANT, &fbb)
+    PRWAtmosphereResult.add(ALTITUDE_M: ALTITUDE_M, &fbb)
+    PRWAtmosphereResult.add(DENSITY_KG_M3: DENSITY_KG_M3, &fbb)
+    PRWAtmosphereResult.add(TEMPERATURE_K: TEMPERATURE_K, &fbb)
+    PRWAtmosphereResult.add(HAS_TEMPERATURE_K: HAS_TEMPERATURE_K, &fbb)
+    PRWAtmosphereResult.add(EXOSPHERIC_TEMPERATURE_K: EXOSPHERIC_TEMPERATURE_K, &fbb)
+    PRWAtmosphereResult.add(HAS_EXOSPHERIC_TEMPERATURE_K: HAS_EXOSPHERIC_TEMPERATURE_K, &fbb)
+    PRWAtmosphereResult.add(SCALE_HEIGHT_M: SCALE_HEIGHT_M, &fbb)
+    PRWAtmosphereResult.add(HAS_SCALE_HEIGHT_M: HAS_SCALE_HEIGHT_M, &fbb)
+    PRWAtmosphereResult.addVectorOf(NUMBER_DENSITIES: NUMBER_DENSITIES, &fbb)
+    return PRWAtmosphereResult.endPRWAtmosphereResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ATMOSPHERE_MODEL, fieldName: "ATMOSPHERE_MODEL", required: false, type: prwAtmosphereFamily.self)
+    try _v.visit(field: VT.VARIANT, fieldName: "VARIANT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALTITUDE_M, fieldName: "ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.DENSITY_KG_M3, fieldName: "DENSITY_KG_M3", required: false, type: Double.self)
+    try _v.visit(field: VT.TEMPERATURE_K, fieldName: "TEMPERATURE_K", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_TEMPERATURE_K, fieldName: "HAS_TEMPERATURE_K", required: false, type: Bool.self)
+    try _v.visit(field: VT.EXOSPHERIC_TEMPERATURE_K, fieldName: "EXOSPHERIC_TEMPERATURE_K", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_EXOSPHERIC_TEMPERATURE_K, fieldName: "HAS_EXOSPHERIC_TEMPERATURE_K", required: false, type: Bool.self)
+    try _v.visit(field: VT.SCALE_HEIGHT_M, fieldName: "SCALE_HEIGHT_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_SCALE_HEIGHT_M, fieldName: "HAS_SCALE_HEIGHT_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.NUMBER_DENSITIES, fieldName: "NUMBER_DENSITIES", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWSpeciesDensity>, PRWSpeciesDensity>>.self)
+    _v.finish()
+  }
+}
+
+///  Runtime diagnostic version; PLG remains the authoritative manifest identity.
+public struct PRWVersionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWVersionResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let VERSION: VOffset = 4
+    static let MODULE_ID: VOffset = 6
+  }
+
+  public var VERSION: String! { let o = _accessor.offset(VT.VERSION); return _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VERSION) }
+  public var MODULE_ID: String! { let o = _accessor.offset(VT.MODULE_ID); return _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODULE_ID) }
+  public static func startPRWVersionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func endPRWVersionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createPRWVersionResult(
+    _ fbb: inout FlatBufferBuilder,
+    VERSIONOffset VERSION: Offset,
+    MODULE_IDOffset MODULE_ID: Offset
+  ) -> Offset {
+    let __start = PRWVersionResult.startPRWVersionResult(&fbb)
+    PRWVersionResult.add(VERSION: VERSION, &fbb)
+    PRWVersionResult.add(MODULE_ID: MODULE_ID, &fbb)
+    return PRWVersionResult.endPRWVersionResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Exactly one arm per envelope. Existing three arms keep their ordinals.
+public struct PRW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRW.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INIT: VOffset = 4
+    static let BATCH_REQUEST: VOffset = 6
+    static let BATCH_RESPONSE: VOffset = 8
+    static let EXECUTION_REQUEST: VOffset = 10
+    static let EXECUTION_RESULT: VOffset = 12
+    static let RESIDENT_STATE: VOffset = 14
+    static let RESIDENT_REQUEST: VOffset = 16
+    static let PREPARE_REQUEST: VOffset = 18
+    static let PREPARE_RESULT: VOffset = 20
+    static let DESCRIBE_REQUEST: VOffset = 22
+    static let DESCRIBE_RESULT: VOffset = 24
+    static let NATIVE_INPUT: VOffset = 26
+    static let EPHEMERIS_REQUEST: VOffset = 28
+    static let EPHEMERIS_RESULT: VOffset = 30
+    static let ATMOSPHERE_REQUEST: VOffset = 32
+    static let ATMOSPHERE_RESULT: VOffset = 34
+    static let VERSION_QUERY: VOffset = 36
+    static let VERSION_RESULT: VOffset = 38
+    static let EARTH_ORIENTATION: VOffset = 40
+    static let SPACE_WEATHER: VOffset = 42
+    static let JB2008_INDICES: VOffset = 44
+  }
+
+  public var INIT: PRWInit? { let o = _accessor.offset(VT.INIT); return o == 0 ? nil : PRWInit(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BATCH_REQUEST: PRWBatchRequest? { let o = _accessor.offset(VT.BATCH_REQUEST); return o == 0 ? nil : PRWBatchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BATCH_RESPONSE: PRWBatchResponse? { let o = _accessor.offset(VT.BATCH_RESPONSE); return o == 0 ? nil : PRWBatchResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Appended portable arms; each method names its permitted arm.
+  public var EXECUTION_REQUEST: PRWExecutionRequest? { let o = _accessor.offset(VT.EXECUTION_REQUEST); return o == 0 ? nil : PRWExecutionRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EXECUTION_RESULT: PRWExecutionResult? { let o = _accessor.offset(VT.EXECUTION_RESULT); return o == 0 ? nil : PRWExecutionResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RESIDENT_STATE: PRWResidentState? { let o = _accessor.offset(VT.RESIDENT_STATE); return o == 0 ? nil : PRWResidentState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RESIDENT_REQUEST: PRWResidentRequest? { let o = _accessor.offset(VT.RESIDENT_REQUEST); return o == 0 ? nil : PRWResidentRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PREPARE_REQUEST: PRWPrepareRequest? { let o = _accessor.offset(VT.PREPARE_REQUEST); return o == 0 ? nil : PRWPrepareRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PREPARE_RESULT: PRWPrepareResult? { let o = _accessor.offset(VT.PREPARE_RESULT); return o == 0 ? nil : PRWPrepareResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DESCRIBE_REQUEST: PRWDescribeRequest? { let o = _accessor.offset(VT.DESCRIBE_REQUEST); return o == 0 ? nil : PRWDescribeRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DESCRIBE_RESULT: PRWDescribeResult? { let o = _accessor.offset(VT.DESCRIBE_RESULT); return o == 0 ? nil : PRWDescribeResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var NATIVE_INPUT: PRWNativeInput? { let o = _accessor.offset(VT.NATIVE_INPUT); return o == 0 ? nil : PRWNativeInput(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EPHEMERIS_REQUEST: PRWEphemerisRequest? { let o = _accessor.offset(VT.EPHEMERIS_REQUEST); return o == 0 ? nil : PRWEphemerisRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EPHEMERIS_RESULT: PRWEphemerisResult? { let o = _accessor.offset(VT.EPHEMERIS_RESULT); return o == 0 ? nil : PRWEphemerisResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ATMOSPHERE_REQUEST: PRWAtmosphereRequest? { let o = _accessor.offset(VT.ATMOSPHERE_REQUEST); return o == 0 ? nil : PRWAtmosphereRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ATMOSPHERE_RESULT: PRWAtmosphereResult? { let o = _accessor.offset(VT.ATMOSPHERE_RESULT); return o == 0 ? nil : PRWAtmosphereResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var VERSION_QUERY: Bool { let o = _accessor.offset(VT.VERSION_QUERY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VERSION_RESULT: PRWVersionResult? { let o = _accessor.offset(VT.VERSION_RESULT); return o == 0 ? nil : PRWVersionResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EARTH_ORIENTATION: PRWEarthOrientation? { let o = _accessor.offset(VT.EARTH_ORIENTATION); return o == 0 ? nil : PRWEarthOrientation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SPACE_WEATHER: PRWSpaceWeatherTable? { let o = _accessor.offset(VT.SPACE_WEATHER); return o == 0 ? nil : PRWSpaceWeatherTable(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var JB2008_INDICES: PRWJB2008IndicesTable? { let o = _accessor.offset(VT.JB2008_INDICES); return o == 0 ? nil : PRWJB2008IndicesTable(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPRW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
+  public static func add(INIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INIT, at: VT.INIT) }
+  public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VT.BATCH_REQUEST) }
+  public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VT.BATCH_RESPONSE) }
+  public static func add(EXECUTION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXECUTION_REQUEST, at: VT.EXECUTION_REQUEST) }
+  public static func add(EXECUTION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXECUTION_RESULT, at: VT.EXECUTION_RESULT) }
+  public static func add(RESIDENT_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESIDENT_STATE, at: VT.RESIDENT_STATE) }
+  public static func add(RESIDENT_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESIDENT_REQUEST, at: VT.RESIDENT_REQUEST) }
+  public static func add(PREPARE_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREPARE_REQUEST, at: VT.PREPARE_REQUEST) }
+  public static func add(PREPARE_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREPARE_RESULT, at: VT.PREPARE_RESULT) }
+  public static func add(DESCRIBE_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIBE_REQUEST, at: VT.DESCRIBE_REQUEST) }
+  public static func add(DESCRIBE_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIBE_RESULT, at: VT.DESCRIBE_RESULT) }
+  public static func add(NATIVE_INPUT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NATIVE_INPUT, at: VT.NATIVE_INPUT) }
+  public static func add(EPHEMERIS_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_REQUEST, at: VT.EPHEMERIS_REQUEST) }
+  public static func add(EPHEMERIS_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_RESULT, at: VT.EPHEMERIS_RESULT) }
+  public static func add(ATMOSPHERE_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERE_REQUEST, at: VT.ATMOSPHERE_REQUEST) }
+  public static func add(ATMOSPHERE_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERE_RESULT, at: VT.ATMOSPHERE_RESULT) }
+  public static func add(VERSION_QUERY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION_QUERY, def: false,
+   at: VT.VERSION_QUERY) }
+  public static func add(VERSION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION_RESULT, at: VT.VERSION_RESULT) }
+  public static func add(EARTH_ORIENTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EARTH_ORIENTATION, at: VT.EARTH_ORIENTATION) }
+  public static func add(SPACE_WEATHER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPACE_WEATHER, at: VT.SPACE_WEATHER) }
+  public static func add(JB2008_INDICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JB2008_INDICES, at: VT.JB2008_INDICES) }
+  public static func endPRW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRW(
+    _ fbb: inout FlatBufferBuilder,
+    INITOffset INIT: Offset = Offset(),
+    BATCH_REQUESTOffset BATCH_REQUEST: Offset = Offset(),
+    BATCH_RESPONSEOffset BATCH_RESPONSE: Offset = Offset(),
+    EXECUTION_REQUESTOffset EXECUTION_REQUEST: Offset = Offset(),
+    EXECUTION_RESULTOffset EXECUTION_RESULT: Offset = Offset(),
+    RESIDENT_STATEOffset RESIDENT_STATE: Offset = Offset(),
+    RESIDENT_REQUESTOffset RESIDENT_REQUEST: Offset = Offset(),
+    PREPARE_REQUESTOffset PREPARE_REQUEST: Offset = Offset(),
+    PREPARE_RESULTOffset PREPARE_RESULT: Offset = Offset(),
+    DESCRIBE_REQUESTOffset DESCRIBE_REQUEST: Offset = Offset(),
+    DESCRIBE_RESULTOffset DESCRIBE_RESULT: Offset = Offset(),
+    NATIVE_INPUTOffset NATIVE_INPUT: Offset = Offset(),
+    EPHEMERIS_REQUESTOffset EPHEMERIS_REQUEST: Offset = Offset(),
+    EPHEMERIS_RESULTOffset EPHEMERIS_RESULT: Offset = Offset(),
+    ATMOSPHERE_REQUESTOffset ATMOSPHERE_REQUEST: Offset = Offset(),
+    ATMOSPHERE_RESULTOffset ATMOSPHERE_RESULT: Offset = Offset(),
+    VERSION_QUERY: Bool = false,
+    VERSION_RESULTOffset VERSION_RESULT: Offset = Offset(),
+    EARTH_ORIENTATIONOffset EARTH_ORIENTATION: Offset = Offset(),
+    SPACE_WEATHEROffset SPACE_WEATHER: Offset = Offset(),
+    JB2008_INDICESOffset JB2008_INDICES: Offset = Offset()
+  ) -> Offset {
+    let __start = PRW.startPRW(&fbb)
+    PRW.add(INIT: INIT, &fbb)
+    PRW.add(BATCH_REQUEST: BATCH_REQUEST, &fbb)
+    PRW.add(BATCH_RESPONSE: BATCH_RESPONSE, &fbb)
+    PRW.add(EXECUTION_REQUEST: EXECUTION_REQUEST, &fbb)
+    PRW.add(EXECUTION_RESULT: EXECUTION_RESULT, &fbb)
+    PRW.add(RESIDENT_STATE: RESIDENT_STATE, &fbb)
+    PRW.add(RESIDENT_REQUEST: RESIDENT_REQUEST, &fbb)
+    PRW.add(PREPARE_REQUEST: PREPARE_REQUEST, &fbb)
+    PRW.add(PREPARE_RESULT: PREPARE_RESULT, &fbb)
+    PRW.add(DESCRIBE_REQUEST: DESCRIBE_REQUEST, &fbb)
+    PRW.add(DESCRIBE_RESULT: DESCRIBE_RESULT, &fbb)
+    PRW.add(NATIVE_INPUT: NATIVE_INPUT, &fbb)
+    PRW.add(EPHEMERIS_REQUEST: EPHEMERIS_REQUEST, &fbb)
+    PRW.add(EPHEMERIS_RESULT: EPHEMERIS_RESULT, &fbb)
+    PRW.add(ATMOSPHERE_REQUEST: ATMOSPHERE_REQUEST, &fbb)
+    PRW.add(ATMOSPHERE_RESULT: ATMOSPHERE_RESULT, &fbb)
+    PRW.add(VERSION_QUERY: VERSION_QUERY, &fbb)
+    PRW.add(VERSION_RESULT: VERSION_RESULT, &fbb)
+    PRW.add(EARTH_ORIENTATION: EARTH_ORIENTATION, &fbb)
+    PRW.add(SPACE_WEATHER: SPACE_WEATHER, &fbb)
+    PRW.add(JB2008_INDICES: JB2008_INDICES, &fbb)
+    return PRW.endPRW(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INIT, fieldName: "INIT", required: false, type: ForwardOffset<PRWInit>.self)
+    try _v.visit(field: VT.BATCH_REQUEST, fieldName: "BATCH_REQUEST", required: false, type: ForwardOffset<PRWBatchRequest>.self)
+    try _v.visit(field: VT.BATCH_RESPONSE, fieldName: "BATCH_RESPONSE", required: false, type: ForwardOffset<PRWBatchResponse>.self)
+    try _v.visit(field: VT.EXECUTION_REQUEST, fieldName: "EXECUTION_REQUEST", required: false, type: ForwardOffset<PRWExecutionRequest>.self)
+    try _v.visit(field: VT.EXECUTION_RESULT, fieldName: "EXECUTION_RESULT", required: false, type: ForwardOffset<PRWExecutionResult>.self)
+    try _v.visit(field: VT.RESIDENT_STATE, fieldName: "RESIDENT_STATE", required: false, type: ForwardOffset<PRWResidentState>.self)
+    try _v.visit(field: VT.RESIDENT_REQUEST, fieldName: "RESIDENT_REQUEST", required: false, type: ForwardOffset<PRWResidentRequest>.self)
+    try _v.visit(field: VT.PREPARE_REQUEST, fieldName: "PREPARE_REQUEST", required: false, type: ForwardOffset<PRWPrepareRequest>.self)
+    try _v.visit(field: VT.PREPARE_RESULT, fieldName: "PREPARE_RESULT", required: false, type: ForwardOffset<PRWPrepareResult>.self)
+    try _v.visit(field: VT.DESCRIBE_REQUEST, fieldName: "DESCRIBE_REQUEST", required: false, type: ForwardOffset<PRWDescribeRequest>.self)
+    try _v.visit(field: VT.DESCRIBE_RESULT, fieldName: "DESCRIBE_RESULT", required: false, type: ForwardOffset<PRWDescribeResult>.self)
+    try _v.visit(field: VT.NATIVE_INPUT, fieldName: "NATIVE_INPUT", required: false, type: ForwardOffset<PRWNativeInput>.self)
+    try _v.visit(field: VT.EPHEMERIS_REQUEST, fieldName: "EPHEMERIS_REQUEST", required: false, type: ForwardOffset<PRWEphemerisRequest>.self)
+    try _v.visit(field: VT.EPHEMERIS_RESULT, fieldName: "EPHEMERIS_RESULT", required: false, type: ForwardOffset<PRWEphemerisResult>.self)
+    try _v.visit(field: VT.ATMOSPHERE_REQUEST, fieldName: "ATMOSPHERE_REQUEST", required: false, type: ForwardOffset<PRWAtmosphereRequest>.self)
+    try _v.visit(field: VT.ATMOSPHERE_RESULT, fieldName: "ATMOSPHERE_RESULT", required: false, type: ForwardOffset<PRWAtmosphereResult>.self)
+    try _v.visit(field: VT.VERSION_QUERY, fieldName: "VERSION_QUERY", required: false, type: Bool.self)
+    try _v.visit(field: VT.VERSION_RESULT, fieldName: "VERSION_RESULT", required: false, type: ForwardOffset<PRWVersionResult>.self)
+    try _v.visit(field: VT.EARTH_ORIENTATION, fieldName: "EARTH_ORIENTATION", required: false, type: ForwardOffset<PRWEarthOrientation>.self)
+    try _v.visit(field: VT.SPACE_WEATHER, fieldName: "SPACE_WEATHER", required: false, type: ForwardOffset<PRWSpaceWeatherTable>.self)
+    try _v.visit(field: VT.JB2008_INDICES, fieldName: "JB2008_INDICES", required: false, type: ForwardOffset<PRWJB2008IndicesTable>.self)
     _v.finish()
   }
 }

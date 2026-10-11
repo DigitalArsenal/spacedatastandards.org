@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "covarianceCalibration" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Uncalibrated", "Calibrated"]
+    },
+    "covarianceRule" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Operator", "ScaledFit", "SourceModel", "PooledModel"]
+    },
+    "CVR" : {
+      "type" : "object",
+      "description" : "Covariance Realism",
+      "properties" : {
+        "RULE" : {
+                "$ref" : "#/definitions/covarianceRule",
+                "description" : "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+              },
+        "MODEL_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+              },
+        "REGIME" : {
+                "type" : "string",
+                "description" : "Orbit regime of the cell, as the model names it."
+              },
+        "AGE_DAYS" : {
+                "type" : "number",
+                "description" : "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+              },
+        "HORIZON_DAYS" : {
+                "type" : "number",
+                "description" : "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+              },
+        "MEASURED_LINEAGE" : {
+                "type" : "string",
+                "description" : "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+              },
+        "TEST_WINDOW" : {
+                "type" : "string",
+                "description" : "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+              },
+        "MEAN_D2_OVER_3" : {
+                "type" : "number",
+                "description" : "Mean of d2/3 over the held-out samples. NaN when not measured."
+              },
+        "COVERAGE_95" : {
+                "type" : "number",
+                "description" : "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+              },
+        "SAMPLES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of held-out samples the test used."
+              },
+        "OBJECTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of distinct objects the samples came from."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+              },
+        "CALIBRATION" : {
+                "$ref" : "#/definitions/covarianceCalibration",
+                "description" : "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+              },
+        "EVIDENCE" : {
+                "type" : "string",
+                "description" : "Identifier of the report or record that holds the test."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CVR"
+}

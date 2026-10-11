@@ -6,6 +6,11 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
+///  Owner and country codes of the public satellite catalog. An ordinal is a
+///  wire value: members are appended after ZWE, never inserted, so the ones
+///  after it are out of alphabetical order. Some owners have two codes, the
+///  catalog's older one and an ISO 3166-1 alpha-3 code the catalog also uses
+///  (CA and CAN); each code is its own member.
 enum legacyCountryCode {
   AB(0),
   ABS(1),
@@ -132,7 +137,22 @@ enum legacyCountryCode {
   VAT(122),
   VENZ(123),
   VTNM(124),
-  ZWE(125);
+  ZWE(125),
+  AGO(126),
+  BGR(127),
+  BHR(128),
+  BWA(129),
+  CAN(130),
+  CZE(131),
+  HRV(132),
+  JOR(133),
+  KWT(134),
+  PER(135),
+  PRI(136),
+  SLB(137),
+  SVK(138),
+  TWN(139),
+  UGA(140);
 
   final int value;
   const legacyCountryCode(this.value);
@@ -265,6 +285,21 @@ enum legacyCountryCode {
       case 123: return legacyCountryCode.VENZ;
       case 124: return legacyCountryCode.VTNM;
       case 125: return legacyCountryCode.ZWE;
+      case 126: return legacyCountryCode.AGO;
+      case 127: return legacyCountryCode.BGR;
+      case 128: return legacyCountryCode.BHR;
+      case 129: return legacyCountryCode.BWA;
+      case 130: return legacyCountryCode.CAN;
+      case 131: return legacyCountryCode.CZE;
+      case 132: return legacyCountryCode.HRV;
+      case 133: return legacyCountryCode.JOR;
+      case 134: return legacyCountryCode.KWT;
+      case 135: return legacyCountryCode.PER;
+      case 136: return legacyCountryCode.PRI;
+      case 137: return legacyCountryCode.SLB;
+      case 138: return legacyCountryCode.SVK;
+      case 139: return legacyCountryCode.TWN;
+      case 140: return legacyCountryCode.UGA;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -273,7 +308,7 @@ enum legacyCountryCode {
       value == null ? null : legacyCountryCode.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 125;
+  static const int maxValue = 140;
   static const fb.Reader<legacyCountryCode> reader = _legacyCountryCodeReader();
 }
 
@@ -285,7 +320,7 @@ class _legacyCountryCodeReader extends fb.Reader<legacyCountryCode> {
 
   @override
   legacyCountryCode read(fb.BufferContext bc, int offset) =>
-      legacyCountryCode.fromValue(const fb.Int8Reader().read(bc, offset));
+      legacyCountryCode.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 ///  Legacy Country Code
@@ -301,7 +336,7 @@ class LCC {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  legacyCountryCode get OWNER => legacyCountryCode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  legacyCountryCode get OWNER => legacyCountryCode.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
   ///  Display name of the owner or source the code stands for.
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Longer description of the owner or source.
@@ -339,7 +374,7 @@ class LCCBuilder {
   }
 
   int addOwner(legacyCountryCode? OWNER) {
-    fbBuilder.addInt8(0, OWNER?.value);
+    fbBuilder.addUint8(0, OWNER?.value);
     return fbBuilder.offset;
   }
   int addNameOffset(int? offset) {
@@ -405,7 +440,7 @@ class LCCObjectBuilder extends fb.ObjectBuilder {
     final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
         : fbBuilder.writeString(_RETRIEVED_AT!);
     fbBuilder.startTable(6);
-    fbBuilder.addInt8(0, _OWNER?.value);
+    fbBuilder.addUint8(0, _OWNER?.value);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, DESCRIPTIONOffset);
     fbBuilder.addBool(3, _ACTIVE);
