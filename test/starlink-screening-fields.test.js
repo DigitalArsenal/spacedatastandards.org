@@ -62,7 +62,12 @@ describe('Starlink CQR volumes and OCM time histories', function () {
 
   it('preserves every 1.234.0 CQR/OCM table slot, field type, default and enum ordinal', () => {
     for (const code of ['CQR', 'OCM']) {
-      const source = read(code).replace(/\/\/[^\n]*/g, '');
+      // A frozen declaration may have moved into a schema the code includes
+      // (1.246.0 moved covarianceCalibration from OCM into CVR); the wire is
+      // unchanged, so search the code's own file and its direct includes.
+      const own = read(code);
+      const included = [...own.matchAll(/^include "\.\.\/(\w+)\/main\.fbs";/gm)].map(m => read(m[1]));
+      const source = [own, ...included].join('\n').replace(/\/\/[^\n]*/g, '');
       for (const [name, { kind, fields }] of Object.entries(frozen[code])) {
         const body = source.match(new RegExp(`${kind}\\s+${name}\\s*(?::[^\\{]+)?\\{([^}]+)\\}`))[1];
         const actual = body.split(kind === 'table' ? ';' : ',').filter(f => f.trim()).map(f => f.replace(/\s+/g, ''));
