@@ -122,6 +122,23 @@ public final class PAP extends com.google.flatbuffers.Table {
   public ByteVector canonicalJsonSignatureVector(ByteVector obj) { int o = __offset(62); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer CANONICAL_JSON_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
   public ByteBuffer CANONICAL_JSON_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Expected gain toward the steering direction with the element errors of
+   * PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+   * Element errors are independent; element n's total phase variance is
+   * s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+   * power gain of the array factor is the coherent part plus the incoherent
+   * floor, with w_n the steered complex weights:
+   * E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+   * which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+   * Equals PEAK_GAIN_DBI when every element is ideal.
+   */
+  public double EXPECTED_PEAK_GAIN_DBI() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+   * errors reduce the steering gain, 0 when every element is ideal.
+   */
+  public double COHERENT_GAIN_LOSS_DB() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createPAP(FlatBufferBuilder builder,
       int PAP_IDOffset,
@@ -153,8 +170,12 @@ public final class PAP extends com.google.flatbuffers.Table {
       long COMPUTED_AT,
       int PRODUCER_IDOffset,
       int SIGNATUREOffset,
-      int CANONICAL_JSON_SIGNATUREOffset) {
-    builder.startTable(30);
+      int CANONICAL_JSON_SIGNATUREOffset,
+      double EXPECTED_PEAK_GAIN_DBI,
+      double COHERENT_GAIN_LOSS_DB) {
+    builder.startTable(32);
+    PAP.addCoherentGainLossDb(builder, COHERENT_GAIN_LOSS_DB);
+    PAP.addExpectedPeakGainDbi(builder, EXPECTED_PEAK_GAIN_DBI);
     PAP.addComputedAt(builder, COMPUTED_AT);
     PAP.addPeakSidelobeLevelDb(builder, PEAK_SIDELOBE_LEVEL_DB);
     PAP.addFirstSidelobeLevelDb(builder, FIRST_SIDELOBE_LEVEL_DB);
@@ -188,7 +209,7 @@ public final class PAP extends com.google.flatbuffers.Table {
     return PAP.endPAP(builder);
   }
 
-  public static void startPAP(FlatBufferBuilder builder) { builder.startTable(30); }
+  public static void startPAP(FlatBufferBuilder builder) { builder.startTable(32); }
   public static void addPapId(FlatBufferBuilder builder, int PAP_IDOffset) { builder.addOffset(0, PAP_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addScenarioId(FlatBufferBuilder builder, int SCENARIO_IDOffset) { builder.addOffset(2, SCENARIO_IDOffset, 0); }
@@ -237,6 +258,8 @@ public final class PAP extends com.google.flatbuffers.Table {
   public static int createCanonicalJsonSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createCanonicalJsonSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startCanonicalJsonSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addExpectedPeakGainDbi(FlatBufferBuilder builder, double EXPECTED_PEAK_GAIN_DBI) { builder.addDouble(30, EXPECTED_PEAK_GAIN_DBI, 0.0); }
+  public static void addCoherentGainLossDb(FlatBufferBuilder builder, double COHERENT_GAIN_LOSS_DB) { builder.addDouble(31, COHERENT_GAIN_LOSS_DB, 0.0); }
   public static int endPAP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // PAP_ID

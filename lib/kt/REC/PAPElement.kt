@@ -96,6 +96,25 @@ class PAPElement : Table() {
             val o = __offset(24)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+     * Errors are independent between elements. 0 = ideal (no phase error).
+     */
+    val phaseErrorSigmaDeg : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * 1-sigma of the element's zero-mean Gaussian position error per axis
+     * (isotropic), metres. Its line-of-sight component adds a phase error of
+     * 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+     */
+    val positionErrorSigmaM : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPAPElement(_bb: ByteBuffer): PAPElement = getRootAsPAPElement(_bb, PAPElement())
@@ -103,8 +122,10 @@ class PAPElement : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPAPElement(builder: FlatBufferBuilder, elementIdOffset: Int, positionXM: Double, positionYM: Double, positionZM: Double, weightReal: Double, weightImaginary: Double, amplitude: Double, phaseDeg: Double, elementPatternIdOffset: Int, failureFlags: UInt, failed: Boolean) : Int {
-            builder.startTable(11)
+        fun createPAPElement(builder: FlatBufferBuilder, elementIdOffset: Int, positionXM: Double, positionYM: Double, positionZM: Double, weightReal: Double, weightImaginary: Double, amplitude: Double, phaseDeg: Double, elementPatternIdOffset: Int, failureFlags: UInt, failed: Boolean, phaseErrorSigmaDeg: Double, positionErrorSigmaM: Double) : Int {
+            builder.startTable(13)
+            addPOSITIONERRORSIGMAM(builder, positionErrorSigmaM)
+            addPHASEERRORSIGMADEG(builder, phaseErrorSigmaDeg)
             addPHASEDEG(builder, phaseDeg)
             addAMPLITUDE(builder, amplitude)
             addWEIGHTIMAGINARY(builder, weightImaginary)
@@ -118,7 +139,7 @@ class PAPElement : Table() {
             addFAILED(builder, failed)
             return endPAPElement(builder)
         }
-        fun startPAPElement(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startPAPElement(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addELEMENTID(builder: FlatBufferBuilder, elementId: Int) = builder.addOffset(0, elementId, 0)
         fun addPOSITIONXM(builder: FlatBufferBuilder, positionXM: Double) = builder.addDouble(1, positionXM, 0.0)
         fun addPOSITIONYM(builder: FlatBufferBuilder, positionYM: Double) = builder.addDouble(2, positionYM, 0.0)
@@ -130,6 +151,8 @@ class PAPElement : Table() {
         fun addELEMENTPATTERNID(builder: FlatBufferBuilder, elementPatternId: Int) = builder.addOffset(8, elementPatternId, 0)
         fun addFAILUREFLAGS(builder: FlatBufferBuilder, failureFlags: UInt) = builder.addInt(9, failureFlags.toInt(), 0)
         fun addFAILED(builder: FlatBufferBuilder, failed: Boolean) = builder.addBoolean(10, failed, false)
+        fun addPHASEERRORSIGMADEG(builder: FlatBufferBuilder, phaseErrorSigmaDeg: Double) = builder.addDouble(11, phaseErrorSigmaDeg, 0.0)
+        fun addPOSITIONERRORSIGMAM(builder: FlatBufferBuilder, positionErrorSigmaM: Double) = builder.addDouble(12, positionErrorSigmaM, 0.0)
         fun endPAPElement(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

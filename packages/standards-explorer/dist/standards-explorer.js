@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.246.0+1791759999293",
+  version: "1.247.0+1791801690384",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -6609,7 +6609,146 @@ file_identifier "$FPC";`,
       ]
     },
     PAP: {
-      IDL: '// Hash: de2444052e3e196bda4f5df89ae2d10924f4775229faa9d30c6833a5054fbf42\n// Version: 1.193.1\n// -----------------------------------END_HEADER\ninclude "../RFL/main.fbs";\n\n// Phased Array Pattern Synthesis (PAP)\n// `$BEM` remains the deployed-beam descriptor and hop schedule. This record is\n// the signed synthesis result for an element array and steering state.\n\n/// Physical arrangement of array elements.\nenum papArrayGeometry : byte {\n  UNSPECIFIED = 0,\n  LINEAR,\n  RECTANGULAR,\n  TRIANGULAR,\n  CIRCULAR,\n  CONFORMAL,\n  ARBITRARY\n}\n\n/// Amplitude taper capability class.\nenum papTaperFamily : byte {\n  UNSPECIFIED = 0,\n  UNIFORM,\n  COSINE,\n  RAISED_COSINE,\n  EQUAL_SIDELOBE,\n  CONTROLLED_SIDELOBE,\n  CUSTOM\n}\n\n/// Angular coordinate held fixed by a gain cut.\nenum papGainCutAxis : byte {\n  UNSPECIFIED = 0,\n  AZIMUTH,\n  ELEVATION,\n  CONE,\n  CLOCK\n}\n\n/// One array element and its applied complex weight.\ntable PAPElement {\n  ELEMENT_ID: string (required);\n  POSITION_X_M: double;\n  POSITION_Y_M: double;\n  POSITION_Z_M: double;\n  WEIGHT_REAL: double;\n  WEIGHT_IMAGINARY: double;\n  AMPLITUDE: double;\n  PHASE_DEG: double;\n  ELEMENT_PATTERN_ID: string;\n  FAILURE_FLAGS: uint32;\n  FAILED: bool;\n}\n\n/// One one-dimensional gain cut through the synthesized pattern.\ntable PAPGainCut {\n  CUT_ID: string (required);\n  AXIS: papGainCutAxis = UNSPECIFIED;\n  FIXED_ANGLE_DEG: double;\n  ANGLES_DEG: [double] (required);\n  GAIN_DBI: [double] (required);\n}\n\n/// One requested adaptive null and its achieved result.\ntable PAPNull {\n  NULL_ID: string (required);\n  SOURCE_ID: string;\n  AZIMUTH_DEG: double;\n  ELEVATION_DEG: double;\n  REQUESTED_DEPTH_DB: double;\n  ACHIEVED_DEPTH_DB: double;\n  ANGULAR_ERROR_DEG: double;\n}\n\n/// Phased Array Pattern Synthesis\ntable PAP {\n  PAP_ID: string (required);\n  NAME: string;\n  SCENARIO_ID: string;\n  RFE_ID: string;\n  BEM_ID: string;\n  /// BEMHopSchedule.SCHEDULE_ID evaluated by this synthesis, when applicable.\n  HOP_SCHEDULE_ID: string;\n  GEOMETRY: papArrayGeometry = UNSPECIFIED;\n  ELEMENTS: [PAPElement] (required);\n  TAPER: papTaperFamily = UNSPECIFIED;\n  TAPER_PARAMETERS: [double];\n\n  STEERING_AZIMUTH_DEG: double;\n  STEERING_ELEVATION_DEG: double;\n  STEERING_CONE_DEG: double;\n  STEERING_CLOCK_DEG: double;\n  SCAN_LOSS_DB: double;\n  PEAK_GAIN_DBI: double;\n\n  GAIN_CUTS: [PAPGainCut] (required);\n  AZIMUTH_3DB_BEAMWIDTH_DEG: double;\n  ELEVATION_3DB_BEAMWIDTH_DEG: double;\n  FIRST_SIDELOBE_LEVEL_DB: double;\n  PEAK_SIDELOBE_LEVEL_DB: double;\n  GRATING_LOBE_PRESENT: bool;\n  GRATING_LOBE_AZIMUTH_DEG: [double];\n  GRATING_LOBE_ELEVATION_DEG: [double];\n  NULLS: [PAPNull];\n\n  PROVENANCE: RFLProvenance (required);\n  COMPUTED_AT: uint64;\n  PRODUCER_ID: string (required);\n  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte\n  /// signature payloads zeroed while preserving their vectors and offsets.\n  SIGNATURE: [ubyte] (required);\n  /// Ed25519 signature over canonical JSON with IDL field order and\n  /// capitalization, no insignificant whitespace, and both signature fields\n  /// omitted.\n  CANONICAL_JSON_SIGNATURE: [ubyte] (required);\n}\n\nroot_type PAP;\nfile_identifier "$PAP";',
+      IDL: `// Hash: 310b4ec8936d803ae5c68cb5a7eb1f362cfb23f5077dce9e5ccb775fbb816543
+// Version: 1.193.2
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+
+// Phased Array Pattern Synthesis (PAP)
+// \`$BEM\` remains the deployed-beam descriptor and hop schedule. This record is
+// the signed synthesis result for an element array and steering state.
+
+/// Physical arrangement of array elements.
+enum papArrayGeometry : byte {
+  UNSPECIFIED = 0,
+  LINEAR,
+  RECTANGULAR,
+  TRIANGULAR,
+  CIRCULAR,
+  CONFORMAL,
+  ARBITRARY
+}
+
+/// Amplitude taper capability class.
+enum papTaperFamily : byte {
+  UNSPECIFIED = 0,
+  UNIFORM,
+  COSINE,
+  RAISED_COSINE,
+  EQUAL_SIDELOBE,
+  CONTROLLED_SIDELOBE,
+  CUSTOM
+}
+
+/// Angular coordinate held fixed by a gain cut.
+enum papGainCutAxis : byte {
+  UNSPECIFIED = 0,
+  AZIMUTH,
+  ELEVATION,
+  CONE,
+  CLOCK
+}
+
+/// One array element and its applied complex weight.
+table PAPElement {
+  ELEMENT_ID: string (required);
+  POSITION_X_M: double;
+  POSITION_Y_M: double;
+  POSITION_Z_M: double;
+  WEIGHT_REAL: double;
+  WEIGHT_IMAGINARY: double;
+  AMPLITUDE: double;
+  PHASE_DEG: double;
+  ELEMENT_PATTERN_ID: string;
+  FAILURE_FLAGS: uint32;
+  FAILED: bool;
+  /// 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+  /// Errors are independent between elements. 0 = ideal (no phase error).
+  PHASE_ERROR_SIGMA_DEG: double;
+  /// 1-sigma of the element's zero-mean Gaussian position error per axis
+  /// (isotropic), metres. Its line-of-sight component adds a phase error of
+  /// 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+  POSITION_ERROR_SIGMA_M: double;
+}
+
+/// One one-dimensional gain cut through the synthesized pattern.
+table PAPGainCut {
+  CUT_ID: string (required);
+  AXIS: papGainCutAxis = UNSPECIFIED;
+  FIXED_ANGLE_DEG: double;
+  ANGLES_DEG: [double] (required);
+  GAIN_DBI: [double] (required);
+}
+
+/// One requested adaptive null and its achieved result.
+table PAPNull {
+  NULL_ID: string (required);
+  SOURCE_ID: string;
+  AZIMUTH_DEG: double;
+  ELEVATION_DEG: double;
+  REQUESTED_DEPTH_DB: double;
+  ACHIEVED_DEPTH_DB: double;
+  ANGULAR_ERROR_DEG: double;
+}
+
+/// Phased Array Pattern Synthesis
+table PAP {
+  PAP_ID: string (required);
+  NAME: string;
+  SCENARIO_ID: string;
+  RFE_ID: string;
+  BEM_ID: string;
+  /// BEMHopSchedule.SCHEDULE_ID evaluated by this synthesis, when applicable.
+  HOP_SCHEDULE_ID: string;
+  GEOMETRY: papArrayGeometry = UNSPECIFIED;
+  ELEMENTS: [PAPElement] (required);
+  TAPER: papTaperFamily = UNSPECIFIED;
+  TAPER_PARAMETERS: [double];
+
+  STEERING_AZIMUTH_DEG: double;
+  STEERING_ELEVATION_DEG: double;
+  STEERING_CONE_DEG: double;
+  STEERING_CLOCK_DEG: double;
+  SCAN_LOSS_DB: double;
+  PEAK_GAIN_DBI: double;
+
+  GAIN_CUTS: [PAPGainCut] (required);
+  AZIMUTH_3DB_BEAMWIDTH_DEG: double;
+  ELEVATION_3DB_BEAMWIDTH_DEG: double;
+  FIRST_SIDELOBE_LEVEL_DB: double;
+  PEAK_SIDELOBE_LEVEL_DB: double;
+  GRATING_LOBE_PRESENT: bool;
+  GRATING_LOBE_AZIMUTH_DEG: [double];
+  GRATING_LOBE_ELEVATION_DEG: [double];
+  NULLS: [PAPNull];
+
+  PROVENANCE: RFLProvenance (required);
+  COMPUTED_AT: uint64;
+  PRODUCER_ID: string (required);
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+  /// Expected gain toward the steering direction with the element errors of
+  /// PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+  /// Element errors are independent; element n's total phase variance is
+  /// s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+  /// power gain of the array factor is the coherent part plus the incoherent
+  /// floor, with w_n the steered complex weights:
+  /// E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+  /// which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+  /// Equals PEAK_GAIN_DBI when every element is ideal.
+  EXPECTED_PEAK_GAIN_DBI: double;
+  /// PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+  /// errors reduce the steering gain, 0 when every element is ideal.
+  COHERENT_GAIN_LOSS_DB: double;
+}
+
+root_type PAP;
+file_identifier "$PAP";`,
       files: [
         "./dist/PAP/PAP.sw.tar.gz",
         "./dist/PAP/PAP.py.tar.gz",
@@ -72090,6 +72229,14 @@ verbatim what that source states about itself.`,
             },
             FAILED: {
               type: "boolean"
+            },
+            PHASE_ERROR_SIGMA_DEG: {
+              type: "number",
+              description: "1-sigma of the element's zero-mean Gaussian phase error, degrees.\nErrors are independent between elements. 0 = ideal (no phase error)."
+            },
+            POSITION_ERROR_SIGMA_M: {
+              type: "number",
+              description: "1-sigma of the element's zero-mean Gaussian position error per axis\n(isotropic), metres. Its line-of-sight component adds a phase error of\n2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal."
             }
           },
           required: [
@@ -72287,6 +72434,14 @@ verbatim what that source states about itself.`,
                 maximum: 255
               },
               description: "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+            },
+            EXPECTED_PEAK_GAIN_DBI: {
+              type: "number",
+              description: "Expected gain toward the steering direction with the element errors of\nPAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.\nElement errors are independent; element n's total phase variance is\ns_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected\npower gain of the array factor is the coherent part plus the incoherent\nfloor, with w_n the steered complex weights:\nE|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),\nwhich for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.\nEquals PEAK_GAIN_DBI when every element is ideal."
+            },
+            COHERENT_GAIN_LOSS_DB: {
+              type: "number",
+              description: "PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element\nerrors reduce the steering gain, 0 when every element is ideal."
             }
           },
           required: [
@@ -137400,6 +137555,14 @@ turned into a number.`
             },
             FAILED: {
               type: "boolean"
+            },
+            PHASE_ERROR_SIGMA_DEG: {
+              type: "number",
+              description: "1-sigma of the element's zero-mean Gaussian phase error, degrees.\nErrors are independent between elements. 0 = ideal (no phase error)."
+            },
+            POSITION_ERROR_SIGMA_M: {
+              type: "number",
+              description: "1-sigma of the element's zero-mean Gaussian position error per axis\n(isotropic), metres. Its line-of-sight component adds a phase error of\n2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal."
             }
           },
           required: [
@@ -137597,6 +137760,14 @@ turned into a number.`
                 maximum: 255
               },
               description: "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted."
+            },
+            EXPECTED_PEAK_GAIN_DBI: {
+              type: "number",
+              description: "Expected gain toward the steering direction with the element errors of\nPAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.\nElement errors are independent; element n's total phase variance is\ns_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected\npower gain of the array factor is the coherent part plus the incoherent\nfloor, with w_n the steered complex weights:\nE|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),\nwhich for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.\nEquals PEAK_GAIN_DBI when every element is ideal."
+            },
+            COHERENT_GAIN_LOSS_DB: {
+              type: "number",
+              description: "PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element\nerrors reduce the steering gain, 0 when every element is ideal."
             }
           },
           required: [
@@ -357353,6 +357524,16 @@ verbatim what that source states about itself.`,
             FAILED: {
               type: "boolean",
               "x-flatbuffer-type": "bool"
+            },
+            PHASE_ERROR_SIGMA_DEG: {
+              type: "number",
+              description: "1-sigma of the element's zero-mean Gaussian phase error, degrees.\nErrors are independent between elements. 0 = ideal (no phase error).",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_ERROR_SIGMA_M: {
+              type: "number",
+              description: "1-sigma of the element's zero-mean Gaussian position error per axis\n(isotropic), metres. Its line-of-sight component adds a phase error of\n2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.",
+              "x-flatbuffer-type": "double"
             }
           },
           required: [
@@ -357672,6 +357853,16 @@ verbatim what that source states about itself.`,
               description: "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted.",
               "x-flatbuffer-type": "[ubyte]",
               "x-flatbuffer-required": true
+            },
+            EXPECTED_PEAK_GAIN_DBI: {
+              type: "number",
+              description: "Expected gain toward the steering direction with the element errors of\nPAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.\nElement errors are independent; element n's total phase variance is\ns_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected\npower gain of the array factor is the coherent part plus the incoherent\nfloor, with w_n the steered complex weights:\nE|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),\nwhich for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.\nEquals PEAK_GAIN_DBI when every element is ideal.",
+              "x-flatbuffer-type": "double"
+            },
+            COHERENT_GAIN_LOSS_DB: {
+              type: "number",
+              description: "PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element\nerrors reduce the steering gain, 0 when every element is ideal.",
+              "x-flatbuffer-type": "double"
             }
           },
           required: [
@@ -489262,6 +489453,16 @@ turned into a number.`,
             FAILED: {
               type: "boolean",
               "x-flatbuffer-type": "bool"
+            },
+            PHASE_ERROR_SIGMA_DEG: {
+              type: "number",
+              description: "1-sigma of the element's zero-mean Gaussian phase error, degrees.\nErrors are independent between elements. 0 = ideal (no phase error).",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_ERROR_SIGMA_M: {
+              type: "number",
+              description: "1-sigma of the element's zero-mean Gaussian position error per axis\n(isotropic), metres. Its line-of-sight component adds a phase error of\n2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.",
+              "x-flatbuffer-type": "double"
             }
           },
           required: [
@@ -489581,6 +489782,16 @@ turned into a number.`,
               description: "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted.",
               "x-flatbuffer-type": "[ubyte]",
               "x-flatbuffer-required": true
+            },
+            EXPECTED_PEAK_GAIN_DBI: {
+              type: "number",
+              description: "Expected gain toward the steering direction with the element errors of\nPAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.\nElement errors are independent; element n's total phase variance is\ns_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected\npower gain of the array factor is the coherent part plus the incoherent\nfloor, with w_n the steered complex weights:\nE|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),\nwhich for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.\nEquals PEAK_GAIN_DBI when every element is ideal.",
+              "x-flatbuffer-type": "double"
+            },
+            COHERENT_GAIN_LOSS_DB: {
+              type: "number",
+              description: "PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element\nerrors reduce the steering gain, 0 when every element is ideal.",
+              "x-flatbuffer-type": "double"
             }
           },
           required: [

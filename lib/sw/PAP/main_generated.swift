@@ -84,6 +84,8 @@ public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     static let ELEMENT_PATTERN_ID: VOffset = 20
     static let FAILURE_FLAGS: VOffset = 22
     static let FAILED: VOffset = 24
+    static let PHASE_ERROR_SIGMA_DEG: VOffset = 26
+    static let POSITION_ERROR_SIGMA_M: VOffset = 28
   }
 
   public var ELEMENT_ID: String! { let o = _accessor.offset(VT.ELEMENT_ID); return _accessor.string(at: o) }
@@ -99,7 +101,14 @@ public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public var ELEMENT_PATTERN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ELEMENT_PATTERN_ID) }
   public var FAILURE_FLAGS: UInt32 { let o = _accessor.offset(VT.FAILURE_FLAGS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public var FAILED: Bool { let o = _accessor.offset(VT.FAILED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startPAPElement(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  ///  1-sigma of the element's zero-mean Gaussian phase error, degrees.
+  ///  Errors are independent between elements. 0 = ideal (no phase error).
+  public var PHASE_ERROR_SIGMA_DEG: Double { let o = _accessor.offset(VT.PHASE_ERROR_SIGMA_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  1-sigma of the element's zero-mean Gaussian position error per axis
+  ///  (isotropic), metres. Its line-of-sight component adds a phase error of
+  ///  2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+  public var POSITION_ERROR_SIGMA_M: Double { let o = _accessor.offset(VT.POSITION_ERROR_SIGMA_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPAPElement(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(ELEMENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEMENT_ID, at: VT.ELEMENT_ID) }
   public static func add(POSITION_X_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X_M, def: 0.0, at: VT.POSITION_X_M) }
   public static func add(POSITION_Y_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y_M, def: 0.0, at: VT.POSITION_Y_M) }
@@ -112,6 +121,8 @@ public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public static func add(FAILURE_FLAGS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAILURE_FLAGS, def: 0, at: VT.FAILURE_FLAGS) }
   public static func add(FAILED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAILED, def: false,
    at: VT.FAILED) }
+  public static func add(PHASE_ERROR_SIGMA_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PHASE_ERROR_SIGMA_DEG, def: 0.0, at: VT.PHASE_ERROR_SIGMA_DEG) }
+  public static func add(POSITION_ERROR_SIGMA_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_ERROR_SIGMA_M, def: 0.0, at: VT.POSITION_ERROR_SIGMA_M) }
   public static func endPAPElement(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createPAPElement(
     _ fbb: inout FlatBufferBuilder,
@@ -125,7 +136,9 @@ public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     PHASE_DEG: Double = 0.0,
     ELEMENT_PATTERN_IDOffset ELEMENT_PATTERN_ID: Offset = Offset(),
     FAILURE_FLAGS: UInt32 = 0,
-    FAILED: Bool = false
+    FAILED: Bool = false,
+    PHASE_ERROR_SIGMA_DEG: Double = 0.0,
+    POSITION_ERROR_SIGMA_M: Double = 0.0
   ) -> Offset {
     let __start = PAPElement.startPAPElement(&fbb)
     PAPElement.add(ELEMENT_ID: ELEMENT_ID, &fbb)
@@ -139,6 +152,8 @@ public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     PAPElement.add(ELEMENT_PATTERN_ID: ELEMENT_PATTERN_ID, &fbb)
     PAPElement.add(FAILURE_FLAGS: FAILURE_FLAGS, &fbb)
     PAPElement.add(FAILED: FAILED, &fbb)
+    PAPElement.add(PHASE_ERROR_SIGMA_DEG: PHASE_ERROR_SIGMA_DEG, &fbb)
+    PAPElement.add(POSITION_ERROR_SIGMA_M: POSITION_ERROR_SIGMA_M, &fbb)
     return PAPElement.endPAPElement(&fbb, start: __start)
   }
 
@@ -155,6 +170,8 @@ public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     try _v.visit(field: VT.ELEMENT_PATTERN_ID, fieldName: "ELEMENT_PATTERN_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.FAILURE_FLAGS, fieldName: "FAILURE_FLAGS", required: false, type: UInt32.self)
     try _v.visit(field: VT.FAILED, fieldName: "FAILED", required: false, type: Bool.self)
+    try _v.visit(field: VT.PHASE_ERROR_SIGMA_DEG, fieldName: "PHASE_ERROR_SIGMA_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_ERROR_SIGMA_M, fieldName: "POSITION_ERROR_SIGMA_M", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -339,6 +356,8 @@ public struct PAP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let PRODUCER_ID: VOffset = 58
     static let SIGNATURE: VOffset = 60
     static let CANONICAL_JSON_SIGNATURE: VOffset = 62
+    static let EXPECTED_PEAK_GAIN_DBI: VOffset = 64
+    static let COHERENT_GAIN_LOSS_DB: VOffset = 66
   }
 
   public var PAP_ID: String! { let o = _accessor.offset(VT.PAP_ID); return _accessor.string(at: o) }
@@ -389,7 +408,20 @@ public struct PAP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  omitted.
   public var CANONICAL_JSON_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CANONICAL_JSON_SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToCanonicalJsonSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANONICAL_JSON_SIGNATURE, body: body) }
-  public static func startPAP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 30) }
+  ///  Expected gain toward the steering direction with the element errors of
+  ///  PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+  ///  Element errors are independent; element n's total phase variance is
+  ///  s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+  ///  power gain of the array factor is the coherent part plus the incoherent
+  ///  floor, with w_n the steered complex weights:
+  ///  E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+  ///  which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+  ///  Equals PEAK_GAIN_DBI when every element is ideal.
+  public var EXPECTED_PEAK_GAIN_DBI: Double { let o = _accessor.offset(VT.EXPECTED_PEAK_GAIN_DBI); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+  ///  errors reduce the steering gain, 0 when every element is ideal.
+  public var COHERENT_GAIN_LOSS_DB: Double { let o = _accessor.offset(VT.COHERENT_GAIN_LOSS_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPAP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 32) }
   public static func add(PAP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAP_ID, at: VT.PAP_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
@@ -421,6 +453,8 @@ public struct PAP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(PRODUCER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_ID, at: VT.PRODUCER_ID) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
   public static func addVectorOf(CANONICAL_JSON_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_JSON_SIGNATURE, at: VT.CANONICAL_JSON_SIGNATURE) }
+  public static func add(EXPECTED_PEAK_GAIN_DBI: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPECTED_PEAK_GAIN_DBI, def: 0.0, at: VT.EXPECTED_PEAK_GAIN_DBI) }
+  public static func add(COHERENT_GAIN_LOSS_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COHERENT_GAIN_LOSS_DB, def: 0.0, at: VT.COHERENT_GAIN_LOSS_DB) }
   public static func endPAP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 18, 36, 54, 58, 60, 62]); return end }
   public static func createPAP(
     _ fbb: inout FlatBufferBuilder,
@@ -453,7 +487,9 @@ public struct PAP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     COMPUTED_AT: UInt64 = 0,
     PRODUCER_IDOffset PRODUCER_ID: Offset,
     SIGNATUREVectorOffset SIGNATURE: Offset,
-    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset
+    CANONICAL_JSON_SIGNATUREVectorOffset CANONICAL_JSON_SIGNATURE: Offset,
+    EXPECTED_PEAK_GAIN_DBI: Double = 0.0,
+    COHERENT_GAIN_LOSS_DB: Double = 0.0
   ) -> Offset {
     let __start = PAP.startPAP(&fbb)
     PAP.add(PAP_ID: PAP_ID, &fbb)
@@ -486,6 +522,8 @@ public struct PAP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     PAP.add(PRODUCER_ID: PRODUCER_ID, &fbb)
     PAP.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
     PAP.addVectorOf(CANONICAL_JSON_SIGNATURE: CANONICAL_JSON_SIGNATURE, &fbb)
+    PAP.add(EXPECTED_PEAK_GAIN_DBI: EXPECTED_PEAK_GAIN_DBI, &fbb)
+    PAP.add(COHERENT_GAIN_LOSS_DB: COHERENT_GAIN_LOSS_DB, &fbb)
     return PAP.endPAP(&fbb, start: __start)
   }
 
@@ -521,6 +559,8 @@ public struct PAP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.PRODUCER_ID, fieldName: "PRODUCER_ID", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VT.CANONICAL_JSON_SIGNATURE, fieldName: "CANONICAL_JSON_SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.EXPECTED_PEAK_GAIN_DBI, fieldName: "EXPECTED_PEAK_GAIN_DBI", required: false, type: Double.self)
+    try _v.visit(field: VT.COHERENT_GAIN_LOSS_DB, fieldName: "COHERENT_GAIN_LOSS_DB", required: false, type: Double.self)
     _v.finish()
   }
 }

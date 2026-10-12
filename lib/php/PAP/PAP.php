@@ -390,22 +390,51 @@ class PAP extends Table
         return $this->__vector_as_bytes(62);
     }
 
+    /// Expected gain toward the steering direction with the element errors of
+    /// PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+    /// Element errors are independent; element n's total phase variance is
+    /// s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+    /// power gain of the array factor is the coherent part plus the incoherent
+    /// floor, with w_n the steered complex weights:
+    /// E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+    /// which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+    /// Equals PEAK_GAIN_DBI when every element is ideal.
+    /**
+     * @return double
+     */
+    public function getEXPECTED_PEAK_GAIN_DBI()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+    /// errors reduce the steering gain, 0 when every element is ideal.
+    /**
+     * @return double
+     */
+    public function getCOHERENT_GAIN_LOSS_DB()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPAP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(30);
+        $builder->StartObject(32);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PAP
      */
-    public static function createPAP(FlatBufferBuilder $builder, $PAP_ID, $NAME, $SCENARIO_ID, $RFE_ID, $BEM_ID, $HOP_SCHEDULE_ID, $GEOMETRY, $ELEMENTS, $TAPER, $TAPER_PARAMETERS, $STEERING_AZIMUTH_DEG, $STEERING_ELEVATION_DEG, $STEERING_CONE_DEG, $STEERING_CLOCK_DEG, $SCAN_LOSS_DB, $PEAK_GAIN_DBI, $GAIN_CUTS, $AZIMUTH_3DB_BEAMWIDTH_DEG, $ELEVATION_3DB_BEAMWIDTH_DEG, $FIRST_SIDELOBE_LEVEL_DB, $PEAK_SIDELOBE_LEVEL_DB, $GRATING_LOBE_PRESENT, $GRATING_LOBE_AZIMUTH_DEG, $GRATING_LOBE_ELEVATION_DEG, $NULLS, $PROVENANCE, $COMPUTED_AT, $PRODUCER_ID, $SIGNATURE, $CANONICAL_JSON_SIGNATURE)
+    public static function createPAP(FlatBufferBuilder $builder, $PAP_ID, $NAME, $SCENARIO_ID, $RFE_ID, $BEM_ID, $HOP_SCHEDULE_ID, $GEOMETRY, $ELEMENTS, $TAPER, $TAPER_PARAMETERS, $STEERING_AZIMUTH_DEG, $STEERING_ELEVATION_DEG, $STEERING_CONE_DEG, $STEERING_CLOCK_DEG, $SCAN_LOSS_DB, $PEAK_GAIN_DBI, $GAIN_CUTS, $AZIMUTH_3DB_BEAMWIDTH_DEG, $ELEVATION_3DB_BEAMWIDTH_DEG, $FIRST_SIDELOBE_LEVEL_DB, $PEAK_SIDELOBE_LEVEL_DB, $GRATING_LOBE_PRESENT, $GRATING_LOBE_AZIMUTH_DEG, $GRATING_LOBE_ELEVATION_DEG, $NULLS, $PROVENANCE, $COMPUTED_AT, $PRODUCER_ID, $SIGNATURE, $CANONICAL_JSON_SIGNATURE, $EXPECTED_PEAK_GAIN_DBI, $COHERENT_GAIN_LOSS_DB)
     {
-        $builder->startObject(30);
+        $builder->startObject(32);
         self::addPAP_ID($builder, $PAP_ID);
         self::addNAME($builder, $NAME);
         self::addSCENARIO_ID($builder, $SCENARIO_ID);
@@ -436,6 +465,8 @@ class PAP extends Table
         self::addPRODUCER_ID($builder, $PRODUCER_ID);
         self::addSIGNATURE($builder, $SIGNATURE);
         self::addCANONICAL_JSON_SIGNATURE($builder, $CANONICAL_JSON_SIGNATURE);
+        self::addEXPECTED_PEAK_GAIN_DBI($builder, $EXPECTED_PEAK_GAIN_DBI);
+        self::addCOHERENT_GAIN_LOSS_DB($builder, $COHERENT_GAIN_LOSS_DB);
         $o = $builder->endObject();
         $builder->required($o, 4);  // PAP_ID
         $builder->required($o, 18);  // ELEMENTS
@@ -937,6 +968,26 @@ class PAP extends Table
     public static function startCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEXPECTED_PEAK_GAIN_DBI(FlatBufferBuilder $builder, $EXPECTED_PEAK_GAIN_DBI)
+    {
+        $builder->addDoubleX(30, $EXPECTED_PEAK_GAIN_DBI, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOHERENT_GAIN_LOSS_DB(FlatBufferBuilder $builder, $COHERENT_GAIN_LOSS_DB)
+    {
+        $builder->addDoubleX(31, $COHERENT_GAIN_LOSS_DB, 0.0);
     }
 
     /**

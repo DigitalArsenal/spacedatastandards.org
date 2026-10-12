@@ -21,6 +21,17 @@ export declare class PAPElement implements flatbuffers.IUnpackableObject<PAPElem
     ELEMENT_PATTERN_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     FAILURE_FLAGS(): number;
     FAILED(): boolean;
+    /**
+     * 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+     * Errors are independent between elements. 0 = ideal (no phase error).
+     */
+    PHASE_ERROR_SIGMA_DEG(): number;
+    /**
+     * 1-sigma of the element's zero-mean Gaussian position error per axis
+     * (isotropic), metres. Its line-of-sight component adds a phase error of
+     * 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+     */
+    POSITION_ERROR_SIGMA_M(): number;
     static startPAPElement(builder: flatbuffers.Builder): void;
     static addElementId(builder: flatbuffers.Builder, ELEMENT_IDOffset: flatbuffers.Offset): void;
     static addPositionXM(builder: flatbuffers.Builder, POSITION_X_M: number): void;
@@ -33,8 +44,10 @@ export declare class PAPElement implements flatbuffers.IUnpackableObject<PAPElem
     static addElementPatternId(builder: flatbuffers.Builder, ELEMENT_PATTERN_IDOffset: flatbuffers.Offset): void;
     static addFailureFlags(builder: flatbuffers.Builder, FAILURE_FLAGS: number): void;
     static addFailed(builder: flatbuffers.Builder, FAILED: boolean): void;
+    static addPhaseErrorSigmaDeg(builder: flatbuffers.Builder, PHASE_ERROR_SIGMA_DEG: number): void;
+    static addPositionErrorSigmaM(builder: flatbuffers.Builder, POSITION_ERROR_SIGMA_M: number): void;
     static endPAPElement(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPAPElement(builder: flatbuffers.Builder, ELEMENT_IDOffset: flatbuffers.Offset, POSITION_X_M: number, POSITION_Y_M: number, POSITION_Z_M: number, WEIGHT_REAL: number, WEIGHT_IMAGINARY: number, AMPLITUDE: number, PHASE_DEG: number, ELEMENT_PATTERN_IDOffset: flatbuffers.Offset, FAILURE_FLAGS: number, FAILED: boolean): flatbuffers.Offset;
+    static createPAPElement(builder: flatbuffers.Builder, ELEMENT_IDOffset: flatbuffers.Offset, POSITION_X_M: number, POSITION_Y_M: number, POSITION_Z_M: number, WEIGHT_REAL: number, WEIGHT_IMAGINARY: number, AMPLITUDE: number, PHASE_DEG: number, ELEMENT_PATTERN_IDOffset: flatbuffers.Offset, FAILURE_FLAGS: number, FAILED: boolean, PHASE_ERROR_SIGMA_DEG: number, POSITION_ERROR_SIGMA_M: number): flatbuffers.Offset;
     unpack(): PAPElementT;
     unpackTo(_o: PAPElementT): void;
 }
@@ -50,7 +63,9 @@ export declare class PAPElementT implements flatbuffers.IGeneratedObject {
     ELEMENT_PATTERN_ID: string | Uint8Array | null;
     FAILURE_FLAGS: number;
     FAILED: boolean;
-    constructor(ELEMENT_ID?: string | Uint8Array | null, POSITION_X_M?: number, POSITION_Y_M?: number, POSITION_Z_M?: number, WEIGHT_REAL?: number, WEIGHT_IMAGINARY?: number, AMPLITUDE?: number, PHASE_DEG?: number, ELEMENT_PATTERN_ID?: string | Uint8Array | null, FAILURE_FLAGS?: number, FAILED?: boolean);
+    PHASE_ERROR_SIGMA_DEG: number;
+    POSITION_ERROR_SIGMA_M: number;
+    constructor(ELEMENT_ID?: string | Uint8Array | null, POSITION_X_M?: number, POSITION_Y_M?: number, POSITION_Z_M?: number, WEIGHT_REAL?: number, WEIGHT_IMAGINARY?: number, AMPLITUDE?: number, PHASE_DEG?: number, ELEMENT_PATTERN_ID?: string | Uint8Array | null, FAILURE_FLAGS?: number, FAILED?: boolean, PHASE_ERROR_SIGMA_DEG?: number, POSITION_ERROR_SIGMA_M?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PAPElement.d.ts.map

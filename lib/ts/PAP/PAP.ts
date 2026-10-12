@@ -278,8 +278,33 @@ canonicalJsonSignatureArray():Uint8Array {
   return new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
+/**
+ * Expected gain toward the steering direction with the element errors of
+ * PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+ * Element errors are independent; element n's total phase variance is
+ * s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+ * power gain of the array factor is the coherent part plus the incoherent
+ * floor, with w_n the steered complex weights:
+ * E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+ * which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+ * Equals PEAK_GAIN_DBI when every element is ideal.
+ */
+EXPECTED_PEAK_GAIN_DBI():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+ * errors reduce the steering gain, 0 when every element is ideal.
+ */
+COHERENT_GAIN_LOSS_DB():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startPAP(builder:flatbuffers.Builder) {
-  builder.startObject(30);
+  builder.startObject(32);
 }
 
 static addPapId(builder:flatbuffers.Builder, PAP_IDOffset:flatbuffers.Offset) {
@@ -513,6 +538,14 @@ static startCanonicalJsonSignatureVector(builder:flatbuffers.Builder, numElems:n
   builder.startVector(1, numElems, 1);
 }
 
+static addExpectedPeakGainDbi(builder:flatbuffers.Builder, EXPECTED_PEAK_GAIN_DBI:number) {
+  builder.addFieldFloat64(30, EXPECTED_PEAK_GAIN_DBI, 0.0);
+}
+
+static addCoherentGainLossDb(builder:flatbuffers.Builder, COHERENT_GAIN_LOSS_DB:number) {
+  builder.addFieldFloat64(31, COHERENT_GAIN_LOSS_DB, 0.0);
+}
+
 static endPAP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PAP_ID
@@ -565,7 +598,9 @@ unpack(): PAPT {
     this.COMPUTED_AT(),
     this.PRODUCER_ID(),
     this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
-    this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength())
+    this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength()),
+    this.EXPECTED_PEAK_GAIN_DBI(),
+    this.COHERENT_GAIN_LOSS_DB()
   );
 }
 
@@ -601,6 +636,8 @@ unpackTo(_o: PAPT): void {
   _o.PRODUCER_ID = this.PRODUCER_ID();
   _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
   _o.CANONICAL_JSON_SIGNATURE = this.bb!.createScalarList<number>(this.CANONICAL_JSON_SIGNATURE.bind(this), this.canonicalJsonSignatureLength());
+  _o.EXPECTED_PEAK_GAIN_DBI = this.EXPECTED_PEAK_GAIN_DBI();
+  _o.COHERENT_GAIN_LOSS_DB = this.COHERENT_GAIN_LOSS_DB();
 }
 }
 
@@ -635,7 +672,9 @@ constructor(
   public COMPUTED_AT: bigint = BigInt('0'),
   public PRODUCER_ID: string|Uint8Array|null = null,
   public SIGNATURE: (number)[] = [],
-  public CANONICAL_JSON_SIGNATURE: (number)[] = []
+  public CANONICAL_JSON_SIGNATURE: (number)[] = [],
+  public EXPECTED_PEAK_GAIN_DBI: number = 0.0,
+  public COHERENT_GAIN_LOSS_DB: number = 0.0
 ){}
 
 
@@ -688,6 +727,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PAP.addProducerId(builder, PRODUCER_ID);
   PAP.addSignature(builder, SIGNATURE);
   PAP.addCanonicalJsonSignature(builder, CANONICAL_JSON_SIGNATURE);
+  PAP.addExpectedPeakGainDbi(builder, this.EXPECTED_PEAK_GAIN_DBI);
+  PAP.addCoherentGainLossDb(builder, this.COHERENT_GAIN_LOSS_DB);
 
   return PAP.endPAP(builder);
 }

@@ -40,6 +40,13 @@ public struct PAPElement : IFlatbufferObject
   public byte[] GetELEMENT_PATTERN_IDArray() { return __p.__vector_as_array<byte>(20); }
   public uint FAILURE_FLAGS { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public bool FAILED { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+  /// Errors are independent between elements. 0 = ideal (no phase error).
+  public double PHASE_ERROR_SIGMA_DEG { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// 1-sigma of the element's zero-mean Gaussian position error per axis
+  /// (isotropic), metres. Its line-of-sight component adds a phase error of
+  /// 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+  public double POSITION_ERROR_SIGMA_M { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<PAPElement> CreatePAPElement(FlatBufferBuilder builder,
       StringOffset ELEMENT_IDOffset = default(StringOffset),
@@ -52,8 +59,12 @@ public struct PAPElement : IFlatbufferObject
       double PHASE_DEG = 0.0,
       StringOffset ELEMENT_PATTERN_IDOffset = default(StringOffset),
       uint FAILURE_FLAGS = 0,
-      bool FAILED = false) {
-    builder.StartTable(11);
+      bool FAILED = false,
+      double PHASE_ERROR_SIGMA_DEG = 0.0,
+      double POSITION_ERROR_SIGMA_M = 0.0) {
+    builder.StartTable(13);
+    PAPElement.AddPOSITION_ERROR_SIGMA_M(builder, POSITION_ERROR_SIGMA_M);
+    PAPElement.AddPHASE_ERROR_SIGMA_DEG(builder, PHASE_ERROR_SIGMA_DEG);
     PAPElement.AddPHASE_DEG(builder, PHASE_DEG);
     PAPElement.AddAMPLITUDE(builder, AMPLITUDE);
     PAPElement.AddWEIGHT_IMAGINARY(builder, WEIGHT_IMAGINARY);
@@ -68,7 +79,7 @@ public struct PAPElement : IFlatbufferObject
     return PAPElement.EndPAPElement(builder);
   }
 
-  public static void StartPAPElement(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartPAPElement(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddELEMENT_ID(FlatBufferBuilder builder, StringOffset ELEMENT_IDOffset) { builder.AddOffset(0, ELEMENT_IDOffset.Value, 0); }
   public static void AddPOSITION_X_M(FlatBufferBuilder builder, double POSITION_X_M) { builder.AddDouble(1, POSITION_X_M, 0.0); }
   public static void AddPOSITION_Y_M(FlatBufferBuilder builder, double POSITION_Y_M) { builder.AddDouble(2, POSITION_Y_M, 0.0); }
@@ -80,6 +91,8 @@ public struct PAPElement : IFlatbufferObject
   public static void AddELEMENT_PATTERN_ID(FlatBufferBuilder builder, StringOffset ELEMENT_PATTERN_IDOffset) { builder.AddOffset(8, ELEMENT_PATTERN_IDOffset.Value, 0); }
   public static void AddFAILURE_FLAGS(FlatBufferBuilder builder, uint FAILURE_FLAGS) { builder.AddUint(9, FAILURE_FLAGS, 0); }
   public static void AddFAILED(FlatBufferBuilder builder, bool FAILED) { builder.AddBool(10, FAILED, false); }
+  public static void AddPHASE_ERROR_SIGMA_DEG(FlatBufferBuilder builder, double PHASE_ERROR_SIGMA_DEG) { builder.AddDouble(11, PHASE_ERROR_SIGMA_DEG, 0.0); }
+  public static void AddPOSITION_ERROR_SIGMA_M(FlatBufferBuilder builder, double POSITION_ERROR_SIGMA_M) { builder.AddDouble(12, POSITION_ERROR_SIGMA_M, 0.0); }
   public static Offset<PAPElement> EndPAPElement(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // ELEMENT_ID
@@ -102,6 +115,8 @@ public struct PAPElement : IFlatbufferObject
     _o.ELEMENT_PATTERN_ID = this.ELEMENT_PATTERN_ID;
     _o.FAILURE_FLAGS = this.FAILURE_FLAGS;
     _o.FAILED = this.FAILED;
+    _o.PHASE_ERROR_SIGMA_DEG = this.PHASE_ERROR_SIGMA_DEG;
+    _o.POSITION_ERROR_SIGMA_M = this.POSITION_ERROR_SIGMA_M;
   }
   public static Offset<PAPElement> Pack(FlatBufferBuilder builder, PAPElementT _o) {
     if (_o == null) return default(Offset<PAPElement>);
@@ -119,7 +134,9 @@ public struct PAPElement : IFlatbufferObject
       _o.PHASE_DEG,
       _ELEMENT_PATTERN_ID,
       _o.FAILURE_FLAGS,
-      _o.FAILED);
+      _o.FAILED,
+      _o.PHASE_ERROR_SIGMA_DEG,
+      _o.POSITION_ERROR_SIGMA_M);
   }
 }
 
@@ -136,6 +153,8 @@ public class PAPElementT
   public string ELEMENT_PATTERN_ID { get; set; }
   public uint FAILURE_FLAGS { get; set; }
   public bool FAILED { get; set; }
+  public double PHASE_ERROR_SIGMA_DEG { get; set; }
+  public double POSITION_ERROR_SIGMA_M { get; set; }
 
   public PAPElementT() {
     this.ELEMENT_ID = null;
@@ -149,6 +168,8 @@ public class PAPElementT
     this.ELEMENT_PATTERN_ID = null;
     this.FAILURE_FLAGS = 0;
     this.FAILED = false;
+    this.PHASE_ERROR_SIGMA_DEG = 0.0;
+    this.POSITION_ERROR_SIGMA_M = 0.0;
   }
 }
 
@@ -169,6 +190,8 @@ static public class PAPElementVerify
       && verifier.VerifyString(tablePos, 20 /*ELEMENT_PATTERN_ID*/, false)
       && verifier.VerifyField(tablePos, 22 /*FAILURE_FLAGS*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 24 /*FAILED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 26 /*PHASE_ERROR_SIGMA_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*POSITION_ERROR_SIGMA_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

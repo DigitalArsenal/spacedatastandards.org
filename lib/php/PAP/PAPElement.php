@@ -134,22 +134,45 @@ class PAPElement extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+    /// Errors are independent between elements. 0 = ideal (no phase error).
+    /**
+     * @return double
+     */
+    public function getPHASE_ERROR_SIGMA_DEG()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// 1-sigma of the element's zero-mean Gaussian position error per axis
+    /// (isotropic), metres. Its line-of-sight component adds a phase error of
+    /// 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+    /**
+     * @return double
+     */
+    public function getPOSITION_ERROR_SIGMA_M()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPAPElement(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PAPElement
      */
-    public static function createPAPElement(FlatBufferBuilder $builder, $ELEMENT_ID, $POSITION_X_M, $POSITION_Y_M, $POSITION_Z_M, $WEIGHT_REAL, $WEIGHT_IMAGINARY, $AMPLITUDE, $PHASE_DEG, $ELEMENT_PATTERN_ID, $FAILURE_FLAGS, $FAILED)
+    public static function createPAPElement(FlatBufferBuilder $builder, $ELEMENT_ID, $POSITION_X_M, $POSITION_Y_M, $POSITION_Z_M, $WEIGHT_REAL, $WEIGHT_IMAGINARY, $AMPLITUDE, $PHASE_DEG, $ELEMENT_PATTERN_ID, $FAILURE_FLAGS, $FAILED, $PHASE_ERROR_SIGMA_DEG, $POSITION_ERROR_SIGMA_M)
     {
-        $builder->startObject(11);
+        $builder->startObject(13);
         self::addELEMENT_ID($builder, $ELEMENT_ID);
         self::addPOSITION_X_M($builder, $POSITION_X_M);
         self::addPOSITION_Y_M($builder, $POSITION_Y_M);
@@ -161,6 +184,8 @@ class PAPElement extends Table
         self::addELEMENT_PATTERN_ID($builder, $ELEMENT_PATTERN_ID);
         self::addFAILURE_FLAGS($builder, $FAILURE_FLAGS);
         self::addFAILED($builder, $FAILED);
+        self::addPHASE_ERROR_SIGMA_DEG($builder, $PHASE_ERROR_SIGMA_DEG);
+        self::addPOSITION_ERROR_SIGMA_M($builder, $POSITION_ERROR_SIGMA_M);
         $o = $builder->endObject();
         $builder->required($o, 4);  // ELEMENT_ID
         return $o;
@@ -274,6 +299,26 @@ class PAPElement extends Table
     public static function addFAILED(FlatBufferBuilder $builder, $FAILED)
     {
         $builder->addBoolX(10, $FAILED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPHASE_ERROR_SIGMA_DEG(FlatBufferBuilder $builder, $PHASE_ERROR_SIGMA_DEG)
+    {
+        $builder->addDoubleX(11, $PHASE_ERROR_SIGMA_DEG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPOSITION_ERROR_SIGMA_M(FlatBufferBuilder $builder, $POSITION_ERROR_SIGMA_M)
+    {
+        $builder->addDoubleX(12, $POSITION_ERROR_SIGMA_M, 0.0);
     }
 
     /**

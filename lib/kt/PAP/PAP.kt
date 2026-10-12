@@ -306,6 +306,31 @@ class PAP : Table() {
         }
     val canonicalJsonSignatureAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
     fun canonicalJsonSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Expected gain toward the steering direction with the element errors of
+     * PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+     * Element errors are independent; element n's total phase variance is
+     * s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+     * power gain of the array factor is the coherent part plus the incoherent
+     * floor, with w_n the steered complex weights:
+     * E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+     * which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+     * Equals PEAK_GAIN_DBI when every element is ideal.
+     */
+    val expectedPeakGainDbi : Double
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+     * errors reduce the steering gain, 0 when every element is ideal.
+     */
+    val coherentGainLossDb : Double
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPAP(_bb: ByteBuffer): PAP = getRootAsPAP(_bb, PAP())
@@ -314,8 +339,10 @@ class PAP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PAPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PAP")
-        fun createPAP(builder: FlatBufferBuilder, papIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rfeIdOffset: Int, bemIdOffset: Int, hopScheduleIdOffset: Int, geometry: Byte, elementsOffset: Int, taper: Byte, taperParametersOffset: Int, steeringAzimuthDeg: Double, steeringElevationDeg: Double, steeringConeDeg: Double, steeringClockDeg: Double, scanLossDb: Double, peakGainDbi: Double, gainCutsOffset: Int, azimuth3DbBeamwidthDeg: Double, elevation3DbBeamwidthDeg: Double, firstSidelobeLevelDb: Double, peakSidelobeLevelDb: Double, gratingLobePresent: Boolean, gratingLobeAzimuthDegOffset: Int, gratingLobeElevationDegOffset: Int, nullsOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
-            builder.startTable(30)
+        fun createPAP(builder: FlatBufferBuilder, papIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rfeIdOffset: Int, bemIdOffset: Int, hopScheduleIdOffset: Int, geometry: Byte, elementsOffset: Int, taper: Byte, taperParametersOffset: Int, steeringAzimuthDeg: Double, steeringElevationDeg: Double, steeringConeDeg: Double, steeringClockDeg: Double, scanLossDb: Double, peakGainDbi: Double, gainCutsOffset: Int, azimuth3DbBeamwidthDeg: Double, elevation3DbBeamwidthDeg: Double, firstSidelobeLevelDb: Double, peakSidelobeLevelDb: Double, gratingLobePresent: Boolean, gratingLobeAzimuthDegOffset: Int, gratingLobeElevationDegOffset: Int, nullsOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int, expectedPeakGainDbi: Double, coherentGainLossDb: Double) : Int {
+            builder.startTable(32)
+            addCOHERENTGAINLOSSDB(builder, coherentGainLossDb)
+            addEXPECTEDPEAKGAINDBI(builder, expectedPeakGainDbi)
             addCOMPUTEDAT(builder, computedAt)
             addPEAKSIDELOBELEVELDB(builder, peakSidelobeLevelDb)
             addFIRSTSIDELOBELEVELDB(builder, firstSidelobeLevelDb)
@@ -348,7 +375,7 @@ class PAP : Table() {
             addGEOMETRY(builder, geometry)
             return endPAP(builder)
         }
-        fun startPAP(builder: FlatBufferBuilder) = builder.startTable(30)
+        fun startPAP(builder: FlatBufferBuilder) = builder.startTable(32)
         fun addPAPID(builder: FlatBufferBuilder, papId: Int) = builder.addOffset(0, papId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addSCENARIOID(builder: FlatBufferBuilder, scenarioId: Int) = builder.addOffset(2, scenarioId, 0)
@@ -445,6 +472,8 @@ class PAP : Table() {
             return builder.endVector()
         }
         fun startCanonicalJsonSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addEXPECTEDPEAKGAINDBI(builder: FlatBufferBuilder, expectedPeakGainDbi: Double) = builder.addDouble(30, expectedPeakGainDbi, 0.0)
+        fun addCOHERENTGAINLOSSDB(builder: FlatBufferBuilder, coherentGainLossDb: Double) = builder.addDouble(31, coherentGainLossDb, 0.0)
         fun endPAP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

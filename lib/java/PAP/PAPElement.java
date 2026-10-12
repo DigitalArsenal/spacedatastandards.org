@@ -42,6 +42,17 @@ public final class PAPElement extends com.google.flatbuffers.Table {
   public ByteBuffer ELEMENT_PATTERN_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
   public long FAILURE_FLAGS() { int o = __offset(22); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   public boolean FAILED() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+   * Errors are independent between elements. 0 = ideal (no phase error).
+   */
+  public double PHASE_ERROR_SIGMA_DEG() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * 1-sigma of the element's zero-mean Gaussian position error per axis
+   * (isotropic), metres. Its line-of-sight component adds a phase error of
+   * 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+   */
+  public double POSITION_ERROR_SIGMA_M() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createPAPElement(FlatBufferBuilder builder,
       int ELEMENT_IDOffset,
@@ -54,8 +65,12 @@ public final class PAPElement extends com.google.flatbuffers.Table {
       double PHASE_DEG,
       int ELEMENT_PATTERN_IDOffset,
       long FAILURE_FLAGS,
-      boolean FAILED) {
-    builder.startTable(11);
+      boolean FAILED,
+      double PHASE_ERROR_SIGMA_DEG,
+      double POSITION_ERROR_SIGMA_M) {
+    builder.startTable(13);
+    PAPElement.addPositionErrorSigmaM(builder, POSITION_ERROR_SIGMA_M);
+    PAPElement.addPhaseErrorSigmaDeg(builder, PHASE_ERROR_SIGMA_DEG);
     PAPElement.addPhaseDeg(builder, PHASE_DEG);
     PAPElement.addAmplitude(builder, AMPLITUDE);
     PAPElement.addWeightImaginary(builder, WEIGHT_IMAGINARY);
@@ -70,7 +85,7 @@ public final class PAPElement extends com.google.flatbuffers.Table {
     return PAPElement.endPAPElement(builder);
   }
 
-  public static void startPAPElement(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startPAPElement(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addElementId(FlatBufferBuilder builder, int ELEMENT_IDOffset) { builder.addOffset(0, ELEMENT_IDOffset, 0); }
   public static void addPositionXM(FlatBufferBuilder builder, double POSITION_X_M) { builder.addDouble(1, POSITION_X_M, 0.0); }
   public static void addPositionYM(FlatBufferBuilder builder, double POSITION_Y_M) { builder.addDouble(2, POSITION_Y_M, 0.0); }
@@ -82,6 +97,8 @@ public final class PAPElement extends com.google.flatbuffers.Table {
   public static void addElementPatternId(FlatBufferBuilder builder, int ELEMENT_PATTERN_IDOffset) { builder.addOffset(8, ELEMENT_PATTERN_IDOffset, 0); }
   public static void addFailureFlags(FlatBufferBuilder builder, long FAILURE_FLAGS) { builder.addInt(9, (int) FAILURE_FLAGS, (int) 0L); }
   public static void addFailed(FlatBufferBuilder builder, boolean FAILED) { builder.addBoolean(10, FAILED, false); }
+  public static void addPhaseErrorSigmaDeg(FlatBufferBuilder builder, double PHASE_ERROR_SIGMA_DEG) { builder.addDouble(11, PHASE_ERROR_SIGMA_DEG, 0.0); }
+  public static void addPositionErrorSigmaM(FlatBufferBuilder builder, double POSITION_ERROR_SIGMA_M) { builder.addDouble(12, POSITION_ERROR_SIGMA_M, 0.0); }
   public static int endPAPElement(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // ELEMENT_ID

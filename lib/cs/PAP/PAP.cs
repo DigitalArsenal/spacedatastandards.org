@@ -135,6 +135,19 @@ public struct PAP : IFlatbufferObject
   public ArraySegment<byte>? GetCANONICAL_JSON_SIGNATUREBytes() { return __p.__vector_as_arraysegment(62); }
 #endif
   public byte[] GetCANONICAL_JSON_SIGNATUREArray() { return __p.__vector_as_array<byte>(62); }
+  /// Expected gain toward the steering direction with the element errors of
+  /// PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+  /// Element errors are independent; element n's total phase variance is
+  /// s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+  /// power gain of the array factor is the coherent part plus the incoherent
+  /// floor, with w_n the steered complex weights:
+  /// E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+  /// which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+  /// Equals PEAK_GAIN_DBI when every element is ideal.
+  public double EXPECTED_PEAK_GAIN_DBI { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+  /// errors reduce the steering gain, 0 when every element is ideal.
+  public double COHERENT_GAIN_LOSS_DB { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<PAP> CreatePAP(FlatBufferBuilder builder,
       StringOffset PAP_IDOffset = default(StringOffset),
@@ -166,8 +179,12 @@ public struct PAP : IFlatbufferObject
       ulong COMPUTED_AT = 0,
       StringOffset PRODUCER_IDOffset = default(StringOffset),
       VectorOffset SIGNATUREOffset = default(VectorOffset),
-      VectorOffset CANONICAL_JSON_SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(30);
+      VectorOffset CANONICAL_JSON_SIGNATUREOffset = default(VectorOffset),
+      double EXPECTED_PEAK_GAIN_DBI = 0.0,
+      double COHERENT_GAIN_LOSS_DB = 0.0) {
+    builder.StartTable(32);
+    PAP.AddCOHERENT_GAIN_LOSS_DB(builder, COHERENT_GAIN_LOSS_DB);
+    PAP.AddEXPECTED_PEAK_GAIN_DBI(builder, EXPECTED_PEAK_GAIN_DBI);
     PAP.AddCOMPUTED_AT(builder, COMPUTED_AT);
     PAP.AddPEAK_SIDELOBE_LEVEL_DB(builder, PEAK_SIDELOBE_LEVEL_DB);
     PAP.AddFIRST_SIDELOBE_LEVEL_DB(builder, FIRST_SIDELOBE_LEVEL_DB);
@@ -201,7 +218,7 @@ public struct PAP : IFlatbufferObject
     return PAP.EndPAP(builder);
   }
 
-  public static void StartPAP(FlatBufferBuilder builder) { builder.StartTable(30); }
+  public static void StartPAP(FlatBufferBuilder builder) { builder.StartTable(32); }
   public static void AddPAP_ID(FlatBufferBuilder builder, StringOffset PAP_IDOffset) { builder.AddOffset(0, PAP_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddSCENARIO_ID(FlatBufferBuilder builder, StringOffset SCENARIO_IDOffset) { builder.AddOffset(2, SCENARIO_IDOffset.Value, 0); }
@@ -272,6 +289,8 @@ public struct PAP : IFlatbufferObject
   public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCANONICAL_JSON_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCANONICAL_JSON_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddEXPECTED_PEAK_GAIN_DBI(FlatBufferBuilder builder, double EXPECTED_PEAK_GAIN_DBI) { builder.AddDouble(30, EXPECTED_PEAK_GAIN_DBI, 0.0); }
+  public static void AddCOHERENT_GAIN_LOSS_DB(FlatBufferBuilder builder, double COHERENT_GAIN_LOSS_DB) { builder.AddDouble(31, COHERENT_GAIN_LOSS_DB, 0.0); }
   public static Offset<PAP> EndPAP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // PAP_ID
@@ -329,6 +348,8 @@ public struct PAP : IFlatbufferObject
     for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
     _o.CANONICAL_JSON_SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.CANONICAL_JSON_SIGNATURELength; ++_j) {_o.CANONICAL_JSON_SIGNATURE.Add(this.CANONICAL_JSON_SIGNATURE(_j));}
+    _o.EXPECTED_PEAK_GAIN_DBI = this.EXPECTED_PEAK_GAIN_DBI;
+    _o.COHERENT_GAIN_LOSS_DB = this.COHERENT_GAIN_LOSS_DB;
   }
   public static Offset<PAP> Pack(FlatBufferBuilder builder, PAPT _o) {
     if (_o == null) return default(Offset<PAP>);
@@ -414,7 +435,9 @@ public struct PAP : IFlatbufferObject
       _o.COMPUTED_AT,
       _PRODUCER_ID,
       _SIGNATURE,
-      _CANONICAL_JSON_SIGNATURE);
+      _CANONICAL_JSON_SIGNATURE,
+      _o.EXPECTED_PEAK_GAIN_DBI,
+      _o.COHERENT_GAIN_LOSS_DB);
   }
 }
 
@@ -450,6 +473,8 @@ public class PAPT
   public string PRODUCER_ID { get; set; }
   public List<byte> SIGNATURE { get; set; }
   public List<byte> CANONICAL_JSON_SIGNATURE { get; set; }
+  public double EXPECTED_PEAK_GAIN_DBI { get; set; }
+  public double COHERENT_GAIN_LOSS_DB { get; set; }
 
   public PAPT() {
     this.PAP_ID = null;
@@ -482,6 +507,8 @@ public class PAPT
     this.PRODUCER_ID = null;
     this.SIGNATURE = null;
     this.CANONICAL_JSON_SIGNATURE = null;
+    this.EXPECTED_PEAK_GAIN_DBI = 0.0;
+    this.COHERENT_GAIN_LOSS_DB = 0.0;
   }
   public static PAPT DeserializeFromBinary(byte[] fbBuffer) {
     return PAP.GetRootAsPAP(new ByteBuffer(fbBuffer)).UnPack();
@@ -529,6 +556,8 @@ static public class PAPVerify
       && verifier.VerifyString(tablePos, 58 /*PRODUCER_ID*/, true)
       && verifier.VerifyVectorOfData(tablePos, 60 /*SIGNATURE*/, 1 /*byte*/, true)
       && verifier.VerifyVectorOfData(tablePos, 62 /*CANONICAL_JSON_SIGNATURE*/, 1 /*byte*/, true)
+      && verifier.VerifyField(tablePos, 64 /*EXPECTED_PEAK_GAIN_DBI*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*COHERENT_GAIN_LOSS_DB*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

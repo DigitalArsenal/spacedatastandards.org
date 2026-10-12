@@ -106,8 +106,27 @@ class PAPElement(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+    # Errors are independent between elements. 0 = ideal (no phase error).
+    # PAPElement
+    def PHASE_ERROR_SIGMA_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma of the element's zero-mean Gaussian position error per axis
+    # (isotropic), metres. Its line-of-sight component adds a phase error of
+    # 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+    # PAPElement
+    def POSITION_ERROR_SIGMA_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def PAPElementStart(builder):
-    builder.StartObject(11)
+    builder.StartObject(13)
 
 def Start(builder):
     PAPElementStart(builder)
@@ -178,6 +197,18 @@ def PAPElementAddFAILED(builder, FAILED):
 def AddFAILED(builder, FAILED):
     PAPElementAddFAILED(builder, FAILED)
 
+def PAPElementAddPHASE_ERROR_SIGMA_DEG(builder, PHASE_ERROR_SIGMA_DEG):
+    builder.PrependFloat64Slot(11, PHASE_ERROR_SIGMA_DEG, 0.0)
+
+def AddPHASE_ERROR_SIGMA_DEG(builder, PHASE_ERROR_SIGMA_DEG):
+    PAPElementAddPHASE_ERROR_SIGMA_DEG(builder, PHASE_ERROR_SIGMA_DEG)
+
+def PAPElementAddPOSITION_ERROR_SIGMA_M(builder, POSITION_ERROR_SIGMA_M):
+    builder.PrependFloat64Slot(12, POSITION_ERROR_SIGMA_M, 0.0)
+
+def AddPOSITION_ERROR_SIGMA_M(builder, POSITION_ERROR_SIGMA_M):
+    PAPElementAddPOSITION_ERROR_SIGMA_M(builder, POSITION_ERROR_SIGMA_M)
+
 def PAPElementEnd(builder):
     return builder.EndObject()
 
@@ -201,6 +232,8 @@ class PAPElementT(object):
         ELEMENT_PATTERN_ID = None,
         FAILURE_FLAGS = 0,
         FAILED = False,
+        PHASE_ERROR_SIGMA_DEG = 0.0,
+        POSITION_ERROR_SIGMA_M = 0.0,
     ):
         self.ELEMENT_ID = ELEMENT_ID  # type: Optional[str]
         self.POSITION_X_M = POSITION_X_M  # type: float
@@ -213,6 +246,8 @@ class PAPElementT(object):
         self.ELEMENT_PATTERN_ID = ELEMENT_PATTERN_ID  # type: Optional[str]
         self.FAILURE_FLAGS = FAILURE_FLAGS  # type: int
         self.FAILED = FAILED  # type: bool
+        self.PHASE_ERROR_SIGMA_DEG = PHASE_ERROR_SIGMA_DEG  # type: float
+        self.POSITION_ERROR_SIGMA_M = POSITION_ERROR_SIGMA_M  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -246,6 +281,8 @@ class PAPElementT(object):
         self.ELEMENT_PATTERN_ID = PAPElement.ELEMENT_PATTERN_ID()
         self.FAILURE_FLAGS = PAPElement.FAILURE_FLAGS()
         self.FAILED = PAPElement.FAILED()
+        self.PHASE_ERROR_SIGMA_DEG = PAPElement.PHASE_ERROR_SIGMA_DEG()
+        self.POSITION_ERROR_SIGMA_M = PAPElement.POSITION_ERROR_SIGMA_M()
 
     # PAPElementT
     def Pack(self, builder):
@@ -267,5 +304,7 @@ class PAPElementT(object):
             PAPElementAddELEMENT_PATTERN_ID(builder, ELEMENT_PATTERN_ID)
         PAPElementAddFAILURE_FLAGS(builder, self.FAILURE_FLAGS)
         PAPElementAddFAILED(builder, self.FAILED)
+        PAPElementAddPHASE_ERROR_SIGMA_DEG(builder, self.PHASE_ERROR_SIGMA_DEG)
+        PAPElementAddPOSITION_ERROR_SIGMA_M(builder, self.POSITION_ERROR_SIGMA_M)
         PAPElement = PAPElementEnd(builder)
         return PAPElement

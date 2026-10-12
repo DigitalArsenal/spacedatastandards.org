@@ -122142,6 +122142,16 @@
                         "FAILED": {
                             "type": "boolean",
                             "x-flatbuffer-type": "bool"
+                        },
+                        "PHASE_ERROR_SIGMA_DEG": {
+                            "type": "number",
+                            "description": "1-sigma of the element's zero-mean Gaussian phase error, degrees.\nErrors are independent between elements. 0 = ideal (no phase error).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "POSITION_ERROR_SIGMA_M": {
+                            "type": "number",
+                            "description": "1-sigma of the element's zero-mean Gaussian position error per axis\n(isotropic), metres. Its line-of-sight component adds a phase error of\n2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.",
+                            "x-flatbuffer-type": "double"
                         }
                     },
                     "required": [
@@ -122461,6 +122471,16 @@
                             "description": "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted.",
                             "x-flatbuffer-type": "[ubyte]",
                             "x-flatbuffer-required": true
+                        },
+                        "EXPECTED_PEAK_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Expected gain toward the steering direction with the element errors of\nPAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.\nElement errors are independent; element n's total phase variance is\ns_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected\npower gain of the array factor is the coherent part plus the incoherent\nfloor, with w_n the steered complex weights:\nE|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),\nwhich for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.\nEquals PEAK_GAIN_DBI when every element is ideal.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "COHERENT_GAIN_LOSS_DB": {
+                            "type": "number",
+                            "description": "PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element\nerrors reduce the steering gain, 0 when every element is ideal.",
+                            "x-flatbuffer-type": "double"
                         }
                     },
                     "required": [
@@ -253992,6 +254012,16 @@
                         "FAILED": {
                             "type": "boolean",
                             "x-flatbuffer-type": "bool"
+                        },
+                        "PHASE_ERROR_SIGMA_DEG": {
+                            "type": "number",
+                            "description": "1-sigma of the element's zero-mean Gaussian phase error, degrees.\nErrors are independent between elements. 0 = ideal (no phase error).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "POSITION_ERROR_SIGMA_M": {
+                            "type": "number",
+                            "description": "1-sigma of the element's zero-mean Gaussian position error per axis\n(isotropic), metres. Its line-of-sight component adds a phase error of\n2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.",
+                            "x-flatbuffer-type": "double"
                         }
                     },
                     "required": [
@@ -254311,6 +254341,16 @@
                             "description": "Ed25519 signature over canonical JSON with IDL field order and\ncapitalization, no insignificant whitespace, and both signature fields\nomitted.",
                             "x-flatbuffer-type": "[ubyte]",
                             "x-flatbuffer-required": true
+                        },
+                        "EXPECTED_PEAK_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Expected gain toward the steering direction with the element errors of\nPAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.\nElement errors are independent; element n's total phase variance is\ns_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected\npower gain of the array factor is the coherent part plus the incoherent\nfloor, with w_n the steered complex weights:\nE|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),\nwhich for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.\nEquals PEAK_GAIN_DBI when every element is ideal.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "COHERENT_GAIN_LOSS_DB": {
+                            "type": "number",
+                            "description": "PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element\nerrors reduce the steering gain, 0 when every element is ideal.",
+                            "x-flatbuffer-type": "double"
                         }
                     },
                     "required": [

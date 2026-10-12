@@ -1,5 +1,5 @@
-// Hash: de2444052e3e196bda4f5df89ae2d10924f4775229faa9d30c6833a5054fbf42
-// Version: 1.193.1
+// Hash: 310b4ec8936d803ae5c68cb5a7eb1f362cfb23f5077dce9e5ccb775fbb816543
+// Version: 1.193.2
 // -----------------------------------END_HEADER
 include "../RFL/main.fbs";
 
@@ -51,6 +51,13 @@ table PAPElement {
   ELEMENT_PATTERN_ID: string;
   FAILURE_FLAGS: uint32;
   FAILED: bool;
+  /// 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+  /// Errors are independent between elements. 0 = ideal (no phase error).
+  PHASE_ERROR_SIGMA_DEG: double;
+  /// 1-sigma of the element's zero-mean Gaussian position error per axis
+  /// (isotropic), metres. Its line-of-sight component adds a phase error of
+  /// 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+  POSITION_ERROR_SIGMA_M: double;
 }
 
 /// One one-dimensional gain cut through the synthesized pattern.
@@ -114,6 +121,19 @@ table PAP {
   /// capitalization, no insignificant whitespace, and both signature fields
   /// omitted.
   CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+  /// Expected gain toward the steering direction with the element errors of
+  /// PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+  /// Element errors are independent; element n's total phase variance is
+  /// s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+  /// power gain of the array factor is the coherent part plus the incoherent
+  /// floor, with w_n the steered complex weights:
+  /// E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+  /// which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+  /// Equals PEAK_GAIN_DBI when every element is ideal.
+  EXPECTED_PEAK_GAIN_DBI: double;
+  /// PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+  /// errors reduce the steering gain, 0 when every element is ideal.
+  COHERENT_GAIN_LOSS_DB: double;
 }
 
 root_type PAP;

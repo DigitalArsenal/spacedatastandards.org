@@ -77,6 +77,23 @@ export declare class PAP implements flatbuffers.IUnpackableObject<PAPT> {
     CANONICAL_JSON_SIGNATURE(index: number): number | null;
     canonicalJsonSignatureLength(): number;
     canonicalJsonSignatureArray(): Uint8Array;
+    /**
+     * Expected gain toward the steering direction with the element errors of
+     * PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+     * Element errors are independent; element n's total phase variance is
+     * s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+     * power gain of the array factor is the coherent part plus the incoherent
+     * floor, with w_n the steered complex weights:
+     * E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+     * which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+     * Equals PEAK_GAIN_DBI when every element is ideal.
+     */
+    EXPECTED_PEAK_GAIN_DBI(): number;
+    /**
+     * PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+     * errors reduce the steering gain, 0 when every element is ideal.
+     */
+    COHERENT_GAIN_LOSS_DB(): number;
     static startPAP(builder: flatbuffers.Builder): void;
     static addPapId(builder: flatbuffers.Builder, PAP_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -136,6 +153,8 @@ export declare class PAP implements flatbuffers.IUnpackableObject<PAPT> {
     static addCanonicalJsonSignature(builder: flatbuffers.Builder, CANONICAL_JSON_SIGNATUREOffset: flatbuffers.Offset): void;
     static createCanonicalJsonSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startCanonicalJsonSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addExpectedPeakGainDbi(builder: flatbuffers.Builder, EXPECTED_PEAK_GAIN_DBI: number): void;
+    static addCoherentGainLossDb(builder: flatbuffers.Builder, COHERENT_GAIN_LOSS_DB: number): void;
     static endPAP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPAPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPAPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -173,7 +192,9 @@ export declare class PAPT implements flatbuffers.IGeneratedObject {
     PRODUCER_ID: string | Uint8Array | null;
     SIGNATURE: (number)[];
     CANONICAL_JSON_SIGNATURE: (number)[];
-    constructor(PAP_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SCENARIO_ID?: string | Uint8Array | null, RFE_ID?: string | Uint8Array | null, BEM_ID?: string | Uint8Array | null, HOP_SCHEDULE_ID?: string | Uint8Array | null, GEOMETRY?: papArrayGeometry, ELEMENTS?: (PAPElementT)[], TAPER?: papTaperFamily, TAPER_PARAMETERS?: (number)[], STEERING_AZIMUTH_DEG?: number, STEERING_ELEVATION_DEG?: number, STEERING_CONE_DEG?: number, STEERING_CLOCK_DEG?: number, SCAN_LOSS_DB?: number, PEAK_GAIN_DBI?: number, GAIN_CUTS?: (PAPGainCutT)[], AZIMUTH_3DB_BEAMWIDTH_DEG?: number, ELEVATION_3DB_BEAMWIDTH_DEG?: number, FIRST_SIDELOBE_LEVEL_DB?: number, PEAK_SIDELOBE_LEVEL_DB?: number, GRATING_LOBE_PRESENT?: boolean, GRATING_LOBE_AZIMUTH_DEG?: (number)[], GRATING_LOBE_ELEVATION_DEG?: (number)[], NULLS?: (PAPNullT)[], PROVENANCE?: RFLProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[], CANONICAL_JSON_SIGNATURE?: (number)[]);
+    EXPECTED_PEAK_GAIN_DBI: number;
+    COHERENT_GAIN_LOSS_DB: number;
+    constructor(PAP_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SCENARIO_ID?: string | Uint8Array | null, RFE_ID?: string | Uint8Array | null, BEM_ID?: string | Uint8Array | null, HOP_SCHEDULE_ID?: string | Uint8Array | null, GEOMETRY?: papArrayGeometry, ELEMENTS?: (PAPElementT)[], TAPER?: papTaperFamily, TAPER_PARAMETERS?: (number)[], STEERING_AZIMUTH_DEG?: number, STEERING_ELEVATION_DEG?: number, STEERING_CONE_DEG?: number, STEERING_CLOCK_DEG?: number, SCAN_LOSS_DB?: number, PEAK_GAIN_DBI?: number, GAIN_CUTS?: (PAPGainCutT)[], AZIMUTH_3DB_BEAMWIDTH_DEG?: number, ELEVATION_3DB_BEAMWIDTH_DEG?: number, FIRST_SIDELOBE_LEVEL_DB?: number, PEAK_SIDELOBE_LEVEL_DB?: number, GRATING_LOBE_PRESENT?: boolean, GRATING_LOBE_AZIMUTH_DEG?: (number)[], GRATING_LOBE_ELEVATION_DEG?: (number)[], NULLS?: (PAPNullT)[], PROVENANCE?: RFLProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[], CANONICAL_JSON_SIGNATURE?: (number)[], EXPECTED_PEAK_GAIN_DBI?: number, COHERENT_GAIN_LOSS_DB?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PAP.d.ts.map

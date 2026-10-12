@@ -246,8 +246,58 @@ func (rcv *PAPElement) MutateFailed(n bool) bool {
 	return rcv.MutateFAILED(n)
 }
 
+/// 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+/// Errors are independent between elements. 0 = ideal (no phase error).
+func (rcv *PAPElement) PHASE_ERROR_SIGMA_DEG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PAPElement) PhaseErrorSigmaDeg() float64 {
+	return rcv.PHASE_ERROR_SIGMA_DEG()
+}
+
+/// 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+/// Errors are independent between elements. 0 = ideal (no phase error).
+func (rcv *PAPElement) MutatePHASE_ERROR_SIGMA_DEG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *PAPElement) MutatePhaseErrorSigmaDeg(n float64) bool {
+	return rcv.MutatePHASE_ERROR_SIGMA_DEG(n)
+}
+
+/// 1-sigma of the element's zero-mean Gaussian position error per axis
+/// (isotropic), metres. Its line-of-sight component adds a phase error of
+/// 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+func (rcv *PAPElement) POSITION_ERROR_SIGMA_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PAPElement) PositionErrorSigmaM() float64 {
+	return rcv.POSITION_ERROR_SIGMA_M()
+}
+
+/// 1-sigma of the element's zero-mean Gaussian position error per axis
+/// (isotropic), metres. Its line-of-sight component adds a phase error of
+/// 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+func (rcv *PAPElement) MutatePOSITION_ERROR_SIGMA_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *PAPElement) MutatePositionErrorSigmaM(n float64) bool {
+	return rcv.MutatePOSITION_ERROR_SIGMA_M(n)
+}
+
 func PAPElementStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(13)
 }
 func PAPElementAddELEMENT_ID(builder *flatbuffers.Builder, ELEMENT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ELEMENT_ID), 0)
@@ -314,6 +364,18 @@ func PAPElementAddFAILED(builder *flatbuffers.Builder, FAILED bool) {
 }
 func PAPElementAddFailed(builder *flatbuffers.Builder, FAILED bool) {
 	PAPElementAddFAILED(builder, FAILED)
+}
+func PAPElementAddPHASE_ERROR_SIGMA_DEG(builder *flatbuffers.Builder, PHASE_ERROR_SIGMA_DEG float64) {
+	builder.PrependFloat64Slot(11, PHASE_ERROR_SIGMA_DEG, 0.0)
+}
+func PAPElementAddPhaseErrorSigmaDeg(builder *flatbuffers.Builder, PHASE_ERROR_SIGMA_DEG float64) {
+	PAPElementAddPHASE_ERROR_SIGMA_DEG(builder, PHASE_ERROR_SIGMA_DEG)
+}
+func PAPElementAddPOSITION_ERROR_SIGMA_M(builder *flatbuffers.Builder, POSITION_ERROR_SIGMA_M float64) {
+	builder.PrependFloat64Slot(12, POSITION_ERROR_SIGMA_M, 0.0)
+}
+func PAPElementAddPositionErrorSigmaM(builder *flatbuffers.Builder, POSITION_ERROR_SIGMA_M float64) {
+	PAPElementAddPOSITION_ERROR_SIGMA_M(builder, POSITION_ERROR_SIGMA_M)
 }
 func PAPElementEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

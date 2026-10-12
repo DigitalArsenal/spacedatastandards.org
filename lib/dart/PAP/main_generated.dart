@@ -171,10 +171,19 @@ class PAPElement {
   int get FAILURE_FLAGS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 22, 0);
   int get failureFlags => FAILURE_FLAGS;
   bool get FAILED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  ///  1-sigma of the element's zero-mean Gaussian phase error, degrees.
+  ///  Errors are independent between elements. 0 = ideal (no phase error).
+  double get PHASE_ERROR_SIGMA_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get phaseErrorSigmaDeg => PHASE_ERROR_SIGMA_DEG;
+  ///  1-sigma of the element's zero-mean Gaussian position error per axis
+  ///  (isotropic), metres. Its line-of-sight component adds a phase error of
+  ///  2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+  double get POSITION_ERROR_SIGMA_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get positionErrorSigmaM => POSITION_ERROR_SIGMA_M;
 
   @override
   String toString() {
-    return 'PAPElement{elementId: ${elementId}, positionXM: ${positionXM}, positionYM: ${positionYM}, positionZM: ${positionZM}, weightReal: ${weightReal}, weightImaginary: ${weightImaginary}, AMPLITUDE: ${AMPLITUDE}, phaseDeg: ${phaseDeg}, elementPatternId: ${elementPatternId}, failureFlags: ${failureFlags}, FAILED: ${FAILED}}';
+    return 'PAPElement{elementId: ${elementId}, positionXM: ${positionXM}, positionYM: ${positionYM}, positionZM: ${positionZM}, weightReal: ${weightReal}, weightImaginary: ${weightImaginary}, AMPLITUDE: ${AMPLITUDE}, phaseDeg: ${phaseDeg}, elementPatternId: ${elementPatternId}, failureFlags: ${failureFlags}, FAILED: ${FAILED}, phaseErrorSigmaDeg: ${phaseErrorSigmaDeg}, positionErrorSigmaM: ${positionErrorSigmaM}}';
   }
 }
 
@@ -192,7 +201,7 @@ class PAPElementBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(13);
   }
 
   int addElementIdOffset(int? offset) {
@@ -239,6 +248,14 @@ class PAPElementBuilder {
     fbBuilder.addBool(10, FAILED);
     return fbBuilder.offset;
   }
+  int addPhaseErrorSigmaDeg(double? PHASE_ERROR_SIGMA_DEG) {
+    fbBuilder.addFloat64(11, PHASE_ERROR_SIGMA_DEG);
+    return fbBuilder.offset;
+  }
+  int addPositionErrorSigmaM(double? POSITION_ERROR_SIGMA_M) {
+    fbBuilder.addFloat64(12, POSITION_ERROR_SIGMA_M);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -257,6 +274,8 @@ class PAPElementObjectBuilder extends fb.ObjectBuilder {
   final String? _ELEMENT_PATTERN_ID;
   final int? _FAILURE_FLAGS;
   final bool? _FAILED;
+  final double? _PHASE_ERROR_SIGMA_DEG;
+  final double? _POSITION_ERROR_SIGMA_M;
 
   PAPElementObjectBuilder({
     String? ELEMENT_ID,
@@ -279,6 +298,10 @@ class PAPElementObjectBuilder extends fb.ObjectBuilder {
     int? FAILURE_FLAGS,
     int? failureFlags,
     bool? FAILED,
+    double? PHASE_ERROR_SIGMA_DEG,
+    double? phaseErrorSigmaDeg,
+    double? POSITION_ERROR_SIGMA_M,
+    double? positionErrorSigmaM,
   })
       : _ELEMENT_ID = elementId ?? ELEMENT_ID,
         _POSITION_X_M = positionXM ?? POSITION_X_M,
@@ -290,7 +313,9 @@ class PAPElementObjectBuilder extends fb.ObjectBuilder {
         _PHASE_DEG = phaseDeg ?? PHASE_DEG,
         _ELEMENT_PATTERN_ID = elementPatternId ?? ELEMENT_PATTERN_ID,
         _FAILURE_FLAGS = failureFlags ?? FAILURE_FLAGS,
-        _FAILED = FAILED;
+        _FAILED = FAILED,
+        _PHASE_ERROR_SIGMA_DEG = phaseErrorSigmaDeg ?? PHASE_ERROR_SIGMA_DEG,
+        _POSITION_ERROR_SIGMA_M = positionErrorSigmaM ?? POSITION_ERROR_SIGMA_M;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -299,7 +324,7 @@ class PAPElementObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ELEMENT_ID!);
     final int? ELEMENT_PATTERN_IDOffset = _ELEMENT_PATTERN_ID == null ? null
         : fbBuilder.writeString(_ELEMENT_PATTERN_ID!);
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(13);
     fbBuilder.addOffset(0, ELEMENT_IDOffset);
     fbBuilder.addFloat64(1, _POSITION_X_M);
     fbBuilder.addFloat64(2, _POSITION_Y_M);
@@ -311,6 +336,8 @@ class PAPElementObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(8, ELEMENT_PATTERN_IDOffset);
     fbBuilder.addUint32(9, _FAILURE_FLAGS);
     fbBuilder.addBool(10, _FAILED);
+    fbBuilder.addFloat64(11, _PHASE_ERROR_SIGMA_DEG);
+    fbBuilder.addFloat64(12, _POSITION_ERROR_SIGMA_M);
     return fbBuilder.endTable();
   }
 
@@ -660,10 +687,25 @@ class PAP {
   ///  omitted.
   List<int>? get CANONICAL_JSON_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 62);
   List<int>? get canonicalJsonSignature => CANONICAL_JSON_SIGNATURE;
+  ///  Expected gain toward the steering direction with the element errors of
+  ///  PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+  ///  Element errors are independent; element n's total phase variance is
+  ///  s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+  ///  power gain of the array factor is the coherent part plus the incoherent
+  ///  floor, with w_n the steered complex weights:
+  ///  E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+  ///  which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+  ///  Equals PEAK_GAIN_DBI when every element is ideal.
+  double get EXPECTED_PEAK_GAIN_DBI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get expectedPeakGainDbi => EXPECTED_PEAK_GAIN_DBI;
+  ///  PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+  ///  errors reduce the steering gain, 0 when every element is ideal.
+  double get COHERENT_GAIN_LOSS_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get coherentGainLossDb => COHERENT_GAIN_LOSS_DB;
 
   @override
   String toString() {
-    return 'PAP{papId: ${papId}, NAME: ${NAME}, scenarioId: ${scenarioId}, rfeId: ${rfeId}, bemId: ${bemId}, hopScheduleId: ${hopScheduleId}, GEOMETRY: ${GEOMETRY}, ELEMENTS: ${ELEMENTS}, TAPER: ${TAPER}, taperParameters: ${taperParameters}, steeringAzimuthDeg: ${steeringAzimuthDeg}, steeringElevationDeg: ${steeringElevationDeg}, steeringConeDeg: ${steeringConeDeg}, steeringClockDeg: ${steeringClockDeg}, scanLossDb: ${scanLossDb}, peakGainDbi: ${peakGainDbi}, gainCuts: ${gainCuts}, azimuth3dbBeamwidthDeg: ${azimuth3dbBeamwidthDeg}, elevation3dbBeamwidthDeg: ${elevation3dbBeamwidthDeg}, firstSidelobeLevelDb: ${firstSidelobeLevelDb}, peakSidelobeLevelDb: ${peakSidelobeLevelDb}, gratingLobePresent: ${gratingLobePresent}, gratingLobeAzimuthDeg: ${gratingLobeAzimuthDeg}, gratingLobeElevationDeg: ${gratingLobeElevationDeg}, NULLS: ${NULLS}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}}';
+    return 'PAP{papId: ${papId}, NAME: ${NAME}, scenarioId: ${scenarioId}, rfeId: ${rfeId}, bemId: ${bemId}, hopScheduleId: ${hopScheduleId}, GEOMETRY: ${GEOMETRY}, ELEMENTS: ${ELEMENTS}, TAPER: ${TAPER}, taperParameters: ${taperParameters}, steeringAzimuthDeg: ${steeringAzimuthDeg}, steeringElevationDeg: ${steeringElevationDeg}, steeringConeDeg: ${steeringConeDeg}, steeringClockDeg: ${steeringClockDeg}, scanLossDb: ${scanLossDb}, peakGainDbi: ${peakGainDbi}, gainCuts: ${gainCuts}, azimuth3dbBeamwidthDeg: ${azimuth3dbBeamwidthDeg}, elevation3dbBeamwidthDeg: ${elevation3dbBeamwidthDeg}, firstSidelobeLevelDb: ${firstSidelobeLevelDb}, peakSidelobeLevelDb: ${peakSidelobeLevelDb}, gratingLobePresent: ${gratingLobePresent}, gratingLobeAzimuthDeg: ${gratingLobeAzimuthDeg}, gratingLobeElevationDeg: ${gratingLobeElevationDeg}, NULLS: ${NULLS}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}, expectedPeakGainDbi: ${expectedPeakGainDbi}, coherentGainLossDb: ${coherentGainLossDb}}';
   }
 }
 
@@ -681,7 +723,7 @@ class PAPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(30);
+    fbBuilder.startTable(32);
   }
 
   int addPapIdOffset(int? offset) {
@@ -804,6 +846,14 @@ class PAPBuilder {
     fbBuilder.addOffset(29, offset);
     return fbBuilder.offset;
   }
+  int addExpectedPeakGainDbi(double? EXPECTED_PEAK_GAIN_DBI) {
+    fbBuilder.addFloat64(30, EXPECTED_PEAK_GAIN_DBI);
+    return fbBuilder.offset;
+  }
+  int addCoherentGainLossDb(double? COHERENT_GAIN_LOSS_DB) {
+    fbBuilder.addFloat64(31, COHERENT_GAIN_LOSS_DB);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -841,6 +891,8 @@ class PAPObjectBuilder extends fb.ObjectBuilder {
   final String? _PRODUCER_ID;
   final List<int>? _SIGNATURE;
   final List<int>? _CANONICAL_JSON_SIGNATURE;
+  final double? _EXPECTED_PEAK_GAIN_DBI;
+  final double? _COHERENT_GAIN_LOSS_DB;
 
   PAPObjectBuilder({
     String? PAP_ID,
@@ -896,6 +948,10 @@ class PAPObjectBuilder extends fb.ObjectBuilder {
     List<int>? SIGNATURE,
     List<int>? CANONICAL_JSON_SIGNATURE,
     List<int>? canonicalJsonSignature,
+    double? EXPECTED_PEAK_GAIN_DBI,
+    double? expectedPeakGainDbi,
+    double? COHERENT_GAIN_LOSS_DB,
+    double? coherentGainLossDb,
   })
       : _PAP_ID = papId ?? PAP_ID,
         _NAME = NAME,
@@ -926,7 +982,9 @@ class PAPObjectBuilder extends fb.ObjectBuilder {
         _COMPUTED_AT = computedAt ?? COMPUTED_AT,
         _PRODUCER_ID = producerId ?? PRODUCER_ID,
         _SIGNATURE = SIGNATURE,
-        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE;
+        _CANONICAL_JSON_SIGNATURE = canonicalJsonSignature ?? CANONICAL_JSON_SIGNATURE,
+        _EXPECTED_PEAK_GAIN_DBI = expectedPeakGainDbi ?? EXPECTED_PEAK_GAIN_DBI,
+        _COHERENT_GAIN_LOSS_DB = coherentGainLossDb ?? COHERENT_GAIN_LOSS_DB;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -962,7 +1020,7 @@ class PAPObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListUint8(_SIGNATURE!);
     final int? CANONICAL_JSON_SIGNATUREOffset = _CANONICAL_JSON_SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_CANONICAL_JSON_SIGNATURE!);
-    fbBuilder.startTable(30);
+    fbBuilder.startTable(32);
     fbBuilder.addOffset(0, PAP_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, SCENARIO_IDOffset);
@@ -993,6 +1051,8 @@ class PAPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(27, PRODUCER_IDOffset);
     fbBuilder.addOffset(28, SIGNATUREOffset);
     fbBuilder.addOffset(29, CANONICAL_JSON_SIGNATUREOffset);
+    fbBuilder.addFloat64(30, _EXPECTED_PEAK_GAIN_DBI);
+    fbBuilder.addFloat64(31, _COHERENT_GAIN_LOSS_DB);
     return fbBuilder.endTable();
   }
 

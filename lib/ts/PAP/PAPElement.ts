@@ -86,8 +86,27 @@ FAILED():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+ * Errors are independent between elements. 0 = ideal (no phase error).
+ */
+PHASE_ERROR_SIGMA_DEG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * 1-sigma of the element's zero-mean Gaussian position error per axis
+ * (isotropic), metres. Its line-of-sight component adds a phase error of
+ * 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+ */
+POSITION_ERROR_SIGMA_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startPAPElement(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(13);
 }
 
 static addElementId(builder:flatbuffers.Builder, ELEMENT_IDOffset:flatbuffers.Offset) {
@@ -134,13 +153,21 @@ static addFailed(builder:flatbuffers.Builder, FAILED:boolean) {
   builder.addFieldInt8(10, +FAILED, +false);
 }
 
+static addPhaseErrorSigmaDeg(builder:flatbuffers.Builder, PHASE_ERROR_SIGMA_DEG:number) {
+  builder.addFieldFloat64(11, PHASE_ERROR_SIGMA_DEG, 0.0);
+}
+
+static addPositionErrorSigmaM(builder:flatbuffers.Builder, POSITION_ERROR_SIGMA_M:number) {
+  builder.addFieldFloat64(12, POSITION_ERROR_SIGMA_M, 0.0);
+}
+
 static endPAPElement(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // ELEMENT_ID
   return offset;
 }
 
-static createPAPElement(builder:flatbuffers.Builder, ELEMENT_IDOffset:flatbuffers.Offset, POSITION_X_M:number, POSITION_Y_M:number, POSITION_Z_M:number, WEIGHT_REAL:number, WEIGHT_IMAGINARY:number, AMPLITUDE:number, PHASE_DEG:number, ELEMENT_PATTERN_IDOffset:flatbuffers.Offset, FAILURE_FLAGS:number, FAILED:boolean):flatbuffers.Offset {
+static createPAPElement(builder:flatbuffers.Builder, ELEMENT_IDOffset:flatbuffers.Offset, POSITION_X_M:number, POSITION_Y_M:number, POSITION_Z_M:number, WEIGHT_REAL:number, WEIGHT_IMAGINARY:number, AMPLITUDE:number, PHASE_DEG:number, ELEMENT_PATTERN_IDOffset:flatbuffers.Offset, FAILURE_FLAGS:number, FAILED:boolean, PHASE_ERROR_SIGMA_DEG:number, POSITION_ERROR_SIGMA_M:number):flatbuffers.Offset {
   PAPElement.startPAPElement(builder);
   PAPElement.addElementId(builder, ELEMENT_IDOffset);
   PAPElement.addPositionXM(builder, POSITION_X_M);
@@ -153,6 +180,8 @@ static createPAPElement(builder:flatbuffers.Builder, ELEMENT_IDOffset:flatbuffer
   PAPElement.addElementPatternId(builder, ELEMENT_PATTERN_IDOffset);
   PAPElement.addFailureFlags(builder, FAILURE_FLAGS);
   PAPElement.addFailed(builder, FAILED);
+  PAPElement.addPhaseErrorSigmaDeg(builder, PHASE_ERROR_SIGMA_DEG);
+  PAPElement.addPositionErrorSigmaM(builder, POSITION_ERROR_SIGMA_M);
   return PAPElement.endPAPElement(builder);
 }
 
@@ -168,7 +197,9 @@ unpack(): PAPElementT {
     this.PHASE_DEG(),
     this.ELEMENT_PATTERN_ID(),
     this.FAILURE_FLAGS(),
-    this.FAILED()
+    this.FAILED(),
+    this.PHASE_ERROR_SIGMA_DEG(),
+    this.POSITION_ERROR_SIGMA_M()
   );
 }
 
@@ -185,6 +216,8 @@ unpackTo(_o: PAPElementT): void {
   _o.ELEMENT_PATTERN_ID = this.ELEMENT_PATTERN_ID();
   _o.FAILURE_FLAGS = this.FAILURE_FLAGS();
   _o.FAILED = this.FAILED();
+  _o.PHASE_ERROR_SIGMA_DEG = this.PHASE_ERROR_SIGMA_DEG();
+  _o.POSITION_ERROR_SIGMA_M = this.POSITION_ERROR_SIGMA_M();
 }
 }
 
@@ -200,7 +233,9 @@ constructor(
   public PHASE_DEG: number = 0.0,
   public ELEMENT_PATTERN_ID: string|Uint8Array|null = null,
   public FAILURE_FLAGS: number = 0,
-  public FAILED: boolean = false
+  public FAILED: boolean = false,
+  public PHASE_ERROR_SIGMA_DEG: number = 0.0,
+  public POSITION_ERROR_SIGMA_M: number = 0.0
 ){}
 
 
@@ -219,7 +254,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.PHASE_DEG,
     ELEMENT_PATTERN_ID,
     this.FAILURE_FLAGS,
-    this.FAILED
+    this.FAILED,
+    this.PHASE_ERROR_SIGMA_DEG,
+    this.POSITION_ERROR_SIGMA_M
   );
 }
 }

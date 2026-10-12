@@ -375,6 +375,8 @@ impl<'a> PAPElement<'a> {
     pub const VT_ELEMENT_PATTERN_ID: ::flatbuffers::VOffsetT = 20;
     pub const VT_FAILURE_FLAGS: ::flatbuffers::VOffsetT = 22;
     pub const VT_FAILED: ::flatbuffers::VOffsetT = 24;
+    pub const VT_PHASE_ERROR_SIGMA_DEG: ::flatbuffers::VOffsetT = 26;
+    pub const VT_POSITION_ERROR_SIGMA_M: ::flatbuffers::VOffsetT = 28;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -387,6 +389,8 @@ impl<'a> PAPElement<'a> {
         args: &'args PAPElementArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PAPElement<'bldr>> {
         let mut builder = PAPElementBuilder::new(_fbb);
+        builder.add_POSITION_ERROR_SIGMA_M(args.POSITION_ERROR_SIGMA_M);
+        builder.add_PHASE_ERROR_SIGMA_DEG(args.PHASE_ERROR_SIGMA_DEG);
         builder.add_PHASE_DEG(args.PHASE_DEG);
         builder.add_AMPLITUDE(args.AMPLITUDE);
         builder.add_WEIGHT_IMAGINARY(args.WEIGHT_IMAGINARY);
@@ -418,6 +422,8 @@ impl<'a> PAPElement<'a> {
         });
         let FAILURE_FLAGS = self.FAILURE_FLAGS();
         let FAILED = self.FAILED();
+        let PHASE_ERROR_SIGMA_DEG = self.PHASE_ERROR_SIGMA_DEG();
+        let POSITION_ERROR_SIGMA_M = self.POSITION_ERROR_SIGMA_M();
         PAPElementT {
             ELEMENT_ID,
             POSITION_X_M,
@@ -430,6 +436,8 @@ impl<'a> PAPElement<'a> {
             ELEMENT_PATTERN_ID,
             FAILURE_FLAGS,
             FAILED,
+            PHASE_ERROR_SIGMA_DEG,
+            POSITION_ERROR_SIGMA_M,
         }
     }
 
@@ -520,6 +528,27 @@ impl<'a> PAPElement<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(PAPElement::VT_FAILED, Some(false)).unwrap()}
     }
+
+    /// 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+    /// Errors are independent between elements. 0 = ideal (no phase error).
+    #[inline]
+    pub fn PHASE_ERROR_SIGMA_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PAPElement::VT_PHASE_ERROR_SIGMA_DEG, Some(0.0)).unwrap()}
+    }
+
+    /// 1-sigma of the element's zero-mean Gaussian position error per axis
+    /// (isotropic), metres. Its line-of-sight component adds a phase error of
+    /// 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+    #[inline]
+    pub fn POSITION_ERROR_SIGMA_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PAPElement::VT_POSITION_ERROR_SIGMA_M, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PAPElement<'_> {
@@ -539,6 +568,8 @@ impl ::flatbuffers::Verifiable for PAPElement<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ELEMENT_PATTERN_ID", Self::VT_ELEMENT_PATTERN_ID, false)?
             .visit_field::<u32>("FAILURE_FLAGS", Self::VT_FAILURE_FLAGS, false)?
             .visit_field::<bool>("FAILED", Self::VT_FAILED, false)?
+            .visit_field::<f64>("PHASE_ERROR_SIGMA_DEG", Self::VT_PHASE_ERROR_SIGMA_DEG, false)?
+            .visit_field::<f64>("POSITION_ERROR_SIGMA_M", Self::VT_POSITION_ERROR_SIGMA_M, false)?
             .finish();
         Ok(())
     }
@@ -556,6 +587,8 @@ pub struct PAPElementArgs<'a> {
     pub ELEMENT_PATTERN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub FAILURE_FLAGS: u32,
     pub FAILED: bool,
+    pub PHASE_ERROR_SIGMA_DEG: f64,
+    pub POSITION_ERROR_SIGMA_M: f64,
 }
 
 impl<'a> Default for PAPElementArgs<'a> {
@@ -573,6 +606,8 @@ impl<'a> Default for PAPElementArgs<'a> {
             ELEMENT_PATTERN_ID: None,
             FAILURE_FLAGS: 0,
             FAILED: false,
+            PHASE_ERROR_SIGMA_DEG: 0.0,
+            POSITION_ERROR_SIGMA_M: 0.0,
         }
     }
 }
@@ -639,6 +674,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PAPElementBuilder<'a, 'b, A> 
     }
 
     #[inline]
+    pub fn add_PHASE_ERROR_SIGMA_DEG(&mut self, PHASE_ERROR_SIGMA_DEG: f64) {
+        self.fbb_.push_slot::<f64>(PAPElement::VT_PHASE_ERROR_SIGMA_DEG, PHASE_ERROR_SIGMA_DEG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_POSITION_ERROR_SIGMA_M(&mut self, POSITION_ERROR_SIGMA_M: f64) {
+        self.fbb_.push_slot::<f64>(PAPElement::VT_POSITION_ERROR_SIGMA_M, POSITION_ERROR_SIGMA_M, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PAPElementBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PAPElementBuilder {
@@ -669,6 +714,8 @@ impl ::core::fmt::Debug for PAPElement<'_> {
         ds.field("ELEMENT_PATTERN_ID", &self.ELEMENT_PATTERN_ID());
         ds.field("FAILURE_FLAGS", &self.FAILURE_FLAGS());
         ds.field("FAILED", &self.FAILED());
+        ds.field("PHASE_ERROR_SIGMA_DEG", &self.PHASE_ERROR_SIGMA_DEG());
+        ds.field("POSITION_ERROR_SIGMA_M", &self.POSITION_ERROR_SIGMA_M());
         ds.finish()
     }
 }
@@ -687,6 +734,8 @@ pub struct PAPElementT {
     pub ELEMENT_PATTERN_ID: Option<alloc::string::String>,
     pub FAILURE_FLAGS: u32,
     pub FAILED: bool,
+    pub PHASE_ERROR_SIGMA_DEG: f64,
+    pub POSITION_ERROR_SIGMA_M: f64,
 }
 
 impl Default for PAPElementT {
@@ -703,6 +752,8 @@ impl Default for PAPElementT {
             ELEMENT_PATTERN_ID: None,
             FAILURE_FLAGS: 0,
             FAILED: false,
+            PHASE_ERROR_SIGMA_DEG: 0.0,
+            POSITION_ERROR_SIGMA_M: 0.0,
         }
     }
 }
@@ -728,6 +779,8 @@ impl PAPElementT {
         });
         let FAILURE_FLAGS = self.FAILURE_FLAGS;
         let FAILED = self.FAILED;
+        let PHASE_ERROR_SIGMA_DEG = self.PHASE_ERROR_SIGMA_DEG;
+        let POSITION_ERROR_SIGMA_M = self.POSITION_ERROR_SIGMA_M;
         PAPElement::create(_fbb, &PAPElementArgs{
             ELEMENT_ID,
             POSITION_X_M,
@@ -740,6 +793,8 @@ impl PAPElementT {
             ELEMENT_PATTERN_ID,
             FAILURE_FLAGS,
             FAILED,
+            PHASE_ERROR_SIGMA_DEG,
+            POSITION_ERROR_SIGMA_M,
         })
     }
 }
@@ -1348,6 +1403,8 @@ impl<'a> PAP<'a> {
     pub const VT_PRODUCER_ID: ::flatbuffers::VOffsetT = 58;
     pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 60;
     pub const VT_CANONICAL_JSON_SIGNATURE: ::flatbuffers::VOffsetT = 62;
+    pub const VT_EXPECTED_PEAK_GAIN_DBI: ::flatbuffers::VOffsetT = 64;
+    pub const VT_COHERENT_GAIN_LOSS_DB: ::flatbuffers::VOffsetT = 66;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1360,6 +1417,8 @@ impl<'a> PAP<'a> {
         args: &'args PAPArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PAP<'bldr>> {
         let mut builder = PAPBuilder::new(_fbb);
+        builder.add_COHERENT_GAIN_LOSS_DB(args.COHERENT_GAIN_LOSS_DB);
+        builder.add_EXPECTED_PEAK_GAIN_DBI(args.EXPECTED_PEAK_GAIN_DBI);
         builder.add_COMPUTED_AT(args.COMPUTED_AT);
         builder.add_PEAK_SIDELOBE_LEVEL_DB(args.PEAK_SIDELOBE_LEVEL_DB);
         builder.add_FIRST_SIDELOBE_LEVEL_DB(args.FIRST_SIDELOBE_LEVEL_DB);
@@ -1463,6 +1522,8 @@ impl<'a> PAP<'a> {
             let x = self.CANONICAL_JSON_SIGNATURE();
             x.into_iter().collect()
         };
+        let EXPECTED_PEAK_GAIN_DBI = self.EXPECTED_PEAK_GAIN_DBI();
+        let COHERENT_GAIN_LOSS_DB = self.COHERENT_GAIN_LOSS_DB();
         PAPT {
             PAP_ID,
             NAME,
@@ -1494,6 +1555,8 @@ impl<'a> PAP<'a> {
             PRODUCER_ID,
             SIGNATURE,
             CANONICAL_JSON_SIGNATURE,
+            EXPECTED_PEAK_GAIN_DBI,
+            COHERENT_GAIN_LOSS_DB,
         }
     }
 
@@ -1742,6 +1805,33 @@ impl<'a> PAP<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PAP::VT_CANONICAL_JSON_SIGNATURE, None).unwrap()}
     }
+
+    /// Expected gain toward the steering direction with the element errors of
+    /// PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+    /// Element errors are independent; element n's total phase variance is
+    /// s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+    /// power gain of the array factor is the coherent part plus the incoherent
+    /// floor, with w_n the steered complex weights:
+    /// E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+    /// which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+    /// Equals PEAK_GAIN_DBI when every element is ideal.
+    #[inline]
+    pub fn EXPECTED_PEAK_GAIN_DBI(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PAP::VT_EXPECTED_PEAK_GAIN_DBI, Some(0.0)).unwrap()}
+    }
+
+    /// PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+    /// errors reduce the steering gain, 0 when every element is ideal.
+    #[inline]
+    pub fn COHERENT_GAIN_LOSS_DB(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PAP::VT_COHERENT_GAIN_LOSS_DB, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PAP<'_> {
@@ -1780,6 +1870,8 @@ impl ::flatbuffers::Verifiable for PAP<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_ID", Self::VT_PRODUCER_ID, true)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, true)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CANONICAL_JSON_SIGNATURE", Self::VT_CANONICAL_JSON_SIGNATURE, true)?
+            .visit_field::<f64>("EXPECTED_PEAK_GAIN_DBI", Self::VT_EXPECTED_PEAK_GAIN_DBI, false)?
+            .visit_field::<f64>("COHERENT_GAIN_LOSS_DB", Self::VT_COHERENT_GAIN_LOSS_DB, false)?
             .finish();
         Ok(())
     }
@@ -1816,6 +1908,8 @@ pub struct PAPArgs<'a> {
     pub PRODUCER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub CANONICAL_JSON_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub EXPECTED_PEAK_GAIN_DBI: f64,
+    pub COHERENT_GAIN_LOSS_DB: f64,
 }
 
 impl<'a> Default for PAPArgs<'a> {
@@ -1852,6 +1946,8 @@ impl<'a> Default for PAPArgs<'a> {
             PRODUCER_ID: None, // required field
             SIGNATURE: None, // required field
             CANONICAL_JSON_SIGNATURE: None, // required field
+            EXPECTED_PEAK_GAIN_DBI: 0.0,
+            COHERENT_GAIN_LOSS_DB: 0.0,
         }
     }
 }
@@ -2013,6 +2109,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PAPBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_EXPECTED_PEAK_GAIN_DBI(&mut self, EXPECTED_PEAK_GAIN_DBI: f64) {
+        self.fbb_.push_slot::<f64>(PAP::VT_EXPECTED_PEAK_GAIN_DBI, EXPECTED_PEAK_GAIN_DBI, 0.0);
+    }
+
+    #[inline]
+    pub fn add_COHERENT_GAIN_LOSS_DB(&mut self, COHERENT_GAIN_LOSS_DB: f64) {
+        self.fbb_.push_slot::<f64>(PAP::VT_COHERENT_GAIN_LOSS_DB, COHERENT_GAIN_LOSS_DB, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PAPBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PAPBuilder {
@@ -2068,6 +2174,8 @@ impl ::core::fmt::Debug for PAP<'_> {
         ds.field("PRODUCER_ID", &self.PRODUCER_ID());
         ds.field("SIGNATURE", &self.SIGNATURE());
         ds.field("CANONICAL_JSON_SIGNATURE", &self.CANONICAL_JSON_SIGNATURE());
+        ds.field("EXPECTED_PEAK_GAIN_DBI", &self.EXPECTED_PEAK_GAIN_DBI());
+        ds.field("COHERENT_GAIN_LOSS_DB", &self.COHERENT_GAIN_LOSS_DB());
         ds.finish()
     }
 }
@@ -2105,6 +2213,8 @@ pub struct PAPT {
     pub PRODUCER_ID: alloc::string::String,
     pub SIGNATURE: alloc::vec::Vec<u8>,
     pub CANONICAL_JSON_SIGNATURE: alloc::vec::Vec<u8>,
+    pub EXPECTED_PEAK_GAIN_DBI: f64,
+    pub COHERENT_GAIN_LOSS_DB: f64,
 }
 
 impl Default for PAPT {
@@ -2140,6 +2250,8 @@ impl Default for PAPT {
             PRODUCER_ID: alloc::string::ToString::to_string(""),
             SIGNATURE: Default::default(),
             CANONICAL_JSON_SIGNATURE: Default::default(),
+            EXPECTED_PEAK_GAIN_DBI: 0.0,
+            COHERENT_GAIN_LOSS_DB: 0.0,
         }
     }
 }
@@ -2218,6 +2330,8 @@ impl PAPT {
             let x = &self.CANONICAL_JSON_SIGNATURE;
             _fbb.create_vector(x)
         });
+        let EXPECTED_PEAK_GAIN_DBI = self.EXPECTED_PEAK_GAIN_DBI;
+        let COHERENT_GAIN_LOSS_DB = self.COHERENT_GAIN_LOSS_DB;
         PAP::create(_fbb, &PAPArgs{
             PAP_ID,
             NAME,
@@ -2249,6 +2363,8 @@ impl PAPT {
             PRODUCER_ID,
             SIGNATURE,
             CANONICAL_JSON_SIGNATURE,
+            EXPECTED_PEAK_GAIN_DBI,
+            COHERENT_GAIN_LOSS_DB,
         })
     }
 }

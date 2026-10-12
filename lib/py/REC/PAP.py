@@ -403,8 +403,33 @@ class PAP(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         return o == 0
 
+    # Expected gain toward the steering direction with the element errors of
+    # PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+    # Element errors are independent; element n's total phase variance is
+    # s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+    # power gain of the array factor is the coherent part plus the incoherent
+    # floor, with w_n the steered complex weights:
+    # E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+    # which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+    # Equals PEAK_GAIN_DBI when every element is ideal.
+    # PAP
+    def EXPECTED_PEAK_GAIN_DBI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+    # errors reduce the steering gain, 0 when every element is ideal.
+    # PAP
+    def COHERENT_GAIN_LOSS_DB(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def PAPStart(builder):
-    builder.StartObject(30)
+    builder.StartObject(32)
 
 def Start(builder):
     PAPStart(builder)
@@ -705,6 +730,18 @@ def PAPCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return PAPCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
+def PAPAddEXPECTED_PEAK_GAIN_DBI(builder, EXPECTED_PEAK_GAIN_DBI):
+    builder.PrependFloat64Slot(30, EXPECTED_PEAK_GAIN_DBI, 0.0)
+
+def AddEXPECTED_PEAK_GAIN_DBI(builder, EXPECTED_PEAK_GAIN_DBI):
+    PAPAddEXPECTED_PEAK_GAIN_DBI(builder, EXPECTED_PEAK_GAIN_DBI)
+
+def PAPAddCOHERENT_GAIN_LOSS_DB(builder, COHERENT_GAIN_LOSS_DB):
+    builder.PrependFloat64Slot(31, COHERENT_GAIN_LOSS_DB, 0.0)
+
+def AddCOHERENT_GAIN_LOSS_DB(builder, COHERENT_GAIN_LOSS_DB):
+    PAPAddCOHERENT_GAIN_LOSS_DB(builder, COHERENT_GAIN_LOSS_DB)
+
 def PAPEnd(builder):
     return builder.EndObject()
 
@@ -755,6 +792,8 @@ class PAPT(object):
         PRODUCER_ID = None,
         SIGNATURE = None,
         CANONICAL_JSON_SIGNATURE = None,
+        EXPECTED_PEAK_GAIN_DBI = 0.0,
+        COHERENT_GAIN_LOSS_DB = 0.0,
     ):
         self.PAP_ID = PAP_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -786,6 +825,8 @@ class PAPT(object):
         self.PRODUCER_ID = PRODUCER_ID  # type: Optional[str]
         self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
         self.CANONICAL_JSON_SIGNATURE = CANONICAL_JSON_SIGNATURE  # type: Optional[List[int]]
+        self.EXPECTED_PEAK_GAIN_DBI = EXPECTED_PEAK_GAIN_DBI  # type: float
+        self.COHERENT_GAIN_LOSS_DB = COHERENT_GAIN_LOSS_DB  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -890,6 +931,8 @@ class PAPT(object):
                     self.CANONICAL_JSON_SIGNATURE.append(PAP.CANONICAL_JSON_SIGNATURE(i))
             else:
                 self.CANONICAL_JSON_SIGNATURE = PAP.CANONICAL_JSON_SIGNATUREAsNumpy()
+        self.EXPECTED_PEAK_GAIN_DBI = PAP.EXPECTED_PEAK_GAIN_DBI()
+        self.COHERENT_GAIN_LOSS_DB = PAP.COHERENT_GAIN_LOSS_DB()
 
     # PAPT
     def Pack(self, builder):
@@ -1020,5 +1063,7 @@ class PAPT(object):
             PAPAddSIGNATURE(builder, SIGNATURE)
         if self.CANONICAL_JSON_SIGNATURE is not None:
             PAPAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE)
+        PAPAddEXPECTED_PEAK_GAIN_DBI(builder, self.EXPECTED_PEAK_GAIN_DBI)
+        PAPAddCOHERENT_GAIN_LOSS_DB(builder, self.COHERENT_GAIN_LOSS_DB)
         PAP = PAPEnd(builder)
         return PAP

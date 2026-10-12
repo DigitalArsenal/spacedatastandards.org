@@ -754,8 +754,70 @@ func (rcv *PAP) MutateCanonicalJsonSignature(j int, n byte) bool {
 	return rcv.MutateCANONICAL_JSON_SIGNATURE(j, n)
 }
 
+/// Expected gain toward the steering direction with the element errors of
+/// PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+/// Element errors are independent; element n's total phase variance is
+/// s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+/// power gain of the array factor is the coherent part plus the incoherent
+/// floor, with w_n the steered complex weights:
+/// E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+/// which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+/// Equals PEAK_GAIN_DBI when every element is ideal.
+func (rcv *PAP) EXPECTED_PEAK_GAIN_DBI() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PAP) ExpectedPeakGainDbi() float64 {
+	return rcv.EXPECTED_PEAK_GAIN_DBI()
+}
+
+/// Expected gain toward the steering direction with the element errors of
+/// PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+/// Element errors are independent; element n's total phase variance is
+/// s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+/// power gain of the array factor is the coherent part plus the incoherent
+/// floor, with w_n the steered complex weights:
+/// E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+/// which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+/// Equals PEAK_GAIN_DBI when every element is ideal.
+func (rcv *PAP) MutateEXPECTED_PEAK_GAIN_DBI(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *PAP) MutateExpectedPeakGainDbi(n float64) bool {
+	return rcv.MutateEXPECTED_PEAK_GAIN_DBI(n)
+}
+
+/// PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+/// errors reduce the steering gain, 0 when every element is ideal.
+func (rcv *PAP) COHERENT_GAIN_LOSS_DB() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PAP) CoherentGainLossDb() float64 {
+	return rcv.COHERENT_GAIN_LOSS_DB()
+}
+
+/// PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+/// errors reduce the steering gain, 0 when every element is ideal.
+func (rcv *PAP) MutateCOHERENT_GAIN_LOSS_DB(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *PAP) MutateCoherentGainLossDb(n float64) bool {
+	return rcv.MutateCOHERENT_GAIN_LOSS_DB(n)
+}
+
 func PAPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(30)
+	builder.StartObject(32)
 }
 func PAPAddPAP_ID(builder *flatbuffers.Builder, PAP_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PAP_ID), 0)
@@ -984,6 +1046,18 @@ func PAPStartCANONICAL_JSON_SIGNATUREVector(builder *flatbuffers.Builder, numEle
 }
 func PAPStartCanonicalJsonSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PAPStartCANONICAL_JSON_SIGNATUREVector(builder, numElems)
+}
+func PAPAddEXPECTED_PEAK_GAIN_DBI(builder *flatbuffers.Builder, EXPECTED_PEAK_GAIN_DBI float64) {
+	builder.PrependFloat64Slot(30, EXPECTED_PEAK_GAIN_DBI, 0.0)
+}
+func PAPAddExpectedPeakGainDbi(builder *flatbuffers.Builder, EXPECTED_PEAK_GAIN_DBI float64) {
+	PAPAddEXPECTED_PEAK_GAIN_DBI(builder, EXPECTED_PEAK_GAIN_DBI)
+}
+func PAPAddCOHERENT_GAIN_LOSS_DB(builder *flatbuffers.Builder, COHERENT_GAIN_LOSS_DB float64) {
+	builder.PrependFloat64Slot(31, COHERENT_GAIN_LOSS_DB, 0.0)
+}
+func PAPAddCoherentGainLossDb(builder *flatbuffers.Builder, COHERENT_GAIN_LOSS_DB float64) {
+	PAPAddCOHERENT_GAIN_LOSS_DB(builder, COHERENT_GAIN_LOSS_DB)
 }
 func PAPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -61,13 +61,22 @@ class PAPElement : flatbuffers.handle
         return flatbuffers.field_uint32(buf_, pos_, 22, 0)
     def FAILED() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    /// 1-sigma of the element's zero-mean Gaussian phase error, degrees.
+    /// Errors are independent between elements. 0 = ideal (no phase error).
+    def PHASE_ERROR_SIGMA_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// 1-sigma of the element's zero-mean Gaussian position error per axis
+    /// (isotropic), metres. Its line-of-sight component adds a phase error of
+    /// 2*pi*POSITION_ERROR_SIGMA_M/lambda radians (1-sigma). 0 = ideal.
+    def POSITION_ERROR_SIGMA_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
 
 def GetRootAsPAPElement(buf:string): return PAPElement { buf, flatbuffers.indirect(buf, 0) }
 
 struct PAPElementBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(13)
         return this
     def add_ELEMENT_ID(ELEMENT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ELEMENT_ID)
@@ -101,6 +110,12 @@ struct PAPElementBuilder:
         return this
     def add_FAILED(FAILED:bool):
         b_.PrependBoolSlot(10, FAILED, 0)
+        return this
+    def add_PHASE_ERROR_SIGMA_DEG(PHASE_ERROR_SIGMA_DEG:float):
+        b_.PrependFloat64Slot(11, PHASE_ERROR_SIGMA_DEG, 0.0)
+        return this
+    def add_POSITION_ERROR_SIGMA_M(POSITION_ERROR_SIGMA_M:float):
+        b_.PrependFloat64Slot(12, POSITION_ERROR_SIGMA_M, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -294,13 +309,28 @@ class PAP : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 62) + i * 1)
     def CANONICAL_JSON_SIGNATURE_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 62)
+    /// Expected gain toward the steering direction with the element errors of
+    /// PAPElement.PHASE_ERROR_SIGMA_DEG and POSITION_ERROR_SIGMA_M, dBi.
+    /// Element errors are independent; element n's total phase variance is
+    /// s_n^2 = sigma_phi^2 + (2*pi*sigma_d/lambda)^2 (radians^2). The expected
+    /// power gain of the array factor is the coherent part plus the incoherent
+    /// floor, with w_n the steered complex weights:
+    /// E|AF|^2 = |sum w_n e^(-s_n^2/2)|^2 + sum |w_n|^2 (1 - e^(-s_n^2)),
+    /// which for equal s is e^(-s^2) |sum w_n|^2 + (1 - e^(-s^2)) sum |w_n|^2.
+    /// Equals PEAK_GAIN_DBI when every element is ideal.
+    def EXPECTED_PEAK_GAIN_DBI() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
+    /// PEAK_GAIN_DBI - EXPECTED_PEAK_GAIN_DBI, dB; positive when element
+    /// errors reduce the steering gain, 0 when every element is ideal.
+    def COHERENT_GAIN_LOSS_DB() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
 
 def GetRootAsPAP(buf:string): return PAP { buf, flatbuffers.indirect(buf, 0) }
 
 struct PAPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(30)
+        b_.StartObject(32)
         return this
     def add_PAP_ID(PAP_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, PAP_ID)
@@ -391,6 +421,12 @@ struct PAPBuilder:
         return this
     def add_CANONICAL_JSON_SIGNATURE(CANONICAL_JSON_SIGNATURE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(29, CANONICAL_JSON_SIGNATURE)
+        return this
+    def add_EXPECTED_PEAK_GAIN_DBI(EXPECTED_PEAK_GAIN_DBI:float):
+        b_.PrependFloat64Slot(30, EXPECTED_PEAK_GAIN_DBI, 0.0)
+        return this
+    def add_COHERENT_GAIN_LOSS_DB(COHERENT_GAIN_LOSS_DB:float):
+        b_.PrependFloat64Slot(31, COHERENT_GAIN_LOSS_DB, 0.0)
         return this
     def end():
         return b_.EndObject()
