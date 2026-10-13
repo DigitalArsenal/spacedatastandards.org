@@ -22,8 +22,10 @@ public enum pvnSourceKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
   ///  Observations (ranges, angles, other measurements) that states are
   ///  estimated from
   case observation = 3
+  ///  Reference registers of sites and facilities (status, dates, identity)
+  case reference = 4
 
-  public static var max: pvnSourceKind { return .observation }
+  public static var max: pvnSourceKind { return .reference }
   public static var min: pvnSourceKind { return .unspecified }
 }
 

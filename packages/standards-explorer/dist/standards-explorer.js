@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.248.0+1791889784785",
+  version: "1.249.0+1791921617551",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -5729,7 +5729,270 @@ file_identifier "$PPE";`,
       ]
     },
     SIT: {
-      IDL: '// Hash: 6f282637e3795d2d62105c0454bf0837ef252daa6109b006f74852a2b0ee8015\n// Version: 1.0.1\n// -----------------------------------END_HEADER\ninclude "../IDM/main.fbs";\n\n/// Enum for the type of site\nenum SiteType: byte {\n  LAUNCH_SITE,\n  OBSERVATION_STATION,\n  HOBBYIST_OBSERVER,\n  RESEARCH_FACILITY,\n  SATELLITE_GROUND_STATION,\n  SPACEPORT,\n  MILITARY_BASE,\n  WEATHER_STATION,\n  ASTRONOMICAL_OBSERVATORY,\n  EDUCATIONAL_INSTITUTE,\n  COMMUNICATION_HUB,\n  POWER_PLANT,\n  INDUSTRIAL_COMPLEX,\n  TRANSPORTATION_HUB,\n  URBAN_AREA,\n  NATIONAL_PARK,\n  HISTORICAL_SITE,\n  OTHER\n}\n\n/// Geometry table with information about geometric properties\ntable Geometry {\n  /// Type of geometry\n  GEOMETRY_TYPE: string;\n  /// Coordinates of the geometry\n  COORDINATES: [float];\n}\n\n/// Site Information Message\ntable SIT {\n  /// Unique identifier for the site, BE_NUMBER\n  ID: string;\n  /// Name of the site\n  NAME: string;\n  /// Abbreviation\n  ABBREVIATION: string;\n  /// Site type as defined in SiteType enum\n  SITE_TYPE: SiteType;\n  /// Site type CATCODE\n  CATCODE: string;\n  /// Network identifier\n  NETWORK: string;\n  /// Latitude of the site\n  LATITUDE: float;\n  /// Longitude of the site\n  LONGITUDE: float;\n  /// Altitude of the site\n  ALTITUDE: float;\n  /// Geometry of the site\n  GEOMETRY: Geometry;\n  /// Center point geometry coordinates\n  CENTER_POINT_GEOMETRY: [float];\n  /// Classification marking of the site\n  CLASSIFICATION: string;\n  /// CTR ISO 3166 Numeric code as string\n  CTR_ID: string;\n  /// Identifier of the user who created the site data\n  CREATED_BY: string;\n  /// Description of the site\n  DESCRIPTION: string;\n  /// URL for the 3D model of the site\n  MODEL_URL: string;\n  /// Source of the site data\n  SOURCE: string;\n  /// Indicates if the site is taskable\n  TASKABLE: bool;\n  /// Operational status of the site (e.g., active, inactive, under construction)\n  OPERATIONAL_STATUS: string;\n  /// Date of establishment\n  ESTABLISHMENT_DATE: string;\n  /// Contact information for the site\n  CONTACT_INFO: string;\n  /// Environmental impact or considerations\n  ENVIRONMENTAL_IMPACT: string;\n  /// Accessibility and infrastructure details\n  ACCESSIBILITY_INFRA: string;\n  /// Vector of Integrated Devices (IDM)\n  INTEGRATED_DEVICES: [IDM];\n}\n\nroot_type SIT;\nfile_identifier "$SIT";',
+      IDL: `// Hash: 9e83c8b84fa57192eb7ca02fd78eef64b869bbaf223078dc0bcb33534acadfc9
+// Version: 1.1.0
+// -----------------------------------END_HEADER
+include "../IDM/main.fbs";
+include "../PVN/main.fbs";
+
+/// Enum for the type of site
+enum SiteType: byte {
+  LAUNCH_SITE,
+  OBSERVATION_STATION,
+  HOBBYIST_OBSERVER,
+  RESEARCH_FACILITY,
+  SATELLITE_GROUND_STATION,
+  SPACEPORT,
+  MILITARY_BASE,
+  WEATHER_STATION,
+  ASTRONOMICAL_OBSERVATORY,
+  EDUCATIONAL_INSTITUTE,
+  COMMUNICATION_HUB,
+  POWER_PLANT,
+  INDUSTRIAL_COMPLEX,
+  TRANSPORTATION_HUB,
+  URBAN_AREA,
+  NATIONAL_PARK,
+  HISTORICAL_SITE,
+  OTHER
+}
+
+/// Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
+/// EU INSPIRE ConditionOfFacilityValue list. Ordinals are wire values: append only.
+enum siteLifecycleStatus : byte {
+  /// No source states a status
+  UNSPECIFIED,
+  /// Proposed, announced or in study; construction not begun
+  PLANNED,
+  /// Under construction
+  UNDER_CONSTRUCTION,
+  /// Construction begun, then halted with no restart date (PRIS suspended construction)
+  CONSTRUCTION_SUSPENDED,
+  /// In operation
+  OPERATING,
+  /// Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)
+  LONG_TERM_SHUTDOWN,
+  /// Permanently shut down; not yet in decommissioning
+  PERMANENT_SHUTDOWN,
+  /// Decommissioning or dismantling under way
+  DECOMMISSIONING,
+  /// Dismantled, remediated or released from regulatory control
+  DECOMMISSIONED,
+  /// Never completed or never operated
+  CANCELLED,
+  /// Every licence-OK source was read and none states a status
+  UNVERIFIED
+}
+
+/// Where one statement about a site was read: the source, the record, the
+/// version of the record and the field the statement came from.
+table SITCitation {
+  /// The source, its originator and the terms the statement travels under
+  PROVENANCE: PVN;
+  /// The source's own identifier of the record (Wikidata QID, "de:Article
+  /// title", tracker unit ids, ROR id, docket number, register row)
+  SOURCE_RECORD_ID: string;
+  /// Where the record can be read
+  SOURCE_URL: string;
+  /// The source's version of the record (revision id, release name)
+  SOURCE_VERSION: string;
+  /// The field of the record the statement was read from, from a closed
+  /// vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+  /// "description", "class:<QID>", "status" (a registry's status column),
+  /// "units" (a tracker's unit statuses), "register:<id>" (a row of the
+  /// provider's reviewed register). Never free text.
+  SOURCE_FIELD: string;
+  /// When the record was read, RFC 3339 UTC
+  RETRIEVED_AT: string;
+}
+
+/// One source's assertion of one lifecycle step of a site.
+table SITStatusEvidence {
+  /// The status the source states
+  STATUS: siteLifecycleStatus = UNSPECIFIED;
+  /// When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)
+  STATUS_DATE: string;
+  /// Where the statement was read
+  CITATION: SITCitation;
+}
+
+/// What a reference to another record about the site is.
+enum sitReferenceRole : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// The site's own record in the register the site record was made from
+  RECORD,
+  /// The site's or its operator's official website
+  OFFICIAL_WEBSITE,
+  /// An encyclopedia article about the site (title and URL only)
+  ENCYCLOPEDIA_ARTICLE,
+  /// The site's record in another registry (a tracker, an organisation registry)
+  REGISTRY_RECORD,
+  /// A regulator's docket or licence record for the site
+  REGULATORY_DOCKET
+}
+
+/// A reference to another record about the site or a party.
+table SITReference {
+  /// What the referenced record is
+  ROLE: sitReferenceRole = UNSPECIFIED;
+  /// Publisher-stable, lowercase identifier of the registry in the provider's
+  /// register of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)
+  REGISTRY: string;
+  /// The registry's identifier of the record
+  RECORD_ID: string;
+  /// Where the record can be read
+  URL: string;
+  /// The record's title as the registry states it (for an encyclopedia, the
+  /// article title only, never its text)
+  TITLE: string;
+  /// Language of the record, BCP 47
+  LANGUAGE: string;
+}
+
+/// What part a party plays at a site.
+enum sitPartyRole : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// Runs the site
+  OPERATOR,
+  /// Owns the site
+  OWNER,
+  /// Licenses and inspects the site
+  REGULATOR
+}
+
+/// An organisation with a part at the site.
+table SITParty {
+  /// The part it plays
+  ROLE: sitPartyRole = UNSPECIFIED;
+  /// Its name, as the source states it
+  NAME: string;
+  /// Records about the party (its registry record, its official website)
+  EXTERNAL_REFERENCES: [SITReference];
+  /// Where the statement that it plays this part was read
+  CITATION: SITCitation;
+}
+
+/// What a quantity of a site measures. Ordinals are wire values: append only.
+enum sitQuantityKind : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// Electrical generating capacity, MW
+  ELECTRICAL_CAPACITY,
+  /// Thermal power, MW
+  THERMAL_POWER,
+  /// Number of reactor or generating units (UNITS empty)
+  REACTOR_UNITS,
+  /// Height above mean sea level, m
+  ELEVATION
+}
+
+/// One stated quantity of a site.
+table SITQuantity {
+  /// What it measures
+  KIND: sitQuantityKind = UNSPECIFIED;
+  /// Its value
+  VALUE: double;
+  /// Units, CCSDS NDM spelling (MW, m); empty for a count
+  UNITS: string;
+  /// When the value applies, ISO 8601 at the source's precision; empty when the source states none
+  DATE: string;
+  /// Where it was read
+  CITATION: SITCitation;
+}
+
+/// Geometry table with information about geometric properties
+table Geometry {
+  /// Type of geometry
+  GEOMETRY_TYPE: string;
+  /// Coordinates of the geometry
+  COORDINATES: [float];
+}
+
+/// Site Information Message
+table SIT {
+  /// Unique identifier for the site, BE_NUMBER
+  ID: string;
+  /// Name of the site
+  NAME: string;
+  /// Abbreviation
+  ABBREVIATION: string;
+  /// Site type as defined in SiteType enum
+  SITE_TYPE: SiteType;
+  /// Site type CATCODE
+  CATCODE: string;
+  /// Network identifier
+  NETWORK: string;
+  /// Latitude of the site
+  LATITUDE: float;
+  /// Longitude of the site
+  LONGITUDE: float;
+  /// Altitude of the site
+  ALTITUDE: float;
+  /// Geometry of the site
+  GEOMETRY: Geometry;
+  /// Center point geometry coordinates
+  CENTER_POINT_GEOMETRY: [float];
+  /// Classification marking of the site
+  CLASSIFICATION: string;
+  /// CTR ISO 3166 Numeric code as string
+  CTR_ID: string;
+  /// Identifier of the user who created the site data
+  CREATED_BY: string;
+  /// Description of the site
+  DESCRIPTION: string;
+  /// URL for the 3D model of the site
+  MODEL_URL: string;
+  /// Source of the site data
+  SOURCE: string;
+  /// Indicates if the site is taskable
+  TASKABLE: bool;
+  /// Operational status of the site (e.g., active, inactive, under construction)
+  OPERATIONAL_STATUS: string;
+  /// Date of establishment
+  ESTABLISHMENT_DATE: string;
+  /// Contact information for the site
+  CONTACT_INFO: string;
+  /// Environmental impact or considerations
+  ENVIRONMENTAL_IMPACT: string;
+  /// Accessibility and infrastructure details
+  ACCESSIBILITY_INFRA: string;
+  /// Vector of Integrated Devices (IDM)
+  INTEGRATED_DEVICES: [IDM];
+  /// Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+  /// words (Online, Offline, Testing); this field is the lifecycle.
+  LIFECYCLE_STATUS: siteLifecycleStatus = UNSPECIFIED;
+  /// When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+  LIFECYCLE_STATUS_DATE: string;
+  /// When the status was last checked against its sources, RFC 3339 UTC
+  STATUS_VERIFIED_AT: string;
+  /// Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+  STATUS_EVIDENCE: [SITStatusEvidence];
+  /// What kind of site this is, as its source names the class ("research
+  /// reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+  /// SiteType
+  SITE_KIND: string;
+  /// Language of DESCRIPTION, BCP 47
+  DESCRIPTION_LANGUAGE: string;
+  /// Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+  DESCRIPTION_CITATION: SITCitation;
+  /// Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+  POSITION_CITATION: SITCitation;
+  /// Records about the site in other registers; the RECORD role names the
+  /// site's own record
+  EXTERNAL_REFERENCES: [SITReference];
+  /// Operators, owners and regulators
+  PARTIES: [SITParty];
+  /// Stated quantities (capacity, power, units, elevation)
+  QUANTITIES: [SITQuantity];
+  /// The record's provider and producer, and the terms of the content the
+  /// record reproduces (each citation carries its own source's terms)
+  PROVENANCE: PVN;
+}
+
+root_type SIT;
+file_identifier "$SIT";`,
       files: [
         "./dist/SIT/SIT.sw.tar.gz",
         "./dist/SIT/SIT.py.tar.gz",
@@ -6138,8 +6401,8 @@ file_identifier "$LAM";`,
       ]
     },
     PVN: {
-      IDL: `// Hash: 904856f84e3767926806d10f5fa47a3f53767bfc054793da697428e1ecfc9e3a
-// Version: 1.245.0
+      IDL: `// Hash: 24c3b94092c29d2012cc1c916d21382b645293692fa4b576c0351988d2a38d32
+// Version: 1.245.1
 // -----------------------------------END_HEADER
 // Product Provenance (PVN)
 //
@@ -6162,7 +6425,9 @@ enum pvnSourceKind : byte {
   Ephemeris,
   /// Observations (ranges, angles, other measurements) that states are
   /// estimated from
-  Observation
+  Observation,
+  /// Reference registers of sites and facilities (status, dates, identity)
+  Reference
 }
 
 /// What the terms of a product's source permit.
@@ -29462,7 +29727,8 @@ var json_default = {
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -35211,7 +35477,8 @@ Decoding applies the inverses from the last back.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -43153,7 +43420,8 @@ turned into a number.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -54770,6 +55038,26 @@ verbatim what that source states about itself.`,
             "HF_RADIO_COMMUNICATIONS"
           ]
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -54791,6 +55079,52 @@ verbatim what that source states about itself.`,
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         FrequencyRange: {
@@ -54972,6 +55306,184 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -55095,6 +55607,66 @@ verbatim what that source states about itself.`,
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -55695,7 +56267,8 @@ verbatim what that source states about itself.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -55785,6 +56358,52 @@ verbatim what that source states about itself.`,
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         KeyType: {
@@ -59261,6 +59880,145 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -59384,6 +60142,66 @@ verbatim what that source states about itself.`,
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -61825,7 +62643,8 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -63271,7 +64090,8 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -63354,6 +64174,52 @@ to the wallet, not to a published record. ABSENT from published records.`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         sensorStatus: {
@@ -65596,6 +66462,145 @@ to the wallet, not to a published record. ABSENT from published records.`
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -65719,6 +66724,66 @@ to the wallet, not to a published record. ABSENT from published records.`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -83406,7 +84471,8 @@ Decoding applies the inverses from the last back.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -93531,7 +94597,8 @@ Decoding applies the inverses from the last back.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -95597,6 +96664,52 @@ Decoding applies the inverses from the last back.`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         ENGINE_TYPE: {
@@ -131117,6 +132230,145 @@ Decoding applies the inverses from the last back.`
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -131240,6 +132492,66 @@ Decoding applies the inverses from the last back.`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -164834,7 +166146,8 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -196641,6 +197954,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             "HF_RADIO_COMMUNICATIONS"
           ]
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -196662,6 +197995,52 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         KeyType: {
@@ -197071,6 +198450,184 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -197194,6 +198751,66 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -199482,7 +201099,8 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -208921,7 +210539,8 @@ assumptions".`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -209004,6 +210623,52 @@ assumptions".`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         sensorStatus: {
@@ -211275,6 +212940,145 @@ assumptions".`
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -211398,6 +213202,66 @@ assumptions".`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -221701,7 +223565,8 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -255944,7 +257809,8 @@ var fbjson_default = {
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -255964,6 +257830,10 @@ var fbjson_default = {
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -256117,6 +257987,10 @@ var fbjson_default = {
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -269532,7 +271406,8 @@ Decoding applies the inverses from the last back.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -269552,6 +271427,10 @@ Decoding applies the inverses from the last back.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -269738,6 +271617,10 @@ Decoding applies the inverses from the last back.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -286669,7 +288552,8 @@ turned into a number.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -286689,6 +288573,10 @@ turned into a number.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -291590,6 +293478,10 @@ turned into a number.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -321685,6 +323577,74 @@ verbatim what that source states about itself.`,
             }
           }
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -321763,6 +323723,172 @@ verbatim what that source states about itself.`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -322218,6 +324344,384 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -322424,6 +324928,126 @@ verbatim what that source states about itself.`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -324835,7 +327459,8 @@ verbatim what that source states about itself.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -324855,6 +327480,10 @@ verbatim what that source states about itself.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -325159,6 +327788,172 @@ verbatim what that source states about itself.`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -330257,6 +333052,10 @@ verbatim what that source states about itself.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -332661,6 +335460,289 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -332867,6 +335949,126 @@ verbatim what that source states about itself.`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -336655,7 +339857,8 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -336675,6 +339878,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -336742,6 +339949,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -340261,7 +343472,8 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -340281,6 +343493,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -340553,6 +343769,172 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -344215,6 +347597,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -345162,6 +348548,289 @@ to the wallet, not to a published record. ABSENT from published records.`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -345368,6 +349037,126 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -383112,7 +386901,8 @@ Decoding applies the inverses from the last back.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -383132,6 +386922,10 @@ Decoding applies the inverses from the last back.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -388178,6 +391972,10 @@ Decoding applies the inverses from the last back.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -407776,7 +411574,8 @@ Decoding applies the inverses from the last back.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -407796,6 +411595,10 @@ Decoding applies the inverses from the last back.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -414423,6 +418226,172 @@ Decoding applies the inverses from the last back.`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -453003,6 +456972,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -480997,6 +484970,289 @@ Decoding applies the inverses from the last back.`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -481203,6 +485459,126 @@ Decoding applies the inverses from the last back.`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -543207,7 +547583,8 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -543227,6 +547604,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -544968,6 +549349,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -617534,6 +621919,74 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             }
           }
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -617612,6 +622065,172 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -619035,6 +623654,384 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -619241,6 +624238,126 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -626491,7 +631608,8 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -626511,6 +631629,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -639236,6 +644358,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -647845,7 +652971,8 @@ assumptions".`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -647865,6 +652992,10 @@ assumptions".`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -648137,6 +653268,172 @@ assumptions".`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -651882,6 +657179,10 @@ assumptions".`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -652829,6 +658130,289 @@ assumptions".`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -653035,6 +658619,126 @@ assumptions".`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -674772,7 +680476,8 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -674792,6 +680497,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -679132,6 +684841,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"

@@ -23,5 +23,9 @@ class pvnSourceKind private constructor() {
          * estimated from
          */
         const val Observation: Byte = 3
+        /**
+         * Reference registers of sites and facilities (status, dates, identity)
+         */
+        const val Reference: Byte = 4
     }
 }

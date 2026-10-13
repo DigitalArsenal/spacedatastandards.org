@@ -95,7 +95,7 @@
     },
     "pvnSourceKind" : {
       "type" : "string",
-      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation"]
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
     },
     "pvnLicenseClass" : {
       "type" : "string",
@@ -120,6 +120,22 @@
     "SiteType" : {
       "type" : "string",
       "enum": ["LAUNCH_SITE", "OBSERVATION_STATION", "HOBBYIST_OBSERVER", "RESEARCH_FACILITY", "SATELLITE_GROUND_STATION", "SPACEPORT", "MILITARY_BASE", "WEATHER_STATION", "ASTRONOMICAL_OBSERVATORY", "EDUCATIONAL_INSTITUTE", "COMMUNICATION_HUB", "POWER_PLANT", "INDUSTRIAL_COMPLEX", "TRANSPORTATION_HUB", "URBAN_AREA", "NATIONAL_PARK", "HISTORICAL_SITE", "OTHER"]
+    },
+    "siteLifecycleStatus" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "PLANNED", "UNDER_CONSTRUCTION", "CONSTRUCTION_SUSPENDED", "OPERATING", "LONG_TERM_SHUTDOWN", "PERMANENT_SHUTDOWN", "DECOMMISSIONING", "DECOMMISSIONED", "CANCELLED", "UNVERIFIED"]
+    },
+    "sitReferenceRole" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RECORD", "OFFICIAL_WEBSITE", "ENCYCLOPEDIA_ARTICLE", "REGISTRY_RECORD", "REGULATORY_DOCKET"]
+    },
+    "sitPartyRole" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "OPERATOR", "OWNER", "REGULATOR"]
+    },
+    "sitQuantityKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ELECTRICAL_CAPACITY", "THERMAL_POWER", "REACTOR_UNITS", "ELEVATION"]
     },
     "sensorStatus" : {
       "type" : "string",
@@ -2187,6 +2203,137 @@
       },
       "additionalProperties" : false
     },
+    "SITCitation" : {
+      "type" : "object",
+      "description" : "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+      "properties" : {
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "The source, its originator and the terms the statement travels under"
+              },
+        "SOURCE_RECORD_ID" : {
+                "type" : "string",
+                "description" : "The source's own identifier of the record (Wikidata QID, \"de:Article\ntitle\", tracker unit ids, ROR id, docket number, register row)"
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Where the record can be read"
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "The source's version of the record (revision id, release name)"
+              },
+        "SOURCE_FIELD" : {
+                "type" : "string",
+                "description" : "The field of the record the statement was read from, from a closed\nvocabulary: a Wikidata property (\"P5817\", \"P576\"), \"infobox:<parameter>\",\n\"description\", \"class:<QID>\", \"status\" (a registry's status column),\n\"units\" (a tracker's unit statuses), \"register:<id>\" (a row of the\nprovider's reviewed register). Never free text."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "When the record was read, RFC 3339 UTC"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SITStatusEvidence" : {
+      "type" : "object",
+      "description" : "One source's assertion of one lifecycle step of a site.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/siteLifecycleStatus",
+                "description" : "The status the source states"
+              },
+        "STATUS_DATE" : {
+                "type" : "string",
+                "description" : "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+              },
+        "CITATION" : {
+                "$ref" : "#/definitions/SITCitation",
+                "description" : "Where the statement was read"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SITReference" : {
+      "type" : "object",
+      "description" : "A reference to another record about the site or a party.",
+      "properties" : {
+        "ROLE" : {
+                "$ref" : "#/definitions/sitReferenceRole",
+                "description" : "What the referenced record is"
+              },
+        "REGISTRY" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+              },
+        "RECORD_ID" : {
+                "type" : "string",
+                "description" : "The registry's identifier of the record"
+              },
+        "URL" : {
+                "type" : "string",
+                "description" : "Where the record can be read"
+              },
+        "TITLE" : {
+                "type" : "string",
+                "description" : "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+              },
+        "LANGUAGE" : {
+                "type" : "string",
+                "description" : "Language of the record, BCP 47"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SITParty" : {
+      "type" : "object",
+      "description" : "An organisation with a part at the site.",
+      "properties" : {
+        "ROLE" : {
+                "$ref" : "#/definitions/sitPartyRole",
+                "description" : "The part it plays"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Its name, as the source states it"
+              },
+        "EXTERNAL_REFERENCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SITReference"},
+                "description" : "Records about the party (its registry record, its official website)"
+              },
+        "CITATION" : {
+                "$ref" : "#/definitions/SITCitation",
+                "description" : "Where the statement that it plays this part was read"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SITQuantity" : {
+      "type" : "object",
+      "description" : "One stated quantity of a site.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/sitQuantityKind",
+                "description" : "What it measures"
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Its value"
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Units, CCSDS NDM spelling (MW, m); empty for a count"
+              },
+        "DATE" : {
+                "type" : "string",
+                "description" : "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+              },
+        "CITATION" : {
+                "$ref" : "#/definitions/SITCitation",
+                "description" : "Where it was read"
+              }
+      },
+      "additionalProperties" : false
+    },
     "Geometry" : {
       "type" : "object",
       "description" : "Geometry table with information about geometric properties",
@@ -2301,6 +2448,54 @@
         "INTEGRATED_DEVICES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"},
                 "description" : "Vector of Integrated Devices (IDM)"
+              },
+        "LIFECYCLE_STATUS" : {
+                "$ref" : "#/definitions/siteLifecycleStatus",
+                "description" : "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+              },
+        "LIFECYCLE_STATUS_DATE" : {
+                "type" : "string",
+                "description" : "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+              },
+        "STATUS_VERIFIED_AT" : {
+                "type" : "string",
+                "description" : "When the status was last checked against its sources, RFC 3339 UTC"
+              },
+        "STATUS_EVIDENCE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SITStatusEvidence"},
+                "description" : "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+              },
+        "SITE_KIND" : {
+                "type" : "string",
+                "description" : "What kind of site this is, as its source names the class (\"research\nreactor\", \"radioactive waste repository\"); SITE_TYPE is the nearest\nSiteType"
+              },
+        "DESCRIPTION_LANGUAGE" : {
+                "type" : "string",
+                "description" : "Language of DESCRIPTION, BCP 47"
+              },
+        "DESCRIPTION_CITATION" : {
+                "$ref" : "#/definitions/SITCitation",
+                "description" : "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+              },
+        "POSITION_CITATION" : {
+                "$ref" : "#/definitions/SITCitation",
+                "description" : "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+              },
+        "EXTERNAL_REFERENCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SITReference"},
+                "description" : "Records about the site in other registers; the RECORD role names the\nsite's own record"
+              },
+        "PARTIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SITParty"},
+                "description" : "Operators, owners and regulators"
+              },
+        "QUANTITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SITQuantity"},
+                "description" : "Stated quantities (capacity, power, units, elevation)"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
               }
       },
       "additionalProperties" : false

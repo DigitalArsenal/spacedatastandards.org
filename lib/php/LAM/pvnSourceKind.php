@@ -13,12 +13,15 @@ class pvnSourceKind
     /// Observations (ranges, angles, other measurements) that states are
     /// estimated from
     const Observation = 3;
+    /// Reference registers of sites and facilities (status, dates, identity)
+    const Reference = 4;
 
     private static $names = array(
         pvnSourceKind::Unspecified=>"Unspecified",
         pvnSourceKind::ElementSet=>"ElementSet",
         pvnSourceKind::Ephemeris=>"Ephemeris",
         pvnSourceKind::Observation=>"Observation",
+        pvnSourceKind::Reference=>"Reference",
     );
 
     public static function Name($e)

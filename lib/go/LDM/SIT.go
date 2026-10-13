@@ -480,8 +480,285 @@ func (rcv *SIT) IntegratedDevicesLength() int {
 }
 
 /// Vector of Integrated Devices (IDM)
+/// Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+/// words (Online, Offline, Testing); this field is the lifecycle.
+func (rcv *SIT) LIFECYCLE_STATUS() siteLifecycleStatus {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return siteLifecycleStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *SIT) LifecycleStatus() siteLifecycleStatus {
+	return rcv.LIFECYCLE_STATUS()
+}
+
+/// Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+/// words (Online, Offline, Testing); this field is the lifecycle.
+func (rcv *SIT) MutateLIFECYCLE_STATUS(n siteLifecycleStatus) bool {
+	return rcv._tab.MutateInt8Slot(52, int8(n))
+}
+
+func (rcv *SIT) MutateLifecycleStatus(n siteLifecycleStatus) bool {
+	return rcv.MutateLIFECYCLE_STATUS(n)
+}
+
+/// When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+func (rcv *SIT) LIFECYCLE_STATUS_DATE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SIT) LifecycleStatusDate() []byte {
+	return rcv.LIFECYCLE_STATUS_DATE()
+}
+
+/// When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+/// When the status was last checked against its sources, RFC 3339 UTC
+func (rcv *SIT) STATUS_VERIFIED_AT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SIT) StatusVerifiedAt() []byte {
+	return rcv.STATUS_VERIFIED_AT()
+}
+
+/// When the status was last checked against its sources, RFC 3339 UTC
+/// Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+func (rcv *SIT) STATUS_EVIDENCE(obj *SITStatusEvidence, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SITStatusEvidence)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SIT) StatusEvidence(obj *SITStatusEvidence, j int) bool {
+	return rcv.STATUS_EVIDENCE(obj, j)
+}
+
+func (rcv *SIT) STATUS_EVIDENCELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SIT) StatusEvidenceLength() int {
+	return rcv.STATUS_EVIDENCELength()
+}
+
+/// Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+/// What kind of site this is, as its source names the class ("research
+/// reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+/// SiteType
+func (rcv *SIT) SITE_KIND() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SIT) SiteKind() []byte {
+	return rcv.SITE_KIND()
+}
+
+/// What kind of site this is, as its source names the class ("research
+/// reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+/// SiteType
+/// Language of DESCRIPTION, BCP 47
+func (rcv *SIT) DESCRIPTION_LANGUAGE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SIT) DescriptionLanguage() []byte {
+	return rcv.DESCRIPTION_LANGUAGE()
+}
+
+/// Language of DESCRIPTION, BCP 47
+/// Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+func (rcv *SIT) DESCRIPTION_CITATION(obj *SITCitation) *SITCitation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SITCitation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SIT) DescriptionCitation(obj *SITCitation) *SITCitation {
+	return rcv.DESCRIPTION_CITATION(obj)
+}
+
+/// Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+/// Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+func (rcv *SIT) POSITION_CITATION(obj *SITCitation) *SITCitation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SITCitation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SIT) PositionCitation(obj *SITCitation) *SITCitation {
+	return rcv.POSITION_CITATION(obj)
+}
+
+/// Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+/// Records about the site in other registers; the RECORD role names the
+/// site's own record
+func (rcv *SIT) EXTERNAL_REFERENCES(obj *SITReference, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SITReference)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SIT) ExternalReferences(obj *SITReference, j int) bool {
+	return rcv.EXTERNAL_REFERENCES(obj, j)
+}
+
+func (rcv *SIT) EXTERNAL_REFERENCESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SIT) ExternalReferencesLength() int {
+	return rcv.EXTERNAL_REFERENCESLength()
+}
+
+/// Records about the site in other registers; the RECORD role names the
+/// site's own record
+/// Operators, owners and regulators
+func (rcv *SIT) PARTIES(obj *SITParty, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SITParty)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SIT) Parties(obj *SITParty, j int) bool {
+	return rcv.PARTIES(obj, j)
+}
+
+func (rcv *SIT) PARTIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SIT) PartiesLength() int {
+	return rcv.PARTIESLength()
+}
+
+/// Operators, owners and regulators
+/// Stated quantities (capacity, power, units, elevation)
+func (rcv *SIT) QUANTITIES(obj *SITQuantity, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SITQuantity)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SIT) Quantities(obj *SITQuantity, j int) bool {
+	return rcv.QUANTITIES(obj, j)
+}
+
+func (rcv *SIT) QUANTITIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SIT) QuantitiesLength() int {
+	return rcv.QUANTITIESLength()
+}
+
+/// Stated quantities (capacity, power, units, elevation)
+/// The record's provider and producer, and the terms of the content the
+/// record reproduces (each citation carries its own source's terms)
+func (rcv *SIT) PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SIT) Provenance(obj *PVN) *PVN {
+	return rcv.PROVENANCE(obj)
+}
+
+/// The record's provider and producer, and the terms of the content the
+/// record reproduces (each citation carries its own source's terms)
 func SITStart(builder *flatbuffers.Builder) {
-	builder.StartObject(24)
+	builder.StartObject(36)
 }
 func SITAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -638,6 +915,102 @@ func SITStartINTEGRATED_DEVICESVector(builder *flatbuffers.Builder, numElems int
 }
 func SITStartIntegratedDevicesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SITStartINTEGRATED_DEVICESVector(builder, numElems)
+}
+func SITAddLIFECYCLE_STATUS(builder *flatbuffers.Builder, LIFECYCLE_STATUS siteLifecycleStatus) {
+	builder.PrependInt8Slot(24, int8(LIFECYCLE_STATUS), 0)
+}
+func SITAddLifecycleStatus(builder *flatbuffers.Builder, LIFECYCLE_STATUS siteLifecycleStatus) {
+	SITAddLIFECYCLE_STATUS(builder, LIFECYCLE_STATUS)
+}
+func SITAddLIFECYCLE_STATUS_DATE(builder *flatbuffers.Builder, LIFECYCLE_STATUS_DATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(LIFECYCLE_STATUS_DATE), 0)
+}
+func SITAddLifecycleStatusDate(builder *flatbuffers.Builder, LIFECYCLE_STATUS_DATE flatbuffers.UOffsetT) {
+	SITAddLIFECYCLE_STATUS_DATE(builder, LIFECYCLE_STATUS_DATE)
+}
+func SITAddSTATUS_VERIFIED_AT(builder *flatbuffers.Builder, STATUS_VERIFIED_AT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(STATUS_VERIFIED_AT), 0)
+}
+func SITAddStatusVerifiedAt(builder *flatbuffers.Builder, STATUS_VERIFIED_AT flatbuffers.UOffsetT) {
+	SITAddSTATUS_VERIFIED_AT(builder, STATUS_VERIFIED_AT)
+}
+func SITAddSTATUS_EVIDENCE(builder *flatbuffers.Builder, STATUS_EVIDENCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(STATUS_EVIDENCE), 0)
+}
+func SITAddStatusEvidence(builder *flatbuffers.Builder, STATUS_EVIDENCE flatbuffers.UOffsetT) {
+	SITAddSTATUS_EVIDENCE(builder, STATUS_EVIDENCE)
+}
+func SITStartSTATUS_EVIDENCEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func SITStartStatusEvidenceVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SITStartSTATUS_EVIDENCEVector(builder, numElems)
+}
+func SITAddSITE_KIND(builder *flatbuffers.Builder, SITE_KIND flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(SITE_KIND), 0)
+}
+func SITAddSiteKind(builder *flatbuffers.Builder, SITE_KIND flatbuffers.UOffsetT) {
+	SITAddSITE_KIND(builder, SITE_KIND)
+}
+func SITAddDESCRIPTION_LANGUAGE(builder *flatbuffers.Builder, DESCRIPTION_LANGUAGE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(DESCRIPTION_LANGUAGE), 0)
+}
+func SITAddDescriptionLanguage(builder *flatbuffers.Builder, DESCRIPTION_LANGUAGE flatbuffers.UOffsetT) {
+	SITAddDESCRIPTION_LANGUAGE(builder, DESCRIPTION_LANGUAGE)
+}
+func SITAddDESCRIPTION_CITATION(builder *flatbuffers.Builder, DESCRIPTION_CITATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(DESCRIPTION_CITATION), 0)
+}
+func SITAddDescriptionCitation(builder *flatbuffers.Builder, DESCRIPTION_CITATION flatbuffers.UOffsetT) {
+	SITAddDESCRIPTION_CITATION(builder, DESCRIPTION_CITATION)
+}
+func SITAddPOSITION_CITATION(builder *flatbuffers.Builder, POSITION_CITATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(POSITION_CITATION), 0)
+}
+func SITAddPositionCitation(builder *flatbuffers.Builder, POSITION_CITATION flatbuffers.UOffsetT) {
+	SITAddPOSITION_CITATION(builder, POSITION_CITATION)
+}
+func SITAddEXTERNAL_REFERENCES(builder *flatbuffers.Builder, EXTERNAL_REFERENCES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(EXTERNAL_REFERENCES), 0)
+}
+func SITAddExternalReferences(builder *flatbuffers.Builder, EXTERNAL_REFERENCES flatbuffers.UOffsetT) {
+	SITAddEXTERNAL_REFERENCES(builder, EXTERNAL_REFERENCES)
+}
+func SITStartEXTERNAL_REFERENCESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func SITStartExternalReferencesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SITStartEXTERNAL_REFERENCESVector(builder, numElems)
+}
+func SITAddPARTIES(builder *flatbuffers.Builder, PARTIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(PARTIES), 0)
+}
+func SITAddParties(builder *flatbuffers.Builder, PARTIES flatbuffers.UOffsetT) {
+	SITAddPARTIES(builder, PARTIES)
+}
+func SITStartPARTIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func SITStartPartiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SITStartPARTIESVector(builder, numElems)
+}
+func SITAddQUANTITIES(builder *flatbuffers.Builder, QUANTITIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(QUANTITIES), 0)
+}
+func SITAddQuantities(builder *flatbuffers.Builder, QUANTITIES flatbuffers.UOffsetT) {
+	SITAddQUANTITIES(builder, QUANTITIES)
+}
+func SITStartQUANTITIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func SITStartQuantitiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SITStartQUANTITIESVector(builder, numElems)
+}
+func SITAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func SITAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	SITAddPROVENANCE(builder, PROVENANCE)
 }
 func SITEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

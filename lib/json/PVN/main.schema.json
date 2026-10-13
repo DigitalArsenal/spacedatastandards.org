@@ -3,7 +3,7 @@
   "definitions": {
     "pvnSourceKind" : {
       "type" : "string",
-      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation"]
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
     },
     "pvnLicenseClass" : {
       "type" : "string",

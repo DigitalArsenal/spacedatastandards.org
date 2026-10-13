@@ -1,7 +1,8 @@
-// Hash: 6f282637e3795d2d62105c0454bf0837ef252daa6109b006f74852a2b0ee8015
-// Version: 1.0.1
+// Hash: 9e83c8b84fa57192eb7ca02fd78eef64b869bbaf223078dc0bcb33534acadfc9
+// Version: 1.1.0
 // -----------------------------------END_HEADER
 include "../IDM/main.fbs";
+include "../PVN/main.fbs";
 
 /// Enum for the type of site
 enum SiteType: byte {
@@ -23,6 +24,151 @@ enum SiteType: byte {
   NATIONAL_PARK,
   HISTORICAL_SITE,
   OTHER
+}
+
+/// Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
+/// EU INSPIRE ConditionOfFacilityValue list. Ordinals are wire values: append only.
+enum siteLifecycleStatus : byte {
+  /// No source states a status
+  UNSPECIFIED,
+  /// Proposed, announced or in study; construction not begun
+  PLANNED,
+  /// Under construction
+  UNDER_CONSTRUCTION,
+  /// Construction begun, then halted with no restart date (PRIS suspended construction)
+  CONSTRUCTION_SUSPENDED,
+  /// In operation
+  OPERATING,
+  /// Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)
+  LONG_TERM_SHUTDOWN,
+  /// Permanently shut down; not yet in decommissioning
+  PERMANENT_SHUTDOWN,
+  /// Decommissioning or dismantling under way
+  DECOMMISSIONING,
+  /// Dismantled, remediated or released from regulatory control
+  DECOMMISSIONED,
+  /// Never completed or never operated
+  CANCELLED,
+  /// Every licence-OK source was read and none states a status
+  UNVERIFIED
+}
+
+/// Where one statement about a site was read: the source, the record, the
+/// version of the record and the field the statement came from.
+table SITCitation {
+  /// The source, its originator and the terms the statement travels under
+  PROVENANCE: PVN;
+  /// The source's own identifier of the record (Wikidata QID, "de:Article
+  /// title", tracker unit ids, ROR id, docket number, register row)
+  SOURCE_RECORD_ID: string;
+  /// Where the record can be read
+  SOURCE_URL: string;
+  /// The source's version of the record (revision id, release name)
+  SOURCE_VERSION: string;
+  /// The field of the record the statement was read from, from a closed
+  /// vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+  /// "description", "class:<QID>", "status" (a registry's status column),
+  /// "units" (a tracker's unit statuses), "register:<id>" (a row of the
+  /// provider's reviewed register). Never free text.
+  SOURCE_FIELD: string;
+  /// When the record was read, RFC 3339 UTC
+  RETRIEVED_AT: string;
+}
+
+/// One source's assertion of one lifecycle step of a site.
+table SITStatusEvidence {
+  /// The status the source states
+  STATUS: siteLifecycleStatus = UNSPECIFIED;
+  /// When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)
+  STATUS_DATE: string;
+  /// Where the statement was read
+  CITATION: SITCitation;
+}
+
+/// What a reference to another record about the site is.
+enum sitReferenceRole : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// The site's own record in the register the site record was made from
+  RECORD,
+  /// The site's or its operator's official website
+  OFFICIAL_WEBSITE,
+  /// An encyclopedia article about the site (title and URL only)
+  ENCYCLOPEDIA_ARTICLE,
+  /// The site's record in another registry (a tracker, an organisation registry)
+  REGISTRY_RECORD,
+  /// A regulator's docket or licence record for the site
+  REGULATORY_DOCKET
+}
+
+/// A reference to another record about the site or a party.
+table SITReference {
+  /// What the referenced record is
+  ROLE: sitReferenceRole = UNSPECIFIED;
+  /// Publisher-stable, lowercase identifier of the registry in the provider's
+  /// register of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)
+  REGISTRY: string;
+  /// The registry's identifier of the record
+  RECORD_ID: string;
+  /// Where the record can be read
+  URL: string;
+  /// The record's title as the registry states it (for an encyclopedia, the
+  /// article title only, never its text)
+  TITLE: string;
+  /// Language of the record, BCP 47
+  LANGUAGE: string;
+}
+
+/// What part a party plays at a site.
+enum sitPartyRole : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// Runs the site
+  OPERATOR,
+  /// Owns the site
+  OWNER,
+  /// Licenses and inspects the site
+  REGULATOR
+}
+
+/// An organisation with a part at the site.
+table SITParty {
+  /// The part it plays
+  ROLE: sitPartyRole = UNSPECIFIED;
+  /// Its name, as the source states it
+  NAME: string;
+  /// Records about the party (its registry record, its official website)
+  EXTERNAL_REFERENCES: [SITReference];
+  /// Where the statement that it plays this part was read
+  CITATION: SITCitation;
+}
+
+/// What a quantity of a site measures. Ordinals are wire values: append only.
+enum sitQuantityKind : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// Electrical generating capacity, MW
+  ELECTRICAL_CAPACITY,
+  /// Thermal power, MW
+  THERMAL_POWER,
+  /// Number of reactor or generating units (UNITS empty)
+  REACTOR_UNITS,
+  /// Height above mean sea level, m
+  ELEVATION
+}
+
+/// One stated quantity of a site.
+table SITQuantity {
+  /// What it measures
+  KIND: sitQuantityKind = UNSPECIFIED;
+  /// Its value
+  VALUE: double;
+  /// Units, CCSDS NDM spelling (MW, m); empty for a count
+  UNITS: string;
+  /// When the value applies, ISO 8601 at the source's precision; empty when the source states none
+  DATE: string;
+  /// Where it was read
+  CITATION: SITCitation;
 }
 
 /// Geometry table with information about geometric properties
@@ -83,6 +229,35 @@ table SIT {
   ACCESSIBILITY_INFRA: string;
   /// Vector of Integrated Devices (IDM)
   INTEGRATED_DEVICES: [IDM];
+  /// Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+  /// words (Online, Offline, Testing); this field is the lifecycle.
+  LIFECYCLE_STATUS: siteLifecycleStatus = UNSPECIFIED;
+  /// When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+  LIFECYCLE_STATUS_DATE: string;
+  /// When the status was last checked against its sources, RFC 3339 UTC
+  STATUS_VERIFIED_AT: string;
+  /// Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+  STATUS_EVIDENCE: [SITStatusEvidence];
+  /// What kind of site this is, as its source names the class ("research
+  /// reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+  /// SiteType
+  SITE_KIND: string;
+  /// Language of DESCRIPTION, BCP 47
+  DESCRIPTION_LANGUAGE: string;
+  /// Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+  DESCRIPTION_CITATION: SITCitation;
+  /// Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+  POSITION_CITATION: SITCitation;
+  /// Records about the site in other registers; the RECORD role names the
+  /// site's own record
+  EXTERNAL_REFERENCES: [SITReference];
+  /// Operators, owners and regulators
+  PARTIES: [SITParty];
+  /// Stated quantities (capacity, power, units, elevation)
+  QUANTITIES: [SITQuantity];
+  /// The record's provider and producer, and the terms of the content the
+  /// record reproduces (each citation carries its own source's terms)
+  PROVENANCE: PVN;
 }
 
 root_type SIT;
