@@ -187,7 +187,7 @@ public enum propagatorFamily: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Propagator configuration structure to describe propagation settings
-public struct propagatorConfig: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct propagatorConfig: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -255,7 +255,7 @@ public struct propagatorConfig: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  VCM State Vector (position and velocity)
-public struct VCMStateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VCMStateVector: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -328,7 +328,7 @@ public struct VCMStateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Keplerian Elements
-public struct keplerianElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct keplerianElements: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -406,7 +406,7 @@ public struct keplerianElements: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Equinoctial Elements
-public struct equinoctialElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct equinoctialElements: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -472,7 +472,7 @@ public struct equinoctialElements: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  UVW Sigmas (Covariance matrix in UVW frame)
-public struct uvwSigmas: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct uvwSigmas: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -538,7 +538,7 @@ public struct uvwSigmas: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  VCM Atmospheric and Perturbation Model Data
-public struct VCMAtmosphericModelData: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VCMAtmosphericModelData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -616,7 +616,7 @@ public struct VCMAtmosphericModelData: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
-public struct VCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Telemetry Transfer Frame (CCSDS 132.0-B-2)
-public struct TMF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TMF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

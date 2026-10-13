@@ -25,7 +25,7 @@ public enum launchDetectionType: Int8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  Launch Detection
-public struct LND: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LND: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

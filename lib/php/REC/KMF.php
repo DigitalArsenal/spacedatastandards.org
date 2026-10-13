@@ -10,6 +10,11 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 class KMF extends Table
 {
     /**
+     * @var string|null Encryption context for decrypting encrypted fields
+     */
+    protected $encryptionCtx = null;
+
+    /**
      * @param ByteBuffer $bb
      * @return KMF
      */
@@ -19,31 +24,15 @@ class KMF extends Table
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
-    // Field-encryption format 3 walk program of KMF (see FlatbuffersEncryption).
-    const FLATBUFFERS_ENCRYPTION_PROGRAM = array(
-        1, 2, 1, 2, 12, 1
-    );
-
     /**
-     * Returns a copy of a KMF buffer (a string) with its (encrypted) fields
-     * encrypted with field-encryption format 3 ($key: 32 bytes; $recordIndex:
-     * unique per buffer under the key).
-     * @throws \InvalidArgumentException for a bad key or a malformed buffer
+     * @param ByteBuffer $bb
+     * @param string|null $encryptionCtx
+     * @return KMF
      */
-    public static function encryptBuffer($bytes, $key, $recordIndex = 0)
+    public static function getRootAsKMFWithEncryption(ByteBuffer $bb, $encryptionCtx)
     {
-        return FlatbuffersEncryption::cryptBuffer($bytes, $key, $recordIndex, self::FLATBUFFERS_ENCRYPTION_PROGRAM);
-    }
-
-    /**
-     * Returns a copy of a KMF buffer (a string) with its (encrypted) fields
-     * decrypted with field-encryption format 3 ($key: 32 bytes; $recordIndex:
-     * unique per buffer under the key).
-     * @throws \InvalidArgumentException for a bad key or a malformed buffer
-     */
-    public static function decryptBuffer($bytes, $key, $recordIndex = 0)
-    {
-        return FlatbuffersEncryption::cryptBuffer($bytes, $key, $recordIndex, self::FLATBUFFERS_ENCRYPTION_PROGRAM);
+        $obj = new KMF();
+        return ($obj->initWithEncryption($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb, $encryptionCtx));
     }
 
     public static function KMFIdentifier()
@@ -65,6 +54,20 @@ class KMF extends Table
     {
         $this->bb_pos = $_i;
         $this->bb = $_bb;
+        return $this;
+    }
+
+    /**
+     * @param int $_i offset
+     * @param ByteBuffer $_bb
+     * @param string|null $_encryptionCtx
+     * @return KMF
+     **/
+    public function initWithEncryption($_i, ByteBuffer $_bb, $_encryptionCtx)
+    {
+        $this->bb_pos = $_i;
+        $this->bb = $_bb;
+        $this->encryptionCtx = $_encryptionCtx;
         return $this;
     }
 

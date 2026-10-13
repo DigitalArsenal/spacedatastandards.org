@@ -75,7 +75,7 @@ public enum pmmEntryState: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 ///  the two external anchors that give that key its weight: the DNS proof that
 ///  binds it to the domain, and the Adversarial-Security bond that prices
 ///  trust in it.
-public struct PMMTrustAnchor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PMMTrustAnchor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -212,7 +212,7 @@ public struct PMMTrustAnchor: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  One module the provider offers.
-public struct PMMModuleEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PMMModuleEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -518,7 +518,7 @@ public struct PMMModuleEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 
 ///  Provider Module Manifest — what one provider node offers, signed by that
 ///  node's key.
-public struct PMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PMM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

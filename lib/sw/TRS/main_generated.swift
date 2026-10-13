@@ -119,7 +119,7 @@ public enum trsPathClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 ///  coordinates are carried explicitly in GRID_LONGITUDE_RAD /
 ///  GRID_LATITUDE_RAD so a solver recomputes exact per-cell Earth-fixed
 ///  geometry instead of interpolating it.
-public struct TRSRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRSRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -454,7 +454,7 @@ public struct TRSRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 ///  One terrain raster solve result. On STATUS = OK every layer below is
 ///  present with exactly GRID_WIDTH * GRID_HEIGHT row-major entries. On any
 ///  other STATUS the result carries NO layers — never a partial raster.
-public struct TRSResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRSResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -599,7 +599,7 @@ public struct TRSResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Terrain raster solve envelope.
-public struct TRS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

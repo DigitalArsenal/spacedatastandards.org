@@ -89,7 +89,7 @@ public enum AtmosphericModelFamily: Int8, FlatbuffersVectorInitializable, Enum, 
 
 
 ///  Atmospheric Model Message
-public struct ATM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ATM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

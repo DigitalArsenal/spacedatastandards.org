@@ -66,7 +66,7 @@ public enum fieldStreamRevocationCategory: Int8, FlatbuffersVectorInitializable,
 }
 
 
-public struct FieldStreamAudience: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FieldStreamAudience: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -122,7 +122,7 @@ public struct FieldStreamAudience: FlatBufferVerifiableTable, FlatbuffersVectorI
   }
 }
 
-public struct FieldStreamRule: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FieldStreamRule: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -190,7 +190,7 @@ public struct FieldStreamRule: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct FSP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FSP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

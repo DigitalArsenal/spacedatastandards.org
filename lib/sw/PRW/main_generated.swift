@@ -427,7 +427,7 @@ public enum prwGnssSpacecraftBlock: UInt8, FlatbuffersVectorInitializable, Enum,
 ///  Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
 ///  bytes verbatim; the propagator uses SOURCE_KIND to decide how to
 ///  consume them.
-public struct PRWInit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWInit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -471,7 +471,7 @@ public struct PRWInit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
   }
 }
 
-public struct PRWKeplerianElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWKeplerianElements: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -556,7 +556,7 @@ public struct PRWKeplerianElements: FlatBufferVerifiableTable, FlatbuffersVector
   }
 }
 
-public struct PRWTleLines: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWTleLines: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -616,7 +616,7 @@ public struct PRWTleLines: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   }
 }
 
-public struct PRWInitSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWInitSource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -685,7 +685,7 @@ public struct PRWInitSource: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  Batch propagation request — propagate every entity in ENTITY_HANDLES[] to
 ///  EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the
 ///  shared arena.
-public struct PRWBatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -755,7 +755,7 @@ public struct PRWBatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 ///  Batch propagation response header — describes the stream written to
 ///  OUTPUT_OFFSET and reports errors. The stream itself is
 ///  `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.
-public struct PRWBatchResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -838,7 +838,7 @@ public struct PRWBatchResponse: FlatBufferVerifiableTable, FlatbuffersVectorInit
 ///  ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
 ///  doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
 ///  added to the a priori model and scaled by the visible Sun fraction.
-public struct PRWEcom2: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWEcom2: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -934,7 +934,7 @@ public struct PRWEcom2: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Instance identity is host-provided, opaque, and not a physical quantity.
-public struct PRWInstance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWInstance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -985,7 +985,7 @@ public struct PRWInstance: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Units are SI. A scalar legacy tolerance must be expanded by the adapter.
-public struct PRWIntegratorSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWIntegratorSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1059,7 +1059,7 @@ public struct PRWIntegratorSettings: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
-public struct PRWSpaceWeather: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWSpaceWeather: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1121,7 +1121,7 @@ public struct PRWSpaceWeather: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 
 ///  Executable subset currently reachable through HPOP invoke. No implied
 ///  support for coefficients, drag models or bodies the provider cannot supply.
-public struct PRWForceConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWForceConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1441,7 +1441,7 @@ public struct PRWForceConfiguration: FlatBufferVerifiableTable, FlatbuffersVecto
 ///  request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
 ///  Covariance entries have row*column units; STM entries row/column units;
 ///  an STM's parameter rows are the identity (parameters are constant).
-public struct PRWStateMatrix: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWStateMatrix: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1484,7 +1484,7 @@ public struct PRWStateMatrix: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.
-public struct PRWProcessNoise: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWProcessNoise: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1541,7 +1541,7 @@ public struct PRWProcessNoise: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.
-public struct PRWResidentState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWResidentState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1705,7 +1705,7 @@ public struct PRWResidentState: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Impulsive change at TDB epoch; delta velocity is m/s in the named basis.
-public struct PRWImpulse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWImpulse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1753,7 +1753,7 @@ public struct PRWImpulse: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Piecewise-linear throttle. Clock is seconds from initial propagation epoch.
-public struct PRWThrottlePoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWThrottlePoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1795,7 +1795,7 @@ public struct PRWThrottlePoint: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Scheduled time gates an optional condition. At least one must be present.
-public struct PRWBurnBoundary: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWBurnBoundary: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1847,7 +1847,7 @@ public struct PRWBurnBoundary: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 
 ///  Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).
 ///  VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).
-public struct PRWFiniteBurn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWFiniteBurn: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1955,7 +1955,7 @@ public struct PRWFiniteBurn: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Fixed endpoint propagation. Provider selected by the host's connected port.
-public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWExecutionRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2083,7 +2083,7 @@ public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Burn times absent until reached; zero means an actual edge at initial epoch.
-public struct PRWBurnReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWBurnReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2199,7 +2199,7 @@ public struct PRWBurnReport: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   }
 }
 
-public struct PRWPropagationSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWPropagationSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2284,7 +2284,7 @@ public struct PRWPropagationSample: FlatBufferVerifiableTable, FlatbuffersVector
   }
 }
 
-public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWExecutionResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2358,7 +2358,7 @@ public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Portable batch request: no output pointer; state records returned via TAB.
-public struct PRWResidentRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWResidentRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2419,7 +2419,7 @@ public struct PRWResidentRequest: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  All epochs explicit; duration seconds >=0; empty handles means all resident.
-public struct PRWPrepareRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWPrepareRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2487,7 +2487,7 @@ public struct PRWPrepareRequest: FlatBufferVerifiableTable, FlatbuffersVectorIni
   }
 }
 
-public struct PRWFitQuality: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWFitQuality: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2565,7 +2565,7 @@ public struct PRWFitQuality: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   }
 }
 
-public struct PRWPrepareResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWPrepareResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2619,7 +2619,7 @@ public struct PRWPrepareResult: FlatBufferVerifiableTable, FlatbuffersVectorInit
   }
 }
 
-public struct PRWDescribeRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWDescribeRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2668,7 +2668,7 @@ public struct PRWDescribeRequest: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.
-public struct PRWTrajectorySource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWTrajectorySource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2723,7 +2723,7 @@ public struct PRWTrajectorySource: FlatBufferVerifiableTable, FlatbuffersVectorI
   }
 }
 
-public struct PRWDescribeResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWDescribeResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2785,7 +2785,7 @@ public struct PRWDescribeResult: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Native container bytes wholly inside the FlatBuffer; not an NCD trailer.
-public struct PRWNativeInput: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWNativeInput: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2832,7 +2832,7 @@ public struct PRWNativeInput: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  of one series (same SERIES, IAU_CONVENTION and data-set provenance) with
 ///  strictly increasing MJD that cover the arc. A provider interpolates as
 ///  published by the series and does not extrapolate.
-public struct PRWEarthOrientation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWEarthOrientation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2871,7 +2871,7 @@ public struct PRWEarthOrientation: FlatBufferVerifiableTable, FlatbuffersVectorI
 ///  increasing DATE covering the arc plus what the atmosphere model reads
 ///  before it (NRLMSISE-00 reads the previous day's F10.7). A provider derives
 ///  its model inputs from these rows and reports which ones it reads.
-public struct PRWSpaceWeatherTable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWSpaceWeatherTable: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2912,7 +2912,7 @@ public struct PRWSpaceWeatherTable: FlatBufferVerifiableTable, FlatbuffersVector
 ///  Dst-derived exospheric temperature change. A provider applies the model's
 ///  own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier
 ///  rows, and states how it interpolates between them.
-public struct PRWJB2008Indices: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWJB2008Indices: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3015,7 +3015,7 @@ public struct PRWJB2008Indices: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  JB2008 drivers for a propagation: daily rows with strictly increasing
 ///  DATE covering the arc plus the days the model's lags read before it.
-public struct PRWJB2008IndicesTable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWJB2008IndicesTable: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3051,7 +3051,7 @@ public struct PRWJB2008IndicesTable: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.
-public struct PRWEphemerisRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWEphemerisRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3098,7 +3098,7 @@ public struct PRWEphemerisRequest: FlatBufferVerifiableTable, FlatbuffersVectorI
   }
 }
 
-public struct PRWEphemerisResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWEphemerisResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3154,7 +3154,7 @@ public struct PRWEphemerisResult: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
-public struct PRWAtmosphereRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWAtmosphereRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3253,7 +3253,7 @@ public struct PRWAtmosphereRequest: FlatBufferVerifiableTable, FlatbuffersVector
   }
 }
 
-public struct PRWSpeciesDensity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWSpeciesDensity: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3294,7 +3294,7 @@ public struct PRWSpeciesDensity: FlatBufferVerifiableTable, FlatbuffersVectorIni
   }
 }
 
-public struct PRWAtmosphereResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWAtmosphereResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3397,7 +3397,7 @@ public struct PRWAtmosphereResult: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Runtime diagnostic version; PLG remains the authoritative manifest identity.
-public struct PRWVersionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRWVersionResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3441,7 +3441,7 @@ public struct PRWVersionResult: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Exactly one arm per envelope. Existing three arms keep their ordinals.
-public struct PRW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

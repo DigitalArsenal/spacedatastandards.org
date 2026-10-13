@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  One pruned-vocabulary token's static embedding row.
-public struct QEMTokenVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct QEMTokenVector: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -99,7 +99,7 @@ public struct QEMTokenVector: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  A QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION,
 ///  MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a
 ///  mismatch on any one means the two vector spaces are not comparable.
-public struct QEM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct QEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

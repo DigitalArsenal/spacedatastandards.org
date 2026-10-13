@@ -92,7 +92,7 @@ public enum signalModulation: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 ///  One point of an emission-limit curve. FREQUENCY_OFFSET_HZ is signed and is
 ///  relative to RFEEmissionMask.REFERENCE_FREQUENCY_HZ. VALUE is expressed in
 ///  the mask's required UNITS.
-public struct RFEEmissionMaskPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFEEmissionMaskPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -135,7 +135,7 @@ public struct RFEEmissionMaskPoint: FlatBufferVerifiableTable, FlatbuffersVector
 
 ///  Provenance of an emitter descriptor or emission mask. Capability schemas
 ///  carry model names and citations as data so the IDL remains provider-neutral.
-public struct RFEProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFEProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -228,7 +228,7 @@ public struct RFEProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 
 ///  A replayable spurious, harmonic, out-of-band, noise, conducted, radiated,
 ///  or susceptibility limit curve.
-public struct RFEEmissionMask: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFEEmissionMask: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -317,7 +317,7 @@ public struct RFEEmissionMask: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  RF Emitter Detail Record
-public struct rfEmitterDetail: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -462,7 +462,7 @@ public struct rfEmitterDetail: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  RF Emitter
-public struct RFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

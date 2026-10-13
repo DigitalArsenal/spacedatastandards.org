@@ -279,7 +279,7 @@ def CFPCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    return CFPCreateDATAVector(builder, data)
+    CFPCreateDATAVector(builder, data)
 
 def CFPEnd(builder):
     return builder.EndObject()

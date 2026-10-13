@@ -77,7 +77,7 @@ public enum irmValidatorMatch: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 ///  The source object a job is reading, and the validators that prove a resumed
 ///  read is reading the same bytes.
-public struct IRMSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IRMSource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -199,7 +199,7 @@ public struct IRMSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 
 ///  Everything a resuming reader needs to decode a chunk that does not begin at
 ///  offset 0. Required whenever NEXT_OFFSET is past the source's own header.
-public struct IRMDecodeContext: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IRMDecodeContext: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -425,7 +425,7 @@ public struct IRMDecodeContext: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  One chunk that was read and durably committed.
-public struct IRMChunk: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IRMChunk: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -540,7 +540,7 @@ public struct IRMChunk: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  The last unrecovered error, carried so a resumed run can refuse to loop.
-public struct IRMFault: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IRMFault: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -617,7 +617,7 @@ public struct IRMFault: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Ingest Resume Mark
-public struct IRM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IRM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

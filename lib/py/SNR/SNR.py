@@ -277,7 +277,7 @@ def SNRCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    return SNRCreateRESERVEDVector(builder, data)
+    SNRCreateRESERVEDVector(builder, data)
 
 def SNREnd(builder):
     return builder.EndObject()

@@ -275,7 +275,7 @@ public enum rflObstacleInteraction: Int8, FlatbuffersVectorInitializable, Enum, 
 ///  conductivity, penetration loss and roughness produced LOSS_DB, and
 ///  GEOMETRY_REF_ID names the exact mesh, face set, panel or analytic shape
 ///  inside it that was hit.
-public struct RFLObstruction: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFLObstruction: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -415,7 +415,7 @@ public struct RFLObstruction: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  One endpoint of a link. Identity ONLY — position, antenna geometry and band
 ///  capability are NOT copied here; they are joined from the standard named by
 ///  ENDPOINT_KIND. A copied position silently goes stale against its source.
-public struct RFLEndpoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFLEndpoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -559,7 +559,7 @@ public struct RFLEndpoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 ///  One modulation-and-coding choice available to a link. The table carries
 ///  engineering capability only; catalogue or recommendation names belong in
 ///  ID / NAME and provenance data, never in the schema vocabulary.
-public struct RFLModCod: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFLModCod: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -676,7 +676,7 @@ public struct RFLModCod: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  One link whose budget is sampled by this record.
-public struct RFLLink: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFLLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -879,7 +879,7 @@ public struct RFLLink: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 ///  One interfering contribution to one sample. SPARSE: entries exist only
 ///  where a contribution was computed, so a dense matrix is never forced into
 ///  existence to say "no interference computed".
-public struct RFLInterferenceContribution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFLInterferenceContribution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -985,7 +985,7 @@ public struct RFLInterferenceContribution: FlatBufferVerifiableTable, Flatbuffer
 
 ///  A named parameter of a model binding, with its unit stated. There is no
 ///  encoding for a parameter value without a unit.
-public struct RFLModelParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFLModelParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1046,7 +1046,7 @@ public struct RFLModelParameter: FlatBufferVerifiableTable, FlatbuffersVectorIni
 ///  binding is an unattributed number: rain attenuation from two different
 ///  recommendations differs by decibels, and a consumer must be able to tell
 ///  which one it is holding.
-public struct RFLModelBinding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFLModelBinding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1128,7 +1128,7 @@ public struct RFLModelBinding: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Where this sample set came from, stated once for the record.
-public struct RFLProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFLProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1301,7 +1301,7 @@ public struct RFLProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  RF Link Sample
-public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -4,7 +4,6 @@
 
 import flatbuffers
 from flatbuffers.compat import import_numpy
-from .FlatbuffersEncryption import FlatbuffersEncryption
 np = import_numpy()
 
 # Collection of Standard Records
@@ -29,28 +28,6 @@ class REC(object):
     # REC
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
-
-    # Field-encryption format 3 walk program of REC (see FlatbuffersEncryption).
-    _FLATBUFFERS_ENCRYPTION_PROGRAM = (
-        3, 4, 8, 15, 1, 5, 6, 1, 1, 6, 6, 4, 1, 63, 2, 1,
-        2, 12, 1
-    )
-
-    @classmethod
-    def EncryptBuffer(cls, buf, key, record_index=0):
-        """Returns a copy of a REC buffer with its (encrypted) fields
-        encrypted with field-encryption format 3 (key: 32 bytes;
-        record_index: unique per buffer under the key)."""
-        return FlatbuffersEncryption.crypt_buffer(
-            buf, key, record_index, cls._FLATBUFFERS_ENCRYPTION_PROGRAM)
-
-    @classmethod
-    def DecryptBuffer(cls, buf, key, record_index=0):
-        """Returns a copy of a REC buffer with its (encrypted) fields
-        decrypted with field-encryption format 3 (key: 32 bytes;
-        record_index: unique per buffer under the key)."""
-        return FlatbuffersEncryption.crypt_buffer(
-            buf, key, record_index, cls._FLATBUFFERS_ENCRYPTION_PROGRAM)
 
     # Schema version identifier
     # REC
@@ -114,7 +91,7 @@ def RECCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    return RECCreateRECORDSVector(builder, data)
+    RECCreateRECORDSVector(builder, data)
 
 def RECEnd(builder):
     return builder.EndObject()

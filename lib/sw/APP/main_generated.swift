@@ -165,7 +165,7 @@ public enum appRuntimeTarget: UInt8, FlatbuffersVectorInitializable, Enum, Verif
 
 ///  One member WASM module of the app. References module identity; never
 ///  embeds the module artifact itself (delivery is the module-bundle lane).
-public struct APPModuleRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -309,7 +309,7 @@ public struct APPModuleRef: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 ///  One SDS record type the app produces and/or consumes. Names an existing
 ///  spacedatastandards.org schema by its established code; the app manifest
 ///  defines no data schemas of its own.
-public struct APPDataRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct APPDataRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -405,7 +405,7 @@ public struct APPDataRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  One upstream data source the app depends on.
-public struct APPSourceRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct APPSourceRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -497,7 +497,7 @@ public struct APPSourceRef: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 ///  or MODULE_ID plus URL for a page served by a member module. Inline pages
 ///  must be fully self-contained — CSS and JS inlined, all assets embedded
 ///  as data URIs, zero external requests.
-public struct APPUIPage: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct APPUIPage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -668,7 +668,7 @@ public struct APPUIPage: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 ///  defines no data shapes of its own, it only references an existing
 ///  spacedatastandards.org schema by its established code. Locators are
 ///  content-addressed and IPFS-first.
-public struct APPDataflow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct APPDataflow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -815,7 +815,7 @@ public struct APPDataflow: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Application Package Manifest — one launchable app.
-public struct APP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

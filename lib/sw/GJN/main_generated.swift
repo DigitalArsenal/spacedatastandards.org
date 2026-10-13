@@ -26,7 +26,7 @@ public enum GJNGeometryType: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  A single position (longitude, latitude, optional altitude)
-public struct GJNPosition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GJNPosition: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -85,7 +85,7 @@ public struct GJNPosition: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  A linear ring is a closed LineString with 4+ positions (first = last)
-public struct GJNLinearRing: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GJNLinearRing: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -122,7 +122,7 @@ public struct GJNLinearRing: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  A polygon represented as an array of rings (outer boundary + holes)
-public struct GJNPolygonRings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GJNPolygonRings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -159,7 +159,7 @@ public struct GJNPolygonRings: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  GeoJSON Geometry object
-public struct GJNGeometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GJNGeometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -238,7 +238,7 @@ public struct GJNGeometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  A key-value property entry for Feature properties
-public struct GJNProperty: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GJNProperty: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -331,7 +331,7 @@ public struct GJNProperty: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  GeoJSON Feature object
-public struct GJNFeature: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GJNFeature: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -421,7 +421,7 @@ public struct GJNFeature: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]
-public struct GJNBoundingBox: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GJNBoundingBox: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -501,7 +501,7 @@ public struct GJNBoundingBox: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  GeoJSON FeatureCollection
-public struct GJN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GJN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

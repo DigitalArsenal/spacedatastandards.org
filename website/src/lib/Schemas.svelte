@@ -64,6 +64,7 @@
     "MNV": ["maneuver", "orbit change", "delta-v", "station-keeping", "thrust", "burn"],
     "CVR": ["covariance", "realism", "calibration", "uncertainty", "Mahalanobis", "coverage", "error model"],
     "PVN": ["provenance", "attribution", "source", "originator", "provider", "license", "licence", "lineage"],
+    "SBD": ["asteroid", "comet", "small body", "minor planet", "heliocentric", "osculating elements", "absolute magnitude", "orbit class"],
     "MFE": ["manifold", "element set", "temporary", "satellite number", "TLE"],
     "MNF": ["manifold", "propagation", "delta-v", "probability", "candidate"],
     "MPE": ["minimum", "propagatable", "compact", "mean motion", "BSTAR", "TLE subset"],

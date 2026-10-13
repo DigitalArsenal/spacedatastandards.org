@@ -187,7 +187,7 @@ public enum evlResultStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Configuration for ECLIPSE.
-public struct EVLEclipseConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLEclipseConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -276,7 +276,7 @@ public struct EVLEclipseConfiguration: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  Configuration for CONTACT.
-public struct EVLContactConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLContactConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -360,7 +360,7 @@ public struct EVLContactConfiguration: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  Configuration for INTRUSION.
-public struct EVLIntrusionConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLIntrusionConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -481,7 +481,7 @@ public struct EVLIntrusionConfiguration: FlatBufferVerifiableTable, FlatbuffersV
 }
 
 ///  Configuration for APSIDES.
-public struct EVLApsidesConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLApsidesConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -535,7 +535,7 @@ public struct EVLApsidesConfiguration: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  Configuration for NODE_CROSSING.
-public struct EVLNodeCrossingConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLNodeCrossingConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -588,7 +588,7 @@ public struct EVLNodeCrossingConfiguration: FlatBufferVerifiableTable, Flatbuffe
 }
 
 ///  Configuration for PARAMETER_CONDITION, the generic locator.
-public struct EVLParameterConditionConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLParameterConditionConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -642,7 +642,7 @@ public struct EVLParameterConditionConfiguration: FlatBufferVerifiableTable, Fla
 }
 
 ///  Parameter values captured at one instant inside an event.
-public struct EVLEventSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLEventSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -685,7 +685,7 @@ public struct EVLEventSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 
 ///  One located event. An instantaneous event has STOP_EPOCH equal to
 ///  START_EPOCH and DURATION_SECONDS equal to 0.
-public struct EVLEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -822,7 +822,7 @@ public struct EVLEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Locate events of one class over one interval.
-public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLEventLocationRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -975,7 +975,7 @@ public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  The events found, and the interval they were actually searched over.
-public struct EVLEventReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVLEventReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1098,7 +1098,7 @@ public struct EVLEventReport: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///
 ///  Angles are radians, durations seconds, epochs ISO 8601 in a named time
 ///  system.
-public struct EVL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EVL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

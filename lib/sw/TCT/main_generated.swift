@@ -110,7 +110,7 @@ public enum tctIntensityCategory: Int8, FlatbuffersVectorInitializable, Enum, Ve
 ///  (1 nmi = 1.852 km exactly) from the centre to the outermost point at which
 ///  the threshold is reached; 0 means the threshold is not reached in that
 ///  quadrant; a negative value means not reported.
-public struct TCTRadii: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TCTRadii: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -176,7 +176,7 @@ public struct TCTRadii: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  One point along a track.
-public struct TCTPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TCTPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -293,7 +293,7 @@ public struct TCTPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Tropical Cyclone Track - One realisation of one storm's track.
-public struct TCT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TCT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -79,7 +79,7 @@ public enum rsdTargetFluctuation: Int8, FlatbuffersVectorInitializable, Enum, Ve
 
 
 ///  Radar Sensitivity and Detection Performance
-public struct RSD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RSD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

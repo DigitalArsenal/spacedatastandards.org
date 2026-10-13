@@ -33613,6 +33613,564 @@
             "x-flatbuffer-root-type": "NCD",
             "x-flatbuffer-file-identifier": "$NCD"
         },
+        "SBD": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated"
+                        },
+                        "ElementSet": {
+                            "value": 1,
+                            "description": "Element sets of a catalog"
+                        },
+                        "Ephemeris": {
+                            "value": 2,
+                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                        },
+                        "Observation": {
+                            "value": 3,
+                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                        }
+                    }
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated. Never a grant: treated as CiteOnly."
+                        },
+                        "Reproducible": {
+                            "value": 1,
+                            "description": "The records may be republished, with the credit the terms ask."
+                        },
+                        "CiteOnly": {
+                            "value": 2,
+                            "description": "The records are computed on and cited, never republished."
+                        },
+                        "ShareAlike": {
+                            "value": 3,
+                            "description": "The records may be republished under the same terms, which every derived record carries."
+                        },
+                        "NonCommercial": {
+                            "value": 4,
+                            "description": "The records may be republished for non-commercial use only."
+                        }
+                    }
+                },
+                "sbdOrbitClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "IEO",
+                        "ATE",
+                        "APO",
+                        "AMO",
+                        "MCA",
+                        "IMB",
+                        "MBA",
+                        "OMB",
+                        "TJN",
+                        "CEN",
+                        "TNO",
+                        "PAA",
+                        "HYA",
+                        "AST",
+                        "ETc",
+                        "JFc",
+                        "HTC",
+                        "CTc",
+                        "PAR",
+                        "HYP",
+                        "COM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not classified"
+                        },
+                        "IEO": {
+                            "value": 1,
+                            "description": "Atira (interior Earth object): Q < 0.983 AU"
+                        },
+                        "ATE": {
+                            "value": 2,
+                            "description": "Aten: a < 1.0 AU, Q > 0.983 AU"
+                        },
+                        "APO": {
+                            "value": 3,
+                            "description": "Apollo: a > 1.0 AU, q < 1.017 AU"
+                        },
+                        "AMO": {
+                            "value": 4,
+                            "description": "Amor: 1.017 AU < q < 1.3 AU"
+                        },
+                        "MCA": {
+                            "value": 5,
+                            "description": "Mars-crossing asteroid: 1.3 AU < q < 1.666 AU, a < 3.2 AU"
+                        },
+                        "IMB": {
+                            "value": 6,
+                            "description": "Inner main-belt asteroid: a < 2.0 AU, q > 1.666 AU"
+                        },
+                        "MBA": {
+                            "value": 7,
+                            "description": "Main-belt asteroid: 2.0 AU < a < 3.2 AU, q > 1.666 AU"
+                        },
+                        "OMB": {
+                            "value": 8,
+                            "description": "Outer main-belt asteroid: 3.2 AU < a < 4.6 AU"
+                        },
+                        "TJN": {
+                            "value": 9,
+                            "description": "Jupiter trojan: 4.6 AU < a < 5.5 AU, e < 0.3"
+                        },
+                        "CEN": {
+                            "value": 10,
+                            "description": "Centaur: 5.5 AU < a < 30.1 AU"
+                        },
+                        "TNO": {
+                            "value": 11,
+                            "description": "Trans-Neptunian object: a > 30.1 AU"
+                        },
+                        "PAA": {
+                            "value": 12,
+                            "description": "Parabolic asteroid: e = 1"
+                        },
+                        "HYA": {
+                            "value": 13,
+                            "description": "Hyperbolic asteroid: e > 1"
+                        },
+                        "AST": {
+                            "value": 14,
+                            "description": "Asteroid on an orbit matching no other class"
+                        },
+                        "ETc": {
+                            "value": 15,
+                            "description": "Encke-type comet: Tisserand parameter with Jupiter > 3, a < a(Jupiter)"
+                        },
+                        "JFc": {
+                            "value": 16,
+                            "description": "Jupiter-family comet: 2 < Tisserand parameter with Jupiter < 3"
+                        },
+                        "HTC": {
+                            "value": 17,
+                            "description": "Halley-type comet: 20 y < P < 200 y"
+                        },
+                        "CTc": {
+                            "value": 18,
+                            "description": "Chiron-type comet: Tisserand parameter with Jupiter > 3, a > a(Jupiter)"
+                        },
+                        "PAR": {
+                            "value": 19,
+                            "description": "Parabolic comet: e = 1"
+                        },
+                        "HYP": {
+                            "value": 20,
+                            "description": "Hyperbolic comet: e > 1"
+                        },
+                        "COM": {
+                            "value": 21,
+                            "description": "Comet on an orbit matching no other class"
+                        }
+                    }
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "ElementSet": {
+                                    "value": 1,
+                                    "description": "Element sets of a catalog"
+                                },
+                                "Ephemeris": {
+                                    "value": 2,
+                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                                },
+                                "Observation": {
+                                    "value": 3,
+                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated. Never a grant: treated as CiteOnly."
+                                },
+                                "Reproducible": {
+                                    "value": 1,
+                                    "description": "The records may be republished, with the credit the terms ask."
+                                },
+                                "CiteOnly": {
+                                    "value": 2,
+                                    "description": "The records are computed on and cited, never republished."
+                                },
+                                "ShareAlike": {
+                                    "value": 3,
+                                    "description": "The records may be republished under the same terms, which every derived record carries."
+                                },
+                                "NonCommercial": {
+                                    "value": 4,
+                                    "description": "The records may be republished for non-commercial use only."
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SBD": {
+                    "type": "object",
+                    "description": "Small Body",
+                    "properties": {
+                        "NUMBER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Minor-planet number; 0 when the body is not numbered.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "DESIGNATION": {
+                            "type": "string",
+                            "description": "Principal provisional designation (e.g. \"1999 RQ36\"), or the comet\ndesignation (e.g. \"1P\"); empty when the source gives none.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "IAU name (e.g. \"Bennu\"); empty when the body is not named.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ORBIT_CLASS": {
+                            "$ref": "#/definitions/sbdOrbitClass",
+                            "description": "Orbit class.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not classified"
+                                },
+                                "IEO": {
+                                    "value": 1,
+                                    "description": "Atira (interior Earth object): Q < 0.983 AU"
+                                },
+                                "ATE": {
+                                    "value": 2,
+                                    "description": "Aten: a < 1.0 AU, Q > 0.983 AU"
+                                },
+                                "APO": {
+                                    "value": 3,
+                                    "description": "Apollo: a > 1.0 AU, q < 1.017 AU"
+                                },
+                                "AMO": {
+                                    "value": 4,
+                                    "description": "Amor: 1.017 AU < q < 1.3 AU"
+                                },
+                                "MCA": {
+                                    "value": 5,
+                                    "description": "Mars-crossing asteroid: 1.3 AU < q < 1.666 AU, a < 3.2 AU"
+                                },
+                                "IMB": {
+                                    "value": 6,
+                                    "description": "Inner main-belt asteroid: a < 2.0 AU, q > 1.666 AU"
+                                },
+                                "MBA": {
+                                    "value": 7,
+                                    "description": "Main-belt asteroid: 2.0 AU < a < 3.2 AU, q > 1.666 AU"
+                                },
+                                "OMB": {
+                                    "value": 8,
+                                    "description": "Outer main-belt asteroid: 3.2 AU < a < 4.6 AU"
+                                },
+                                "TJN": {
+                                    "value": 9,
+                                    "description": "Jupiter trojan: 4.6 AU < a < 5.5 AU, e < 0.3"
+                                },
+                                "CEN": {
+                                    "value": 10,
+                                    "description": "Centaur: 5.5 AU < a < 30.1 AU"
+                                },
+                                "TNO": {
+                                    "value": 11,
+                                    "description": "Trans-Neptunian object: a > 30.1 AU"
+                                },
+                                "PAA": {
+                                    "value": 12,
+                                    "description": "Parabolic asteroid: e = 1"
+                                },
+                                "HYA": {
+                                    "value": 13,
+                                    "description": "Hyperbolic asteroid: e > 1"
+                                },
+                                "AST": {
+                                    "value": 14,
+                                    "description": "Asteroid on an orbit matching no other class"
+                                },
+                                "ETc": {
+                                    "value": 15,
+                                    "description": "Encke-type comet: Tisserand parameter with Jupiter > 3, a < a(Jupiter)"
+                                },
+                                "JFc": {
+                                    "value": 16,
+                                    "description": "Jupiter-family comet: 2 < Tisserand parameter with Jupiter < 3"
+                                },
+                                "HTC": {
+                                    "value": 17,
+                                    "description": "Halley-type comet: 20 y < P < 200 y"
+                                },
+                                "CTc": {
+                                    "value": 18,
+                                    "description": "Chiron-type comet: Tisserand parameter with Jupiter > 3, a > a(Jupiter)"
+                                },
+                                "PAR": {
+                                    "value": 19,
+                                    "description": "Parabolic comet: e = 1"
+                                },
+                                "HYP": {
+                                    "value": 20,
+                                    "description": "Hyperbolic comet: e > 1"
+                                },
+                                "COM": {
+                                    "value": 21,
+                                    "description": "Comet on an orbit matching no other class"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "NEO": {
+                            "type": "boolean",
+                            "description": "Near-Earth object: perihelion distance below 1.3 AU.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "PHA": {
+                            "type": "boolean",
+                            "description": "Potentially hazardous: Earth MOID at most 0.05 AU and H at most 22. False\nwhen EARTH_MOID is not given.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "EARTH_MOID": {
+                            "type": "number",
+                            "description": "Earth minimum orbit intersection distance, AU.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CENTER_NAME": {
+                            "type": "string",
+                            "description": "Origin of the orbit (CCSDS CENTER_NAME), \"SUN\" for a heliocentric orbit.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REF_FRAME": {
+                            "type": "string",
+                            "description": "Frame the angles are measured in (CCSDS REF_FRAME), e.g. \"ICRF\", or\n\"ECLIPJ2000\" for the mean ecliptic and equinox of J2000.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TIME_SYSTEM": {
+                            "type": "string",
+                            "description": "Time system of EPOCH and PERICENTER_EPOCH (CCSDS TIME_SYSTEM), e.g. \"TDB\".",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Epoch of osculation, ISO 8601 in TIME_SYSTEM.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SEMI_MAJOR_AXIS": {
+                            "type": "number",
+                            "description": "Semi-major axis, km.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "INCLINATION": {
+                            "type": "number",
+                            "description": "Inclination, deg.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "RA_OF_ASC_NODE": {
+                            "type": "number",
+                            "description": "Right ascension (longitude) of the ascending node, deg.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ARG_OF_PERICENTER": {
+                            "type": "number",
+                            "description": "Argument of pericenter, deg.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "MEAN_ANOMALY": {
+                            "type": "number",
+                            "description": "Mean anomaly at EPOCH, deg.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "GM": {
+                            "type": "number",
+                            "description": "Gravitational parameter of CENTER_NAME the elements were computed with,\nkm**3/s**2.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PERICENTER_DISTANCE": {
+                            "type": "number",
+                            "description": "Pericenter distance (q), km: the orbit size of a comet.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PERICENTER_EPOCH": {
+                            "type": "string",
+                            "description": "Time of pericenter passage, ISO 8601 in TIME_SYSTEM.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ABSOLUTE_MAGNITUDE": {
+                            "type": "number",
+                            "description": "Absolute magnitude H (IAU H, G system).",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SLOPE_PARAMETER": {
+                            "type": "number",
+                            "description": "Slope parameter G (IAU H, G system).",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "DIAMETER": {
+                            "type": "number",
+                            "description": "Diameter, km.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ALBEDO": {
+                            "type": "number",
+                            "description": "Geometric albedo.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ROTATION_PERIOD": {
+                            "type": "number",
+                            "description": "Rotation period, hours.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CEU": {
+                            "type": "number",
+                            "description": "Current ephemeris uncertainty (Lowell astorb CEU) at CEU_EPOCH, arcsec.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CEU_RATE": {
+                            "type": "number",
+                            "description": "Rate of change of CEU, arcsec/day.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CEU_EPOCH": {
+                            "type": "string",
+                            "description": "Date CEU holds at, ISO 8601.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ORBIT_ARC": {
+                            "type": "number",
+                            "description": "Observed arc the orbit was fitted to, days.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "OBSERVATION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Observations the orbit was fitted to.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where the record comes from and the terms it travels under.",
+                            "x-flatbuffer-type": "PVN"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SBD",
+            "x-flatbuffer-root-type": "SBD",
+            "x-flatbuffer-file-identifier": "$SBD"
+        },
         "GST": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -181905,6 +182463,125 @@
                         }
                     }
                 },
+                "sbdOrbitClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "IEO",
+                        "ATE",
+                        "APO",
+                        "AMO",
+                        "MCA",
+                        "IMB",
+                        "MBA",
+                        "OMB",
+                        "TJN",
+                        "CEN",
+                        "TNO",
+                        "PAA",
+                        "HYA",
+                        "AST",
+                        "ETc",
+                        "JFc",
+                        "HTC",
+                        "CTc",
+                        "PAR",
+                        "HYP",
+                        "COM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not classified"
+                        },
+                        "IEO": {
+                            "value": 1,
+                            "description": "Atira (interior Earth object): Q < 0.983 AU"
+                        },
+                        "ATE": {
+                            "value": 2,
+                            "description": "Aten: a < 1.0 AU, Q > 0.983 AU"
+                        },
+                        "APO": {
+                            "value": 3,
+                            "description": "Apollo: a > 1.0 AU, q < 1.017 AU"
+                        },
+                        "AMO": {
+                            "value": 4,
+                            "description": "Amor: 1.017 AU < q < 1.3 AU"
+                        },
+                        "MCA": {
+                            "value": 5,
+                            "description": "Mars-crossing asteroid: 1.3 AU < q < 1.666 AU, a < 3.2 AU"
+                        },
+                        "IMB": {
+                            "value": 6,
+                            "description": "Inner main-belt asteroid: a < 2.0 AU, q > 1.666 AU"
+                        },
+                        "MBA": {
+                            "value": 7,
+                            "description": "Main-belt asteroid: 2.0 AU < a < 3.2 AU, q > 1.666 AU"
+                        },
+                        "OMB": {
+                            "value": 8,
+                            "description": "Outer main-belt asteroid: 3.2 AU < a < 4.6 AU"
+                        },
+                        "TJN": {
+                            "value": 9,
+                            "description": "Jupiter trojan: 4.6 AU < a < 5.5 AU, e < 0.3"
+                        },
+                        "CEN": {
+                            "value": 10,
+                            "description": "Centaur: 5.5 AU < a < 30.1 AU"
+                        },
+                        "TNO": {
+                            "value": 11,
+                            "description": "Trans-Neptunian object: a > 30.1 AU"
+                        },
+                        "PAA": {
+                            "value": 12,
+                            "description": "Parabolic asteroid: e = 1"
+                        },
+                        "HYA": {
+                            "value": 13,
+                            "description": "Hyperbolic asteroid: e > 1"
+                        },
+                        "AST": {
+                            "value": 14,
+                            "description": "Asteroid on an orbit matching no other class"
+                        },
+                        "ETc": {
+                            "value": 15,
+                            "description": "Encke-type comet: Tisserand parameter with Jupiter > 3, a < a(Jupiter)"
+                        },
+                        "JFc": {
+                            "value": 16,
+                            "description": "Jupiter-family comet: 2 < Tisserand parameter with Jupiter < 3"
+                        },
+                        "HTC": {
+                            "value": 17,
+                            "description": "Halley-type comet: 20 y < P < 200 y"
+                        },
+                        "CTc": {
+                            "value": 18,
+                            "description": "Chiron-type comet: Tisserand parameter with Jupiter > 3, a > a(Jupiter)"
+                        },
+                        "PAR": {
+                            "value": 19,
+                            "description": "Parabolic comet: e = 1"
+                        },
+                        "HYP": {
+                            "value": 20,
+                            "description": "Hyperbolic comet: e > 1"
+                        },
+                        "COM": {
+                            "value": 21,
+                            "description": "Comet on an orbit matching no other class"
+                        }
+                    }
+                },
                 "sbmEventType": {
                     "type": "string",
                     "enum": [
@@ -187737,7 +188414,8 @@
                         "NONE",
                         "ABA",
                         "CVR",
-                        "PVN"
+                        "PVN",
+                        "SBD"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "ushort",
@@ -187753,6 +188431,9 @@
                         },
                         "PVN": {
                             "value": 258
+                        },
+                        "SBD": {
+                            "value": 259
                         }
                     }
                 },
@@ -261133,6 +261814,283 @@
                     },
                     "additionalProperties": false
                 },
+                "SBD": {
+                    "type": "object",
+                    "description": "Small Body",
+                    "properties": {
+                        "NUMBER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Minor-planet number; 0 when the body is not numbered.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "DESIGNATION": {
+                            "type": "string",
+                            "description": "Principal provisional designation (e.g. \"1999 RQ36\"), or the comet\ndesignation (e.g. \"1P\"); empty when the source gives none.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "IAU name (e.g. \"Bennu\"); empty when the body is not named.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ORBIT_CLASS": {
+                            "$ref": "#/definitions/sbdOrbitClass",
+                            "description": "Orbit class.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not classified"
+                                },
+                                "IEO": {
+                                    "value": 1,
+                                    "description": "Atira (interior Earth object): Q < 0.983 AU"
+                                },
+                                "ATE": {
+                                    "value": 2,
+                                    "description": "Aten: a < 1.0 AU, Q > 0.983 AU"
+                                },
+                                "APO": {
+                                    "value": 3,
+                                    "description": "Apollo: a > 1.0 AU, q < 1.017 AU"
+                                },
+                                "AMO": {
+                                    "value": 4,
+                                    "description": "Amor: 1.017 AU < q < 1.3 AU"
+                                },
+                                "MCA": {
+                                    "value": 5,
+                                    "description": "Mars-crossing asteroid: 1.3 AU < q < 1.666 AU, a < 3.2 AU"
+                                },
+                                "IMB": {
+                                    "value": 6,
+                                    "description": "Inner main-belt asteroid: a < 2.0 AU, q > 1.666 AU"
+                                },
+                                "MBA": {
+                                    "value": 7,
+                                    "description": "Main-belt asteroid: 2.0 AU < a < 3.2 AU, q > 1.666 AU"
+                                },
+                                "OMB": {
+                                    "value": 8,
+                                    "description": "Outer main-belt asteroid: 3.2 AU < a < 4.6 AU"
+                                },
+                                "TJN": {
+                                    "value": 9,
+                                    "description": "Jupiter trojan: 4.6 AU < a < 5.5 AU, e < 0.3"
+                                },
+                                "CEN": {
+                                    "value": 10,
+                                    "description": "Centaur: 5.5 AU < a < 30.1 AU"
+                                },
+                                "TNO": {
+                                    "value": 11,
+                                    "description": "Trans-Neptunian object: a > 30.1 AU"
+                                },
+                                "PAA": {
+                                    "value": 12,
+                                    "description": "Parabolic asteroid: e = 1"
+                                },
+                                "HYA": {
+                                    "value": 13,
+                                    "description": "Hyperbolic asteroid: e > 1"
+                                },
+                                "AST": {
+                                    "value": 14,
+                                    "description": "Asteroid on an orbit matching no other class"
+                                },
+                                "ETc": {
+                                    "value": 15,
+                                    "description": "Encke-type comet: Tisserand parameter with Jupiter > 3, a < a(Jupiter)"
+                                },
+                                "JFc": {
+                                    "value": 16,
+                                    "description": "Jupiter-family comet: 2 < Tisserand parameter with Jupiter < 3"
+                                },
+                                "HTC": {
+                                    "value": 17,
+                                    "description": "Halley-type comet: 20 y < P < 200 y"
+                                },
+                                "CTc": {
+                                    "value": 18,
+                                    "description": "Chiron-type comet: Tisserand parameter with Jupiter > 3, a > a(Jupiter)"
+                                },
+                                "PAR": {
+                                    "value": 19,
+                                    "description": "Parabolic comet: e = 1"
+                                },
+                                "HYP": {
+                                    "value": 20,
+                                    "description": "Hyperbolic comet: e > 1"
+                                },
+                                "COM": {
+                                    "value": 21,
+                                    "description": "Comet on an orbit matching no other class"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "NEO": {
+                            "type": "boolean",
+                            "description": "Near-Earth object: perihelion distance below 1.3 AU.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "PHA": {
+                            "type": "boolean",
+                            "description": "Potentially hazardous: Earth MOID at most 0.05 AU and H at most 22. False\nwhen EARTH_MOID is not given.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        },
+                        "EARTH_MOID": {
+                            "type": "number",
+                            "description": "Earth minimum orbit intersection distance, AU.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CENTER_NAME": {
+                            "type": "string",
+                            "description": "Origin of the orbit (CCSDS CENTER_NAME), \"SUN\" for a heliocentric orbit.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REF_FRAME": {
+                            "type": "string",
+                            "description": "Frame the angles are measured in (CCSDS REF_FRAME), e.g. \"ICRF\", or\n\"ECLIPJ2000\" for the mean ecliptic and equinox of J2000.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TIME_SYSTEM": {
+                            "type": "string",
+                            "description": "Time system of EPOCH and PERICENTER_EPOCH (CCSDS TIME_SYSTEM), e.g. \"TDB\".",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Epoch of osculation, ISO 8601 in TIME_SYSTEM.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SEMI_MAJOR_AXIS": {
+                            "type": "number",
+                            "description": "Semi-major axis, km.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "INCLINATION": {
+                            "type": "number",
+                            "description": "Inclination, deg.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "RA_OF_ASC_NODE": {
+                            "type": "number",
+                            "description": "Right ascension (longitude) of the ascending node, deg.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ARG_OF_PERICENTER": {
+                            "type": "number",
+                            "description": "Argument of pericenter, deg.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "MEAN_ANOMALY": {
+                            "type": "number",
+                            "description": "Mean anomaly at EPOCH, deg.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "GM": {
+                            "type": "number",
+                            "description": "Gravitational parameter of CENTER_NAME the elements were computed with,\nkm**3/s**2.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PERICENTER_DISTANCE": {
+                            "type": "number",
+                            "description": "Pericenter distance (q), km: the orbit size of a comet.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PERICENTER_EPOCH": {
+                            "type": "string",
+                            "description": "Time of pericenter passage, ISO 8601 in TIME_SYSTEM.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ABSOLUTE_MAGNITUDE": {
+                            "type": "number",
+                            "description": "Absolute magnitude H (IAU H, G system).",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SLOPE_PARAMETER": {
+                            "type": "number",
+                            "description": "Slope parameter G (IAU H, G system).",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "DIAMETER": {
+                            "type": "number",
+                            "description": "Diameter, km.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ALBEDO": {
+                            "type": "number",
+                            "description": "Geometric albedo.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ROTATION_PERIOD": {
+                            "type": "number",
+                            "description": "Rotation period, hours.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CEU": {
+                            "type": "number",
+                            "description": "Current ephemeris uncertainty (Lowell astorb CEU) at CEU_EPOCH, arcsec.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CEU_RATE": {
+                            "type": "number",
+                            "description": "Rate of change of CEU, arcsec/day.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CEU_EPOCH": {
+                            "type": "string",
+                            "description": "Date CEU holds at, ISO 8601.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ORBIT_ARC": {
+                            "type": "number",
+                            "description": "Observed arc the orbit was fitted to, days.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "OBSERVATION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Observations the orbit was fitted to.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where the record comes from and the terms it travels under.",
+                            "x-flatbuffer-type": "PVN"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "sbmFragment": {
                     "type": "object",
                     "description": "One debris fragment produced by a breakup event.\n\nVector components are expressed in the parent SBM.REF_FRAME axes.\nPosition and velocity are the fragment's state at SBM.EPOCH, i.e. the\nparent state plus the ejection delta-V, before any propagation.",
@@ -285524,6 +286482,9 @@
                                 },
                                 "PVN": {
                                     "value": 258
+                                },
+                                "SBD": {
+                                    "value": 259
                                 }
                             },
                             "x-flatbuffer-default": "NONE"

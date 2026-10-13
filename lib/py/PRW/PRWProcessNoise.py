@@ -117,7 +117,7 @@ def PRWProcessNoiseCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data):
     return builder.EndVector()
 
 def CreateSPECTRAL_DENSITY_M2_S3Vector(builder, data):
-    return PRWProcessNoiseCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data)
+    PRWProcessNoiseCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data)
 
 def PRWProcessNoiseAddDISCRETIZATION_SECONDS(builder, DISCRETIZATION_SECONDS):
     builder.PrependFloat64Slot(3, DISCRETIZATION_SECONDS, 0.0)

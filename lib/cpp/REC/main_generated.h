@@ -271,6 +271,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -2125,16 +2126,18 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_ABA = 256,
   RecordTypeExtended_CVR = 257,
   RecordTypeExtended_PVN = 258,
+  RecordTypeExtended_SBD = 259,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_PVN
+  RecordTypeExtended_MAX = RecordTypeExtended_SBD
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[4] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[5] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
     RecordTypeExtended_CVR,
-    RecordTypeExtended_PVN
+    RecordTypeExtended_PVN,
+    RecordTypeExtended_SBD
   };
   return values;
 }
@@ -2145,6 +2148,7 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_ABA: return "ABA";
     case RecordTypeExtended_CVR: return "CVR";
     case RecordTypeExtended_PVN: return "PVN";
+    case RecordTypeExtended_SBD: return "SBD";
     default: return "";
   }
 }

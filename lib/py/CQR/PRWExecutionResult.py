@@ -148,7 +148,7 @@ def PRWExecutionResultCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    return PRWExecutionResultCreateSAMPLESVector(builder, data)
+    PRWExecutionResultCreateSAMPLESVector(builder, data)
 
 def PRWExecutionResultAddELAPSED_SECONDS(builder, ELAPSED_SECONDS):
     builder.PrependFloat64Slot(2, ELAPSED_SECONDS, 0.0)
@@ -194,7 +194,7 @@ def PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data):
     return builder.EndVector()
 
 def CreateDYNAMIC_PARAMETERSVector(builder, data):
-    return PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data)
+    PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data)
 
 def PRWExecutionResultEnd(builder):
     return builder.EndObject()

@@ -25,7 +25,7 @@ import FlatBuffers
 ///  so REFERENCE_TIME is that reference time and may precede START_TIME.
 ///  Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer
 ///  assume which convention was used.
-public struct TDMTransmitRamp: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TDMTransmitRamp: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -135,7 +135,7 @@ public struct TDMTransmitRamp: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 ///
 ///  Units are those the standard assigns to that keyword; RANGE additionally
 ///  depends on RANGE_UNITS, which is metadata, not data.
-public struct TDMObservation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TDMObservation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -193,7 +193,7 @@ public struct TDMObservation: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  block and its own DATA_START/DATA_STOP block (503.0-B-2 Cor.1 annex E,
 ///  figures E-16 and E-18). The TDM root models a SINGLE segment, so a
 ///  multi-segment file cannot be represented without this vector.
-public struct TDMSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TDMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -747,7 +747,7 @@ public struct TDMSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Tracking Data Message
-public struct TDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

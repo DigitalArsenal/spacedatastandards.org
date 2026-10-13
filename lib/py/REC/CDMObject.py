@@ -637,7 +637,7 @@ def CDMObjectCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    return CDMObjectCreateCOVARIANCEVector(builder, data)
+    CDMObjectCreateCOVARIANCEVector(builder, data)
 
 def CDMObjectAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)

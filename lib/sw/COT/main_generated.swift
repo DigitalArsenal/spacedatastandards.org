@@ -33,7 +33,7 @@ public enum COTHowType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  CoT Point - geographical point with error estimates
-public struct COTPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct COTPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -98,7 +98,7 @@ public struct COTPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  CoT Detail - extensible detail element
-public struct COTDetail: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct COTDetail: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -314,7 +314,7 @@ public struct COTDetail: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Cursor on Target Event
-public struct COT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct COT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

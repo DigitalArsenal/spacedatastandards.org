@@ -56,7 +56,7 @@ public enum tfnSurfaceKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  One designator the facility answers to in a named coding system.
-public struct TFNDesignator: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TFNDesignator: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -105,7 +105,7 @@ public struct TFNDesignator: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  One operating surface: the arrival/departure geometry of the facility.
 ///  A runway and a berth carry the same shape; fields a domain does not use
 ///  are absent (NaN), never zero.
-public struct TFNOperatingSurface: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TFNOperatingSurface: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -230,7 +230,7 @@ public struct TFNOperatingSurface: FlatBufferVerifiableTable, FlatbuffersVectorI
 ///  Required on every record: a redistributed facility whose dataset, epoch,
 ///  and licence are unstated is not publishable. The standard names no
 ///  dataset, provider, or site.
-public struct TFNProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TFNProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -383,7 +383,7 @@ public struct TFNProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Transport Facility Node
-public struct TFN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TFN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

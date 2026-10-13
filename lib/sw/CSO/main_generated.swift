@@ -121,7 +121,7 @@ public enum csoAlertStage: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Celestial Source: a non-stellar source or transient, with position and multi-band brightness.
-public struct CSO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CSO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

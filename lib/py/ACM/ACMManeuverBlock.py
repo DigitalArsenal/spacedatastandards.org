@@ -240,7 +240,7 @@ def ACMManeuverBlockCreateTARGET_MOMENTUMVector(builder, data):
     return builder.EndVector()
 
 def CreateTARGET_MOMENTUMVector(builder, data):
-    return ACMManeuverBlockCreateTARGET_MOMENTUMVector(builder, data)
+    ACMManeuverBlockCreateTARGET_MOMENTUMVector(builder, data)
 
 def ACMManeuverBlockAddTARGET_MOM_FRAME(builder, TARGET_MOM_FRAME):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_MOM_FRAME), 0)
@@ -268,7 +268,7 @@ def ACMManeuverBlockCreateTARGET_ATTITUDEVector(builder, data):
     return builder.EndVector()
 
 def CreateTARGET_ATTITUDEVector(builder, data):
-    return ACMManeuverBlockCreateTARGET_ATTITUDEVector(builder, data)
+    ACMManeuverBlockCreateTARGET_ATTITUDEVector(builder, data)
 
 def ACMManeuverBlockAddTARGET_SPINRATE(builder, TARGET_SPINRATE):
     builder.PrependFloat64Slot(11, TARGET_SPINRATE, float('nan'))

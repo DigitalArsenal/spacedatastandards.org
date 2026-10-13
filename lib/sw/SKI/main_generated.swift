@@ -25,7 +25,7 @@ public enum imageCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Sky Imagery
-public struct SKI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

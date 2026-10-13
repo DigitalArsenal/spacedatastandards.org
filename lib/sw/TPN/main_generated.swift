@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Transponder
-public struct TPN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TPN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

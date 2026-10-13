@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Program Description Message
-public struct PRG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PRG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -68,7 +68,7 @@ public struct PRG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   }
 }
 
-public struct USR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct USR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

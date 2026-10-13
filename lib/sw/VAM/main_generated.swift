@@ -120,7 +120,7 @@ public enum visualAssetReviewerRole: Int8, FlatbuffersVectorInitializable, Enum,
 
 
 ///  Three-dimensional vector.
-public struct VAMVector3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMVector3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -168,7 +168,7 @@ public struct VAMVector3: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Scale with identity defaults for every component.
-public struct VAMScale3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMScale3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -216,7 +216,7 @@ public struct VAMScale3: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Rotation quaternion.
-public struct VAMQuaternion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMQuaternion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -270,7 +270,7 @@ public struct VAMQuaternion: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Transform from source coordinates into canonical meters. Absent SCALE and omitted scale components mean identity scale; translation and bounds use VAMVector3 zero defaults.
-public struct VAMTransform: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMTransform: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -344,7 +344,7 @@ public struct VAMTransform: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Coordinate pin or general structured annotation in canonical model-meter coordinates. POSITION is absent for a general note.
-public struct VAMAnnotation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMAnnotation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -401,7 +401,7 @@ public struct VAMAnnotation: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Provenance and license metadata for an asset source.
-public struct VAMSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMSource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -507,7 +507,7 @@ public struct VAMSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Geometry, material, texture, and bounds measurements.
-public struct VAMMetrics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMMetrics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -603,7 +603,7 @@ public struct VAMMetrics: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Validation result for one asset variant.
-public struct VAMValidation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMValidation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -674,7 +674,7 @@ public struct VAMValidation: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  One named quality score and its basis.
-public struct VAMQualityDimension: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMQualityDimension: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -724,7 +724,7 @@ public struct VAMQualityDimension: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  One source, optimized, LOD, or alternate visual representation.
-public struct VAMVariant: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -919,7 +919,7 @@ public struct VAMVariant: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Exact approved alternate asset bytes and reviewed state.
-public struct VAMApprovedAlternate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMApprovedAlternate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -997,7 +997,7 @@ public struct VAMApprovedAlternate: FlatBufferVerifiableTable, FlatbuffersVector
 ///  APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
 ///  Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
 ///  The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
-public struct VAMReview: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1201,7 +1201,7 @@ public struct VAMReview: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 ///  The metadata-review signed projection contains uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_METADATA_SHA256; DECIDED_AT; REASONS; COMMENT when present; ANNOTATIONS; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
 ///  Absent optional fields are omitted and arrays preserve order. A verifier reconstructs exactly this projection, applies RFC 8785 JCS, hashes the UTF-8 serialization bytes, compares ENVELOPE_SHA256, and verifies SIGNATURE over the raw 32-byte digest. ENVELOPE_SHA256 and SIGNATURE are excluded from the projection.
 ///  The verifier must also enforce repository, issue, entity, and VAM equality; nonce single use; role authorization; exact metadata binding; and DECISION equal to APPROVE_METADATA_ONLY before trusting the decision.
-public struct VAMMetadataOnlyReview: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAMMetadataOnlyReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1363,7 +1363,7 @@ public struct VAMMetadataOnlyReview: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Visual Asset Manifest — ranked visual representations for one stable entity.
-public struct VAM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

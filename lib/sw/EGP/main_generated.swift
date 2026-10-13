@@ -30,7 +30,7 @@ public enum egpMembershipMode: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 ///  Provenance of the assertions behind a group. Field-for-field the
 ///  `$CMR` provenance shape, so one consumer parses both.
-public struct EGPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EGPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -144,7 +144,7 @@ public struct EGPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  The query that generated this group — the wire form of save-search-as-group.
 ///  This is generating provenance, not source lineage, so it is a field of its
 ///  own and never overloaded onto EGPProvenance.
-public struct EGPQuery: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EGPQuery: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -218,7 +218,7 @@ public struct EGPQuery: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  One membership assertion.
-public struct EGPMember: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EGPMember: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -297,7 +297,7 @@ public struct EGPMember: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Entity Group
-public struct EGP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EGP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

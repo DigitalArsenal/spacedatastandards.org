@@ -258,7 +258,7 @@ public enum cqrLaunchScreening: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  Host-resolved provenance. Strings are evidence, not commands to execute.
-public struct CQRSourceProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRSourceProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -359,7 +359,7 @@ public struct CQRSourceProvenance: FlatBufferVerifiableTable, FlatbuffersVectorI
 ///  Exactly one scientific source arm, or a validated instance/source handle.
 ///  OMM/TLE use their native mean-element units; OEM/PPE km and km/s; OCM its
 ///  declared units. No implicit conversion of TEME, ECEF or ICRF-labelled data.
-public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRObjectSource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -524,7 +524,7 @@ public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Explicit UTC search window and positive resolution, SI seconds/metres.
-public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRScreeningControls: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -676,7 +676,7 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
 
 ///  CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
 ///  Reject inconsistent radii instead of silently choosing one source.
-public struct CQRPairRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRPairRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -747,7 +747,7 @@ public struct CQRPairRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  covariance together when changing basis; covariance is finite symmetric
 ///  positive semidefinite. Probability algorithms requiring an inverse reject
 ///  singular covariance unless their documented method supports it.
-public struct CQRPlaneGeometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRPlaneGeometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -812,7 +812,7 @@ public struct CQRPlaneGeometry: FlatBufferVerifiableTable, FlatbuffersVectorInit
   }
 }
 
-public struct CQRProbabilityRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRProbabilityRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -858,7 +858,7 @@ public struct CQRProbabilityRequest: FlatBufferVerifiableTable, FlatbuffersVecto
 ///  inapplicable: consumers must ignore its default zero. Never report a heuristic
 ///  maximum as probability computed from supplied covariance. Otherwise
 ///  PROBABILITY is unitless in [0,1]; supplied/synthesized covariance is explicit.
-public struct CQRProbabilityResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRProbabilityResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -972,7 +972,7 @@ public struct CQRProbabilityResult: FlatBufferVerifiableTable, FlatbuffersVector
   }
 }
 
-public struct CQRAlfanoRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRAlfanoRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1013,7 +1013,7 @@ public struct CQRAlfanoRequest: FlatBufferVerifiableTable, FlatbuffersVectorInit
   }
 }
 
-public struct CQRAlfanoResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRAlfanoResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1064,7 +1064,7 @@ public struct CQRAlfanoResult: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 ///  XML declaration, if present, must agree. Content must be nonempty CDM KVN
 ///  or CDM XML matching SERIALIZATION; reject UNSPECIFIED and other documents.
 ///  Not an arbitrary JSON container.
-public struct CQRNativeDocument: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRNativeDocument: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1108,7 +1108,7 @@ public struct CQRNativeDocument: FlatBufferVerifiableTable, FlatbuffersVectorIni
 
 ///  Order arrays index the supplied catalog stream in exact reception order.
 ///  Ranges are half-open; absent endpoints select the full respective range.
-public struct CQRCatalogRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRCatalogRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1231,7 +1231,7 @@ public struct CQRCatalogRequest: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Explicit summary when legacy source lacks sufficient data for a full CDM.
-public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQREvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1510,7 +1510,7 @@ public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   }
 }
 
-public struct CQRScreeningStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRScreeningStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1590,7 +1590,7 @@ public struct CQRScreeningStatistics: FlatBufferVerifiableTable, FlatbuffersVect
 ///  Stable order by TCA then primary/secondary identity; ties retain original
 ///  input-pair order. EVENT_OFFSET indexes this order across bounded chunks.
 ///  PIV output cap, YIELDED and BACKLOG_REMAINING carry stream backpressure.
-public struct CQRCatalogResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRCatalogResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1660,7 +1660,7 @@ public struct CQRCatalogResult: FlatBufferVerifiableTable, FlatbuffersVectorInit
 ///  SAMPLED_STATES consumes sampled OEM records in SOURCES[].EPHEMERIS;
 ///  POLYNOMIAL_SEGMENTS consumes SEGMENTS/PPE. Handles are validated against
 ///  INSTANCE identity/generation; they are never persisted process addresses.
-public struct CQRIndexRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRIndexRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1745,7 +1745,7 @@ public struct CQRIndexRequest: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct CQRIndexResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRIndexResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1798,7 +1798,7 @@ public struct CQRIndexResult: FlatBufferVerifiableTable, FlatbuffersVectorInitia
   }
 }
 
-public struct CQRWindowRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRWindowRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1851,7 +1851,7 @@ public struct CQRWindowRequest: FlatBufferVerifiableTable, FlatbuffersVectorInit
   }
 }
 
-public struct CQRDestroyRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRDestroyRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1892,7 +1892,7 @@ public struct CQRDestroyRequest: FlatBufferVerifiableTable, FlatbuffersVectorIni
   }
 }
 
-public struct CQRVersionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRVersionResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1930,7 +1930,7 @@ public struct CQRVersionResult: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  Screening criterion for one object class. Exactly one kind per entry;
 ///  SCREENING selects which fields apply.
-public struct CQRLaunchCriterion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRLaunchCriterion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2011,7 +2011,7 @@ public struct CQRLaunchCriterion: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  One launched object: its trajectory for a liftoff at NOMINAL_LIFTOFF.
-public struct CQRLaunchSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRLaunchSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2100,7 +2100,7 @@ public struct CQRLaunchSegment: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  One orbiting object to screen against.
-public struct CQRLaunchObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRLaunchObject: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2151,7 +2151,7 @@ public struct CQRLaunchObject: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct CQRLaunchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRLaunchRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2274,7 +2274,7 @@ public struct CQRLaunchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  Liftoff times that violate at least one criterion, half-open [START, END),
 ///  widened by the liftoff step and CLOSURE_PAD_SECONDS and merged.
-public struct CQRLaunchClosure: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRLaunchClosure: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2331,7 +2331,7 @@ public struct CQRLaunchClosure: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  Closest approach of one segment to one orbiting object for one liftoff
 ///  time: the worst liftoff time of each contiguous run below REPORT_RATIO.
-public struct CQRLaunchApproach: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRLaunchApproach: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2447,7 +2447,7 @@ public struct CQRLaunchApproach: FlatBufferVerifiableTable, FlatbuffersVectorIni
   }
 }
 
-public struct CQRLaunchResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQRLaunchResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2531,7 +2531,7 @@ public struct CQRLaunchResult: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 ///  probability, typed native documents, resident screening-index control and
 ///  launch-window screening.
 ///  Exactly one arm per PIV payload, selected by the declared METHOD_ID.
-public struct CQR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CQR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

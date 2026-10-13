@@ -40,7 +40,7 @@ public enum F107DataType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Space Weather Data Record
-public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SPW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -287,7 +287,7 @@ public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   }
 }
 
-public struct SPWCOLLECTION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SPWCOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

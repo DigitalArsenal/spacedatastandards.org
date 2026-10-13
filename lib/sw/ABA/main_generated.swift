@@ -42,7 +42,7 @@ public enum abaDisclosure: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Address Book Attestation - one node's signed, byte-exact contact entry.
-public struct ABA: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ABA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

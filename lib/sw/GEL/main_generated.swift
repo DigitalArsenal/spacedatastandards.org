@@ -42,7 +42,7 @@ public enum gelObservationDisposition: Int8, FlatbuffersVectorInitializable, Enu
 
 
 ///  Trace from a solution row back to one `$DOA` observation or `$IQC` capture.
-public struct GELObservationRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GELObservationRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -144,7 +144,7 @@ public struct GELObservationRef: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Numerical convergence diagnostics for the fused estimator.
-public struct GELConvergenceDiagnostics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GELConvergenceDiagnostics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -230,7 +230,7 @@ public struct GELConvergenceDiagnostics: FlatBufferVerifiableTable, FlatbuffersV
 }
 
 ///  Emitter Geolocation Solution
-public struct GEL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GEL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

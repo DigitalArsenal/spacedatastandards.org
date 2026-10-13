@@ -25,7 +25,7 @@ public enum radarObsType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Radar Observation
-public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RDO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

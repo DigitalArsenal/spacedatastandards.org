@@ -77,7 +77,7 @@ def ContainerSetCreateCONTAINERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTAINERSVector(builder, data):
-    return ContainerSetCreateCONTAINERSVector(builder, data)
+    ContainerSetCreateCONTAINERSVector(builder, data)
 
 def ContainerSetEnd(builder):
     return builder.EndObject()

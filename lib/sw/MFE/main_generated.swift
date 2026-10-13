@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Manifold Element Set
-public struct MFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

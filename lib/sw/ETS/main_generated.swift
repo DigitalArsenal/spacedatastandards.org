@@ -62,7 +62,7 @@ public enum etsAltitudeDatum: UInt8, FlatbuffersVectorInitializable, Enum, Verif
 
 ///  One identity the tracked object is known by in a named identity scheme.
 ///  Same shape and meaning as `TMSIdentifier`.
-public struct ETSIdentifier: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ETSIdentifier: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -117,7 +117,7 @@ public struct ETSIdentifier: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  redistributed track whose feed, epoch and licence are unstated is not
 ///  publishable. Same fields, same meaning as `TMSProvenance`. The standard
 ///  names no feed, provider or site.
-public struct ETSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ETSProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -274,7 +274,7 @@ public struct ETSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Encoded Track Segment
-public struct ETS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ETS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

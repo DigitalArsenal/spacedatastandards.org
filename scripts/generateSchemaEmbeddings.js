@@ -27,6 +27,7 @@ const descriptionOverrides = {
   "MNV": "Orbit Maneuver - detected, planned, or executed maneuvers",
   "CVR": "Covariance Realism - the rule behind a covariance and its realism test against held-out reference states",
   "PVN": "Product Provenance - source, originator, provider, producer, licence class and lineage of a data product",
+  "SBD": "Small Body - an asteroid or comet: designation, orbit class, heliocentric osculating elements, photometry, size and orbit quality",
   "MNF": "Orbit Manifold - manifold propagation with delta-V and probability weights",
   "RFM": "Reference Frame - CCSDS celestial and terrestrial coordinate frames",
   "ATM": "Atmospheric Model - CCSDS SANA registry of atmosphere density models",
@@ -70,6 +71,7 @@ const keywordsMap = {
   "MNV": ["maneuver", "orbit change", "delta-v", "station-keeping", "thrust", "burn"],
   "CVR": ["covariance", "realism", "calibration", "uncertainty", "Mahalanobis", "coverage", "error model"],
   "PVN": ["provenance", "attribution", "source", "originator", "provider", "license", "licence", "lineage"],
+  "SBD": ["asteroid", "comet", "small body", "minor planet", "heliocentric", "osculating elements", "absolute magnitude", "orbit class"],
   "MFE": ["manifold", "element set", "temporary", "satellite number", "TLE"],
   "MNF": ["manifold", "propagation", "delta-v", "probability", "candidate"],
   "MPE": ["minimum", "propagatable", "compact", "mean motion", "BSTAR", "TLE subset"],
@@ -204,7 +206,7 @@ const keywordsMap = {
 const categoryMap = {};
 // Build category map from taxonomy-like structure
 const categories = [
-  { tag: "Orbit", types: ["OMM","OEM","OPM","OCM","BOV","MNV","MFE","MNF","MPE","STV","OBT","OBD","OSM","AST","PCF","VCM","PPE","CVR"] },
+  { tag: "Orbit", types: ["OMM","OEM","OPM","OCM","BOV","MNV","MFE","MNF","MPE","STV","OBT","OBD","OSM","AST","PCF","VCM","PPE","CVR","SBD"] },
   { tag: "Attitude", types: ["AEM","APM","ACM","ATD"] },
   { tag: "Conjunction", types: ["CDM","CSM","HYP"] },
   { tag: "Tracking", types: ["TDM","TRK","TKG"] },

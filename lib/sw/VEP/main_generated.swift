@@ -73,7 +73,7 @@ public enum vepInterpolation: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 ///  One point of the burn-rate table: consumption at a stated regime,
 ///  altitude, and speed.
-public struct VEPPerformancePoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VEPPerformancePoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -157,7 +157,7 @@ public struct VEPPerformancePoint: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  One replenishment option: how the energy store is reset.
-public struct VEPReplenishment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VEPReplenishment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -231,7 +231,7 @@ public struct VEPReplenishment: FlatBufferVerifiableTable, FlatbuffersVectorInit
 ///  Required on every record: a profile whose data source, epoch, and
 ///  licence are unstated is not publishable. The standard names no dataset,
 ///  provider, or site.
-public struct VEPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VEPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -386,7 +386,7 @@ public struct VEPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Vehicle Endurance Profile
-public struct VEP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VEP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

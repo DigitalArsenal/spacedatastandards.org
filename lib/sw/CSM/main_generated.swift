@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Conjunction Summary Message
-public struct CSM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CSM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

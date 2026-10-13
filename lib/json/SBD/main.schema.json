@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "sbdOrbitClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "IEO", "ATE", "APO", "AMO", "MCA", "IMB", "MBA", "OMB", "TJN", "CEN", "TNO", "PAA", "HYA", "AST", "ETc", "JFc", "HTC", "CTc", "PAR", "HYP", "COM"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SBD" : {
+      "type" : "object",
+      "description" : "Small Body",
+      "properties" : {
+        "NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Minor-planet number; 0 when the body is not numbered."
+              },
+        "DESIGNATION" : {
+                "type" : "string",
+                "description" : "Principal provisional designation (e.g. \"1999 RQ36\"), or the comet\ndesignation (e.g. \"1P\"); empty when the source gives none."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "IAU name (e.g. \"Bennu\"); empty when the body is not named."
+              },
+        "ORBIT_CLASS" : {
+                "$ref" : "#/definitions/sbdOrbitClass",
+                "description" : "Orbit class."
+              },
+        "NEO" : {
+                "type" : "boolean",
+                "description" : "Near-Earth object: perihelion distance below 1.3 AU."
+              },
+        "PHA" : {
+                "type" : "boolean",
+                "description" : "Potentially hazardous: Earth MOID at most 0.05 AU and H at most 22. False\nwhen EARTH_MOID is not given."
+              },
+        "EARTH_MOID" : {
+                "type" : "number",
+                "description" : "Earth minimum orbit intersection distance, AU."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of the orbit (CCSDS CENTER_NAME), \"SUN\" for a heliocentric orbit."
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Frame the angles are measured in (CCSDS REF_FRAME), e.g. \"ICRF\", or\n\"ECLIPJ2000\" for the mean ecliptic and equinox of J2000."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system of EPOCH and PERICENTER_EPOCH (CCSDS TIME_SYSTEM), e.g. \"TDB\"."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of osculation, ISO 8601 in TIME_SYSTEM."
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis, km."
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity."
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination, deg."
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension (longitude) of the ascending node, deg."
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "Argument of pericenter, deg."
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly at EPOCH, deg."
+              },
+        "GM" : {
+                "type" : "number",
+                "description" : "Gravitational parameter of CENTER_NAME the elements were computed with,\nkm**3/s**2."
+              },
+        "PERICENTER_DISTANCE" : {
+                "type" : "number",
+                "description" : "Pericenter distance (q), km: the orbit size of a comet."
+              },
+        "PERICENTER_EPOCH" : {
+                "type" : "string",
+                "description" : "Time of pericenter passage, ISO 8601 in TIME_SYSTEM."
+              },
+        "ABSOLUTE_MAGNITUDE" : {
+                "type" : "number",
+                "description" : "Absolute magnitude H (IAU H, G system)."
+              },
+        "SLOPE_PARAMETER" : {
+                "type" : "number",
+                "description" : "Slope parameter G (IAU H, G system)."
+              },
+        "DIAMETER" : {
+                "type" : "number",
+                "description" : "Diameter, km."
+              },
+        "ALBEDO" : {
+                "type" : "number",
+                "description" : "Geometric albedo."
+              },
+        "ROTATION_PERIOD" : {
+                "type" : "number",
+                "description" : "Rotation period, hours."
+              },
+        "CEU" : {
+                "type" : "number",
+                "description" : "Current ephemeris uncertainty (Lowell astorb CEU) at CEU_EPOCH, arcsec."
+              },
+        "CEU_RATE" : {
+                "type" : "number",
+                "description" : "Rate of change of CEU, arcsec/day."
+              },
+        "CEU_EPOCH" : {
+                "type" : "string",
+                "description" : "Date CEU holds at, ISO 8601."
+              },
+        "ORBIT_ARC" : {
+                "type" : "number",
+                "description" : "Observed arc the orbit was fitted to, days."
+              },
+        "OBSERVATION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Observations the orbit was fitted to."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where the record comes from and the terms it travels under."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SBD"
+}

@@ -76,7 +76,7 @@ public enum qrpFilterOp: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  One field filter of a request.
-public struct QRPFilter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct QRPFilter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -127,7 +127,7 @@ public struct QRPFilter: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  One column descriptor of a page, in record field order.
-public struct QRPColumn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct QRPColumn: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -197,7 +197,7 @@ public struct QRPColumn: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Query Page - request, page header or error frame.
-public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

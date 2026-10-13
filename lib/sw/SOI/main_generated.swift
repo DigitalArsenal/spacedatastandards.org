@@ -54,7 +54,7 @@ public enum soiCalibrationType: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Space Object Identification Observation Set
-public struct SOI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SOI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -52,7 +52,7 @@ public enum mdpDsmMode: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable 
 ///  must not be repurposed here. Note that a barycenter and a body center are
 ///  different objects (4 is the Mars barycenter, 499 is Mars) and the
 ///  distinction is operationally load-bearing.
-public struct MDPEncounterStage: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDPEncounterStage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -155,7 +155,7 @@ public struct MDPEncounterStage: FlatBufferVerifiableTable, FlatbuffersVectorIni
 ///  Time-of-flight bound between two encounters. Adjacent stages give per-leg
 ///  bounds; non-adjacent stages give cumulative bounds such as
 ///  "Earth to Mars to Earth within 3 years".
-public struct MDPFlightTimeBound: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDPFlightTimeBound: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -219,7 +219,7 @@ public struct MDPFlightTimeBound: FlatBufferVerifiableTable, FlatbuffersVectorIn
 ///  boundary-value problem with no body/epoch grid and no sequence, $MPE is an
 ///  Earth mean-element targeter, $MNF is an Earth manifold sweep, and $MNV is an
 ///  SSA-detected maneuver on a catalogued Earth object.
-public struct MDP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

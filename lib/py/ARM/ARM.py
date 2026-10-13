@@ -238,7 +238,7 @@ def ARMCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    return ARMCreateRESERVEDVector(builder, data)
+    ARMCreateRESERVEDVector(builder, data)
 
 def ARMEnd(builder):
     return builder.EndObject()

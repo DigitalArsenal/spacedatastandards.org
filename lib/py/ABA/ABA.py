@@ -258,7 +258,7 @@ def ABACreatePUBLIC_KEYVector(builder, data):
     return builder.EndVector()
 
 def CreatePUBLIC_KEYVector(builder, data):
-    return ABACreatePUBLIC_KEYVector(builder, data)
+    ABACreatePUBLIC_KEYVector(builder, data)
 
 def ABAAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_ALGORITHM), 0)
@@ -286,7 +286,7 @@ def ABACreatePROFILE_BYTESVector(builder, data):
     return builder.EndVector()
 
 def CreatePROFILE_BYTESVector(builder, data):
-    return ABACreatePROFILE_BYTESVector(builder, data)
+    ABACreatePROFILE_BYTESVector(builder, data)
 
 def ABAAddPROFILE_SHA256(builder, PROFILE_SHA256):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(PROFILE_SHA256), 0)
@@ -308,7 +308,7 @@ def ABACreatePROFILE_SHA256Vector(builder, data):
     return builder.EndVector()
 
 def CreatePROFILE_SHA256Vector(builder, data):
-    return ABACreatePROFILE_SHA256Vector(builder, data)
+    ABACreatePROFILE_SHA256Vector(builder, data)
 
 def ABAAddVISIBILITY(builder, VISIBILITY):
     builder.PrependInt8Slot(6, VISIBILITY, 0)
@@ -360,7 +360,7 @@ def ABACreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    return ABACreateSIGNATUREVector(builder, data)
+    ABACreateSIGNATUREVector(builder, data)
 
 def ABAEnd(builder):
     return builder.EndObject()

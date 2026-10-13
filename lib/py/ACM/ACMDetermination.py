@@ -287,7 +287,7 @@ def ACMDeterminationCreateSENSORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSENSORSVector(builder, data):
-    return ACMDeterminationCreateSENSORSVector(builder, data)
+    ACMDeterminationCreateSENSORSVector(builder, data)
 
 def ACMDeterminationEnd(builder):
     return builder.EndObject()

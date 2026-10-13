@@ -30,7 +30,7 @@ public enum catalogQueryKind: UInt8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  Catalog query request payload.
-public struct CAQRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CAQRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -96,7 +96,7 @@ public struct CAQRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Catalog query result payload.
-public struct CAQResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CAQResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -176,7 +176,7 @@ public struct CAQResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Catalog query envelope — carries either a request or a result payload.
-public struct CAQ: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CAQ: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

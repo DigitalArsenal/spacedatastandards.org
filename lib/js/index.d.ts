@@ -192,6 +192,7 @@ export * as RPC from './RPC/main.js';
 export * as RPT from './RPT/main.js';
 export * as RSD from './RSD/main.js';
 export * as SAR from './SAR/main.js';
+export * as SBD from './SBD/main.js';
 export * as SBM from './SBM/main.js';
 export * as SCC from './SCC/main.js';
 export * as SCM from './SCM/main.js';

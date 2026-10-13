@@ -15,5 +15,6 @@ export enum RecordTypeExtended {
   NONE = 0,
   ABA = 256,
   CVR = 257,
-  PVN = 258
+  PVN = 258,
+  SBD = 259
 }

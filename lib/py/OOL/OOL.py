@@ -110,7 +110,7 @@ def OOLCreateONORBITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateONORBITSVector(builder, data):
-    return OOLCreateONORBITSVector(builder, data)
+    OOLCreateONORBITSVector(builder, data)
 
 def OOLEnd(builder):
     return builder.EndObject()

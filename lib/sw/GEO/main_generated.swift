@@ -52,7 +52,7 @@ public enum troughType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  GEO Spacecraft Status
-public struct GEO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GEO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -120,7 +120,7 @@ public enum FusionMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Tracking and Data Fusion
-public struct TKG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TKG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

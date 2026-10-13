@@ -1,5 +1,5 @@
-// Hash: d78ec00ba1a6e56d5501acda4e2933bcdd7a5631b9bcb60d5e7fdcd90a6c351a
-// Version: 1.44.80
+// Hash: d48b0ee9b2fdd58daf49c42fa91681c1decb4f859604c73e451db727fbb5a1bf
+// Version: 1.44.81
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -194,6 +194,7 @@ include "../RPC/main.fbs";
 include "../RPT/main.fbs";
 include "../RSD/main.fbs";
 include "../SAR/main.fbs";
+include "../SBD/main.fbs";
 include "../SBM/main.fbs";
 include "../SCC/main.fbs";
 include "../SCM/main.fbs";
@@ -352,7 +353,8 @@ enum RecordTypeExtended : ushort {
   NONE = 0,
   ABA = 256,
   CVR = 257,
-  PVN = 258
+  PVN = 258,
+  SBD = 259
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

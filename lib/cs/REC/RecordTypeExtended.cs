@@ -15,4 +15,5 @@ public enum RecordTypeExtended : ushort
   ABA = 256,
   CVR = 257,
   PVN = 258,
+  SBD = 259,
 };

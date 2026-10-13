@@ -167,7 +167,7 @@ public enum gctVariantScope: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 ///  the cloud near Z = 0). Levels are ordered finest first. Every per-Gaussian
 ///  vector holds exactly 4 * GAUSSIAN_COUNT float32 values — one RGBA texel
 ///  per Gaussian — in the same Gaussian order.
-public struct GCTLevel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GCTLevel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -304,7 +304,7 @@ public struct GCTLevel: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 ///  bounds, stored as bytes: distance / DISTANCE_SCALE_M, negative inside,
 ///  clamped to [-128, 127]. Optional; a consumer without it sphere-traces
 ///  nothing and lights the variant from an atlas instead.
-public struct GCTDistanceField: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GCTDistanceField: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -397,7 +397,7 @@ public struct GCTDistanceField: FlatBufferVerifiableTable, FlatbuffersVectorInit
 ///  A baked density volume of a variant on the same cube as its distance
 ///  field, for ray marching: N^3 samples of amplitude in AMPLITUDE_UNITS,
 ///  float16, x fastest. Optional.
-public struct GCTDensityVolume: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GCTDensityVolume: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -469,7 +469,7 @@ public struct GCTDensityVolume: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  One variant: one cloud (or one tile's merged mixture) as a chain of
 ///  levels of detail in its own frame. Instances place variants in the tile.
-public struct GCTVariant: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GCTVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -590,7 +590,7 @@ public struct GCTVariant: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 ///  SYMMETRY, rotate by YAW_RAD about +Z, translate by (X_M, Y_M, Z_M). The
 ///  aligned-binary INSTANCES section carries these fields in this order as
 ///  float32.
-public struct GCTInstance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GCTInstance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -730,7 +730,7 @@ public struct GCTInstance: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 ///  what a coarse tile draws as a continuous sheet before any Gaussian is
 ///  resolved. Samples are row-major with latitude as the outer index, cell
 ///  (i, j) centred at (LAT0_RAD + i * DLAT_RAD, LON0_RAD + j * DLON_RAD).
-public struct GCTCoverGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GCTCoverGrid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -852,7 +852,7 @@ public struct GCTCoverGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Gaussian Cloud Tile: one quadtree tile of a volumetric field as a mass-conserving Gaussian mixture, rendering-ready, for one valid time.
-public struct GCT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GCT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

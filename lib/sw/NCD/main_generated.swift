@@ -99,7 +99,7 @@ public enum ncdContainerFormat: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 ///  body pair, frame, numeric type and time bounds, and a reader must choose
 ///  among them. $OEM carries the STATES; this carries the segment DESCRIPTOR
 ///  that says which states came from where and what must be written back.
-public struct NCDSegmentDescriptor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NCDSegmentDescriptor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -229,7 +229,7 @@ public struct NCDSegmentDescriptor: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Header block of a fixed-column satellite position container (SP3).
-public struct NCDSP3Header: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NCDSP3Header: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -397,7 +397,7 @@ public struct NCDSP3Header: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Parameters of a scenario-epoch text container.
-public struct NCDScenarioEpochContainer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NCDScenarioEpochContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -507,7 +507,7 @@ public struct NCDScenarioEpochContainer: FlatBufferVerifiableTable, FlatbuffersV
 }
 
 ///  Header words of a fixed-record binary ephemeris container.
-public struct NCDCode500Header: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NCDCode500Header: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -614,7 +614,7 @@ public struct NCDCode500Header: FlatBufferVerifiableTable, FlatbuffersVectorInit
 ///  the file-level facts are the same kind of fact in each, and the
 ///  format-specific blocks are optional sub-tables selected by FORMAT. Only the
 ///  block matching FORMAT is populated.
-public struct NCD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NCD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

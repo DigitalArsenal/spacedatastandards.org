@@ -229,7 +229,7 @@ public enum scvRasterProductEncoding: UInt8, FlatbuffersVectorInitializable, Enu
 }
 
 
-public struct SCVVec3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVVec3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -276,7 +276,7 @@ public struct SCVVec3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
   }
 }
 
-public struct SCVEllipsoid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVEllipsoid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -342,7 +342,7 @@ public struct SCVEllipsoid: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   }
 }
 
-public struct SCVTimeGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVTimeGrid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -414,7 +414,7 @@ public struct SCVTimeGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   }
 }
 
-public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVSensorShapeContract: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -539,7 +539,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
   }
 }
 
-public struct SCVSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -624,7 +624,7 @@ public struct SCVSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   }
 }
 
-public struct SCVStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVStateSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -707,7 +707,7 @@ public struct SCVStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
   }
 }
 
-public struct SCVTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -810,7 +810,7 @@ public struct SCVTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   }
 }
 
-public struct SCVTargetStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVTargetStateSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -893,7 +893,7 @@ public struct SCVTargetStateSample: FlatBufferVerifiableTable, FlatbuffersVector
   }
 }
 
-public struct SCVCoverageGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVCoverageGrid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -995,7 +995,7 @@ public struct SCVCoverageGrid: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct SCVCoverageRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVCoverageRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1128,7 +1128,7 @@ public struct SCVCoverageRequest: FlatBufferVerifiableTable, FlatbuffersVectorIn
   }
 }
 
-public struct SCVProgress: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVProgress: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1219,7 +1219,7 @@ public struct SCVProgress: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   }
 }
 
-public struct SCVCancel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVCancel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1274,7 +1274,7 @@ public struct SCVCancel: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   }
 }
 
-public struct SCVSensorContribution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVSensorContribution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1327,7 +1327,7 @@ public struct SCVSensorContribution: FlatBufferVerifiableTable, FlatbuffersVecto
   }
 }
 
-public struct SCVHistogramBin: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVHistogramBin: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1386,7 +1386,7 @@ public struct SCVHistogramBin: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct SCVSwathSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVSwathSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1488,7 +1488,7 @@ public struct SCVSwathSegment: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct SCVMemoryRegion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVMemoryRegion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1574,7 +1574,7 @@ public struct SCVMemoryRegion: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct SCVPackedGeometryChunk: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVPackedGeometryChunk: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1785,7 +1785,7 @@ public struct SCVPackedGeometryChunk: FlatBufferVerifiableTable, FlatbuffersVect
   }
 }
 
-public struct SCVPackedRasterBand: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVPackedRasterBand: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1889,7 +1889,7 @@ public struct SCVPackedRasterBand: FlatBufferVerifiableTable, FlatbuffersVectorI
   }
 }
 
-public struct SCVPackedRasterProducts: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVPackedRasterProducts: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1985,7 +1985,7 @@ public struct SCVPackedRasterProducts: FlatBufferVerifiableTable, FlatbuffersVec
   }
 }
 
-public struct SCVAggregateStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVAggregateStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2104,7 +2104,7 @@ public struct SCVAggregateStatistics: FlatBufferVerifiableTable, FlatbuffersVect
   }
 }
 
-public struct SCVTargetResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVTargetResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2204,7 +2204,7 @@ public struct SCVTargetResult: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct SCVResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2319,7 +2319,7 @@ public struct SCVResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   }
 }
 
-public struct SCV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

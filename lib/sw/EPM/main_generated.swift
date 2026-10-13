@@ -53,7 +53,7 @@ public enum EntityType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 ///  PUBLIC_KEY, a re-signed SIGNATURE, and a re-published EPM at the same
 ///  peer-addressed location. The PeerID (multihash of the libp2p identity
 ///  pubkey) is the stable anchor across rotations.
-public struct CryptoKey: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -182,7 +182,7 @@ public struct CryptoKey: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Represents a geographic address
-public struct Address: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct Address: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -260,7 +260,7 @@ public struct Address: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 }
 
 ///  Proves a blockchain key derives from the same HD wallet as the signing key
-public struct ChainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ChainProof: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -359,7 +359,7 @@ public struct ChainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 ///  canonical statement is 6 fixed LF-terminated lines prefixed
 ///  "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
 ///  SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
-public struct DomainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct DomainProof: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -447,7 +447,7 @@ public struct DomainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Entity Profile Message
-public struct EPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

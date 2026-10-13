@@ -21,7 +21,7 @@ public enum licensingWrappedKeyAlgorithm: Int8, FlatbuffersVectorInitializable, 
 
 
 ///  Wrapped module content key
-public struct LWK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LWK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

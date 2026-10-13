@@ -16,5 +16,6 @@ class RecordTypeExtended private constructor() {
         const val ABA: UShort = 256u
         const val CVR: UShort = 257u
         const val PVN: UShort = 258u
+        const val SBD: UShort = 259u
     }
 }

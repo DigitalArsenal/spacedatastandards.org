@@ -32,6 +32,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "VCM", desc: "Vector Covariance Message" },
       { abbr: "PPE", desc: "Polynomial Ephemeris" },
       { abbr: "CVR", desc: "Covariance Realism" },
+      { abbr: "SBD", desc: "Small Body" },
     ],
   },
   {

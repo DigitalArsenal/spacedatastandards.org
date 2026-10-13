@@ -413,7 +413,7 @@ def APMCreateQUATERNION_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateQUATERNION_STATESVector(builder, data):
-    return APMCreateQUATERNION_STATESVector(builder, data)
+    APMCreateQUATERNION_STATESVector(builder, data)
 
 def APMAddEULER_ANGLE_STATES(builder, EULER_ANGLE_STATES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(EULER_ANGLE_STATES), 0)
@@ -431,7 +431,7 @@ def APMCreateEULER_ANGLE_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEULER_ANGLE_STATESVector(builder, data):
-    return APMCreateEULER_ANGLE_STATESVector(builder, data)
+    APMCreateEULER_ANGLE_STATESVector(builder, data)
 
 def APMAddANGULAR_VELOCITIES(builder, ANGULAR_VELOCITIES):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ANGULAR_VELOCITIES), 0)
@@ -449,7 +449,7 @@ def APMCreateANGULAR_VELOCITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateANGULAR_VELOCITIESVector(builder, data):
-    return APMCreateANGULAR_VELOCITIESVector(builder, data)
+    APMCreateANGULAR_VELOCITIESVector(builder, data)
 
 def APMAddSPIN_STATES(builder, SPIN_STATES):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SPIN_STATES), 0)
@@ -467,7 +467,7 @@ def APMCreateSPIN_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSPIN_STATESVector(builder, data):
-    return APMCreateSPIN_STATESVector(builder, data)
+    APMCreateSPIN_STATESVector(builder, data)
 
 def APMAddINERTIAS(builder, INERTIAS):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(INERTIAS), 0)
@@ -485,7 +485,7 @@ def APMCreateINERTIASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINERTIASVector(builder, data):
-    return APMCreateINERTIASVector(builder, data)
+    APMCreateINERTIASVector(builder, data)
 
 def APMAddMANEUVERS(builder, MANEUVERS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
@@ -503,7 +503,7 @@ def APMCreateMANEUVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMANEUVERSVector(builder, data):
-    return APMCreateMANEUVERSVector(builder, data)
+    APMCreateMANEUVERSVector(builder, data)
 
 def APMEnd(builder):
     return builder.EndObject()

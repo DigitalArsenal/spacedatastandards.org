@@ -1949,6 +1949,10 @@
       "type" : "string",
       "enum": ["HH", "VV", "HV", "VH", "DUAL_HH_VV", "DUAL_HH_HV", "DUAL_VV_VH", "QUAD", "COMPACT"]
     },
+    "sbdOrbitClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "IEO", "ATE", "APO", "AMO", "MCA", "IMB", "MBA", "OMB", "TJN", "CEN", "TNO", "PAA", "HYA", "AST", "ETc", "JFc", "HTC", "CTc", "PAR", "HYP", "COM"]
+    },
     "sbmEventType" : {
       "type" : "string",
       "enum": ["UNKNOWN", "EXPLOSION", "COLLISION"]
@@ -2583,7 +2587,7 @@
     },
     "RecordTypeExtended" : {
       "type" : "string",
-      "enum": ["NONE", "ABA", "CVR", "PVN"]
+      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD"]
     },
     "ABA" : {
       "type" : "object",
@@ -40369,6 +40373,137 @@
         "SRC_IDS" : {
                 "type" : "array", "items" : {"type" : "string"},
                 "description" : "Source identifiers"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SBD" : {
+      "type" : "object",
+      "description" : "Small Body",
+      "properties" : {
+        "NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Minor-planet number; 0 when the body is not numbered."
+              },
+        "DESIGNATION" : {
+                "type" : "string",
+                "description" : "Principal provisional designation (e.g. \"1999 RQ36\"), or the comet\ndesignation (e.g. \"1P\"); empty when the source gives none."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "IAU name (e.g. \"Bennu\"); empty when the body is not named."
+              },
+        "ORBIT_CLASS" : {
+                "$ref" : "#/definitions/sbdOrbitClass",
+                "description" : "Orbit class."
+              },
+        "NEO" : {
+                "type" : "boolean",
+                "description" : "Near-Earth object: perihelion distance below 1.3 AU."
+              },
+        "PHA" : {
+                "type" : "boolean",
+                "description" : "Potentially hazardous: Earth MOID at most 0.05 AU and H at most 22. False\nwhen EARTH_MOID is not given."
+              },
+        "EARTH_MOID" : {
+                "type" : "number",
+                "description" : "Earth minimum orbit intersection distance, AU."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of the orbit (CCSDS CENTER_NAME), \"SUN\" for a heliocentric orbit."
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Frame the angles are measured in (CCSDS REF_FRAME), e.g. \"ICRF\", or\n\"ECLIPJ2000\" for the mean ecliptic and equinox of J2000."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system of EPOCH and PERICENTER_EPOCH (CCSDS TIME_SYSTEM), e.g. \"TDB\"."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of osculation, ISO 8601 in TIME_SYSTEM."
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis, km."
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity."
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination, deg."
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension (longitude) of the ascending node, deg."
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "Argument of pericenter, deg."
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly at EPOCH, deg."
+              },
+        "GM" : {
+                "type" : "number",
+                "description" : "Gravitational parameter of CENTER_NAME the elements were computed with,\nkm**3/s**2."
+              },
+        "PERICENTER_DISTANCE" : {
+                "type" : "number",
+                "description" : "Pericenter distance (q), km: the orbit size of a comet."
+              },
+        "PERICENTER_EPOCH" : {
+                "type" : "string",
+                "description" : "Time of pericenter passage, ISO 8601 in TIME_SYSTEM."
+              },
+        "ABSOLUTE_MAGNITUDE" : {
+                "type" : "number",
+                "description" : "Absolute magnitude H (IAU H, G system)."
+              },
+        "SLOPE_PARAMETER" : {
+                "type" : "number",
+                "description" : "Slope parameter G (IAU H, G system)."
+              },
+        "DIAMETER" : {
+                "type" : "number",
+                "description" : "Diameter, km."
+              },
+        "ALBEDO" : {
+                "type" : "number",
+                "description" : "Geometric albedo."
+              },
+        "ROTATION_PERIOD" : {
+                "type" : "number",
+                "description" : "Rotation period, hours."
+              },
+        "CEU" : {
+                "type" : "number",
+                "description" : "Current ephemeris uncertainty (Lowell astorb CEU) at CEU_EPOCH, arcsec."
+              },
+        "CEU_RATE" : {
+                "type" : "number",
+                "description" : "Rate of change of CEU, arcsec/day."
+              },
+        "CEU_EPOCH" : {
+                "type" : "string",
+                "description" : "Date CEU holds at, ISO 8601."
+              },
+        "ORBIT_ARC" : {
+                "type" : "number",
+                "description" : "Observed arc the orbit was fitted to, days."
+              },
+        "OBSERVATION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Observations the orbit was fitted to."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where the record comes from and the terms it travels under."
               }
       },
       "additionalProperties" : false

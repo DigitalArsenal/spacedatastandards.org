@@ -10,7 +10,7 @@ import FlatBuffers
 
 ///  One parameter of the propagation model, stated by name so a model
 ///  registry can evolve without schema change.
-public struct TMSModelParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TMSModelParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -64,7 +64,7 @@ public struct TMSModelParameter: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  One identity the track is known by in a named identity scheme.
-public struct TMSIdentifier: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TMSIdentifier: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -115,7 +115,7 @@ public struct TMSIdentifier: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  Required on every record: a redistributed track whose feed, epoch, and
 ///  licence are unstated is not publishable. The standard names no feed,
 ///  provider, or site.
-public struct TMSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TMSProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -272,7 +272,7 @@ public struct TMSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Track Model State
-public struct TMS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TMS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

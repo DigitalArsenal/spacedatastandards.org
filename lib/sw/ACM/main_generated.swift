@@ -50,7 +50,7 @@ public enum maneuverableFlag: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Attitude State Data
-public struct attitudeState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct attitudeState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -246,7 +246,7 @@ public struct attitudeState: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Attitude Physical Characteristics
-public struct attPhysicalProperties: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct attPhysicalProperties: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -385,7 +385,7 @@ public struct attPhysicalProperties: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Attitude Covariance
-public struct attCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct attCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -446,7 +446,7 @@ public struct attCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Attitude Maneuver
-public struct attManeuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct attManeuver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -520,7 +520,7 @@ public struct attManeuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Attitude Comprehensive Message
-public struct ACM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -827,7 +827,7 @@ public struct ACM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 ///  block's keywords, then its data lines as TIMES (the first column of each line,
 ///  elapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other
 ///  columns, NUMBER_STATES per line, row by row).
-public struct ACMAttitudeBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACMAttitudeBlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -961,7 +961,7 @@ public struct ACMAttitudeBlock: FlatBufferVerifiableTable, FlatbuffersVectorInit
 ///  One covariance time history of an ACM (Table 5-6): the diagonal terms of the
 ///  covariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line
 ///  has the same number of values.
-public struct ACMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACMCovarianceBlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1063,7 +1063,7 @@ public struct ACMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  One maneuver specification of an ACM (Table 5-7).
-public struct ACMManeuverBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACMManeuverBlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1186,7 +1186,7 @@ public struct ACMManeuverBlock: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  The attitude determination data of an ACM (Table 5-8).
-public struct ACMDetermination: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACMDetermination: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1339,7 +1339,7 @@ public struct ACMDetermination: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  One sensor block of an ACM's attitude determination data.
-public struct ACMSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACMSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1407,7 +1407,7 @@ public struct ACMSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 
 ///  One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML
 ///  form: the parameter name (the x) and the value as written.
-public struct ACMUserDefinedParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACMUserDefinedParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

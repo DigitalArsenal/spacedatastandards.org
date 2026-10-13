@@ -27,7 +27,7 @@ public enum pssSolutionStatus: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 }
 
 
-public struct PSSVariableValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PSSVariableValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -94,7 +94,7 @@ public struct PSSVariableValue: FlatBufferVerifiableTable, FlatbuffersVectorInit
   }
 }
 
-public struct PSSObjectiveValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PSSObjectiveValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -161,7 +161,7 @@ public struct PSSObjectiveValue: FlatBufferVerifiableTable, FlatbuffersVectorIni
   }
 }
 
-public struct PSSConstraintValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PSSConstraintValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -234,7 +234,7 @@ public struct PSSConstraintValue: FlatBufferVerifiableTable, FlatbuffersVectorIn
   }
 }
 
-public struct PSSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PSSProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -326,7 +326,7 @@ public struct PSSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   }
 }
 
-public struct PSSSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PSSSolution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -438,7 +438,7 @@ public struct PSSSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   }
 }
 
-public struct PSSAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PSSAttestation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -500,7 +500,7 @@ public struct PSSAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitia
   }
 }
 
-public struct PSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

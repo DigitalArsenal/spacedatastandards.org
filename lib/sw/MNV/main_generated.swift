@@ -46,7 +46,7 @@ public enum maneuverCharacterization: Int8, FlatbuffersVectorInitializable, Enum
 
 
 ///  Pre/post-maneuver orbital state
-public struct mnvOrbitalState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mnvOrbitalState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -254,7 +254,7 @@ public struct mnvOrbitalState: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 ///  (the direction of r x v); V in-track, W x U, completing the right-handed
 ///  frame. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the
 ///  pre-maneuver state at EVENT_START_TIME.
-public struct MNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MNV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -45,7 +45,7 @@ public enum scenarioActionCode: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Time-tagged point or annotation shown in a scenario.
-public struct SCNPointOfInterest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCNPointOfInterest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -128,7 +128,7 @@ public struct SCNPointOfInterest: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Sensor or site view-cone overlay used by scenario tools.
-public struct SCNViewCone: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCNViewCone: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -208,7 +208,7 @@ public struct SCNViewCone: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Target pairing for sun-advantage visualization.
-public struct SCNSunAdvantageTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCNSunAdvantageTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -262,7 +262,7 @@ public struct SCNSunAdvantageTarget: FlatBufferVerifiableTable, FlatbuffersVecto
 
 ///  Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
 ///  when available; POINTS preserves simple WGS84 polygon imports.
-public struct SCNExclusionZone: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCNExclusionZone: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -339,7 +339,7 @@ public struct SCNExclusionZone: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  Scene reference that binds viewer-scene state to existing SDS domain
 ///  records without duplicating those records.
-public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCNReference: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -561,7 +561,7 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Imported scenario event payload composed from existing SDS records.
-public struct SCNEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCNEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -627,7 +627,7 @@ public struct SCNEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Scenario asset-change notification payload.
-public struct SCNAssetsChanged: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCNAssetsChanged: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -708,7 +708,7 @@ public struct SCNAssetsChanged: FlatBufferVerifiableTable, FlatbuffersVectorInit
 ///  Scenario - canonical scene composition and simulation state for external
 ///  scenario controls integrations. Domain records remain in their native SDS
 ///  schemas and are referenced or embedded here only as scenario content.
-public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

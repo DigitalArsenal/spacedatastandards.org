@@ -257,7 +257,7 @@ def ACMAttitudeBlockCreateTIMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTIMESVector(builder, data):
-    return ACMAttitudeBlockCreateTIMESVector(builder, data)
+    ACMAttitudeBlockCreateTIMESVector(builder, data)
 
 def ACMAttitudeBlockAddVALUES(builder, VALUES):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(VALUES), 0)
@@ -279,7 +279,7 @@ def ACMAttitudeBlockCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    return ACMAttitudeBlockCreateVALUESVector(builder, data)
+    ACMAttitudeBlockCreateVALUESVector(builder, data)
 
 def ACMAttitudeBlockEnd(builder):
     return builder.EndObject()
