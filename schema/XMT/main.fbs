@@ -1,0 +1,673 @@
+/// Catalog Cross-Match (XMT)
+/// Description
+/// How two or more catalogs or sources of orbital products were compared and
+/// combined: the trajectory residuals of proposed identity pairs, the holdout
+/// residuals of an epoch-state fit against a provider's ephemeris, and the
+/// per-object choices of a catalog composer (which source's catalog record,
+/// which source's element set or state, which maneuvers merged) with the
+/// counters of the run. Each choice names its candidates, why one won or none
+/// did, and the content identifiers of the records chosen, so a reader can
+/// audit a composed catalog without re-running it.
+///
+/// XMT carries decisions and evidence only. The records decided over keep
+/// their own standards ($CAT, $OMM, $OCM, $OEM, $MNV) and are passed beside an
+/// XMT unchanged; identity declarations come in as $OIL links, and the
+/// covariance label of a chosen product is its $CVR. Trajectory agreement in
+/// an XMT supports review of an identity; it is not proof of identity or a
+/// match probability.
+///
+/// One XMT carries one arm: a match request or report, a compose recipe or
+/// report, an integrate recipe or report, or an epoch-fit policy or report.
+/// Times are Unix milliseconds (int64, *_MS) unless stated; distances km,
+/// speeds km/s.
+include "../OIL/main.fbs";
+include "../CVR/main.fbs";
+include "../MNV/main.fbs";
+include "../PRW/main.fbs";
+
+/// Verdict of a trajectory comparison. Append new values only; never reorder or
+/// reuse existing values.
+enum xmtPairVerdict : ubyte {
+  /// Not compared.
+  Unspecified,
+  /// Trajectories agree within the tolerances (supports review; not proof).
+  Compatible,
+  /// Agree, but another proposed pairing of the same identity also passes.
+  Ambiguous,
+  /// Separation exceeds the tolerances.
+  Rejected,
+  /// Could not be judged: different grids or frames, too short an arc, or
+  /// supplied velocities inconsistent with the positions.
+  Insufficient
+}
+
+/// How a composer keys objects across catalog layers. Append new values only;
+/// never reorder or reuse existing values.
+enum xmtIdentityRule : ubyte {
+  /// NORAD number first, then international designator, then the source's
+  /// native key (recipe version 1).
+  NoradFirst,
+  /// International designator only; records without one stay unresolved
+  /// (recipe version 2).
+  InternationalDesignator
+}
+
+/// Outcome of the catalog-record choice for one object. Append new values
+/// only; never reorder or reuse existing values.
+enum xmtRecordChoice : ubyte {
+  /// Not decided.
+  Unspecified,
+  /// A record was selected and published.
+  Selected,
+  /// Layers disagree on the object's identifiers; withheld until an override
+  /// names a layer.
+  IdentityConflict,
+  /// No valid international designator under the international-designator
+  /// rule; withheld.
+  MissingDesignator
+}
+
+/// Outcome of the orbital-state source choice for one object. Append new
+/// values only; never reorder or reuse existing values.
+enum xmtStateChoice : ubyte {
+  /// Not decided.
+  Unspecified,
+  /// A state candidate within the maximum age was selected.
+  Selected,
+  /// No state sources configured.
+  Unconfigured,
+  /// The configured sources' newest states are older than the maximum age.
+  Stale,
+  /// The configured sources have only states after the as-of time.
+  Future,
+  /// No configured source has a state for the object.
+  Missing,
+  /// Exactly one source declares coverage of the object (or an override
+  /// chose one).
+  Covered,
+  /// Several sources declare coverage and none was chosen.
+  Overlap
+}
+
+/// Standing of one source's product for one object. Append new values only;
+/// never reorder or reuse existing values.
+enum xmtCandidateStanding : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Chosen.
+  Selected,
+  /// Eligible but not chosen.
+  NotSelected,
+  /// Epoch after the as-of time.
+  Future,
+  /// Epoch before a maneuver that retires the products before it.
+  Retired,
+  /// Older than the policy's maximum age.
+  TooOld
+}
+
+/// Why a product was chosen. Append new values only; never reorder or reuse
+/// existing values.
+enum xmtSelectionReason : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// The only eligible candidate.
+  OnlyCandidate,
+  /// Lowest measured median error among the measured eligible candidates.
+  LowestMeasuredMedian,
+  /// No candidate measured; the source order decided.
+  UnmeasuredFallbackOrder
+}
+
+/// Kind of product record. Append new values only; never reorder or reuse
+/// existing values.
+enum xmtRecordKind : ubyte {
+  Unspecified,
+  /// Catalog record ($CAT).
+  Cat,
+  /// Element set ($OMM).
+  Omm,
+  /// State and covariance ($OCM).
+  Ocm,
+  /// Maneuver ($MNV).
+  Mnv,
+  /// Ephemeris ($OEM).
+  Oem
+}
+
+/// Where the covariance label of a chosen product comes from. Append new
+/// values only; never reorder or reuse existing values.
+enum xmtCovarianceOrigin : ubyte {
+  /// No covariance.
+  Absent,
+  /// The paired $OCM's COV_REALISM.
+  FromOcm,
+  /// The element set's own COV_REALISM.
+  FromOmm
+}
+
+/// Outcome of an epoch-state fit check. Append new values only; never reorder
+/// or reuse existing values.
+enum xmtFitVerdict : ubyte {
+  /// Not decided.
+  Unspecified,
+  /// Training and held-out residuals within the tolerance.
+  Validated,
+  /// Residuals exceed the tolerance; refine the state.
+  RequiresRefinement,
+  /// Held-out RMS above the policy's maximum.
+  RejectedHoldoutRegression,
+  /// A corrected state was proposed and must be re-propagated and validated.
+  CandidateNeedsPropagation
+}
+
+/// Content identifiers of one record.
+table XMTRecordRef {
+  KIND: xmtRecordKind = Unspecified;
+  /// SHA-256 hex digest of the record bytes as passed (size prefix included).
+  SHA256: string;
+  /// CIDv1 (raw, sha2-256) of the same bytes.
+  CID: string;
+}
+
+/// A trajectory or state product taking part in a comparison.
+table XMTTrajectory {
+  /// Identifier of the trajectory within the request; distinct.
+  ID: string;
+  /// Provider namespace of the product, e.g. "vimpel", "space-track".
+  PROVIDER: string;
+  /// The object's identifier in the provider's namespace.
+  NATIVE_ID: string;
+  /// Immutable reference to the record the trajectory came from (CID or
+  /// SHA-256).
+  RECORD_ID: string;
+}
+
+/// Tolerances of a trajectory comparison. Both trajectories must be on the
+/// same uniform UTC grid in the same Earth-centred inertial frame.
+table XMTMatchPolicy {
+  /// Maximum position separation over the arc for Compatible, km.
+  POSITION_TOLERANCE_KM: double;
+  /// Maximum velocity separation over the arc for Compatible, km/s.
+  VELOCITY_TOLERANCE_KM_S: double;
+  /// Maximum difference between each trajectory's supplied velocity and the
+  /// velocity differentiated from its positions, km/s.
+  FINITE_DIFFERENCE_TOLERANCE_KM_S: double;
+  /// Minimum arc span, s.
+  MINIMUM_SPAN_S: double;
+}
+
+/// A request to compare proposed identity pairs over trajectories.
+table XMTMatchRequest {
+  POLICY: XMTMatchPolicy;
+  /// The trajectories, in the order their records are passed.
+  TRAJECTORIES: [XMTTrajectory];
+  /// Proposed pairs: LEFT.TRAJECTORY_ID and RIGHT.TRAJECTORY_ID name
+  /// trajectories; RIGHT may also name the catalog object the left identity
+  /// would bind to (NORAD_CAT_ID or INTERNATIONAL_DESIGNATOR); EVIDENCE is the
+  /// declaration's.
+  PAIRS: [OILLink];
+}
+
+/// Result of comparing one proposed pair.
+table XMTPairResult {
+  /// The proposed link, as requested (identities, evidence).
+  LINK: OILLink;
+  VERDICT: xmtPairVerdict = Unspecified;
+  /// Why the verdict (human-readable).
+  REASON: string;
+  /// Largest position separation over the arc, km; NaN when not compared.
+  MAX_POSITION_RESIDUAL_KM: double = nan;
+  /// Largest velocity separation over the arc, km/s; NaN when not compared.
+  MAX_VELOCITY_RESIDUAL_KM_S: double = nan;
+  /// Largest difference of the left trajectory's supplied velocity from its
+  /// differentiated positions, km/s; NaN when not compared.
+  LEFT_FINITE_DIFFERENCE_RESIDUAL_KM_S: double = nan;
+  /// The same for the right trajectory, km/s.
+  RIGHT_FINITE_DIFFERENCE_RESIDUAL_KM_S: double = nan;
+  /// Grid samples compared; 0 when not compared.
+  SAMPLES: uint32;
+  /// Arc span compared, s.
+  SPAN_S: double;
+  /// Key of the catalog object the pair would bind to ("norad:<n>" or
+  /// "cospar:<designator>"); empty when the pair names none.
+  OBJECT_KEY: string;
+  /// True when the integration bound the native identity to OBJECT_KEY.
+  BOUND: bool;
+}
+
+/// The comparison of a set of proposed pairs.
+table XMTMatchReport {
+  POLICY: XMTMatchPolicy;
+  TRAJECTORIES: [XMTTrajectory];
+  PAIRS: [XMTPairResult];
+}
+
+/// One catalog layer of a composition, in priority order.
+table XMTLayer {
+  /// Layer identifier, unique in the recipe.
+  ID: string;
+  /// Node that published the snapshot.
+  NODE: string;
+  /// Provider namespace.
+  PROVIDER: string;
+  /// Source within the provider.
+  SOURCE: string;
+  /// Immutable publication head (CID) of the snapshot.
+  HEAD: string;
+  /// The source-native key of each record in input order; empty when the
+  /// records carry their own identifiers.
+  NATIVE_KEYS: [string];
+}
+
+/// A per-object override of a composition.
+table XMTObjectOverride {
+  /// Object key the override applies to ("norad:<n>", "cospar:<designator>",
+  /// or a source key).
+  OBJECT_KEY: string;
+  /// Layer whose record to publish (resolves an identity conflict); empty =
+  /// priority order.
+  CATALOG_LAYER: string;
+  /// State sources for this object in preference order; empty = the
+  /// recipe's.
+  STATE_SOURCES: [string];
+  /// Maximum state age for this object, s; NaN = the recipe's.
+  MAX_AGE_S: double = nan;
+}
+
+/// One available orbital state of an object.
+table XMTStateCandidate {
+  OBJECT_KEY: string;
+  /// Source that produced the state.
+  SOURCE_ID: string;
+  /// Immutable reference to the state record.
+  RECORD_ID: string;
+  /// State epoch, Unix milliseconds.
+  EPOCH_MS: int64;
+}
+
+/// The objects a source declares it covers.
+table XMTSourceCoverage {
+  SOURCE_ID: string;
+  /// Immutable publication the declaration comes from.
+  HEAD: string;
+  /// International designators covered.
+  OBJECTS: [string];
+}
+
+/// Recipe of a catalog composition.
+table XMTComposeRecipe {
+  IDENTITY_RULE: xmtIdentityRule = NoradFirst;
+  /// Unix milliseconds the composition is as of.
+  AS_OF_MS: int64;
+  /// Maximum age of a selected state, s; +Infinity = no limit.
+  MAX_AGE_S: double = inf;
+  /// Catalog layers in priority order, one per catalog input.
+  LAYERS: [XMTLayer];
+  /// State sources in preference order.
+  STATE_SOURCES: [string];
+  OVERRIDES: [XMTObjectOverride];
+  STATE_CANDIDATES: [XMTStateCandidate];
+  COVERAGE: [XMTSourceCoverage];
+}
+
+/// One layer's record of an object.
+table XMTLayerRecord {
+  /// Layer ID.
+  LAYER: string;
+  /// 0-based position of the record in the layer's input.
+  ORDINAL: uint32;
+  /// Source-native key; empty = none.
+  NATIVE_KEY: string;
+  /// Object name in the record.
+  NAME: string;
+  /// International designator in the record; empty = none.
+  DESIGNATOR: string;
+}
+
+/// The state-source choice for one object.
+table XMTStateSelection {
+  STATUS: xmtStateChoice = Unspecified;
+  /// Source chosen; empty when none.
+  SOURCE_ID: string;
+  /// Record chosen; empty when none.
+  RECORD_ID: string;
+  /// Epoch of the chosen state, Unix milliseconds; 0 when none.
+  EPOCH_MS: int64;
+  /// The sources considered (or, for coverage, those declaring coverage).
+  SOURCES: [string];
+}
+
+/// The composition decision for one object.
+table XMTComposedObject {
+  /// Object key ("norad:<n>", "cospar:<designator>", or a source key).
+  KEY: string;
+  /// International designator of the selected record.
+  INTERNATIONAL_DESIGNATOR: string;
+  /// Name in the selected record.
+  NAME: string;
+  /// Layer of the selected record.
+  SELECTED_LAYER: string;
+  STATUS: xmtRecordChoice = Unspecified;
+  /// Every layer's record of the object.
+  CANDIDATES: [XMTLayerRecord];
+  STATE: XMTStateSelection;
+}
+
+/// Result of a catalog composition.
+table XMTComposeReport {
+  /// Records read over all layers.
+  INPUT_RECORDS: uint32;
+  /// Distinct objects.
+  OBJECT_COUNT: uint32;
+  /// Objects whose layers disagree on identifiers.
+  IDENTITY_CONFLICTS: uint32;
+  OBJECTS: [XMTComposedObject];
+}
+
+/// Measured error of one source's product kind in one regime and horizon.
+table XMTMeasuredError {
+  SOURCE_ID: string;
+  /// Product kind, e.g. "sgp4", "sgp4xp" (the mean element theory).
+  PRODUCT: string;
+  /// Orbit regime as the error model names it.
+  REGIME: string;
+  /// Prediction horizon, days.
+  HORIZON_DAYS: double;
+  /// Median 3-D position error, km.
+  MEDIAN_3D_KM: double;
+  /// Samples behind the median.
+  SAMPLES: uint32;
+}
+
+/// How one product is chosen per object.
+table XMTSelectionPolicy {
+  /// Horizon the measured table is read at, days; NaN = none.
+  HORIZON_DAYS: double = nan;
+  /// Minimum samples for a measured row to count.
+  MIN_SAMPLES: uint32 = 30;
+  /// Maximum product age, days; +Infinity = no limit.
+  MAX_AGE_DAYS: double = inf;
+  /// Sources in preference order (ties and the unmeasured fallback).
+  SOURCE_ORDER: [string];
+  /// The measured table.
+  MEASURED: [XMTMeasuredError];
+  /// Rows in MEASURED (kept when a report omits the table itself).
+  MEASURED_ROWS: uint32;
+}
+
+/// How maneuvers from several sources are merged.
+table XMTManeuverPolicy {
+  /// Reports of one burn from different sources within this time merge, s.
+  TIME_TOLERANCE_S: double = 3600;
+  /// Absolute delta-v tolerance for merging, km/s; NaN = not compared.
+  DELTA_V_TOLERANCE_KM_S: double = nan;
+  /// Relative delta-v tolerance for merging; NaN = not compared.
+  DELTA_V_RELATIVE_TOLERANCE: double = nan;
+  /// Statuses that make an object maneuverable.
+  MANEUVERABLE_STATUSES: [maneuverStatus];
+  /// Statuses that retire the products before the maneuver.
+  RETIRING_STATUSES: [maneuverStatus];
+}
+
+/// Recipe of a catalog integration.
+table XMTIntegrateRecipe {
+  /// Unix milliseconds the integration is as of.
+  AS_OF_MS: int64;
+  /// Identity links to test on trajectories; absent = no native identities.
+  IDENTITY: XMTMatchRequest;
+  SELECTION: XMTSelectionPolicy;
+  MANEUVERS: XMTManeuverPolicy;
+}
+
+/// One source's report of a merged maneuver.
+table XMTManeuverMember {
+  SOURCE_ID: string;
+  STATUS: maneuverStatus = UNKNOWN;
+  /// The source's maneuver ID.
+  ID: string;
+  /// Maneuver time, Unix milliseconds.
+  TIME_MS: int64;
+}
+
+/// One maneuver event of an object after merging.
+table XMTManeuverEvent {
+  /// Earliest member's time, Unix milliseconds.
+  TIME_MS: int64;
+  /// Best status any member gave.
+  STATUS: maneuverStatus = UNKNOWN;
+  /// Delta-v of the primary member, km/s; NaN = not stated.
+  DELTA_V_KM_S: double = nan;
+  MEMBERS: [XMTManeuverMember];
+  /// The published $MNV record.
+  RECORD: XMTRecordRef;
+}
+
+/// One source's product as a candidate for one object.
+table XMTProductCandidate {
+  SOURCE_ID: string;
+  /// Product epoch, Unix milliseconds.
+  EPOCH_MS: int64;
+  /// As-of time minus epoch, days.
+  AGE_DAYS: double;
+  STANDING: xmtCandidateStanding = Unspecified;
+  /// True when the measured table covers it with enough samples.
+  MEASURED: bool;
+  /// Measured median 3-D error, km; NaN when not in the table.
+  MEDIAN_3D_KM: double = nan;
+  /// Samples behind the median.
+  SAMPLES: uint32;
+  /// Time of the maneuver that retired it, Unix milliseconds; 0 = not
+  /// retired.
+  RETIRED_BY_MS: int64;
+  RECORD: XMTRecordRef;
+}
+
+/// The product chosen for one object and kind.
+table XMTProductSelection {
+  SOURCE_ID: string;
+  EPOCH_MS: int64;
+  REASON: xmtSelectionReason = Unspecified;
+  /// True when another measured candidate has the same median.
+  TIE: bool;
+  /// The element set chosen.
+  OMM: XMTRecordRef;
+  /// The paired state and covariance, when there is one.
+  OCM: XMTRecordRef;
+  COVARIANCE_ORIGIN: xmtCovarianceOrigin = Absent;
+  /// The covariance's realism label.
+  COVARIANCE: CVR;
+  /// The measured row it won on (when MEASURED).
+  MEASURED: XMTMeasuredError;
+}
+
+/// The choice for one product kind of one object.
+table XMTProductChoice {
+  /// Product kind, e.g. "sgp4", "sgp4xp".
+  PRODUCT: string;
+  CANDIDATES: [XMTProductCandidate];
+  /// Absent when no candidate was eligible (the kind is stale).
+  SELECTED: XMTProductSelection;
+}
+
+/// Outcome of the integration of one object. Append new values only; never
+/// reorder or reuse existing values.
+enum xmtObjectOutcome : ubyte {
+  Unspecified,
+  /// At least one product kind has a selection.
+  Selected,
+  /// Products exist but none is eligible.
+  Stale,
+  /// No product names the object.
+  NoProduct
+}
+
+/// The integration of one catalog object.
+table XMTIntegratedObject {
+  /// Object key ("norad:<n>", "cospar:<designator>", or "unkeyed:<ordinal>").
+  KEY: string;
+  /// NORAD catalog number; 0 = none.
+  NORAD_CAT_ID: uint32;
+  /// International designator; empty = none.
+  INTERNATIONAL_DESIGNATOR: string;
+  NAME: string;
+  /// MANEUVERABLE as published (record's own or from history).
+  MANEUVERABLE: bool;
+  /// True when the maneuver history made it maneuverable.
+  MANEUVERABLE_FROM_HISTORY: bool;
+  MANEUVERS: [XMTManeuverEvent];
+  /// Regime its products' covariance labels name; empty = unknown.
+  REGIME: string;
+  PRODUCTS: [XMTProductChoice];
+  OUTCOME: xmtObjectOutcome = Unspecified;
+}
+
+/// A product that could not be placed on a catalog object.
+table XMTUnplacedRecord {
+  KIND: xmtRecordKind = Unspecified;
+  /// 0-based position in its input.
+  ORDINAL: uint32;
+  /// Source named by the record; empty when unattributed.
+  SOURCE_ID: string;
+  /// NORAD number the record names; 0 = none.
+  NORAD_CAT_ID: uint32;
+  /// International designator the record names; empty = none.
+  INTERNATIONAL_DESIGNATOR: string;
+  /// Native identifier the record names; empty = none.
+  NATIVE_ID: string;
+  /// Reason code: "identity-conflict", "not-in-catalog",
+  /// "unbound-native-identity" for unlinked records; "unattributed-product",
+  /// "invalid-epoch", "no-object-identity", "no-maneuver-time" for refused
+  /// ones.
+  REASON: string;
+}
+
+/// Count of records under one reason.
+table XMTReasonCount {
+  REASON: string;
+  COUNT: uint32;
+}
+
+/// Result of a catalog integration.
+table XMTIntegrateReport {
+  AS_OF_MS: int64;
+  /// The policies applied (SELECTION may omit its MEASURED table and give
+  /// MEASURED_ROWS).
+  SELECTION: XMTSelectionPolicy;
+  MANEUVERS: XMTManeuverPolicy;
+  CATALOG_RECORDS: uint32;
+  OMM_RECORDS: uint32;
+  OCM_RECORDS: uint32;
+  MNV_RECORDS: uint32;
+  /// Product kinds with a selection.
+  SELECTED_COUNT: uint32;
+  /// Objects with products but no eligible one.
+  STALE_COUNT: uint32;
+  /// Objects with no product.
+  NO_PRODUCT_COUNT: uint32;
+  /// Selections decided by source order (nothing measured).
+  UNMEASURED_COUNT: uint32;
+  /// Selections without a paired $OCM.
+  WITHOUT_OCM_COUNT: uint32;
+  MANEUVERABLE_COUNT: uint32;
+  MANEUVER_EVENT_COUNT: uint32;
+  /// Events merged from more than one source.
+  MERGED_EVENT_COUNT: uint32;
+  /// Unlinked records by reason.
+  UNLINKED_COUNTS: [XMTReasonCount];
+  /// Records refused.
+  REFUSED_COUNT: uint32;
+  /// The identity links tested, with BOUND set where they bound.
+  IDENTITY: XMTMatchReport;
+  OBJECTS: [XMTIntegratedObject];
+  /// Products that named no catalog object (first 1000).
+  UNLINKED: [XMTUnplacedRecord];
+  /// Products refused as unreadable (first 1000).
+  REFUSED: [XMTUnplacedRecord];
+}
+
+/// Policy of an epoch-state fit to a provider ephemeris, validated on
+/// held-out samples.
+table XMTEpochFitPolicy {
+  /// Propagator module identifier, e.g. "com.orbpro.hpop".
+  PROPAGATOR_ID: string;
+  /// SHA-256 hex digest of the propagator artifact.
+  PROPAGATOR_ARTIFACT_SHA256: string;
+  /// Force model the trajectories were propagated with.
+  FORCE_MODEL: PRWForceConfiguration;
+  /// Integrator settings, when stated.
+  INTEGRATOR: PRWIntegratorSettings;
+  /// Known limitations of the force model (human-readable).
+  FORCE_MODEL_LIMITATION: string;
+  /// Immutable reference to the frame transformation used.
+  FRAME_TRANSFORMATION_REF: string;
+  /// Every HOLDOUT_STRIDE-th sample is held out, 2 to 8.
+  HOLDOUT_STRIDE: uint8;
+  /// Maximum training and held-out residual for Validated, km.
+  POSITION_TOLERANCE_KM: double;
+  /// Held-out RMS above this rejects the fit, km; NaN = no limit.
+  MAXIMUM_HOLDOUT_RMS_KM: double = nan;
+  /// Finite-difference perturbation of the position, km (fit step).
+  POSITION_PERTURBATION_KM: double;
+  /// Finite-difference perturbation of the velocity, km/s (fit step).
+  VELOCITY_PERTURBATION_KM_S: double;
+  /// Position residual weight (one sigma), km (fit step).
+  POSITION_WEIGHT_KM: double;
+  /// Position regularization (prior sigma), km (fit step).
+  POSITION_REGULARIZATION_KM: double;
+  /// Velocity regularization (prior sigma), km/s (fit step).
+  VELOCITY_REGULARIZATION_KM_S: double;
+}
+
+/// Training and held-out residuals of an epoch state against a provider's
+/// ephemeris.
+table XMTEpochFitReport {
+  VERDICT: xmtFitVerdict = Unspecified;
+  TRAINING_SAMPLES: uint32;
+  HOLDOUT_SAMPLES: uint32;
+  /// Position RMS on the training samples, km.
+  TRAINING_RMS_KM: double;
+  /// Position RMS on the held-out samples, km.
+  HOLDOUT_RMS_KM: double;
+  MAXIMUM_TRAINING_RESIDUAL_KM: double;
+  MAXIMUM_HOLDOUT_RESIDUAL_KM: double;
+  /// SHA-256 of the provider ephemeris compared against.
+  REFERENCE_SHA256: string;
+  /// SHA-256 of the seed state record.
+  SEED_SHA256: string;
+  /// Provider-native object identifier.
+  NATIVE_ID: string;
+  /// Epoch of the seed state, ISO 8601 UTC as the seed states it.
+  EPOCH: string;
+  /// Samples on the arc.
+  SAMPLE_COUNT: uint32;
+  /// Arc span, s.
+  SPAN_S: double;
+  POLICY: XMTEpochFitPolicy;
+  /// True when a covariance accompanies the state (false: position
+  /// consistency only).
+  COVARIANCE_AVAILABLE: bool;
+  /// Proposed position correction, km (3 values, the seed's frame); empty
+  /// when no fit step ran.
+  POSITION_CORRECTION_KM: [double];
+  /// Proposed velocity correction, km/s (3 values); empty when no fit step
+  /// ran.
+  VELOCITY_CORRECTION_KM_S: [double];
+  /// Human-readable caveat.
+  NOTE: string;
+}
+
+/// Catalog Cross-Match - exactly one arm is set.
+table XMT {
+  MATCH_REQUEST: XMTMatchRequest;
+  MATCH_REPORT: XMTMatchReport;
+  COMPOSE_RECIPE: XMTComposeRecipe;
+  COMPOSE_REPORT: XMTComposeReport;
+  INTEGRATE_RECIPE: XMTIntegrateRecipe;
+  INTEGRATE_REPORT: XMTIntegrateReport;
+  EPOCH_FIT_POLICY: XMTEpochFitPolicy;
+  EPOCH_FIT_REPORT: XMTEpochFitReport;
+}
+
+root_type XMT;
+file_identifier "$XMT";

@@ -65,6 +65,8 @@ table NSTNode {
   /// Onion-service address when the peer is reachable over an anonymity
   /// network.
   ONION_ADDRESS: string;
+  /// Standards the peer publishes or serves, as their codes, e.g. "OMM".
+  STANDARDS: [string];
 }
 
 /// Node Status Record - the set of peers a node reports.
@@ -74,6 +76,8 @@ table NST {
   GENERATED_AT: int64;
   /// Peer identifier of the emitting node.
   SOURCE_PEER_ID: string;
+  /// Entity tag of this set, for conditional requests.
+  ETAG: string;
 }
 
 root_type NST;

@@ -757,6 +757,81 @@ table PRWVersionResult {
   MODULE_ID:string (required);
 }
 
+/// One propagation window: propagate one source (an element set, an
+/// initialized entity or a resident handle) from START to STOP, sampling at
+/// most STEP_SECONDS apart with the last sample exactly at STOP. The answer is
+/// one $OEM data block per query, in SEQUENCE order, covering [START, STOP];
+/// a provider that cannot answer returns an empty block whose COMMENT begins
+/// "REFUSED" and reports the reason in PRWWindowReport.
+table PRWWindowQuery {
+  /// Position of the query in the request, 0-based; answers keep this order.
+  SEQUENCE:uint;
+  /// 0-based index of the source record among the source records passed
+  /// with the request (e.g. the $OMM element sets, across all frames, in input
+  /// order). Ignored when ENTITY_HANDLE is used.
+  SET_INDEX:uint;
+  /// Entity handle of an initialized or resident source; 0 = use SET_INDEX.
+  ENTITY_HANDLE:uint;
+  /// Object key of the source as the requester names it (e.g. "NORAD:25544");
+  /// the answer block must be of this object.
+  OBJECT_KEY:string;
+  /// NORAD catalog number of the object; 0 = none (then OBJECT_ID identifies
+  /// it).
+  NORAD_CAT_ID:uint;
+  /// International designator or provider object identifier; empty = none.
+  OBJECT_ID:string;
+  /// Epoch of the source record, for reference; absent = not stated.
+  SOURCE_EPOCH:TIMInstant;
+  /// First and last instants of the window (UTC unless TIME_SYSTEM says
+  /// otherwise).
+  START:TIMInstant (required);
+  STOP:TIMInstant (required);
+  /// Largest sample spacing, seconds (> 0).
+  STEP_SECONDS:double;
+}
+
+/// A batch of propagation windows. Existing BATCH_REQUEST propagates every
+/// entity to one EPOCH; a window request propagates each query's source over
+/// its own [START, STOP] at STEP_SECONDS.
+table PRWWindowRequest {
+  QUERIES:[PRWWindowQuery];
+  /// Port of the propagator expected to answer; empty = the host's default.
+  PROPAGATOR_PORT_ID:string;
+  /// Neighbouring source records each window spans on either side (context
+  /// for the requester's replay); 0 = not stated.
+  NEIGHBOUR_SETS:uint;
+  /// Frame the answers should be in, as an RFM name (e.g. "TEME", "GCRF");
+  /// empty = the provider's native frame.
+  TARGET_FRAME:string;
+  /// How to answer, human-readable.
+  INSTRUCTIONS:string;
+}
+
+/// A window the provider refused.
+table PRWWindowRefusal {
+  /// The query's SEQUENCE.
+  SEQUENCE:uint;
+  /// The query's SET_INDEX.
+  SET_INDEX:uint;
+  /// Reason code, e.g. "set-out-of-range", "mean-element-theory-not-sgp4:X",
+  /// "invalid-span", "span-too-long", "sgp4-propagate".
+  REASON:string;
+}
+
+/// Summary of the answers to a window request.
+table PRWWindowReport {
+  /// Queries received, answered and refused.
+  QUERIES:uint;
+  ANSWERED:uint;
+  REFUSED:uint;
+  /// Source records received.
+  SOURCE_RECORDS:uint;
+  REFUSALS:[PRWWindowRefusal];
+  /// The propagator and its configuration, e.g. "SGP4, Vallado, WGS-72,
+  /// opsmode i; TEME, UTC, km and km/s".
+  PROVIDER:string;
+}
+
 /// Exactly one arm per envelope. Existing three arms keep their ordinals.
 table PRW {
   INIT:PRWInit;
@@ -781,6 +856,9 @@ table PRW {
   EARTH_ORIENTATION:PRWEarthOrientation;
   SPACE_WEATHER:PRWSpaceWeatherTable;
   JB2008_INDICES:PRWJB2008IndicesTable;
+  /// Propagation over windows: one $OEM block per query answers it.
+  WINDOW_REQUEST:PRWWindowRequest;
+  WINDOW_REPORT:PRWWindowReport;
 }
 
 root_type PRW;
